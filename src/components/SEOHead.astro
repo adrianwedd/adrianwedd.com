@@ -25,6 +25,7 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
+<meta name="color-scheme" content="dark light" />
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
@@ -32,6 +33,9 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />
+
+<!-- Preconnect for GA4 (only useful if consent given, but cheap) -->
+<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
 <!-- Open Graph -->
 <meta property="og:type" content={type} />

@@ -21,6 +21,7 @@ const { Content } = await render(episode);
   title={episode.data.title}
   description={episode.data.description}
   type="article"
+  publishedDate={episode.data.date.toISOString()}
   tags={episode.data.tags}
 >
   <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
