@@ -1,9 +1,15 @@
 ---
 // GA4 integration — consent-gated, async, non-blocking.
 // Only loads after user grants analytics consent.
-// Custom events: page_view, project_click, audio_play, scroll_depth, gallery_view.
 //
-// Set GA_MEASUREMENT_ID in .env or replace the placeholder below.
+// Custom events:
+//   Content: project_click, gallery_view, audio_play, audio_progress
+//   Engagement: scroll_depth, reading_time, outbound_click, copy_text
+//   Navigation: internal_nav, tag_filter, theme_switch
+//   Performance: page_timing
+//
+// Custom dimensions:
+//   content_type, content_tags, theme, referrer_type
 ---
 
 <script>
@@ -18,31 +24,195 @@
     } catch { return null; }
   }
 
+  function gtag(...args: any[]) {
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).dataLayer.push(arguments);
+  }
+
   function loadGA4() {
     if (!GA_ID || document.getElementById('ga4-script')) return;
 
-    // Load gtag.js async
     const script = document.createElement('script');
     script.id = 'ga4-script';
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
     document.head.appendChild(script);
 
-    // Initialise dataLayer
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    function gtag(...args: any[]) { (window as any).dataLayer.push(arguments); }
     (window as any).gtag = gtag;
 
     gtag('js', new Date());
     gtag('config', GA_ID, {
-      send_page_view: true,
+      send_page_view: false, // we send manually with enriched data
       cookie_flags: 'SameSite=Lax;Secure',
     });
 
-    // Track scroll depth
-    trackScrollDepth();
+    // Send enriched page view
+    sendPageView();
 
-    // Track project clicks
+    // Engagement tracking
+    trackScrollDepth();
+    trackReadingTime();
+    trackOutboundClicks();
+    trackCopyEvents();
+
+    // Content tracking
+    trackProjectClicks();
+    trackGalleryViews();
+    trackAudioPlayback();
+    trackTagFilters();
+    trackThemeSwitches();
+
+    // Performance
+    trackPageTiming();
+  }
+
+  // --- Page view with custom dimensions ---
+
+  function sendPageView() {
+    const path = window.location.pathname;
+    const contentType = getContentType(path);
+    const tags = getPageTags();
+    const theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+    const referrerType = classifyReferrer();
+
+    gtag('event', 'page_view', {
+      page_path: path,
+      page_title: document.title,
+      content_type: contentType,
+      content_tags: tags.join(','),
+      theme: theme,
+      referrer_type: referrerType,
+    });
+  }
+
+  function getContentType(path: string): string {
+    if (path === '/') return 'home';
+    if (path.startsWith('/blog/tag/')) return 'tag_page';
+    if (path.startsWith('/blog/')) return 'blog_post';
+    if (path === '/blog/' || path === '/blog') return 'blog_index';
+    if (path.startsWith('/projects/')) return 'project';
+    if (path === '/projects/' || path === '/projects') return 'project_index';
+    if (path.startsWith('/gallery/')) return 'gallery';
+    if (path === '/gallery/' || path === '/gallery') return 'gallery_index';
+    if (path.startsWith('/audio/')) return 'audio';
+    if (path === '/audio/' || path === '/audio') return 'audio_index';
+    if (path.startsWith('/about')) return 'about';
+    return 'other';
+  }
+
+  function getPageTags(): string[] {
+    const tagEls = document.querySelectorAll('[data-tag]');
+    return Array.from(tagEls).map(el => (el as HTMLElement).dataset.tag || '').filter(Boolean);
+  }
+
+  function classifyReferrer(): string {
+    const ref = document.referrer;
+    if (!ref) return 'direct';
+    try {
+      const host = new URL(ref).hostname;
+      if (host.includes('google')) return 'search';
+      if (host.includes('bing')) return 'search';
+      if (host.includes('duckduckgo')) return 'search';
+      if (host.includes('twitter') || host.includes('x.com')) return 'social';
+      if (host.includes('linkedin')) return 'social';
+      if (host.includes('facebook')) return 'social';
+      if (host.includes('reddit')) return 'social';
+      if (host.includes('github')) return 'developer';
+      if (host.includes('adrianwedd')) return 'internal';
+      return 'referral';
+    } catch { return 'unknown'; }
+  }
+
+  // --- Scroll depth ---
+
+  function trackScrollDepth() {
+    const milestones = [25, 50, 75, 100];
+    const tracked = new Set<number>();
+
+    const observer = () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) return;
+      const pct = Math.round((window.scrollY / docHeight) * 100);
+      for (const m of milestones) {
+        if (pct >= m && !tracked.has(m)) {
+          tracked.add(m);
+          gtag('event', 'scroll_depth', {
+            depth: m,
+            content_type: getContentType(window.location.pathname),
+          });
+        }
+      }
+    };
+
+    window.addEventListener('scroll', observer, { passive: true });
+  }
+
+  // --- Reading time ---
+
+  function trackReadingTime() {
+    const contentType = getContentType(window.location.pathname);
+    if (!['blog_post', 'project', 'about'].includes(contentType)) return;
+
+    const start = Date.now();
+    let maxVisible = 0;
+
+    const tick = () => {
+      const elapsed = Math.round((Date.now() - start) / 1000);
+      if (elapsed > maxVisible) maxVisible = elapsed;
+    };
+
+    const interval = setInterval(tick, 1000);
+
+    const sendReading = () => {
+      clearInterval(interval);
+      if (maxVisible >= 5) { // only send if they stayed 5+ seconds
+        gtag('event', 'reading_time', {
+          seconds: maxVisible,
+          content_type: contentType,
+          page_path: window.location.pathname,
+        });
+      }
+    };
+
+    // Send on page unload or visibility change
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') sendReading();
+    });
+  }
+
+  // --- Outbound clicks ---
+
+  function trackOutboundClicks() {
+    document.addEventListener('click', (e) => {
+      const link = (e.target as HTMLElement).closest('a[href]') as HTMLAnchorElement | null;
+      if (!link) return;
+      try {
+        const url = new URL(link.href);
+        if (url.hostname !== window.location.hostname) {
+          gtag('event', 'outbound_click', {
+            link_url: link.href,
+            link_text: link.textContent?.trim().slice(0, 100) || '',
+            link_domain: url.hostname,
+          });
+        }
+      } catch { /* relative URLs, javascript:, etc */ }
+    });
+  }
+
+  // --- Copy events (content engagement signal) ---
+
+  function trackCopyEvents() {
+    document.addEventListener('copy', () => {
+      gtag('event', 'copy_text', {
+        page_path: window.location.pathname,
+        content_type: getContentType(window.location.pathname),
+      });
+    });
+  }
+
+  // --- Content: project clicks ---
+
+  function trackProjectClicks() {
     document.querySelectorAll('a[href*="/projects/"]').forEach(el => {
       el.addEventListener('click', () => {
         gtag('event', 'project_click', {
@@ -51,52 +221,113 @@
         });
       });
     });
+  }
 
-    // Track gallery views
+  // --- Content: gallery views ---
+
+  function trackGalleryViews() {
     document.querySelectorAll('.gallery-trigger').forEach(el => {
       el.addEventListener('click', () => {
         gtag('event', 'gallery_view', {
           image_index: (el as HTMLElement).dataset.index,
+          collection: window.location.pathname,
         });
       });
     });
+  }
 
-    // Track audio plays
+  // --- Content: audio playback ---
+
+  function trackAudioPlayback() {
     document.querySelectorAll('audio').forEach(el => {
+      let started = false;
+
       el.addEventListener('play', () => {
-        gtag('event', 'audio_play', {
-          audio_src: el.src,
+        if (!started) {
+          started = true;
+          gtag('event', 'audio_play', {
+            audio_src: el.src,
+            page_path: window.location.pathname,
+          });
+        }
+      });
+
+      // Track audio progress milestones
+      const audioMilestones = new Set<number>();
+      el.addEventListener('timeupdate', () => {
+        if (!el.duration) return;
+        const pct = Math.round((el.currentTime / el.duration) * 100);
+        for (const m of [25, 50, 75, 100]) {
+          if (pct >= m && !audioMilestones.has(m)) {
+            audioMilestones.add(m);
+            gtag('event', 'audio_progress', {
+              audio_src: el.src,
+              progress: m,
+            });
+          }
+        }
+      });
+    });
+  }
+
+  // --- Navigation: tag filter clicks ---
+
+  function trackTagFilters() {
+    document.querySelectorAll('[data-tag]').forEach(el => {
+      el.addEventListener('click', () => {
+        gtag('event', 'tag_filter', {
+          tag: (el as HTMLElement).dataset.tag,
+          page_path: window.location.pathname,
         });
       });
     });
   }
 
-  function trackScrollDepth() {
-    const milestones = [25, 50, 75, 100];
-    const tracked = new Set<number>();
+  // --- Navigation: theme switches ---
 
-    const observer = () => {
-      const scrollPercent = Math.round(
-        (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
-      );
-      for (const m of milestones) {
-        if (scrollPercent >= m && !tracked.has(m)) {
-          tracked.add(m);
-          (window as any).gtag?.('event', 'scroll_depth', { depth: m });
-        }
-      }
-    };
-
-    window.addEventListener('scroll', observer, { passive: true });
+  function trackThemeSwitches() {
+    document.querySelectorAll('.theme-toggle').forEach(el => {
+      el.addEventListener('click', () => {
+        // Read after the toggle fires
+        setTimeout(() => {
+          const theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+          gtag('event', 'theme_switch', { theme });
+        }, 50);
+      });
+    });
   }
 
-  // Check consent on load
+  // --- Performance: page timing ---
+
+  function trackPageTiming() {
+    if (!('performance' in window)) return;
+
+    // Wait for load to complete
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+        if (!nav) return;
+
+        gtag('event', 'page_timing', {
+          dns_ms: Math.round(nav.domainLookupEnd - nav.domainLookupStart),
+          tcp_ms: Math.round(nav.connectEnd - nav.connectStart),
+          ttfb_ms: Math.round(nav.responseStart - nav.requestStart),
+          dom_interactive_ms: Math.round(nav.domInteractive - nav.startTime),
+          dom_complete_ms: Math.round(nav.domComplete - nav.startTime),
+          load_ms: Math.round(nav.loadEventEnd - nav.startTime),
+          transfer_bytes: nav.transferSize || 0,
+        });
+      }, 100);
+    });
+  }
+
+  // --- Init ---
+
   const consent = getConsent();
   if (consent?.analytics) {
     loadGA4();
   }
 
-  // Listen for consent updates
   window.addEventListener('consent-updated', ((e: CustomEvent<ConsentState>) => {
     if (e.detail.analytics) {
       loadGA4();
