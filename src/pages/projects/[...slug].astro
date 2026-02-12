@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedContent from '../../components/RelatedContent.astro';
+import { getCollection, render } from 'astro:content';
+import { slug } from '../../lib/utils';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: slug(project.id) },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout
+  title={project.data.title}
+  description={project.data.description}
+  type="article"
+  tags={project.data.tags}
+>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <header class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-xs px-2 py-0.5 rounded-full border border-accent/30 text-accent">
+          {project.data.status}
+        </span>
+        {project.data.url && (
+          <a href={project.data.url} class="text-xs text-text-muted hover:text-accent transition-colors" target="_blank" rel="noopener">
+            Visit site &nearr;
+          </a>
+        )}
+        {project.data.repo && (
+          <a href={`https://github.com/adrianwedd/${project.data.repo}`} class="text-xs text-text-muted hover:text-accent transition-colors" target="_blank" rel="noopener">
+            Source &nearr;
+          </a>
+        )}
+      </div>
+      <h1 class="text-text">{project.data.title}</h1>
+      <p class="mt-4 text-lg text-text-muted leading-relaxed">{project.data.description}</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {project.data.tags.map((tag: string) => (
+          <span class="text-xs px-2 py-0.5 rounded-full bg-surface-alt border border-border text-text-muted">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </header>
+
+    <div class="prose prose-invert max-w-none
+      prose-headings:text-text prose-headings:font-semibold
+      prose-p:text-text prose-p:leading-relaxed
+      prose-a:text-accent prose-a:no-underline hover:prose-a:underline
+      prose-strong:text-text
+      prose-code:text-text-accent prose-code:bg-surface-alt prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+      prose-pre:bg-surface-alt prose-pre:border prose-pre:border-border
+      prose-blockquote:border-accent prose-blockquote:text-text-muted
+      prose-li:text-text
+    ">
+      <Content />
+    </div>
+
+    <RelatedContent currentTags={project.data.tags} currentId={project.id} contentType="projects" />
+
+    <nav class="mt-16 pt-8 border-t border-border" aria-label="Back to projects">
+      <a href="/projects/" class="text-sm text-text-muted hover:text-accent transition-colors">
+        &larr; All projects
+      </a>
+    </nav>
+  </article>
+</BaseLayout>
