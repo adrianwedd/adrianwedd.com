@@ -4,7 +4,7 @@ description: "A poem and its exegesis, rendered as an interactive web experience
 tags: ["poetry", "web", "creative"]
 repo: "Footnotes-at-the-Edge-of-Reality"
 status: "complete"
-featured: true
+featured: false
 date: 2025-09-01
 ---
 
