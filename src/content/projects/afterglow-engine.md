@@ -4,8 +4,8 @@ description: "Audio archaeology tool that mines past work for new textures. Pad 
 tags: ["music", "audio", "python", "creative"]
 repo: "https://github.com/adrianwedd/afterglow-engine"
 status: "active"
-featured: false
-date: 2025-06-01
+featured: true
+date: 2026-02-02
 ---
 
 Distils completed audio work into reusable sonic pigments. Pad mining, drone generation, granular clouds, hiss and air textures — all extracted from your existing catalogue and output as 44.1kHz WAV files optimised for hardware samplers.

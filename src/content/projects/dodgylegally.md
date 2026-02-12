@@ -4,8 +4,8 @@ description: "Creative audio sampling CLI. Turns random words into instruments v
 tags: ["music", "cli", "python", "creative"]
 repo: "https://github.com/adrianwedd/dodgylegally"
 status: "active"
-featured: false
-date: 2025-03-01
+featured: true
+date: 2026-02-01
 ---
 
 Type a random word. Get a sample pack. dodgylegally generates audio instruments from chaotic search phrases — pulling from YouTube, local files, and a 5,000-word dictionary with weighted source mixing.

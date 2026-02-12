@@ -4,7 +4,7 @@ description: "Precision-engineered CLI for intelligent music library organisatio
 tags: ["music", "cli", "node", "audio"]
 repo: "https://github.com/adrianwedd/ordr.fm"
 status: "active"
-featured: true
+featured: false
 date: 2025-07-01
 ---
 
