@@ -19,6 +19,22 @@ const recentPosts = (await getCollection('blog'))
   title="About"
   description="Adrian Wedd — AI safety researcher, systems analyst, and creative technologist based in Tasmania."
 >
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Adrian Wedd',
+    url: 'https://adrianwedd.com',
+    description: 'AI safety researcher, systems analyst, and creative technologist based in Tasmania',
+    jobTitle: 'AI Safety Researcher',
+    workLocation: {
+      '@type': 'Place',
+      name: 'Tasmania, Australia'
+    },
+    knowsAbout: ['AI Safety', 'Systems Analysis', 'Cybersecurity', 'Multi-agent Systems', 'Infrastructure Management'],
+    sameAs: [
+      'https://github.com/adrianwedd'
+    ]
+  })} />
   <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <header class="mb-12">
       <h1 class="text-text">About</h1>

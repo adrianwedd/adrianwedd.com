@@ -24,6 +24,22 @@ const { Content } = await render(project);
   publishedDate={project.data.date.toISOString()}
   tags={project.data.tags}
 >
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.data.title,
+    description: project.data.description,
+    url: new URL(Astro.url.pathname, Astro.site).href,
+    dateCreated: project.data.date.toISOString(),
+    keywords: project.data.tags,
+    ...(project.data.url ? { url: project.data.url } : {}),
+    ...(project.data.repo ? { codeRepository: project.data.repo.startsWith('http') ? project.data.repo : `https://github.com/adrianwedd/${project.data.repo}` } : {}),
+    author: {
+      '@type': 'Person',
+      name: 'Adrian Wedd',
+      url: 'https://adrianwedd.com'
+    }
+  })} />
   <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <header class="mb-10">
       <div class="flex items-center gap-3 mb-4">
