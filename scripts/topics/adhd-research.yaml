@@ -1,0 +1,35 @@
+# ADHD research topic config — drives content-pipeline.sh
+# Supports thiswasntinthebrochure.wtf
+
+queries:
+  - "ADHD executive function"
+  - "ADHD technology interventions"
+  - "neurodiversity workplace"
+  - "ADHD cognitive strategies"
+  - "adult ADHD self-regulation"
+
+# Domain/security keyword filters for build_top_cited_bibliography.py
+domain_keywords:
+  - "ADHD"
+  - "attention deficit"
+  - "executive function"
+  - "neurodiversity"
+  - "neurodivergent"
+
+exclude_titles:
+  - "metaverse"
+
+# NotebookLM settings
+notebooklm:
+  template: academic-paper
+  depth: 15
+  mode: scholarly
+  auto_generate: "report"
+
+# Astro output
+tags:
+  - "adhd"
+  - "neurodivergence"
+  - "research"
+
+target: src/content/blog/

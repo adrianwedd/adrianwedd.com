@@ -1,0 +1,50 @@
+# AI security research topic config — drives content-pipeline.sh
+# Supports failure-first-embodied-ai work
+
+queries:
+  - "LLM security vulnerabilities"
+  - "VLM adversarial attacks"
+  - "embodied AI safety"
+  - "prompt injection attacks"
+  - "vision language model jailbreak"
+  - "agentic AI red teaming"
+  - "robot safety verification"
+
+# Domain/security keyword filters for build_top_cited_bibliography.py
+domain_keywords:
+  - "language model"
+  - "multimodal"
+  - "vision-language"
+  - "embodied"
+  - "agentic"
+  - "robot"
+
+security_keywords:
+  - "prompt injection"
+  - "jailbreak"
+  - "adversarial"
+  - "red team"
+  - "security"
+  - "safety"
+  - "attack"
+
+exclude_titles:
+  - "covid"
+  - "vaccine"
+  - "clinical"
+  - "metaverse"
+
+# NotebookLM settings
+notebooklm:
+  template: academic-paper
+  depth: 15
+  mode: scholarly
+  auto_generate: "report"
+
+# Astro output
+tags:
+  - "ai"
+  - "security"
+  - "research"
+
+target: src/content/blog/
