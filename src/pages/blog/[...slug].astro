@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
+import NotebookAssets from '../../components/NotebookAssets.astro';
 import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
 
@@ -70,6 +71,18 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
     ">
       <Content />
     </div>
+
+    <NotebookAssets
+      audioUrl={post.data.audioUrl}
+      videoUrl={post.data.videoUrl}
+      infographic={post.data.infographic}
+      mindmap={post.data.mindmap}
+      quiz={post.data.quiz}
+      flashcards={post.data.flashcards}
+      dataTable={post.data.dataTable}
+      slides={post.data.slides}
+      title={post.data.title}
+    />
 
     <RelatedContent currentTags={post.data.tags} currentId={post.id} contentType="blog" />
 

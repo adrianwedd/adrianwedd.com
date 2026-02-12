@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
+import NotebookAssets from '../../components/NotebookAssets.astro';
 import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
 
@@ -63,6 +64,18 @@ const { Content } = await render(project);
     ">
       <Content />
     </div>
+
+    <NotebookAssets
+      audioUrl={project.data.audioUrl}
+      videoUrl={project.data.videoUrl}
+      infographic={project.data.infographic}
+      mindmap={project.data.mindmap}
+      quiz={project.data.quiz}
+      flashcards={project.data.flashcards}
+      dataTable={project.data.dataTable}
+      slides={project.data.slides}
+      title={project.data.title}
+    />
 
     <RelatedContent currentTags={project.data.tags} currentId={project.id} contentType="projects" />
 
