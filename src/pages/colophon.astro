@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const buildDate = new Date().toISOString().split('T')[0];
+const astroVersion = '5.x';
+---
+
+<BaseLayout
+  title="Colophon"
+  description="Technical details, credits, and build information for adrianwedd.com"
+>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <header class="mb-12">
+      <h1 class="text-text">Colophon</h1>
+      <p class="mt-4 text-lg text-text-muted">
+        How this site is built, who helped, and what powers it.
+      </p>
+    </header>
+
+    <div class="space-y-8 text-text leading-relaxed">
+      <section>
+        <h2 class="text-text text-xl font-semibold mb-4">Technical Stack</h2>
+        <dl class="space-y-3">
+          <div>
+            <dt class="font-medium text-accent">Framework</dt>
+            <dd class="text-text-muted">Astro {astroVersion} with TypeScript strict mode</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Styling</dt>
+            <dd class="text-text-muted">Tailwind CSS 3 with CSS custom properties for theming</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Interactive Components</dt>
+            <dd class="text-text-muted">Preact islands (AudioPlayer, MindMap, Quiz, Flashcards, DataTable)</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Content</dt>
+            <dd class="text-text-muted">Markdown + MDX with Astro Content Collections (Zod schemas)</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Hosting</dt>
+            <dd class="text-text-muted">Cloudflare Pages with @astrojs/cloudflare adapter</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Analytics</dt>
+            <dd class="text-text-muted">Google Analytics 4 (consent-gated, client-side events)</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Rich Media</dt>
+            <dd class="text-text-muted">NotebookLM Studio (audio overviews, reports, quizzes, mind maps)</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section>
+        <h2 class="text-text text-xl font-semibold mb-4">Design Philosophy</h2>
+        <ul class="list-disc list-inside space-y-2 text-text-muted">
+          <li>Dark-first with warm amber accent (#d4a574)</li>
+          <li>System font stack — zero font downloads</li>
+          <li>Minimal JavaScript — interactive islands only where needed</li>
+          <li>No tracking before consent</li>
+          <li>Semantic HTML + progressive enhancement</li>
+          <li>Content-first — code serves the writing</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-text text-xl font-semibold mb-4">Build Information</h2>
+        <dl class="space-y-3">
+          <div>
+            <dt class="font-medium text-accent">Last Built</dt>
+            <dd class="text-text-muted">{buildDate}</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Build Process</dt>
+            <dd class="text-text-muted">Static site generation (SSG) with CI/CD via Cloudflare Pages</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Content Pipeline</dt>
+            <dd class="text-text-muted">Automated via GitHub Actions + NotebookLM API integration</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Source Code</dt>
+            <dd class="text-text-muted">
+              <a href="https://github.com/adrianwedd/adrianwedd.com" target="_blank" rel="noopener" class="text-accent hover:underline">
+                github.com/adrianwedd/adrianwedd.com
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <section>
+        <h2 class="text-text text-xl font-semibold mb-4">Credits</h2>
+        <div class="space-y-4 text-text-muted">
+          <p>
+            Built by <a href="https://adrianwedd.com" class="text-accent hover:underline">Adrian Wedd</a> with assistance from <a href="https://claude.ai/code" target="_blank" rel="noopener" class="text-accent hover:underline">Claude Code</a> (Opus 4.6).
+          </p>
+          <p>
+            NotebookLM automation toolkit: <a href="https://github.com/adrianwedd/notebooklm" target="_blank" rel="noopener" class="text-accent hover:underline">github.com/adrianwedd/notebooklm</a>
+          </p>
+          <p>
+            Production NotebookLM research pipeline: <a href="https://github.com/adrianwedd/failure-first-embodied-ai" target="_blank" rel="noopener" class="text-accent hover:underline">github.com/adrianwedd/failure-first-embodied-ai</a>
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-text text-xl font-semibold mb-4">Typography</h2>
+        <p class="text-text-muted">
+          System font stack for maximum performance and native feel:
+        </p>
+        <pre class="mt-3 p-4 bg-surface-alt border border-border rounded text-xs text-text overflow-x-auto">system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif</pre>
+      </section>
+
+      <section>
+        <h2 class="text-text text-xl font-semibold mb-4">Performance Budget</h2>
+        <ul class="list-disc list-inside space-y-2 text-text-muted">
+          <li>Zero custom fonts</li>
+          <li>Analytics: ~30KB gzipped (consent-gated)</li>
+          <li>Interactive islands: lazy hydration via <code class="text-text-accent bg-surface-alt px-1 py-0.5 rounded">client:idle</code></li>
+          <li>Images: lazy loading with native <code class="text-text-accent bg-surface-alt px-1 py-0.5 rounded">loading="lazy"</code></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-text text-xl font-semibold mb-4">License</h2>
+        <p class="text-text-muted">
+          Content (blog posts, project descriptions, writing) is © {new Date().getFullYear()} Adrian Wedd unless otherwise noted.
+          Code is available under MIT license.
+        </p>
+      </section>
+
+      <section class="pt-8 border-t border-border">
+        <p class="text-sm text-text-muted">
+          Questions about this site's architecture or content pipeline? See <a href="https://github.com/adrianwedd/adrianwedd.com/blob/main/docs/NOTEBOOKLM_PIPELINE.md" target="_blank" rel="noopener" class="text-accent hover:underline">NotebookLM Pipeline docs</a> or <a href="https://github.com/adrianwedd/adrianwedd.com/issues" target="_blank" rel="noopener" class="text-accent hover:underline">open an issue</a>.
+        </p>
+      </section>
+    </div>
+
+    <nav class="mt-16 pt-8 border-t border-border" aria-label="Back to home">
+      <a href="/" class="text-sm text-text-muted hover:text-accent transition-colors">
+        &larr; Home
+      </a>
+    </nav>
+  </article>
+</BaseLayout>
