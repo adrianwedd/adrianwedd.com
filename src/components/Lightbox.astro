@@ -1,0 +1,109 @@
+---
+interface Props {
+  images: Array<{ src: string; alt: string; caption?: string }>;
+}
+
+const { images } = Astro.props;
+---
+
+<div
+  id="lightbox"
+  class="fixed inset-0 z-[200] hidden bg-surface/95 backdrop-blur-sm"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image viewer"
+>
+  <div class="flex items-center justify-center h-full p-4 sm:p-8">
+    <button
+      id="lightbox-close"
+      type="button"
+      class="absolute top-4 right-4 z-10 p-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-alt transition-colors"
+      aria-label="Close lightbox"
+    >
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <button
+      id="lightbox-prev"
+      type="button"
+      class="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-alt transition-colors"
+      aria-label="Previous image"
+    >
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <button
+      id="lightbox-next"
+      type="button"
+      class="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-alt transition-colors"
+      aria-label="Next image"
+    >
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+
+    <figure class="max-w-full max-h-full flex flex-col items-center">
+      <img
+        id="lightbox-img"
+        src=""
+        alt=""
+        class="max-h-[80vh] max-w-full rounded-lg object-contain"
+      />
+      <figcaption id="lightbox-caption" class="mt-3 text-sm text-text-muted text-center"></figcaption>
+    </figure>
+  </div>
+</div>
+
+<script define:vars={{ images }}>
+  const lightbox = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  const caption = document.getElementById('lightbox-caption');
+  let currentIndex = 0;
+
+  function show(index) {
+    currentIndex = index;
+    const image = images[index];
+    img.src = image.src;
+    img.alt = image.alt;
+    caption.textContent = image.caption || '';
+    lightbox.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function hide() {
+    lightbox.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function prev() {
+    show((currentIndex - 1 + images.length) % images.length);
+  }
+
+  function next() {
+    show((currentIndex + 1) % images.length);
+  }
+
+  document.querySelectorAll('.gallery-trigger').forEach(btn => {
+    btn.addEventListener('click', () => show(parseInt(btn.dataset.index)));
+  });
+
+  document.getElementById('lightbox-close').addEventListener('click', hide);
+  document.getElementById('lightbox-prev').addEventListener('click', prev);
+  document.getElementById('lightbox-next').addEventListener('click', next);
+
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox || e.target.parentElement === lightbox) hide();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.classList.contains('hidden')) return;
+    if (e.key === 'Escape') hide();
+    if (e.key === 'ArrowLeft') prev();
+    if (e.key === 'ArrowRight') next();
+  });
+</script>

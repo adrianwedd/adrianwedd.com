@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # local temp
 tmp/
+
+# Claude state
+.claude/ralph-loop.local.md

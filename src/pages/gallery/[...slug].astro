@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedContent from '../../components/RelatedContent.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { getCollection, render } from 'astro:content';
+import { slug } from '../../lib/utils';
+
+export async function getStaticPaths() {
+  const galleries = await getCollection('gallery');
+  return galleries.map(gallery => ({
+    params: { slug: slug(gallery.id) },
+    props: { gallery },
+  }));
+}
+
+const { gallery } = Astro.props;
+const { Content } = await render(gallery);
+---
+
+<BaseLayout
+  title={gallery.data.title}
+  description={gallery.data.description || `Gallery: ${gallery.data.title}`}
+  image={gallery.data.coverImage}
+  tags={gallery.data.tags}
+>
+  <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <header class="mb-10 max-w-3xl">
+      <h1 class="text-text">{gallery.data.title}</h1>
+      {gallery.data.description && (
+        <p class="mt-4 text-lg text-text-muted leading-relaxed">{gallery.data.description}</p>
+      )}
+      <div class="mt-4 flex flex-wrap gap-2">
+        {gallery.data.tags.map((tag: string) => (
+          <span class="text-xs px-2 py-0.5 rounded-full bg-surface-alt border border-border text-text-muted">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </header>
+
+    {/* Narrative text */}
+    <div class="prose prose-invert max-w-3xl mb-10
+      prose-headings:text-text prose-p:text-text prose-p:leading-relaxed
+      prose-a:text-accent
+    ">
+      <Content />
+    </div>
+
+    {/* Image grid */}
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="gallery-grid">
+      {gallery.data.images.map((image: { src: string; alt: string; caption?: string }, index: number) => (
+        <button
+          type="button"
+          class="gallery-trigger group block rounded-lg overflow-hidden border border-border hover:border-accent/50 transition-all cursor-pointer bg-transparent p-0 text-left w-full"
+          data-index={index}
+          aria-label={`View ${image.alt}`}
+        >
+          <div class="aspect-[4/3] bg-surface-alt overflow-hidden">
+            <img
+              src={image.src}
+              alt={image.alt}
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+          </div>
+          {image.caption && (
+            <p class="p-2 text-xs text-text-muted">{image.caption}</p>
+          )}
+        </button>
+      ))}
+    </div>
+
+    <Lightbox images={gallery.data.images} />
+
+    <RelatedContent currentTags={gallery.data.tags} currentId={gallery.id} contentType="gallery" />
+
+    <nav class="mt-16 pt-8 border-t border-border" aria-label="Back to gallery">
+      <a href="/gallery/" class="text-sm text-text-muted hover:text-accent transition-colors">
+        &larr; All collections
+      </a>
+    </nav>
+  </article>
+</BaseLayout>

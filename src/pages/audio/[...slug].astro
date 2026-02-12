@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedContent from '../../components/RelatedContent.astro';
+import AudioPlayer from '../../components/islands/AudioPlayer';
+import { getCollection, render } from 'astro:content';
+import { slug } from '../../lib/utils';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('audio');
+  return episodes.map(episode => ({
+    params: { slug: slug(episode.id) },
+    props: { episode },
+  }));
+}
+
+const { episode } = Astro.props;
+const { Content } = await render(episode);
+---
+
+<BaseLayout
+  title={episode.data.title}
+  description={episode.data.description}
+  type="article"
+  tags={episode.data.tags}
+>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <header class="mb-8">
+      <div class="flex items-center gap-3 text-sm text-text-muted mb-4">
+        <time datetime={episode.data.date.toISOString()}>
+          {episode.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+        {episode.data.duration && (
+          <>
+            <span aria-hidden="true">&middot;</span>
+            <span>{episode.data.duration}</span>
+          </>
+        )}
+      </div>
+      <h1 class="text-text">{episode.data.title}</h1>
+      <p class="mt-4 text-lg text-text-muted leading-relaxed">{episode.data.description}</p>
+    </header>
+
+    <div class="mb-10">
+      <AudioPlayer client:load src={episode.data.audioUrl} title={episode.data.title} />
+    </div>
+
+    <div class="prose prose-invert max-w-none
+      prose-headings:text-text prose-headings:font-semibold
+      prose-p:text-text prose-p:leading-relaxed
+      prose-a:text-accent
+    ">
+      <Content />
+    </div>
+
+    {episode.data.transcript && (
+      <details class="mt-10 border border-border rounded-lg">
+        <summary class="px-4 py-3 text-sm font-medium text-text cursor-pointer hover:text-accent transition-colors">
+          Transcript
+        </summary>
+        <div class="px-4 pb-4 text-sm text-text-muted leading-relaxed whitespace-pre-wrap">
+          {episode.data.transcript}
+        </div>
+      </details>
+    )}
+
+    <RelatedContent currentTags={episode.data.tags} currentId={episode.id} contentType="audio" />
+
+    <nav class="mt-16 pt-8 border-t border-border" aria-label="Back to audio">
+      <a href="/audio/" class="text-sm text-text-muted hover:text-accent transition-colors">
+        &larr; All episodes
+      </a>
+    </nav>
+  </article>
+</BaseLayout>
