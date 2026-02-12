@@ -93,7 +93,7 @@ const recentPosts = (await getCollection('blog'))
         <div class="space-y-3">
           {featuredProjects.map(project => (
             <a
-              href={project.data.url || `/projects/${slug(project.id)}/`}
+              href={`/projects/${slug(project.id)}/`}
               class="group flex items-center gap-3 no-underline"
             >
               <span class="text-sm text-text group-hover:text-accent transition-colors">
