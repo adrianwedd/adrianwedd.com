@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Transparency from '../components/islands/Transparency.tsx';
 import { getCollection } from 'astro:content';
 import { slug } from '../lib/utils';
 
@@ -69,6 +70,20 @@ const recentPosts = (await getCollection('blog'))
           <span class="text-text-muted"> — a book about parenting and neurodivergence</span>
         </li>
       </ul>
+
+      <h2 id="privacy" class="text-text mt-12">Privacy</h2>
+
+      <p>
+        This site respects your choices. No tracking happens without consent.
+        Analytics (if enabled) uses Google Analytics 4 with cookie flags set to SameSite=Lax and Secure.
+        Personalisation stores visit data locally in your browser — nothing leaves your machine.
+      </p>
+
+      <p>
+        You can see exactly what this site knows about you and reset it at any time.
+      </p>
+
+      <Transparency client:load />
     </div>
 
     {/* Connected work */}
