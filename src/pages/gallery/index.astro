@@ -39,7 +39,7 @@ const allMedia = [...new Set(collections.map(c => c.data.medium).filter(Boolean)
       {collections.map(collection => (
         <a
           href={`/gallery/${slug(collection.id)}/`}
-          class="group block rounded-xl overflow-hidden border border-border hover:border-accent/50 transition-all no-underline"
+          class="group block rounded-xl overflow-hidden border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline"
         >
           {collection.data.coverImage && (
             <div class="aspect-[4/3] bg-surface-alt overflow-hidden">

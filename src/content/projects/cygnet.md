@@ -8,6 +8,10 @@ featured: false
 date: 2025-04-01
 ---
 
-An ecosystem for 3D printed housing development — 28+ specialised AI agents coordinating land acquisition, building operations, and print logistics across a 170-acre eco village project in Cygnet, Tasmania.
+Housing in Australia is broken in ways that conventional construction cannot fix. The economics don't work. The timelines don't work. The waste is staggering. And the people who need homes most urgently are the ones least served by the industry's existing incentive structures.
 
-32 units planned, 10 completed. 60% cost reduction vs traditional construction, 80% waste reduction, 50% carbon footprint reduction. When housing is broken, sometimes you print new answers.
+Cygnet is an attempt to route around those structures entirely. It's an ecosystem for 3D printed housing development on a 170-acre site in Cygnet, Tasmania—twenty-eight specialised AI agents coordinating land acquisition, building operations, and print logistics across what is designed to become an eco village.
+
+The agents don't replace human decision-making. They accelerate the parts that are slow for bad reasons: permit choreography, material logistics, scheduling dependencies, cost modelling across dozens of simultaneous variables. The goal is sixty percent cost reduction against traditional construction, eighty percent waste reduction, and a carbon footprint halved—not as aspiration, but as engineering constraint.
+
+When housing is broken at the system level, you don't fix it by building the same thing slightly cheaper. You rethink what building means.

@@ -45,7 +45,7 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
     <div class="mt-10 space-y-8">
       {posts.map(post => (
         <article>
-          <a href={`/blog/${slug(post.id)}/`} class="group block no-underline">
+          <a href={`/blog/${slug(post.id)}/`} class="group block p-6 rounded-xl bg-surface-alt border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline">
             <div class="flex items-start justify-between gap-4">
               <div>
                 <h2 class="text-xl font-semibold text-text group-hover:text-accent transition-colors">
