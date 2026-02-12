@@ -1,5 +1,16 @@
 import { defineCollection, z } from 'astro:content';
 
+const notebookAssets = {
+  audioUrl: z.string().optional(),
+  videoUrl: z.string().optional(),
+  infographic: z.string().optional(),
+  mindmap: z.string().optional(),
+  quiz: z.string().optional(),
+  flashcards: z.string().optional(),
+  dataTable: z.string().optional(),
+  slides: z.string().optional(),
+};
+
 const blog = defineCollection({
   type: 'content',
   schema: z.object({
@@ -10,6 +21,7 @@ const blog = defineCollection({
     tags: z.array(z.string()).min(1),
     draft: z.boolean().default(false),
     heroImage: z.string().optional(),
+    ...notebookAssets,
   }),
 });
 
@@ -25,6 +37,7 @@ const projects = defineCollection({
     featured: z.boolean().default(false),
     heroImage: z.string().optional(),
     date: z.coerce.date(),
+    ...notebookAssets,
   }),
 });
 

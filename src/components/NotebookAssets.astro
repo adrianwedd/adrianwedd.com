@@ -1,0 +1,107 @@
+---
+import AudioPlayer from './islands/AudioPlayer.tsx';
+import MindMap from './islands/MindMap.tsx';
+import Quiz from './islands/Quiz.tsx';
+import Flashcards from './islands/Flashcards.tsx';
+import DataTable from './islands/DataTable.tsx';
+
+interface Props {
+  audioUrl?: string;
+  videoUrl?: string;
+  infographic?: string;
+  mindmap?: string;
+  quiz?: string;
+  flashcards?: string;
+  dataTable?: string;
+  slides?: string;
+  title?: string;
+}
+
+const { audioUrl, videoUrl, infographic, mindmap, quiz, flashcards, dataTable, slides, title = 'Notebook asset' } = Astro.props;
+
+const hasAssets = audioUrl || videoUrl || infographic || mindmap || quiz || flashcards || dataTable || slides;
+---
+
+{hasAssets && (
+  <section class="mt-12 pt-8 border-t border-border space-y-8" aria-label="Notebook assets">
+    <h2 class="text-lg font-semibold text-text">Explore</h2>
+
+    {audioUrl && (
+      <div>
+        <h3 class="text-sm font-medium text-text-muted mb-3">Audio overview</h3>
+        <AudioPlayer src={audioUrl} title={title} client:idle />
+      </div>
+    )}
+
+    {videoUrl && (
+      <div>
+        <h3 class="text-sm font-medium text-text-muted mb-3">Video summary</h3>
+        <video
+          controls
+          preload="metadata"
+          class="w-full rounded-lg border border-border bg-surface-alt"
+        >
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      </div>
+    )}
+
+    {infographic && (
+      <div>
+        <h3 class="text-sm font-medium text-text-muted mb-3">Infographic</h3>
+        <a href={infographic} target="_blank" rel="noopener" class="block">
+          <img
+            src={infographic}
+            alt={`Infographic for ${title}`}
+            class="w-full rounded-lg border border-border hover:border-accent/50 transition-colors cursor-zoom-in"
+            loading="lazy"
+          />
+        </a>
+      </div>
+    )}
+
+    {mindmap && (
+      <div>
+        <h3 class="text-sm font-medium text-text-muted mb-3">Mind map</h3>
+        <MindMap src={mindmap} client:idle />
+      </div>
+    )}
+
+    {quiz && (
+      <div>
+        <h3 class="text-sm font-medium text-text-muted mb-3">Quiz</h3>
+        <Quiz src={quiz} client:idle />
+      </div>
+    )}
+
+    {flashcards && (
+      <div>
+        <h3 class="text-sm font-medium text-text-muted mb-3">Flashcards</h3>
+        <Flashcards src={flashcards} client:idle />
+      </div>
+    )}
+
+    {dataTable && (
+      <div>
+        <h3 class="text-sm font-medium text-text-muted mb-3">Data</h3>
+        <DataTable src={dataTable} client:idle />
+      </div>
+    )}
+
+    {slides && (
+      <div>
+        <h3 class="text-sm font-medium text-text-muted mb-3">Slides</h3>
+        <a
+          href={slides}
+          download
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm text-text-muted hover:text-accent hover:border-accent/50 transition-colors no-underline"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Download slide deck (PDF)
+        </a>
+      </div>
+    )}
+  </section>
+)}
