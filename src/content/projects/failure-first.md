@@ -6,7 +6,7 @@ url: "https://failurefirst.org"
 repo: "failure-first"
 status: "active"
 featured: true
-date: 2025-06-01
+date: 2026-02-09
 ---
 
 Failure First is a framework for AI safety that inverts the usual approach. Instead of asking "what should this system do?", it starts with "what must this system never do?" — and builds safety from the failure cases inward.

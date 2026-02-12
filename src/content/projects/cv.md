@@ -4,8 +4,8 @@ description: "A professional document that evolves with the work, built with mul
 tags: ["craft", "web", "career"]
 repo: "cv"
 status: "active"
-featured: false
-date: 2024-01-01
+featured: true
+date: 2026-02-04
 ---
 
 Not a static résumé. A living document that reflects how the work evolves — built with Astro, supporting multiple locale builds, and designed to be read rather than skimmed.
