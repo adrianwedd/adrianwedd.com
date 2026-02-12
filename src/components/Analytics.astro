@@ -66,6 +66,24 @@
     trackPageTiming();
   }
 
+  // --- Environment helpers ---
+
+  function classifyScreen(): { type: string; bucket: string } {
+    const w = window.innerWidth;
+    if (w < 640) return { type: 'mobile', bucket: '<640' };
+    if (w < 1024) return { type: 'tablet', bucket: '640-1023' };
+    if (w < 1440) return { type: 'desktop', bucket: '1024-1439' };
+    return { type: 'desktop', bucket: '1440+' };
+  }
+
+  function getConnectionType(): string {
+    const nav = navigator as any;
+    if (nav.connection) {
+      return nav.connection.effectiveType || nav.connection.type || 'unknown';
+    }
+    return 'unknown';
+  }
+
   // --- Page view with custom dimensions ---
 
   function sendPageView() {
@@ -75,6 +93,9 @@
     const theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
     const referrerType = classifyReferrer();
 
+    const screen = classifyScreen();
+    const connection = getConnectionType();
+
     gtag('event', 'page_view', {
       page_path: path,
       page_title: document.title,
@@ -82,6 +103,13 @@
       content_tags: tags.join(','),
       theme: theme,
       referrer_type: referrerType,
+      // Demographics / environment
+      user_language: navigator.language || '',
+      user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+      device_type: screen.type,
+      screen_bucket: screen.bucket,
+      connection_type: connection,
+      is_touch: ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 'true' : 'false',
     });
   }
 
