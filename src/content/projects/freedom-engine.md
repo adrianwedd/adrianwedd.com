@@ -1,0 +1,19 @@
+---
+title: "Freedom Engine"
+description: "Secure AI service helping federal inmates understand First Step Act time credit provisions."
+tags: ["ai", "justice", "python"]
+repo: "https://github.com/adrianwedd/freedom-engine"
+status: "active"
+featured: false
+date: 2025-04-01
+---
+
+There are over 264,000 people in the US federal prison system. Many of them are eligible for reduced sentences under the First Step Act, but the provisions are buried in legal complexity that most inmates cannot navigate alone. The information gap is not theoretical—it costs people months or years of their lives.
+
+The Freedom Engine is an AI-assisted Q&A service designed to bridge that gap. It takes questions about FSA time credits—submitted through prison email systems like CorrLinks and JPay—and returns accurate, plain-language answers grounded in federal statutes, BOP policy statements, and relevant case law.
+
+The architecture is security-first in a way that most AI projects never have to think about. A three-layer PII redaction quorum strips personal information before anything touches a language model. HSM tokenization vaults handle what remains. Every response passes through 100% human review—AI assists, it never decides. These are not optional safeguards bolted on at the end; they are the system. In a context where a wrong answer affects someone's liberty, confidence scores and legal expert validation are not features, they are requirements.
+
+The knowledge base is version-controlled with "versioned interpretations"—because the law changes, case law evolves, and a system that was right last month can be wrong today. The phased roadmap starts with a fully manual response service, builds a training corpus from real questions, and only introduces RAG-assisted drafting once accuracy has been validated by legal experts on real data.
+
+I care about this because the people who need it most have the least ability to advocate for themselves. Technology should close that gap, not widen it.
