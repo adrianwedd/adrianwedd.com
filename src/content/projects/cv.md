@@ -4,7 +4,7 @@ description: "A professional document that evolves with the work, built with mul
 tags: ["craft", "web", "career"]
 repo: "cv"
 status: "active"
-featured: true
+featured: false
 date: 2024-01-01
 ---
 

@@ -4,7 +4,7 @@ description: "A research article on the psychology of risk dismissal in technolo
 tags: ["research", "risk", "psychology"]
 repo: "why-demonstrated-risk-is-ignored"
 status: "complete"
-featured: true
+featured: false
 date: 2025-03-01
 ---
 
