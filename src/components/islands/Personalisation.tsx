@@ -67,14 +67,28 @@ export default function Personalisation() {
 
     saveMemory(memory);
 
-    // Generate greeting
-    if (memory.visits > 1) {
-      setGreeting(`Welcome back. ${getTimeGreeting()}`);
-    } else if (memory.referrer) {
-      setGreeting(`Welcome — glad you found your way here from ${memory.referrer}.`);
-    } else {
-      setGreeting(getTimeGreeting());
-    }
+    // Fetch SSR greeting
+    fetch('/api/personalization')
+      .then(res => res.json())
+      .then((data: { greeting: string; referrerHostname?: string }) => {
+        if (memory.visits > 1) {
+          setGreeting(`Welcome back. ${data.greeting}`);
+        } else if (data.referrerHostname) {
+          setGreeting(`Welcome — glad you found your way here from ${data.referrerHostname}.`);
+        } else {
+          setGreeting(data.greeting);
+        }
+      })
+      .catch(() => {
+        // Fallback to client-side
+        if (memory.visits > 1) {
+          setGreeting(`Welcome back. ${getTimeGreeting()}`);
+        } else if (memory.referrer) {
+          setGreeting(`Welcome — glad you found your way here from ${memory.referrer}.`);
+        } else {
+          setGreeting(getTimeGreeting());
+        }
+      });
   }, []);
 
   if (!greeting) return null;
