@@ -96,4 +96,9 @@ const currentPath = Astro.url.pathname;
       (btn as HTMLElement).focus();
     }
   });
+
+  const header = document.querySelector('header')!;
+  const onScroll = () => header.classList.toggle('header-scrolled', window.scrollY > 10);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 </script>

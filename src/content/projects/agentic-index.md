@@ -8,6 +8,8 @@ featured: false
 date: 2025-08-01
 ---
 
-A scored and curated index of autonomous AI tooling — LLM agents, multi-agent systems, RAG pipelines, and dev tools. Data-driven scoring methodology, fast search, transparent metrics.
+The AI agent ecosystem has a curation problem. New frameworks appear weekly, each claiming autonomy, each backed by a README full of superlatives and a demo that works exactly once. If you're trying to choose tooling for real work—multi-agent orchestration, RAG pipelines, dev tooling—the landscape is a fog of marketing copy and GitHub stars that measure hype, not quality.
 
-Available as a PyPI package for CLI access. The index the AI agent ecosystem needed but nobody was maintaining honestly.
+I built the Agentic Index because I was tired of doing the same evaluation triage every time I started a new project. It's a scored, curated catalogue of autonomous AI tooling with a transparent methodology: what it does, how mature it is, whether it actually works under load. Data-driven scoring, fast search, available as a PyPI package for CLI access.
+
+This is not a neutral aggregator. It's opinionated by design. The index the ecosystem needed but nobody was maintaining honestly—because honest curation requires saying "no" more often than "yes," and that doesn't generate sponsorship revenue.
