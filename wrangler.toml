@@ -1,0 +1,10 @@
+name = "adrianwedd-com"
+compatibility_date = "2026-02-12"
+pages_build_output_dir = "dist"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "adrianwedd-media"
+
+[vars]
+SITE_URL = "https://adrianwedd.com"

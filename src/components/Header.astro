@@ -1,0 +1,99 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+  { href: '/projects/', label: 'Projects' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/gallery/', label: 'Gallery' },
+  { href: '/audio/', label: 'Audio' },
+  { href: '/about/', label: 'About' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-surface/90 backdrop-blur-sm border-b border-border">
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16" aria-label="Main navigation">
+    <a href="/" class="text-lg font-semibold text-text hover:text-accent transition-colors no-underline">
+      Adrian Wedd
+    </a>
+
+    {/* Desktop nav */}
+    <div class="hidden md:flex items-center gap-1">
+      {navLinks.map(({ href, label }) => (
+        <a
+          href={href}
+          class:list={[
+            'px-3 py-2 rounded-lg text-sm transition-colors no-underline',
+            currentPath.startsWith(href)
+              ? 'text-accent bg-surface-alt font-medium'
+              : 'text-text-muted hover:text-text hover:bg-surface-alt',
+          ]}
+          aria-current={currentPath.startsWith(href) ? 'page' : undefined}
+        >
+          {label}
+        </a>
+      ))}
+      <ThemeToggle />
+    </div>
+
+    {/* Mobile: theme toggle + hamburger */}
+    <div class="flex items-center gap-2 md:hidden">
+      <ThemeToggle />
+      <button
+        type="button"
+        class="mobile-menu-btn p-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-alt transition-colors"
+        aria-expanded="false"
+        aria-label="Open menu"
+      >
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path class="menu-icon-open" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <path class="menu-icon-close hidden" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  {/* Mobile menu */}
+  <div class="mobile-menu hidden md:hidden border-t border-border bg-surface" role="navigation" aria-label="Mobile navigation">
+    <div class="px-4 py-3 space-y-1">
+      {navLinks.map(({ href, label }) => (
+        <a
+          href={href}
+          class:list={[
+            'block px-3 py-2 rounded-lg text-sm transition-colors no-underline',
+            currentPath.startsWith(href)
+              ? 'text-accent bg-surface-alt font-medium'
+              : 'text-text-muted hover:text-text hover:bg-surface-alt',
+          ]}
+          aria-current={currentPath.startsWith(href) ? 'page' : undefined}
+        >
+          {label}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector('.mobile-menu-btn')!;
+  const menu = document.querySelector('.mobile-menu')!;
+  const iconOpen = document.querySelector('.menu-icon-open')!;
+  const iconClose = document.querySelector('.menu-icon-close')!;
+
+  btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    btn.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
+    menu.classList.toggle('hidden');
+    iconOpen.classList.toggle('hidden');
+    iconClose.classList.toggle('hidden');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
+      (btn as HTMLElement).click();
+      (btn as HTMLElement).focus();
+    }
+  });
+</script>
