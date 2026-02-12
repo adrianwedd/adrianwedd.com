@@ -1,0 +1,105 @@
+---
+// GA4 integration — consent-gated, async, non-blocking.
+// Only loads after user grants analytics consent.
+// Custom events: page_view, project_click, audio_play, scroll_depth, gallery_view.
+//
+// Set GA_MEASUREMENT_ID in .env or replace the placeholder below.
+---
+
+<script>
+  const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '';
+
+  type ConsentState = { analytics: boolean; personalisation: boolean; timestamp: number };
+
+  function getConsent(): ConsentState | null {
+    try {
+      const raw = localStorage.getItem('adrianwedd_consent');
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }
+
+  function loadGA4() {
+    if (!GA_ID || document.getElementById('ga4-script')) return;
+
+    // Load gtag.js async
+    const script = document.createElement('script');
+    script.id = 'ga4-script';
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    document.head.appendChild(script);
+
+    // Initialise dataLayer
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    function gtag(...args: any[]) { (window as any).dataLayer.push(arguments); }
+    (window as any).gtag = gtag;
+
+    gtag('js', new Date());
+    gtag('config', GA_ID, {
+      send_page_view: true,
+      cookie_flags: 'SameSite=Lax;Secure',
+    });
+
+    // Track scroll depth
+    trackScrollDepth();
+
+    // Track project clicks
+    document.querySelectorAll('a[href*="/projects/"]').forEach(el => {
+      el.addEventListener('click', () => {
+        gtag('event', 'project_click', {
+          project_name: el.textContent?.trim() || 'unknown',
+          link_url: (el as HTMLAnchorElement).href,
+        });
+      });
+    });
+
+    // Track gallery views
+    document.querySelectorAll('.gallery-trigger').forEach(el => {
+      el.addEventListener('click', () => {
+        gtag('event', 'gallery_view', {
+          image_index: (el as HTMLElement).dataset.index,
+        });
+      });
+    });
+
+    // Track audio plays
+    document.querySelectorAll('audio').forEach(el => {
+      el.addEventListener('play', () => {
+        gtag('event', 'audio_play', {
+          audio_src: el.src,
+        });
+      });
+    });
+  }
+
+  function trackScrollDepth() {
+    const milestones = [25, 50, 75, 100];
+    const tracked = new Set<number>();
+
+    const observer = () => {
+      const scrollPercent = Math.round(
+        (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+      );
+      for (const m of milestones) {
+        if (scrollPercent >= m && !tracked.has(m)) {
+          tracked.add(m);
+          (window as any).gtag?.('event', 'scroll_depth', { depth: m });
+        }
+      }
+    };
+
+    window.addEventListener('scroll', observer, { passive: true });
+  }
+
+  // Check consent on load
+  const consent = getConsent();
+  if (consent?.analytics) {
+    loadGA4();
+  }
+
+  // Listen for consent updates
+  window.addEventListener('consent-updated', ((e: CustomEvent<ConsentState>) => {
+    if (e.detail.analytics) {
+      loadGA4();
+    }
+  }) as EventListener);
+</script>
