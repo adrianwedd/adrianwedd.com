@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AnalyticsDashboard from '../../components/islands/AnalyticsDashboard';
+
+const seo = {
+  title: 'Analytics',
+  description: 'Public analytics dashboard — aggregate traffic, content performance, and visitor insights.',
+  noindex: false,
+};
+---
+
+<BaseLayout seo={seo}>
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4">Analytics</h1>
+      <p class="text-text-muted text-lg">
+        Aggregate data from Google Analytics 4. No individual visitor tracking.
+        Updates daily at build time.
+      </p>
+    </header>
+
+    <AnalyticsDashboard client:load />
+  </div>
+</BaseLayout>
