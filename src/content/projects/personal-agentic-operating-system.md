@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/personal-agentic-operating-system"
 status: "active"
 featured: false
 date: 2025-07-01
+heroImage: "/images/projects/personal-agentic-operating-system-hero.webp"
 ---
 
 Most agentic systems assume the cloud. I built this one to assume your machine.

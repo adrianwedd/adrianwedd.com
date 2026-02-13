@@ -1,0 +1,14 @@
+{
+  "title": "Footnotes at the Edge of Reality - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/footnotes-at-the-edge-of-reality.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

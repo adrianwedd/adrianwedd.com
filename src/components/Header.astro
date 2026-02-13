@@ -95,6 +95,23 @@ const currentPath = Astro.url.pathname;
     if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
       (btn as HTMLElement).click();
       (btn as HTMLElement).focus();
+      return;
+    }
+
+    // Focus trap when mobile menu is open
+    if (e.key === 'Tab' && !menu.classList.contains('hidden')) {
+      const focusable = menu.querySelectorAll<HTMLElement>('a[href], button');
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
   });
 

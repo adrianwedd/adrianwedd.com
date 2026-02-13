@@ -37,38 +37,40 @@ const allMedia = [...new Set(collections.map(c => c.data.medium).filter(Boolean)
 
     <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {collections.map(collection => (
-        <a
-          href={`/gallery/${slug(collection.id)}/`}
-          class="group block rounded-xl overflow-hidden border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline"
-        >
-          {collection.data.coverImage && (
-            <div class="aspect-[4/3] bg-surface-alt overflow-hidden">
-              <img
-                src={collection.data.coverImage}
-                alt={collection.data.title}
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                loading="lazy"
-              />
-            </div>
-          )}
-          <div class="p-4">
-            <h2 class="text-base font-semibold text-text group-hover:text-accent transition-colors">
-              {collection.data.title}
-            </h2>
-            {collection.data.description && (
-              <p class="mt-1 text-sm text-text-muted line-clamp-2">{collection.data.description}</p>
+        <article>
+          <a
+            href={`/gallery/${slug(collection.id)}/`}
+            class="group block rounded-xl overflow-hidden border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline"
+          >
+            {collection.data.coverImage && (
+              <div class="aspect-[4/3] bg-surface-alt overflow-hidden">
+                <img
+                  src={collection.data.coverImage}
+                  alt={collection.data.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              </div>
             )}
-            <div class="mt-2 flex items-center gap-2 text-xs text-text-muted">
-              <span>{collection.data.images.length} image{collection.data.images.length !== 1 ? 's' : ''}</span>
-              {collection.data.medium && (
-                <>
-                  <span aria-hidden="true">&middot;</span>
-                  <span>{collection.data.medium}</span>
-                </>
+            <div class="p-4">
+              <h2 class="text-base font-semibold text-text group-hover:text-accent transition-colors">
+                {collection.data.title}
+              </h2>
+              {collection.data.description && (
+                <p class="mt-1 text-sm text-text-muted line-clamp-2">{collection.data.description}</p>
               )}
+              <div class="mt-2 flex items-center gap-2 text-xs text-text-muted">
+                <span>{collection.data.images.length} image{collection.data.images.length !== 1 ? 's' : ''}</span>
+                {collection.data.medium && (
+                  <>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>{collection.data.medium}</span>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </article>
       ))}
     </div>
   </section>

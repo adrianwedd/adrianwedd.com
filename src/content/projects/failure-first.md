@@ -7,6 +7,7 @@ repo: "failure-first"
 status: "active"
 featured: true
 date: 2026-02-09
+heroImage: "/images/projects/failure-first-hero.webp"
 ---
 
 Most AI safety work begins with capability: what should the system do? What are its goals? How do we align it with human values? These are reasonable questions. They are also the wrong place to start—because they assume you understand the system well enough to specify positive outcomes, and that assumption is increasingly fragile.

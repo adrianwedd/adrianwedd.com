@@ -1,0 +1,14 @@
+{
+  "title": "Lunar Tools Prototypes - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/lunar-tools-prototypes.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

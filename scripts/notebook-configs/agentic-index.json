@@ -1,0 +1,14 @@
+{
+  "title": "Agentic Index - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/agentic-index.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

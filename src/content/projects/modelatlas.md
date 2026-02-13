@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/ModelAtlas"
 status: "active"
 featured: false
 date: 2025-04-15
+heroImage: "/images/projects/modelatlas-hero.webp"
 ---
 
 There are thousands of foundation models now. New ones appear daily. Most metadata about them is incomplete, inconsistent, or wrong. Context lengths are missing. Base model lineage is ambiguous. Quantisation details are buried in config blobs that nobody parses. If you want to choose a model for a production system, you are assembling the picture yourself from fragments.

@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/emdr-agent"
 status: "experiment"
 featured: false
 date: 2025-06-01
+heroImage: "/images/projects/emdr-agent-hero.webp"
 ---
 
 Therapy has a pacing problem. A human therapist reads the room—breath, posture, the micro-expressions that signal when to slow down or when to press forward. Software does not get that for free.

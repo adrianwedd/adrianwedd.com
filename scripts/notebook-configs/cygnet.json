@@ -1,0 +1,14 @@
+{
+  "title": "Cygnet - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/cygnet.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

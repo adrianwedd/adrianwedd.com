@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/neuroconnect"
 status: "active"
 featured: false
 date: 2025-05-01
+heroImage: "/images/projects/neuroconnect-hero.webp"
 ---
 
 A person with ADHD calls a helpline. They trail off mid-sentence. There is a pause—maybe they lost the word, maybe they lost the thread, maybe they are in crisis. The system has to know the difference. It has to know in under a second.

@@ -1,0 +1,14 @@
+{
+  "title": "Before the Words Existed - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/before-the-words-existed.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

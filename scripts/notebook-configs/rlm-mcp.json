@@ -1,0 +1,14 @@
+{
+  "title": "rlm-mcp - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/rlm-mcp.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Squishmallowdex - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/squishmallowdex.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

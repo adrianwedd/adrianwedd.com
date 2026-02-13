@@ -1,0 +1,14 @@
+{
+  "title": "EMDR Agent - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/emdr-agent.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

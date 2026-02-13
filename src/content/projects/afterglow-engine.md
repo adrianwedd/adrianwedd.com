@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/afterglow-engine"
 status: "active"
 featured: true
 date: 2026-02-02
+heroImage: "/images/projects/afterglow-engine-hero.webp"
 ---
 
 The premise is simple and slightly unsettling: your best sounds already exist. They're buried in your finished work—in the reverb tails of tracks you forgot, the sub-harmonics of a pad you used once, the room tone of a recording you made in a different house, in a different year, in a different life.

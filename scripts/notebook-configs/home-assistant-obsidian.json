@@ -1,0 +1,14 @@
+{
+  "title": "Home Assistant Obsidian - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/home-assistant-obsidian.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}
