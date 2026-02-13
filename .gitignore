@@ -28,3 +28,4 @@ tmp/
 
 # Claude state
 .claude/ralph-loop.local.md
+notebook-assets/adhdo/audio-original.mp3
