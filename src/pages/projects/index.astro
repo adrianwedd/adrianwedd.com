@@ -31,20 +31,32 @@ const statusLabels: Record<string, string> = {
     </p>
 
     {allTags.length > 0 && (
-      <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
+      <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag" id="tag-filters">
+        <button
+          type="button"
+          data-tag=""
+          class="tag-filter text-xs px-3 py-1 rounded-full border border-accent bg-accent/10 text-accent font-medium cursor-pointer transition-colors"
+        >
+          All
+        </button>
         {allTags.map(tag => (
-          <span class="text-xs px-3 py-1 rounded-full border border-border text-text-muted">
+          <button
+            type="button"
+            data-tag={tag}
+            class="tag-filter text-xs px-3 py-1 rounded-full border border-border text-text-muted cursor-pointer hover:border-accent hover:text-accent transition-colors"
+          >
             {tag}
-          </span>
+          </button>
         ))}
       </nav>
     )}
 
-    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+    <div class="mt-10 grid gap-6 sm:grid-cols-2" id="project-grid">
       {projects.map(project => (
         <a
           href={`/projects/${slug(project.id)}/`}
-          class="group block p-6 rounded-xl bg-surface-alt border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline"
+          data-tags={JSON.stringify(project.data.tags)}
+          class="project-card group block p-6 rounded-xl bg-surface-alt border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline"
         >
           <div class="flex items-start justify-between gap-3">
             <h2 class="text-lg font-semibold text-text group-hover:text-accent transition-colors">
@@ -73,4 +85,34 @@ const statusLabels: Record<string, string> = {
       ))}
     </div>
   </section>
+
+  <script>
+    const filters = document.getElementById('tag-filters');
+    const cards = document.querySelectorAll<HTMLElement>('.project-card');
+
+    filters?.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.tag-filter');
+      if (!btn) return;
+
+      const tag = btn.dataset.tag || '';
+
+      // Update active button styles
+      filters.querySelectorAll('.tag-filter').forEach(b => {
+        b.classList.remove('border-accent', 'bg-accent/10', 'text-accent', 'font-medium');
+        b.classList.add('border-border', 'text-text-muted');
+      });
+      btn.classList.remove('border-border', 'text-text-muted');
+      btn.classList.add('border-accent', 'bg-accent/10', 'text-accent', 'font-medium');
+
+      // Filter cards
+      cards.forEach(card => {
+        if (!tag) {
+          card.style.display = '';
+          return;
+        }
+        const tags: string[] = JSON.parse(card.dataset.tags || '[]');
+        card.style.display = tags.includes(tag) ? '' : 'none';
+      });
+    });
+  </script>
 </BaseLayout>
