@@ -1,0 +1,14 @@
+{
+  "title": "NotebookLM Automation - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/notebooklm-automation.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

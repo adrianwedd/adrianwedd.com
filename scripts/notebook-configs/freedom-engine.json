@@ -1,0 +1,14 @@
+{
+  "title": "Freedom Engine - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/freedom-engine.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

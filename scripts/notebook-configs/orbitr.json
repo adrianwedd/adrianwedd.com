@@ -1,0 +1,14 @@
+{
+  "title": "orbitr - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/orbitr.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

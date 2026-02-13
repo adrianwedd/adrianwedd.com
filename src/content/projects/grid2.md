@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/grid2_repo"
 status: "experiment"
 featured: false
 date: 2025-05-01
+heroImage: "/images/projects/grid2-hero.webp"
 ---
 
 The problem with AI website builders is hallucination. Ask a language model to generate a page and you get something that looks plausible until you inspect it—broken layouts, invented components, styles that conflict. The output is probabilistic. Probability is not what you want from a build system.

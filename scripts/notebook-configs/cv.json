@@ -1,0 +1,14 @@
+{
+  "title": "Living CV - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/cv.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

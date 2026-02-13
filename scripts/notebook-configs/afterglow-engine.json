@@ -1,0 +1,14 @@
+{
+  "title": "Afterglow Engine - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/afterglow-engine.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

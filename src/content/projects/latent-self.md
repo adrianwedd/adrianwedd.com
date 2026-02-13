@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/latent-self"
 status: "complete"
 featured: false
 date: 2025-02-01
+heroImage: "/images/projects/latent-self-hero.webp"
 ---
 
 A mirror shows you what you are. This installation shows you what you almost are.

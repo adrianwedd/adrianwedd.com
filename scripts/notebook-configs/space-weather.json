@@ -1,0 +1,14 @@
+{
+  "title": "Space Weather - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/space-weather.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

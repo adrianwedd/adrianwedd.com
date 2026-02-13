@@ -1,0 +1,14 @@
+{
+  "title": "This Wasn't in the Brochure - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/this-wasnt-in-the-brochure.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

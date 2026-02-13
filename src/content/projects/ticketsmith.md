@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/ticketsmith"
 status: "active"
 featured: false
 date: 2025-08-01
+heroImage: "/images/projects/ticketsmith-hero.webp"
 ---
 
 Every organisation that uses Jira and Confluence has the same problem: the knowledge is there, but finding it costs more than recreating it. Tickets reference documents that reference other tickets. Context lives in comments that nobody reads twice. The institutional memory is vast and effectively inaccessible.

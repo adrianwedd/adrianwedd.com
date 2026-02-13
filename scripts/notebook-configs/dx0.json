@@ -1,0 +1,14 @@
+{
+  "title": "Dx0 - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/dx0.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

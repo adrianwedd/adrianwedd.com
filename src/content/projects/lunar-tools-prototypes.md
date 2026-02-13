@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/lunar_tools_prototypes"
 status: "experiment"
 featured: false
 date: 2025-06-15
+heroImage: "/images/projects/lunar-tools-prototypes-hero.webp"
 ---
 
 A visitor speaks into a microphone. Their voice becomes a brushstroke. An ambient sound becomes a fractal branch. A dream described aloud becomes an image that did not exist until they said it.

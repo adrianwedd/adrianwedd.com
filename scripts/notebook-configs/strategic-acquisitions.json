@@ -1,0 +1,14 @@
+{
+  "title": "Strategic Acquisitions - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/strategic-acquisitions.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

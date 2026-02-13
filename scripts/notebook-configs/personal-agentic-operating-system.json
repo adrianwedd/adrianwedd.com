@@ -1,0 +1,14 @@
+{
+  "title": "Personal Agentic Operating System - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/personal-agentic-operating-system.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

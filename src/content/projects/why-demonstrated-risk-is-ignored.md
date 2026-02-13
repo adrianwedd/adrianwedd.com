@@ -6,6 +6,7 @@ repo: "why-demonstrated-risk-is-ignored"
 status: "complete"
 featured: true
 date: 2026-02-07
+heroImage: "/images/projects/why-demonstrated-risk-is-ignored-hero.webp"
 ---
 
 You show someone evidence of harm. They acknowledge the evidence. Then they proceed as if the evidence doesn't exist. This isn't stupidity or denial—it's something more structural, and more dangerous.

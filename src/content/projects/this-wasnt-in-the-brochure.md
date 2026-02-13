@@ -7,6 +7,7 @@ repo: "This-Wasn-t-in-the-Brochure"
 status: "active"
 featured: true
 date: 2026-02-08
+heroImage: "/images/projects/this-wasnt-in-the-brochure-hero.webp"
 ---
 
 When I was six, I wrote a BASIC program to make the computer say good morning. I didn't know it then, but I was building my first executive function prosthetic — externalising a sequence my brain couldn't reliably hold on its own. I've been building workarounds ever since.

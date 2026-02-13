@@ -1,0 +1,14 @@
+{
+  "title": "Latent Self - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/latent-self.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Grid 2.0 - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/grid2.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

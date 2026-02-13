@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/notebooklm-automation"
 status: "complete"
 featured: false
 date: 2025-12-01
+heroImage: "/images/projects/notebooklm-automation-hero.webp"
 ---
 
 Google built NotebookLM as a walled garden. I built a door.

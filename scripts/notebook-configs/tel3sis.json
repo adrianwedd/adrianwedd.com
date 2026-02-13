@@ -1,0 +1,14 @@
+{
+  "title": "TEL3SIS - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/tel3sis.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

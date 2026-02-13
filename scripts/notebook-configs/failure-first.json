@@ -1,0 +1,14 @@
+{
+  "title": "Failure First - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/failure-first.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

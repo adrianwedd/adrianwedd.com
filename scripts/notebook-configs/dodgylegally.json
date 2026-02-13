@@ -1,0 +1,14 @@
+{
+  "title": "dodgylegally - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/dodgylegally.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

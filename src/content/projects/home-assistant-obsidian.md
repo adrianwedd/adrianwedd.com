@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/home-assistant-obsidian"
 status: "active"
 featured: false
 date: 2024-06-01
+heroImage: "/images/projects/home-assistant-obsidian-hero.webp"
 ---
 
 I keep two systems running at home that shape how I think: Obsidian for knowledge, Home Assistant for the physical environment. They existed on separate machines, with separate maintenance windows, separate failure modes. The obvious question was why.

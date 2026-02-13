@@ -1,0 +1,14 @@
+{
+  "title": "ModelAtlas - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/modelatlas.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

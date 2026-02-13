@@ -1,0 +1,14 @@
+{
+  "title": "Ticketsmith - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/ticketsmith.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

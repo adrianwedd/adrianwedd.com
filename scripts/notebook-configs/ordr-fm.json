@@ -1,0 +1,14 @@
+{
+  "title": "ordr.fm - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/ordr-fm.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

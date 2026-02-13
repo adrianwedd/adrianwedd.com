@@ -1,0 +1,14 @@
+{
+  "title": "VERITAS - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/veritas.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}

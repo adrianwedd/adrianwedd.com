@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/VERITAS"
 status: "active"
 featured: false
 date: 2025-03-01
+heroImage: "/images/projects/veritas-hero.webp"
 ---
 
 Legal AI has an integrity problem. Most tools optimise for speed and treat accuracy as negotiable. In a profession where a hallucinated citation can end a career, that trade-off is backwards.

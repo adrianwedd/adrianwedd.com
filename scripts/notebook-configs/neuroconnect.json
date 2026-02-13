@@ -1,0 +1,14 @@
+{
+  "title": "NeuroConnect - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/neuroconnect.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}
