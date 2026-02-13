@@ -98,6 +98,7 @@ export default function AudioPlayer({ src, title }: Props) {
               onInput={seek}
               class="flex-1 h-1 accent-accent cursor-pointer"
               aria-label="Seek"
+              aria-valuetext={`${formatTime(currentTime)} of ${formatTime(duration)}`}
             />
             <span class="text-xs text-text-muted tabular-nums">{formatTime(duration)}</span>
           </div>

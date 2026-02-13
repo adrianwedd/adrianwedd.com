@@ -1,6 +1,6 @@
 ---
 title: "Why Demonstrated Risk Is Ignored"
-description: "A research article on the psychology of risk dismissal in technology."
+description: "Why do people acknowledge evidence of harm and then proceed as if it doesn't exist? A deep dive into structural risk dismissal."
 tags: ["research", "risk", "psychology"]
 repo: "why-demonstrated-risk-is-ignored"
 status: "complete"

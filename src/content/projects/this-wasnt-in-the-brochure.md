@@ -1,6 +1,6 @@
 ---
 title: "This Wasn't in the Brochure"
-description: "A neurodivergent co-parenting guide written with a three-AI workflow — 11 chapters on what happens when the life you planned meets the brain you actually have."
+description: "A neurodivergent co-parenting guide — what happens when the life you planned meets the brain you actually have."
 tags: ["writing", "neurodivergence", "parenting", "ai", "co-parenting"]
 url: "https://thiswasntinthebrochure.wtf"
 repo: "This-Wasn-t-in-the-Brochure"
