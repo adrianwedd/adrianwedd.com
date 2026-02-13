@@ -1,6 +1,6 @@
 ---
 title: "Footnotes at the Edge of Reality"
-description: "A poem and its exegesis, rendered as an interactive web experience."
+description: "A long-form poem about memory and perception, rendered as an interactive web experience with generative canvas backgrounds."
 tags: ["poetry", "web", "creative"]
 repo: "Footnotes-at-the-Edge-of-Reality"
 status: "complete"

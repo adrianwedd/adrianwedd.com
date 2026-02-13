@@ -36,6 +36,7 @@ const statusLabels: Record<string, string> = {
           type="button"
           data-tag=""
           class="tag-filter text-xs px-3 py-1 rounded-full border border-accent bg-accent/10 text-accent font-medium cursor-pointer transition-colors"
+          aria-pressed="true"
         >
           All
         </button>
@@ -44,6 +45,7 @@ const statusLabels: Record<string, string> = {
             type="button"
             data-tag={tag}
             class="tag-filter text-xs px-3 py-1 rounded-full border border-border text-text-muted cursor-pointer hover:border-accent hover:text-accent transition-colors"
+            aria-pressed="false"
           >
             {tag}
           </button>
@@ -96,13 +98,15 @@ const statusLabels: Record<string, string> = {
 
       const tag = btn.dataset.tag || '';
 
-      // Update active button styles
+      // Update active button styles and aria-pressed
       filters.querySelectorAll('.tag-filter').forEach(b => {
         b.classList.remove('border-accent', 'bg-accent/10', 'text-accent', 'font-medium');
         b.classList.add('border-border', 'text-text-muted');
+        b.setAttribute('aria-pressed', 'false');
       });
       btn.classList.remove('border-border', 'text-text-muted');
       btn.classList.add('border-accent', 'bg-accent/10', 'text-accent', 'font-medium');
+      btn.setAttribute('aria-pressed', 'true');
 
       // Filter cards
       cards.forEach(card => {

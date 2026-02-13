@@ -48,6 +48,7 @@ const hasAssets = audioUrl || videoUrl || infographic || mindmap || quiz || flas
           controls
           preload="metadata"
           class="w-full rounded-lg border border-border bg-surface-alt"
+          aria-label={`Video overview of ${title}`}
         >
           <source src={videoUrl} type="video/mp4" />
         </video>

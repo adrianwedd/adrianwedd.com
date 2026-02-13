@@ -1,6 +1,6 @@
 ---
 title: "Living CV"
-description: "A professional document that evolves with the work, built with multi-locale support."
+description: "A CV that updates as the work evolves — multi-locale support because careers don't stay in one country or language."
 tags: ["craft", "web", "career"]
 repo: "cv"
 status: "active"

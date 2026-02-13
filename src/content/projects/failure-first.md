@@ -1,6 +1,6 @@
 ---
 title: "Failure First"
-description: "A methodology for AI safety that starts with what can go wrong."
+description: "An AI safety methodology that inverts the usual approach — start with what must never happen, then work backwards."
 tags: ["ai-safety", "methodology", "research"]
 url: "https://failurefirst.org"
 repo: "failure-first"

@@ -1,6 +1,6 @@
 ---
 title: "ADHDo"
-description: "AI cognitive scaffold for ADHD executive function — three-stage reasoning pipeline, crisis detection, ambient nudge orchestration, and zero shame by design."
+description: "AI cognitive scaffold for ADHD executive function — adapts to the shape of your day with zero shame by design."
 tags: ["ai", "neurodivergence", "python", "agents"]
 repo: "https://github.com/adrianwedd/ADHDo"
 status: "active"

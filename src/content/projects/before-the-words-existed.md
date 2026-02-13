@@ -1,6 +1,6 @@
 ---
 title: "Before the Words Existed"
-description: "A scholarly close reading of William Gibson's Neuromancer arguing that the novel encodes a detailed experiential structure of cognitive mismatch — interface-dependent attention, reversible competence, relational dysfunction — using language that wouldn't enter common discourse until decades later."
+description: "A close reading of Neuromancer arguing Gibson encoded the experience of ADHD decades before the language existed."
 tags: ["neurodivergence", "literary-criticism", "research", "adhd"]
 url: "https://adrianwedd.github.io/before-the-words-existed/"
 repo: "before-the-words-existed"
