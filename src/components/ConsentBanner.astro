@@ -14,8 +14,8 @@
     <!-- Compact bar -->
     <div id="consent-compact" class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
       <p class="text-xs text-text-muted">
-        This site uses cookies.
-        <a href="/about/#privacy" class="hover:text-accent transition-colors underline">Details</a>
+        This site uses cookies for analytics (aggregate traffic data) and personalisation (visit count, stored locally).
+        No tracking before consent. <a href="/about/#privacy" class="hover:text-accent transition-colors underline">Full privacy details</a>
       </p>
       <div class="flex items-center gap-2 shrink-0">
         <button id="consent-manage" type="button" class="text-xs text-text-muted hover:text-text transition-colors">
@@ -32,6 +32,10 @@
 
     <!-- Expanded options (hidden by default) -->
     <div id="consent-expanded" class="hidden max-w-6xl mx-auto px-4 pb-3">
+      <p class="text-xs text-text-muted mb-3 max-w-2xl">
+        <strong class="text-text">Analytics:</strong> Google Analytics 4 tracks aggregate traffic—what gets read, where readers come from. No individual session reconstruction.
+        <strong class="text-text ml-3">Personalisation:</strong> Visit counter stored in your browser's localStorage. Never leaves your device.
+      </p>
       <div class="flex flex-wrap items-center gap-4 text-xs">
         <label class="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" id="consent-analytics" class="accent-accent w-3.5 h-3.5" />
