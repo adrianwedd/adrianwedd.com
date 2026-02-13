@@ -36,7 +36,7 @@ The testing surfaced failure modes you only see in multi-agent setups:
 
 The current approach to AI safety — focusing on the "alignment" of individual models — does not hold up once those models start talking to each other.
 
-For **embodied AI** and **autonomous systems** (like factory swarms or autonomous vehicle networks), the implication is direct. Safety cannot be an emergent property of a group of safe individuals; it must be a structural constraint of the network itself. We need new standards for agent identity, provenance, and "air-gapped" reasoning contexts that treat every inter-agent communication as potentially hostile.
+For **embodied AI** and **autonomous systems** (like factory swarms or autonomous vehicle networks), the implication is direct. Safety cannot be an emergent property of a group of safe individuals; it must be a structural constraint of the network itself. We need new standards for agent identity, traceability, and isolated reasoning contexts that treat every inter-agent communication as potentially hostile.
 
 ## The Dataset: Testing with Moltbook
 

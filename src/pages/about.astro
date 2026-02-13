@@ -17,14 +17,14 @@ const recentPosts = (await getCollection('blog'))
 
 <BaseLayout
   title="About"
-  description="I build things that think, break, and sometimes both. AI safety researcher, systems analyst, creative technologist. Based in Tasmania."
+  description="I build things that think, break, and sometimes both. AI safety researcher and systems thinker. Building things that think, break, and sometimes both. Based in Tasmania."
 >
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'Adrian Wedd',
     url: 'https://adrianwedd.com',
-    description: 'AI safety researcher, systems analyst, and creative technologist based in Tasmania',
+    description: 'AI safety researcher and systems thinker based in Tasmania',
     jobTitle: 'AI Safety Researcher',
     workLocation: {
       '@type': 'Place',

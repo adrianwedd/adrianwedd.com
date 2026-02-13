@@ -16,4 +16,4 @@ The multi-locale architecture matters because translation isn't just about chang
 
 The document lives in version control. Changes are tracked, dated, and reversible. When the work shifts, the CV shifts with it—not in six months when I remember to update a Word file, but immediately, as part of the same thought process that shaped the work itself.
 
-A professional document should keep up with the career it represents.
+A professional document should be as alive as the career it represents.
