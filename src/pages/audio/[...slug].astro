@@ -39,6 +39,27 @@ const { Content } = await render(episode);
       </div>
       <h1 class="text-text">{episode.data.title}</h1>
       <p class="mt-4 text-lg text-text-muted leading-relaxed">{episode.data.description}</p>
+
+      {(episode.data.relatedProject || episode.data.relatedPost) && (
+        <div class="mt-6 p-4 rounded-lg bg-surface-alt border border-border">
+          <p class="text-sm text-text-muted">
+            {episode.data.relatedProject && (
+              <>
+                Generated for project: <a href={`/projects/${episode.data.relatedProject}/`} class="text-accent hover:underline font-medium">
+                  {episode.data.relatedProject.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                </a>
+              </>
+            )}
+            {episode.data.relatedPost && (
+              <>
+                Companion to article: <a href={`/blog/${episode.data.relatedPost}/`} class="text-accent hover:underline font-medium">
+                  {episode.data.relatedPost.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                </a>
+              </>
+            )}
+          </p>
+        </div>
+      )}
     </header>
 
     <div class="mb-10">

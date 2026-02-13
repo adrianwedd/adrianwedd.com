@@ -28,8 +28,16 @@ const hasAssets = audioUrl || videoUrl || infographic || mindmap || quiz || flas
 
     {audioUrl && (
       <div>
-        <h3 class="text-sm font-medium text-text-muted mb-3">Audio overview</h3>
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-medium text-text-muted">Audio overview</h3>
+          <a href="/audio/" class="text-xs text-text-muted hover:text-accent transition-colors">
+            Browse all audio &rarr;
+          </a>
+        </div>
         <AudioPlayer src={audioUrl} title={title} client:idle />
+        <p class="mt-2 text-xs text-text-muted">
+          Also available as a standalone episode in the <a href="/audio/" class="text-accent hover:underline">audio collection</a>.
+        </p>
       </div>
     )}
 
