@@ -61,9 +61,182 @@ scripts/import-gallery.sh dir/    # import image directory as gallery
 scripts/import-audio.sh file.mp3  # import audio as episode
 ```
 
+## NotebookLM Automation
+
+**Location**: `../notebooklm/` (relative to repo root)
+
+Automated generation of audio overviews, video summaries, and other Studio assets for blog posts and projects.
+
+### Quick Start
+
+```bash
+cd ../notebooklm
+
+# Authenticate (one-time)
+nlm login
+
+# Generate audio + video for a project
+./scripts/automate-notebook.sh --config my-config.json --parallel
+```
+
+### Key Scripts
+
+**`automate-notebook.sh`** - End-to-end automation from JSON config:
+- Creates notebook from title
+- Adds sources (URLs, text files, Google Drive)
+- Generates artifacts (audio, video, quiz, flashcards, etc.)
+- Exports to directory structure
+- Returns JSON summary
+
+**`generate-parallel.sh`** - Concurrent artifact generation:
+- Generate multiple artifacts at once (3x faster)
+- Real-time progress monitoring
+- Use with `--wait --download ./output`
+
+**`research-topic.sh`** - Smart notebook creation from topics:
+- DuckDuckGo + Wikipedia source discovery
+- URL deduplication
+- Automatic source addition
+
+### Generating Assets for Projects
+
+**1. Create config JSON** (per project):
+
+```json
+{
+  "title": "Project Name - Audio Overview",
+  "sources": [
+    "textfile:../adrianwedd.com/src/content/projects/project-name.md"
+  ],
+  "studio": [
+    {"type": "audio"},
+    {"type": "video"}
+  ]
+}
+```
+
+**2. Run automation**:
+
+```bash
+cd ../notebooklm
+./scripts/automate-notebook.sh \
+  --config project-config.json \
+  --parallel \
+  --export ./exports/project-name
+```
+
+**3. Move assets to site**:
+
+```bash
+# Create asset directory
+mkdir -p ../adrianwedd.com/public/notebook-assets/project-name
+
+# Copy generated files
+cp exports/project-name/studio/audio/*.mp3 \
+   ../adrianwedd.com/public/notebook-assets/project-name/audio.mp3
+
+cp exports/project-name/studio/video/*.mp4 \
+   ../adrianwedd.com/public/notebook-assets/project-name/video.mp4
+```
+
+**4. Update project frontmatter**:
+
+```markdown
+---
+title: "Project Name"
+audioUrl: "/notebook-assets/project-name/audio.mp3"
+videoUrl: "/notebook-assets/project-name/video.mp4"
+---
+```
+
+**5. Create audio collection entry** (for cross-linking):
+
+```markdown
+---
+title: "Project Name Overview"
+description: "Audio deep dive into..."
+date: 2026-02-13
+tags: ["notebooklm", "relevant-tags"]
+audioUrl: "/notebook-assets/project-name/audio.mp3"
+duration: "8:47"
+relatedProject: "project-name"
+---
+
+NotebookLM Studio overview generated from project materials...
+
+[View the full project →](/projects/project-name/)
+```
+
+### Asset Types
+
+**Fast** (~30-60 seconds):
+- `quiz` - Quiz questions (JSON)
+- `flashcards` - Study cards (JSON)
+- `data-table` - Data table (CSV)
+- `report` - Written report (Markdown)
+
+**Slow** (2-10 minutes):
+- `audio` - Audio overview (MP3, 20-60MB)
+- `video` - Video summary (MP4, 30-100MB)
+
+**Visual**:
+- `infographic` - Visual infographic (PNG)
+- `mindmap` - Mind map diagram (JSON)
+- `slides` - Presentation slides (PDF)
+
+### Batch Generation Helper
+
+For generating assets for all projects without them:
+
+```bash
+# From adrianwedd.com repo
+./scripts/generate-all-notebook-assets.sh
+```
+
+This script:
+1. Identifies projects without audioUrl/videoUrl
+2. Creates NotebookLM config for each
+3. Runs parallel generation
+4. Moves assets to public/notebook-assets/
+5. Creates audio collection entries
+6. Updates project frontmatter
+
+### Daily Quota
+
+NotebookLM has generation limits:
+- ~50 audio generations per day
+- ~50 video generations per day
+- Unlimited text-based artifacts (quiz, flashcards, reports)
+
+Plan accordingly for batch generation.
+
+### Authentication
+
+Cookie-based via Chrome DevTools Protocol:
+- Stored in `~/.notebooklm-mcp-cli/profiles/default`
+- Re-auth when cookies expire: `nlm login`
+- Use dedicated Google account (ToS violation risk)
+
+### Export Structure
+
+```
+exports/project-name/
+├── metadata.json
+├── sources/
+│   ├── index.json
+│   └── content--<id>.md
+└── studio/
+    ├── manifest.json
+    ├── audio/
+    │   └── overview.mp3
+    └── video/
+        └── overview.mp4
+```
+
 ## Gotchas
 
 - `output: 'hybrid'` was removed in Astro 5 — static is default, use `export const prerender = false` for SSR routes
 - Content collection IDs include file extension (`.md`/`.mdx`) — always strip with `slug()`
 - Light mode accent color was darkened to `#b07820` for WCAG AA on white backgrounds
 - Tailwind color utilities (`bg-surface`, `text-muted`, `text-accent`) resolve through CSS custom properties, not static values — inspect `tailwind.config.mjs` and `global.css` together
+- **NotebookLM audio/video generation takes 2-10 minutes per asset** — batch generation of 30 projects = ~1-5 hours total
