@@ -1,6 +1,6 @@
 ---
 title: "ADHDo"
-description: "AI cognitive scaffold for ADHD executive function — 28 agent personas, sub-3-second response times, crisis detection, and zero shame by design."
+description: "AI cognitive scaffold for ADHD executive function — three-stage reasoning pipeline, crisis detection, ambient nudge orchestration, and zero shame by design."
 tags: ["ai", "neurodivergence", "python", "agents"]
 repo: "https://github.com/adrianwedd/ADHDo"
 status: "active"
@@ -14,9 +14,7 @@ Most productivity tools are built for brains that can hold a queue. If you can't
 
 ADHDo is the assistant I built because I needed executive function treated as a variable, not a constant. Not a todo list with encouragement bolted on — a cognitive scaffold that adapts to the shape of the day.
 
-The system runs a three-stage cognitive pipeline: a state gatherer that reads physical, temporal, and environmental context; a reasoning engine with confidence gating (it won't act unless it understands the situation); and a tools executor that orchestrates music, timers, nudges, and environment controls. Twenty-eight specialised agent personas handle different modes — crisis detection when the overwhelm spiral starts, ambient nudges when focus drifts, a celebration engine that marks progress without performing it.
-
-Attention shaped every architectural decision. Response times average 447 milliseconds, well under the three-second window before an ADHD brain decides an interaction isn't worth sustaining. Google Nest speakers put the scaffold in the room, not behind a screen. A Jellyfin-powered focus music library of five thousand tracks auto-categorises by mood — because sometimes the right frequency is the only executive function that works.
+The system runs a three-stage cognitive pipeline. A state gatherer reads physical, temporal, and environmental context — medication windows, sitting duration, task backlog, energy levels. A reasoning engine with confidence gating processes that state; it won't act unless it understands the situation. Then a tools executor orchestrates interventions: focus music, timers, ambient nudges, environment controls. The loop closes in under 450 milliseconds on average — well inside the three-second window before an ADHD brain decides an interaction isn't worth sustaining. Google Nest speakers put the scaffold in the room, not behind a screen. A Jellyfin-powered focus music library of five thousand tracks auto-categorises by mood — because sometimes the right frequency is the only executive function that works.
 
 The crisis detection system monitors for repetitive questions, frustrated language, task-switching chaos, and negative self-talk, then intervenes with de-escalation — not platitudes. Hyperfocus management detects extended sessions and suggests breaks without breaking flow state.
 

@@ -1,7 +1,7 @@
 ---
 title: "This Wasn't in the Brochure"
-description: "A book about parenting, neurodivergence, and the things nobody warns you about."
-tags: ["writing", "neurodivergence", "parenting"]
+description: "A neurodivergent co-parenting guide written with a three-AI workflow — 11 chapters on what happens when the life you planned meets the brain you actually have."
+tags: ["writing", "neurodivergence", "parenting", "ai", "co-parenting"]
 url: "https://thiswasntinthebrochure.wtf"
 repo: "This-Wasn-t-in-the-Brochure"
 status: "active"
@@ -9,11 +9,15 @@ featured: true
 date: 2026-02-08
 ---
 
-There's a version of parenting that exists in books and antenatal classes—a version with developmental milestones that arrive on schedule, sleep regressions that resolve, and challenges that respond to the right technique applied with sufficient consistency. That version is a fairy tale. A useful one, sometimes. But a fairy tale.
+When I was six, I wrote a BASIC program to make the computer say good morning. I didn't know it then, but I was building my first executive function prosthetic — externalising a sequence my brain couldn't reliably hold on its own. I've been building workarounds ever since.
 
-*This Wasn't in the Brochure* is about what happens when the life you planned meets the life you get. It's a book about parenting and neurodivergence—both your children's and your own—written from inside the experience rather than above it. The gaps between what the experts promise and what actually works at two in the morning. The slow realisation that some of the traits you're learning to support in your kids are the same ones you've been masking in yourself for decades.
+The diagnosis came forty years late. ADHD, recognised in my children first, then — slowly, reluctantly — in myself. The traits I was learning to support in them were the same ones I'd been masking since before I had language for it. The brochure never mentioned this part.
 
-This is not a self-help book. It doesn't offer five steps or a framework. It offers the thing that actually helped me: the recognition that the brochure was always incomplete, and that showing up for the version of life that exists—rather than grieving the one that doesn't—is its own quiet form of courage.
+*This Wasn't in the Brochure* is a co-parenting guide for the version of family life that doesn't appear in antenatal classes. Neurodiversity-affirming, trauma-informed, and evidence-based — at least 70% of citations are peer-reviewed. Eleven chapters, seven appendices, four localised editions. It covers what happens when both parents and children are neurodivergent, when standard advice breaks against non-standard brains, and when showing up honestly is the only technique that works at two in the morning.
+
+I wrote it using a three-AI workflow: Codex for structural reasoning and evidence synthesis, Claude for voice and narrative refinement, Gemini for adversarial review and gap analysis. Not dictation — cognitive scaffolding. The same principle as that BASIC program, scaled up. The models handled what my executive function couldn't sustain: holding the structure of a 60,000-word manuscript across months of non-linear writing. The authorship — every argument, every disclosure, every sentence that made me wince and keep it in — is mine.
+
+The book's aesthetic draws on 16th-century maritime woodcuts: a voyage without reliable charts, navigated by dead reckoning and the willingness to stay on the water.
 
 ---
 
