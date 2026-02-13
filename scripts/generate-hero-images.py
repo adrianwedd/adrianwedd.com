@@ -10,10 +10,10 @@ from PIL import Image, ImageDraw, ImageFont
 PROJECTS_DIR = Path(__file__).parent.parent / "src" / "content" / "projects"
 OUTPUT_DIR = Path(__file__).parent.parent / "public" / "images" / "projects"
 
-BG_COLOR = (26, 26, 30)       # #1a1a1e
-ACCENT_COLOR = (232, 168, 76) # #e8a84c
-TEXT_COLOR = (245, 240, 235)   # #f5f0eb
-MUTED_COLOR = (160, 155, 150) # #a09b96
+BG_COLOR = (26, 24, 28)        # #1a181c
+ACCENT_COLOR = (196, 139, 110) # #c48b6e
+TEXT_COLOR = (226, 221, 216)   # #e2ddd8
+MUTED_COLOR = (150, 142, 150) # #968e96
 WIDTH, HEIGHT = 1200, 600
 
 
