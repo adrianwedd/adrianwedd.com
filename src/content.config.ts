@@ -70,6 +70,8 @@ const audio = defineCollection({
     duration: z.string().optional(),
     transcript: z.string().optional(),
     heroImage: z.string().optional(),
+    relatedProject: z.string().optional(),
+    relatedPost: z.string().optional(),
   }),
 });
 
