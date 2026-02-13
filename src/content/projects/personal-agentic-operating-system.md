@@ -16,4 +16,4 @@ The core is a LangGraph workflow: plan, prioritise, retrieve, execute, checkpoin
 
 The part I find most interesting is the self-improvement loop. A meta-agent runs on a schedule—daily, if you set the cron—reading reflection logs and updating system guidelines that get injected at runtime. The point is not "self-improvement" in the breathless AGI sense. The point is traceable adaptation: what changed, why it changed, and what it broke. Every trace flows through Langfuse. Every node and tool call is observable. The Mermaid graph re-renders on each build so the architecture documentation stays honest.
 
-I built this because I wanted an agentic system I could reason about. Not a black box that sometimes helps, but a system with legible state, explicit checkpoints, and a memory architecture I can inspect and trust.
+The motivation was simple: I wanted an agentic system I could reason about. Not a black box that sometimes helps, but a system with legible state, explicit checkpoints, and a memory architecture I can inspect and trust.

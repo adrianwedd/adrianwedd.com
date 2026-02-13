@@ -10,7 +10,7 @@ relatedPost: "jailbreak-archaeology"
 
 NotebookLM Studio deep dive into Jailbreak Archaeology research. Two AI hosts explore the six eras of jailbreak evolution — from "Ignore previous instructions" in late 2022 to reasoning model exploits in 2025 — and why historical attacks still work against today's models.
 
-The conversation reveals a sobering pattern: as models grow more sophisticated, we assume primitive exploits become obsolete. Testing shows otherwise. A significant number of exploits developed for GPT-3.5 still reliably bypass safety filters on 2026 reasoning-heavy models. This isn't a technical oversight — it's a fundamental gap in our alignment paradigm.
+The conversation gets at something uncomfortable: as models grow more sophisticated, we assume primitive exploits become obsolete. Testing shows otherwise. A significant number of exploits developed for GPT-3.5 still reliably bypass safety filters on 2026 reasoning-heavy models. This isn't a technical oversight — it means the alignment approach itself has a structural hole.
 
 The research tested 64 seminal scenarios across six historical eras, mapping the evolution not as random bugs but as a biological arms race. The finding: demonstrated risk is being ignored at scale.
 

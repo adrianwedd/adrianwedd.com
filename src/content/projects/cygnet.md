@@ -14,4 +14,4 @@ Cygnet is an attempt to route around those structures entirely. It's an ecosyste
 
 The agents don't replace human decision-making. They accelerate the parts that are slow for bad reasons: permit choreography, material logistics, scheduling dependencies, cost modelling across dozens of simultaneous variables. The goal is sixty percent cost reduction against traditional construction, eighty percent waste reduction, and a carbon footprint halved—not as aspiration, but as engineering constraint.
 
-When housing is broken at the system level, you don't fix it by building the same thing slightly cheaper. You rethink what building means.
+When housing is broken at the system level, building the same thing slightly cheaper doesn't fix it. You need different materials, different processes, and a different relationship between design and construction entirely.

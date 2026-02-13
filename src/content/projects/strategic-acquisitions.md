@@ -16,4 +16,4 @@ The spatial intelligence layer is the most interesting part. It integrates with 
 
 The valuation model trains on engineered features—land per bedroom, bed-bath ratios, latitude-longitude interactions—using cross-validated gradient boosting and random forest estimators. Celery Beat schedules nightly listing ingestion. A Flask web interface with role-based access lets analysts and viewers work with the data differently. Everything that fails goes to a dead letter queue for inspection.
 
-I built this because housing is a problem that deserves better tooling, and because the data exists. It just was not connected.
+Housing deserves better tooling. The data exists. It just was not connected.

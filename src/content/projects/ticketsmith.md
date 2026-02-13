@@ -16,4 +16,4 @@ The architecture runs on sovereign compute. A containerised vLLM server exposes 
 
 The RAG pipeline handles ingestion and retrieval across Atlassian's API surface—issues, pages, comments, attachments—and maintains an evaluation dataset of curated prompt-response pairs. Accuracy is measurable. Regressions are catchable. Model selection is documented in a decision matrix that maps task types to model capabilities.
 
-I built this because the gap between "we have documentation" and "the AI can find and use our documentation" is where most enterprise AI projects fail. The documentation exists. The retrieval infrastructure is the missing piece. Running it on your own hardware means the security conversation is already over.
+The gap between "we have documentation" and "the AI can find and use our documentation" is where most enterprise AI projects fail. The documentation exists. The retrieval infrastructure is the missing piece. Running it on your own hardware means the security conversation is already over.

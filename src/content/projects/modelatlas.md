@@ -14,6 +14,6 @@ I built ModelAtlas to make that process systematic. It is a framework for parsin
 
 TrustForge computes a trust score for each model by fusing metrics across dimensions: licence compliance, download statistics, upstream lineage, and LLM-inferred risk. TracePoint provides lineage debugging—you can inspect any model's journey from raw scrape through every enrichment decision to its final metadata state, including the prompts that drove each inference.
 
-The philosophy is that metadata is critical infrastructure. When researchers, engineers, and agentic systems need to select a model, they should be able to trace why that model exists, what it was built from, and whether the claims about it hold up. Trust must be quantifiable. Enrichment must be recursive. The system should be able to explain its own construction.
+The philosophy is that metadata is critical infrastructure. When researchers, engineers, and agentic systems need to select a model, they should be able to trace why that model exists, what it was built from, and whether the claims about it hold up. Trust should be quantifiable, enrichment should be recursive, and the system should be able to explain how it was built.
 
 A CLI provides semantic search. A React dashboard is in development for visual analytics. The whole pipeline runs from a single command. Models are stored as enriched JSON with Git LFS for the large artefacts.

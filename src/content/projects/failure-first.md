@@ -13,7 +13,7 @@ Most AI safety work begins with capability: what should the system do? What are 
 
 Failure First inverts the approach. It begins with the question every engineer learns to ask first and every product manager learns to suppress: what must this system never do? What are the failure modes that are unrecoverable? Where are the cliff edges?
 
-The methodology builds safety from the failure cases inward. You map the catastrophic outcomes first—not as edge cases, but as the primary design constraints. The system's architecture then emerges as the shape of what remains after you've removed the unacceptable. This is not pessimism. It's structural realism: the acknowledgement that in complex systems, the space of harmful outcomes is larger, more varied, and more creative than the space of intended ones.
+The methodology builds safety from the failure cases inward. You map the catastrophic outcomes first—not as edge cases, but as the primary design constraints. The architecture is what's left after you've ruled out the unacceptable. This is not pessimism. It's engineering: the acknowledgement that in complex systems, the space of harmful outcomes is larger, more varied, and more creative than the space of intended ones.
 
 The framework draws on pre-mortem analysis, red teaming, and the aviation industry's approach to incident reporting—where the goal is not to prevent all failure, but to ensure that no single failure is unsurvivable. Applied to AI, this means designing systems where the worst-case outcome is bounded, even when the average-case outcome is uncertain.
 
