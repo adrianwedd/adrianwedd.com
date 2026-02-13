@@ -8,7 +8,7 @@ duration: "8:47"
 relatedProject: "adhdo"
 ---
 
-NotebookLM Studio overview generated from ADHDo research materials. Explores the design challenges of building AI assistants for ADHD executive function without replicating neurotypical productivity frameworks.
+NotebookLM Studio overview generated from ADHDo research materials. Explores the design challenges of building AI assistants for ADHD executive function without just recreating neurotypical productivity tools.
 
 The conversation covers the three-stage cognitive pipeline (state gathering, reasoning with confidence gating, tools execution), crisis detection systems that monitor for frustrated language and task-switching chaos, and hyperfocus management that respects flow state. Most importantly: the design principle that executive function is a variable, not a constant — and scaffolding should adapt to the shape of the day.
 

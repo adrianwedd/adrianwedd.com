@@ -12,4 +12,4 @@ The AI agent ecosystem has a curation problem. New frameworks appear weekly, eac
 
 I built the Agentic Index because I was tired of doing the same evaluation triage every time I started a new project. It's a scored, curated catalogue of autonomous AI tooling with a transparent methodology: what it does, how mature it is, whether it actually works under load. Data-driven scoring, fast search, available as a PyPI package for CLI access.
 
-This is not a neutral aggregator. It's opinionated by design. The index the ecosystem needed but nobody was maintaining honestly—because honest curation requires saying "no" more often than "yes," and that doesn't generate sponsorship revenue.
+This is not a neutral aggregator. It's opinionated by design. The index the ecosystem needed but nobody was maintaining honestly.

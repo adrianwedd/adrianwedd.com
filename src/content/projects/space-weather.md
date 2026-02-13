@@ -12,4 +12,4 @@ The sun is a noisy neighbour. Coronal mass ejections, solar wind variations, geo
 
 The Australian Bureau of Meteorology's Space Weather Services publishes the data, but the raw feeds aren't designed for casual monitoring. This dashboard pulls real-time A-Index, K-Index, and Dst-Index data and presents it in a clean interface that makes the invisible visible: the electromagnetic weather happening above us, all the time, that most people never think about.
 
-I built this because I find it genuinely fascinating that there's a weather system we can't feel, can barely see, and that nonetheless shapes the reliability of the infrastructure we depend on. The dashboard is the simplest version of that fascination—a window into a kind of weather that doesn't care whether you're watching.
+There's a weather system we can't feel, can barely see, and that nonetheless shapes the reliability of the infrastructure we depend on. The dashboard is the simplest version of that fascination — a window into a kind of weather that doesn't care whether you're watching.

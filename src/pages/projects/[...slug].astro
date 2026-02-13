@@ -66,6 +66,14 @@ const { Content } = await render(project);
           </span>
         ))}
       </div>
+    {project.data.heroImage && (
+        <img
+          src={project.data.heroImage}
+          alt={project.data.title}
+          class="w-full rounded-lg border border-border mb-10"
+          loading="eager"
+        />
+      )}
     </header>
 
     <div class="prose prose-invert max-w-none
