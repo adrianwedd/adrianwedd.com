@@ -12,12 +12,12 @@ const allMedia = [...new Set(collections.map(c => c.data.medium).filter(Boolean)
 
 <BaseLayout
   title="Gallery"
-  description="Photography, art, and visual experiments."
+  description="Visual thinking—process documentation, experiments that didn't need words, and patterns noticed before they had names."
 >
   <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <h1 class="text-text">Gallery</h1>
     <p class="mt-4 text-text-muted max-w-prose">
-      Photography, art, and visual experiments.
+      Visual thinking—process documentation, experiments that didn't need words, and patterns noticed before they had names.
     </p>
 
     {(allTags.length > 0 || allMedia.length > 0) && (
