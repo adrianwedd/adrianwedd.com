@@ -8,12 +8,12 @@ How NotebookLM automation generates rich media assets for project and blog pages
 
 Each project page can display up to 8 NotebookLM-generated asset types: audio overview, video summary, report, slides, infographic, mind map, quiz, and flashcards. These are stored in `public/notebook-assets/<slug>/` and referenced via frontmatter fields.
 
-The pipeline spans three repos:
+The pipeline scripts are self-contained in `scripts/notebooklm/` within this repo.
 
-| Repo | Role |
-|------|------|
-| `notebooklm` | Core automation toolkit — create notebooks, add sources, generate artifacts, export |
-| `failure-first-embodied-ai` | Production example — 3 Python tools for batch research synthesis |
+| Component | Role |
+|-----------|------|
+| `scripts/notebooklm/` | Core automation toolkit — create notebooks, add sources, generate artifacts, export |
+| `failure-first-embodied-ai` (external) | Production example — 3 Python tools for batch research synthesis |
 | `adrianwedd.com` | Consumer — imports exports, renders via NotebookAssets.astro + Preact islands |
 
 ---
@@ -23,7 +23,7 @@ The pipeline spans three repos:
 ```
 Source material (URLs, text, PDFs)
     ↓
-notebooklm/scripts/automate-notebook.sh --config config.json
+scripts/notebooklm/scripts/automate-notebook.sh --config config.json
     ↓
 [nlm CLI: create notebook → add sources → generate artifacts → export]
     ↓
@@ -103,17 +103,17 @@ Create a JSON config per project. Place in `adrianwedd.com/tmp/notebook-configs/
 ### Single project
 
 ```bash
-cd ../notebooklm
+cd scripts/notebooklm
 ./scripts/automate-notebook.sh \
-  --config ../adrianwedd.com/tmp/notebook-configs/ordr-fm.json \
+  --config ../../tmp/notebook-configs/ordr-fm.json \
   --parallel \
-  --export ../notebooklm/exports
+  --export ./exports
 ```
 
 ### Batch (all projects)
 
 ```bash
-for config in ../adrianwedd.com/tmp/notebook-configs/*.json; do
+for config in ../../tmp/notebook-configs/*.json; do
   echo "=== Processing: $config ==="
   ./scripts/automate-notebook.sh \
     --config "$config" \
@@ -142,9 +142,8 @@ done
 ## Step 3: Import into adrianwedd.com
 
 ```bash
-cd ../adrianwedd.com
 python3 scripts/export_astro.py \
-  ../notebooklm/exports/ordr-fm-music-library-organisation \
+  scripts/notebooklm/exports/ordr-fm-music-library-organisation \
   --target src/content/projects \
   --public-dir public \
   --tags music cli audio
@@ -237,7 +236,7 @@ research/business/notebooklm_exports/<report-name>/
 
 ## Template System
 
-The `notebooklm` repo includes pre-built templates in `templates/`:
+The `scripts/notebooklm/` directory includes pre-built templates in `templates/`:
 
 | Template | Sources | Artifacts |
 |----------|---------|-----------|

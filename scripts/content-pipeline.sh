@@ -18,7 +18,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 FAILURE_FIRST_REPO="$(cd "$REPO_ROOT/../failure-first-embodied-ai" 2>/dev/null && pwd || echo "")"
-NOTEBOOKLM_REPO="$(cd "$REPO_ROOT/../notebooklm" 2>/dev/null && pwd || echo "")"
+NOTEBOOKLM_REPO="$REPO_ROOT/scripts/notebooklm"
 
 # Defaults
 TOPIC=""
@@ -223,7 +223,7 @@ with open('$WORKS_FILE') as f:
 # ============================
 if ! $SKIP_RESEARCH; then
   if [[ -z "$NOTEBOOKLM_REPO" ]]; then
-    warn "notebooklm repo not found at ../notebooklm/ — skipping research step"
+    warn "notebooklm scripts not found at scripts/notebooklm/ — skipping research step"
     SKIP_RESEARCH=true
   fi
 fi

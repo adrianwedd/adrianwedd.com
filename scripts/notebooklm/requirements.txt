@@ -1,0 +1,12 @@
+# Required for NotebookLM automation scripts
+# Install: pip install -r scripts/notebooklm/requirements.txt
+
+# CLI tool for NotebookLM API (cookie-based auth)
+notebooklm-mcp-cli
+
+# Research features (web_search.py, wikipedia_search.py)
+requests>=2.31.0
+duckduckgo-search>=4.0
+
+# Schema validation (validate-json.sh) — optional
+jsonschema>=4.0
