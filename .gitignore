@@ -26,6 +26,12 @@ pnpm-debug.log*
 # local temp
 tmp/
 
+# GA4 credentials (local dev)
+.ga4-credentials.json
+
+# Build-time generated analytics
+public/api/analytics.json
+
 # Claude state
 .claude/ralph-loop.local.md
 notebook-assets/adhdo/audio-original.mp3
