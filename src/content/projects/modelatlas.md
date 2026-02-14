@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/ModelAtlas"
 status: "active"
 featured: false
 date: 2025-04-15
+audioUrl: "/notebook-assets/modelatlas/audio.mp3"
 heroImage: "/images/projects/modelatlas-hero.webp"
 ---
 

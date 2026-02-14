@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/notebooklm-automation"
 status: "complete"
 featured: false
 date: 2025-12-01
+audioUrl: "/notebook-assets/notebooklm-automation/audio.mp3"
 heroImage: "/images/projects/notebooklm-automation-hero.webp"
 ---
 
