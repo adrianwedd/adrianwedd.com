@@ -6,7 +6,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-NOTEBOOKLM_DIR="$(cd "$REPO_ROOT/../notebooklm" && pwd)"
+NOTEBOOKLM_DIR="$REPO_ROOT/scripts/notebooklm"
 PROJECTS_DIR="$REPO_ROOT/src/content/projects"
 AUDIO_DIR="$REPO_ROOT/src/content/audio"
 PUBLIC_ASSETS="$REPO_ROOT/public/notebook-assets"

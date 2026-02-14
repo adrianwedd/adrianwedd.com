@@ -6,11 +6,9 @@
 
 ## Post-Launch: Automation & Tooling
 
-### NotebookLM Content Pipeline
-- Assimilate key scripts from `../notebooklm` via stable adapter interface:
-  - `generate-audio.sh` — podcast-style audio from source material
-  - `research-topic.sh` — research and compile source material for blog posts
-  - `add-sources.sh` / `export-notebook.sh` — notebook management
+### NotebookLM Content Pipeline ✅
+- ~~Assimilate key scripts from `../notebooklm`~~ — Done. Scripts now self-contained at `scripts/notebooklm/`
+- Batch generation via `scripts/generate-all-notebook-assets.sh`
 - Define input/output contract: source material in → Markdown/audio + frontmatter out
 - Outputs are drafts — publish first, review later
 - Pin tool versions, treat as optional enhancement (publishing works without it)
@@ -87,7 +85,7 @@
 ### Colophon
 - `/colophon/` page: how the site was built
 - Build timestamp, git hash, dependency versions
-- Cloudflare Pages build log integration (if API permits)
+- GitHub Actions build log integration
 - "Last updated" indicators on content
 
 ### Search

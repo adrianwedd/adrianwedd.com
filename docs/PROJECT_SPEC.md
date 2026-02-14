@@ -1,13 +1,13 @@
 # PROJECT SPEC: adrianwedd.com
 
-**Governed by:** `docs/DESIGN_CHARTER.md` v2.0
+**Governed by:** `docs/DESIGN_CHARTER.md` v2.1
 **Voice reference:** `../aisi-apps/STYLE.md`
 
 ---
 
 ## Scope
 
-Build and deploy adrianwedd.com as a hybrid Astro site on Cloudflare Pages. The site is a creative technologist's living workshop—portfolio, blog, gallery, audio, and intelligence layer—auto-building from GitHub with smart CI and personalisation features.
+Build and deploy adrianwedd.com as a static Astro site on GitHub Pages. The site is a creative technologist's living workshop—portfolio, blog, gallery, audio, and intelligence layer—auto-building from GitHub with smart CI and personalisation features.
 
 ---
 
@@ -63,38 +63,36 @@ Build and deploy adrianwedd.com as a hybrid Astro site on Cloudflare Pages. The 
 
 ### Astro Configuration
 
-- **Output:** `hybrid` (SSG default, SSR opt-in per route)
-- **Adapter:** `@astrojs/cloudflare`
+- **Output:** `static` (fully static, no SSR)
 - **Integrations:** `@astrojs/mdx`, `@astrojs/sitemap`, `astro-icon`
 - **Islands:** Preact (`@astrojs/preact`)
 - **CSS:** Tailwind CSS with custom dark/light theme
 - **Content Collections:** `blog`, `projects`, `gallery`, `audio`
 
-### Cloudflare Stack
+### Hosting & Infrastructure
 
-- **Pages:** Build + deploy from `main` branch
-- **Functions:** SSR routes for personalisation, analytics proxy
-- **R2:** Media storage (images, audio)
-- **KV:** Visitor segment cache, build metadata
-- **Analytics:** Cloudflare Web Analytics as baseline + GA4
+- **GitHub Pages:** Static hosting, deployed via GitHub Actions from `main` branch
+- **DNS:** Cloudflare (pointing to GitHub Pages)
+- **Analytics:** GA4 (consent-gated)
 
 ### Personalisation Architecture
 
 ```
 Visitor arrives
-  → Cloudflare Function reads cookies (if consented)
-  → Determines segment: new / returning / referral-source / time-of-day
-  → Injects segment into Astro SSR context
+  → Client-side JavaScript reads localStorage (if consented)
+  → Determines segment: new / returning / time-of-day
   → Components conditionally render based on segment
-  → Client-side: localStorage for preferences, no PII
+  → localStorage for preferences, no PII
   → Fallback: full static experience (no degradation)
 ```
+
+All personalisation is client-side only. The site is fully static with no server-side rendering.
 
 ### Content Pipeline
 
 ```
 Author writes Markdown → git commit → push to main
-  → Cloudflare Pages build triggers
+  → GitHub Actions build triggers
   → Astro build:
     1. Content collections validate frontmatter
     2. Cross-links generated from shared tags
@@ -102,7 +100,7 @@ Author writes Markdown → git commit → push to main
     4. Audio metadata extracted
     5. Project index refreshed from GitHub API (cached)
     6. Sitemap + RSS generated
-  → Deploy to Cloudflare Pages
+  → Deploy to GitHub Pages
 ```
 
 ### Local Development Tooling
@@ -115,8 +113,8 @@ Author writes Markdown → git commit → push to main
 | `scripts/import-audio.sh` | Process audio file → episode page |
 | `scripts/sync-repos.sh` | Pull project metadata from GitHub API |
 | `scripts/optimise-images.sh` | Batch image optimisation (Sharp → WebP/AVIF, responsive srcsets) |
-| `scripts/generate-audio.sh` | Generate podcast/audio content via NotebookLM API (assimilated from `../notebooklm`) |
-| `scripts/research-topic.sh` | Research and generate source material for blog posts (assimilated from `../notebooklm`) |
+| `scripts/generate-all-notebook-assets.sh` | Batch generate NotebookLM audio/video for all projects |
+| `scripts/notebooklm/` | Self-contained NotebookLM automation scripts and libraries |
 
 ---
 
@@ -131,9 +129,9 @@ Author writes Markdown → git commit → push to main
 
 ### Colour
 
-- **Dark mode (default):** Rich dark backgrounds, warm accent colours
-- **Light mode:** Full parity, comfortable contrast
-- **Accent:** TBD — one or two signature colours
+- **Dark mode (default):** Plum-tinted darks (`#1a181c`), dusty copper accent (`#c48b6e`), mauve-gray muted (`#968e96`)
+- **Light mode:** Warm cream backgrounds (`#f7f4f1`), umber accent (`#8a5e42`)
+- **Palette:** Botanical earth tones throughout
 - **Constraint:** WCAG AA contrast ratios enforced
 
 ### Layout
@@ -156,7 +154,7 @@ Author writes Markdown → git commit → push to main
 ### Public Dashboard (`/analytics/`)
 
 - Aggregate traffic, popular content, visitor geography
-- Built with Preact island, data from GA4 API via Cloudflare Function
+- Built with Preact island, data from GA4 API
 - Refreshes on build or at configurable interval
 - No individual visitor data exposed
 
@@ -164,11 +162,11 @@ Author writes Markdown → git commit → push to main
 
 | Feature | Segment | Implementation |
 |---------|---------|---------------|
-| Greeting variation | Time of day | SSR |
+| Greeting variation | Time of day | Client-side |
 | "You might also like" | Browsing history (localStorage) | Client-side |
-| Referral-aware hero | Referral source | SSR |
+| Referral-aware hero | Referral source | Client-side |
 | Generative accent imagery | Visitor segment | Build-time variants + client selection |
-| Return visitor recognition | Cookie (consented) | SSR |
+| Return visitor recognition | localStorage (consented) | Client-side |
 
 ---
 
@@ -187,9 +185,7 @@ Author writes Markdown → git commit → push to main
 ## Deployment
 
 - **Branch:** `main` → production
-- **Preview:** PR branches get preview URLs from Cloudflare Pages
-- **Domain:** adrianwedd.com (DNS already at Cloudflare)
-- **CI:** Cloudflare Pages auto-build on push
-- **Local CI (dev phase):** Scripts run locally before graduating to GitHub Actions
+- **Domain:** adrianwedd.com (DNS at Cloudflare, pointing to GitHub Pages)
+- **CI/CD:** GitHub Actions (`.github/workflows/deploy.yml`) builds and deploys on push to `main`
 
 ---

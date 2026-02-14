@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Personal website for Adrian Wedd. Astro 5 on Cloudflare Pages. Dark-first design with warm amber accent.
+Personal website for Adrian Wedd. Astro 5 on GitHub Pages. Dark-first design with botanical earth-tone palette (dusty copper accent).
 
 ## Commands
 
@@ -22,7 +22,7 @@ No linter, formatter, or test suite is configured.
 - **Styling:** Tailwind CSS 3 with CSS custom properties for theming
 - **Islands:** Preact for interactive components (AudioPlayer, Personalisation, Transparency)
 - **Content:** Astro Content Collections (blog, projects, gallery, audio) in `src/content/`
-- **Hosting:** Cloudflare Pages (adapter: `@astrojs/cloudflare`)
+- **Hosting:** GitHub Pages via GitHub Actions (fully static output)
 - **Analytics:** GA4 consent-gated via `ConsentBanner.astro` + `Analytics.astro`
 
 ## Architecture
@@ -63,14 +63,14 @@ scripts/import-audio.sh file.mp3  # import audio as episode
 
 ## NotebookLM Automation
 
-**Location**: `../notebooklm/` (relative to repo root)
+**Location**: `scripts/notebooklm/` (within the repo)
 
 Automated generation of audio overviews, video summaries, and other Studio assets for blog posts and projects.
 
 ### Quick Start
 
 ```bash
-cd ../notebooklm
+cd scripts/notebooklm
 
 # Authenticate (one-time)
 nlm login
@@ -106,7 +106,7 @@ nlm login
 {
   "title": "Project Name - Audio Overview",
   "sources": [
-    "textfile:../adrianwedd.com/src/content/projects/project-name.md"
+    "textfile:src/content/projects/project-name.md"
   ],
   "studio": [
     {"type": "audio"},
@@ -118,7 +118,7 @@ nlm login
 **2. Run automation**:
 
 ```bash
-cd ../notebooklm
+cd scripts/notebooklm
 ./scripts/automate-notebook.sh \
   --config project-config.json \
   --parallel \
@@ -129,14 +129,14 @@ cd ../notebooklm
 
 ```bash
 # Create asset directory
-mkdir -p ../adrianwedd.com/public/notebook-assets/project-name
+mkdir -p public/notebook-assets/project-name
 
 # Copy generated files
-cp exports/project-name/studio/audio/*.mp3 \
-   ../adrianwedd.com/public/notebook-assets/project-name/audio.mp3
+cp scripts/notebooklm/exports/project-name/studio/audio/*.mp3 \
+   public/notebook-assets/project-name/audio.mp3
 
-cp exports/project-name/studio/video/*.mp4 \
-   ../adrianwedd.com/public/notebook-assets/project-name/video.mp4
+cp scripts/notebooklm/exports/project-name/studio/video/*.mp4 \
+   public/notebook-assets/project-name/video.mp4
 ```
 
 **4. Update project frontmatter**:
@@ -235,8 +235,7 @@ exports/project-name/
 
 ## Gotchas
 
-- `output: 'hybrid'` was removed in Astro 5 — static is default, use `export const prerender = false` for SSR routes
 - Content collection IDs include file extension (`.md`/`.mdx`) — always strip with `slug()`
-- Light mode accent color was darkened to `#b07820` for WCAG AA on white backgrounds
+- Light mode accent color is `#8a5e42` (umber) for WCAG AA on warm cream backgrounds
 - Tailwind color utilities (`bg-surface`, `text-muted`, `text-accent`) resolve through CSS custom properties, not static values — inspect `tailwind.config.mjs` and `global.css` together
 - **NotebookLM audio/video generation takes 2-10 minutes per asset** — batch generation of 30 projects = ~1-5 hours total
