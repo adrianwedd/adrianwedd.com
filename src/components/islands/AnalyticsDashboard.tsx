@@ -48,7 +48,7 @@ export default function AnalyticsDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/analytics')
+    fetch('/api/analytics.json')
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
