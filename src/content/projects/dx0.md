@@ -6,7 +6,8 @@ repo: "https://github.com/adrianwedd/Dx0"
 status: "active"
 featured: false
 date: 2025-05-01
-heroImage: "/images/projects/dx0-hero.webp"
+audioUrl: "/notebook-assets/dx0/audio.mp3"
+heroImage: "/notebook-assets/dx0/infographic.webp"
 ---
 
 The question everyone asks about AI in medicine is whether it can diagnose. That's the wrong question. The right question is whether it can diagnose responsibly—within resource constraints, with appropriate uncertainty, without the kind of confident hallucination that in a clinical context becomes malpractice.
