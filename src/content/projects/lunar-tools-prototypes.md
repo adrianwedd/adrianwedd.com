@@ -7,7 +7,7 @@ status: "experiment"
 featured: false
 date: 2025-06-15
 audioUrl: "/notebook-assets/lunar-tools-prototypes/audio.mp3"
-heroImage: "/images/projects/lunar-tools-prototypes-hero.webp"
+heroImage: "/notebook-assets/lunar-tools-prototypes/infographic.webp"
 ---
 
 A visitor speaks into a microphone. Their voice becomes a brushstroke. An ambient sound becomes a fractal branch. A dream described aloud becomes an image that did not exist until they said it.

@@ -6,7 +6,7 @@ repo: "https://github.com/adrianwedd/TEL3SIS"
 status: "active"
 featured: false
 date: 2025-10-01
-heroImage: "/images/projects/tel3sis-hero.webp"
+heroImage: "/notebook-assets/tel3sis/infographic.webp"
 ---
 
 The phone call is the oldest real-time interface we have. It's also the one AI handles worst. Chat is easy—latency is invisible, you can take a few seconds to think, the user stares at a typing indicator and waits. On a phone call, three seconds of silence is an eternity. It's the gap where the caller decides the system is broken, or stupid, or both.
