@@ -6,7 +6,7 @@ repo: "https://github.com/adrianwedd/ordr.fm"
 status: "active"
 featured: false
 date: 2025-07-01
-heroImage: "/images/projects/ordr-fm-hero.webp"
+heroImage: "/notebook-assets/ordr-fm/infographic.webp"
 ---
 
 My music library is the single most curated collection I own. Decades of albums, carefully sourced, tagged with intention, organised by a system that only I fully understand. When that library outgrew the capacity of any existing organiser to handle it without mangling metadata or silently overwriting lossless files with lossy duplicates, I built the tool I needed.

@@ -6,7 +6,7 @@ repo: "https://github.com/adrianwedd/strategic-acquisitions"
 status: "active"
 featured: false
 date: 2025-01-15
-heroImage: "/images/projects/strategic-acquisitions-hero.webp"
+heroImage: "/notebook-assets/strategic-acquisitions/infographic.webp"
 ---
 
 Housing shortages are not information problems, but they have information problems inside them. When a public housing organisation needs to acquire properties, the analysis that should take hours takes weeks. Listing discovery. Valuation modelling. Planning zone verification. Hazard assessment. Infrastructure proximity. Each step involves a different data source and a different manual process.

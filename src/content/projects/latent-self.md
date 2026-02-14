@@ -7,7 +7,7 @@ status: "complete"
 featured: false
 date: 2025-02-01
 audioUrl: "/notebook-assets/latent-self/audio.mp3"
-heroImage: "/images/projects/latent-self-hero.webp"
+heroImage: "/notebook-assets/latent-self/infographic.webp"
 ---
 
 A mirror shows you what you are. This installation shows you what you almost are.
