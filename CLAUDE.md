@@ -184,31 +184,53 @@ NotebookLM Studio overview generated from project materials...
 - `mindmap` - Mind map diagram (JSON)
 - `slides` - Presentation slides (PDF)
 
-### Batch Generation Helper
+### Batch Generation Helpers
 
-For generating assets for all projects without them:
+**Audio overviews** for all projects without them:
 
 ```bash
-# From adrianwedd.com repo
 ./scripts/generate-all-notebook-assets.sh
 ```
 
 This script:
-1. Identifies projects without audioUrl/videoUrl
-2. Creates NotebookLM config for each
-3. Runs parallel generation
-4. Moves assets to public/notebook-assets/
-5. Creates audio collection entries
+1. Identifies projects without audioUrl
+2. Creates NotebookLM configs
+3. Runs parallel audio generation
+4. Compresses to 64kbps mono MP3
+5. Moves assets to public/notebook-assets/
 6. Updates project frontmatter
+
+**Infographic hero images** for all projects:
+
+```bash
+./scripts/generate-all-infographics.sh [--yes] [--landscape]
+```
+
+This script:
+1. Finds projects without infographics
+2. Generates portrait infographics (1536x2752px)
+3. Uses consistent focus prompt for visual cohesion
+4. Converts to WebP (~150KB vs 6MB PNG)
+5. Updates heroImage in project frontmatter
+6. Skips projects with existing infographics
+
+**Retry failed generations:**
+
+```bash
+./scripts/retry-failed-infographics.sh [--yes]
+```
+
+Auto-detects projects without infographics and retries generation (useful after hitting rate limits).
 
 ### Daily Quota
 
 NotebookLM has generation limits:
 - ~50 audio generations per day
 - ~50 video generations per day
+- ~50 infographic generations per day
 - Unlimited text-based artifacts (quiz, flashcards, reports)
 
-Plan accordingly for batch generation.
+Plan accordingly for batch generation. If hitting rate limits, wait 24 hours and retry.
 
 ### Authentication
 

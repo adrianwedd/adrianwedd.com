@@ -34,4 +34,7 @@ public/api/analytics.json
 
 # Claude state
 .claude/ralph-loop.local.md
-notebook-assets/adhdo/audio-original.mp3
+
+# NotebookLM exports (large, regenerable)
+scripts/notebooklm/exports/
+public/notebook-assets/*/audio-original.mp3
