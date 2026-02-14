@@ -6,7 +6,8 @@ repo: "Footnotes-at-the-Edge-of-Reality"
 status: "complete"
 featured: true
 date: 2026-02-06
-heroImage: "/images/projects/footnotes-at-the-edge-of-reality-hero.webp"
+audioUrl: "/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3"
+heroImage: "/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp"
 ---
 
 There's a moment when you realise memory isn't retrieval—it's reconstruction. Every time you remember something, you're not accessing a stored file. You're building it again, from fragments, under different lighting, with a slightly different hand. The boundary between observation and construction dissolves the moment you try to locate it.

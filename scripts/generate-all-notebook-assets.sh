@@ -2,20 +2,42 @@
 set -euo pipefail
 
 # generate-all-notebook-assets.sh
-# Batch generate NotebookLM audio/video assets for all projects without them
+# Batch generate NotebookLM audio assets for all projects without them.
+#
+# Usage:
+#   ./scripts/generate-all-notebook-assets.sh [--yes] [--audio-only] [--limit N]
+#
+# Options:
+#   --yes         Skip interactive prompts (for non-interactive/CI use)
+#   --audio-only  Generate audio only, skip video (default: audio only)
+#   --limit N     Process at most N projects (useful for quota management)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 NOTEBOOKLM_DIR="$REPO_ROOT/scripts/notebooklm"
 PROJECTS_DIR="$REPO_ROOT/src/content/projects"
-AUDIO_DIR="$REPO_ROOT/src/content/audio"
 PUBLIC_ASSETS="$REPO_ROOT/public/notebook-assets"
 
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
+
+# Defaults
+YES=false
+LIMIT=0
+COMPRESS_BITRATE="64k"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --yes|-y) YES=true; shift ;;
+        --limit) LIMIT="$2"; shift 2 ;;
+        --audio-only) shift ;; # already default
+        *) echo "Unknown option: $1"; exit 1 ;;
+    esac
+done
 
 # Counters
 TOTAL=0
@@ -26,33 +48,46 @@ FAILED=0
 echo "=== NotebookLM Asset Batch Generation ==="
 echo
 
-# Check if notebooklm directory exists
+# Check dependencies
+if ! command -v nlm &>/dev/null; then
+    echo -e "${RED}Error: nlm CLI not found. Install: pip install notebooklm-mcp-cli${NC}"
+    exit 1
+fi
+
+if ! command -v ffmpeg &>/dev/null; then
+    echo -e "${YELLOW}Warning: ffmpeg not found — audio files will not be compressed${NC}"
+    COMPRESS_BITRATE=""
+fi
+
 if [ ! -d "$NOTEBOOKLM_DIR" ]; then
     echo -e "${RED}Error: NotebookLM directory not found at $NOTEBOOKLM_DIR${NC}"
     exit 1
 fi
 
-# Check if authenticated
-if ! "$NOTEBOOKLM_DIR/scripts/doctor.sh" > /dev/null 2>&1; then
-    echo -e "${YELLOW}Warning: NotebookLM authentication may be required${NC}"
-    echo "Run: cd $NOTEBOOKLM_DIR && nlm login"
+# Check authentication
+if ! nlm login --check &>/dev/null; then
+    echo -e "${YELLOW}Warning: NotebookLM authentication may be expired${NC}"
+    echo "Run: nlm login"
     echo
-    read -p "Continue anyway? (y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
+    if [ "$YES" = false ]; then
+        read -p "Continue anyway? (y/N) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    else
+        echo "Continuing (--yes flag set)..."
     fi
 fi
 
-# Find projects without audio/video
+# Find projects without audio
 echo "Scanning projects..."
 PROJECTS_WITHOUT_ASSETS=()
 
 for project_file in "$PROJECTS_DIR"/*.md; do
     project_name=$(basename "$project_file" .md)
 
-    # Skip if already has audioUrl or videoUrl
-    if grep -q "^audioUrl:\|^videoUrl:" "$project_file"; then
+    if grep -q "^audioUrl:" "$project_file"; then
         ((SKIPPED++)) || true
         continue
     fi
@@ -61,30 +96,39 @@ for project_file in "$PROJECTS_DIR"/*.md; do
     ((TOTAL++)) || true
 done
 
-echo "Found $TOTAL projects without NotebookLM assets"
+echo "Found $TOTAL projects without audio assets"
 echo "Skipped $SKIPPED projects with existing assets"
 echo
 
 if [ $TOTAL -eq 0 ]; then
-    echo "All projects already have assets!"
+    echo "All projects already have audio assets!"
     exit 0
 fi
 
+# Apply limit
+if [ "$LIMIT" -gt 0 ] && [ "$LIMIT" -lt "$TOTAL" ]; then
+    echo -e "${YELLOW}Limiting to first $LIMIT projects (of $TOTAL)${NC}"
+    PROJECTS_WITHOUT_ASSETS=("${PROJECTS_WITHOUT_ASSETS[@]:0:$LIMIT}")
+    TOTAL=$LIMIT
+fi
+
 # Show what will be generated
-echo "Will generate audio + video for:"
+echo "Will generate audio for:"
 for project in "${PROJECTS_WITHOUT_ASSETS[@]}"; do
     echo "  - $project"
 done
 echo
 
 echo -e "${YELLOW}Estimated time: $(($TOTAL * 6)) minutes (avg 6 min per project)${NC}"
-echo -e "${YELLOW}NotebookLM daily quota: ~50 audio, ~50 video${NC}"
+echo -e "${YELLOW}NotebookLM daily quota: ~50 audio generations${NC}"
 echo
 
-read -p "Continue with batch generation? (y/N) " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    exit 1
+if [ "$YES" = false ]; then
+    read -p "Continue with batch generation? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
 fi
 
 # Process each project
@@ -96,12 +140,10 @@ for i in "${!PROJECTS_WITHOUT_ASSETS[@]}"; do
     echo "[$idx/$TOTAL] Processing: $project"
     echo "----------------------------------------"
 
-    # Read project metadata
     project_file="$PROJECTS_DIR/$project.md"
-    title=$(grep "^title:" "$project_file" | head -1 | sed 's/^title: *"\?\(.*\)"\?$/\1/' | sed 's/"$//')
-    date=$(grep "^date:" "$project_file" | head -1 | sed 's/^date: *//')
+    title=$(grep "^title:" "$project_file" | head -1 | sed 's/^title: *"\{0,1\}\(.*\)"\{0,1\}$/\1/' | sed 's/"$//')
 
-    # Create temp config
+    # Create temp config (audio only)
     config_file=$(mktemp)
     cat > "$config_file" <<EOF
 {
@@ -110,78 +152,74 @@ for i in "${!PROJECTS_WITHOUT_ASSETS[@]}"; do
     "textfile:$project_file"
   ],
   "studio": [
-    {"type": "audio"},
-    {"type": "video"}
+    {"type": "audio"}
   ]
 }
 EOF
 
-    echo "  Config created: $config_file"
-    echo "  Generating artifacts..."
+    echo "  Title: $title"
+    echo "  Generating audio..."
 
-    # Run automation
+    # Run automation from notebooklm directory
     export_dir="$NOTEBOOKLM_DIR/exports/$project"
+    notebook_dir=""
 
-    if cd "$NOTEBOOKLM_DIR" && ./scripts/automate-notebook.sh \
+    cd "$NOTEBOOKLM_DIR"
+    ./scripts/automate-notebook.sh \
         --config "$config_file" \
-        --export "./exports/$project" \
-        --parallel > /dev/null 2>&1; then
+        --export "./exports/$project" 2>&1 | while IFS= read -r line; do echo "    $line"; done || true
 
-        echo "  ✓ Generation complete"
+    # Find the export subdirectory (name varies)
+    if [ -d "$export_dir" ]; then
+        notebook_dir=$(find "$export_dir" -maxdepth 1 -type d ! -path "$export_dir" | head -1)
+    fi
 
-        # Create asset directory
-        mkdir -p "$PUBLIC_ASSETS/$project"
+    # Look for audio in the export
+    audio_found=false
+    if [ -n "$notebook_dir" ]; then
+        audio_file=$(find "$notebook_dir/studio/audio" -name "*.mp3" 2>/dev/null | head -1)
+        if [ -n "$audio_file" ]; then
+            audio_found=true
+            mkdir -p "$PUBLIC_ASSETS/$project"
 
-        # Move audio
-        if [ -f "$export_dir/studio/audio"/*.mp3 ]; then
-            cp "$export_dir/studio/audio"/*.mp3 "$PUBLIC_ASSETS/$project/audio.mp3"
-            echo "  ✓ Audio moved to /public/notebook-assets/$project/audio.mp3"
-        else
-            echo "  ✗ Audio generation failed"
-        fi
+            # Compress with ffmpeg if available
+            if [ -n "$COMPRESS_BITRATE" ]; then
+                audio_size=$(stat -f%z "$audio_file" 2>/dev/null || stat -c%s "$audio_file" 2>/dev/null)
+                audio_size_mb=$((audio_size / 1048576))
+                echo "  Raw audio: ${audio_size_mb}MB — compressing to ${COMPRESS_BITRATE}bps..."
+                ffmpeg -y -i "$audio_file" -b:a "$COMPRESS_BITRATE" -ac 1 "$PUBLIC_ASSETS/$project/audio.mp3" 2>/dev/null
+                compressed_size=$(stat -f%z "$PUBLIC_ASSETS/$project/audio.mp3" 2>/dev/null || stat -c%s "$PUBLIC_ASSETS/$project/audio.mp3" 2>/dev/null)
+                compressed_mb=$((compressed_size / 1048576))
+                echo -e "  ${GREEN}✓ Audio compressed: ${compressed_mb}MB → public/notebook-assets/$project/audio.mp3${NC}"
+            else
+                cp "$audio_file" "$PUBLIC_ASSETS/$project/audio.mp3"
+                echo -e "  ${GREEN}✓ Audio copied to public/notebook-assets/$project/audio.mp3${NC}"
+            fi
 
-        # Move video
-        if [ -f "$export_dir/studio/video"/*.mp4 ]; then
-            cp "$export_dir/studio/video"/*.mp4 "$PUBLIC_ASSETS/$project/video.mp4"
-            echo "  ✓ Video moved to /public/notebook-assets/$project/video.mp4"
-        else
-            echo "  ✗ Video generation failed"
-        fi
-
-        # Update project frontmatter (add audioUrl and videoUrl)
-        cd "$REPO_ROOT"
-        if ! grep -q "^audioUrl:" "$project_file"; then
-            # Find the line after 'date:' and insert audioUrl
-            sed -i '' "/^date:/a\\
+            # Update project frontmatter
+            cd "$REPO_ROOT"
+            if ! grep -q "^audioUrl:" "$project_file"; then
+                sed -i '' "/^date:/a\\
 audioUrl: \"/notebook-assets/$project/audio.mp3\"
 " "$project_file"
-            echo "  ✓ Added audioUrl to project frontmatter"
+                echo -e "  ${GREEN}✓ Added audioUrl to project frontmatter${NC}"
+            fi
+
+            ((SUCCESS++)) || true
         fi
+    fi
 
-        if ! grep -q "^videoUrl:" "$project_file"; then
-            # Find the line after 'audioUrl:' and insert videoUrl
-            sed -i '' "/^audioUrl:/a\\
-videoUrl: \"/notebook-assets/$project/video.mp4\"
-" "$project_file"
-            echo "  ✓ Added videoUrl to project frontmatter"
-        fi
-
-        # TODO: Create audio collection entry
-        # This would need project description, tags, etc.
-        # Skipping for now - can be done manually or in follow-up
-
-        ((SUCCESS++)) || true
-    else
-        echo "  ✗ Generation failed"
+    if [ "$audio_found" = false ]; then
+        echo -e "  ${RED}✗ No audio file found in export${NC}"
         ((FAILED++)) || true
     fi
 
     # Cleanup
     rm -f "$config_file"
 
-    # Rate limiting - pause between projects
+    # Rate limiting
     if [ $idx -lt $TOTAL ]; then
-        echo "  Pausing 10 seconds before next project..."
+        echo "  Pausing 10 seconds..."
         sleep 10
     fi
 done
@@ -189,18 +227,17 @@ done
 echo
 echo "=== Batch Generation Complete ==="
 echo "Total:     $TOTAL"
-echo "Success:   $SUCCESS"
-echo "Failed:    $FAILED"
+echo -e "Success:   ${GREEN}$SUCCESS${NC}"
+echo -e "Failed:    ${RED}$FAILED${NC}"
 echo "Skipped:   $SKIPPED"
 echo
 
 if [ $SUCCESS -gt 0 ]; then
     echo -e "${GREEN}Generated assets are in: public/notebook-assets/${NC}"
-    echo -e "${GREEN}Project frontmatter updated with audioUrl/videoUrl${NC}"
+    echo -e "${GREEN}Project frontmatter updated with audioUrl${NC}"
     echo
     echo "Next steps:"
-    echo "1. Review generated assets"
-    echo "2. Create audio collection entries (src/content/audio/)"
-    echo "3. Run: npm run build"
-    echo "4. Commit changes"
+    echo "1. Review generated audio files"
+    echo "2. npm run build"
+    echo "3. Commit and push"
 fi

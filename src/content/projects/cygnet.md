@@ -6,7 +6,8 @@ repo: "https://github.com/adrianwedd/cygnet"
 status: "active"
 featured: false
 date: 2025-04-01
-heroImage: "/images/projects/cygnet-hero.webp"
+audioUrl: "/notebook-assets/cygnet/audio.mp3"
+heroImage: "/notebook-assets/cygnet/infographic.webp"
 ---
 
 Housing in Australia is broken in ways that conventional construction cannot fix. The economics don't work. The timelines don't work. The waste is staggering. And the people who need homes most urgently are the ones least served by the industry's existing incentive structures.

@@ -8,7 +8,7 @@ featured: true
 date: 2026-02-05
 audioUrl: "/notebook-assets/adhdo/audio.mp3"
 videoUrl: "/notebook-assets/adhdo/video.mp4"
-heroImage: "/images/projects/adhdo-hero.webp"
+heroImage: "/notebook-assets/adhdo/infographic.webp"
 ---
 
 Most productivity tools are built for brains that can hold a queue. If you can't — if the queue collapses the moment something shiny crosses your peripheral vision — those tools don't fail gracefully. They fail judgmentally. Missed reminders become evidence. Incomplete lists become character flaws.

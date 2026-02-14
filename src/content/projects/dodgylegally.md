@@ -6,7 +6,8 @@ repo: "https://github.com/adrianwedd/dodgylegally"
 status: "active"
 featured: true
 date: 2026-02-01
-heroImage: "/images/projects/dodgylegally-hero.webp"
+audioUrl: "/notebook-assets/dodgylegally/audio.mp3"
+heroImage: "/notebook-assets/dodgylegally/infographic.webp"
 ---
 
 The best samples come from places you weren't looking. That's the premise—and the entire workflow. Type a random word. Get a sample pack. dodgylegally generates audio instruments from chaotic search phrases, pulling from YouTube, local files, and a five-thousand-word dictionary with weighted source mixing.

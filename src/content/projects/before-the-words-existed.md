@@ -7,7 +7,8 @@ repo: "before-the-words-existed"
 status: "complete"
 featured: true
 date: 2026-02-10
-heroImage: "/images/projects/before-the-words-existed-hero.webp"
+audioUrl: "/notebook-assets/before-the-words-existed/audio.mp3"
+heroImage: "/notebook-assets/before-the-words-existed/infographic.webp"
 ---
 
 What if *Neuromancer* wasn't about addiction? What if it was about ADHD?
