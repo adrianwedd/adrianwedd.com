@@ -2,7 +2,9 @@
 
 ## What happened today (2026-02-14)
 
-Successfully generated NotebookLM infographics for **13 of 32 projects**. The remaining 19 projects hit NotebookLM rate limits (timeouts after 3 minutes).
+Successfully generated NotebookLM infographics for **13 of 32 projects**. The remaining 19 projects hit NotebookLM rate limits.
+
+**Retry attempted:** All 19 failed again (still rate-limited or service degraded). Daily quota may not have reset yet.
 
 ## Projects that need infographics (19 total)
 
