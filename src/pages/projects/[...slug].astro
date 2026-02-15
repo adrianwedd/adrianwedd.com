@@ -62,10 +62,21 @@ const relatedEpisodes = allAudio.filter((ep) => ep.data.relatedProject === proje
       crumbs={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: project.data.title }]}
     />
     <header class="mb-10">
-      <div class="mb-4 flex items-center gap-3">
+      <div class="mb-4 flex items-center gap-3 text-sm text-text-muted">
         <span class="border-accent/30 rounded-full border px-2 py-0.5 text-xs text-accent">
           {project.data.status}
         </span>
+        {project.data.updatedDate ? (
+          <span>
+            Updated <time datetime={project.data.updatedDate.toISOString()}>
+              {project.data.updatedDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </time>
+          </span>
+        ) : (
+          <time datetime={project.data.date.toISOString()}>
+            {project.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </time>
+        )}
         {
           project.data.url && (
             <a

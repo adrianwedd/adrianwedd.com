@@ -33,6 +33,7 @@ const projects = defineCollection({
     tags: z.array(z.string()).min(1),
     url: z.string().url().optional(),
     repo: z.string().optional(),
+    updatedDate: z.coerce.date().optional(),
     status: z.enum(['active', 'complete', 'archived', 'experiment']).default('active'),
     featured: z.boolean().default(false),
     heroImage: z.string().optional(),

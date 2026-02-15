@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import { getCollection, render } from 'astro:content';
-import { slug } from '../../lib/utils';
+import { slug, imageSlug } from '../../lib/utils';
 
 export async function getStaticPaths() {
   const galleries = await getCollection('gallery');
@@ -15,6 +15,7 @@ export async function getStaticPaths() {
 }
 
 const { gallery } = Astro.props;
+const collectionSlug = slug(gallery.id);
 const { Content } = await render(gallery);
 ---
 
@@ -58,11 +59,10 @@ const { Content } = await render(gallery);
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="gallery-grid">
       {
         gallery.data.images.map((image: { src: string; alt: string; caption?: string }, index: number) => (
-          <button
-            type="button"
-            class="gallery-trigger hover:border-accent/50 group block w-full cursor-pointer overflow-hidden rounded-lg border border-border bg-transparent p-0 text-left transition-all"
+          <a
+            href={`/gallery/${collectionSlug}/${imageSlug(image.alt)}/`}
+            class="gallery-trigger hover:border-accent/50 group block w-full overflow-hidden rounded-lg border border-border no-underline transition-all"
             data-index={index}
-            aria-label={`View ${image.alt}`}
           >
             <div class="aspect-[4/3] overflow-hidden bg-surface-alt">
               <img
@@ -73,7 +73,7 @@ const { Content } = await render(gallery);
               />
             </div>
             {image.caption && <p class="p-2 text-xs text-text-muted">{image.caption}</p>}
-          </button>
+          </a>
         ))
       }
     </div>
