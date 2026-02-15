@@ -23,6 +23,21 @@ const { Content } = await render(project);
 const projectSlug = slug(project.id);
 const allAudio = await getCollection('audio');
 const relatedEpisodes = allAudio.filter((ep) => ep.data.relatedProject === projectSlug);
+
+const allProjects = (await getCollection('projects'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Prev/next navigation
+const currentIndex = allProjects.findIndex((p) => p.id === project.id);
+const prevProject = currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : null;
+const nextProject = currentIndex > 0 ? allProjects[currentIndex - 1] : null;
+
+// Series support
+const seriesProjects = project.data.series
+  ? allProjects
+      .filter((p) => p.data.series === project.data.series)
+      .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+  : [];
 ---
 
 <BaseLayout
@@ -171,6 +186,32 @@ const relatedEpisodes = allAudio.filter((ep) => ep.data.relatedProject === proje
       )
     }
 
+    {
+      seriesProjects.length > 1 && (
+        <nav class="mb-8 rounded-lg border border-border bg-surface-alt p-4" aria-label="Series navigation">
+          <p class="mb-2 text-xs font-medium text-text-muted">
+            Part {seriesProjects.findIndex((p) => p.id === project.id) + 1} of {seriesProjects.length} in <span class="text-accent">{project.data.series}</span>
+          </p>
+          <ol class="space-y-1">
+            {seriesProjects.map((p, i) => (
+              <li class="text-sm">
+                {p.id === project.id ? (
+                  <span class="font-medium text-accent">{i + 1}. {p.data.title}</span>
+                ) : (
+                  <a
+                    href={`/projects/${slug(p.id)}/`}
+                    class="text-text-muted no-underline transition-colors hover:text-accent"
+                  >
+                    {i + 1}. {p.data.title}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
     <TableOfContents contentSelector=".prose" client:idle />
 
     <div
@@ -242,8 +283,37 @@ const relatedEpisodes = allAudio.filter((ep) => ep.data.relatedProject === proje
 
     <RelatedContent currentTags={project.data.tags} currentId={project.id} currentDate={project.data.date} contentType="projects" />
 
-    <nav class="mt-16 border-t border-border pt-8" aria-label="Back to projects">
-      <a href="/projects/" class="text-sm text-text-muted transition-colors hover:text-accent"> &larr; All projects </a>
+    <nav class="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next projects">
+      {
+        prevProject ? (
+          <a
+            href={`/projects/${slug(prevProject.id)}/`}
+            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors"
+          >
+            <span class="text-xs text-text-muted">&larr; Previous</span>
+            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+              {prevProject.data.title}
+            </span>
+          </a>
+        ) : (
+          <a href="/projects/" class="flex items-center text-sm text-text-muted transition-colors hover:text-accent">
+            &larr; All projects
+          </a>
+        )
+      }
+      {
+        nextProject && (
+          <a
+            href={`/projects/${slug(nextProject.id)}/`}
+            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors sm:text-right"
+          >
+            <span class="text-xs text-text-muted">Next &rarr;</span>
+            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+              {nextProject.data.title}
+            </span>
+          </a>
+        )
+      }
     </nav>
   </article>
 </BaseLayout>
