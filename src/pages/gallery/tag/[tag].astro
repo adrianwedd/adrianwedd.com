@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { slug } from '../../../lib/utils';
+
+export async function getStaticPaths() {
+  const galleries = await getCollection('gallery');
+  const tags = [...new Set(galleries.flatMap((g) => g.data.tags))];
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      galleries: galleries
+        .filter((g) => g.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+}
+
+const { tag, galleries } = Astro.props;
+
+const allGalleries = await getCollection('gallery');
+const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
+---
+
+<BaseLayout title={`Gallery tagged "${tag}"`} description={`Gallery collections tagged with ${tag}.`}>
+  <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <h1 class="text-text">Tag: {tag}</h1>
+    <p class="mt-2 text-text-muted">{galleries.length} collection{galleries.length !== 1 ? 's' : ''}</p>
+
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
+      <a
+        href="/gallery/"
+        class="rounded-full border border-border px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:border-accent hover:text-accent"
+      >
+        All
+      </a>
+      {
+        allTags.map((t) => (
+          <a
+            href={`/gallery/tag/${t}/`}
+            class:list={[
+              'rounded-full border px-3 py-1 text-xs no-underline',
+              t === tag
+                ? 'bg-accent/10 border-accent font-medium text-accent'
+                : 'border-border text-text-muted transition-colors hover:border-accent hover:text-accent',
+            ]}
+          >
+            {t}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+      {
+        galleries.map((gallery) => (
+          <a
+            href={`/gallery/${slug(gallery.id)}/`}
+            class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border bg-surface-alt no-underline shadow-subtle transition-all hover:shadow-card"
+          >
+            {gallery.data.coverImage && (
+              <img
+                src={gallery.data.coverImage}
+                alt=""
+                class="h-48 w-full object-cover"
+                loading="lazy"
+              />
+            )}
+            <div class="p-4">
+              <h2 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
+                {gallery.data.title}
+              </h2>
+              <p class="mt-1 text-xs text-text-muted">
+                {gallery.data.images.length} image{gallery.data.images.length !== 1 ? 's' : ''}
+                <span aria-hidden="true"> · </span>
+                {gallery.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

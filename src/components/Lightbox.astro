@@ -58,21 +58,31 @@ const { images } = Astro.props;
   const lightbox = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
   const caption = document.getElementById('lightbox-caption');
+  const closeBtn = document.getElementById('lightbox-close');
+  const prevBtn = document.getElementById('lightbox-prev');
+  const nextBtn = document.getElementById('lightbox-next');
   let currentIndex = 0;
+  let triggerElement = null;
 
-  function show(index) {
+  function show(index, trigger) {
     currentIndex = index;
+    triggerElement = trigger || document.activeElement;
     const image = images[index];
     img.src = image.src;
     img.alt = image.alt;
     caption.textContent = image.caption || '';
     lightbox.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    closeBtn.focus();
   }
 
   function hide() {
     lightbox.classList.add('hidden');
     document.body.style.overflow = '';
+    if (triggerElement && triggerElement.focus) {
+      triggerElement.focus();
+    }
+    triggerElement = null;
   }
 
   function prev() {
@@ -84,12 +94,12 @@ const { images } = Astro.props;
   }
 
   document.querySelectorAll('.gallery-trigger').forEach((btn) => {
-    btn.addEventListener('click', () => show(parseInt(btn.dataset.index)));
+    btn.addEventListener('click', () => show(parseInt(btn.dataset.index), btn));
   });
 
-  document.getElementById('lightbox-close').addEventListener('click', hide);
-  document.getElementById('lightbox-prev').addEventListener('click', prev);
-  document.getElementById('lightbox-next').addEventListener('click', next);
+  closeBtn.addEventListener('click', hide);
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
 
   lightbox.addEventListener('click', (e) => {
     if (e.target === lightbox || e.target.parentElement === lightbox) hide();
@@ -97,8 +107,22 @@ const { images } = Astro.props;
 
   document.addEventListener('keydown', (e) => {
     if (lightbox.classList.contains('hidden')) return;
-    if (e.key === 'Escape') hide();
-    if (e.key === 'ArrowLeft') prev();
-    if (e.key === 'ArrowRight') next();
+    if (e.key === 'Escape') { hide(); return; }
+    if (e.key === 'ArrowLeft') { prev(); return; }
+    if (e.key === 'ArrowRight') { next(); return; }
+
+    // Focus trap: keep Tab within lightbox
+    if (e.key === 'Tab') {
+      const focusable = [closeBtn, prevBtn, nextBtn];
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   });
 </script>

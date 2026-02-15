@@ -49,6 +49,12 @@ export default function AudioPlayer({ src, title }: Props) {
     audio.currentTime = parseFloat(input.value);
   };
 
+  const skip = (seconds: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + seconds));
+  };
+
   const cycleRate = () => {
     const rates = [1, 1.25, 1.5, 2];
     const next = rates[(rates.indexOf(playbackRate) + 1) % rates.length];
@@ -84,6 +90,28 @@ export default function AudioPlayer({ src, title }: Props) {
               <polygon points="5,3 19,12 5,21" />
             </svg>
           )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => skip(-15)}
+          class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded text-text-muted transition-colors hover:text-text"
+          aria-label="Skip back 15 seconds"
+        >
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z" />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => skip(30)}
+          class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded text-text-muted transition-colors hover:text-text"
+          aria-label="Skip forward 30 seconds"
+        >
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z" />
+          </svg>
         </button>
 
         <div class="min-w-0 flex-1">

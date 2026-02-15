@@ -215,7 +215,7 @@ export default function GitHubActivity() {
 
   if (loading) {
     return (
-      <div class="space-y-3 animate-pulse">
+      <div class="space-y-3 animate-pulse" aria-label="Loading GitHub activity" role="status">
         <div class="flex gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} class="h-16 flex-1 rounded bg-surface-alt" />
@@ -245,7 +245,7 @@ export default function GitHubActivity() {
   }
 
   return (
-    <div class="space-y-6">
+    <div class="space-y-6" aria-live="polite">
       {/* Stats bar */}
       <div class="grid grid-cols-3 gap-3 text-center">
         <div class="rounded bg-surface-alt px-3 py-3 border border-border">

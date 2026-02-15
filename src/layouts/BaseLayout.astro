@@ -114,6 +114,7 @@ const props = Astro.props;
         var timer;
         var overlay = document.getElementById('kb-overlay');
         var closeBtn = document.getElementById('kb-close');
+        var helpTrigger = null;
 
         function isTyping(e) {
           var t = e.target;
@@ -121,13 +122,17 @@ const props = Astro.props;
         }
 
         function showHelp() {
+          helpTrigger = document.activeElement;
           overlay.classList.remove('hidden');
           overlay.classList.add('flex');
+          closeBtn.focus();
         }
 
         function hideHelp() {
           overlay.classList.add('hidden');
           overlay.classList.remove('flex');
+          if (helpTrigger && helpTrigger.focus) helpTrigger.focus();
+          helpTrigger = null;
         }
 
         var routes = { h: '/', b: '/blog/', p: '/projects/', g: '/gallery/', n: '/now/', a: '/about/' };

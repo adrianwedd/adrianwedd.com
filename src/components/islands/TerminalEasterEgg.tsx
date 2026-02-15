@@ -178,7 +178,23 @@ export default function TerminalEasterEgg() {
     <div
       class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
       onClick={(e) => { if (e.target === e.currentTarget) setVisible(false); }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') { setVisible(false); return; }
+        if (e.key === 'Tab') {
+          const closeBtnEl = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[aria-label="Close terminal"]');
+          if (closeBtnEl && inputRef.current) {
+            if (e.shiftKey && document.activeElement === closeBtnEl) {
+              e.preventDefault();
+              inputRef.current.focus();
+            } else if (!e.shiftKey && document.activeElement === inputRef.current) {
+              e.preventDefault();
+              closeBtnEl.focus();
+            }
+          }
+        }
+      }}
       role="dialog"
+      aria-modal="true"
       aria-label="Terminal"
     >
       <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-green-800 bg-black shadow-raised">
