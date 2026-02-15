@@ -10,16 +10,28 @@ date: 2026-02-08
 heroImage: "/images/projects/this-wasnt-in-the-brochure-hero.webp"
 ---
 
-When I was six, I wrote a BASIC program to make the computer say good morning. I didn't know it then, but I was building my first executive function prosthetic — externalising a sequence my brain couldn't reliably hold on its own. I've been building workarounds ever since.
+A book and companion site for co-parents navigating ADHD, autism, PDA, and ODD — built on a simple premise: the brochure they gave you was for a different trip.
 
-The diagnosis came forty years late. ADHD, recognised in my children first, then — slowly, reluctantly — in myself. The traits I was learning to support in them were the same ones I'd been masking since before I had language for it. The brochure never mentioned this part.
+## What it is
 
-*This Wasn't in the Brochure* is a co-parenting guide for the version of family life that doesn't appear in antenatal classes. Neurodiversity-affirming, trauma-informed, and evidence-based — at least 70% of citations are peer-reviewed. Eleven chapters, seven appendices, four localised editions. It covers what happens when both parents and children are neurodivergent, when standard advice breaks against non-standard brains, and when showing up honestly is the only technique that works at two in the morning.
+Eleven chapters, seven appendices, four regionally localised editions. Not a parenting manual — a cartographer's guide to the shared neurobiology of your household. The core argument: if your child is neurodivergent, the heritability data (74–90%) means you probably are too. The book calls this the double discovery, and treats it as the foundation of effective co-parenting rather than a complication.
 
-I wrote it using a three-AI workflow: Codex for structural reasoning and evidence synthesis, Claude for voice and narrative refinement, Gemini for adversarial review and gap analysis. Not dictation — cognitive scaffolding. The same principle as that BASIC program, scaled up. The models handled what my executive function couldn't sustain: holding the structure of a 60,000-word manuscript across months of non-linear writing. The authorship — every argument, every disclosure, every sentence that made me wince and keep it in — is mine.
+Every strategy includes variations for high-conflict and parallel parenting. You don't need a friendly divorce to use this book. You need only a shared commitment — even a reluctant one — to your child's wellbeing.
 
-The book's aesthetic draws on 16th-century maritime woodcuts: a voyage without reliable charts, navigated by dead reckoning and the willingness to stay on the water.
+## How it was built
+
+Written using a three-AI cognitive scaffolding workflow: Codex for structural reasoning and evidence synthesis, Claude for voice and narrative refinement, Gemini for adversarial review and gap analysis. The models handled what executive dysfunction made unsustainable — holding the architecture of a 60,000-word manuscript across months of non-linear writing. The authorship is mine. Every argument, every disclosure, every sentence that made me wince and keep it in.
+
+At least 70% of citations are peer-reviewed. The remaining 30% are clinical guidelines, professional consensus documents, and grey literature clearly flagged as such.
+
+## The companion site
+
+[thiswasntinthebrochure.wtf](https://thiswasntinthebrochure.wtf) hosts three free chapters (no email required), a printable survival toolkit (crisis cards, visual routines, scripts for difficult conversations), and regional edition selectors for US, Australian, British, and New Zealand readers — each adapted to local clinical terminology, educational systems, and legal frameworks.
+
+## Design
+
+The visual language draws on 16th-century maritime woodcuts: a voyage without reliable charts, navigated by dead reckoning and the willingness to stay on the water. The nautical metaphor runs through the book because mainstream parenting advice is a map for calm water, and your family is sailing open ocean.
 
 ---
 
-[Read more at thiswasntinthebrochure.wtf](https://thiswasntinthebrochure.wtf)
+[Read the full synopsis →](/blog/this-wasnt-in-the-brochure/) · [Visit thiswasntinthebrochure.wtf →](https://thiswasntinthebrochure.wtf)
