@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Now" description="What I'm focused on right now. Updated February 2026.">
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <header class="mb-12">
+      <h1 class="text-text">Now</h1>
+      <p class="mt-2 text-sm text-text-muted">
+        Updated February 2026. This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page</a>.
+      </p>
+    </header>
+
+    <div class="space-y-8 leading-relaxed text-text">
+      <section>
+        <h2 class="text-text">Focus</h2>
+        <p>
+          Multi-agent AI safety. Specifically: what happens when individually safe agents are composed into systems, and
+          why the safety properties don't transfer. The research sits under the
+          <a href="/projects/failure-first/">Failure First</a> umbrella.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-text">Building</h2>
+        <ul class="mt-2 space-y-2">
+          <li>This site — shipping improvements in weekly sprints</li>
+          <li><a href="/projects/agentic-index/">Agentic Index</a> — benchmarking agent capabilities</li>
+          <li>A pipeline that turns project documentation into audio overviews, infographics, and quizzes using NotebookLM Studio</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-text">Writing</h2>
+        <p>
+          Publishing more of the research that's been sitting in private repos. Recent pieces on
+          <a href="/blog/jailbreak-archaeology/">jailbreak archaeology</a> and
+          <a href="/blog/when-ai-systems-talk-safety-breaks/">multi-agent safety failures</a>.
+          Working on a longer piece about why demonstrated risk is systematically ignored.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-text">Looking for</h2>
+        <p>
+          Interesting work in AI safety, systems thinking, or infrastructure. Open to research collaborations,
+          technical advisory roles, or full-time positions where the problems are real and the approach is honest.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-text">Location</h2>
+        <p>Tasmania, Australia.</p>
+      </section>
+    </div>
+
+    <nav class="mt-16 border-t border-border pt-8" aria-label="Related pages">
+      <div class="flex gap-6">
+        <a href="/about/" class="text-sm text-text-muted transition-colors hover:text-accent">&larr; About</a>
+        <a href="/projects/" class="text-sm text-text-muted transition-colors hover:text-accent">Projects &rarr;</a>
+      </div>
+    </nav>
+  </article>
+</BaseLayout>
