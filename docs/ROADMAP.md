@@ -97,16 +97,16 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
-## Sprint 8: Engagement & Polish (In Progress)
+## Sprint 8: Engagement & Polish ✅ (Completed Feb 16, 2026)
 
-[Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/8).
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/8).
 
-- [ ] [#74](https://github.com/adrianwedd/adrianwedd.com/issues/74) Share button component for content pages
-- [ ] [#75](https://github.com/adrianwedd/adrianwedd.com/issues/75) Blog post series support
-- [ ] [#76](https://github.com/adrianwedd/adrianwedd.com/issues/76) Project status color-coding on index page
-- [ ] [#77](https://github.com/adrianwedd/adrianwedd.com/issues/77) Contact page: add context section
-- [ ] [#78](https://github.com/adrianwedd/adrianwedd.com/issues/78) About page: journey timeline
-- [ ] [#79](https://github.com/adrianwedd/adrianwedd.com/issues/79) Dynamic OG images for blog posts
+- ✅ [#74](https://github.com/adrianwedd/adrianwedd.com/issues/74) Share button component for content pages
+- ✅ [#75](https://github.com/adrianwedd/adrianwedd.com/issues/75) Blog post series support
+- ✅ [#76](https://github.com/adrianwedd/adrianwedd.com/issues/76) Project status color-coding on index page
+- ✅ [#77](https://github.com/adrianwedd/adrianwedd.com/issues/77) Contact page: add context section
+- ✅ [#78](https://github.com/adrianwedd/adrianwedd.com/issues/78) About page: journey timeline
+- ✅ [#79](https://github.com/adrianwedd/adrianwedd.com/issues/79) Dynamic OG images for blog posts
 
 ---
 
