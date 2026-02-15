@@ -45,16 +45,16 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
-## Sprint 4: Automation & Discovery (In Progress)
+## Sprint 4: Automation & Discovery ✅ (Completed Feb 15, 2026)
 
-[Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/4).
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/4).
 
-- [ ] [#50](https://github.com/adrianwedd/adrianwedd.com/issues/50) GitHub repo auto-discovery and explorable project tier
-- [ ] [#51](https://github.com/adrianwedd/adrianwedd.com/issues/51) Smarter related content via tag co-occurrence
-- [ ] [#52](https://github.com/adrianwedd/adrianwedd.com/issues/52) Individual gallery image pages with metadata
-- [ ] [#53](https://github.com/adrianwedd/adrianwedd.com/issues/53) "Last updated" indicators on content pages
-- [ ] [#54](https://github.com/adrianwedd/adrianwedd.com/issues/54) Keyboard shortcuts for power user navigation
-- [ ] [#55](https://github.com/adrianwedd/adrianwedd.com/issues/55) Enhanced content scaffolding with AI-assisted metadata
+- ✅ [#50](https://github.com/adrianwedd/adrianwedd.com/issues/50) GitHub repo auto-discovery and explorable project tier
+- ✅ [#51](https://github.com/adrianwedd/adrianwedd.com/issues/51) Smarter related content via tag co-occurrence
+- ✅ [#52](https://github.com/adrianwedd/adrianwedd.com/issues/52) Individual gallery image pages with metadata
+- ✅ [#53](https://github.com/adrianwedd/adrianwedd.com/issues/53) "Last updated" indicators on content pages
+- ✅ [#54](https://github.com/adrianwedd/adrianwedd.com/issues/54) Keyboard shortcuts for power user navigation
+- ✅ [#55](https://github.com/adrianwedd/adrianwedd.com/issues/55) Enhanced content scaffolding with AI-assisted metadata
 
 ---
 
