@@ -1,6 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GitHubActivity from '../components/islands/GitHubActivity';
+import { getCollection } from 'astro:content';
+
+const blogPosts = (await getCollection('blog')).filter((p) => !p.data.draft);
+const projects = await getCollection('projects');
+const galleries = await getCollection('gallery');
+const episodes = await getCollection('audio');
+
+const totalWords = blogPosts.reduce((sum, p) => sum + (p.body ? p.body.split(/\s+/).length : 0), 0);
+const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
 ---
 
 <BaseLayout title="Now" description="What I'm focused on right now. Updated February 2026.">
@@ -52,6 +61,29 @@ import GitHubActivity from '../components/islands/GitHubActivity';
       <section>
         <h2 class="text-text">Location</h2>
         <p>Tasmania, Australia.</p>
+      </section>
+
+      <section>
+        <h2 class="text-text">This Site</h2>
+        <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div class="rounded-lg border border-border bg-surface-alt px-4 py-3 text-center">
+            <div class="text-xl font-semibold text-accent">{blogPosts.length}</div>
+            <div class="text-xs text-text-muted">posts</div>
+          </div>
+          <div class="rounded-lg border border-border bg-surface-alt px-4 py-3 text-center">
+            <div class="text-xl font-semibold text-accent">{projects.length}</div>
+            <div class="text-xs text-text-muted">projects</div>
+          </div>
+          <div class="rounded-lg border border-border bg-surface-alt px-4 py-3 text-center">
+            <div class="text-xl font-semibold text-accent">{totalImages}</div>
+            <div class="text-xs text-text-muted">images</div>
+          </div>
+          <div class="rounded-lg border border-border bg-surface-alt px-4 py-3 text-center">
+            <div class="text-xl font-semibold text-accent">{episodes.length}</div>
+            <div class="text-xs text-text-muted">episodes</div>
+          </div>
+        </div>
+        <p class="mt-3 text-xs text-text-muted">{totalWords.toLocaleString()} words written across {blogPosts.length} posts.</p>
       </section>
 
       <section>
