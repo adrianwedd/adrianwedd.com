@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
+import fs from 'node:fs';
 
 const allProjects = await getCollection('projects');
 const projects = allProjects.sort((a, b) => {
@@ -19,6 +20,37 @@ const statusLabels: Record<string, string> = {
   archived: 'Archived',
   experiment: 'Experiment',
 };
+
+// Load auto-discovered repos from cached data
+interface GitHubRepo {
+  name: string;
+  description: string;
+  language: string;
+  topics: string[];
+  url: string;
+  homepage: string;
+  stars: number;
+  forks: number;
+  updated_at: string;
+  fork: boolean;
+  archived: boolean;
+}
+
+let discoveredRepos: GitHubRepo[] = [];
+try {
+  const reposPath = new URL('../../data/repos.json', import.meta.url);
+  const raw = fs.readFileSync(reposPath, 'utf-8');
+  const allRepos: GitHubRepo[] = JSON.parse(raw);
+
+  // Exclude: forks, archived, repos that already have project pages, empty repos
+  const existingSlugs = new Set(allProjects.map((p) => slug(p.id).toLowerCase()));
+  discoveredRepos = allRepos
+    .filter((r) => !r.fork && !r.archived && r.description && !existingSlugs.has(r.name.toLowerCase()))
+    .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+    .slice(0, 12);
+} catch {
+  // No repos.json yet — sync-repos.sh hasn't run
+}
 ---
 
 <BaseLayout title="Projects" description="Things I've built, broken, and sometimes both.">
@@ -133,6 +165,53 @@ const statusLabels: Record<string, string> = {
     </div>
 
     <p id="no-results" class="mt-10 hidden text-center text-text-muted">No projects match these filters.</p>
+
+    {/* Auto-discovered repos from GitHub */}
+    {discoveredRepos.length > 0 && (
+      <section class="mt-16 border-t border-border pt-10">
+        <h2 class="text-lg font-semibold text-text">More on GitHub</h2>
+        <p class="mt-1 text-sm text-text-muted">Other public repos, auto-discovered from GitHub.</p>
+        <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {discoveredRepos.map((repo) => (
+            <a
+              href={repo.url}
+              target="_blank"
+              rel="noopener"
+              class="hover:border-accent/50 group block rounded-lg border border-border bg-surface-alt p-4 no-underline transition-all hover:shadow-card"
+            >
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="font-mono text-sm font-medium text-text transition-colors group-hover:text-accent">
+                  {repo.name}
+                </h3>
+                {repo.language && (
+                  <span class="shrink-0 rounded-full border border-border px-2 py-0.5 text-xs text-text-muted">
+                    {repo.language}
+                  </span>
+                )}
+              </div>
+              <p class="mt-1 text-xs leading-relaxed text-text-muted line-clamp-2">
+                {repo.description}
+              </p>
+              {repo.stars > 0 && (
+                <span class="mt-2 inline-block text-xs text-text-muted">
+                  ★ {repo.stars}
+                </span>
+              )}
+            </a>
+          ))}
+        </div>
+        <p class="mt-4 text-sm text-text-muted">
+          <a
+            href="https://github.com/adrianwedd?tab=repositories"
+            target="_blank"
+            rel="noopener"
+            class="text-accent hover:underline"
+          >
+            View all repositories →
+          </a>
+        </p>
+      </section>
+    )}
   </section>
 
   <script>

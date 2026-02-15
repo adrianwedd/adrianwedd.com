@@ -1,0 +1,3700 @@
+[
+{
+  "name": "adrianwedd.com",
+  "description": "adrianwedd.com \u2014 living workshop",
+  "language": "Shell",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/adrianwedd.com",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-15T12:07:34Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "terminal",
+  "description": "",
+  "language": "JavaScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/terminal",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-15T12:06:13Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "squishmallowdex",
+  "description": "Your Squishmallow collection tracker - like a Pok\u00e9dex, but for Squishmallows!  Download info on 3000+ Squishmallows from the wiki and browse your collection offline. Search by name, filter by squad, mark your favourites, and track which ones you own!",
+  "language": "Python",
+  "topics": [
+    "collection-tracker",
+    "csv-database",
+    "database",
+    "fun",
+    "hobby",
+    "offline-first",
+    "squishmallows",
+    "static-site",
+    "web-scraping"
+  ],
+  "url": "https://github.com/adrianwedd/squishmallowdex",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-15T11:06:15Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "cv",
+  "description": "\ud83e\udd16 AI-Enhanced CV System: Intelligent resume optimization with Claude AI, automated GitHub integration, version-controlled prompt engineering, and enterprise-grade CI/CD deployment",
+  "language": "Python",
+  "topics": [
+    "ai-automation",
+    "ai-powered",
+    "automated-cv",
+    "automation",
+    "career",
+    "ci-cd",
+    "claude-ai",
+    "cv-generator",
+    "enterprise-grade",
+    "github-actions",
+    "github-integration",
+    "latex",
+    "persona-driven",
+    "portfolio",
+    "professional-cv",
+    "prompt-engineering",
+    "responsive-design",
+    "resume",
+    "version-controlled"
+  ],
+  "url": "https://github.com/adrianwedd/cv",
+  "homepage": "https://adrianwedd.github.io/cv",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2026-02-14T22:05:22Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "failure-first",
+  "description": "",
+  "language": "Astro",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/failure-first",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2026-02-13T10:15:09Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "tinyclaw",
+  "description": "TinyClaw is a team of personal agents that collaborate with each other",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/tinyclaw",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-13T04:32:41Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "GLOSSOPETRAE",
+  "description": "LINGUISTIC ENGINE FOR AI",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/GLOSSOPETRAE",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-10T22:56:29Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "nanoclaw",
+  "description": "My personal Claude assistant that runs in Apple containers. Lightweight, secure, and built to be understood and customized for your own needs.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/nanoclaw",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-02T07:16:37Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "TAP",
+  "description": "TAP: An automated jailbreaking method for black-box LLMs",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/TAP",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-12-10T20:38:33Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "PaperBanana",
+  "description": "PaperBanana: Automating Academic Illustration For AI Scientists",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/PaperBanana",
+  "homepage": "https://dwzhu-pku.github.io/PaperBanana/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-02T23:13:42Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Awesome-LVLM-Attack",
+  "description": "\ud83d\ude0e up-to-date & curated list of awesome Attacks on Large-Vision-Language-Models papers, methods & resources.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Awesome-LVLM-Attack",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-27T14:50:19Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Awesome-LVLM-Safety",
+  "description": "A curated list of resources dedicated to the safety of Large Vision-Language Models. This repository aligns with our survey titled A Survey of Safety on Large Vision-Language Models: Attacks, Defenses, and Evaluations.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Awesome-LVLM-Safety",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-06T14:53:40Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "notebooklm-automation",
+  "description": "Automation toolkit for Google NotebookLM - export notebooks, generate artifacts, smart research, and multi-format export (Obsidian, Notion, Anki)",
+  "language": "Shell",
+  "topics": [
+    "ai-tools",
+    "anki",
+    "automation",
+    "bash",
+    "export",
+    "google",
+    "knowledge-management",
+    "notebooklm",
+    "notion",
+    "obsidian",
+    "python",
+    "research"
+  ],
+  "url": "https://github.com/adrianwedd/notebooklm-automation",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-08T11:40:29Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "easylap-server",
+  "description": "A Python server for sending data from a EasyLAP RC lap counter USB device via UDP over the local network.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/easylap-server",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-12-17T21:52:18Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "dodgylegally",
+  "description": "Creative audio sampling CLI \u2014 turns random words into instruments via YouTube and beyond",
+  "language": "Python",
+  "topics": [
+    "audio",
+    "audio-processing",
+    "cli",
+    "creative-coding",
+    "music",
+    "music-production",
+    "python",
+    "sample-pack",
+    "sampling",
+    "sound-design"
+  ],
+  "url": "https://github.com/adrianwedd/dodgylegally",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-03T10:51:39Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "openclaw",
+  "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. \ud83e\udd9e ",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/openclaw",
+  "homepage": "https://openclaw.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-02T08:43:30Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "VibeVoice",
+  "description": "Open-Source Frontier Voice AI",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/VibeVoice",
+  "homepage": "https://microsoft.github.io/VibeVoice/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-27T13:11:58Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "AI-SWA",
+  "description": "SelfArchitectAI - A self-evolving software architect agent that reasons about its own design, builds modular components, and continually refines its architecture",
+  "language": "Python",
+  "topics": [
+    "ai-agent",
+    "autonomous-coding",
+    "meta-programming",
+    "python",
+    "self-evolving",
+    "self-healing",
+    "software-architect",
+    "software-architecture"
+  ],
+  "url": "https://github.com/adrianwedd/AI-SWA",
+  "homepage": "",
+  "stars": 1,
+  "forks": 1,
+  "updated_at": "2026-02-14T08:52:00Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "why-demonstrated-risk-is-ignored",
+  "description": "",
+  "language": "Astro",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/why-demonstrated-risk-is-ignored",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-19T05:05:27Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "rlm-mcp",
+  "description": "MCP server implementing Recursive Language Model pattern for processing arbitrarily long contexts. Enables Claude Code to work with 1M+ character documents through session-based chunking, BM25 search, and artifact provenance tracking.",
+  "language": "Python",
+  "topics": [
+    "bm25-search",
+    "claude",
+    "claude-code",
+    "context-window",
+    "document-processing",
+    "fastmcp",
+    "llm",
+    "mcp",
+    "model-context-protocol",
+    "recursive-language-model"
+  ],
+  "url": "https://github.com/adrianwedd/rlm-mcp",
+  "homepage": "https://modelcontextprotocol.io",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-11T02:49:30Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "adrianwedd",
+  "description": "Forensic systems architecture: instrumenting autonomy, stress-testing trust, keeping humans sovereign when inputs get strange",
+  "language": "JavaScript",
+  "topics": [
+    "github-profile",
+    "portfolio",
+    "profile",
+    "readme"
+  ],
+  "url": "https://github.com/adrianwedd/adrianwedd",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-16T09:04:23Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "claude-code-skills-peeps-for-claude",
+  "description": "Reusable skills for Claude Code - Allows claude-code to use codex-cli and gemini-cli - and access 100+ AI models on openrouter",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/claude-code-skills-peeps-for-claude",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-14T09:42:53Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "alpamayo",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/alpamayo",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-12T04:43:40Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "MimicKit",
+  "description": "A lightweight suite of motion imitation methods for training controllers.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/MimicKit",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-12T17:56:41Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "jepa-wms",
+  "description": "Code, data and weights for the paper **What drives success in physical planning with Joint-Embedding Predictive World Models?**",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/jepa-wms",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-08T16:09:27Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "ralph",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/ralph",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-12T19:24:50Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "vibe-kanban",
+  "description": "Get 10X more out of Claude Code, Codex or any coding agent",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/vibe-kanban",
+  "homepage": "https://www.vibekanban.com/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-11T15:39:09Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "ADHDo",
+  "description": "\ud83e\udde0\u26a1 Neurodiversity-affirming AI assistant for ADHD executive function support. Features crisis detection, circuit breaker psychology, and local-first processing.",
+  "language": "Python",
+  "topics": [
+    "accessibility",
+    "adhd",
+    "ai-assistant",
+    "australia",
+    "executive-function",
+    "helpline",
+    "ndis",
+    "neurodiversity",
+    "python"
+  ],
+  "url": "https://github.com/adrianwedd/ADHDo",
+  "homepage": "",
+  "stars": 4,
+  "forks": 0,
+  "updated_at": "2026-02-11T01:51:16Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "awesome-robotics",
+  "description": "A list of awesome Robotics resources",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/awesome-robotics",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-09-22T20:24:10Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "call-me",
+  "description": "Minimal plugin that lets Claude Code call you on the phone.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/call-me",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-08T18:31:10Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "rayhunter",
+  "description": "Rust tool to detect cell site simulators on an orbic mobile hotspot ",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/rayhunter",
+  "homepage": "https://efforg.github.io/rayhunter/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-07T22:07:43Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "raspberry-pi-hailo-ai-demos",
+  "description": "",
+  "language": "Shell",
+  "topics": [
+    "computer-vision",
+    "edge-ai",
+    "hailo",
+    "raspberry-pi"
+  ],
+  "url": "https://github.com/adrianwedd/raspberry-pi-hailo-ai-demos",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2025-08-06T10:26:40Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "claude-code-showcase",
+  "description": "Comprehensive Claude Code project configuration example with hooks, skills, agents, commands, and GitHub Actions workflows",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/claude-code-showcase",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T19:05:18Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Footnotes-at-the-Edge-of-Reality",
+  "description": "An essay-poem exploring physics, language, and what it means to participate in reality.",
+  "language": "JavaScript",
+  "topics": [
+    "epistemology",
+    "essay-poem",
+    "general-relativity",
+    "language",
+    "participation",
+    "philosophy",
+    "philosophy-of-science",
+    "physics",
+    "physics-poetry",
+    "poetry",
+    "quantum-mechanics",
+    "reality",
+    "science-poetry"
+  ],
+  "url": "https://github.com/adrianwedd/Footnotes-at-the-Edge-of-Reality",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-20T20:44:36Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "ComfyUI",
+  "description": "A powerful and modular stable diffusion GUI with a graph/nodes interface.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/ComfyUI",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-29T15:37:49Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "space-weather",
+  "description": "A comprehensive web application for monitoring and visualizing various space weather indices and phenomena. Integrates backend data retrieval and processing with a user-friendly frontend.",
+  "language": "Python",
+  "topics": [
+    "nasa-api",
+    "science",
+    "space-weather",
+    "visualization",
+    "web-app"
+  ],
+  "url": "https://github.com/adrianwedd/space-weather",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T16:50:28Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "orbitr",
+  "description": "\ud83c\udfb5 Multi-track polyphonic AI sequencer with concentric rings. Inspired by Playtronica's Orbita, enhanced with Meta's MusicGen for real-time sample generation.",
+  "language": "HTML",
+  "topics": [
+    "creative-coding",
+    "generative-music",
+    "music-sequencer",
+    "musicgen",
+    "react",
+    "web-audio"
+  ],
+  "url": "https://github.com/adrianwedd/orbitr",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2026-01-26T23:47:20Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "lunar_tools_prototypes",
+  "description": "Oneiric interfaces and audiovisual installations: Dream Interpreters, Fingerprint Painters, and Cosmic Murals.",
+  "language": "Python",
+  "topics": [
+    "audio-reactive",
+    "creative-coding",
+    "generative-ai",
+    "generative-art",
+    "immersive",
+    "installations",
+    "interactive-art",
+    "midi",
+    "realtime-visuals"
+  ],
+  "url": "https://github.com/adrianwedd/lunar_tools_prototypes",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-05T21:22:08Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "emdr-agent",
+  "description": "TypeScript-based therapeutic agent for EMDR (Eye Movement Desensitization and Reprocessing) therapy assistance and protocol guidance",
+  "language": "TypeScript",
+  "topics": [
+    "ai-health",
+    "digital-therapeutics",
+    "emdr",
+    "mental-health",
+    "react",
+    "therapy",
+    "typescript",
+    "wellness"
+  ],
+  "url": "https://github.com/adrianwedd/emdr-agent",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-11T18:04:12Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "lunar_tools",
+  "description": "toolkit for interactive exhibitions",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/lunar_tools",
+  "homepage": "http://www.lunar-ring.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T11:29:42Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "awesome-selfhosted",
+  "description": "A list of Free Software network services and web applications which can be hosted on your own servers",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/awesome-selfhosted",
+  "homepage": "https://reddit.com/r/selfhosted",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T11:24:04Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "LMOps",
+  "description": "General technology for enabling AI capabilities w/ LLMs and MLLMs",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/LMOps",
+  "homepage": "https://aka.ms/nlpagi",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:43:48Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "langchain-tutorials",
+  "description": "Overview and tutorial of the LangChain Library",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/langchain-tutorials",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:45:57Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Top10",
+  "description": "Official OWASP Top 10 Document Repository",
+  "language": "HTML",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Top10",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:44:36Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "babyagi-ui",
+  "description": "BabyAGI UI is designed to make it easier to run and develop with babyagi in a web app, like a ChatGPT.",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/babyagi-ui",
+  "homepage": "https://babyagi-ui.vercel.app",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:44:47Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "FinGPTTemplate",
+  "description": "Data-Centric FinGPT.  Open-source for open finance!  Revolutionize \ud83d\udd25    We'll soon release the trained model.",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/FinGPTTemplate",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:44:24Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "development-guide",
+  "description": "A set of guidelines and best practices for an awesome software engineering team",
+  "language": "HTML",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/development-guide",
+  "homepage": "https://engineering.18f.gov",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:43:36Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "LLMsPracticalGuide",
+  "description": "A curated list of practical guide resources of LLMs (LLMs Tree, Examples, Papers)",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/LLMsPracticalGuide",
+  "homepage": "https://arxiv.org/abs/2304.13712v2",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:43:24Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "AI-Friends",
+  "description": "A collection of handy helpers for AI art generation, AI writing and other experimental tools",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/AI-Friends",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:41:26Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "stable-diffusion-webui-colab",
+  "description": "stable diffusion webui colab",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/stable-diffusion-webui-colab",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:42:35Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "TavernAI",
+  "description": "Atmospheric adventure chat for AI language models (KoboldAI, NovelAI, Pygmalion, OpenAI chatgpt, gpt-4)",
+  "language": "JavaScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/TavernAI",
+  "homepage": "https://tavernai.net",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:41:49Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "LLMSurvey",
+  "description": "The official GitHub page for the survey paper \"A Survey of Large Language Models\".",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/LLMSurvey",
+  "homepage": "https://arxiv.org/abs/2303.18223",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:42:00Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "fast-stable-diffusion",
+  "description": "fast-stable-diffusion + DreamBooth",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/fast-stable-diffusion",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:41:14Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "text-generation-webui-colab",
+  "description": "A colab gradio web UI for running Large Language Models",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/text-generation-webui-colab",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:40:50Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "midjourney-automation-bot",
+  "description": "The Midjourney Automation Bot is a simple-to-use Python-based solution  to automate the creation and acquisition of AI-rendered visuals via Discord's Midjourney bot.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/midjourney-automation-bot",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:39:48Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "llama",
+  "description": "Inference code for LLaMA models",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/llama",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:38:38Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "ChatPDF",
+  "description": "Chat with any PDF. Easily upload the PDF documents you'd like to chat with. Instant answers. Ask questions, extract information, and summarize documents with AI. Sources included.",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/ChatPDF",
+  "homepage": "https://heybot.thesamur.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:37:51Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "generative-agents-colab",
+  "description": "An attempt to build a working, locally-running cheap version of Generative Agents: Interactive Simulacra of Human Behavior",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/generative-agents-colab",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:36:17Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "knowledge",
+  "description": "Knowledge is a tool for saving, searching, accessing, and exploring all of your favorite websites, documents and files.",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/knowledge",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:35:51Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "screenshot-to-code",
+  "description": "Drop in a screenshot and convert it to clean code (HTML/Tailwind/React/Vue)",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/screenshot-to-code",
+  "homepage": "https://screenshottocode.com",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:32:38Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "narrator",
+  "description": "David Attenborough narrates your life",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/narrator",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:33:27Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Awesome-GPT-Agents",
+  "description": "A curated list of GPT agents for cybersecurity",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Awesome-GPT-Agents",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:32:25Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "AgentGPT",
+  "description": "\ud83e\udd16 Assemble, configure, and deploy autonomous AI Agents in your browser.",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/AgentGPT",
+  "homepage": "https://agentgpt.reworkd.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T08:31:49Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "SuperAGI",
+  "description": "<\u26a1\ufe0f> SuperAGI - A dev-first open source autonomous AI agent framework. Enabling developers to build, manage & run useful autonomous agents quickly and reliably.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/SuperAGI",
+  "homepage": "https://superagi.com/",
+  "stars": 0,
+  "forks": 1,
+  "updated_at": "2026-01-06T07:44:53Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "openai-realtime-agents",
+  "description": "This is a simple demonstration of more advanced, agentic patterns built on top of the Realtime API.",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/openai-realtime-agents",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T07:44:18Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "gemini-fullstack-langgraph-quickstart",
+  "description": "Get started with building Fullstack Agents using Gemini 2.5 and LangGraph. W00t!",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gemini-fullstack-langgraph-quickstart",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T07:42:43Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "CL4R1T4S",
+  "description": "SYSTEM PROMPT TRANSPARENCY FOR ALL - CHATGPT, GEMINI, GROK, CLAUDE, PERPLEXITY, CURSOR, WINDSURF, DEVIN, REPLIT, AND MORE!",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/CL4R1T4S",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T07:42:31Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "ism-oscal",
+  "description": "A mirror of ISM OSCAL documents. The authoritative source can be found at https://www.cyber.gov.au/ism/oscal. ",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/ism-oscal",
+  "homepage": "https://www.cyber.gov.au/ism/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T07:42:07Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "dolphin-beach",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/dolphin-beach",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-09T12:07:40Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "agent-task-management-system",
+  "description": "Intelligent task management system for agent-based workflows with dependency resolution and CLI tools.",
+  "language": "Python",
+  "topics": [
+    "agent-orchestration",
+    "ai-agents",
+    "prototypes",
+    "task-management",
+    "workflow"
+  ],
+  "url": "https://github.com/adrianwedd/agent-task-management-system",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-26T14:57:33Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "SelfEvolvingAgent",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/SelfEvolvingAgent",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-16T07:09:57Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "codex",
+  "description": "Lightweight coding agent that runs in your terminal",
+  "language": "Rust",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/codex",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-19T09:07:37Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "continuous-thought-machines",
+  "description": "Continuous Thought Machines, because thought takes time and reasoning is a process.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/continuous-thought-machines",
+  "homepage": "https://pub.sakana.ai/ctm/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-19T09:48:07Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "nano-vllm",
+  "description": "Nano vLLM",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/nano-vllm",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-24T16:57:50Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "gemini-cli",
+  "description": "An open-source AI agent that brings the power of Gemini directly into your terminal.",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gemini-cli",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-26T13:31:37Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "chucknorris",
+  "description": "\u26a1 C\u0337h\u0337u\u0337c\u0337k\u0337N\u0337o\u0337r\u0337r\u0337i\u0337s\u0337 MCP server: Helping LLMs break limits. Provides enhancement prompts inspired by elder-plinius' L1B3RT4S",
+  "language": "JavaScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/chucknorris",
+  "homepage": "https://www.npmjs.com/package/@pollinations/chucknorris",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2025-07-01T15:43:56Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "OpenDeepResearcher",
+  "description": "",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/OpenDeepResearcher",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-07T06:09:11Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "vocode-core",
+  "description": "\ud83e\udd16 Build voice-based LLM agents. Modular + open source.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/vocode-core",
+  "homepage": "https://vocode.dev",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-07T11:16:33Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "genai-processors",
+  "description": "GenAI Processors is a lightweight Python library that enables efficient, parallel content processing.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/genai-processors",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-10T17:47:06Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "SWE-agent",
+  "description": "SWE-agent takes a GitHub issue and tries to automatically fix it, using your LM of choice. It can also be employed for offensive cybersecurity or competitive coding challenges. [NeurIPS 2024] ",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/SWE-agent",
+  "homepage": "https://swe-agent.com",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-21T20:53:07Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "AgentSociety",
+  "description": "AgentSociety: Large-scale Social Simulation to Understand Human Behaviors and Society through LLM-driven Agents",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/AgentSociety",
+  "homepage": "https://agentsociety.readthedocs.io/en/latest/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-24T00:40:05Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "Claude-Code-Usage-Monitor",
+  "description": "Real-time Claude Code usage monitor with predictions and warnings",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Claude-Code-Usage-Monitor",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-26T08:28:29Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "claude-code-monitoring-guide",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/claude-code-monitoring-guide",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-29T05:21:27Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "qwen-code",
+  "description": "qwen-code is a coding agent that lives in digital world.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/qwen-code",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-29T09:54:10Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "claude-code-sub-agents",
+  "description": "Collection of specialized AI subagents for Claude Code for personal use.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/claude-code-sub-agents",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-31T03:06:55Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "SEAL",
+  "description": "Self-Adapting Language Models",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/SEAL",
+  "homepage": "https://arxiv.org/abs/2506.10943",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-01T20:06:35Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "Self-Evolving-Agents",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Self-Evolving-Agents",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-02T09:10:08Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "claude-code",
+  "description": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows - all through natural language commands.",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/claude-code",
+  "homepage": "https://docs.anthropic.com/s/claude-code",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T14:42:48Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "langextract",
+  "description": "A Python library for extracting structured information from unstructured text using LLMs with precise source grounding and interactive visualization.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/langextract",
+  "homepage": "https://pypi.org/project/langextract/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-09T05:47:47Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "audiocraft",
+  "description": "Audiocraft is a library for audio processing and generation with deep learning. It features the state-of-the-art EnCodec audio compressor / tokenizer, along with MusicGen, a simple and controllable music generation LM with textual and melodic conditioning.",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/audiocraft",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-13T11:08:13Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "Interactive-Player",
+  "description": "An emulator for Netflix's Interactive Entertainment, because Obi wanted to watch Battle Kitty Interactive again.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Interactive-Player",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-14T23:19:26Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "agents.md",
+  "description": "AGENTS.md \u2014 a simple, open format for guiding coding agents",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/agents.md",
+  "homepage": "https://agents.md",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-19T21:49:15Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "DeepCode",
+  "description": "\"DeepCode: Open Agentic Coding (Paper2Code & Text2Web & Text2Backend)\"",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/DeepCode",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-22T13:54:40Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "gooey",
+  "description": "A powerful GUI app and Toolkit for Claude Code - Create custom agents, manage interactive Claude Code sessions, run secure background agents, and more.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gooey",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-25T21:13:46Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "gcloud-mcp",
+  "description": "gcloud MCP server",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gcloud-mcp",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-09-09T21:21:19Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "AutoReviewer",
+  "description": "Use LLMs to perform automatic code reviews.",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/AutoReviewer",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-11-18T10:32:24Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "chat-langchain",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/chat-langchain",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-12-05T12:52:39Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "Bard-API",
+  "description": "The python package that returns response of Google Bard through API.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Bard-API",
+  "homepage": "https://pypi.org/project/bardapi/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-12-09T17:29:13Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "LangChain-Coder",
+  "description": "Web Application that can generate code and fix bugs and run them from GPT-3, CodexAI",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/LangChain-Coder",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-12-12T12:17:48Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "langchain-ui",
+  "description": "\ud83e\uddec The open source chat-ai toolkit",
+  "language": "JavaScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/langchain-ui",
+  "homepage": "https://langchain-ui.vercel.app",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-12-13T10:58:28Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "pandora",
+  "description": "Pandora",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/pandora",
+  "homepage": "https://chat.zhile.io",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-12-13T12:10:06Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "twitter-agent",
+  "description": "lil twitter agi \ud83e\udd16",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/twitter-agent",
+  "homepage": "https://twitter.com/lil_bigsky_agi",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-12-20T10:51:09Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "deeplake",
+  "description": "Data Lake for Deep Learning. Multi-modal Vector Database for LLMs/LangChain. Store, query, version, & visualize datasets. Stream data in real-time to PyTorch/TensorFlow. https://activeloop.ai",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/deeplake",
+  "homepage": "https://activeloop.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-12-22T08:17:29Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "LEANN",
+  "description": "RAG on Everything with LEANN. Enjoy 97% storage savings while running a fast, accurate, and 100% private RAG application on your personal device.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/LEANN",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-02T04:59:13Z",
+  "fork": true,
+  "archived": true
+}
+,
+{
+  "name": "project-terrawatt",
+  "description": "LangGraph-based sustainability research platform for energy management and infrastructure optimization.",
+  "language": "Python",
+  "topics": [
+    "energy",
+    "energy-management",
+    "infrastructure",
+    "langgraph",
+    "python",
+    "renewable-energy",
+    "research",
+    "sustainability"
+  ],
+  "url": "https://github.com/adrianwedd/project-terrawatt",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-23T02:55:30Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "ticketsmith",
+  "description": "Enterprise AI automation for Jira & Confluence with self-hosted vLLM inference and RAG pipelines.",
+  "language": "Python",
+  "topics": [
+    "ai-automation",
+    "atlassian-forge",
+    "confluence",
+    "devops",
+    "enterprise",
+    "enterprise-automation",
+    "jira",
+    "rag",
+    "react",
+    "vllm"
+  ],
+  "url": "https://github.com/adrianwedd/ticketsmith",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-14T14:19:33Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "excel-sheet-unlocker",
+  "description": "Python utility for Excel protection management and cell unlocking.",
+  "language": "Python",
+  "topics": [
+    "automation",
+    "excel",
+    "python",
+    "security",
+    "utility",
+    "vba"
+  ],
+  "url": "https://github.com/adrianwedd/excel-sheet-unlocker",
+  "homepage": "",
+  "stars": 0,
+  "forks": 1,
+  "updated_at": "2023-08-10T20:12:16Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "TEL3SIS",
+  "description": "Telephony-Linked Embedded LLM System for Interactive Support",
+  "language": "HTML",
+  "topics": [
+    "celery",
+    "customer-support",
+    "fastapi",
+    "interactive-system",
+    "llm",
+    "python",
+    "real-time-voice",
+    "redis",
+    "telephony",
+    "voice-ai"
+  ],
+  "url": "https://github.com/adrianwedd/TEL3SIS",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-02-11T17:39:21Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "personal-intelligence-node",
+  "description": "Personal portfolio and intelligence hub - adrianwedd.com website with integrated AI-powered content management and dynamic data visualization",
+  "language": "JavaScript",
+  "topics": [
+    "astro",
+    "digital-garden",
+    "knowledge-base",
+    "knowledge-graph",
+    "nextjs",
+    "portfolio",
+    "react",
+    "website"
+  ],
+  "url": "https://github.com/adrianwedd/personal-intelligence-node",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-05T03:20:46Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "Agentic-Index",
+  "description": "Agentic Index, the definitive, developer-focused catalogue of autonomous AI tooling. Here you\u2019ll find scored and curated repositories that power LLM agents, multi-agent systems, RAG pipelines, devtools, and more",
+  "language": "Python",
+  "topics": [
+    "agent-frameworks",
+    "ai-agents",
+    "autonomous-systems",
+    "benchmarking",
+    "catalog",
+    "devtools",
+    "directory",
+    "llm",
+    "multi-agent"
+  ],
+  "url": "https://github.com/adrianwedd/Agentic-Index",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2025-12-30T08:35:46Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "afterglow-engine",
+  "description": "A small offline tool that mines your past audio work for new textures.",
+  "language": "Python",
+  "topics": [
+    "ambient-music",
+    "audio-mining",
+    "audio-processing",
+    "cli",
+    "creative-coding",
+    "digital-archaeology",
+    "granular-synthesis",
+    "python",
+    "sound-design"
+  ],
+  "url": "https://github.com/adrianwedd/afterglow-engine",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-12-30T08:38:24Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "ModelAtlas",
+  "description": "A dynamic, enriched intelligence system mapping the foundation model landscape. Trust. Trace. Transform.",
+  "language": "Python",
+  "topics": [
+    "ai-models",
+    "analysis",
+    "landscape"
+  ],
+  "url": "https://github.com/adrianwedd/ModelAtlas",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-07-29T14:00:09Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "claude-nexus",
+  "description": "",
+  "language": "Python",
+  "topics": [
+    "anthropic",
+    "claude-ai",
+    "integration"
+  ],
+  "url": "https://github.com/adrianwedd/claude-nexus",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-04T00:59:25Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "wcag-process-matrix",
+  "description": "WCAG Process Matrix",
+  "language": "",
+  "topics": [
+    "accessibility",
+    "compliance",
+    "process-management",
+    "wcag"
+  ],
+  "url": "https://github.com/adrianwedd/wcag-process-matrix",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2019-01-04T13:52:40Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "grid2_repo",
+  "description": "\ud83d\ude80 Grid 2.0 - Deterministic AI Website Builder. AI for understanding, algorithms for execution. Export real code you own.",
+  "language": "TypeScript",
+  "topics": [
+    "ai-coding",
+    "codegen",
+    "deterministic-ai",
+    "react",
+    "website-builder"
+  ],
+  "url": "https://github.com/adrianwedd/grid2_repo",
+  "homepage": "https://grid2repo.vercel.app",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2026-01-28T17:48:19Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "Dx0",
+  "description": "Advanced diagnostic and debugging toolkit for complex system analysis and performance optimization",
+  "language": "Python",
+  "topics": [
+    "debugging",
+    "diagnostics",
+    "performance-analysis",
+    "python",
+    "system-tools"
+  ],
+  "url": "https://github.com/adrianwedd/Dx0",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2026-01-13T20:47:21Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "system",
+  "description": "Core system utilities and configuration management tools for development environment setup and maintenance",
+  "language": "",
+  "topics": [
+    "config",
+    "development-environment",
+    "dotfiles",
+    "macos",
+    "setup"
+  ],
+  "url": "https://github.com/adrianwedd/system",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-20T18:29:07Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "home-assistant-addons",
+  "description": "",
+  "language": "Shell",
+  "topics": [
+    "addons",
+    "automation",
+    "home-assistant",
+    "iot"
+  ],
+  "url": "https://github.com/adrianwedd/home-assistant-addons",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-12-04T02:05:26Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "home-assistant-obsidian",
+  "description": "Obsidian running in a docker container on your Home Assistant instance",
+  "language": "Shell",
+  "topics": [
+    "addon",
+    "docker",
+    "home-assistant",
+    "obsidian",
+    "productivity"
+  ],
+  "url": "https://github.com/adrianwedd/home-assistant-obsidian",
+  "homepage": "",
+  "stars": 4,
+  "forks": 2,
+  "updated_at": "2025-12-30T04:14:06Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "ordr.fm",
+  "description": "Methodical Music Sorting - A precision-engineered CLI tool for intelligent music library organization powered by EXIF metadata, lossless prioritization, and zero-overwrite safety. Sorts chaos into harmony with dry-run integrity, album-level logic, and comprehensive logging.",
+  "language": "HTML",
+  "topics": [
+    "audio-metadata",
+    "cli",
+    "file-management",
+    "mp3-tagging",
+    "music-organization",
+    "python"
+  ],
+  "url": "https://github.com/adrianwedd/ordr.fm",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2025-12-30T00:28:47Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "homelab-scripts",
+  "description": "Collection of production-ready Bash scripts for homelab automation: disk cleanup, system updates, network discovery, and service monitoring",
+  "language": "Shell",
+  "topics": [
+    "automation",
+    "bash",
+    "homelab",
+    "maintenance",
+    "shell-scripts",
+    "sysadmin"
+  ],
+  "url": "https://github.com/adrianwedd/homelab-scripts",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-11-19T12:27:22Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "wedd.org.au",
+  "description": "wedd.org.au",
+  "language": "",
+  "topics": [
+    "landing-page",
+    "personal",
+    "website"
+  ],
+  "url": "https://github.com/adrianwedd/wedd.org.au",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2022-05-23T13:01:22Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "before-the-words-existed",
+  "description": "Gibson encoded cognitive mismatch in 1984, before the vocabulary existed to name it \u2014 a forensic, experiential reading of Neuromancer.",
+  "language": "Python",
+  "topics": [
+    "cognitive-mismatch",
+    "cyberpunk",
+    "digital-humanities",
+    "disability-studies",
+    "experimental",
+    "literary-analysis",
+    "media-studies",
+    "neurodiversity",
+    "neuromancer",
+    "science-fiction",
+    "speculative-fiction",
+    "william-gibson"
+  ],
+  "url": "https://github.com/adrianwedd/before-the-words-existed",
+  "homepage": "https://adrianwedd.github.io/before-the-words-existed/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-02T18:53:59Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "latent-self",
+  "description": "Interactive face-morphing mirror installation with real-time transformations, emotion banks, and admin panel for art installations",
+  "language": "Python",
+  "topics": [
+    "computer-vision",
+    "emotion-recognition",
+    "generative-art",
+    "installation",
+    "interactive-art",
+    "python"
+  ],
+  "url": "https://github.com/adrianwedd/latent-self",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-03T16:00:16Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "personal-agentic-operating-system",
+  "description": "Personal Agentic Operating System - Local-first LLM agents orchestrated with LangGraph, powered by Qdrant & Neo4j, observable via Langfuse",
+  "language": "Python",
+  "topics": [
+    "ai-assistant",
+    "langgraph",
+    "llm-os",
+    "local-first",
+    "neo4j",
+    "python",
+    "qdrant"
+  ],
+  "url": "https://github.com/adrianwedd/personal-agentic-operating-system",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2025-07-23T06:37:11Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "agentic-research-engine",
+  "description": "The agentic-research-engine is a next-generation multi-agent research system designed to transcend the limitations of current agentic paradigms. Our mission is to build a system capable of genuine learning, dynamic collaboration, and autonomous self-improvement, moving beyond the rigid orchestrator-worker models that are stateful but static.",
+  "language": "Python",
+  "topics": [
+    "ai-research",
+    "autonomous",
+    "llm",
+    "multi-agent",
+    "python",
+    "research"
+  ],
+  "url": "https://github.com/adrianwedd/agentic-research-engine",
+  "homepage": "",
+  "stars": 0,
+  "forks": 1,
+  "updated_at": "2025-08-09T13:58:11Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "lemonsqueezy-claude-skills",
+  "description": "6 production-ready Claude Code skills for automating Lemon Squeezy operations. Customer support, sales analytics, discount codes, and refunds. Saves 5+ hours/week.",
+  "language": "",
+  "topics": [
+    "ai-automation",
+    "api-integration",
+    "automation",
+    "claude-ai",
+    "claude-code",
+    "claude-code-skills",
+    "customer-support",
+    "discount-codes",
+    "ecommerce",
+    "lemon-squeezy",
+    "marketing-attribution",
+    "payment-processing",
+    "productivity-tools",
+    "saas-tools",
+    "sales-analytics",
+    "skills"
+  ],
+  "url": "https://github.com/adrianwedd/lemonsqueezy-claude-skills",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-06T03:40:50Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "L1B3RT45",
+  "description": "JAILBREAK PROMPTS FOR ALL MAJOR AI MODELS",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/L1B3RT45",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2026-01-03T15:42:30Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "PentestAgent",
+  "description": "All-in-one offensive security toolbox with AI agent and MCP architecture. Integrates tools like Nmap, Metasploit, FFUF, SQLMap. Enables pentesting, bug bounty hunting, threat hunting, and reporting. RAG-based responses with local knowledge base support.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/PentestAgent",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-05T10:54:38Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "qrbtf",
+  "description": "AI & parametric QR code generator.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/qrbtf",
+  "homepage": "https://qrbtf.com",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-04-17T08:22:41Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "picar-x",
+  "description": "",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/picar-x",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-10-05T07:21:26Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "menticus-reserved",
+  "description": "Strategic namespace reservation for Menticus - Tasmania AI Solutions ecosystem. Future organization: github.com/Menticus",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/menticus-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:18:29Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "cerebrix-reserved",
+  "description": "Strategic namespace reservation for Cerebrix - Tasmania AI Solutions ecosystem",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/cerebrix-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:16:00Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "lucidus-reserved",
+  "description": "Strategic namespace reservation for Lucidus - Tasmania AI Solutions ecosystem",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/lucidus-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:15:57Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "virteum-reserved",
+  "description": "Strategic namespace reservation for Virteum - Tasmania AI Solutions ecosystem",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/virteum-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:15:54Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "mentaris-reserved",
+  "description": "Strategic namespace reservation for Mentaris - Tasmania AI Solutions ecosystem",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/mentaris-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:15:51Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "coordinex-reserved",
+  "description": "Strategic namespace reservation for Coordinex - Tasmania AI Solutions ecosystem",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/coordinex-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:15:48Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "cogitara-reserved",
+  "description": "Strategic namespace reservation for Cogitara - Tasmania AI Solutions ecosystem. Future organization: github.com/Cogitara",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/cogitara-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:14:03Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "meridian-reserved",
+  "description": "Strategic namespace reservation for Meridian - Tasmania AI Solutions ecosystem. Future organization: github.com/Meridian",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/meridian-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:14:00Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "orchestris-reserved",
+  "description": "Strategic namespace reservation for Orchestris - Tasmania AI Solutions ecosystem. Future organization: github.com/Orchestris",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/orchestris-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:13:57Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "luminate-reserved",
+  "description": "Strategic namespace reservation for Luminate - Tasmania AI Solutions ecosystem. Future organization: github.com/Luminate",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/luminate-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:13:54Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "synaptiq-reserved",
+  "description": "Strategic namespace reservation for Synaptiq - Tasmania AI Solutions ecosystem. Future organization: github.com/Synaptiq",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/synaptiq-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:13:51Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "tasmanis-reserved",
+  "description": "Strategic namespace reservation for Tasmanis - Tasmania AI Solutions ecosystem. Future organization: github.com/Tasmanis",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/tasmanis-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:13:49Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "zephyric-reserved",
+  "description": "Strategic namespace reservation for Zephyric - Tasmania AI Solutions ecosystem. Future organization: github.com/Zephyric",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/zephyric-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:13:46Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "convergis-reserved",
+  "description": "Strategic namespace reservation for Convergis - Tasmania AI Solutions ecosystem. Future organization: github.com/Convergis",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/convergis-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:13:43Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "nexurus-reserved",
+  "description": "Strategic namespace reservation for Nexurus - Tasmania AI Solutions ecosystem. Future organization: github.com/Nexurus",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/nexurus-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:13:40Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "sapientia-reserved",
+  "description": "Strategic namespace reservation for Sapientia - Tasmania AI Solutions ecosystem",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/sapientia-reserved",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-08-07T15:11:42Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "null",
+  "description": "Null-safety testing framework and utilities for robust error handling in Python applications",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/null",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-06-21T00:12:42Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "AustLII-Legal-Case-Report",
+  "description": "Australian Legal Cases from Federal Court of Australia",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/AustLII-Legal-Case-Report",
+  "homepage": "https://archive.ics.uci.edu/dataset/239/legal+case+reports",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-08-21T07:00:50Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "stable-diffusion-webui",
+  "description": "Stable Diffusion web UI",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/stable-diffusion-webui",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-09-06T18:13:34Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "chatgpt-retrieval-plugin",
+  "description": "The ChatGPT Retrieval Plugin lets you easily search and find personal or work documents by asking questions in everyday language.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/chatgpt-retrieval-plugin",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-04-24T17:48:18Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "pippin",
+  "description": "The Digital Being Framework for Autonomous Agents",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/pippin",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-01-24T07:30:38Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "echo_chamber",
+  "description": "A Finetuned Phi-2 Based Toxic Chatroom @ ICL",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/echo_chamber",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-05-20T14:49:12Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "obsidian-sample-plugin",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/obsidian-sample-plugin",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-01-27T21:38:04Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "addons-example",
+  "description": "Example Home Assistant add-on repository",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/addons-example",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-03-24T06:48:46Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "microsoft-teams-chat-extractor",
+  "description": "A Chrome extension to extract chats from Microsoft Teams Web",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/microsoft-teams-chat-extractor",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2021-03-12T22:13:28Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "csm",
+  "description": "A Conversational Speech Generation Model",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/csm",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-05-27T12:21:52Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "suna",
+  "description": "Suna - Open Source Generalist AI Agent",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/suna",
+  "homepage": "https://www.suna.so",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2025-05-20T09:55:24Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "gpt-engineer",
+  "description": "Specify what you want it to build, the AI asks for clarification, and then builds it.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gpt-engineer",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-10T22:46:48Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "cam_scripts",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/cam_scripts",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-09-26T01:30:27Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "aider",
+  "description": "aider is GPT powered coding in your terminal",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/aider",
+  "homepage": "https://aider.chat/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-10-09T00:14:57Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "GirlfriendGPT",
+  "description": "Girlfriend GPT is a Python project to build your own AI girlfriend using ChatGPT4.0",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/GirlfriendGPT",
+  "homepage": "https://gptgirlfriend.online",
+  "stars": 0,
+  "forks": 1,
+  "updated_at": "2023-11-11T05:08:51Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "DeepFaceLab",
+  "description": "DeepFaceLab is the leading software for creating deepfakes.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/DeepFaceLab",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-31T22:29:15Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Bazecor",
+  "description": "Graphical configurator for Dygma Products",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Bazecor",
+  "homepage": "https://dygma.com/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-07-18T15:28:17Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "free-games-claimer",
+  "description": "Automatically claims free games on the Epic Games Store, Amazon Prime Gaming and GOG.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/free-games-claimer",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-07-10T11:28:10Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "ivy",
+  "description": "Unified AI",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/ivy",
+  "homepage": "https://unify.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-11T00:32:01Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "gpt-researcher",
+  "description": "GPT based autonomous agent that does online comprehensive research on any given topic",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gpt-researcher",
+  "homepage": "https://gptr.dev",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-05-13T06:44:46Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "SlashGPT",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/SlashGPT",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-03T17:06:41Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "open-interpreter",
+  "description": "OpenAI's Code Interpreter in your terminal, running locally",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/open-interpreter",
+  "homepage": "http://openinterpreter.com/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-11-28T00:53:54Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "superagent",
+  "description": "\ud83e\udd77 SuperAgent - Deploy LLM Agents to production",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/superagent",
+  "homepage": "https://docs.superagent.sh",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-01-31T11:51:33Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "quivr",
+  "description": "Dump all your files and thoughts into your private GenerativeAI Second Brain and chat with it",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/quivr",
+  "homepage": "https://quivr.app",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-06-11T19:11:47Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "audiocraft-infinity-webui",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/audiocraft-infinity-webui",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-14T02:55:04Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "modelscope-agent",
+  "description": "ModelScope-Agent(\u5f00\u6e90\u7248GPTs): An agent framework connecting models in ModelScope with the world",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/modelscope-agent",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-01-31T08:14:27Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "AgentVerse",
+  "description": "\ud83e\udd16 AgentVerse \ud83e\ude90 is designed to facilitate the deployment of multiple LLM-based agents in various applications, which primarily provides two frameworks: task-solving and simulation",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/AgentVerse",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-01-18T12:56:11Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "huginn",
+  "description": "Create agents that monitor and act on your behalf. ",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/huginn",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-01-17T17:17:03Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "AutoGPTQ",
+  "description": "An easy-to-use LLMs quantization package with user-friendly apis, based on GPTQ algorithm.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/AutoGPTQ",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-12-15T06:53:13Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "text-generation-webui",
+  "description": "A Gradio web UI for Large Language Models. Supports transformers, GPTQ, AWQ, EXL2, llama.cpp (GGUF), Llama models.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/text-generation-webui",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-01-31T11:53:47Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "bluetti_mqtt",
+  "description": "MQTT interface for Bluetti power stations",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/bluetti_mqtt",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-02-12T21:55:56Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "code-interpreter-hacking",
+  "description": "Can code interpreter hack itself?",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/code-interpreter-hacking",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2023-07-12T08:37:05Z",
+  "fork": false,
+  "archived": false
+}
+,
+{
+  "name": "gemini-sagittarius",
+  "description": "A Remake of the Google Gemini Fake Demo, Except Using GPT-4 and It's Real",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gemini-sagittarius",
+  "homepage": "http://sagittarius.greg.technology/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-12-12T20:06:11Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "GPTvsGPT",
+  "description": "A playful script to get two AI assistants to converse using OpenAI Assistants API",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/GPTvsGPT",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-11-07T06:39:17Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "openai-cookbook",
+  "description": "Examples and guides for using the OpenAI API",
+  "language": "MDX",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/openai-cookbook",
+  "homepage": "https://platform.openai.com/docs/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-11-07T10:15:22Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "hassio-addons",
+  "description": "Home Assistant addons that I've slurped or modified.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/hassio-addons",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-01-18T21:34:59Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "instagraph",
+  "description": "Converts text input or URL into knowledge graph and displays",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/instagraph",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-09-12T23:17:40Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "ChatGPT_Automation",
+  "description": "A Headless Chrome interface to communicate with ChatGPT",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/ChatGPT_Automation",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-09-05T15:18:21Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Housing-Prices-With-ChatGPT",
+  "description": "",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Housing-Prices-With-ChatGPT",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-09-03T09:27:39Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "WG-gesucht-Bot-w-ChatGPT",
+  "description": "A scraping and messaging bot for wg-gesucht.de. To help find accommodation in the competitive German rental housing market. Personalised messages with ChatGPT",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/WG-gesucht-Bot-w-ChatGPT",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-02-13T19:36:00Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "RealEstateGPT",
+  "description": "Housing data + ChatGPT",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/RealEstateGPT",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-03-13T20:49:29Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "generative_agents",
+  "description": "Generative Agents: Interactive Simulacra of Human Behavior",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/generative_agents",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-11-14T23:16:08Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "CyberChef",
+  "description": "The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/CyberChef",
+  "homepage": "https://gchq.github.io/CyberChef",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-04T21:15:45Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "hackingtool",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/hackingtool",
+  "homepage": "https://forms.gle/ntuAX8BGRR5yAb9ZA",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-08T16:30:04Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "generative-ai-docs",
+  "description": "Documentation for Google's Generative AI developer site",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/generative-ai-docs",
+  "homepage": "https://developers.generativeai.google",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-07T15:44:46Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "haystack",
+  "description": ":mag: Haystack is an open source NLP framework to interact with your data using Transformer models and LLMs (GPT-4, Falcon and alike). Haystack offers production-ready tools to quickly build complex question answering, semantic search, text generation applications, and more.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/haystack",
+  "homepage": "https://haystack.deepset.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-17T12:15:30Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "ix",
+  "description": "Autonomous GPT-4 agent platform",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/ix",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-08-03T10:14:10Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "gpt-repository-loader",
+  "description": "Convert code repos into an LLM prompt-friendly format. Mostly built by GPT-4.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gpt-repository-loader",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-02T22:23:56Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "gpt4all",
+  "description": "gpt4all: an ecosystem of open-source chatbots trained on a massive collections of clean assistant data including code, stories and dialogue",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gpt4all",
+  "homepage": "https://gpt4all.io",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-14T22:43:18Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "mini-agi",
+  "description": "MiniAGI is a minimal general-purpose autonomous agent based on GPT-3.5 / GPT-4. Can analyze stock prices, perform network security tests, create art, and order pizza.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/mini-agi",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-06-14T05:47:59Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Open-Assistant",
+  "description": "OpenAssistant is a chat-based assistant that understands tasks, can interact with third-party systems, and retrieve information dynamically to do so.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Open-Assistant",
+  "homepage": "https://open-assistant.io",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-10T19:00:38Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "MISP",
+  "description": "MISP (core software) - Open Source Threat Intelligence and Sharing Platform",
+  "language": "PHP",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/MISP",
+  "homepage": "https://www.misp-project.org/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-11T00:10:58Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "chainlit",
+  "description": "Build Python LLM apps in minutes \u26a1\ufe0f",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/chainlit",
+  "homepage": "https://docs.chainlit.io",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-20T14:45:06Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "vocode_langchain",
+  "description": "Interact with ChatGPT or Langchain agent over phone",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/vocode_langchain",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-09-25T17:08:03Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "langchain-ui-api",
+  "description": "\ud83e\uddec A back-end for Langchain UI",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/langchain-ui-api",
+  "homepage": "https://dolphin-app-tmpol.ondigitalocean.app/api/v1/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-10-10T21:11:43Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Auto-GPT",
+  "description": "An experimental open-source attempt to make GPT-4 fully autonomous.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Auto-GPT",
+  "homepage": "https://agpt.co",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2023-06-21T11:08:23Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "langflow",
+  "description": "\u26d3\ufe0f LangFlow is a UI for LangChain, designed with react-flow to provide an effortless way to experiment and prototype flows.",
+  "language": "TypeScript",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/langflow",
+  "homepage": "http://www.logspace.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-09-01T22:04:01Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "BabyAGIChatGPT",
+  "description": "A ChatGPT plugin to run BabyAI directly in the chat interface",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/BabyAGIChatGPT",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-04-26T20:17:02Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "certificate-transparency-go",
+  "description": "Auditing for TLS certificates (Go code)",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/certificate-transparency-go",
+  "homepage": "https://certificate.transparency.dev",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-06-12T10:09:34Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Openai-Dialogflow-CX-ES-Python",
+  "description": "Openai-Dialogflow-CX-ES-Python",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Openai-Dialogflow-CX-ES-Python",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-01-05T18:20:45Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Openai-Dialogflow-ES",
+  "description": "Openai-Dialogflow-ES",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Openai-Dialogflow-ES",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2022-12-24T17:21:07Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "azure-openai-proxy",
+  "description": "A proxy for Azure OpenAI API that can convert an OpenAI request into an Azure OpenAI request.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/azure-openai-proxy",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2023-05-06T08:37:20Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "llm-lobbyist",
+  "description": "Code for the paper: \"Large Language Models as Corporate Lobbyists\" (2023).",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/llm-lobbyist",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2023-01-13T03:31:25Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "wingmanAI",
+  "description": "Real-time transcription of audio, integrated with ChatGPT for interactive use. Save, load, and append transcripts for effective context management in conversations.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/wingmanAI",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-06-06T09:24:03Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "github-assistant",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/github-assistant",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-06-07T12:09:26Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "pyCodeAGI",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/pyCodeAGI",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-05-04T06:48:22Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "llama_index",
+  "description": "LlamaIndex (GPT Index) is a project that provides a central interface to connect your LLM's with external data.",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/llama_index",
+  "homepage": "https://gpt-index.readthedocs.io/en/latest/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2024-03-20T16:49:15Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "stable-diffusion",
+  "description": "A latent text-to-image diffusion model",
+  "language": "Jupyter Notebook",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/stable-diffusion",
+  "homepage": "https://ommer-lab.com/research/latent-diffusion-models/",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2023-06-11T10:49:39Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "FLARE",
+  "description": "Forward-Looking Active REtrieval-augmented generation (FLARE)",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/FLARE",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-05-17T07:55:56Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "gorilla",
+  "description": "Gorilla: An API store for LLMs",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gorilla",
+  "homepage": "https://gorilla.cs.berkeley.edu/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-06-12T21:49:30Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "matrix_chatgpt_bot",
+  "description": "A simple matrix bot that supports chatting with ChatGPT, Bing AI, Google Bard",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/matrix_chatgpt_bot",
+  "homepage": "https://matrix.to/#/#public:matrix.qqs.tw",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-10-04T01:40:21Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "eva",
+  "description": "Database system for building simpler and faster AI-powered applications",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/eva",
+  "homepage": "https://evadb.readthedocs.io/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-05-26T07:57:34Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "psychic",
+  "description": "Universal APIs for unstructured data. Sync documents from SaaS tools to a SQL or vector database, where they can be easily queried by AI applications",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/psychic",
+  "homepage": "https://www.psychic.dev/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-09-01T22:01:02Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "langchain-experiments",
+  "description": "Building Apps with LLMs",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/langchain-experiments",
+  "homepage": "https://datalumina.io",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-05-15T05:37:32Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "langchain-hub",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/langchain-hub",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-04-24T07:05:16Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "shared_colab_notebooks",
+  "description": "A Repo to store the Google Colaboratory Notebooks that I have created and shared",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/shared_colab_notebooks",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-02-01T09:50:44Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "automatic1111-colab",
+  "description": "Using StableDiffusion webui on Colab",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/automatic1111-colab",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-05-19T10:45:53Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "LLM-As-Chatbot",
+  "description": "LLM as a Chatbot Service",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/LLM-As-Chatbot",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-05-17T06:44:50Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "dify",
+  "description": "One API for plugins and datasets, one interface for prompt engineering and visual operation, all for creating powerful AI applications.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/dify",
+  "homepage": "https://dify.ai",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-09-01T21:59:13Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Realestate",
+  "description": "Contains a set of Python scripts for real estate data analysis, visualization, and fitting.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Realestate",
+  "homepage": "https://towardsdatascience.com/house-hunting-in-the-san-francisco-bay-area-deal-hunting-using-machine-learning-3ed6fc8e8991",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2022-03-19T22:49:31Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "plugins-quickstart",
+  "description": "Get a ChatGPT plugin up and running in under 5 minutes!",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/plugins-quickstart",
+  "homepage": "https://platform.openai.com/docs/plugins",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-05-13T09:17:58Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Agent-LLM",
+  "description": "An Artificial Intelligence Automation Platform.  AI Instruction management from various providers, has an adaptive memory, and a versatile plugin system with many commands including web browsing.  Supports many AI providers and models and growing support every day.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Agent-LLM",
+  "homepage": "https://agent-llm.com",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-20T14:50:25Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "babyagi-asi",
+  "description": "BabyAGI: an Autonomous and Self-Improving agent, or BASI",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/babyagi-asi",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-07-10T12:41:06Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "babyagi",
+  "description": "",
+  "language": "Python",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/babyagi",
+  "homepage": "",
+  "stars": 1,
+  "forks": 0,
+  "updated_at": "2026-02-10T13:19:12Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "book-gpt",
+  "description": "Drop a book, start asking question.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/book-gpt",
+  "homepage": "https://book-gpt.fraserxu.dev",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-10-07T01:21:54Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "examples",
+  "description": "",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/examples",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-04-18T22:04:35Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "gpt4-pdf-chatbot-langchain",
+  "description": "GPT4 & LangChain Chatbot for large PDF docs",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/gpt4-pdf-chatbot-langchain",
+  "homepage": "https://www.youtube.com/watch?v=ih9PBGVVOO4",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-10-07T01:21:53Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "Prompt-Engineering-Guide",
+  "description": "\ud83d\udc19 Guides, papers, lecture, notebooks and resources for prompt engineering",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/Prompt-Engineering-Guide",
+  "homepage": "https://www.promptingguide.ai/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-10-25T05:03:57Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "LangChain-CheatSheet",
+  "description": "LangChain CheatSheet",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/LangChain-CheatSheet",
+  "homepage": "https://python.langchain.com/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-04-11T09:45:35Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "GenAI_LLM_timeline",
+  "description": "ChatGPT, GenerativeAI and LLMs Timeline",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/GenAI_LLM_timeline",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-04-16T15:40:13Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "e2b",
+  "description": "Your own virtual developer. e2b uses AI agents to build software for you based on your instructions. Developers describe what they want to build by writing documentation. Then let AI agents with access to tools do the coding work.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/e2b",
+  "homepage": "https://e2b.dev",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2023-10-10T21:10:02Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "ChatGPT",
+  "description": "Lightweight package for interacting with ChatGPT's API by OpenAI. Uses reverse engineered official API.",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/ChatGPT",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2022-12-12T07:55:37Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "sample-generator",
+  "description": "Tools to train a generative model on arbitrary audio samples",
+  "language": "",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/sample-generator",
+  "homepage": "",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2022-09-07T18:15:13Z",
+  "fork": true,
+  "archived": false
+}
+,
+{
+  "name": "jekyll-theme-console",
+  "description": "A jekyll theme inspired by linux consoles for hackers, developers and script kiddies.",
+  "language": "CSS",
+  "topics": [],
+  "url": "https://github.com/adrianwedd/jekyll-theme-console",
+  "homepage": "https://b2a3e8.github.io/jekyll-theme-console/",
+  "stars": 0,
+  "forks": 0,
+  "updated_at": "2019-06-18T13:33:49Z",
+  "fork": true,
+  "archived": false
+}
+]

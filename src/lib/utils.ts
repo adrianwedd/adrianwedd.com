@@ -5,3 +5,11 @@
 export function slug(id: string): string {
   return id.replace(/\.mdx?$/, '');
 }
+
+/** Generate a URL-safe slug from image alt text. */
+export function imageSlug(alt: string): string {
+  return alt
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}

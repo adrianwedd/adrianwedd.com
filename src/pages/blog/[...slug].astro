@@ -48,6 +48,16 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
         <time datetime={post.data.date.toISOString()}>
           {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
         </time>
+        {post.data.updatedDate && (
+          <>
+            <span aria-hidden="true">&middot;</span>
+            <span>
+              Updated <time datetime={post.data.updatedDate.toISOString()}>
+                {post.data.updatedDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </time>
+            </span>
+          </>
+        )}
         <span aria-hidden="true">&middot;</span>
         <span>{readingTime} min read</span>
       </div>

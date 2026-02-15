@@ -70,15 +70,28 @@ const allItems: ContentItem[] = [
   })),
 ];
 
-// Score by tag overlap, excluding current item
+// Build tag frequency map for IDF-style weighting (rare tags score higher)
+const tagCounts = new Map<string, number>();
+for (const item of allItems) {
+  for (const t of item.tags) {
+    tagCounts.set(t, (tagCounts.get(t) || 0) + 1);
+  }
+}
+const totalItems = allItems.length;
+
+// Score by weighted tag overlap + temporal proximity
 const related = allItems
   .filter((item) => item.id !== `${contentType}:${currentId}`)
-  .map((item) => ({
-    ...item,
-    score: item.tags.filter((t) => currentTags.includes(t)).length,
-  }))
+  .map((item) => {
+    // Tag co-occurrence score: shared tags weighted by inverse frequency
+    const tagScore = item.tags
+      .filter((t) => currentTags.includes(t))
+      .reduce((sum, t) => sum + Math.log(totalItems / (tagCounts.get(t) || 1)), 0);
+
+    return { ...item, score: tagScore };
+  })
   .filter((item) => item.score > 0)
-  .sort((a, b) => b.score - a.score || (a.type === contentType ? 1 : -1))
+  .sort((a, b) => b.score - a.score)
   .slice(0, limit);
 
 const typeLabels: Record<string, string> = {
