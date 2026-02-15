@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import { getCollection, render } from 'astro:content';
@@ -7,7 +8,7 @@ import { slug } from '../../lib/utils';
 
 export async function getStaticPaths() {
   const galleries = await getCollection('gallery');
-  return galleries.map(gallery => ({
+  return galleries.map((gallery) => ({
     params: { slug: slug(gallery.id) },
     props: { gallery },
   }));
@@ -24,59 +25,65 @@ const { Content } = await render(gallery);
   type="article"
   tags={gallery.data.tags}
 >
-  <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <article class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumb
+      crumbs={[{ label: 'Home', href: '/' }, { label: 'Gallery', href: '/gallery/' }, { label: gallery.data.title }]}
+    />
     <header class="mb-10 max-w-3xl">
       <h1 class="text-text">{gallery.data.title}</h1>
-      {gallery.data.description && (
-        <p class="mt-4 text-lg text-text-muted leading-relaxed">{gallery.data.description}</p>
-      )}
+      {
+        gallery.data.description && (
+          <p class="mt-4 text-lg leading-relaxed text-text-muted">{gallery.data.description}</p>
+        )
+      }
       <div class="mt-4 flex flex-wrap gap-2">
-        {gallery.data.tags.map((tag: string) => (
-          <span class="text-xs px-2 py-0.5 rounded-full bg-surface-alt border border-border text-text-muted">
-            {tag}
-          </span>
-        ))}
+        {
+          gallery.data.tags.map((tag: string) => (
+            <span class="rounded-full border border-border bg-surface-alt px-2 py-0.5 text-xs text-text-muted">
+              {tag}
+            </span>
+          ))
+        }
       </div>
     </header>
 
     {/* Narrative text */}
-    <div class="prose prose-invert max-w-3xl mb-10
-      prose-headings:text-text prose-p:text-text prose-p:leading-relaxed
-      prose-a:text-accent
-    ">
+    <div
+      class="prose prose-invert mb-10 max-w-3xl prose-headings:text-text prose-p:leading-relaxed prose-p:text-text prose-a:text-accent"
+    >
       <Content />
     </div>
 
     {/* Image grid */}
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="gallery-grid">
-      {gallery.data.images.map((image: { src: string; alt: string; caption?: string }, index: number) => (
-        <button
-          type="button"
-          class="gallery-trigger group block rounded-lg overflow-hidden border border-border hover:border-accent/50 transition-all cursor-pointer bg-transparent p-0 text-left w-full"
-          data-index={index}
-          aria-label={`View ${image.alt}`}
-        >
-          <div class="aspect-[4/3] bg-surface-alt overflow-hidden">
-            <img
-              src={image.src}
-              alt={image.alt}
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              loading="lazy"
-            />
-          </div>
-          {image.caption && (
-            <p class="p-2 text-xs text-text-muted">{image.caption}</p>
-          )}
-        </button>
-      ))}
+      {
+        gallery.data.images.map((image: { src: string; alt: string; caption?: string }, index: number) => (
+          <button
+            type="button"
+            class="gallery-trigger hover:border-accent/50 group block w-full cursor-pointer overflow-hidden rounded-lg border border-border bg-transparent p-0 text-left transition-all"
+            data-index={index}
+            aria-label={`View ${image.alt}`}
+          >
+            <div class="aspect-[4/3] overflow-hidden bg-surface-alt">
+              <img
+                src={image.src}
+                alt={image.alt}
+                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+            </div>
+            {image.caption && <p class="p-2 text-xs text-text-muted">{image.caption}</p>}
+          </button>
+        ))
+      }
     </div>
 
     <Lightbox images={gallery.data.images} />
 
     <RelatedContent currentTags={gallery.data.tags} currentId={gallery.id} contentType="gallery" />
 
-    <nav class="mt-16 pt-8 border-t border-border" aria-label="Back to gallery">
-      <a href="/gallery/" class="text-sm text-text-muted hover:text-accent transition-colors">
+    <nav class="mt-16 border-t border-border pt-8" aria-label="Back to gallery">
+      <a href="/gallery/" class="text-sm text-text-muted transition-colors hover:text-accent">
         &larr; All collections
       </a>
     </nav>

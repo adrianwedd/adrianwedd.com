@@ -5,13 +5,13 @@ import { slug } from '../../../lib/utils';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  const tags = [...new Set(posts.flatMap(p => p.data.tags))];
-  return tags.map(tag => ({
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+  return tags.map((tag) => ({
     params: { tag },
     props: {
       tag,
       posts: posts
-        .filter(p => !p.data.draft && p.data.tags.includes(tag))
+        .filter((p) => !p.data.draft && p.data.tags.includes(tag))
         .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
     },
   }));
@@ -20,57 +20,61 @@ export async function getStaticPaths() {
 const { tag, posts } = Astro.props;
 
 const allPosts = await getCollection('blog');
-const allTags = [...new Set(allPosts.filter(p => !p.data.draft).flatMap(p => p.data.tags))].sort();
+const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) => p.data.tags))].sort();
 ---
 
-<BaseLayout
-  title={`Posts tagged "${tag}"`}
-  description={`Blog posts tagged with ${tag}.`}
->
-  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<BaseLayout title={`Posts tagged "${tag}"`} description={`Blog posts tagged with ${tag}.`}>
+  <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
     <h1 class="text-text">Tag: {tag}</h1>
     <p class="mt-2 text-text-muted">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
 
     <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
       <a
         href="/blog/"
-        class="text-xs px-3 py-1 rounded-full border border-border text-text-muted hover:border-accent hover:text-accent transition-colors no-underline"
+        class="rounded-full border border-border px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:border-accent hover:text-accent"
       >
         All
       </a>
-      {allTags.map(t => (
-        <a
-          href={`/blog/tag/${t}/`}
-          class:list={[
-            'text-xs px-3 py-1 rounded-full border no-underline',
-            t === tag
-              ? 'border-accent bg-accent/10 text-accent font-medium'
-              : 'border-border text-text-muted hover:border-accent hover:text-accent transition-colors',
-          ]}
-        >
-          {t}
-        </a>
-      ))}
+      {
+        allTags.map((t) => (
+          <a
+            href={`/blog/tag/${t}/`}
+            class:list={[
+              'rounded-full border px-3 py-1 text-xs no-underline',
+              t === tag
+                ? 'bg-accent/10 border-accent font-medium text-accent'
+                : 'border-border text-text-muted transition-colors hover:border-accent hover:text-accent',
+            ]}
+          >
+            {t}
+          </a>
+        ))
+      }
     </nav>
 
     <div class="mt-10 space-y-8">
-      {posts.map(post => (
-        <article>
-          <a href={`/blog/${slug(post.id)}/`} class="group block p-6 rounded-xl bg-surface-alt border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline">
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <h2 class="text-xl font-semibold text-text group-hover:text-accent transition-colors">
-                  {post.data.title}
-                </h2>
-                <p class="mt-1 text-sm text-text-muted leading-relaxed">{post.data.description}</p>
+      {
+        posts.map((post) => (
+          <article>
+            <a
+              href={`/blog/${slug(post.id)}/`}
+              class="card-hover hover:border-accent/50 group block rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h2 class="text-xl font-semibold text-text transition-colors group-hover:text-accent">
+                    {post.data.title}
+                  </h2>
+                  <p class="mt-1 text-sm leading-relaxed text-text-muted">{post.data.description}</p>
+                </div>
+                <time class="whitespace-nowrap text-xs text-text-muted" datetime={post.data.date.toISOString()}>
+                  {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </time>
               </div>
-              <time class="text-xs text-text-muted whitespace-nowrap" datetime={post.data.date.toISOString()}>
-                {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
-              </time>
-            </div>
-          </a>
-        </article>
-      ))}
+            </a>
+          </article>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>

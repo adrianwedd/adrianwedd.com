@@ -21,7 +21,9 @@
     try {
       const raw = localStorage.getItem('adrianwedd_consent');
       return raw ? JSON.parse(raw) : null;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
 
   function gtag(...args: any[]) {
@@ -109,7 +111,7 @@
       device_type: screen.type,
       screen_bucket: screen.bucket,
       connection_type: connection,
-      is_touch: ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 'true' : 'false',
+      is_touch: 'ontouchstart' in window || navigator.maxTouchPoints > 0 ? 'true' : 'false',
     });
   }
 
@@ -130,7 +132,9 @@
 
   function getPageTags(): string[] {
     const tagEls = document.querySelectorAll('[data-tag]');
-    return Array.from(tagEls).map(el => (el as HTMLElement).dataset.tag || '').filter(Boolean);
+    return Array.from(tagEls)
+      .map((el) => (el as HTMLElement).dataset.tag || '')
+      .filter(Boolean);
   }
 
   function classifyReferrer(): string {
@@ -148,7 +152,9 @@
       if (host.includes('github')) return 'developer';
       if (host.includes('adrianwedd')) return 'internal';
       return 'referral';
-    } catch { return 'unknown'; }
+    } catch {
+      return 'unknown';
+    }
   }
 
   // --- Scroll depth ---
@@ -193,7 +199,8 @@
 
     const sendReading = () => {
       clearInterval(interval);
-      if (maxVisible >= 5) { // only send if they stayed 5+ seconds
+      if (maxVisible >= 5) {
+        // only send if they stayed 5+ seconds
         gtag('event', 'reading_time', {
           seconds: maxVisible,
           content_type: contentType,
@@ -223,7 +230,9 @@
             link_domain: url.hostname,
           });
         }
-      } catch { /* relative URLs, javascript:, etc */ }
+      } catch {
+        /* relative URLs, javascript:, etc */
+      }
     });
   }
 
@@ -241,7 +250,7 @@
   // --- Content: project clicks ---
 
   function trackProjectClicks() {
-    document.querySelectorAll('a[href*="/projects/"]').forEach(el => {
+    document.querySelectorAll('a[href*="/projects/"]').forEach((el) => {
       el.addEventListener('click', () => {
         gtag('event', 'project_click', {
           project_name: el.textContent?.trim() || 'unknown',
@@ -254,7 +263,7 @@
   // --- Content: gallery views ---
 
   function trackGalleryViews() {
-    document.querySelectorAll('.gallery-trigger').forEach(el => {
+    document.querySelectorAll('.gallery-trigger').forEach((el) => {
       el.addEventListener('click', () => {
         gtag('event', 'gallery_view', {
           image_index: (el as HTMLElement).dataset.index,
@@ -267,7 +276,7 @@
   // --- Content: audio playback ---
 
   function trackAudioPlayback() {
-    document.querySelectorAll('audio').forEach(el => {
+    document.querySelectorAll('audio').forEach((el) => {
       let started = false;
 
       el.addEventListener('play', () => {
@@ -301,7 +310,7 @@
   // --- Navigation: tag filter clicks ---
 
   function trackTagFilters() {
-    document.querySelectorAll('[data-tag]').forEach(el => {
+    document.querySelectorAll('[data-tag]').forEach((el) => {
       el.addEventListener('click', () => {
         gtag('event', 'tag_filter', {
           tag: (el as HTMLElement).dataset.tag,
@@ -314,7 +323,7 @@
   // --- Navigation: theme switches ---
 
   function trackThemeSwitches() {
-    document.querySelectorAll('.theme-toggle').forEach(el => {
+    document.querySelectorAll('.theme-toggle').forEach((el) => {
       el.addEventListener('click', () => {
         // Read after the toggle fires
         setTimeout(() => {

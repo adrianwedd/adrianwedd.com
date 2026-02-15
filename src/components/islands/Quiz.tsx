@@ -21,7 +21,7 @@ export default function Quiz({ src }: Props) {
 
   useEffect(() => {
     fetch(src)
-      .then(r => r.json())
+      .then((r) => r.json())
       .then((data) => setQuestions(Array.isArray(data) ? data : data.questions || []))
       .catch(() => setError('Failed to load quiz.'));
   }, [src]);
@@ -31,14 +31,19 @@ export default function Quiz({ src }: Props) {
 
   if (finished) {
     return (
-      <div class="rounded-xl bg-surface-alt border border-border p-6 text-center">
+      <div class="rounded-xl border border-border bg-surface-alt p-6 text-center">
         <p class="text-lg font-semibold text-text">
           {score} / {questions.length} correct
         </p>
         <button
           type="button"
-          onClick={() => { setCurrent(0); setSelected(null); setScore(0); setFinished(false); }}
-          class="mt-4 px-4 py-2 rounded-lg border border-border text-sm text-text-muted hover:text-accent hover:border-accent/50 transition-colors"
+          onClick={() => {
+            setCurrent(0);
+            setSelected(null);
+            setScore(0);
+            setFinished(false);
+          }}
+          class="hover:border-accent/50 mt-4 rounded-lg border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:text-accent"
         >
           Try again
         </button>
@@ -50,11 +55,11 @@ export default function Quiz({ src }: Props) {
   const revealed = selected !== null;
 
   return (
-    <div class="rounded-xl bg-surface-alt border border-border p-6">
-      <p class="text-xs text-text-muted mb-3">
+    <div class="rounded-xl border border-border bg-surface-alt p-6">
+      <p class="mb-3 text-xs text-text-muted">
         Question {current + 1} of {questions.length}
       </p>
-      <p class="text-sm font-medium text-text mb-4">{q.question}</p>
+      <p class="mb-4 text-sm font-medium text-text">{q.question}</p>
       <div class="space-y-2">
         {q.options.map((opt, i) => {
           let style = 'border-border text-text-muted';
@@ -69,10 +74,10 @@ export default function Quiz({ src }: Props) {
               disabled={revealed}
               onClick={() => {
                 setSelected(i);
-                if (i === q.answer) setScore(s => s + 1);
+                if (i === q.answer) setScore((s) => s + 1);
               }}
-              class={`w-full text-left px-4 py-2 rounded-lg border text-sm transition-colors ${style} ${
-                !revealed ? 'hover:border-accent/50 hover:text-text cursor-pointer' : ''
+              class={`w-full rounded-lg border px-4 py-2 text-left text-sm transition-colors ${style} ${
+                !revealed ? 'hover:border-accent/50 cursor-pointer hover:text-text' : ''
               }`}
             >
               {opt}
@@ -80,9 +85,7 @@ export default function Quiz({ src }: Props) {
           );
         })}
       </div>
-      {revealed && q.explanation && (
-        <p class="mt-3 text-xs text-text-muted">{q.explanation}</p>
-      )}
+      {revealed && q.explanation && <p class="mt-3 text-xs text-text-muted">{q.explanation}</p>}
       {revealed && (
         <button
           type="button"
@@ -90,11 +93,11 @@ export default function Quiz({ src }: Props) {
             if (current + 1 >= questions.length) {
               setFinished(true);
             } else {
-              setCurrent(c => c + 1);
+              setCurrent((c) => c + 1);
               setSelected(null);
             }
           }}
-          class="mt-4 px-4 py-2 rounded-lg bg-accent text-surface text-sm font-medium hover:bg-accent-hover transition-colors"
+          class="mt-4 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-accent-hover"
         >
           {current + 1 >= questions.length ? 'See results' : 'Next'}
         </button>

@@ -15,14 +15,18 @@ function getConsent(): ConsentState | null {
   try {
     const raw = localStorage.getItem(CONSENT_KEY);
     return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
 function getMemory(): VisitorMemory | null {
   try {
     const raw = localStorage.getItem(MEMORY_KEY);
     return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
 export default function Transparency() {
@@ -58,11 +62,11 @@ export default function Transparency() {
   if (!consent) return null;
 
   return (
-    <div class="mt-8 border border-border rounded-xl p-6 bg-surface-alt">
+    <div class="mt-8 rounded-xl border border-border bg-surface-alt p-6">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        class="flex items-center gap-2 text-sm font-medium text-text hover:text-accent transition-colors w-full text-left"
+        class="flex w-full items-center gap-2 text-left text-sm font-medium text-text transition-colors hover:text-accent"
         aria-expanded={open}
       >
         <span class="transition-transform" style={{ transform: open ? 'rotate(90deg)' : 'none' }}>
@@ -74,17 +78,24 @@ export default function Transparency() {
       {open && (
         <div class="mt-4 space-y-4 text-sm">
           <div>
-            <h4 class="font-medium text-text mb-1">Consent</h4>
+            <h4 class="mb-1 font-medium text-text">Consent</h4>
             <ul class="space-y-1 text-text-muted">
               <li>Analytics: {consent.analytics ? 'Allowed' : 'Denied'}</li>
               <li>Personalisation: {consent.personalisation ? 'Allowed' : 'Denied'}</li>
-              <li>Set: {new Date(consent.timestamp).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}</li>
+              <li>
+                Set:{' '}
+                {new Date(consent.timestamp).toLocaleDateString('en-AU', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })}
+              </li>
             </ul>
           </div>
 
           {memory && (
             <div>
-              <h4 class="font-medium text-text mb-1">What I remember</h4>
+              <h4 class="mb-1 font-medium text-text">What I remember</h4>
               <ul class="space-y-1 text-text-muted">
                 <li>Visits: {memory.visits}</li>
                 {memory.referrer && <li>First arrived from: {memory.referrer}</li>}
@@ -93,18 +104,18 @@ export default function Transparency() {
               <button
                 type="button"
                 onClick={resetMemory}
-                class="mt-2 text-xs text-text-muted hover:text-accent transition-colors"
+                class="mt-2 text-xs text-text-muted transition-colors hover:text-accent"
               >
                 Clear browsing memory
               </button>
             </div>
           )}
 
-          <div class="pt-2 border-t border-border">
+          <div class="border-t border-border pt-2">
             <button
               type="button"
               onClick={resetAll}
-              class="text-xs text-text-muted hover:text-accent transition-colors"
+              class="text-xs text-text-muted transition-colors hover:text-accent"
             >
               Reset all preferences and reload
             </button>

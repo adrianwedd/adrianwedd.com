@@ -10,7 +10,8 @@ const projects = allProjects.sort((a, b) => {
   return b.data.date.getTime() - a.data.date.getTime();
 });
 
-const allTags = [...new Set(projects.flatMap(p => p.data.tags))].sort();
+const allTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
+const allStatuses = [...new Set(projects.map((p) => p.data.status))].sort();
 
 const statusLabels: Record<string, string> = {
   active: 'Active',
@@ -20,107 +21,215 @@ const statusLabels: Record<string, string> = {
 };
 ---
 
-<BaseLayout
-  title="Projects"
-  description="Things I've built, broken, and sometimes both."
->
-  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<BaseLayout title="Projects" description="Things I've built, broken, and sometimes both.">
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
     <h1 class="text-text">Projects</h1>
-    <p class="mt-4 text-text-muted max-w-prose">
-      Things I've built, broken, and sometimes both.
-    </p>
+    <p class="mt-4 max-w-prose text-text-muted">Things I've built, broken, and sometimes both.</p>
 
-    {allTags.length > 0 && (
-      <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag" id="tag-filters">
-        <button
-          type="button"
-          data-tag=""
-          class="tag-filter text-xs px-3 py-1 rounded-full border border-accent bg-accent/10 text-accent font-medium cursor-pointer transition-colors"
-          aria-pressed="true"
-        >
-          All
-        </button>
-        {allTags.map(tag => (
+    {/* Status filter */}
+    <div class="mt-8 flex flex-wrap gap-2" id="status-filters" aria-label="Filter by status">
+      <button
+        type="button"
+        data-status=""
+        class="status-filter bg-accent/10 cursor-pointer rounded-full border border-accent px-3 py-1 text-xs font-medium text-accent transition-colors"
+        aria-pressed="true"
+      >
+        All
+      </button>
+      {
+        allStatuses.map((status) => (
           <button
             type="button"
-            data-tag={tag}
-            class="tag-filter text-xs px-3 py-1 rounded-full border border-border text-text-muted cursor-pointer hover:border-accent hover:text-accent transition-colors"
+            data-status={status}
+            class="status-filter cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
             aria-pressed="false"
           >
-            {tag}
+            {statusLabels[status] || status}
           </button>
-        ))}
-      </nav>
-    )}
-
-    <div class="mt-10 grid gap-6 sm:grid-cols-2" id="project-grid">
-      {projects.map(project => (
-        <article
-          data-tags={JSON.stringify(project.data.tags)}
-          class="project-card"
-        >
-          <a
-            href={`/projects/${slug(project.id)}/`}
-            class="group block p-6 rounded-xl bg-surface-alt border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline"
-          >
-            <div class="flex items-start justify-between gap-3">
-              <h2 class="text-lg font-semibold text-text group-hover:text-accent transition-colors">
-                {project.data.title}
-              </h2>
-              <span class:list={[
-                'text-xs px-2 py-0.5 rounded-full border whitespace-nowrap',
-                project.data.featured
-                  ? 'border-accent/30 text-accent'
-                  : 'border-border text-text-muted',
-              ]}>
-                {statusLabels[project.data.status] || project.data.status}
-              </span>
-            </div>
-            <p class="mt-2 text-sm text-text-muted leading-relaxed">
-              {project.data.description}
-            </p>
-            <div class="mt-4 flex flex-wrap gap-2">
-              {project.data.tags.slice(0, 4).map((tag: string) => (
-                <span class="text-xs px-2 py-0.5 rounded-full bg-surface border border-border text-text-muted">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </a>
-        </article>
-      ))}
+        ))
+      }
     </div>
+
+    {/* Tag filter */}
+    {
+      allTags.length > 0 && (
+        <div class="mt-3 flex flex-wrap gap-2" id="tag-filters" aria-label="Filter by tag">
+          <button
+            type="button"
+            data-tag=""
+            class="tag-filter bg-accent/10 cursor-pointer rounded-full border border-accent px-3 py-1 text-xs font-medium text-accent transition-colors"
+            aria-pressed="true"
+          >
+            All tags
+          </button>
+          {allTags.map((tag) => (
+            <button
+              type="button"
+              data-tag={tag}
+              class="tag-filter cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+              aria-pressed="false"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      )
+    }
+
+    {/* Sort control */}
+    <div class="mt-4 flex items-center gap-2">
+      <label for="sort-select" class="text-xs text-text-muted">Sort:</label>
+      <select
+        id="sort-select"
+        class="rounded border border-border bg-surface-alt px-2 py-1 text-xs text-text-muted focus:border-accent focus:outline-none"
+      >
+        <option value="featured">Featured first</option>
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="alpha">A–Z</option>
+      </select>
+    </div>
+
+    <div class="mt-6 grid gap-6 sm:grid-cols-2" id="project-grid">
+      {
+        projects.map((project) => (
+          <article
+            data-tags={JSON.stringify(project.data.tags)}
+            data-status={project.data.status}
+            data-featured={project.data.featured ? 'true' : ''}
+            data-date={project.data.date.toISOString()}
+            data-title={project.data.title}
+            class="project-card"
+          >
+            <a
+              href={`/projects/${slug(project.id)}/`}
+              class="card-hover hover:border-accent/50 group block h-full rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
+            >
+              <div class="flex items-start justify-between gap-3">
+                <h2 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
+                  {project.data.title}
+                </h2>
+                <span
+                  class:list={[
+                    'whitespace-nowrap rounded-full border px-2 py-0.5 text-xs',
+                    project.data.featured ? 'border-accent/30 text-accent' : 'border-border text-text-muted',
+                  ]}
+                >
+                  {statusLabels[project.data.status] || project.data.status}
+                </span>
+              </div>
+              <p class="mt-2 text-sm leading-relaxed text-text-muted">{project.data.description}</p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                {project.data.tags.slice(0, 4).map((tag: string) => (
+                  <span class="rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-text-muted">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+
+    <p id="no-results" class="mt-10 hidden text-center text-text-muted">No projects match these filters.</p>
   </section>
 
   <script>
-    const filters = document.getElementById('tag-filters');
-    const cards = document.querySelectorAll<HTMLElement>('.project-card');
+    const grid = document.getElementById('project-grid')!;
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.project-card'));
+    const statusFilters = document.getElementById('status-filters')!;
+    const tagFilters = document.getElementById('tag-filters')!;
+    const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
+    const noResults = document.getElementById('no-results')!;
 
-    filters?.addEventListener('click', (e) => {
+    let activeStatus = '';
+    let activeTag = '';
+
+    // Read URL params on load
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('status')) activeStatus = params.get('status')!;
+    if (params.get('tag')) activeTag = params.get('tag')!;
+    if (params.get('sort')) sortSelect.value = params.get('sort')!;
+
+    function setActiveButton(container: HTMLElement, cls: string, value: string, attr: string) {
+      container.querySelectorAll(`.${cls}`).forEach((b) => {
+        const el = b as HTMLElement;
+        const match = (el.dataset[attr] || '') === value;
+        el.classList.toggle('border-accent', match);
+        el.classList.toggle('bg-accent/10', match);
+        el.classList.toggle('text-accent', match);
+        el.classList.toggle('font-medium', match);
+        el.classList.toggle('border-border', !match);
+        el.classList.toggle('text-text-muted', !match);
+        el.setAttribute('aria-pressed', match ? 'true' : 'false');
+      });
+    }
+
+    function updateURL() {
+      const p = new URLSearchParams();
+      if (activeStatus) p.set('status', activeStatus);
+      if (activeTag) p.set('tag', activeTag);
+      if (sortSelect.value !== 'featured') p.set('sort', sortSelect.value);
+      const qs = p.toString();
+      history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname);
+    }
+
+    function applyFilters() {
+      let visible = 0;
+      cards.forEach((card) => {
+        const matchStatus = !activeStatus || card.dataset.status === activeStatus;
+        const matchTag = !activeTag || (JSON.parse(card.dataset.tags || '[]') as string[]).includes(activeTag);
+        const show = matchStatus && matchTag;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      noResults.classList.toggle('hidden', visible > 0);
+      updateURL();
+    }
+
+    function applySort() {
+      const sorted = [...cards].sort((a, b) => {
+        const sort = sortSelect.value;
+        if (sort === 'featured') {
+          const af = a.dataset.featured ? 1 : 0;
+          const bf = b.dataset.featured ? 1 : 0;
+          if (af !== bf) return bf - af;
+          return new Date(b.dataset.date!).getTime() - new Date(a.dataset.date!).getTime();
+        }
+        if (sort === 'newest') return new Date(b.dataset.date!).getTime() - new Date(a.dataset.date!).getTime();
+        if (sort === 'oldest') return new Date(a.dataset.date!).getTime() - new Date(b.dataset.date!).getTime();
+        return (a.dataset.title || '').localeCompare(b.dataset.title || '');
+      });
+      sorted.forEach((card) => grid.appendChild(card));
+      updateURL();
+    }
+
+    statusFilters.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.status-filter');
+      if (!btn) return;
+      activeStatus = btn.dataset.status || '';
+      setActiveButton(statusFilters, 'status-filter', activeStatus, 'status');
+      applyFilters();
+    });
+
+    tagFilters.addEventListener('click', (e) => {
       const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.tag-filter');
       if (!btn) return;
-
-      const tag = btn.dataset.tag || '';
-
-      // Update active button styles and aria-pressed
-      filters.querySelectorAll('.tag-filter').forEach(b => {
-        b.classList.remove('border-accent', 'bg-accent/10', 'text-accent', 'font-medium');
-        b.classList.add('border-border', 'text-text-muted');
-        b.setAttribute('aria-pressed', 'false');
-      });
-      btn.classList.remove('border-border', 'text-text-muted');
-      btn.classList.add('border-accent', 'bg-accent/10', 'text-accent', 'font-medium');
-      btn.setAttribute('aria-pressed', 'true');
-
-      // Filter cards (project-card is on the <article> wrapper)
-      cards.forEach(card => {
-        if (!tag) {
-          card.style.display = '';
-          return;
-        }
-        const tags: string[] = JSON.parse(card.dataset.tags || '[]');
-        card.style.display = tags.includes(tag) ? '' : 'none';
-      });
+      activeTag = btn.dataset.tag || '';
+      setActiveButton(tagFilters, 'tag-filter', activeTag, 'tag');
+      applyFilters();
     });
+
+    sortSelect.addEventListener('change', () => {
+      applySort();
+      applyFilters();
+    });
+
+    // Apply initial state from URL
+    setActiveButton(statusFilters, 'status-filter', activeStatus, 'status');
+    setActiveButton(tagFilters, 'tag-filter', activeTag, 'tag');
+    applySort();
+    applyFilters();
   </script>
 </BaseLayout>

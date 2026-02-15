@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
@@ -7,7 +8,7 @@ import { slug } from '../../lib/utils';
 
 export async function getStaticPaths() {
   const episodes = await getCollection('audio');
-  return episodes.map(episode => ({
+  return episodes.map((episode) => ({
     params: { slug: slug(episode.id) },
     props: { episode },
   }));
@@ -25,73 +26,86 @@ const { Content } = await render(episode);
   publishedDate={episode.data.date.toISOString()}
   tags={episode.data.tags}
 >
-  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumb
+      crumbs={[{ label: 'Home', href: '/' }, { label: 'Audio', href: '/audio/' }, { label: episode.data.title }]}
+    />
     <header class="mb-8">
-      <div class="flex items-center gap-3 text-sm text-text-muted mb-4">
+      <div class="mb-4 flex items-center gap-3 text-sm text-text-muted">
         <time datetime={episode.data.date.toISOString()}>
           {episode.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
         </time>
-        {episode.data.duration && (
-          <>
-            <span aria-hidden="true">&middot;</span>
-            <span>{episode.data.duration}</span>
-          </>
-        )}
+        {
+          episode.data.duration && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <span>{episode.data.duration}</span>
+            </>
+          )
+        }
       </div>
       <h1 class="text-text">{episode.data.title}</h1>
-      <p class="mt-4 text-lg text-text-muted leading-relaxed">{episode.data.description}</p>
+      <p class="mt-4 text-lg leading-relaxed text-text-muted">{episode.data.description}</p>
 
-      {(episode.data.relatedProject || episode.data.relatedPost) && (
-        <div class="mt-6 p-4 rounded-lg bg-surface-alt border border-border">
-          <p class="text-sm text-text-muted">
-            {episode.data.relatedProject && (
-              <>
-                Generated for project: <a href={`/projects/${episode.data.relatedProject}/`} class="text-accent hover:underline font-medium">
-                  {episode.data.relatedProject.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                </a>
-              </>
-            )}
-            {episode.data.relatedPost && (
-              <>
-                Companion to article: <a href={`/blog/${episode.data.relatedPost}/`} class="text-accent hover:underline font-medium">
-                  {episode.data.relatedPost.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                </a>
-              </>
-            )}
-          </p>
-        </div>
-      )}
+      {
+        (episode.data.relatedProject || episode.data.relatedPost) && (
+          <div class="mt-6 rounded-lg border border-border bg-surface-alt p-4">
+            <p class="text-sm text-text-muted">
+              {episode.data.relatedProject && (
+                <>
+                  Generated for project:{' '}
+                  <a href={`/projects/${episode.data.relatedProject}/`} class="font-medium text-accent hover:underline">
+                    {episode.data.relatedProject
+                      .split('-')
+                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .join(' ')}
+                  </a>
+                </>
+              )}
+              {episode.data.relatedPost && (
+                <>
+                  Companion to article:{' '}
+                  <a href={`/blog/${episode.data.relatedPost}/`} class="font-medium text-accent hover:underline">
+                    {episode.data.relatedPost
+                      .split('-')
+                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .join(' ')}
+                  </a>
+                </>
+              )}
+            </p>
+          </div>
+        )
+      }
     </header>
 
     <div class="mb-10">
       <AudioPlayer client:load src={episode.data.audioUrl} title={episode.data.title} />
     </div>
 
-    <div class="prose prose-invert max-w-none
-      prose-headings:text-text prose-headings:font-semibold
-      prose-p:text-text prose-p:leading-relaxed
-      prose-a:text-accent
-    ">
+    <div
+      class="prose prose-invert max-w-none prose-headings:font-semibold prose-headings:text-text prose-p:leading-relaxed prose-p:text-text prose-a:text-accent"
+    >
       <Content />
     </div>
 
-    {episode.data.transcript && (
-      <details class="mt-10 border border-border rounded-lg">
-        <summary class="px-4 py-3 text-sm font-medium text-text cursor-pointer hover:text-accent transition-colors">
-          Transcript
-        </summary>
-        <div class="px-4 pb-4 text-sm text-text-muted leading-relaxed whitespace-pre-wrap">
-          {episode.data.transcript}
-        </div>
-      </details>
-    )}
+    {
+      episode.data.transcript && (
+        <details class="mt-10 rounded-lg border border-border">
+          <summary class="cursor-pointer px-4 py-3 text-sm font-medium text-text transition-colors hover:text-accent">
+            Transcript
+          </summary>
+          <div class="whitespace-pre-wrap px-4 pb-4 text-sm leading-relaxed text-text-muted">
+            {episode.data.transcript}
+          </div>
+        </details>
+      )
+    }
 
     <RelatedContent currentTags={episode.data.tags} currentId={episode.id} contentType="audio" />
 
-    <nav class="mt-16 pt-8 border-t border-border" aria-label="Back to audio">
-      <a href="/audio/" class="text-sm text-text-muted hover:text-accent transition-colors">
-        &larr; All episodes
-      </a>
+    <nav class="mt-16 border-t border-border pt-8" aria-label="Back to audio">
+      <a href="/audio/" class="text-sm text-text-muted transition-colors hover:text-accent"> &larr; All episodes </a>
     </nav>
   </article>
 </BaseLayout>
