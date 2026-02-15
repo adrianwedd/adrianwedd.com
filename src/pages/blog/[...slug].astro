@@ -62,6 +62,11 @@ const seriesPosts = post.data.series
     aria-valuemax="100"
     aria-valuenow="0"
   ></div>
+  <div
+    id="reading-remaining"
+    class="fixed right-4 top-[4.25rem] z-40 rounded-full border border-border bg-surface-alt px-2.5 py-0.5 text-xs text-text-muted opacity-0 transition-opacity duration-300"
+    aria-live="off"
+  ></div>
 
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumb
@@ -187,8 +192,10 @@ const seriesPosts = post.data.series
 
   <script>
     const bar = document.getElementById('reading-progress');
+    const remaining = document.getElementById('reading-remaining');
     const article = document.querySelector('article');
     if (bar && article) {
+      const totalReadMin = Math.max(1, Math.ceil((article.textContent?.split(/\s+/).length || 0) / 200));
       const update = () => {
         const rect = article.getBoundingClientRect();
         const total = article.scrollHeight - window.innerHeight;
@@ -196,6 +203,15 @@ const seriesPosts = post.data.series
         const pct = Math.min(100, Math.max(0, (scrolled / total) * 100));
         bar.style.width = `${pct}%`;
         bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+        if (remaining) {
+          const minLeft = Math.max(0, Math.ceil(totalReadMin * (1 - pct / 100)));
+          if (pct > 5 && pct < 98) {
+            remaining.textContent = minLeft <= 1 ? '< 1 min left' : `${minLeft} min left`;
+            remaining.style.opacity = '1';
+          } else {
+            remaining.style.opacity = '0';
+          }
+        }
       };
       window.addEventListener('scroll', update, { passive: true });
       update();
