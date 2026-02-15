@@ -6,8 +6,6 @@ repo: "Footnotes-at-the-Edge-of-Reality"
 status: "complete"
 featured: true
 date: 2026-02-06
-audioUrl: "/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3"
-heroImage: "/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp"
 ---
 
 Matter tells Space how to curve. Space tells Matter how to move. The poem begins where Wheeler's formulation begins — with a dialogue, not a command. No force imposes order. There is no throne at the centre of things. There is only a conversation, reciprocal and ongoing, between two things that cannot exist without each other.
