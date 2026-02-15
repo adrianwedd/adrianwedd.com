@@ -18,22 +18,35 @@ All 7 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
-## Sprint 2: Content Depth & Polish (Due: April 1, 2026)
+## Sprint 2: Content Depth & Polish ✅ (Completed Feb 15, 2026)
 
-[7 issues in GitHub milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/2):
+All 7 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/2).
 
-**Navigation & UX**
-- [#37](https://github.com/adrianwedd/adrianwedd.com/issues/37) Table of contents for long-form content
-- [#38](https://github.com/adrianwedd/adrianwedd.com/issues/38) Breadcrumb navigation on detail pages
-- [#39](https://github.com/adrianwedd/adrianwedd.com/issues/39) Reading time and word count on blog posts
-- [#40](https://github.com/adrianwedd/adrianwedd.com/issues/40) Project filtering and sorting on index page
+- ✅ [#37](https://github.com/adrianwedd/adrianwedd.com/issues/37) Table of contents for long-form content
+- ✅ [#38](https://github.com/adrianwedd/adrianwedd.com/issues/38) Breadcrumb navigation on detail pages
+- ✅ [#39](https://github.com/adrianwedd/adrianwedd.com/issues/39) Reading time and word count on blog posts
+- ✅ [#40](https://github.com/adrianwedd/adrianwedd.com/issues/40) Project filtering and sorting on index page
+- ✅ [#41](https://github.com/adrianwedd/adrianwedd.com/issues/41) ESLint + Prettier for code consistency
+- ✅ [#42](https://github.com/adrianwedd/adrianwedd.com/issues/42) Blog content: publish 3 more posts
+- ✅ [#43](https://github.com/adrianwedd/adrianwedd.com/issues/43) Gallery expansion: project screenshots and diagrams
 
-**Code Quality**
-- [#41](https://github.com/adrianwedd/adrianwedd.com/issues/41) ESLint + Prettier for code consistency
+---
 
-**Content**
-- [#42](https://github.com/adrianwedd/adrianwedd.com/issues/42) Blog content: publish 3 more posts
-- [#43](https://github.com/adrianwedd/adrianwedd.com/issues/43) Gallery expansion: project screenshots and diagrams
+## Sprint 3: Cross-Linking & Discovery (Due: May 1, 2026)
+
+[6 issues in GitHub milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/3):
+
+**Content Discovery**
+- [#44](https://github.com/adrianwedd/adrianwedd.com/issues/44) Related content suggestions on detail pages
+- [#46](https://github.com/adrianwedd/adrianwedd.com/issues/46) Audio episode cross-links on project pages
+- [#47](https://github.com/adrianwedd/adrianwedd.com/issues/47) Prev/next navigation on blog posts
+
+**New Pages**
+- [#45](https://github.com/adrianwedd/adrianwedd.com/issues/45) /now page — what I'm working on
+
+**Content Quality**
+- [#48](https://github.com/adrianwedd/adrianwedd.com/issues/48) Project page audit: fill missing URLs and repos
+- [#49](https://github.com/adrianwedd/adrianwedd.com/issues/49) Sitemap and robots.txt improvements
 
 ---
 
