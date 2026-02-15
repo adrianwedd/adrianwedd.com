@@ -26,37 +26,72 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </script>
 
 <style is:global>
-  /* Pagefind UI theme overrides */
+  /* Pagefind UI theme overrides — maps to site's --color-* custom properties */
   :root {
     --pagefind-ui-scale: 1;
-    --pagefind-ui-primary: var(--accent);
-    --pagefind-ui-text: var(--text);
-    --pagefind-ui-background: var(--surface);
-    --pagefind-ui-border: var(--border);
-    --pagefind-ui-tag: var(--surface-alt);
+    --pagefind-ui-primary: var(--color-accent);
+    --pagefind-ui-text: var(--color-text);
+    --pagefind-ui-background: var(--color-surface);
+    --pagefind-ui-border: var(--color-border);
+    --pagefind-ui-tag: var(--color-surface-alt);
     --pagefind-ui-border-width: 1px;
     --pagefind-ui-border-radius: 0.5rem;
     --pagefind-ui-font: inherit;
   }
 
   .pagefind-ui__search-input {
-    background: var(--surface-alt) !important;
-    color: var(--text) !important;
+    background: var(--color-surface-alt) !important;
+    color: var(--color-text) !important;
   }
 
   .pagefind-ui__search-input::placeholder {
-    color: var(--text-muted) !important;
+    color: var(--color-text-muted) !important;
+  }
+
+  .pagefind-ui__search-input:focus {
+    outline: 2px solid var(--color-accent) !important;
+    outline-offset: 2px;
   }
 
   .pagefind-ui__result-link {
-    color: var(--accent) !important;
+    color: var(--color-accent) !important;
+  }
+
+  .pagefind-ui__result-link:hover {
+    text-decoration: underline !important;
   }
 
   .pagefind-ui__result-excerpt {
-    color: var(--text-muted) !important;
+    color: var(--color-text-muted) !important;
+  }
+
+  .pagefind-ui__result-excerpt mark {
+    background: var(--color-accent-muted) !important;
+    color: var(--color-text) !important;
+    padding: 0.1em 0.2em;
+    border-radius: 2px;
   }
 
   .pagefind-ui__message {
-    color: var(--text-muted) !important;
+    color: var(--color-text-muted) !important;
+  }
+
+  .pagefind-ui__button {
+    background: var(--color-surface-alt) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+  }
+
+  .pagefind-ui__button:hover {
+    border-color: var(--color-accent) !important;
+    color: var(--color-accent) !important;
+  }
+
+  .pagefind-ui__result {
+    border-color: var(--color-border) !important;
+  }
+
+  .pagefind-ui__result-title {
+    color: var(--color-text) !important;
   }
 </style>
