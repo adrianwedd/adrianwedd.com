@@ -5,7 +5,7 @@ tags: ["web", "fun", "kids"]
 repo: "https://github.com/adrianwedd/squishmallowdex"
 status: "complete"
 featured: false
-heroImage: "/images/projects/squishmallowdex.png"
+heroImage: "/images/projects/squishmallowdex-hero.png"
 date: 2024-12-01
 ---
 
