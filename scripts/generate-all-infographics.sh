@@ -76,8 +76,8 @@ PROJECTS_TO_PROCESS=()
 for project_file in "$PROJECTS_DIR"/*.md; do
     project_name=$(basename "$project_file" .md)
 
-    # Skip if already has a NotebookLM infographic
-    if grep -q "^heroImage:.*infographic" "$project_file"; then
+    # Skip if already has any heroImage
+    if grep -q "^heroImage:" "$project_file"; then
         ((SKIPPED++)) || true
         continue
     fi
@@ -192,10 +192,13 @@ EOFCONFIG
         --focus "$FOCUS" \
         -y 2>&1 | while IFS= read -r line; do echo "    $line"; done
 
-    # Poll for completion (max 3 minutes)
+    # Poll for completion (max 5 minutes with backoff)
     artifact_id=""
-    for attempt in $(seq 1 36); do
-        sleep 5
+    poll_interval=5
+    for attempt in $(seq 1 40); do
+        sleep $poll_interval
+        # Increase interval after first minute
+        if [ $attempt -eq 12 ]; then poll_interval=10; fi
         status_json=$(nlm studio status "$notebook_id" 2>/dev/null || echo "[]")
         # Get the most recent infographic artifact
         result=$(echo "$status_json" | python3 -c "
@@ -221,8 +224,9 @@ if infographics:
             fi
         fi
 
+        elapsed=$(( (attempt <= 12 ? attempt * 5 : 60 + (attempt - 12) * 10) ))
         if [ $((attempt % 6)) -eq 0 ]; then
-            echo "  Still generating... ($((attempt * 5))s)"
+            echo "  Still generating... (${elapsed}s)"
         fi
     done
 
