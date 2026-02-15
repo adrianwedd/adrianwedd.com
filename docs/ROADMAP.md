@@ -58,6 +58,19 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
+## Sprint 5: Polish & Delight (In Progress)
+
+[Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/5).
+
+- [ ] [#56](https://github.com/adrianwedd/adrianwedd.com/issues/56) Terminal/CLI easter egg
+- [ ] [#57](https://github.com/adrianwedd/adrianwedd.com/issues/57) View source HTML comments and hidden messages
+- [ ] [#58](https://github.com/adrianwedd/adrianwedd.com/issues/58) Smart gallery import with EXIF extraction
+- [ ] [#59](https://github.com/adrianwedd/adrianwedd.com/issues/59) Build metadata and CI status on colophon
+- [ ] [#60](https://github.com/adrianwedd/adrianwedd.com/issues/60) Temporal proximity in related content
+- [ ] [#61](https://github.com/adrianwedd/adrianwedd.com/issues/61) Content versioning: archival timestamps and permalink preservation
+
+---
+
 ## Post-Launch: Automation & Tooling
 
 ### NotebookLM Content Pipeline ✅
