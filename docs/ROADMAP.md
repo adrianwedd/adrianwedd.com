@@ -84,6 +84,19 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
+## Sprint 7: Content Navigation & Homepage (In Progress)
+
+[Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/7).
+
+- [ ] [#68](https://github.com/adrianwedd/adrianwedd.com/issues/68) Gallery index: interactive tag and medium filtering
+- [ ] [#69](https://github.com/adrianwedd/adrianwedd.com/issues/69) Audio tag pages and index tag navigation
+- [ ] [#70](https://github.com/adrianwedd/adrianwedd.com/issues/70) 404 page: inline Pagefind search
+- [ ] [#71](https://github.com/adrianwedd/adrianwedd.com/issues/71) Homepage: add gallery and audio sections
+- [ ] [#72](https://github.com/adrianwedd/adrianwedd.com/issues/72) Blog index: tag filter navigation bar
+- [ ] [#73](https://github.com/adrianwedd/adrianwedd.com/issues/73) Unified content stats on /now page
+
+---
+
 ## Post-Launch: Automation & Tooling
 
 ### NotebookLM Content Pipeline ✅
