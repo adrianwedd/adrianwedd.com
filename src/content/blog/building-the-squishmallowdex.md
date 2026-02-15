@@ -55,4 +55,4 @@ The project took about eight hours total across two sessions. The first session 
 
 Not every project needs to advance the state of the art. Some just need to make a small person's eyes light up.
 
-[Take a closer look at the Squishmallowdex](/projects/squishmallowdex/) or [view the source](https://github.com/adrianwedd/squishmallowdex).
+[Try the Squishmallowdex](https://squishmallowdex.com), [read more about the project](/projects/squishmallowdex/), or [view the source](https://github.com/adrianwedd/squishmallowdex).
