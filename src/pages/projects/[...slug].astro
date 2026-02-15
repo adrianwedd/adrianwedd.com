@@ -18,6 +18,10 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+
+const projectSlug = slug(project.id);
+const allAudio = await getCollection('audio');
+const relatedEpisodes = allAudio.filter((ep) => ep.data.relatedProject === projectSlug);
 ---
 
 <BaseLayout
@@ -119,6 +123,32 @@ const { Content } = await render(project);
         <div class="mb-10">
           <p class="mb-2 text-sm text-text-muted">Listen while you read</p>
           <AudioPlayer src={project.data.audioUrl} title={`${project.data.title} — Audio Overview`} client:load />
+        </div>
+      )
+    }
+
+    {
+      relatedEpisodes.length > 0 && (
+        <div class="mb-10">
+          <p class="mb-3 text-sm font-medium text-text-muted">Related episodes</p>
+          <div class="space-y-2">
+            {relatedEpisodes.map((ep) => (
+              <a
+                href={`/audio/${slug(ep.id)}/`}
+                class="hover:border-accent/50 group flex items-center gap-3 rounded-lg border border-border bg-surface-alt p-3 no-underline transition-colors"
+              >
+                <svg class="h-4 w-4 shrink-0 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+                </svg>
+                <div class="min-w-0">
+                  <span class="block truncate text-sm text-text transition-colors group-hover:text-accent">
+                    {ep.data.title}
+                  </span>
+                  {ep.data.duration && <span class="text-xs text-text-muted">{ep.data.duration}</span>}
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
       )
     }
