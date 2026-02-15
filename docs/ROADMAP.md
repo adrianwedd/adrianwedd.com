@@ -32,21 +32,16 @@ All 7 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
-## Sprint 3: Cross-Linking & Discovery (Due: May 1, 2026)
+## Sprint 3: Cross-Linking & Discovery ✅ (Completed Feb 15, 2026)
 
-[6 issues in GitHub milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/3):
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/3).
 
-**Content Discovery**
-- [#44](https://github.com/adrianwedd/adrianwedd.com/issues/44) Related content suggestions on detail pages
-- [#46](https://github.com/adrianwedd/adrianwedd.com/issues/46) Audio episode cross-links on project pages
-- [#47](https://github.com/adrianwedd/adrianwedd.com/issues/47) Prev/next navigation on blog posts
-
-**New Pages**
-- [#45](https://github.com/adrianwedd/adrianwedd.com/issues/45) /now page — what I'm working on
-
-**Content Quality**
-- [#48](https://github.com/adrianwedd/adrianwedd.com/issues/48) Project page audit: fill missing URLs and repos
-- [#49](https://github.com/adrianwedd/adrianwedd.com/issues/49) Sitemap and robots.txt improvements
+- ✅ [#44](https://github.com/adrianwedd/adrianwedd.com/issues/44) Related content suggestions on detail pages (already done in Sprint 2)
+- ✅ [#45](https://github.com/adrianwedd/adrianwedd.com/issues/45) /now page — what I'm working on
+- ✅ [#46](https://github.com/adrianwedd/adrianwedd.com/issues/46) Audio episode cross-links on project pages
+- ✅ [#47](https://github.com/adrianwedd/adrianwedd.com/issues/47) Prev/next navigation on blog posts (already done in Sprint 2)
+- ✅ [#48](https://github.com/adrianwedd/adrianwedd.com/issues/48) Project page audit: fill missing URLs and repos
+- ✅ [#49](https://github.com/adrianwedd/adrianwedd.com/issues/49) Sitemap and robots.txt improvements (already complete)
 
 ---
 
