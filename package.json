@@ -22,7 +22,7 @@
     "astro": "^5.17.1",
     "preact": "^10.28.3",
     "satori": "^0.19.2",
-    "tailwindcss": "^3.4.19"
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
