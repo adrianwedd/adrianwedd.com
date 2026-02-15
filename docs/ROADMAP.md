@@ -4,6 +4,23 @@
 
 ---
 
+## Sprint 1: Post-launch Maintenance (Due: March 15, 2026)
+
+Active sprint tracking [7 issues in GitHub milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/1):
+
+**Priority: Medium**
+- [#25](https://github.com/adrianwedd/adrianwedd.com/issues/25) Analytics insights and optimization
+- [#27](https://github.com/adrianwedd/adrianwedd.com/issues/27) Content expansion: Blog posts cadence
+- [#29](https://github.com/adrianwedd/adrianwedd.com/issues/29) Performance monitoring and regression prevention
+- [#30](https://github.com/adrianwedd/adrianwedd.com/issues/30) NotebookLM asset management improvements
+
+**Maintenance**
+- [#26](https://github.com/adrianwedd/adrianwedd.com/issues/26) Complete NotebookLM infographics for 4 remaining projects
+- [#28](https://github.com/adrianwedd/adrianwedd.com/issues/28) Dependency maintenance: monthly update cycle
+- [#31](https://github.com/adrianwedd/adrianwedd.com/issues/31) Cleanup: Remove untracked files and finalize asset organization
+
+---
+
 ## Post-Launch: Automation & Tooling
 
 ### NotebookLM Content Pipeline ✅
@@ -39,13 +56,13 @@
 - Component variants based on segment
 - Cookie-based return visitor recognition (consent-gated)
 
-### Public Analytics Dashboard
-- `/analytics/` route
-- Preact island consuming GA4 Data API via Cloudflare Function
-- Aggregate metrics: traffic, popular content, geography, referral sources
-- Build-time snapshot cached in KV + client-side refresh
+### Public Analytics Dashboard ✅
+- ~~`/analytics/` route~~ — Done
+- ~~Preact island consuming GA4 Data API~~ — Done (build-time fetch via `scripts/fetch-ga4-data.mjs`)
+- ~~Aggregate metrics: traffic, popular content, geography, referral sources~~ — Done
+- Build-time snapshot written to static JSON (GitHub Pages, no Functions/KV needed)
 - No individual visitor data exposed
-- Style with same personality as the rest of the site — not a generic admin panel
+- ~~Style with same personality as the rest of the site~~ — Done
 
 ### Measurement Protocol
 - Server-side GA4 events via Measurement Protocol
