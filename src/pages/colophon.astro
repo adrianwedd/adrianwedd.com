@@ -1,8 +1,42 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
 
-const buildDate = new Date().toISOString().split('T')[0];
-const astroVersion = '5.x';
+const buildTimestamp = new Date();
+const buildDate = buildTimestamp.toISOString().split('T')[0];
+const buildTime = buildTimestamp.toISOString().split('T')[1].split('.')[0] + ' UTC';
+
+// Git info (no shell, safe from injection)
+let gitSha = '';
+let gitShortSha = '';
+let gitBranch = '';
+try {
+  gitSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf-8' }).trim();
+  gitShortSha = gitSha.slice(0, 7);
+  gitBranch = execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { encoding: 'utf-8' }).trim();
+} catch { /* not in git */ }
+
+// Package versions
+let astroVersion = '5.x';
+const nodeVersion = process.version;
+try {
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+  astroVersion = pkg.dependencies?.astro?.replace('^', '') || '5.x';
+} catch { /* fallback */ }
+
+// Content counts
+const contentDir = 'src/content';
+let blogCount = 0;
+let projectCount = 0;
+let galleryCount = 0;
+let audioCount = 0;
+try {
+  blogCount = fs.readdirSync(`${contentDir}/blog`).filter((f: string) => f.endsWith('.md')).length;
+  projectCount = fs.readdirSync(`${contentDir}/projects`).filter((f: string) => f.endsWith('.md')).length;
+  galleryCount = fs.readdirSync(`${contentDir}/gallery`).filter((f: string) => f.endsWith('.md')).length;
+  audioCount = fs.readdirSync(`${contentDir}/audio`).filter((f: string) => f.endsWith('.md')).length;
+} catch { /* fallback */ }
 ---
 
 <BaseLayout title="Colophon" description="How this site is built, what powers it, and who helped.">
@@ -72,15 +106,37 @@ const astroVersion = '5.x';
         <dl class="space-y-3">
           <div>
             <dt class="font-medium text-accent">Last Built</dt>
-            <dd class="text-text-muted">{buildDate}</dd>
+            <dd class="text-text-muted">{buildDate} at {buildTime}</dd>
+          </div>
+          {gitShortSha && (
+            <div>
+              <dt class="font-medium text-accent">Commit</dt>
+              <dd class="text-text-muted">
+                <a
+                  href={`https://github.com/adrianwedd/adrianwedd.com/commit/${gitSha}`}
+                  target="_blank"
+                  rel="noopener"
+                  class="font-mono text-accent hover:underline"
+                >
+                  {gitShortSha}
+                </a>
+                {gitBranch && <span> on {gitBranch}</span>}
+              </dd>
+            </div>
+          )}
+          <div>
+            <dt class="font-medium text-accent">Runtime</dt>
+            <dd class="text-text-muted">Astro {astroVersion} / Node {nodeVersion}</dd>
+          </div>
+          <div>
+            <dt class="font-medium text-accent">Content</dt>
+            <dd class="text-text-muted">
+              {blogCount} posts, {projectCount} projects, {galleryCount} galleries, {audioCount} episodes
+            </dd>
           </div>
           <div>
             <dt class="font-medium text-accent">Build Process</dt>
             <dd class="text-text-muted">Static site generation (SSG) with CI/CD via GitHub Actions</dd>
-          </div>
-          <div>
-            <dt class="font-medium text-accent">Content Pipeline</dt>
-            <dd class="text-text-muted">Automated via GitHub Actions + NotebookLM API integration</dd>
           </div>
           <div>
             <dt class="font-medium text-accent">Source Code</dt>

@@ -35,7 +35,7 @@ CSS custom properties define all colors in `src/styles/global.css` (`:root` = da
 ### Content collections
 Defined in `src/content.config.ts` with four collections:
 - **blog:** title, description, date, tags (required), draft, heroImage, updatedDate
-- **projects:** title, description, date, tags, status (`active|complete|archived|experiment`), featured, url, repo, heroImage
+- **projects:** title, description, date, tags, status (`active|complete|archived|experiment`), featured, url, repo, heroImage, updatedDate
 - **gallery:** title, date, tags, images array (`{src, alt, caption?}`), medium, collection, coverImage
 - **audio:** title, description, date, tags, audioUrl, duration, transcript, heroImage
 
@@ -51,6 +51,22 @@ Preact islands in `src/components/islands/` are client-hydrated interactive comp
 - **No custom fonts:** System font stack only — zero font downloads.
 - **Consent-first:** No tracking before user consent. ConsentBanner dispatches `consent-updated` CustomEvent.
 - **Class-based selectors:** ThemeToggle and Header use class selectors (not IDs) to avoid duplicate ID issues when rendered in both desktop and mobile nav.
+
+## Permalink strategy
+
+URLs are permanent. Once published, a page's URL must not change.
+
+- **Blog:** `/blog/{slug}/` — slug derived from filename (strip `.md`)
+- **Projects:** `/projects/{slug}/` — slug derived from filename
+- **Gallery collections:** `/gallery/{slug}/` — slug derived from filename
+- **Gallery images:** `/gallery/{collection}/{image-slug}/` — image-slug from alt text
+- **Audio:** `/audio/{slug}/` — slug derived from filename
+
+**Rules:**
+- Never rename a content file after publication (changes the URL)
+- Canonical URLs are set automatically via `SEOHead.astro`
+- If a URL must change, add a redirect in the Astro config or a 301 page
+- `updatedDate` in frontmatter tracks content revisions without changing URLs
 
 ## Content authoring
 

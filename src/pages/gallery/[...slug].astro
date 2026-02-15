@@ -80,7 +80,7 @@ const { Content } = await render(gallery);
 
     <Lightbox images={gallery.data.images} />
 
-    <RelatedContent currentTags={gallery.data.tags} currentId={gallery.id} contentType="gallery" />
+    <RelatedContent currentTags={gallery.data.tags} currentId={gallery.id} currentDate={gallery.data.date} contentType="gallery" />
 
     <nav class="mt-16 border-t border-border pt-8" aria-label="Back to gallery">
       <a href="/gallery/" class="text-sm text-text-muted transition-colors hover:text-accent">

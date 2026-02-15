@@ -102,7 +102,7 @@ const { Content } = await render(episode);
       )
     }
 
-    <RelatedContent currentTags={episode.data.tags} currentId={episode.id} contentType="audio" />
+    <RelatedContent currentTags={episode.data.tags} currentId={episode.id} currentDate={episode.data.date} contentType="audio" />
 
     <nav class="mt-16 border-t border-border pt-8" aria-label="Back to audio">
       <a href="/audio/" class="text-sm text-text-muted transition-colors hover:text-accent"> &larr; All episodes </a>

@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ConsentBanner from '../components/ConsentBanner.astro';
 import Analytics from '../components/Analytics.astro';
+import TerminalEasterEgg from '../components/islands/TerminalEasterEgg';
 import '../styles/global.css';
 
 interface Props {
@@ -19,8 +20,30 @@ const props = Astro.props;
 ---
 
 <!doctype html>
+<!--
+
+     █████╗ ██████╗ ██████╗ ██╗ █████╗ ███╗   ██╗
+    ██╔══██╗██╔══██╗██╔══██╗██║██╔══██╗████╗  ██║
+    ███████║██║  ██║██████╔╝██║███████║██╔██╗ ██║
+    ██╔══██║██║  ██║██╔══██╗██║██╔══██║██║╚██╗██║
+    ██║  ██║██████╔╝██║  ██║██║██║  ██║██║ ╚████║
+    ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝
+                    W E D D
+
+    You're reading the source. Nice.
+
+    Built with Astro, Tailwind, and Preact.
+    Keyboard shortcuts: press ? on any page.
+    Source: https://github.com/adrianwedd/adrianwedd.com
+
+    Looking for work in AI safety, systems, or infrastructure.
+    Say hello: https://adrianwedd.com/contact/
+
+-->
 <html lang="en">
   <head>
+    <meta name="author" content="Adrian Wedd" />
+    <meta name="generator" content="Astro + curiosity" />
     <SEOHead {...props} />
     <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Blog" href="/blog/rss.xml" />
     <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Audio" href="/audio/feed.xml" />
@@ -30,6 +53,14 @@ const props = Astro.props;
         var t = localStorage.getItem('theme');
         if (t === 'light' || (!t && window.matchMedia('(prefers-color-scheme: light)').matches)) {
           document.documentElement.classList.add('light');
+        }
+        if (!sessionStorage.getItem('_welcomed')) {
+          sessionStorage.setItem('_welcomed', '1');
+          console.log(
+            '%c adrianwedd.com ',
+            'background:#c48b6e;color:#1a181c;font-weight:bold;font-size:14px;padding:4px 8px;border-radius:4px',
+          );
+          console.log('Press ? for keyboard shortcuts. Source: https://github.com/adrianwedd/adrianwedd.com');
         }
       })();
     </script>
@@ -48,6 +79,7 @@ const props = Astro.props;
     <Footer />
     <ConsentBanner />
     <Analytics />
+    <TerminalEasterEgg client:idle />
 
     {/* Keyboard shortcuts overlay */}
     <div id="kb-overlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60" role="dialog" aria-label="Keyboard shortcuts">
