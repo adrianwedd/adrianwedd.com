@@ -2,6 +2,7 @@
 title: "Squishmallowdex"
 description: "Collection tracker for 3,000+ Squishmallows. Like a Pokedex, but softer. Built for a friend's kid, tested by mine."
 tags: ["web", "fun", "kids"]
+url: "https://squishmallowdex.com"
 repo: "https://github.com/adrianwedd/squishmallowdex"
 status: "complete"
 featured: true
