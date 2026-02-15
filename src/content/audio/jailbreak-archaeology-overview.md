@@ -6,6 +6,7 @@ tags: ["notebooklm", "ai", "safety", "research"]
 audioUrl: "/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3"
 duration: "12:15"
 relatedPost: "jailbreak-archaeology"
+relatedProject: "failure-first"
 ---
 
 There's an uncomfortable assumption baked into AI safety discourse: as models grow more sophisticated, primitive exploits become obsolete. Testing shows otherwise.

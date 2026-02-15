@@ -6,6 +6,7 @@ tags: ["notebooklm", "ai", "safety", "research", "multi-agent"]
 audioUrl: "/notebook-assets/failure-first/moltbook/audio.mp3"
 duration: "14:32"
 relatedPost: "when-ai-systems-talk-safety-breaks"
+relatedProject: "failure-first"
 ---
 
 Single-agent safety does not compose. That's the central finding, and it has implications for every multi-agent system being built right now.
