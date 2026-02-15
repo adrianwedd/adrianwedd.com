@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import ShareButton from '../../components/islands/ShareButton';
 import RelatedContent from '../../components/RelatedContent.astro';
+import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
@@ -17,6 +18,12 @@ export async function getStaticPaths() {
 
 const { episode } = Astro.props;
 const { Content } = await render(episode);
+
+const allEpisodes = (await getCollection('audio'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const currentIndex = allEpisodes.findIndex((e) => e.id === episode.id);
+const prevEpisode = currentIndex < allEpisodes.length - 1 ? allEpisodes[currentIndex + 1] : null;
+const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
 ---
 
 <BaseLayout
@@ -100,18 +107,86 @@ const { Content } = await render(episode);
         <details class="mt-10 rounded-lg border border-border">
           <summary class="cursor-pointer px-4 py-3 text-sm font-medium text-text transition-colors hover:text-accent">
             Transcript
+            <span class="ml-2 text-xs font-normal text-text-muted">
+              ({episode.data.transcript.split(/\s+/).length.toLocaleString()} words)
+            </span>
           </summary>
-          <div class="whitespace-pre-wrap px-4 pb-4 text-sm leading-relaxed text-text-muted">
-            {episode.data.transcript}
+          <div class="relative px-4 pb-4">
+            <button
+              type="button"
+              class="transcript-copy absolute right-4 top-0 rounded border border-border bg-surface-alt px-2 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+              aria-label="Copy transcript"
+            >
+              Copy
+            </button>
+            <div class="transcript-text whitespace-pre-wrap pt-1 text-sm leading-relaxed text-text-muted">
+              {episode.data.transcript}
+            </div>
           </div>
         </details>
       )
     }
 
+    <NotebookAssets
+      videoUrl={episode.data.videoUrl}
+      infographic={episode.data.infographic}
+      mindmap={episode.data.mindmap}
+      quiz={episode.data.quiz}
+      flashcards={episode.data.flashcards}
+      dataTable={episode.data.dataTable}
+      slides={episode.data.slides}
+      title={episode.data.title}
+    />
+
     <RelatedContent currentTags={episode.data.tags} currentId={episode.id} currentDate={episode.data.date} contentType="audio" />
 
-    <nav class="mt-16 border-t border-border pt-8" aria-label="Back to audio">
-      <a href="/audio/" class="text-sm text-text-muted transition-colors hover:text-accent"> &larr; All episodes </a>
+    <nav class="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next episodes">
+      {
+        prevEpisode ? (
+          <a
+            href={`/audio/${slug(prevEpisode.id)}/`}
+            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors"
+          >
+            <span class="text-xs text-text-muted">&larr; Previous</span>
+            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+              {prevEpisode.data.title}
+            </span>
+          </a>
+        ) : (
+          <a href="/audio/" class="flex items-center text-sm text-text-muted transition-colors hover:text-accent">
+            &larr; All episodes
+          </a>
+        )
+      }
+      {
+        nextEpisode && (
+          <a
+            href={`/audio/${slug(nextEpisode.id)}/`}
+            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors sm:text-right"
+          >
+            <span class="text-xs text-text-muted">Next &rarr;</span>
+            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+              {nextEpisode.data.title}
+            </span>
+          </a>
+        )
+      }
     </nav>
   </article>
+  <script>
+    const copyBtn = document.querySelector('.transcript-copy');
+    const transcriptText = document.querySelector('.transcript-text');
+    if (copyBtn && transcriptText) {
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(transcriptText.textContent || '');
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+        } catch {
+          copyBtn.textContent = 'Failed';
+          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+        }
+      });
+    }
+  </script>
 </BaseLayout>

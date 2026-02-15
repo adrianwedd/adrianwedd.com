@@ -26,6 +26,12 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
     {
       allTags.length > 0 && (
         <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
+          <a
+            href="/audio/"
+            class="bg-accent/10 rounded-full border border-accent px-3 py-1 text-xs font-medium text-accent no-underline"
+          >
+            All
+          </a>
           {allTags.map((tag) => (
             <a
               href={`/audio/tag/${tag}/`}
