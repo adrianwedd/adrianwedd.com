@@ -20,10 +20,30 @@ try {
 // Package versions
 let astroVersion = '5.x';
 const nodeVersion = process.version;
+interface PkgDep { name: string; version: string }
+let deps: PkgDep[] = [];
 try {
   const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
   astroVersion = pkg.dependencies?.astro?.replace('^', '') || '5.x';
+  const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+  deps = Object.entries(allDeps)
+    .map(([name, version]) => ({ name, version: (version as string).replace(/^\^|~/, '') }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 } catch { /* fallback */ }
+
+// Count generated pages (from last build if available)
+let pageCount = 0;
+try {
+  const countFiles = (dir: string): number => {
+    let count = 0;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) count += countFiles(`${dir}/${entry.name}`);
+      else if (entry.name.endsWith('.html')) count++;
+    }
+    return count;
+  };
+  pageCount = countFiles('dist');
+} catch { /* no dist yet */ }
 
 // Content counts
 const contentDir = 'src/content';
@@ -134,6 +154,12 @@ try {
               {blogCount} posts, {projectCount} projects, {galleryCount} galleries, {audioCount} episodes
             </dd>
           </div>
+          {pageCount > 0 && (
+            <div>
+              <dt class="font-medium text-accent">Pages Generated</dt>
+              <dd class="text-text-muted">{pageCount} static HTML pages</dd>
+            </div>
+          )}
           <div>
             <dt class="font-medium text-accent">Build Process</dt>
             <dd class="text-text-muted">Static site generation (SSG) with CI/CD via GitHub Actions</dd>
@@ -153,6 +179,21 @@ try {
           </div>
         </dl>
       </section>
+
+      {deps.length > 0 && (
+        <section>
+          <h2 class="mb-4 text-xl font-semibold text-text">Dependencies</h2>
+          <p class="mb-3 text-sm text-text-muted">{deps.length} packages power this site.</p>
+          <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs sm:grid-cols-3">
+            {deps.map((d) => (
+              <div class="flex justify-between gap-2">
+                <span class="truncate text-text-muted">{d.name}</span>
+                <span class="shrink-0 font-mono text-accent">{d.version}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section>
         <h2 class="mb-4 text-xl font-semibold text-text">Credits</h2>

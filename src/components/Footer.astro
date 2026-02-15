@@ -4,16 +4,46 @@ const year = new Date().getFullYear();
 
 <footer class="mt-auto border-t border-border">
   <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-    <div class="flex flex-col items-center justify-between gap-4 text-sm text-text-muted sm:flex-row">
-      <p>&copy; {year} Adrian Wedd</p>
-      <nav class="flex gap-4" aria-label="Footer links">
-        <a href="https://github.com/adrianwedd" class="transition-colors hover:text-text">GitHub</a>
-        <a href="https://linkedin.com/in/adrianwedd" class="transition-colors hover:text-text">LinkedIn</a>
-        <a href="/contact/" class="transition-colors hover:text-text">Contact</a>
-        <a href="/blog/rss.xml" class="transition-colors hover:text-text">RSS</a>
-        <a href="/now/" class="transition-colors hover:text-text">Now</a>
-        <a href="/colophon/" class="transition-colors hover:text-text">Colophon</a>
+    <div class="grid gap-8 text-sm text-text-muted sm:grid-cols-3">
+      <nav aria-label="Site pages">
+        <p class="mb-2 text-xs font-medium text-text">Site</p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1">
+          <a href="/projects/" class="transition-colors hover:text-text">Projects</a>
+          <a href="/blog/" class="transition-colors hover:text-text">Blog</a>
+          <a href="/gallery/" class="transition-colors hover:text-text">Gallery</a>
+          <a href="/audio/" class="transition-colors hover:text-text">Audio</a>
+          <a href="/search/" class="transition-colors hover:text-text">Search</a>
+        </div>
       </nav>
+      <nav aria-label="About and meta">
+        <p class="mb-2 text-xs font-medium text-text">Meta</p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1">
+          <a href="/about/" class="transition-colors hover:text-text">About</a>
+          <a href="/now/" class="transition-colors hover:text-text">Now</a>
+          <a href="/contact/" class="transition-colors hover:text-text">Contact</a>
+          <a href="/colophon/" class="transition-colors hover:text-text">Colophon</a>
+          <a href="/analytics/" class="transition-colors hover:text-text">Analytics</a>
+        </div>
+      </nav>
+      <nav aria-label="External links">
+        <p class="mb-2 text-xs font-medium text-text">Elsewhere</p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1">
+          <a href="https://github.com/adrianwedd" target="_blank" rel="noopener" class="transition-colors hover:text-text">GitHub</a>
+          <a href="https://linkedin.com/in/adrianwedd" target="_blank" rel="noopener" class="transition-colors hover:text-text">LinkedIn</a>
+          <a href="/blog/rss.xml" class="transition-colors hover:text-text">RSS</a>
+        </div>
+      </nav>
+    </div>
+    <div class="mt-6 flex items-center justify-between border-t border-border pt-4 text-xs text-text-muted">
+      <p>&copy; {year} Adrian Wedd</p>
+      <button
+        type="button"
+        class="transition-colors hover:text-accent"
+        onclick="window.scrollTo({top:0,behavior:'smooth'})"
+        aria-label="Back to top"
+      >
+        Back to top &uarr;
+      </button>
     </div>
   </div>
 </footer>
