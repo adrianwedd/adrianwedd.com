@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 
 const episodes = (await getCollection('audio')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
 ---
 
 <BaseLayout
@@ -21,6 +22,21 @@ const episodes = (await getCollection('audio')).sort((a, b) => b.data.date.getTi
       Conversations with AI tools about failure modes, risk frameworks, and ideas too raw for text. The workshop
       extended—thinking aloud.
     </p>
+
+    {
+      allTags.length > 0 && (
+        <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
+          {allTags.map((tag) => (
+            <a
+              href={`/audio/tag/${tag}/`}
+              class="rounded-full border border-border px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:border-accent hover:text-accent"
+            >
+              {tag}
+            </a>
+          ))}
+        </nav>
+      )
+    }
 
     <div class="mt-10 space-y-6">
       {

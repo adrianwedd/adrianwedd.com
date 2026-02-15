@@ -21,5 +21,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         Browse projects
       </a>
     </div>
+
+    <div class="mx-auto mt-12 max-w-md text-left">
+      <p class="mb-4 text-sm text-text-muted">Or search for what you were looking for:</p>
+      <div id="search-404"></div>
+    </div>
   </section>
 </BaseLayout>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', async () => {
+    var script = document.createElement('script');
+    script.src = '/pagefind/pagefind-ui.js';
+    script.onload = function () {
+      new PagefindUI({
+        element: '#search-404',
+        showSubResults: false,
+        showImages: false,
+        autofocus: false,
+      });
+    };
+    document.head.appendChild(script);
+  });
+</script>
