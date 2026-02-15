@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import TableOfContents from '../../components/islands/TableOfContents';
+import ShareButton from '../../components/islands/ShareButton';
 import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import { getCollection, render } from 'astro:content';
@@ -29,12 +30,23 @@ const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 // Reading time estimate
 const words = post.body ? post.body.split(/\s+/).length : 0;
 const readingTime = Math.max(1, Math.ceil(words / 200));
+
+// OG image: use heroImage if set, otherwise generated OG image
+const postSlug = slug(post.id);
+const ogImage = post.data.heroImage || `/og/${postSlug}.png`;
+
+// Series support
+const seriesPosts = post.data.series
+  ? allPosts
+      .filter((p) => p.data.series === post.data.series)
+      .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+  : [];
 ---
 
 <BaseLayout
   title={post.data.title}
   description={post.data.description}
-  image={post.data.heroImage}
+  image={ogImage}
   type="article"
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
@@ -75,7 +87,7 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
       </div>
       <h1 class="text-text">{post.data.title}</h1>
       <p class="mt-4 text-lg leading-relaxed text-text-muted">{post.data.description}</p>
-      <div class="mt-4 flex flex-wrap gap-2">
+      <div class="mt-4 flex flex-wrap items-center gap-2">
         {
           post.data.tags.map((tag: string) => (
             <a
@@ -86,8 +98,37 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
             </a>
           ))
         }
+        <span class="ml-auto">
+          <ShareButton title={post.data.title} url={`/blog/${slug(post.id)}/`} client:idle />
+        </span>
       </div>
     </header>
+
+    {
+      seriesPosts.length > 1 && (
+        <nav class="mb-8 rounded-lg border border-border bg-surface-alt p-4" aria-label="Series navigation">
+          <p class="mb-2 text-xs font-medium text-text-muted">
+            Part {seriesPosts.findIndex((p) => p.id === post.id) + 1} of {seriesPosts.length} in <span class="text-accent">{post.data.series}</span>
+          </p>
+          <ol class="space-y-1">
+            {seriesPosts.map((p, i) => (
+              <li class="text-sm">
+                {p.id === post.id ? (
+                  <span class="font-medium text-accent">{i + 1}. {p.data.title}</span>
+                ) : (
+                  <a
+                    href={`/blog/${slug(p.id)}/`}
+                    class="text-text-muted no-underline transition-colors hover:text-accent"
+                  >
+                    {i + 1}. {p.data.title}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
 
     <TableOfContents contentSelector=".prose" client:idle />
 

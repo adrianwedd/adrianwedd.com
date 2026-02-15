@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import ShareButton from '../../components/islands/ShareButton';
 import RelatedContent from '../../components/RelatedContent.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
@@ -44,7 +45,12 @@ const { Content } = await render(episode);
           )
         }
       </div>
-      <h1 class="text-text">{episode.data.title}</h1>
+      <div class="flex items-start justify-between gap-4">
+        <h1 class="text-text">{episode.data.title}</h1>
+        <span class="mt-2 shrink-0">
+          <ShareButton title={episode.data.title} url={`/audio/${slug(episode.id)}/`} client:idle />
+        </span>
+      </div>
       <p class="mt-4 text-lg leading-relaxed text-text-muted">{episode.data.description}</p>
 
       {
