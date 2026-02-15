@@ -33,21 +33,21 @@ jobs:
 
     steps:
       - name: Checkout adrianwedd.com
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: adrianwedd.com
 
       # NOTE: If these are private repos, replace secrets.GITHUB_TOKEN
       # with a PAT that has cross-repo access (e.g. secrets.PIPELINE_PAT)
       - name: Checkout failure-first-embodied-ai
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: adrianwedd/failure-first-embodied-ai
           path: failure-first-embodied-ai
           token: ${{ secrets.PIPELINE_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Checkout notebooklm
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: adrianwedd/notebooklm
           path: notebooklm
