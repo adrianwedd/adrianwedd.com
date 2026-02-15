@@ -21,6 +21,13 @@ const statusLabels: Record<string, string> = {
   experiment: 'Experiment',
 };
 
+const statusColors: Record<string, string> = {
+  active: 'border-green-700 text-green-400',
+  complete: 'border-accent/30 text-accent',
+  archived: 'border-border text-text-muted',
+  experiment: 'border-purple-700 text-purple-400',
+};
+
 // Load auto-discovered repos from cached data
 interface GitHubRepo {
   name: string;
@@ -144,7 +151,7 @@ try {
                 <span
                   class:list={[
                     'whitespace-nowrap rounded-full border px-2 py-0.5 text-xs',
-                    project.data.featured ? 'border-accent/30 text-accent' : 'border-border text-text-muted',
+                    statusColors[project.data.status] || 'border-border text-text-muted',
                   ]}
                 >
                   {statusLabels[project.data.status] || project.data.status}
