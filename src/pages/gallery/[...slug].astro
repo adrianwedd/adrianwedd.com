@@ -21,6 +21,7 @@ const { Content } = await render(gallery);
   title={gallery.data.title}
   description={gallery.data.description || `Gallery: ${gallery.data.title}`}
   image={gallery.data.coverImage}
+  type="article"
   tags={gallery.data.tags}
 >
   <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
