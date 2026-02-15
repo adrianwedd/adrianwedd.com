@@ -110,6 +110,19 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
+## Sprint 9: Navigation & Wayfinding (In Progress)
+
+[Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/9).
+
+- [ ] [#80](https://github.com/adrianwedd/adrianwedd.com/issues/80) Back-to-top button for long pages
+- [ ] [#81](https://github.com/adrianwedd/adrianwedd.com/issues/81) Homepage hero: add CTA buttons
+- [ ] [#82](https://github.com/adrianwedd/adrianwedd.com/issues/82) Footer: expand navigation links
+- [ ] [#83](https://github.com/adrianwedd/adrianwedd.com/issues/83) Project status legend on index page
+- [ ] [#84](https://github.com/adrianwedd/adrianwedd.com/issues/84) Colophon: dependency versions and build stats
+- [ ] [#85](https://github.com/adrianwedd/adrianwedd.com/issues/85) Blog reading position indicator
+
+---
+
 ## Post-Launch: Automation & Tooling
 
 ### NotebookLM Content Pipeline ✅
