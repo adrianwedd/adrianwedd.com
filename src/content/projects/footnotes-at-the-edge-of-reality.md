@@ -2,6 +2,7 @@
 title: "Footnotes at the Edge of Reality"
 description: "A long-form poem about what happens when physics breaks down — and what holds together when everything else fails."
 tags: ["poetry", "web", "creative", "physics"]
+url: "https://adrianwedd.github.io/Footnotes-at-the-Edge-of-Reality/"
 repo: "Footnotes-at-the-Edge-of-Reality"
 status: "complete"
 featured: true
@@ -19,3 +20,7 @@ The form is part of the argument. The poem is rendered as an interactive web exp
 And somewhere in the physics — in the reciprocity, the entanglement, the way orbits remember their vows — there is a quieter poem. About knowing someone so completely that separation becomes a technicality. About questions that bend answers and measurements that leave scars. About two things in conversation that cannot exist without each other.
 
 The universe is not finished speaking. Neither are we.
+
+---
+
+[Read the poem →](https://adrianwedd.github.io/Footnotes-at-the-Edge-of-Reality/)
