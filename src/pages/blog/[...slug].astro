@@ -97,7 +97,7 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
       title={post.data.title}
     />
 
-    <RelatedContent currentTags={post.data.tags} currentId={post.id} contentType="blog" />
+    <RelatedContent currentTags={post.data.tags} currentId={post.id} currentDate={post.data.date} contentType="blog" />
 
     {/* Prev/Next navigation */}
     <nav class="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next posts">

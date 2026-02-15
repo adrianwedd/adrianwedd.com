@@ -233,7 +233,7 @@ const relatedEpisodes = allAudio.filter((ep) => ep.data.relatedProject === proje
       title={project.data.title}
     />
 
-    <RelatedContent currentTags={project.data.tags} currentId={project.id} contentType="projects" />
+    <RelatedContent currentTags={project.data.tags} currentId={project.id} currentDate={project.data.date} contentType="projects" />
 
     <nav class="mt-16 border-t border-border pt-8" aria-label="Back to projects">
       <a href="/projects/" class="text-sm text-text-muted transition-colors hover:text-accent"> &larr; All projects </a>

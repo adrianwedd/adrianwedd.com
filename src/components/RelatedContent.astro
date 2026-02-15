@@ -5,11 +5,12 @@ import { slug } from '../lib/utils';
 interface Props {
   currentTags: string[];
   currentId: string;
+  currentDate?: Date;
   contentType: 'blog' | 'projects' | 'gallery' | 'audio';
   limit?: number;
 }
 
-const { currentTags, currentId, contentType, limit = 3 } = Astro.props;
+const { currentTags, currentId, currentDate, contentType, limit = 3 } = Astro.props;
 
 // Gather all content types
 const [blogs, projects, galleries, audios] = await Promise.all([
@@ -25,6 +26,7 @@ type ContentItem = {
   title: string;
   description: string;
   tags: string[];
+  date: Date;
   href: string;
   score: number;
 };
@@ -38,6 +40,7 @@ const allItems: ContentItem[] = [
       title: p.data.title,
       description: p.data.description,
       tags: p.data.tags,
+      date: p.data.date,
       href: `/blog/${slug(p.id)}/`,
       score: 0,
     })),
@@ -47,6 +50,7 @@ const allItems: ContentItem[] = [
     title: p.data.title,
     description: p.data.description,
     tags: p.data.tags,
+    date: p.data.date,
     href: p.data.url || `/projects/${slug(p.id)}/`,
     score: 0,
   })),
@@ -56,6 +60,7 @@ const allItems: ContentItem[] = [
     title: p.data.title,
     description: p.data.description || '',
     tags: p.data.tags,
+    date: p.data.date,
     href: `/gallery/${slug(p.id)}/`,
     score: 0,
   })),
@@ -65,6 +70,7 @@ const allItems: ContentItem[] = [
     title: p.data.title,
     description: p.data.description,
     tags: p.data.tags,
+    date: p.data.date,
     href: `/audio/${slug(p.id)}/`,
     score: 0,
   })),
@@ -79,6 +85,10 @@ for (const item of allItems) {
 }
 const totalItems = allItems.length;
 
+// Temporal proximity: boost for content published near the same time
+const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
+const currentTime = currentDate?.getTime();
+
 // Score by weighted tag overlap + temporal proximity
 const related = allItems
   .filter((item) => item.id !== `${contentType}:${currentId}`)
@@ -88,7 +98,16 @@ const related = allItems
       .filter((t) => currentTags.includes(t))
       .reduce((sum, t) => sum + Math.log(totalItems / (tagCounts.get(t) || 1)), 0);
 
-    return { ...item, score: tagScore };
+    // Temporal proximity: linear decay over 90 days, max 20% of tag score
+    let temporalBoost = 0;
+    if (currentTime && tagScore > 0) {
+      const daysDiff = Math.abs(currentTime - item.date.getTime());
+      if (daysDiff < NINETY_DAYS_MS) {
+        temporalBoost = tagScore * 0.2 * (1 - daysDiff / NINETY_DAYS_MS);
+      }
+    }
+
+    return { ...item, score: tagScore + temporalBoost };
   })
   .filter((item) => item.score > 0)
   .sort((a, b) => b.score - a.score)
