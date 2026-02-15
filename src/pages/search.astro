@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Search" description="Search across all projects, blog posts, audio, and gallery.">
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <h1 class="text-text mb-8">Search</h1>
+    <div id="search" class="search-container"></div>
+  </section>
+</BaseLayout>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', async () => {
+    const script = document.createElement('script');
+    script.src = '/pagefind/pagefind-ui.js';
+    script.onload = () => {
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        showImages: true,
+      });
+    };
+    document.head.appendChild(script);
+  });
+</script>
+
+<style is:global>
+  /* Pagefind UI theme overrides */
+  :root {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-text: var(--text);
+    --pagefind-ui-background: var(--surface);
+    --pagefind-ui-border: var(--border);
+    --pagefind-ui-tag: var(--surface-alt);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 0.5rem;
+    --pagefind-ui-font: inherit;
+  }
+
+  .pagefind-ui__search-input {
+    background: var(--surface-alt) !important;
+    color: var(--text) !important;
+  }
+
+  .pagefind-ui__search-input::placeholder {
+    color: var(--text-muted) !important;
+  }
+
+  .pagefind-ui__result-link {
+    color: var(--accent) !important;
+  }
+
+  .pagefind-ui__result-excerpt {
+    color: var(--text-muted) !important;
+  }
+
+  .pagefind-ui__message {
+    color: var(--text-muted) !important;
+  }
+</style>

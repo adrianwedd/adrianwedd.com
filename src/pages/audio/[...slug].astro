@@ -20,6 +20,7 @@ const { Content } = await render(episode);
 <BaseLayout
   title={episode.data.title}
   description={episode.data.description}
+  image={episode.data.heroImage}
   type="article"
   publishedDate={episode.data.date.toISOString()}
   tags={episode.data.tags}

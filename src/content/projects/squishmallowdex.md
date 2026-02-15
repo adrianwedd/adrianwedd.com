@@ -4,7 +4,7 @@ description: "Collection tracker for 3,000+ Squishmallows. Like a Pokedex, but s
 tags: ["web", "fun", "kids"]
 repo: "https://github.com/adrianwedd/squishmallowdex"
 status: "complete"
-featured: false
+featured: true
 heroImage: "/images/projects/squishmallowdex-hero.png"
 date: 2024-12-01
 ---
