@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import TableOfContents from '../../components/islands/TableOfContents';
 import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
@@ -8,7 +10,7 @@ import { slug } from '../../lib/utils';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
-  return projects.map(project => ({
+  return projects.map((project) => ({
     params: { slug: slug(project.id) },
     props: { project },
   }));
@@ -26,110 +28,157 @@ const { Content } = await render(project);
   publishedDate={project.data.date.toISOString()}
   tags={project.data.tags}
 >
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'CreativeWork',
-    name: project.data.title,
-    description: project.data.description,
-    url: new URL(Astro.url.pathname, Astro.site).href,
-    dateCreated: project.data.date.toISOString(),
-    keywords: project.data.tags,
-    ...(project.data.url ? { url: project.data.url } : {}),
-    ...(project.data.repo ? { codeRepository: project.data.repo.startsWith('http') ? project.data.repo : `https://github.com/adrianwedd/${project.data.repo}` } : {}),
-    author: {
-      '@type': 'Person',
-      name: 'Adrian Wedd',
-      url: 'https://adrianwedd.com'
-    }
-  })} />
-  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: project.data.title,
+      description: project.data.description,
+      url: new URL(Astro.url.pathname, Astro.site).href,
+      dateCreated: project.data.date.toISOString(),
+      keywords: project.data.tags,
+      ...(project.data.url ? { url: project.data.url } : {}),
+      ...(project.data.repo
+        ? {
+            codeRepository: project.data.repo.startsWith('http')
+              ? project.data.repo
+              : `https://github.com/adrianwedd/${project.data.repo}`,
+          }
+        : {}),
+      author: {
+        '@type': 'Person',
+        name: 'Adrian Wedd',
+        url: 'https://adrianwedd.com',
+      },
+    })}
+  />
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumb
+      crumbs={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: project.data.title }]}
+    />
     <header class="mb-10">
-      <div class="flex items-center gap-3 mb-4">
-        <span class="text-xs px-2 py-0.5 rounded-full border border-accent/30 text-accent">
+      <div class="mb-4 flex items-center gap-3">
+        <span class="border-accent/30 rounded-full border px-2 py-0.5 text-xs text-accent">
           {project.data.status}
         </span>
-        {project.data.url && (
-          <a href={project.data.url} class="text-xs text-text-muted hover:text-accent transition-colors" target="_blank" rel="noopener">
-            Visit site &nearr;
-          </a>
-        )}
-        {project.data.repo && (
-          <a href={project.data.repo.startsWith('http') ? project.data.repo : `https://github.com/adrianwedd/${project.data.repo}`} class="text-xs text-text-muted hover:text-accent transition-colors" target="_blank" rel="noopener">
-            Source &nearr;
-          </a>
-        )}
+        {
+          project.data.url && (
+            <a
+              href={project.data.url}
+              class="text-xs text-text-muted transition-colors hover:text-accent"
+              target="_blank"
+              rel="noopener"
+            >
+              Visit site &nearr;
+            </a>
+          )
+        }
+        {
+          project.data.repo && (
+            <a
+              href={
+                project.data.repo.startsWith('http')
+                  ? project.data.repo
+                  : `https://github.com/adrianwedd/${project.data.repo}`
+              }
+              class="text-xs text-text-muted transition-colors hover:text-accent"
+              target="_blank"
+              rel="noopener"
+            >
+              Source &nearr;
+            </a>
+          )
+        }
       </div>
       <h1 class="text-text">{project.data.title}</h1>
-      <p class="mt-4 text-lg text-text-muted leading-relaxed">{project.data.description}</p>
+      <p class="mt-4 text-lg leading-relaxed text-text-muted">{project.data.description}</p>
       <div class="mt-4 flex flex-wrap gap-2">
-        {project.data.tags.map((tag: string) => (
-          <span class="text-xs px-2 py-0.5 rounded-full bg-surface-alt border border-border text-text-muted">
-            {tag}
-          </span>
-        ))}
+        {
+          project.data.tags.map((tag: string) => (
+            <span class="rounded-full border border-border bg-surface-alt px-2 py-0.5 text-xs text-text-muted">
+              {tag}
+            </span>
+          ))
+        }
       </div>
-    {project.data.heroImage && (
-        <img
-          src={project.data.heroImage}
-          alt={project.data.title}
-          class="w-full rounded-lg border border-border mb-10"
-          loading="eager"
-        />
-      )}
+      {
+        project.data.heroImage && (
+          <img
+            src={project.data.heroImage}
+            alt={project.data.title}
+            class="mb-10 w-full rounded-lg border border-border"
+            loading="eager"
+          />
+        )
+      }
     </header>
 
-    {project.data.audioUrl && (
-      <div class="mb-10">
-        <p class="text-sm text-text-muted mb-2">Listen while you read</p>
-        <AudioPlayer src={project.data.audioUrl} title={`${project.data.title} — Audio Overview`} client:load />
-      </div>
-    )}
+    {
+      project.data.audioUrl && (
+        <div class="mb-10">
+          <p class="mb-2 text-sm text-text-muted">Listen while you read</p>
+          <AudioPlayer src={project.data.audioUrl} title={`${project.data.title} — Audio Overview`} client:load />
+        </div>
+      )
+    }
 
-    <div class="prose max-w-none
-      prose-headings:text-text prose-headings:font-semibold prose-headings:mb-4 prose-headings:mt-8
-      prose-p:text-text prose-p:leading-relaxed prose-p:mb-4
-      prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-      prose-strong:text-text
-      prose-code:text-text-accent prose-code:bg-surface-alt prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-      prose-pre:bg-surface-alt prose-pre:border prose-pre:border-border prose-pre:my-4
-      prose-blockquote:border-accent prose-blockquote:text-text-muted prose-blockquote:my-4
-      prose-li:text-text
-      prose-ul:my-4 prose-ol:my-4
-    ">
+    <TableOfContents contentSelector=".prose" client:idle />
+
+    <div
+      class="prose max-w-none prose-headings:mb-4 prose-headings:mt-8 prose-headings:font-semibold prose-headings:text-text prose-p:mb-4 prose-p:leading-relaxed prose-p:text-text prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-blockquote:my-4 prose-blockquote:border-accent prose-blockquote:text-text-muted prose-strong:text-text prose-code:rounded prose-code:bg-surface-alt prose-code:px-1 prose-code:py-0.5 prose-code:text-text-accent prose-pre:my-4 prose-pre:border prose-pre:border-border prose-pre:bg-surface-alt prose-ol:my-4 prose-ul:my-4 prose-li:text-text"
+    >
       <Content />
     </div>
 
     {/* CTA — prominent links to live site / source */}
-    {(project.data.url || project.data.repo) && (
-      <div class="mt-10 flex flex-wrap gap-3">
-        {project.data.url && (
-          <a
-            href={project.data.url}
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent text-surface font-medium text-sm hover:bg-accent-hover transition-colors no-underline shadow-subtle hover:shadow-card"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-            </svg>
-            Visit project
-          </a>
-        )}
-        {project.data.repo && (
-          <a
-            href={project.data.repo.startsWith('http') ? project.data.repo : `https://github.com/adrianwedd/${project.data.repo}`}
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-text-muted font-medium text-sm hover:border-accent hover:text-accent transition-colors no-underline shadow-subtle hover:shadow-card"
-          >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-            View source
-          </a>
-        )}
-      </div>
-    )}
+    {
+      (project.data.url || project.data.repo) && (
+        <div class="mt-10 flex flex-wrap gap-3">
+          {project.data.url && (
+            <a
+              href={project.data.url}
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline shadow-subtle transition-colors hover:bg-accent-hover hover:shadow-card"
+            >
+              <svg
+                class="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                />
+              </svg>
+              Visit project
+            </a>
+          )}
+          {project.data.repo && (
+            <a
+              href={
+                project.data.repo.startsWith('http')
+                  ? project.data.repo
+                  : `https://github.com/adrianwedd/${project.data.repo}`
+              }
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-muted no-underline shadow-subtle transition-colors hover:border-accent hover:text-accent hover:shadow-card"
+            >
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              View source
+            </a>
+          )}
+        </div>
+      )
+    }
 
     <NotebookAssets
       audioUrl={project.data.audioUrl}
@@ -145,10 +194,8 @@ const { Content } = await render(project);
 
     <RelatedContent currentTags={project.data.tags} currentId={project.id} contentType="projects" />
 
-    <nav class="mt-16 pt-8 border-t border-border" aria-label="Back to projects">
-      <a href="/projects/" class="text-sm text-text-muted hover:text-accent transition-colors">
-        &larr; All projects
-      </a>
+    <nav class="mt-16 border-t border-border pt-8" aria-label="Back to projects">
+      <a href="/projects/" class="text-sm text-text-muted transition-colors hover:text-accent"> &larr; All projects </a>
     </nav>
   </article>
 </BaseLayout>

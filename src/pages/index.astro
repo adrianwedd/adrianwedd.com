@@ -6,12 +6,12 @@ import { slug } from '../lib/utils';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
-  .filter(p => p.data.featured)
+  .filter((p) => p.data.featured)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const allPosts = await getCollection('blog');
 const recentPosts = allPosts
-  .filter(p => !p.data.draft)
+  .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
 ---
@@ -21,101 +21,100 @@ const recentPosts = allPosts
   description="AI safety researcher and systems thinker. Building things that think, break, and sometimes both."
 >
   {/* Hero */}
-  <section class="hero-glow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+  <section class="hero-glow mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
     <Personalisation client:load />
-    <h1 class="text-text animate-in">Adrian Wedd</h1>
-    <p class="mt-4 text-xl sm:text-2xl text-text-muted max-w-prose leading-relaxed animate-in" style="animation-delay: 0.1s">
+    <h1 class="animate-in text-text">Adrian Wedd</h1>
+    <p
+      class="animate-in mt-4 max-w-prose text-xl leading-relaxed text-text-muted sm:text-2xl"
+      style="animation-delay: 0.1s"
+    >
       I build things that think, break, and sometimes both.
     </p>
-    <p class="mt-6 text-base text-text-muted max-w-prose leading-relaxed animate-in" style="animation-delay: 0.2s">
-      AI safety researcher and systems thinker. This is my workshop — where finished work, ongoing experiments, and raw thinking coexist.
+    <p class="animate-in mt-6 max-w-prose text-base leading-relaxed text-text-muted" style="animation-delay: 0.2s">
+      AI safety researcher and systems thinker. This is my workshop — where finished work, ongoing experiments, and raw
+      thinking coexist.
     </p>
   </section>
 
-  <div class="section-divider max-w-6xl mx-auto" />
+  <div class="section-divider mx-auto max-w-6xl"></div>
 
   {/* Featured projects */}
-  {featuredProjects.length > 0 && (
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-      <div class="flex items-baseline justify-between mb-8">
-        <h2 class="text-text">Featured Work</h2>
-        <a href="/projects/" class="text-sm text-text-muted hover:text-accent transition-colors">
-          All projects &rarr;
-        </a>
-      </div>
-      <div class="grid gap-6 sm:grid-cols-2">
-        {featuredProjects.map((project) => (
-          <a
-            href={`/projects/${slug(project.id)}/`}
-            class="group block rounded-xl bg-surface-alt border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline overflow-hidden"
-          >
-            {project.data.heroImage && (
-              <img
-                src={project.data.heroImage}
-                alt=""
-                class="w-full h-40 object-cover"
-                loading="lazy"
-              />
-            )}
-            <div class="p-6">
-              <h3 class="text-lg font-semibold text-text group-hover:text-accent transition-colors">
-                {project.data.title}
-              </h3>
-              <p class="mt-2 text-sm text-text-muted leading-relaxed">
-                {project.data.description}
-              </p>
-              <div class="mt-4 flex flex-wrap gap-2">
-                {project.data.tags.slice(0, 3).map((tag: string) => (
-                  <span class="text-xs px-2 py-0.5 rounded-full bg-surface border border-border text-text-muted">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
+  {
+    featuredProjects.length > 0 && (
+      <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div class="mb-8 flex items-baseline justify-between">
+          <h2 class="text-text">Featured Work</h2>
+          <a href="/projects/" class="text-sm text-text-muted transition-colors hover:text-accent">
+            All projects &rarr;
           </a>
-        ))}
-      </div>
-      <div class="mt-8 text-center">
-        <a href="/projects/" class="text-sm text-text-muted hover:text-accent transition-colors">
-          All projects &rarr;
-        </a>
-      </div>
-    </section>
-  )}
+        </div>
+        <div class="grid gap-6 sm:grid-cols-2">
+          {featuredProjects.map((project) => (
+            <a
+              href={`/projects/${slug(project.id)}/`}
+              class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border bg-surface-alt no-underline shadow-subtle transition-all hover:shadow-card"
+            >
+              {project.data.heroImage && (
+                <img src={project.data.heroImage} alt="" class="h-40 w-full object-cover" loading="lazy" />
+              )}
+              <div class="p-6">
+                <h3 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
+                  {project.data.title}
+                </h3>
+                <p class="mt-2 text-sm leading-relaxed text-text-muted">{project.data.description}</p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  {project.data.tags.slice(0, 3).map((tag: string) => (
+                    <span class="rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-text-muted">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div class="mt-8 text-center">
+          <a href="/projects/" class="text-sm text-text-muted transition-colors hover:text-accent">
+            All projects &rarr;
+          </a>
+        </div>
+      </section>
+    )
+  }
 
-  <div class="section-divider max-w-6xl mx-auto" />
+  <div class="section-divider mx-auto max-w-6xl"></div>
 
   {/* Recent posts */}
-  {recentPosts.length > 0 && (
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-      <div class="flex items-baseline justify-between mb-8">
-        <h2 class="text-text">Recent Writing</h2>
-        <a href="/blog/" class="text-sm text-text-muted hover:text-accent transition-colors">
-          All posts &rarr;
-        </a>
-      </div>
-      <div class="space-y-6">
-        {recentPosts.map((post) => (
-          <a
-            href={`/blog/${slug(post.id)}/`}
-            class="group block p-6 rounded-xl bg-surface-alt border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline"
-          >
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <h3 class="text-lg font-semibold text-text group-hover:text-accent transition-colors">
-                  {post.data.title}
-                </h3>
-                <p class="mt-1 text-sm text-text-muted leading-relaxed">
-                  {post.data.description}
-                </p>
-              </div>
-              <time class="text-xs text-text-muted whitespace-nowrap" datetime={post.data.date.toISOString()}>
-                {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
-              </time>
-            </div>
+  {
+    recentPosts.length > 0 && (
+      <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div class="mb-8 flex items-baseline justify-between">
+          <h2 class="text-text">Recent Writing</h2>
+          <a href="/blog/" class="text-sm text-text-muted transition-colors hover:text-accent">
+            All posts &rarr;
           </a>
-        ))}
-      </div>
-    </section>
-  )}
+        </div>
+        <div class="space-y-6">
+          {recentPosts.map((post) => (
+            <a
+              href={`/blog/${slug(post.id)}/`}
+              class="card-hover hover:border-accent/50 group block rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h3 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
+                    {post.data.title}
+                  </h3>
+                  <p class="mt-1 text-sm leading-relaxed text-text-muted">{post.data.description}</p>
+                </div>
+                <time class="whitespace-nowrap text-xs text-text-muted" datetime={post.data.date.toISOString()}>
+                  {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </time>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

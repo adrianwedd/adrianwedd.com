@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import TableOfContents from '../../components/islands/TableOfContents';
 import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import { getCollection, render } from 'astro:content';
@@ -7,7 +9,7 @@ import { slug } from '../../lib/utils';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map(post => ({
+  return posts.map((post) => ({
     params: { slug: post.id.replace(/\.mdx?$/, '') },
     props: { post },
   }));
@@ -17,10 +19,10 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 
 const allPosts = (await getCollection('blog'))
-  .filter(p => !p.data.draft)
+  .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const currentIndex = allPosts.findIndex(p => p.id === post.id);
+const currentIndex = allPosts.findIndex((p) => p.id === post.id);
 const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
@@ -37,9 +39,12 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
 >
-  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumb
+      crumbs={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog/' }, { label: post.data.title }]}
+    />
     <header class="mb-10">
-      <div class="flex items-center gap-3 text-sm text-text-muted mb-4">
+      <div class="mb-4 flex items-center gap-3 text-sm text-text-muted">
         <time datetime={post.data.date.toISOString()}>
           {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
         </time>
@@ -47,30 +52,26 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
         <span>{readingTime} min read</span>
       </div>
       <h1 class="text-text">{post.data.title}</h1>
-      <p class="mt-4 text-lg text-text-muted leading-relaxed">{post.data.description}</p>
+      <p class="mt-4 text-lg leading-relaxed text-text-muted">{post.data.description}</p>
       <div class="mt-4 flex flex-wrap gap-2">
-        {post.data.tags.map((tag: string) => (
-          <a
-            href={`/blog/tag/${tag}/`}
-            class="text-xs px-2 py-0.5 rounded-full bg-surface-alt border border-border text-text-muted hover:text-accent hover:border-accent transition-colors no-underline"
-          >
-            {tag}
-          </a>
-        ))}
+        {
+          post.data.tags.map((tag: string) => (
+            <a
+              href={`/blog/tag/${tag}/`}
+              class="rounded-full border border-border bg-surface-alt px-2 py-0.5 text-xs text-text-muted no-underline transition-colors hover:border-accent hover:text-accent"
+            >
+              {tag}
+            </a>
+          ))
+        }
       </div>
     </header>
 
-    <div class="prose max-w-none
-      prose-headings:text-text prose-headings:font-semibold prose-headings:mb-4 prose-headings:mt-8
-      prose-p:text-text prose-p:leading-relaxed prose-p:mb-4
-      prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-      prose-strong:text-text
-      prose-code:text-text-accent prose-code:bg-surface-alt prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-      prose-pre:bg-surface-alt prose-pre:border prose-pre:border-border prose-pre:my-4
-      prose-blockquote:border-accent prose-blockquote:text-text-muted prose-blockquote:my-4
-      prose-li:text-text
-      prose-ul:my-4 prose-ol:my-4
-    ">
+    <TableOfContents contentSelector=".prose" client:idle />
+
+    <div
+      class="prose max-w-none prose-headings:mb-4 prose-headings:mt-8 prose-headings:font-semibold prose-headings:text-text prose-p:mb-4 prose-p:leading-relaxed prose-p:text-text prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-blockquote:my-4 prose-blockquote:border-accent prose-blockquote:text-text-muted prose-strong:text-text prose-code:rounded prose-code:bg-surface-alt prose-code:px-1 prose-code:py-0.5 prose-code:text-text-accent prose-pre:my-4 prose-pre:border prose-pre:border-border prose-pre:bg-surface-alt prose-ol:my-4 prose-ul:my-4 prose-li:text-text"
+    >
       <Content />
     </div>
 
@@ -89,19 +90,35 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
     <RelatedContent currentTags={post.data.tags} currentId={post.id} contentType="blog" />
 
     {/* Prev/Next navigation */}
-    <nav class="mt-16 pt-8 border-t border-border grid gap-4 sm:grid-cols-2" aria-label="Previous and next posts">
-      {prevPost ? (
-        <a href={`/blog/${slug(prevPost.id)}/`} class="group p-4 rounded-lg border border-border hover:border-accent/50 transition-colors no-underline">
-          <span class="text-xs text-text-muted">&larr; Previous</span>
-          <span class="block mt-1 text-sm font-medium text-text group-hover:text-accent transition-colors">{prevPost.data.title}</span>
-        </a>
-      ) : <div />}
-      {nextPost && (
-        <a href={`/blog/${slug(nextPost.id)}/`} class="group p-4 rounded-lg border border-border hover:border-accent/50 transition-colors no-underline sm:text-right">
-          <span class="text-xs text-text-muted">Next &rarr;</span>
-          <span class="block mt-1 text-sm font-medium text-text group-hover:text-accent transition-colors">{nextPost.data.title}</span>
-        </a>
-      )}
+    <nav class="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next posts">
+      {
+        prevPost ? (
+          <a
+            href={`/blog/${slug(prevPost.id)}/`}
+            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors"
+          >
+            <span class="text-xs text-text-muted">&larr; Previous</span>
+            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+              {prevPost.data.title}
+            </span>
+          </a>
+        ) : (
+          <div />
+        )
+      }
+      {
+        nextPost && (
+          <a
+            href={`/blog/${slug(nextPost.id)}/`}
+            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors sm:text-right"
+          >
+            <span class="text-xs text-text-muted">Next &rarr;</span>
+            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+              {nextPost.data.title}
+            </span>
+          </a>
+        )
+      }
     </nav>
   </article>
 </BaseLayout>

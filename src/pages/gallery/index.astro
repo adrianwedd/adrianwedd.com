@@ -3,75 +3,77 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 
-const collections = (await getCollection('gallery'))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const collections = (await getCollection('gallery')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const allTags = [...new Set(collections.flatMap(c => c.data.tags))].sort();
-const allMedia = [...new Set(collections.map(c => c.data.medium).filter(Boolean))].sort();
+const allTags = [...new Set(collections.flatMap((c) => c.data.tags))].sort();
+const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolean))].sort();
 ---
 
 <BaseLayout
   title="Gallery"
   description="Visual thinking—process documentation, experiments that didn't need words, and patterns noticed before they had names."
 >
-  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
     <h1 class="text-text">Gallery</h1>
-    <p class="mt-4 text-text-muted max-w-prose">
-      Visual thinking—process documentation, experiments that didn't need words, and patterns noticed before they had names.
+    <p class="mt-4 max-w-prose text-text-muted">
+      Visual thinking—process documentation, experiments that didn't need words, and patterns noticed before they had
+      names.
     </p>
 
-    {(allTags.length > 0 || allMedia.length > 0) && (
-      <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter gallery">
-        {allMedia.map(medium => (
-          <span class="text-xs px-3 py-1 rounded-full border border-border text-text-muted">
-            {medium}
-          </span>
-        ))}
-        {allTags.map(tag => (
-          <span class="text-xs px-3 py-1 rounded-full border border-border text-text-muted">
-            {tag}
-          </span>
-        ))}
-      </nav>
-    )}
+    {
+      (allTags.length > 0 || allMedia.length > 0) && (
+        <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter gallery">
+          {allMedia.map((medium) => (
+            <span class="rounded-full border border-border px-3 py-1 text-xs text-text-muted">{medium}</span>
+          ))}
+          {allTags.map((tag) => (
+            <span class="rounded-full border border-border px-3 py-1 text-xs text-text-muted">{tag}</span>
+          ))}
+        </nav>
+      )
+    }
 
     <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {collections.map(collection => (
-        <article>
-          <a
-            href={`/gallery/${slug(collection.id)}/`}
-            class="group block rounded-xl overflow-hidden border border-border shadow-subtle hover:shadow-card card-hover hover:border-accent/50 transition-all no-underline"
-          >
-            {collection.data.coverImage && (
-              <div class="aspect-[4/3] bg-surface-alt overflow-hidden">
-                <img
-                  src={collection.data.coverImage}
-                  alt={collection.data.title}
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-              </div>
-            )}
-            <div class="p-4">
-              <h2 class="text-base font-semibold text-text group-hover:text-accent transition-colors">
-                {collection.data.title}
-              </h2>
-              {collection.data.description && (
-                <p class="mt-1 text-sm text-text-muted line-clamp-2">{collection.data.description}</p>
+      {
+        collections.map((collection) => (
+          <article>
+            <a
+              href={`/gallery/${slug(collection.id)}/`}
+              class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border no-underline shadow-subtle transition-all hover:shadow-card"
+            >
+              {collection.data.coverImage && (
+                <div class="aspect-[4/3] overflow-hidden bg-surface-alt">
+                  <img
+                    src={collection.data.coverImage}
+                    alt={collection.data.title}
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
               )}
-              <div class="mt-2 flex items-center gap-2 text-xs text-text-muted">
-                <span>{collection.data.images.length} image{collection.data.images.length !== 1 ? 's' : ''}</span>
-                {collection.data.medium && (
-                  <>
-                    <span aria-hidden="true">&middot;</span>
-                    <span>{collection.data.medium}</span>
-                  </>
+              <div class="p-4">
+                <h2 class="text-base font-semibold text-text transition-colors group-hover:text-accent">
+                  {collection.data.title}
+                </h2>
+                {collection.data.description && (
+                  <p class="mt-1 line-clamp-2 text-sm text-text-muted">{collection.data.description}</p>
                 )}
+                <div class="mt-2 flex items-center gap-2 text-xs text-text-muted">
+                  <span>
+                    {collection.data.images.length} image{collection.data.images.length !== 1 ? 's' : ''}
+                  </span>
+                  {collection.data.medium && (
+                    <>
+                      <span aria-hidden="true">&middot;</span>
+                      <span>{collection.data.medium}</span>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          </a>
-        </article>
-      ))}
+            </a>
+          </article>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>

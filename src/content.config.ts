@@ -48,11 +48,13 @@ const gallery = defineCollection({
     description: z.string().optional(),
     date: z.coerce.date(),
     tags: z.array(z.string()).min(1),
-    images: z.array(z.object({
-      src: z.string(),
-      alt: z.string(),
-      caption: z.string().optional(),
-    })),
+    images: z.array(
+      z.object({
+        src: z.string(),
+        alt: z.string(),
+        caption: z.string().optional(),
+      }),
+    ),
     medium: z.string().optional(),
     collection: z.string().optional(),
     coverImage: z.string().optional(),

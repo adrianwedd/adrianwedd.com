@@ -5,12 +5,12 @@ import { getCollection } from 'astro:content';
 import { slug } from '../lib/utils';
 
 const featuredProjects = (await getCollection('projects'))
-  .filter(p => p.data.featured)
+  .filter((p) => p.data.featured)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 5);
 
 const recentPosts = (await getCollection('blog'))
-  .filter(p => !p.data.draft)
+  .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
 ---
@@ -19,58 +19,62 @@ const recentPosts = (await getCollection('blog'))
   title="About"
   description="I build things that think, break, and sometimes both. AI safety researcher and systems thinker. Building things that think, break, and sometimes both. Based in Tasmania."
 >
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Adrian Wedd',
-    url: 'https://adrianwedd.com',
-    description: 'AI safety researcher and systems thinker based in Tasmania',
-    jobTitle: 'Independent AI Safety Researcher',
-    workLocation: {
-      '@type': 'Place',
-      name: 'Tasmania, Australia'
-    },
-    knowsAbout: ['AI Safety', 'Systems Analysis', 'Cybersecurity', 'Multi-agent Systems', 'Infrastructure Management'],
-    sameAs: [
-      'https://github.com/adrianwedd'
-    ]
-  })} />
-  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Adrian Wedd',
+      url: 'https://adrianwedd.com',
+      description: 'AI safety researcher and systems thinker based in Tasmania',
+      jobTitle: 'Independent AI Safety Researcher',
+      workLocation: {
+        '@type': 'Place',
+        name: 'Tasmania, Australia',
+      },
+      knowsAbout: [
+        'AI Safety',
+        'Systems Analysis',
+        'Cybersecurity',
+        'Multi-agent Systems',
+        'Infrastructure Management',
+      ],
+      sameAs: ['https://github.com/adrianwedd'],
+    })}
+  />
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <header class="mb-12">
       <h1 class="text-text">About</h1>
     </header>
 
-    <div class="space-y-6 text-text leading-relaxed">
+    <div class="space-y-6 leading-relaxed text-text">
+      <p>I'm Adrian Wedd. I live in Tasmania and I build things that think, break, and sometimes both.</p>
+
       <p>
-        I'm Adrian Wedd. I live in Tasmania and I build things that think, break, and sometimes both.
+        I'm an independent AI safety researcher—building the multi-agent systems I study, writing about what happens
+        when demonstrated risk meets institutional optimism, and trying to make more of that work public. Currently
+        looking for interesting opportunities.
       </p>
 
       <p>
-        I'm an independent AI safety researcher—building the multi-agent systems
-        I study, writing about what happens when demonstrated risk meets institutional optimism,
-        and trying to make more of that work public. Currently looking for interesting opportunities.
+        I've worked in environmental advocacy, government, and infrastructure management. The thread through all of it
+        is an obsession with how complex systems fail. This site is where all of that lands.
+      </p>
+
+      <h2 class="mt-12 text-text">What I'm Working On</h2>
+
+      <p>
+        Right now: AI safety frameworks that start from what can go wrong, not what should go right. Multi-agent systems
+        where the safety constraints are physical, not theoretical. And the gap between what organisations know about
+        technological risk and what they actually do about it — which turns out to be enormous.
       </p>
 
       <p>
-        I've worked in environmental advocacy, government, and infrastructure management.
-        The thread through all of it is an obsession with how complex systems fail.
-        This site is where all of that lands.
+        I also write, make art, and occasionally record audio. This site is the workbench — finished work, ongoing
+        experiments, and raw thinking all in one place.
       </p>
 
-      <h2 class="text-text mt-12">What I'm Working On</h2>
-
-      <p>
-        Right now: AI safety frameworks that start from what can go wrong, not what should go right.
-        Multi-agent systems where the safety constraints are physical, not theoretical.
-        And the gap between what organisations know about technological risk and what they actually do about it — which turns out to be enormous.
-      </p>
-
-      <p>
-        I also write, make art, and occasionally record audio. This site is the workbench — finished work,
-        ongoing experiments, and raw thinking all in one place.
-      </p>
-
-      <h2 class="text-text mt-12">Elsewhere</h2>
+      <h2 class="mt-12 text-text">Elsewhere</h2>
 
       <ul class="space-y-2">
         <li>
@@ -87,57 +91,52 @@ const recentPosts = (await getCollection('blog'))
         </li>
       </ul>
 
-      <h2 id="privacy" class="text-text mt-12">Privacy</h2>
+      <h2 id="privacy" class="mt-12 text-text">Privacy</h2>
 
       <p>
-        This site respects your choices. No tracking happens without consent.
-        Analytics (if enabled) uses Google Analytics 4 with cookie flags set to SameSite=Lax and Secure.
-        Personalisation stores visit data locally in your browser — nothing leaves your machine.
+        This site respects your choices. No tracking happens without consent. Analytics (if enabled) uses Google
+        Analytics 4 with cookie flags set to SameSite=Lax and Secure. Personalisation stores visit data locally in your
+        browser — nothing leaves your machine.
       </p>
 
-      <p>
-        You can see exactly what this site knows about you and reset it at any time.
-      </p>
+      <p>You can see exactly what this site knows about you and reset it at any time.</p>
 
       <Transparency client:load />
     </div>
 
     {/* Connected work */}
-    {featuredProjects.length > 0 && (
-      <aside class="mt-16 pt-8 border-t border-border">
-        <h2 class="text-lg font-semibold text-text mb-4">Featured Work</h2>
-        <div class="space-y-3">
-          {featuredProjects.map(project => (
-            <a
-              href={`/projects/${slug(project.id)}/`}
-              class="group flex items-center gap-3 no-underline"
-            >
-              <span class="text-sm text-text group-hover:text-accent transition-colors">
-                {project.data.title}
-              </span>
-              <span class="text-xs text-text-muted">{project.data.description}</span>
-            </a>
-          ))}
-        </div>
-      </aside>
-    )}
+    {
+      featuredProjects.length > 0 && (
+        <aside class="mt-16 border-t border-border pt-8">
+          <h2 class="mb-4 text-lg font-semibold text-text">Featured Work</h2>
+          <div class="space-y-3">
+            {featuredProjects.map((project) => (
+              <a href={`/projects/${slug(project.id)}/`} class="group flex items-center gap-3 no-underline">
+                <span class="text-sm text-text transition-colors group-hover:text-accent">{project.data.title}</span>
+                <span class="text-xs text-text-muted">{project.data.description}</span>
+              </a>
+            ))}
+          </div>
+        </aside>
+      )
+    }
 
-    {recentPosts.length > 0 && (
-      <aside class="mt-8 pt-8 border-t border-border">
-        <h2 class="text-lg font-semibold text-text mb-4">Recent Writing</h2>
-        <div class="space-y-3">
-          {recentPosts.map(post => (
-            <a href={`/blog/${slug(post.id)}/`} class="group flex items-center gap-3 no-underline">
-              <span class="text-sm text-text group-hover:text-accent transition-colors">
-                {post.data.title}
-              </span>
-              <time class="text-xs text-text-muted" datetime={post.data.date.toISOString()}>
-                {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
-              </time>
-            </a>
-          ))}
-        </div>
-      </aside>
-    )}
+    {
+      recentPosts.length > 0 && (
+        <aside class="mt-8 border-t border-border pt-8">
+          <h2 class="mb-4 text-lg font-semibold text-text">Recent Writing</h2>
+          <div class="space-y-3">
+            {recentPosts.map((post) => (
+              <a href={`/blog/${slug(post.id)}/`} class="group flex items-center gap-3 no-underline">
+                <span class="text-sm text-text transition-colors group-hover:text-accent">{post.data.title}</span>
+                <time class="text-xs text-text-muted" datetime={post.data.date.toISOString()}>
+                  {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+                </time>
+              </a>
+            ))}
+          </div>
+        </aside>
+      )
+    }
   </article>
 </BaseLayout>

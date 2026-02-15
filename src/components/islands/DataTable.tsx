@@ -36,8 +36,8 @@ export default function DataTable({ src }: Props) {
 
   useEffect(() => {
     fetch(src)
-      .then(r => r.text())
-      .then(text => {
+      .then((r) => r.text())
+      .then((text) => {
         const parsed = parseCSV(text);
         if (parsed.length > 0) {
           setHeaders(parsed[0]);
@@ -50,16 +50,17 @@ export default function DataTable({ src }: Props) {
   if (error) return <p class="text-sm text-text-muted">{error}</p>;
   if (!headers.length) return <p class="text-sm text-text-muted">Loading...</p>;
 
-  const sorted = sortCol !== null
-    ? [...rows].sort((a, b) => {
-        const va = a[sortCol] ?? '';
-        const vb = b[sortCol] ?? '';
-        const na = parseFloat(va);
-        const nb = parseFloat(vb);
-        if (!isNaN(na) && !isNaN(nb)) return sortAsc ? na - nb : nb - na;
-        return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
-      })
-    : rows;
+  const sorted =
+    sortCol !== null
+      ? [...rows].sort((a, b) => {
+          const va = a[sortCol] ?? '';
+          const vb = b[sortCol] ?? '';
+          const na = parseFloat(va);
+          const nb = parseFloat(vb);
+          if (!isNaN(na) && !isNaN(nb)) return sortAsc ? na - nb : nb - na;
+          return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        })
+      : rows;
 
   const handleSort = (col: number) => {
     if (sortCol === col) {
@@ -71,7 +72,7 @@ export default function DataTable({ src }: Props) {
   };
 
   return (
-    <div class="rounded-xl bg-surface-alt border border-border overflow-auto max-h-[28rem]">
+    <div class="max-h-[28rem] overflow-auto rounded-xl border border-border bg-surface-alt">
       <table class="w-full text-sm">
         <thead class="sticky top-0 bg-surface-alt">
           <tr>
@@ -79,19 +80,17 @@ export default function DataTable({ src }: Props) {
               <th
                 key={i}
                 onClick={() => handleSort(i)}
-                class="px-3 py-2 text-left text-xs font-medium text-text-muted border-b border-border cursor-pointer hover:text-accent transition-colors select-none"
+                class="cursor-pointer select-none border-b border-border px-3 py-2 text-left text-xs font-medium text-text-muted transition-colors hover:text-accent"
               >
                 {h}
-                {sortCol === i && (
-                  <span class="ml-1">{sortAsc ? '\u25b2' : '\u25bc'}</span>
-                )}
+                {sortCol === i && <span class="ml-1">{sortAsc ? '\u25b2' : '\u25bc'}</span>}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {sorted.map((row, ri) => (
-            <tr key={ri} class="border-b border-border/50 hover:bg-surface transition-colors">
+            <tr key={ri} class="border-border/50 border-b transition-colors hover:bg-surface">
               {row.map((cell, ci) => (
                 <td key={ci} class="px-3 py-2 text-text">
                   {cell}

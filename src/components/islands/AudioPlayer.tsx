@@ -64,50 +64,50 @@ export default function AudioPlayer({ src, title }: Props) {
   };
 
   return (
-    <div class="rounded-xl bg-surface-alt border border-border p-4">
+    <div class="rounded-xl border border-border bg-surface-alt p-4">
       <audio ref={audioRef} src={src} preload="metadata" />
 
       <div class="flex items-center gap-3">
         <button
           type="button"
           onClick={togglePlay}
-          class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-accent text-surface hover:bg-accent-hover transition-colors"
+          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-accent text-surface transition-colors hover:bg-accent-hover"
           aria-label={playing ? 'Pause' : 'Play'}
         >
           {playing ? (
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
               <rect x="6" y="4" width="4" height="16" />
               <rect x="14" y="4" width="4" height="16" />
             </svg>
           ) : (
-            <svg class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+            <svg class="ml-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
               <polygon points="5,3 19,12 5,21" />
             </svg>
           )}
         </button>
 
-        <div class="flex-1 min-w-0">
-          <div class="text-sm font-medium text-text truncate">{title}</div>
-          <div class="flex items-center gap-2 mt-1">
-            <span class="text-xs text-text-muted tabular-nums">{formatTime(currentTime)}</span>
+        <div class="min-w-0 flex-1">
+          <div class="truncate text-sm font-medium text-text">{title}</div>
+          <div class="mt-1 flex items-center gap-2">
+            <span class="text-xs tabular-nums text-text-muted">{formatTime(currentTime)}</span>
             <input
               type="range"
               min="0"
               max={duration || 0}
               value={currentTime}
               onInput={seek}
-              class="flex-1 h-1 accent-accent cursor-pointer"
+              class="h-1 flex-1 cursor-pointer accent-accent"
               aria-label="Seek"
               aria-valuetext={`${formatTime(currentTime)} of ${formatTime(duration)}`}
             />
-            <span class="text-xs text-text-muted tabular-nums">{formatTime(duration)}</span>
+            <span class="text-xs tabular-nums text-text-muted">{formatTime(duration)}</span>
           </div>
         </div>
 
         <button
           type="button"
           onClick={cycleRate}
-          class="text-xs px-2 py-1 rounded border border-border text-text-muted hover:text-text hover:border-accent transition-colors tabular-nums"
+          class="rounded border border-border px-2 py-1 text-xs tabular-nums text-text-muted transition-colors hover:border-accent hover:text-text"
           aria-label={`Playback speed: ${playbackRate}x`}
         >
           {playbackRate}x

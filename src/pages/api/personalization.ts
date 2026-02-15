@@ -3,11 +3,14 @@
 export const prerender = true;
 
 export async function GET() {
-  return new Response(JSON.stringify({
-    greeting: 'Welcome.',
-    timeOfDay: 'afternoon',
-  }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return new Response(
+    JSON.stringify({
+      greeting: 'Welcome.',
+      timeOfDay: 'afternoon',
+    }),
+    {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
 }

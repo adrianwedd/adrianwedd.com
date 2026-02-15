@@ -17,7 +17,7 @@ export default function Flashcards({ src }: Props) {
 
   useEffect(() => {
     fetch(src)
-      .then(r => r.json())
+      .then((r) => r.json())
       .then((data) => setCards(Array.isArray(data) ? data : data.cards || []))
       .catch(() => setError('Failed to load flashcards.'));
   }, [src]);
@@ -28,39 +28,41 @@ export default function Flashcards({ src }: Props) {
   const card = cards[current];
 
   return (
-    <div class="rounded-xl bg-surface-alt border border-border p-6">
-      <p class="text-xs text-text-muted mb-3">
+    <div class="rounded-xl border border-border bg-surface-alt p-6">
+      <p class="mb-3 text-xs text-text-muted">
         Card {current + 1} of {cards.length}
       </p>
 
       <button
         type="button"
         onClick={() => setFlipped(!flipped)}
-        class="w-full min-h-[8rem] flex items-center justify-center p-6 rounded-lg border border-border hover:border-accent/50 transition-colors cursor-pointer"
+        class="hover:border-accent/50 flex min-h-[8rem] w-full cursor-pointer items-center justify-center rounded-lg border border-border p-6 transition-colors"
       >
-        <p class="text-sm text-text text-center">
-          {flipped ? card.back : card.front}
-        </p>
+        <p class="text-center text-sm text-text">{flipped ? card.back : card.front}</p>
       </button>
 
-      <p class="text-xs text-text-muted text-center mt-2">
-        {flipped ? 'Answer' : 'Click to reveal'}
-      </p>
+      <p class="mt-2 text-center text-xs text-text-muted">{flipped ? 'Answer' : 'Click to reveal'}</p>
 
-      <div class="flex justify-between mt-4">
+      <div class="mt-4 flex justify-between">
         <button
           type="button"
           disabled={current === 0}
-          onClick={() => { setCurrent(c => c - 1); setFlipped(false); }}
-          class="px-3 py-1 rounded border border-border text-sm text-text-muted hover:text-text hover:border-accent/50 transition-colors disabled:opacity-30"
+          onClick={() => {
+            setCurrent((c) => c - 1);
+            setFlipped(false);
+          }}
+          class="hover:border-accent/50 rounded border border-border px-3 py-1 text-sm text-text-muted transition-colors hover:text-text disabled:opacity-30"
         >
           Previous
         </button>
         <button
           type="button"
           disabled={current === cards.length - 1}
-          onClick={() => { setCurrent(c => c + 1); setFlipped(false); }}
-          class="px-3 py-1 rounded border border-border text-sm text-text-muted hover:text-text hover:border-accent/50 transition-colors disabled:opacity-30"
+          onClick={() => {
+            setCurrent((c) => c + 1);
+            setFlipped(false);
+          }}
+          class="hover:border-accent/50 rounded border border-border px-3 py-1 text-sm text-text-muted transition-colors hover:text-text disabled:opacity-30"
         >
           Next
         </button>

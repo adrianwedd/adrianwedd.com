@@ -14,7 +14,9 @@ function getConsent(): ConsentState | null {
   try {
     const raw = localStorage.getItem('adrianwedd_consent');
     return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
 function getMemory(): VisitorMemory {
@@ -53,7 +55,9 @@ export default function Personalisation() {
     if (!memory.referrer && document.referrer) {
       try {
         memory.referrer = new URL(document.referrer).hostname;
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
     }
 
     // Track current page
@@ -69,7 +73,7 @@ export default function Personalisation() {
 
     // Fetch SSR greeting
     fetch('/api/personalization')
-      .then(res => res.json())
+      .then((res) => res.json())
       .then((data: { greeting: string; referrerHostname?: string }) => {
         if (memory.visits > 1) {
           setGreeting(`Welcome back. ${data.greeting}`);
@@ -93,9 +97,5 @@ export default function Personalisation() {
 
   if (!greeting) return null;
 
-  return (
-    <div class="text-sm text-text-muted italic">
-      {greeting}
-    </div>
-  );
+  return <div class="text-sm italic text-text-muted">{greeting}</div>;
 }

@@ -3,17 +3,15 @@ import { slug } from '../../lib/utils';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const episodes = (await getCollection('audio'))
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const episodes = (await getCollection('audio')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const site = context.site!.toString().replace(/\/$/, '');
 
-  const items = episodes.map(ep => {
-    const audioUrl = ep.data.audioUrl.startsWith('http')
-      ? ep.data.audioUrl
-      : `${site}${ep.data.audioUrl}`;
+  const items = episodes
+    .map((ep) => {
+      const audioUrl = ep.data.audioUrl.startsWith('http') ? ep.data.audioUrl : `${site}${ep.data.audioUrl}`;
 
-    return `
+      return `
     <item>
       <title>${escapeXml(ep.data.title)}</title>
       <description>${escapeXml(ep.data.description)}</description>
@@ -24,7 +22,8 @@ export async function GET(context: APIContext) {
       ${ep.data.duration ? `<itunes:duration>${ep.data.duration}</itunes:duration>` : ''}
       <itunes:explicit>false</itunes:explicit>
     </item>`;
-  }).join('\n');
+    })
+    .join('\n');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"

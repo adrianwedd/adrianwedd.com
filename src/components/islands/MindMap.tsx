@@ -18,14 +18,12 @@ function Node({ node, depth = 0 }: { node: MindMapNode; depth?: number }) {
       <button
         type="button"
         onClick={() => hasChildren && setOpen(!open)}
-        class={`flex items-center gap-2 py-1 px-2 rounded text-sm text-left w-full hover:bg-surface-alt transition-colors ${
+        class={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-sm transition-colors hover:bg-surface-alt ${
           hasChildren ? 'cursor-pointer' : 'cursor-default'
         }`}
       >
         {hasChildren && (
-          <span class={`text-text-muted text-xs transition-transform ${open ? 'rotate-90' : ''}`}>
-            &#9654;
-          </span>
+          <span class={`text-xs text-text-muted transition-transform ${open ? 'rotate-90' : ''}`}>&#9654;</span>
         )}
         {!hasChildren && <span class="w-3" />}
         <span class="text-text">{node.label}</span>
@@ -47,7 +45,7 @@ export default function MindMap({ src }: Props) {
 
   useEffect(() => {
     fetch(src)
-      .then(r => r.json())
+      .then((r) => r.json())
       .then(setData)
       .catch(() => setError('Failed to load mind map.'));
   }, [src]);
@@ -56,7 +54,7 @@ export default function MindMap({ src }: Props) {
   if (!data) return <p class="text-sm text-text-muted">Loading...</p>;
 
   return (
-    <div class="rounded-xl bg-surface-alt border border-border p-4 overflow-auto max-h-[32rem]">
+    <div class="max-h-[32rem] overflow-auto rounded-xl border border-border bg-surface-alt p-4">
       <ul>
         <Node node={data} />
       </ul>
