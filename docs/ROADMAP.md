@@ -71,16 +71,16 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
-## Sprint 6: Accessibility & Reach (In Progress)
+## Sprint 6: Accessibility & Reach ✅ (Completed Feb 15, 2026)
 
-[Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/6).
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/6).
 
-- [ ] [#62](https://github.com/adrianwedd/adrianwedd.com/issues/62) Accessibility: focus traps, aria-live, and modal management
-- [ ] [#63](https://github.com/adrianwedd/adrianwedd.com/issues/63) Mobile UX: auto-close menu and viewport height fix
-- [ ] [#64](https://github.com/adrianwedd/adrianwedd.com/issues/64) Reading progress indicator for blog posts
-- [ ] [#65](https://github.com/adrianwedd/adrianwedd.com/issues/65) Audio player: add skip forward/back buttons
-- [ ] [#66](https://github.com/adrianwedd/adrianwedd.com/issues/66) Tag pages for projects and gallery
-- [ ] [#67](https://github.com/adrianwedd/adrianwedd.com/issues/67) Print stylesheet for blog posts and project pages
+- ✅ [#62](https://github.com/adrianwedd/adrianwedd.com/issues/62) Accessibility: focus traps, aria-live, and modal management
+- ✅ [#63](https://github.com/adrianwedd/adrianwedd.com/issues/63) Mobile UX: auto-close menu and viewport height fix
+- ✅ [#64](https://github.com/adrianwedd/adrianwedd.com/issues/64) Reading progress indicator for blog posts
+- ✅ [#65](https://github.com/adrianwedd/adrianwedd.com/issues/65) Audio player: add skip forward/back buttons
+- ✅ [#66](https://github.com/adrianwedd/adrianwedd.com/issues/66) Tag pages for projects and gallery
+- ✅ [#67](https://github.com/adrianwedd/adrianwedd.com/issues/67) Print stylesheet for blog posts and project pages
 
 ---
 
