@@ -22,6 +22,8 @@ const props = Astro.props;
 <html lang="en">
   <head>
     <SEOHead {...props} />
+    <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Blog" href="/blog/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Audio" href="/audio/feed.xml" />
     {/* Prevent flash of wrong theme */}
     <script is:inline>
       (function() {

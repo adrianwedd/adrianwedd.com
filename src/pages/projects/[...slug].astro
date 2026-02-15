@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
+import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
 
@@ -76,6 +77,13 @@ const { Content } = await render(project);
         />
       )}
     </header>
+
+    {project.data.audioUrl && (
+      <div class="mb-10">
+        <p class="text-sm text-text-muted mb-2">Listen while you read</p>
+        <AudioPlayer src={project.data.audioUrl} title={`${project.data.title} — Audio Overview`} client:load />
+      </div>
+    )}
 
     <div class="prose max-w-none
       prose-headings:text-text prose-headings:font-semibold prose-headings:mb-4 prose-headings:mt-8
