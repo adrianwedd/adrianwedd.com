@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import GitHubActivity from '../components/islands/GitHubActivity';
 ---
 
 <BaseLayout title="Now" description="What I'm focused on right now. Updated February 2026.">
@@ -51,6 +52,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <section>
         <h2 class="text-text">Location</h2>
         <p>Tasmania, Australia.</p>
+      </section>
+
+      <section>
+        <h2 class="text-text">Recent Activity</h2>
+        <p class="text-sm text-text-muted mb-4">Live from GitHub.</p>
+        <GitHubActivity client:idle />
       </section>
     </div>
 
