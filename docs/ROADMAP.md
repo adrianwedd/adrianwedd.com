@@ -123,6 +123,19 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
+## Sprint 10: Content Depth & Cross-Linking (In Progress)
+
+[Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/10).
+
+- [ ] [#86](https://github.com/adrianwedd/adrianwedd.com/issues/86) NotebookAssets support on audio episode pages
+- [ ] [#87](https://github.com/adrianwedd/adrianwedd.com/issues/87) Project series support
+- [ ] [#88](https://github.com/adrianwedd/adrianwedd.com/issues/88) Audio transcript display polish
+- [ ] [#89](https://github.com/adrianwedd/adrianwedd.com/issues/89) Audio index: add All button for tag consistency
+- [ ] [#90](https://github.com/adrianwedd/adrianwedd.com/issues/90) Prev/next navigation on audio episodes
+- [ ] [#91](https://github.com/adrianwedd/adrianwedd.com/issues/91) Prev/next navigation on project pages
+
+---
+
 ## Post-Launch: Automation & Tooling
 
 ### NotebookLM Content Pipeline ✅
