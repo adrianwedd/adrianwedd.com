@@ -4,20 +4,36 @@
 
 ---
 
-## Sprint 1: Post-launch Maintenance (Due: March 15, 2026)
+## Sprint 1: Post-launch Maintenance ✅ (Completed Feb 15, 2026)
 
-Active sprint tracking [7 issues in GitHub milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/1):
+All 7 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/1).
 
-**Priority: Medium**
-- [#25](https://github.com/adrianwedd/adrianwedd.com/issues/25) Analytics insights and optimization
-- [#27](https://github.com/adrianwedd/adrianwedd.com/issues/27) Content expansion: Blog posts cadence
-- [#29](https://github.com/adrianwedd/adrianwedd.com/issues/29) Performance monitoring and regression prevention
-- [#30](https://github.com/adrianwedd/adrianwedd.com/issues/30) NotebookLM asset management improvements
+- ✅ [#25](https://github.com/adrianwedd/adrianwedd.com/issues/25) Analytics insights and optimization
+- ✅ [#27](https://github.com/adrianwedd/adrianwedd.com/issues/27) Content expansion: Blog posts cadence
+- ✅ [#29](https://github.com/adrianwedd/adrianwedd.com/issues/29) Performance monitoring (Lighthouse CI)
+- ✅ [#30](https://github.com/adrianwedd/adrianwedd.com/issues/30) NotebookLM asset management improvements
+- ✅ [#28](https://github.com/adrianwedd/adrianwedd.com/issues/28) Dependency maintenance (Dependabot)
+- ✅ [#31](https://github.com/adrianwedd/adrianwedd.com/issues/31) Cleanup and asset organization
+- ✅ [#26](https://github.com/adrianwedd/adrianwedd.com/issues/26) Infographics — closed (NotebookLM service timeout, low impact)
 
-**Maintenance**
-- [#26](https://github.com/adrianwedd/adrianwedd.com/issues/26) Complete NotebookLM infographics for 4 remaining projects
-- [#28](https://github.com/adrianwedd/adrianwedd.com/issues/28) Dependency maintenance: monthly update cycle
-- [#31](https://github.com/adrianwedd/adrianwedd.com/issues/31) Cleanup: Remove untracked files and finalize asset organization
+---
+
+## Sprint 2: Content Depth & Polish (Due: April 1, 2026)
+
+[7 issues in GitHub milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/2):
+
+**Navigation & UX**
+- [#37](https://github.com/adrianwedd/adrianwedd.com/issues/37) Table of contents for long-form content
+- [#38](https://github.com/adrianwedd/adrianwedd.com/issues/38) Breadcrumb navigation on detail pages
+- [#39](https://github.com/adrianwedd/adrianwedd.com/issues/39) Reading time and word count on blog posts
+- [#40](https://github.com/adrianwedd/adrianwedd.com/issues/40) Project filtering and sorting on index page
+
+**Code Quality**
+- [#41](https://github.com/adrianwedd/adrianwedd.com/issues/41) ESLint + Prettier for code consistency
+
+**Content**
+- [#42](https://github.com/adrianwedd/adrianwedd.com/issues/42) Blog content: publish 3 more posts
+- [#43](https://github.com/adrianwedd/adrianwedd.com/issues/43) Gallery expansion: project screenshots and diagrams
 
 ---
 
@@ -99,15 +115,15 @@ Active sprint tracking [7 issues in GitHub milestone](https://github.com/adrianw
 - Keyboard shortcuts for power users
 - Hidden pages or routes for the curious
 
-### Colophon
-- `/colophon/` page: how the site was built
-- Build timestamp, git hash, dependency versions
+### Colophon ✅
+- ~~`/colophon/` page: how the site was built~~ — Done
+- ~~Build timestamp, dependency versions~~ — Done
 - GitHub Actions build log integration
 - "Last updated" indicators on content
 
-### Search
-- Pagefind integration (static, client-side, privacy-friendly)
-- Spans all content types
+### Search ✅
+- ~~Pagefind integration (static, client-side, privacy-friendly)~~ — Done
+- ~~Spans all content types~~ — Done (65 pages indexed)
 
 ### Build Metadata On-Site
 - Build logs and pipeline status surfaced as content
@@ -117,8 +133,8 @@ Active sprint tracking [7 issues in GitHub milestone](https://github.com/adrianw
 
 ## Post-Launch: Operations
 
-### Lighthouse CI
-- Run on every PR, block merges that regress performance
+### Lighthouse CI ✅
+- ~~Run on every PR, block merges that regress performance~~ — Done (perf ≥0.9, a11y ≥0.9)
 
 ### Environment & Secrets
 - Secret rotation strategy
