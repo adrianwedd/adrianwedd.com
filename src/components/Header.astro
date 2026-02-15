@@ -129,6 +129,15 @@ const currentPath = Astro.url.pathname;
     }
   });
 
+  // Auto-close mobile menu when a link is clicked
+  menu.querySelectorAll('a[href]').forEach((link) => {
+    link.addEventListener('click', () => {
+      if (!menu.classList.contains('hidden')) {
+        (btn as HTMLElement).click();
+      }
+    });
+  });
+
   const header = document.querySelector('header')!;
   const onScroll = () => header.classList.toggle('header-scrolled', window.scrollY > 10);
   window.addEventListener('scroll', onScroll, { passive: true });
