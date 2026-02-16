@@ -136,16 +136,16 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
-## Sprint 11: Gallery Parity & Index Polish (In Progress)
+## Sprint 11: Gallery Parity & Index Polish ✅ (Completed Feb 16, 2026)
 
-[Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/11).
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/11).
 
-- [ ] [#92](https://github.com/adrianwedd/adrianwedd.com/issues/92) ShareButton on gallery collection and image pages
-- [ ] [#93](https://github.com/adrianwedd/adrianwedd.com/issues/93) Prev/next navigation on gallery collection pages
-- [ ] [#94](https://github.com/adrianwedd/adrianwedd.com/issues/94) Gallery collection tags: convert spans to links
-- [ ] [#95](https://github.com/adrianwedd/adrianwedd.com/issues/95) Project index: show date on cards
-- [ ] [#96](https://github.com/adrianwedd/adrianwedd.com/issues/96) Gallery index: add All button for tag nav
-- [ ] [#97](https://github.com/adrianwedd/adrianwedd.com/issues/97) Gallery index: medium badges as filter links
+- ✅ [#92](https://github.com/adrianwedd/adrianwedd.com/issues/92) ShareButton on gallery collection and image pages
+- ✅ [#93](https://github.com/adrianwedd/adrianwedd.com/issues/93) Prev/next navigation on gallery collection pages
+- ✅ [#94](https://github.com/adrianwedd/adrianwedd.com/issues/94) Gallery collection tags: convert spans to links
+- ✅ [#95](https://github.com/adrianwedd/adrianwedd.com/issues/95) Project index: show date on cards
+- ✅ [#96](https://github.com/adrianwedd/adrianwedd.com/issues/96) Gallery index: add All button for tag nav
+- ✅ [#97](https://github.com/adrianwedd/adrianwedd.com/issues/97) Gallery index: medium badges as filter links
 
 ---
 
