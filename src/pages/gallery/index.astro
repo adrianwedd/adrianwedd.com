@@ -23,8 +23,14 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
     {
       (allTags.length > 0 || allMedia.length > 0) && (
         <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter gallery">
+          <a
+            href="/gallery/"
+            class="bg-accent/10 rounded-full border border-accent px-3 py-1 text-xs font-medium text-accent no-underline"
+          >
+            All
+          </a>
           {allMedia.map((medium) => (
-            <span class="rounded-full border border-border bg-surface-alt px-3 py-1 text-xs text-text-muted">{medium}</span>
+            <span class="rounded-full border border-accent/30 px-3 py-1 text-xs italic text-accent">{medium}</span>
           ))}
           {allTags.map((tag) => (
             <a
