@@ -93,27 +93,31 @@ const props = Astro.props;
     <TerminalEasterEgg client:idle />
 
     {/* Keyboard shortcuts overlay */}
-    <div id="kb-overlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60" role="dialog" aria-label="Keyboard shortcuts">
-      <div class="mx-4 max-w-sm rounded-lg border border-border bg-surface p-6 shadow-raised">
+    <div id="kb-overlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+      <div class="mx-4 max-w-sm rounded-xl border border-border bg-surface p-6 shadow-raised" id="kb-dialog">
         <div class="mb-4 flex items-center justify-between">
           <h2 class="text-lg font-semibold text-text">Keyboard shortcuts</h2>
-          <button id="kb-close" class="text-text-muted hover:text-text" aria-label="Close">&times;</button>
+          <button id="kb-close" class="rounded-lg p-1 text-text-muted transition-colors hover:bg-surface-alt hover:text-text" aria-label="Close">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <div class="space-y-2 text-sm">
-          <p class="text-text-muted font-medium mb-1">Navigation</p>
-          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-            <kbd class="font-mono text-xs text-accent">g h</kbd><span class="text-text">Home</span>
-            <kbd class="font-mono text-xs text-accent">g b</kbd><span class="text-text">Blog</span>
-            <kbd class="font-mono text-xs text-accent">g p</kbd><span class="text-text">Projects</span>
-            <kbd class="font-mono text-xs text-accent">g g</kbd><span class="text-text">Gallery</span>
-            <kbd class="font-mono text-xs text-accent">g n</kbd><span class="text-text">Now</span>
-            <kbd class="font-mono text-xs text-accent">g a</kbd><span class="text-text">About</span>
+        <div class="space-y-3 text-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-text-muted">Navigation</p>
+          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g h</kbd><span class="text-text">Home</span>
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g b</kbd><span class="text-text">Blog</span>
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g p</kbd><span class="text-text">Projects</span>
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g g</kbd><span class="text-text">Gallery</span>
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g n</kbd><span class="text-text">Now</span>
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g a</kbd><span class="text-text">About</span>
           </div>
-          <p class="text-text-muted font-medium mt-3 mb-1">Actions</p>
-          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-            <kbd class="font-mono text-xs text-accent">/</kbd><span class="text-text">Search</span>
-            <kbd class="font-mono text-xs text-accent">t</kbd><span class="text-text">Toggle theme</span>
-            <kbd class="font-mono text-xs text-accent">?</kbd><span class="text-text">This help</span>
+          <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Actions</p>
+          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">/</kbd><span class="text-text">Search</span>
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">t</kbd><span class="text-text">Toggle theme</span>
+            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">?</kbd><span class="text-text">This help</span>
           </div>
         </div>
       </div>
@@ -196,6 +200,9 @@ const props = Astro.props;
         });
 
         closeBtn.addEventListener('click', hideHelp);
+        overlay.addEventListener('click', function (e) {
+          if (e.target === overlay) hideHelp();
+        });
         overlay.addEventListener('click', function (e) { if (e.target === overlay) hideHelp(); });
       })();
     </script>

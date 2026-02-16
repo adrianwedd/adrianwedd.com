@@ -62,6 +62,26 @@ const collectionSlug = slug(gallery.id);
   type="article"
   tags={gallery.data.tags}
 >
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ImageObject',
+      name: image.alt,
+      contentUrl: new URL(image.src, Astro.site).href,
+      ...(image.caption ? { caption: image.caption } : {}),
+      isPartOf: {
+        '@type': 'ImageGallery',
+        name: gallery.data.title,
+        url: new URL(`/gallery/${collectionSlug}/`, Astro.site).href,
+      },
+      author: {
+        '@type': 'Person',
+        name: 'Adrian Wedd',
+        url: 'https://adrianwedd.com',
+      },
+    })}
+  />
   <article class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumb
       crumbs={[

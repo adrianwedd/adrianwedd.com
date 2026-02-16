@@ -33,6 +33,29 @@ const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
   type="article"
   tags={gallery.data.tags}
 >
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ImageGallery',
+      name: gallery.data.title,
+      description: gallery.data.description || `Gallery: ${gallery.data.title}`,
+      url: new URL(Astro.url.pathname, Astro.site).href,
+      datePublished: gallery.data.date.toISOString(),
+      image: gallery.data.images.map((img: { src: string; alt: string; caption?: string }) => ({
+        '@type': 'ImageObject',
+        contentUrl: new URL(img.src, Astro.site).href,
+        name: img.alt,
+        ...(img.caption ? { caption: img.caption } : {}),
+      })),
+      keywords: gallery.data.tags,
+      author: {
+        '@type': 'Person',
+        name: 'Adrian Wedd',
+        url: 'https://adrianwedd.com',
+      },
+    })}
+  />
   <article class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumb
       crumbs={[{ label: 'Home', href: '/' }, { label: 'Gallery', href: '/gallery/' }, { label: gallery.data.title }]}
@@ -77,7 +100,7 @@ const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
             class="gallery-trigger hover:border-accent/50 group block w-full overflow-hidden rounded-lg border border-border no-underline transition-all"
             data-index={index}
           >
-            <div class="aspect-[4/3] overflow-hidden bg-surface-alt">
+            <div class="img-placeholder aspect-[4/3] overflow-hidden">
               <img
                 src={image.src}
                 alt={image.alt}
