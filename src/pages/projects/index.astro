@@ -169,12 +169,15 @@ try {
                 </span>
               </div>
               <p class="mt-2 text-sm leading-relaxed text-text-muted">{project.data.description}</p>
-              <div class="mt-4 flex flex-wrap gap-2">
+              <div class="mt-4 flex flex-wrap items-center gap-2">
                 {project.data.tags.slice(0, 4).map((tag: string) => (
                   <span class="rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-text-muted">
                     {tag}
                   </span>
                 ))}
+                <time class="ml-auto whitespace-nowrap text-xs text-text-muted" datetime={project.data.date.toISOString()}>
+                  {project.data.date.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' })}
+                </time>
               </div>
             </a>
           </article>
