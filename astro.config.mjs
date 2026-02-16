@@ -7,10 +7,15 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   site: 'https://adrianwedd.com',
+  trailingSlash: 'always',
   integrations: [
     mdx(),
     sitemap(),
     preact(),
     tailwind(),
   ],
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: 'hover',
+  },
 });

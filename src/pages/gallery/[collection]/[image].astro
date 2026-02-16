@@ -98,8 +98,11 @@ const collectionSlug = slug(gallery.id);
         <img
           src={image.src}
           alt={image.alt}
+          width="1200"
+          height="900"
           class="w-full"
           loading="eager"
+          fetchpriority="high"
         />
       </div>
       {image.caption && (

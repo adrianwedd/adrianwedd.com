@@ -77,8 +77,11 @@ const hasAssets = audioUrl || videoUrl || infographic || mindmap || quiz || flas
             <img
               src={infographic}
               alt={`Infographic for ${title}`}
+              width="768"
+              height="1376"
               class="hover:border-accent/50 w-full cursor-zoom-in rounded-lg border border-border transition-colors"
               loading="lazy"
+              decoding="async"
             />
           </a>
         </div>

@@ -149,8 +149,11 @@ const seriesProjects = project.data.series
           <img
             src={project.data.heroImage}
             alt={project.data.title}
+            width="1200"
+            height="630"
             class="mb-10 w-full rounded-lg border border-border"
             loading="eager"
+            fetchpriority="high"
           />
         )
       }

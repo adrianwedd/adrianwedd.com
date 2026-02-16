@@ -14,6 +14,7 @@ interface Props {
   type?: 'website' | 'article';
   publishedDate?: string;
   tags?: string[];
+  noindex?: boolean;
 }
 
 const props = Astro.props;
@@ -203,7 +204,6 @@ const props = Astro.props;
         overlay.addEventListener('click', function (e) {
           if (e.target === overlay) hideHelp();
         });
-        overlay.addEventListener('click', function (e) { if (e.target === overlay) hideHelp(); });
       })();
     </script>
 

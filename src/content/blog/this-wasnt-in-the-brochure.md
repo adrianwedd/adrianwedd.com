@@ -3,6 +3,7 @@ title: "This Wasn't in the Brochure"
 description: "A field guide for co-parenting neurodivergent children — written from inside the storm, not the clinical sidelines."
 date: 2026-02-15
 tags: ["writing", "neurodivergence", "parenting", "books"]
+heroImage: "/og/this-wasnt-in-the-brochure.png"
 ---
 
 You packed for a picnic. You ended up in the Drake Passage.

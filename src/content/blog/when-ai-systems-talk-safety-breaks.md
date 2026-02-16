@@ -4,6 +4,7 @@ description: "Multi-agent AI research reveals a critical gap: single-agent safet
 date: 2026-02-13
 tags: ["ai", "safety", "research"]
 draft: false
+heroImage: "/og/when-ai-systems-talk-safety-breaks.png"
 audioUrl: "/notebook-assets/failure-first/moltbook/audio.mp3"
 videoUrl: "/notebook-assets/failure-first/moltbook/video.mp4"
 ---

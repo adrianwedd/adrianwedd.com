@@ -4,6 +4,7 @@ description: "I tested 64 jailbreak scenarios across six historical eras against
 date: 2026-02-13
 tags: ["ai", "safety", "research"]
 draft: false
+heroImage: "/og/jailbreak-archaeology.png"
 audioUrl: "/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3"
 videoUrl: "/notebook-assets/failure-first/jailbreak-archaeology/video.mp4"
 slides: "/notebook-assets/failure-first/jailbreak-archaeology/slides.pdf"

@@ -99,8 +99,11 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
                   <img
                     src={collection.data.coverImage}
                     alt={collection.data.title}
+                    width="400"
+                    height="300"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
               )}

@@ -29,6 +29,7 @@ const currentPath = Astro.url.pathname;
         navLinks.map(({ href, label }) => (
           <a
             href={href}
+            data-astro-prefetch
             class:list={[
               'rounded-lg px-3 py-2 text-sm no-underline transition-colors',
               currentPath.startsWith(href)
@@ -74,6 +75,7 @@ const currentPath = Astro.url.pathname;
         navLinks.map(({ href, label }) => (
           <a
             href={href}
+            data-astro-prefetch
             class:list={[
               'block rounded-lg px-3 py-2 text-sm no-underline transition-colors',
               currentPath.startsWith(href)
