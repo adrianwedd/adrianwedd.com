@@ -52,13 +52,16 @@ const seriesProjects = project.data.series
     type="application/ld+json"
     set:html={JSON.stringify({
       '@context': 'https://schema.org',
-      '@type': 'CreativeWork',
+      '@type': 'SoftwareApplication',
       name: project.data.title,
       description: project.data.description,
       url: new URL(Astro.url.pathname, Astro.site).href,
-      dateCreated: project.data.date.toISOString(),
+      datePublished: project.data.date.toISOString(),
+      ...(project.data.updatedDate ? { dateModified: project.data.updatedDate.toISOString() } : {}),
       keywords: project.data.tags,
-      ...(project.data.url ? { url: project.data.url } : {}),
+      applicationCategory: 'DeveloperApplication',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      ...(project.data.url ? { installUrl: project.data.url } : {}),
       ...(project.data.repo
         ? {
             codeRepository: project.data.repo.startsWith('http')
@@ -66,11 +69,13 @@ const seriesProjects = project.data.series
               : `https://github.com/adrianwedd/${project.data.repo}`,
           }
         : {}),
+      ...(project.data.heroImage ? { image: new URL(project.data.heroImage, Astro.site).href } : {}),
       author: {
         '@type': 'Person',
         name: 'Adrian Wedd',
         url: 'https://adrianwedd.com',
       },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(Astro.url.pathname, Astro.site).href },
     })}
   />
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">

@@ -58,14 +58,28 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
     '@type': type === 'article' ? 'Article' : 'WebSite',
     name: fullTitle,
     description,
-    url: canonicalUrl,
-    image: ogImageUrl,
+    url: canonicalUrl.href,
+    image: ogImageUrl.href,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl.href },
     ...(type === 'article' && publishedDate ? { datePublished: publishedDate } : {}),
     ...(tags ? { keywords: tags.join(', ') } : {}),
     author: {
       '@type': 'Person',
       name: 'Adrian Wedd',
       url: 'https://adrianwedd.com',
+      sameAs: [
+        'https://github.com/adrianwedd',
+        'https://www.linkedin.com/in/adrianwedd/',
+      ],
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Adrian Wedd',
+      url: 'https://adrianwedd.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://adrianwedd.com/favicon.svg',
+      },
     },
   })}
 />

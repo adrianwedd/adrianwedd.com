@@ -34,6 +34,29 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
   publishedDate={episode.data.date.toISOString()}
   tags={episode.data.tags}
 >
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'PodcastEpisode',
+      name: episode.data.title,
+      description: episode.data.description,
+      url: new URL(Astro.url.pathname, Astro.site).href,
+      datePublished: episode.data.date.toISOString(),
+      ...(episode.data.duration ? { duration: `PT${episode.data.duration.replace(':', 'M').replace(/(\d+)$/, '$1S')}` } : {}),
+      associatedMedia: {
+        '@type': 'AudioObject',
+        contentUrl: new URL(episode.data.audioUrl, Astro.site).href,
+        encodingFormat: 'audio/mpeg',
+      },
+      keywords: episode.data.tags,
+      author: {
+        '@type': 'Person',
+        name: 'Adrian Wedd',
+        url: 'https://adrianwedd.com',
+      },
+    })}
+  />
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumb
       crumbs={[{ label: 'Home', href: '/' }, { label: 'Audio', href: '/audio/' }, { label: episode.data.title }]}

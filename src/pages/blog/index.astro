@@ -22,21 +22,35 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
     {/* Tag filter */}
     {
       allTags.length > 0 && (
-        <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
-          <a
-            href="/blog/"
-            class="bg-accent/10 rounded-full border border-accent px-3 py-1 text-xs font-medium text-accent no-underline"
-          >
-            All
-          </a>
-          {allTags.map((tag) => (
+        <nav class="mt-8" aria-label="Filter by tag">
+          <div class="flex flex-wrap gap-2" id="blog-tags">
             <a
-              href={`/blog/tag/${tag}/`}
-              class="rounded-full border border-border px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:border-accent hover:text-accent"
+              href="/blog/"
+              class="bg-accent/10 rounded-full border border-accent px-3 py-1 text-xs font-medium text-accent no-underline"
             >
-              {tag}
+              All
             </a>
-          ))}
+            {allTags.map((tag, i) => (
+              <a
+                href={`/blog/tag/${tag}/`}
+                class:list={[
+                  'rounded-full border border-border px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:border-accent hover:text-accent',
+                  i >= 10 && 'blog-tag-overflow hidden',
+                ]}
+              >
+                {tag}
+              </a>
+            ))}
+            {allTags.length > 10 && (
+              <button
+                type="button"
+                id="blog-tags-toggle"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+              >
+                +{allTags.length - 10} more
+              </button>
+            )}
+          </div>
         </nav>
       )
     }
@@ -79,4 +93,19 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
       }
     </div>
   </section>
+
+  <script>
+    const toggle = document.getElementById('blog-tags-toggle');
+    if (toggle) {
+      let expanded = false;
+      toggle.addEventListener('click', () => {
+        expanded = !expanded;
+        document.querySelectorAll('.blog-tag-overflow').forEach((el) => {
+          (el as HTMLElement).classList.toggle('hidden', !expanded);
+        });
+        toggle.textContent = expanded ? 'Show less' : toggle.dataset.label || '';
+      });
+      toggle.dataset.label = toggle.textContent || '';
+    }
+  </script>
 </BaseLayout>

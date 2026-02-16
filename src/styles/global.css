@@ -49,6 +49,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -107,6 +108,14 @@
     @apply overflow-x-auto rounded-lg bg-surface-alt p-4 font-mono text-sm;
   }
 
+  /* External link indicator in prose content */
+  .prose a[href^="http"]::after,
+  .prose a[href^="//"]::after {
+    content: ' \2197';
+    font-size: 0.75em;
+    opacity: 0.5;
+  }
+
   ::selection {
     background-color: var(--color-accent-muted);
     color: var(--color-surface);
@@ -149,6 +158,11 @@
     opacity: 0.04;
     pointer-events: none;
     z-index: -1;
+  }
+
+  /* Lazy-load placeholder for images */
+  .img-placeholder {
+    background: linear-gradient(135deg, var(--color-surface-alt), var(--color-surface-raised));
   }
 
   .section-divider {

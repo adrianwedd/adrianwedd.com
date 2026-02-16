@@ -51,6 +51,33 @@ const seriesPosts = post.data.series
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
 >
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: post.data.title,
+      description: post.data.description,
+      url: new URL(Astro.url.pathname, Astro.site).href,
+      image: new URL(ogImage, Astro.site).href,
+      datePublished: post.data.date.toISOString(),
+      ...(post.data.updatedDate ? { dateModified: post.data.updatedDate.toISOString() } : {}),
+      wordCount: words,
+      keywords: post.data.tags,
+      author: {
+        '@type': 'Person',
+        name: 'Adrian Wedd',
+        url: 'https://adrianwedd.com',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Adrian Wedd',
+        url: 'https://adrianwedd.com',
+        logo: { '@type': 'ImageObject', url: 'https://adrianwedd.com/favicon.svg' },
+      },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(Astro.url.pathname, Astro.site).href },
+    })}
+  />
   {/* Reading progress bar */}
   <div
     id="reading-progress"
@@ -191,6 +218,30 @@ const seriesPosts = post.data.series
   </article>
 
   <script>
+    // Code block copy buttons
+    document.querySelectorAll('.prose pre').forEach((pre) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'relative group/code';
+      pre.parentNode!.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+
+      const btn = document.createElement('button');
+      btn.className = 'absolute right-2 top-2 rounded border border-border bg-surface-alt px-2 py-1 text-xs text-text-muted opacity-0 transition-all hover:border-accent hover:text-accent group-hover/code:opacity-100';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        try {
+          await navigator.clipboard.writeText(code?.textContent || pre.textContent || '');
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        } catch {
+          btn.textContent = 'Failed';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        }
+      });
+      wrapper.appendChild(btn);
+    });
+
     const bar = document.getElementById('reading-progress');
     const remaining = document.getElementById('reading-remaining');
     const article = document.querySelector('article');

@@ -112,16 +112,28 @@ try {
           >
             All tags
           </button>
-          {allTags.map((tag) => (
+          {allTags.map((tag, i) => (
             <button
               type="button"
               data-tag={tag}
-              class="tag-filter cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+              class:list={[
+                'tag-filter cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent',
+                i >= 10 && 'project-tag-overflow hidden',
+              ]}
               aria-pressed="false"
             >
               {tag}
             </button>
           ))}
+          {allTags.length > 10 && (
+            <button
+              type="button"
+              id="project-tags-toggle"
+              class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              +{allTags.length - 10} more
+            </button>
+          )}
         </div>
       )
     }
@@ -149,7 +161,7 @@ try {
             data-featured={project.data.featured ? 'true' : ''}
             data-date={project.data.date.toISOString()}
             data-title={project.data.title}
-            class="project-card"
+            class="project-card transition-opacity duration-200"
           >
             <a
               href={`/projects/${slug(project.id)}/`}
@@ -281,7 +293,8 @@ try {
         const matchStatus = !activeStatus || card.dataset.status === activeStatus;
         const matchTag = !activeTag || (JSON.parse(card.dataset.tags || '[]') as string[]).includes(activeTag);
         const show = matchStatus && matchTag;
-        card.style.display = show ? '' : 'none';
+        card.style.opacity = show ? '1' : '0';
+        setTimeout(() => { card.style.display = show ? '' : 'none'; }, show ? 0 : 200);
         if (show) visible++;
       });
       noResults.classList.toggle('hidden', visible > 0);
@@ -325,6 +338,20 @@ try {
       applySort();
       applyFilters();
     });
+
+    // Tag overflow toggle
+    const tagToggle = document.getElementById('project-tags-toggle');
+    if (tagToggle) {
+      let expanded = false;
+      tagToggle.dataset.label = tagToggle.textContent || '';
+      tagToggle.addEventListener('click', () => {
+        expanded = !expanded;
+        document.querySelectorAll('.project-tag-overflow').forEach((el) => {
+          (el as HTMLElement).classList.toggle('hidden', !expanded);
+        });
+        tagToggle.textContent = expanded ? 'Show less' : tagToggle.dataset.label || '';
+      });
+    }
 
     // Apply initial state from URL
     setActiveButton(statusFilters, 'status-filter', activeStatus, 'status');

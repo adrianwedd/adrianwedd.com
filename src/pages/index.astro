@@ -30,6 +30,33 @@ const recentEpisodes = allEpisodes
   title="Adrian Wedd"
   description="AI safety researcher and systems thinker. Building things that think, break, and sometimes both."
 >
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Adrian Wedd',
+      url: 'https://adrianwedd.com',
+      description: 'AI safety researcher and systems thinker. Building things that think, break, and sometimes both.',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: 'https://adrianwedd.com/search/?q={search_term_string}',
+        },
+        'query-input': 'required name=search_term_string',
+      },
+      author: {
+        '@type': 'Person',
+        name: 'Adrian Wedd',
+        url: 'https://adrianwedd.com',
+        sameAs: [
+          'https://github.com/adrianwedd',
+          'https://www.linkedin.com/in/adrianwedd/',
+        ],
+      },
+    })}
+  />
   {/* Hero */}
   <section class="hero-glow mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
     <Personalisation client:load />
@@ -164,7 +191,7 @@ const recentEpisodes = allEpisodes
                 class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border no-underline shadow-subtle transition-all hover:shadow-card"
               >
                 {collection.data.coverImage && (
-                  <div class="aspect-[4/3] overflow-hidden bg-surface-alt">
+                  <div class="img-placeholder aspect-[4/3] overflow-hidden">
                     <img
                       src={collection.data.coverImage}
                       alt={collection.data.title}
