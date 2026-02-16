@@ -227,6 +227,45 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
+## Sprint 18: Advanced SEO & Metadata
+
+6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/18).
+
+- [ ] [#134](https://github.com/adrianwedd/adrianwedd.com/issues/134) Enhanced sitemap with changefreq and priority
+- [ ] [#135](https://github.com/adrianwedd/adrianwedd.com/issues/135) FAQ/HowTo structured data on relevant blog posts
+- [ ] [#136](https://github.com/adrianwedd/adrianwedd.com/issues/136) Add humans.txt
+- [ ] [#137](https://github.com/adrianwedd/adrianwedd.com/issues/137) Sitemap lastmod from content dates
+- [ ] [#138](https://github.com/adrianwedd/adrianwedd.com/issues/138) VideoObject schema for NotebookLM videos
+- [ ] [#139](https://github.com/adrianwedd/adrianwedd.com/issues/139) Enhanced Organization schema in JSON-LD
+
+---
+
+## Sprint 19: Performance & Image Pipeline
+
+6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/19).
+
+- [ ] [#140](https://github.com/adrianwedd/adrianwedd.com/issues/140) WebP/AVIF image conversion pipeline
+- [ ] [#141](https://github.com/adrianwedd/adrianwedd.com/issues/141) Image blur-up LQIP placeholders
+- [ ] [#142](https://github.com/adrianwedd/adrianwedd.com/issues/142) Astro View Transitions
+- [ ] [#143](https://github.com/adrianwedd/adrianwedd.com/issues/143) Scroll-driven animations for content sections
+- [ ] [#144](https://github.com/adrianwedd/adrianwedd.com/issues/144) Upgrade dns-prefetch to preconnect for critical origins
+- [ ] [#145](https://github.com/adrianwedd/adrianwedd.com/issues/145) Responsive image srcset for hero and gallery images
+
+---
+
+## Sprint 20: Developer Experience & Monitoring
+
+6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/20).
+
+- [ ] [#146](https://github.com/adrianwedd/adrianwedd.com/issues/146) Content validation script
+- [ ] [#147](https://github.com/adrianwedd/adrianwedd.com/issues/147) Link checker for internal and external links
+- [ ] [#148](https://github.com/adrianwedd/adrianwedd.com/issues/148) Image optimization enforcement in CI
+- [ ] [#149](https://github.com/adrianwedd/adrianwedd.com/issues/149) Custom 404 page with analytics tracking
+- [ ] [#150](https://github.com/adrianwedd/adrianwedd.com/issues/150) Automated dependency audit in CI
+- [ ] [#151](https://github.com/adrianwedd/adrianwedd.com/issues/151) Build size tracking and budget
+
+---
+
 ## Post-Launch: Automation & Tooling
 
 ### NotebookLM Content Pipeline ✅
