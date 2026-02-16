@@ -188,42 +188,42 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
-## Sprint 15: PWA & Web Standards
+## Sprint 15: PWA & Web Standards ✅ (Completed Feb 16, 2026)
 
-6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/15).
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/15).
 
-- [ ] [#116](https://github.com/adrianwedd/adrianwedd.com/issues/116) Web app manifest and PWA metadata
-- [ ] [#117](https://github.com/adrianwedd/adrianwedd.com/issues/117) Favicon variants: apple-touch-icon and PNG sizes
-- [ ] [#118](https://github.com/adrianwedd/adrianwedd.com/issues/118) Security headers via _headers file
-- [ ] [#119](https://github.com/adrianwedd/adrianwedd.com/issues/119) Projects RSS feed
-- [ ] [#120](https://github.com/adrianwedd/adrianwedd.com/issues/120) Gallery RSS feed
-- [ ] [#121](https://github.com/adrianwedd/adrianwedd.com/issues/121) Combined RSS feed aggregating all content types
-
----
-
-## Sprint 16: Performance & Images
-
-6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/16).
-
-- [ ] [#122](https://github.com/adrianwedd/adrianwedd.com/issues/122) Add width and height to all img tags for CLS prevention
-- [ ] [#123](https://github.com/adrianwedd/adrianwedd.com/issues/123) Preload critical above-the-fold images
-- [ ] [#124](https://github.com/adrianwedd/adrianwedd.com/issues/124) Add decoding=async to all lazy-loaded images
-- [ ] [#125](https://github.com/adrianwedd/adrianwedd.com/issues/125) DNS prefetch for external origins
-- [ ] [#126](https://github.com/adrianwedd/adrianwedd.com/issues/126) Lighthouse CI: add CLS and image dimension assertions
-- [ ] [#127](https://github.com/adrianwedd/adrianwedd.com/issues/127) Resource hints: modulepreload for Preact islands
+- ✅ [#116](https://github.com/adrianwedd/adrianwedd.com/issues/116) Web app manifest and PWA metadata
+- ✅ [#117](https://github.com/adrianwedd/adrianwedd.com/issues/117) Favicon variants: apple-touch-icon and PNG sizes
+- ✅ [#118](https://github.com/adrianwedd/adrianwedd.com/issues/118) Security headers via _headers file
+- ✅ [#119](https://github.com/adrianwedd/adrianwedd.com/issues/119) Projects RSS feed
+- ✅ [#120](https://github.com/adrianwedd/adrianwedd.com/issues/120) Gallery RSS feed
+- ✅ [#121](https://github.com/adrianwedd/adrianwedd.com/issues/121) Combined RSS feed aggregating all content types
 
 ---
 
-## Sprint 17: Content & Feed Completeness
+## Sprint 16: Performance & Images ✅ (Completed Feb 16, 2026)
 
-6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/17).
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/16).
 
-- [ ] [#128](https://github.com/adrianwedd/adrianwedd.com/issues/128) Blog post hero images via OG image generation
-- [ ] [#129](https://github.com/adrianwedd/adrianwedd.com/issues/129) Footer: add audio feed and combined feed links
-- [ ] [#130](https://github.com/adrianwedd/adrianwedd.com/issues/130) Content audit: fill missing frontmatter fields
-- [ ] [#131](https://github.com/adrianwedd/adrianwedd.com/issues/131) RSS auto-discovery: add link tags to HTML head
-- [ ] [#132](https://github.com/adrianwedd/adrianwedd.com/issues/132) Noindex on utility pages
-- [ ] [#133](https://github.com/adrianwedd/adrianwedd.com/issues/133) Canonical URL consistency: trailing slash enforcement
+- ✅ [#122](https://github.com/adrianwedd/adrianwedd.com/issues/122) Add width and height to all img tags for CLS prevention
+- ✅ [#123](https://github.com/adrianwedd/adrianwedd.com/issues/123) Preload critical above-the-fold images
+- ✅ [#124](https://github.com/adrianwedd/adrianwedd.com/issues/124) Add decoding=async to all lazy-loaded images
+- ✅ [#125](https://github.com/adrianwedd/adrianwedd.com/issues/125) DNS prefetch for external origins
+- ✅ [#126](https://github.com/adrianwedd/adrianwedd.com/issues/126) Lighthouse CI: add CLS and image dimension assertions
+- ✅ [#127](https://github.com/adrianwedd/adrianwedd.com/issues/127) Resource hints: modulepreload for Preact islands
+
+---
+
+## Sprint 17: Content & Feed Completeness ✅ (Completed Feb 16, 2026)
+
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/17).
+
+- ✅ [#128](https://github.com/adrianwedd/adrianwedd.com/issues/128) Blog post hero images via OG image generation
+- ✅ [#129](https://github.com/adrianwedd/adrianwedd.com/issues/129) Footer: add audio feed and combined feed links
+- ✅ [#130](https://github.com/adrianwedd/adrianwedd.com/issues/130) Content audit: fill missing frontmatter fields
+- ✅ [#131](https://github.com/adrianwedd/adrianwedd.com/issues/131) RSS auto-discovery: add link tags to HTML head
+- ✅ [#132](https://github.com/adrianwedd/adrianwedd.com/issues/132) Noindex on utility pages
+- ✅ [#133](https://github.com/adrianwedd/adrianwedd.com/issues/133) Canonical URL consistency: trailing slash enforcement
 
 ---
 
