@@ -109,7 +109,7 @@ const recentEpisodes = allEpisodes
               class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border bg-surface-alt no-underline shadow-subtle transition-all hover:shadow-card"
             >
               {project.data.heroImage && (
-                <img src={project.data.heroImage} alt={`${project.data.title} hero image`} class="h-40 w-full object-cover" loading="lazy" />
+                <img src={project.data.heroImage} alt={`${project.data.title} hero image`} width="600" height="160" class="h-40 w-full object-cover" loading="lazy" decoding="async" />
               )}
               <div class="p-6">
                 <h3 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
@@ -195,8 +195,11 @@ const recentEpisodes = allEpisodes
                     <img
                       src={collection.data.coverImage}
                       alt={collection.data.title}
+                      width="400"
+                      height="300"
                       class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 )}

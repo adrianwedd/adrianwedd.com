@@ -6,11 +6,13 @@ interface Props {
   type?: 'website' | 'article';
   publishedDate?: string;
   tags?: string[];
+  noindex?: boolean;
 }
 
-const { title, description, image = '/og-default.svg', type = 'website', publishedDate, tags } = Astro.props;
+const { title, description, image = '/og-default.svg', type = 'website', publishedDate, tags, noindex } = Astro.props;
 
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonicalUrl = new URL(pathname, Astro.site);
 const ogImageUrl = new URL(image, Astro.site);
 const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 ---
@@ -22,16 +24,27 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <meta name="author" content="Adrian Wedd" />
 <meta name="theme-color" content="#c48b6e" />
 {tags && <meta name="keywords" content={tags.join(', ')} />}
+{noindex && <meta name="robots" content="noindex, nofollow" />}
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 <link rel="icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
 
-<!-- Preconnect for GA4 (only useful if consent given, but cheap) -->
+<!-- RSS auto-discovery -->
+<link rel="alternate" type="application/rss+xml" title="Adrian Wedd — All Content" href="/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Blog" href="/blog/rss.xml" />
+
+<!-- Preconnect for external origins -->
 <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+<link rel="dns-prefetch" href="https://api.github.com" />
+<link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
 
 <!-- Open Graph -->
 <meta property="og:type" content={type} />

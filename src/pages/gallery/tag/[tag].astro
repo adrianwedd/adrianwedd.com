@@ -63,8 +63,11 @@ const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
               <img
                 src={gallery.data.coverImage}
                 alt=""
+                width="400"
+                height="300"
                 class="h-48 w-full object-cover"
                 loading="lazy"
+                decoding="async"
               />
             )}
             <div class="p-4">

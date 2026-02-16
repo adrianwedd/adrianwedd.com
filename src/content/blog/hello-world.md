@@ -3,6 +3,7 @@ title: "Building in the Open"
 description: "Why this site exists, and what I hope it becomes."
 date: 2026-02-12
 tags: ["meta", "craft"]
+heroImage: "/og/hello-world.png"
 ---
 
 Most personal sites are museums. Carefully selected exhibits, arranged chronologically, with the messy work hidden in a drawer somewhere. This is not that.

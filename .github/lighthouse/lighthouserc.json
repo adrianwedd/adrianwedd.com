@@ -6,7 +6,10 @@
         "/",
         "/about/",
         "/projects/",
-        "/blog/"
+        "/blog/",
+        "/gallery/",
+        "/audio/",
+        "/now/"
       ]
     },
     "assert": {
@@ -14,7 +17,14 @@
         "categories:performance": ["error", { "minScore": 0.9 }],
         "categories:accessibility": ["error", { "minScore": 0.9 }],
         "categories:best-practices": ["warn", { "minScore": 0.9 }],
-        "categories:seo": ["warn", { "minScore": 0.9 }]
+        "categories:seo": ["warn", { "minScore": 0.9 }],
+        "image-size-responsive": "warn",
+        "unsized-images": "warn",
+        "uses-responsive-images": "warn",
+        "meta-description": "error",
+        "document-title": "error",
+        "html-has-lang": "error",
+        "is-crawlable": "error"
       }
     }
   }

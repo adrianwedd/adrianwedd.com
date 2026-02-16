@@ -1,0 +1,21 @@
+{
+  "name": "Adrian Wedd",
+  "short_name": "adrianwedd",
+  "description": "AI safety researcher and systems thinker. Building things that think, break, and sometimes both.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#c48b6e",
+  "background_color": "#1a181c",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

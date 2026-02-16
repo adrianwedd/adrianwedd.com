@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { execFileSync } from 'node:child_process';
+// noindex: utility page
 import fs from 'node:fs';
 
 const buildTimestamp = new Date();
@@ -59,7 +60,7 @@ try {
 } catch { /* fallback */ }
 ---
 
-<BaseLayout title="Colophon" description="How this site is built, what powers it, and who helped.">
+<BaseLayout title="Colophon" description="How this site is built, what powers it, and who helped." noindex>
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <header class="mb-12">
       <h1 class="text-text">Colophon</h1>
