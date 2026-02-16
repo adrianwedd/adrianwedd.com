@@ -149,42 +149,42 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
-## Sprint 12: Structured Data & SEO
+## Sprint 12: Structured Data & SEO ✅ (Completed Feb 16, 2026)
 
-6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/12).
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/12).
 
-- [ ] [#98](https://github.com/adrianwedd/adrianwedd.com/issues/98) Blog post JSON-LD: Article schema with author and publisher
-- [ ] [#99](https://github.com/adrianwedd/adrianwedd.com/issues/99) Audio episode JSON-LD: PodcastEpisode / AudioObject schema
-- [ ] [#100](https://github.com/adrianwedd/adrianwedd.com/issues/100) Gallery collection JSON-LD: ImageGallery schema
-- [ ] [#101](https://github.com/adrianwedd/adrianwedd.com/issues/101) Project page JSON-LD: enrich existing SoftwareApplication schema
-- [ ] [#102](https://github.com/adrianwedd/adrianwedd.com/issues/102) SEOHead: add publisher Organization and sameAs links
-- [ ] [#103](https://github.com/adrianwedd/adrianwedd.com/issues/103) WebSite JSON-LD with SearchAction on homepage
-
----
-
-## Sprint 13: Index Page Polish
-
-6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/13).
-
-- [ ] [#104](https://github.com/adrianwedd/adrianwedd.com/issues/104) Gallery index: sort control (newest, oldest, A-Z)
-- [ ] [#105](https://github.com/adrianwedd/adrianwedd.com/issues/105) Audio index: sort control (newest, oldest, A-Z)
-- [ ] [#106](https://github.com/adrianwedd/adrianwedd.com/issues/106) Tag overflow: collapsible tag nav on index pages
-- [ ] [#107](https://github.com/adrianwedd/adrianwedd.com/issues/107) Empty state messaging on gallery and audio index
-- [ ] [#108](https://github.com/adrianwedd/adrianwedd.com/issues/108) Gallery index: client-side tag filtering
-- [ ] [#109](https://github.com/adrianwedd/adrianwedd.com/issues/109) Filter transitions: animate card show/hide on index pages
+- ✅ [#98](https://github.com/adrianwedd/adrianwedd.com/issues/98) Blog post JSON-LD: Article schema with author and publisher
+- ✅ [#99](https://github.com/adrianwedd/adrianwedd.com/issues/99) Audio episode JSON-LD: PodcastEpisode / AudioObject schema
+- ✅ [#100](https://github.com/adrianwedd/adrianwedd.com/issues/100) Gallery collection JSON-LD: ImageGallery schema
+- ✅ [#101](https://github.com/adrianwedd/adrianwedd.com/issues/101) Project page JSON-LD: enrich existing SoftwareApplication schema
+- ✅ [#102](https://github.com/adrianwedd/adrianwedd.com/issues/102) SEOHead: add publisher Organization and sameAs links
+- ✅ [#103](https://github.com/adrianwedd/adrianwedd.com/issues/103) WebSite JSON-LD with SearchAction on homepage
 
 ---
 
-## Sprint 14: Interactive Enhancements
+## Sprint 13: Index Page Polish ✅ (Completed Feb 16, 2026)
 
-6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/14).
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/13).
 
-- [ ] [#110](https://github.com/adrianwedd/adrianwedd.com/issues/110) Code block copy button for blog posts
-- [ ] [#111](https://github.com/adrianwedd/adrianwedd.com/issues/111) Search page: loading skeleton while Pagefind initializes
-- [ ] [#112](https://github.com/adrianwedd/adrianwedd.com/issues/112) Keyboard shortcut help modal: polish and accessibility
-- [ ] [#113](https://github.com/adrianwedd/adrianwedd.com/issues/113) External link indicators
-- [ ] [#114](https://github.com/adrianwedd/adrianwedd.com/issues/114) Smooth scroll anchor links for table of contents
-- [ ] [#115](https://github.com/adrianwedd/adrianwedd.com/issues/115) Image lazy-load blur placeholder
+- ✅ [#104](https://github.com/adrianwedd/adrianwedd.com/issues/104) Gallery index: sort control (newest, oldest, A-Z)
+- ✅ [#105](https://github.com/adrianwedd/adrianwedd.com/issues/105) Audio index: sort control (newest, oldest, A-Z)
+- ✅ [#106](https://github.com/adrianwedd/adrianwedd.com/issues/106) Tag overflow: collapsible tag nav on index pages
+- ✅ [#107](https://github.com/adrianwedd/adrianwedd.com/issues/107) Empty state messaging on gallery and audio index
+- ✅ [#108](https://github.com/adrianwedd/adrianwedd.com/issues/108) Gallery index: client-side tag filtering
+- ✅ [#109](https://github.com/adrianwedd/adrianwedd.com/issues/109) Filter transitions: animate card show/hide on index pages
+
+---
+
+## Sprint 14: Interactive Enhancements ✅ (Completed Feb 16, 2026)
+
+All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/14).
+
+- ✅ [#110](https://github.com/adrianwedd/adrianwedd.com/issues/110) Code block copy button for blog posts
+- ✅ [#111](https://github.com/adrianwedd/adrianwedd.com/issues/111) Search page: loading skeleton while Pagefind initializes
+- ✅ [#112](https://github.com/adrianwedd/adrianwedd.com/issues/112) Keyboard shortcut help modal: polish and accessibility
+- ✅ [#113](https://github.com/adrianwedd/adrianwedd.com/issues/113) External link indicators
+- ✅ [#114](https://github.com/adrianwedd/adrianwedd.com/issues/114) Smooth scroll anchor links for table of contents
+- ✅ [#115](https://github.com/adrianwedd/adrianwedd.com/issues/115) Image lazy-load blur placeholder
 
 ---
 
