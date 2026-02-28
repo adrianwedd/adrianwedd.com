@@ -1,0 +1,256 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Services"
+  description="Digital infrastructure for ND-led businesses. Websites, operations hubs, and AI-enhanced workflows. Ongoing tech retainer."
+>
+  {/* Hero */}
+  <section
+    id="services-hero"
+    aria-labelledby="services-hero-heading"
+    class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8"
+  >
+    <h1 id="services-hero-heading" class="text-text">
+      Digital infrastructure for ND-led businesses
+    </h1>
+    <p class="mt-6 max-w-prose text-lg text-text-muted">
+      I build websites, private operations hubs, and AI-enhanced workflows for neurodivergent-led
+      small businesses. Ongoing tech retainer — I stay involved as your digital partner, not just a
+      one-off contractor.
+    </p>
+    <a
+      href="/contact/"
+      class="mt-8 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline transition-opacity hover:opacity-90"
+    >
+      Work with me
+    </a>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+
+  {/* What I build */}
+  <section
+    id="what-i-build"
+    aria-labelledby="what-i-build-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+  >
+    <h2 id="what-i-build-heading" class="text-text">What I build</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      <div class="rounded-xl border border-border bg-surface-alt p-5">
+        <h3 class="font-semibold text-text">Public website</h3>
+        <p class="mt-2 text-sm text-text-muted">
+          Fast, accessible, dyslexia-friendly. No frameworks, no bloat. Deploys to Cloudflare Pages.
+        </p>
+      </div>
+      <div class="rounded-xl border border-border bg-surface-alt p-5">
+        <h3 class="font-semibold text-text">Operations hub</h3>
+        <p class="mt-2 text-sm text-text-muted">
+          Private dashboard behind a password gate. Kanban board, document viewer, GitHub issues —
+          your project in one place.
+        </p>
+      </div>
+      <div class="rounded-xl border border-border bg-surface-alt p-5">
+        <h3 class="font-semibold text-text">AI workflows</h3>
+        <p class="mt-2 text-sm text-text-muted">
+          Automated content pipelines, AI-enhanced CVs, trading agents, NotebookLM audio overviews.
+          Built and maintained.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+
+  {/* Recent work */}
+  <section
+    id="recent-work"
+    aria-labelledby="recent-work-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+  >
+    <h2 id="recent-work-heading" class="text-text">Recent work</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
+        <h3 class="font-semibold text-text">
+          <a
+            href="https://evolvechiropractictas.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-text no-underline transition-colors hover:text-accent"
+          >
+            Evolve Chiropractic
+          </a>
+        </h3>
+        <p class="mt-2 flex-1 text-sm text-text-muted">
+          Three-site ecosystem (chiropractic practice, health coaching, author hub). AHPRA-compliant
+          content, shared brand system, private operations hub.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-1.5">
+          {['Healthcare', 'Multi-site', 'AHPRA'].map((tag) => (
+            <span class="rounded-full border border-border px-2.5 py-0.5 text-xs text-text-muted">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
+        <h3 class="font-semibold text-text">
+          <a
+            href="https://clutterbusters.pages.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-text no-underline transition-colors hover:text-accent"
+          >
+            Clutterbusters
+          </a>
+        </h3>
+        <p class="mt-2 flex-1 text-sm text-text-muted">
+          Public website and operations hub for a neurodivergent-specialist decluttering service.
+          Dyslexia-first design, Lexend font, audio-first roadmap.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-1.5">
+          {['ND-led', 'Dyslexia-first', 'Solo operator'].map((tag) => (
+            <span class="rounded-full border border-border px-2.5 py-0.5 text-xs text-text-muted">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
+        <h3 class="font-semibold text-text">
+          <a
+            href="https://adrianwedd.github.io/cv/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-text no-underline transition-colors hover:text-accent"
+          >
+            AI-Enhanced CV
+          </a>
+        </h3>
+        <p class="mt-2 flex-1 text-sm text-text-muted">
+          Self-healing CV pipeline. GitHub Actions runs twice daily: collects activity data, Claude
+          AI optimises content, hallucination detector gates deployment.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-1.5">
+          {['AI', 'Self-healing', 'Open source'].map((tag) => (
+            <span class="rounded-full border border-border px-2.5 py-0.5 text-xs text-text-muted">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+
+  {/* How it works */}
+  <section
+    id="how-it-works"
+    aria-labelledby="how-it-works-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+  >
+    <h2 id="how-it-works-heading" class="text-text">How it works</h2>
+    <ol class="mt-8 space-y-6">
+      <li class="flex gap-4">
+        <span
+          class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface-alt text-sm font-semibold text-accent"
+          aria-hidden="true"
+        >
+          1
+        </span>
+        <div>
+          <h3 class="font-semibold text-text">Discovery call</h3>
+          <p class="mt-1 text-sm text-text-muted">
+            We talk about your business, your needs, and what good looks like. No forms, no pitch
+            deck.
+          </p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span
+          class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface-alt text-sm font-semibold text-accent"
+          aria-hidden="true"
+        >
+          2
+        </span>
+        <div>
+          <h3 class="font-semibold text-text">Build sprint</h3>
+          <p class="mt-1 text-sm text-text-muted">
+            I design and build your site, hub, or workflow. You review at each stage. Typically 2–4
+            weeks.
+          </p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span
+          class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface-alt text-sm font-semibold text-accent"
+          aria-hidden="true"
+        >
+          3
+        </span>
+        <div>
+          <h3 class="font-semibold text-text">Ongoing retainer</h3>
+          <p class="mt-1 text-sm text-text-muted">
+            Monthly check-ins, updates, new features as your business grows. You're never left to
+            manage it alone.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+
+  {/* Pricing */}
+  <section
+    id="pricing"
+    aria-labelledby="pricing-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+  >
+    <h2 id="pricing-heading" class="text-text">Pricing</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      <div class="rounded-xl border border-border bg-surface-alt p-6">
+        <h3 class="font-semibold text-text">Build</h3>
+        <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">One-off</p>
+        <p class="mt-3 text-sm text-text-muted">
+          One-off scoped project. Public site + operations hub. Fixed price agreed upfront.
+        </p>
+      </div>
+      <div class="rounded-xl border border-border bg-surface-alt p-6">
+        <h3 class="font-semibold text-text">Retainer</h3>
+        <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Monthly</p>
+        <p class="mt-3 text-sm text-text-muted">
+          Ongoing monthly engagement. Updates, new features, tech support. Billed monthly.
+        </p>
+      </div>
+    </div>
+    <p class="mt-6 text-sm text-text-muted">
+      Prices vary by scope.{' '}
+      <a href="/contact/" class="text-accent transition-colors hover:opacity-80">
+        Let's talk.
+      </a>
+    </p>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+
+  {/* CTA */}
+  <section
+    id="services-cta"
+    aria-labelledby="services-cta-heading"
+    class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8"
+  >
+    <h2 id="services-cta-heading" class="text-text">Ready to get started?</h2>
+    <p class="mt-4 max-w-prose text-text-muted">
+      Based in Cygnet, Tasmania. Working with clients remotely across Australia.
+    </p>
+    <a
+      href="/contact/"
+      class="mt-8 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline transition-opacity hover:opacity-90"
+    >
+      Get in touch
+    </a>
+  </section>
+</BaseLayout>
