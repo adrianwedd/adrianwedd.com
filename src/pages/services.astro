@@ -1,5 +1,38 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const services = [
+  { title: 'Public website', desc: 'Fast, accessible, dyslexia-friendly. No frameworks, no bloat. Deploys to Cloudflare Pages.' },
+  { title: 'Operations hub', desc: 'Private dashboard behind a password gate. Kanban board, document viewer, GitHub issues — your project in one place.' },
+  { title: 'AI workflows', desc: 'Automated content pipelines, AI-enhanced CVs, trading agents, NotebookLM audio overviews. Built and maintained.' },
+];
+
+const caseStudies = [
+  {
+    name: 'Evolve Chiropractic',
+    url: 'https://evolvechiropractictas.com',
+    desc: 'Three-site ecosystem (chiropractic practice, health coaching, author hub). AHPRA-compliant content, shared brand system, private operations hub.',
+    tags: ['Healthcare', 'Multi-site', 'AHPRA'],
+  },
+  {
+    name: 'Clutterbusters',
+    url: 'https://clutterbusters.pages.dev',
+    desc: 'Public website and operations hub for a neurodivergent-specialist decluttering service. Dyslexia-first design, Lexend font, audio-first roadmap.',
+    tags: ['ND-led', 'Dyslexia-first', 'Solo operator'],
+  },
+  {
+    name: 'AI-Enhanced CV',
+    url: 'https://adrianwedd.github.io/cv/',
+    desc: 'Self-healing CV pipeline. GitHub Actions runs twice daily: collects activity data, Claude AI optimises content, hallucination detector gates deployment.',
+    tags: ['AI', 'Self-healing', 'Open source'],
+  },
+];
+
+const steps = [
+  { n: '1', title: 'Discovery call', desc: "We talk about your business, your needs, and what good looks like. No forms, no pitch deck." },
+  { n: '2', title: 'Build sprint', desc: "I design and build your site, hub, or workflow. You review at each stage. Typically 2–4 weeks." },
+  { n: '3', title: 'Ongoing retainer', desc: "Monthly check-ins, updates, new features as your business grows. You're never left to manage it alone." },
+];
 ---
 
 <BaseLayout
@@ -38,26 +71,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   >
     <h2 id="what-i-build-heading" class="text-text">What I build</h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
-      <div class="rounded-xl border border-border bg-surface-alt p-5">
-        <h3 class="font-semibold text-text">Public website</h3>
-        <p class="mt-2 text-sm text-text-muted">
-          Fast, accessible, dyslexia-friendly. No frameworks, no bloat. Deploys to Cloudflare Pages.
-        </p>
-      </div>
-      <div class="rounded-xl border border-border bg-surface-alt p-5">
-        <h3 class="font-semibold text-text">Operations hub</h3>
-        <p class="mt-2 text-sm text-text-muted">
-          Private dashboard behind a password gate. Kanban board, document viewer, GitHub issues —
-          your project in one place.
-        </p>
-      </div>
-      <div class="rounded-xl border border-border bg-surface-alt p-5">
-        <h3 class="font-semibold text-text">AI workflows</h3>
-        <p class="mt-2 text-sm text-text-muted">
-          Automated content pipelines, AI-enhanced CVs, trading agents, NotebookLM audio overviews.
-          Built and maintained.
-        </p>
-      </div>
+      {services.map(({ title, desc }) => (
+        <div class="rounded-xl border border-border bg-surface-alt p-5">
+          <h3 class="font-semibold text-text">{title}</h3>
+          <p class="mt-2 text-sm text-text-muted">{desc}</p>
+        </div>
+      ))}
     </div>
   </section>
 
@@ -71,75 +90,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   >
     <h2 id="recent-work-heading" class="text-text">Recent work</h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
-      <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
-        <h3 class="font-semibold text-text">
-          <a
-            href="https://evolvechiropractictas.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-text no-underline transition-colors hover:text-accent"
-          >
-            Evolve Chiropractic
-          </a>
-        </h3>
-        <p class="mt-2 flex-1 text-sm text-text-muted">
-          Three-site ecosystem (chiropractic practice, health coaching, author hub). AHPRA-compliant
-          content, shared brand system, private operations hub.
-        </p>
-        <div class="mt-4 flex flex-wrap gap-1.5">
-          {['Healthcare', 'Multi-site', 'AHPRA'].map((tag) => (
-            <span class="rounded-full border border-border px-2.5 py-0.5 text-xs text-text-muted">
-              {tag}
-            </span>
-          ))}
+      {caseStudies.map(({ name, url, desc, tags }) => (
+        <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
+          <h3 class="font-semibold text-text">
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-text no-underline transition-colors hover:text-accent"
+            >
+              {name}
+            </a>
+          </h3>
+          <p class="mt-2 flex-1 text-sm text-text-muted">{desc}</p>
+          <div class="mt-4 flex flex-wrap gap-1.5">
+            {tags.map((tag) => (
+              <span class="rounded-full border border-border px-2.5 py-0.5 text-xs text-text-muted">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
-      <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
-        <h3 class="font-semibold text-text">
-          <a
-            href="https://clutterbusters.pages.dev"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-text no-underline transition-colors hover:text-accent"
-          >
-            Clutterbusters
-          </a>
-        </h3>
-        <p class="mt-2 flex-1 text-sm text-text-muted">
-          Public website and operations hub for a neurodivergent-specialist decluttering service.
-          Dyslexia-first design, Lexend font, audio-first roadmap.
-        </p>
-        <div class="mt-4 flex flex-wrap gap-1.5">
-          {['ND-led', 'Dyslexia-first', 'Solo operator'].map((tag) => (
-            <span class="rounded-full border border-border px-2.5 py-0.5 text-xs text-text-muted">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-      <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
-        <h3 class="font-semibold text-text">
-          <a
-            href="https://adrianwedd.github.io/cv/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-text no-underline transition-colors hover:text-accent"
-          >
-            AI-Enhanced CV
-          </a>
-        </h3>
-        <p class="mt-2 flex-1 text-sm text-text-muted">
-          Self-healing CV pipeline. GitHub Actions runs twice daily: collects activity data, Claude
-          AI optimises content, hallucination detector gates deployment.
-        </p>
-        <div class="mt-4 flex flex-wrap gap-1.5">
-          {['AI', 'Self-healing', 'Open source'].map((tag) => (
-            <span class="rounded-full border border-border px-2.5 py-0.5 text-xs text-text-muted">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
+      ))}
     </div>
   </section>
 
@@ -153,51 +125,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   >
     <h2 id="how-it-works-heading" class="text-text">How it works</h2>
     <ol class="mt-8 space-y-6">
-      <li class="flex gap-4">
-        <span
-          class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface-alt text-sm font-semibold text-accent"
-          aria-hidden="true"
-        >
-          1
-        </span>
-        <div>
-          <h3 class="font-semibold text-text">Discovery call</h3>
-          <p class="mt-1 text-sm text-text-muted">
-            We talk about your business, your needs, and what good looks like. No forms, no pitch
-            deck.
-          </p>
-        </div>
-      </li>
-      <li class="flex gap-4">
-        <span
-          class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface-alt text-sm font-semibold text-accent"
-          aria-hidden="true"
-        >
-          2
-        </span>
-        <div>
-          <h3 class="font-semibold text-text">Build sprint</h3>
-          <p class="mt-1 text-sm text-text-muted">
-            I design and build your site, hub, or workflow. You review at each stage. Typically 2–4
-            weeks.
-          </p>
-        </div>
-      </li>
-      <li class="flex gap-4">
-        <span
-          class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface-alt text-sm font-semibold text-accent"
-          aria-hidden="true"
-        >
-          3
-        </span>
-        <div>
-          <h3 class="font-semibold text-text">Ongoing retainer</h3>
-          <p class="mt-1 text-sm text-text-muted">
-            Monthly check-ins, updates, new features as your business grows. You're never left to
-            manage it alone.
-          </p>
-        </div>
-      </li>
+      {steps.map(({ n, title, desc }) => (
+        <li class="flex gap-4">
+          <span
+            class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface-alt text-sm font-semibold text-accent"
+            aria-hidden="true"
+          >
+            {n}
+          </span>
+          <div>
+            <h3 class="font-semibold text-text">
+              <span class="sr-only">Step {n}: </span>{title}
+            </h3>
+            <p class="mt-1 text-sm text-text-muted">{desc}</p>
+          </div>
+        </li>
+      ))}
     </ol>
   </section>
 
@@ -228,7 +171,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
     <p class="mt-6 text-sm text-text-muted">
       Prices vary by scope.{' '}
-      <a href="/contact/" class="text-accent transition-colors hover:opacity-80">
+      <a href="/contact/" class="text-accent transition-colors hover:opacity-90">
         Let's talk.
       </a>
     </p>
