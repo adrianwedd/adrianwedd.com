@@ -1,6 +1,6 @@
 ---
 title: "Cygnet"
-description: "AI-powered 3D printed housing ecosystem. 28+ agents coordinating land, build, and print operations for affordable housing."
+description: "When housing is broken at the system level, you don't fix it by building the same thing slightly cheaper. 28 agents, 170 acres, one eco village."
 tags: ["ai", "housing", "agents", "typescript"]
 repo: "https://github.com/adrianwedd/cygnet"
 status: "active"

@@ -1,6 +1,6 @@
 ---
 title: "EMDR Agent"
-description: "AI-powered therapeutic agent for EMDR protocol guidance with real-time distress monitoring and crisis intervention."
+description: "What safety architecture does AI-assisted trauma therapy require before it has any business existing? Built to find out."
 tags: ["ai", "health", "typescript"]
 repo: "https://github.com/adrianwedd/emdr-agent"
 status: "experiment"

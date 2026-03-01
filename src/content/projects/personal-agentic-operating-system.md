@@ -1,6 +1,6 @@
 ---
 title: "Personal Agentic Operating System"
-description: "Local-first LLM agents orchestrated with LangGraph, powered by Qdrant and Neo4j, observable via Langfuse."
+description: "Most agentic systems assume the cloud. This one assumes your machine — local-first, fully observable, with a meta-agent that reads its own reflection logs."
 tags: ["ai", "infrastructure", "python"]
 repo: "https://github.com/adrianwedd/personal-agentic-operating-system"
 status: "active"

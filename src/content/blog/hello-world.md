@@ -1,6 +1,6 @@
 ---
 title: "Building in the Open"
-description: "Why this site exists, and what I hope it becomes."
+description: "The commit log is more honest than the readme. Building in public as a practice, not a performance."
 date: 2026-02-12
 tags: ["meta", "craft"]
 heroImage: "/og/hello-world.png"

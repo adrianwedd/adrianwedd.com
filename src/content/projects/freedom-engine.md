@@ -1,6 +1,6 @@
 ---
 title: "Freedom Engine"
-description: "Secure AI service helping federal inmates understand First Step Act time credit provisions."
+description: "The First Step Act exists. The information is public. The legal complexity makes it inaccessible. 264,000 people can't afford that gap."
 tags: ["ai", "justice", "python"]
 repo: "https://github.com/adrianwedd/freedom-engine"
 status: "active"

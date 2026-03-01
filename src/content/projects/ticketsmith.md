@@ -1,6 +1,6 @@
 ---
 title: "Ticketsmith"
-description: "Enterprise AI automation for Jira and Confluence with self-hosted vLLM inference and RAG pipelines."
+description: "Institutional knowledge is vast, effectively inaccessible, and costs more to recreate than to find. Ticketsmith makes it findable — on sovereign compute."
 tags: ["ai", "infrastructure", "python"]
 repo: "https://github.com/adrianwedd/ticketsmith"
 status: "active"
