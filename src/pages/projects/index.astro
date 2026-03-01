@@ -67,7 +67,7 @@ try {
     <p class="mt-4 max-w-prose text-text-muted">Thirty-odd things built in public. AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.</p>
 
     {/* Status filter */}
-    <div class="mt-8 flex flex-wrap gap-2" id="status-filters" aria-label="Filter by status">
+    <div class="mt-8 flex flex-wrap gap-2" id="status-filters" role="group" aria-label="Filter by status">
       <button
         type="button"
         data-status=""
@@ -104,7 +104,7 @@ try {
     {/* Tag filter */}
     {
       allTags.length > 0 && (
-        <div class="mt-3 flex flex-wrap gap-2" id="tag-filters" aria-label="Filter by tag">
+        <div class="mt-3 flex flex-wrap gap-2" id="tag-filters" role="group" aria-label="Filter by tag">
           <button
             type="button"
             data-tag=""
