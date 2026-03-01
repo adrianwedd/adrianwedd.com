@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 import { slug } from '../lib/utils';
 import ScrollReveal from '../components/ScrollReveal.astro';
+import { getPlaceholder } from '../lib/placeholder';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
@@ -26,6 +27,22 @@ const allEpisodes = await getCollection('audio');
 const recentEpisodes = allEpisodes
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
+
+const galleryPlaceholders = new Map<string, string>();
+for (const collection of recentGalleries) {
+  if (collection.data.coverImage) {
+    const ph = await getPlaceholder(collection.data.coverImage);
+    if (ph) galleryPlaceholders.set(collection.data.coverImage, ph);
+  }
+}
+
+const projectPlaceholders = new Map<string, string>();
+for (const project of featuredProjects) {
+  if (project.data.heroImage) {
+    const ph = await getPlaceholder(project.data.heroImage);
+    if (ph) projectPlaceholders.set(project.data.heroImage, ph);
+  }
+}
 ---
 
 <BaseLayout
@@ -124,17 +141,22 @@ const recentEpisodes = allEpisodes
                 class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border bg-surface-alt no-underline shadow-subtle transition-all hover:shadow-card"
               >
                 {project.data.heroImage && (
-                  <Picture
-                    src={project.data.heroImage}
-                    width={600}
-                    height={160}
-                    widths={[320, 600, 900]}
-                    formats={['avif', 'webp']}
-                    alt={`${project.data.title} hero image`}
-                    class="h-40 w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div
+                    class="blur-up"
+                    style={projectPlaceholders.get(project.data.heroImage) ? `background-image: url(${projectPlaceholders.get(project.data.heroImage)})` : undefined}
+                  >
+                    <Picture
+                      src={project.data.heroImage}
+                      width={600}
+                      height={160}
+                      widths={[320, 600, 900]}
+                      formats={['avif', 'webp']}
+                      alt={`${project.data.title} hero image`}
+                      class="h-40 w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
                 )}
                 <div class="p-6">
                   <h3 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
@@ -253,7 +275,10 @@ const recentEpisodes = allEpisodes
                   class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border no-underline shadow-subtle transition-all hover:shadow-card"
                 >
                   {collection.data.coverImage && (
-                    <div class="img-placeholder aspect-[4/3] overflow-hidden">
+                    <div
+                      class="img-placeholder blur-up aspect-[4/3] overflow-hidden"
+                      style={galleryPlaceholders.get(collection.data.coverImage) ? `background-image: url(${galleryPlaceholders.get(collection.data.coverImage)})` : undefined}
+                    >
                       <Picture
                         src={collection.data.coverImage}
                         width={400}
