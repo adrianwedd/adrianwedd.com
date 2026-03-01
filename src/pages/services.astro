@@ -77,12 +77,53 @@ const steps = [
   { n: '2', title: 'Build', desc: "I move fast. Iterative, visible progress. You stay in the loop at every stage. Scope is agreed upfront — no bill shock." },
   { n: '3', title: 'Stay', desc: "Most clients keep me on. Monthly retainer: updates, new features, whatever comes up. I don't hand off and disappear." },
 ];
+
+const pricing = [
+  {
+    title: 'Project',
+    cadence: 'Fixed scope',
+    typical: '2–8 weeks, fixed quote',
+    desc: 'Scoped, priced, and agreed upfront. No surprises. Right for a defined build with a clear outcome.',
+  },
+  {
+    title: 'Retainer',
+    cadence: 'Monthly',
+    typical: 'From the month after delivery',
+    desc: 'Ongoing capacity. Updates, new features, support, whatever comes up. Most clients move here after the initial build.',
+  },
+  {
+    title: 'Consult',
+    cadence: 'Day rate',
+    typical: 'Half-day or full-day engagements',
+    desc: 'Strategy, architecture, evaluation, policy. Useful when you need deep expertise for a specific question without a full build.',
+  },
+];
 ---
 
 <BaseLayout
-  title="Services"
-  description="AI integration, security evaluation, voice agents, healthcare and legal systems, and creative AI. Based in Tasmania, working everywhere. I build what needs building and stay involved."
+  title="Services — AI Consulting & Development"
+  description="AI integration, security evaluation, voice agents, agentic systems, and web development. Tasmania-based, working globally."
 >
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    'name': 'Adrian Wedd — AI Consulting & Development',
+    'url': 'https://adrianwedd.com/services/',
+    'provider': {
+      '@type': 'Person',
+      'name': 'Adrian Wedd',
+      'url': 'https://adrianwedd.com',
+    },
+    'areaServed': ['Australia', 'Worldwide'],
+    'serviceType': [
+      'AI Integration',
+      'Security Evaluation',
+      'Voice AI',
+      'Web Development',
+      'AI Governance',
+      'Agentic Systems',
+    ],
+  })} />
   {/* Hero */}
   <section
     id="services-hero"
@@ -226,27 +267,14 @@ const steps = [
   >
     <h2 id="pricing-heading" class="text-text">Pricing</h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
-      <div class="rounded-xl border border-border bg-surface-alt p-6">
-        <h3 class="font-semibold text-text">Project</h3>
-        <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Fixed scope</p>
-        <p class="mt-3 text-sm text-text-muted">
-          Scoped, priced, and agreed upfront. No surprises. Right for a defined build with a clear outcome.
-        </p>
-      </div>
-      <div class="rounded-xl border border-border bg-surface-alt p-6">
-        <h3 class="font-semibold text-text">Retainer</h3>
-        <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Monthly</p>
-        <p class="mt-3 text-sm text-text-muted">
-          Ongoing capacity. Updates, new features, support, whatever comes up. Most clients move here after the initial build.
-        </p>
-      </div>
-      <div class="rounded-xl border border-border bg-surface-alt p-6">
-        <h3 class="font-semibold text-text">Consult</h3>
-        <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Day rate</p>
-        <p class="mt-3 text-sm text-text-muted">
-          Strategy, architecture, evaluation, policy. Useful when you need deep expertise for a specific question without a full build.
-        </p>
-      </div>
+      {pricing.map(({ title, cadence, typical, desc }) => (
+        <div class="rounded-xl border border-border bg-surface-alt p-6">
+          <h3 class="font-semibold text-text">{title}</h3>
+          <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">{cadence}</p>
+          <p class="mt-1 text-xs text-accent">{typical}</p>
+          <p class="mt-3 text-sm text-text-muted">{desc}</p>
+        </div>
+      ))}
     </div>
     <p class="mt-6 text-sm text-text-muted">
       Rates depend on scope and engagement type.{' '}
