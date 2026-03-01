@@ -80,9 +80,29 @@ const steps = [
 ---
 
 <BaseLayout
-  title="Services"
-  description="AI integration, security evaluation, voice agents, healthcare and legal systems, and creative AI. Based in Tasmania, working everywhere. I build what needs building and stay involved."
+  title="Services — AI Consulting & Development"
+  description="AI integration, security evaluation, voice agents, agentic systems, and web development. Tasmania-based, working globally. Fixed-scope projects, monthly retainers, and day-rate consulting."
 >
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    'name': 'Adrian Wedd — AI Consulting & Development',
+    'url': 'https://adrianwedd.com/services/',
+    'provider': {
+      '@type': 'Person',
+      'name': 'Adrian Wedd',
+      'url': 'https://adrianwedd.com',
+    },
+    'areaServed': ['Australia', 'Remote / International'],
+    'serviceType': [
+      'AI Integration',
+      'Security Evaluation',
+      'Voice AI',
+      'Web Development',
+      'AI Governance',
+      'Agentic Systems',
+    ],
+  })} />
   {/* Hero */}
   <section
     id="services-hero"
