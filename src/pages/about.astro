@@ -17,7 +17,7 @@ const recentPosts = (await getCollection('blog'))
 
 <BaseLayout
   title="About"
-  description="I build things that think, break, and sometimes both. AI safety researcher and systems thinker. Building things that think, break, and sometimes both. Based in Tasmania."
+  description="Systems builder, AI safety researcher, adversarial thinker. AuDHD. Formerly Greenpeace Actions unit. Based in Cygnet, Tasmania."
 >
   <script
     type="application/ld+json"
@@ -48,63 +48,133 @@ const recentPosts = (await getCollection('blog'))
     </header>
 
     <div class="space-y-6 leading-relaxed text-text">
-      <p>I'm Adrian Wedd. I live in Tasmania and I build things that think, break, and sometimes both.</p>
-
       <p>
-        I'm an independent AI safety researcher—building the multi-agent systems I study, writing about what happens
-        when demonstrated risk meets institutional optimism, and trying to make more of that work public. Currently
-        looking for interesting opportunities.
+        I'm Adrian Wedd. I live in Cygnet, Tasmania. I build systems, break them deliberately,
+        and use what I learn to make the next ones harder to break.
       </p>
 
       <p>
-        I've worked in environmental advocacy, government, and infrastructure management. The thread through all of it
-        is an obsession with how complex systems fail. This site is where all of that lands.
+        I've been doing this since I was six years old — BASIC on a home computer, pulling apart
+        anything I could get my hands on to see what was inside. Nearly 45 years later the
+        tools are more interesting but the impulse is identical.
       </p>
 
-      <h2 class="mt-12 text-text">How I Got Here</h2>
+      <h2 class="mt-12 text-text">Where the adversarial thinking comes from</h2>
+
+      <p>
+        I spent years coordinating direct actions for Greenpeace. Not communications, not
+        fundraising — the Actions unit. Planning operations against well-resourced opponents
+        who would rather you didn't succeed. That work teaches you to enumerate failure modes
+        before you move. It teaches you that the optimistic plan is the dangerous plan. It
+        teaches you that operational security isn't a checkbox — it's the difference between
+        the mission succeeding and people getting hurt.
+      </p>
+
+      <p>
+        That thinking didn't leave when I moved into systems integration, cybersecurity, and
+        eventually AI. It became the methodology. Failure First — the AI safety framework I
+        published — isn't an academic construct. It's what happens when someone who spent years
+        asking "what's the worst that could happen and how do we survive it" gets access to
+        frontier AI systems and a lot of compute.
+      </p>
+
+      <h2 class="mt-12 text-text">AuDHD — feature, not bug</h2>
+
+      <p>
+        I'm Autistic and ADHD. I'm not disclosing this as context for the hard parts. I'm
+        naming it because it directly explains why I'm good at what I do.
+      </p>
+
+      <p>
+        Hyperfocus is a superpower in this work. When a problem is interesting enough — and
+        complex systems failing is almost always interesting enough — I can go to a depth and
+        velocity that most people can't sustain. The CV pipeline, the red-teaming framework,
+        the Evolve ecosystem: these weren't built slowly. They were built in intense bursts of
+        concentrated attention that covered enormous ground fast.
+      </p>
+
+      <p>
+        The pattern recognition that comes with autism is genuinely useful for adversarial
+        thinking. I notice what doesn't fit. I notice the thing that looks fine but is subtly
+        wrong. I notice the failure mode hiding inside the working system. That's not a skill
+        I acquired — it's how I process the world.
+      </p>
+
+      <p>
+        And the directness that comes with both: I don't waste words and I don't soften
+        assessments to make them comfortable. If your AI system has a problem, I'll tell you
+        what it is, not a version of it that's easier to hear.
+      </p>
+
+      <h2 class="mt-12 text-text">What I actually care about</h2>
+
+      <p>
+        I started at Greenpeace because I believed in the work, not because it was a career
+        move. I built Freedom Engine — an AI system to help US federal inmates understand their
+        First Step Act time credits — because those people needed it and no one else was
+        building it. I built ADHDo and NeuroConnect because I understand executive function
+        failure from the inside and I wanted better tools to exist.
+      </p>
+
+      <p>
+        The through-line: I build for people who need it. The small business that can't afford
+        a Sydney agency. The healthcare practice navigating regulatory complexity without a
+        legal team. The person inside a broken system trying to understand their rights.
+      </p>
+
+      <p>
+        I take safety seriously before it's required. My own CV pipeline ships a hallucination
+        detector that blocks fabricated claims before they deploy. That's not a commercial
+        requirement — it's a values statement. This site collects no analytics without your
+        consent. That's not legally mandated — it's how I think things should work.
+      </p>
+
+      <p>
+        I'm not neutral on AI risk. I think the failure modes are real, underestimated, and
+        worth taking seriously before the incentives catch up. That's why I do the red-teaming
+        work. That's why the methodology is public.
+      </p>
+
+      <h2 class="mt-12 text-text">How I got here</h2>
 
       <div class="mt-6 border-l-2 border-border pl-6 space-y-6">
         <div>
-          <p class="text-xs font-medium text-accent">Environmental Advocacy</p>
+          <p class="text-xs font-medium text-accent">Greenpeace & Wilderness Society</p>
           <p class="mt-1 text-sm text-text-muted">
-            Started in conservation — learning how ecosystems fail when feedback loops break. First exposure to systems
-            thinking at scale.
+            Direct action coordination, operational security, field ICT, risk assessment against
+            adversarial opponents. Where the failure-first instinct was forged under conditions
+            where getting it wrong had real consequences.
           </p>
         </div>
         <div>
-          <p class="text-xs font-medium text-accent">Government</p>
+          <p class="text-xs font-medium text-accent">Infrastructure & cybersecurity</p>
           <p class="mt-1 text-sm text-text-muted">
-            Policy and public administration. Saw firsthand how institutions process (and ignore) risk. The gap between
-            knowing and acting became a recurring theme.
+            Seven years at Homes Tasmania delivering systems integration, penetration testing,
+            vulnerability assessment, IDAM, and Essential Eight compliance for public housing
+            infrastructure. Wrote the department's first Generative AI policy.
           </p>
         </div>
         <div>
-          <p class="text-xs font-medium text-accent">Infrastructure</p>
+          <p class="text-xs font-medium text-accent">Independent research & client delivery</p>
           <p class="mt-1 text-sm text-text-muted">
-            Managing systems that can't afford to fail. Learned that reliability is a practice, not a property — and
-            that most failures are systemic, not technical.
-          </p>
-        </div>
-        <div>
-          <p class="text-xs font-medium text-accent">AI Safety</p>
-          <p class="mt-1 text-sm text-text-muted">
-            Everything converges here. Multi-agent systems, failure modes, institutional blind spots. Building the tools
-            to surface what models actually do, not what we hope they do.
+            AI safety research with a published arXiv preprint, 120+ models evaluated, 18,000+
+            adversarial prompts. Alongside: client sites, AI pipelines, voice agents, and
+            agentic systems built and shipped.
           </p>
         </div>
       </div>
 
-      <h2 class="mt-12 text-text">What I'm Working On</h2>
+      <h2 class="mt-12 text-text">What I'm working on</h2>
 
       <p>
-        Right now: AI safety frameworks that start from what can go wrong, not what should go right. Multi-agent systems
-        where the safety constraints are physical, not theoretical. And the gap between what organisations know about
-        technological risk and what they actually do about it — which turns out to be enormous.
+        AI systems that fail gracefully and auditably. Multi-agent architectures with real
+        safety constraints. The gap between what organisations say about AI risk and what
+        they actually do about it — which remains enormous and consequential.
       </p>
 
       <p>
-        I also write, make art, and occasionally record audio. This site is the workbench — finished work, ongoing
-        experiments, and raw thinking all in one place.
+        Also: music tools, interactive installations, writing, and whatever else demands
+        enough attention to be worth the hyperfocus.
       </p>
 
       <h2 class="mt-12 text-text">Elsewhere</h2>
@@ -116,11 +186,15 @@ const recentPosts = (await getCollection('blog'))
         </li>
         <li>
           <a href="https://failurefirst.org" target="_blank" rel="noopener">Failure First</a>
-          <span class="text-text-muted"> — AI safety methodology</span>
+          <span class="text-text-muted"> — AI safety methodology and adversarial evaluation framework</span>
         </li>
         <li>
           <a href="https://thiswasntinthebrochure.wtf" target="_blank" rel="noopener">This Wasn't in the Brochure</a>
-          <span class="text-text-muted"> — a book about parenting and neurodivergence</span>
+          <span class="text-text-muted"> — a book about co-parenting neurodivergent children</span>
+        </li>
+        <li>
+          <a href="/services/" class="text-accent">Work with me</a>
+          <span class="text-text-muted"> — consulting, development, AI integration, security evaluation</span>
         </li>
       </ul>
 
