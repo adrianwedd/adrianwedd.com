@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { slug } from '../../../lib/utils';
 
@@ -60,15 +61,19 @@ const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
             class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border bg-surface-alt no-underline shadow-subtle transition-all hover:shadow-card"
           >
             {gallery.data.coverImage && (
-              <img
-                src={gallery.data.coverImage}
-                alt=""
-                width="400"
-                height="300"
-                class="h-48 w-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
+              <div class="img-placeholder aspect-[4/3] overflow-hidden">
+                <Picture
+                  src={gallery.data.coverImage}
+                  width={400}
+                  height={300}
+                  widths={[200, 400, 800]}
+                  formats={['avif', 'webp']}
+                  alt={gallery.data.title}
+                  class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
             )}
             <div class="p-4">
               <h2 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">

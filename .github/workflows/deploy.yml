@@ -34,7 +34,7 @@ jobs:
           PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
       - name: Enforce no raw <img> on local paths
         run: |
-          if grep -rn '<img[[:space:]]' src/pages/ src/layouts/ src/components/ \
+          if grep -rn '<img' src/pages/ src/layouts/ src/components/ \
             --include='*.astro' \
             | grep -v 'https\?://' \
             | grep -v 'data:' \
@@ -42,7 +42,7 @@ jobs:
             | grep -v 'src=""' \
             | grep -q .; then
             echo "ERROR: Raw <img> tags with local paths found. Use Astro <Picture> instead."
-            grep -rn '<img[[:space:]]' src/pages/ src/layouts/ src/components/ \
+            grep -rn '<img' src/pages/ src/layouts/ src/components/ \
               --include='*.astro' \
               | grep -v 'https\?://' \
               | grep -v 'data:' \
