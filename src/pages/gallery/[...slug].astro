@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Picture } from 'astro:assets';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import ShareButton from '../../components/islands/ShareButton';
@@ -101,11 +102,13 @@ const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
             data-index={index}
           >
             <div class="img-placeholder aspect-[4/3] overflow-hidden">
-              <img
+              <Picture
                 src={image.src}
+                width={600}
+                height={450}
+                widths={[300, 600, 900]}
+                formats={['avif', 'webp']}
                 alt={image.alt}
-                width="400"
-                height="300"
                 class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
                 decoding="async"
