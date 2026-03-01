@@ -12,12 +12,12 @@ const totalWords = blogPosts.reduce((sum, p) => sum + (p.body ? p.body.split(/\s
 const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
 ---
 
-<BaseLayout title="Now" description="What I'm focused on right now. Updated February 2026.">
+<BaseLayout title="Now" description="What I'm focused on right now. Updated March 2026.">
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <header class="mb-12">
       <h1 class="text-text">Now</h1>
       <p class="mt-2 text-sm text-text-muted">
-        Updated February 2026. This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page</a>.
+        Updated March 2026. This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page</a>.
       </p>
     </header>
 
@@ -27,34 +27,36 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
         <p>
           Multi-agent AI safety. Specifically: what happens when individually safe agents are composed into systems, and
           why the safety properties don't transfer. The research sits under the
-          <a href="/projects/failure-first/">Failure First</a> umbrella.
+          <a href="/projects/failure-first/">Failure First</a> umbrella — 120+ models, 18,000+ adversarial prompts, four headline findings.
         </p>
       </section>
 
       <section>
         <h2 class="text-text">Building</h2>
         <ul class="mt-2 space-y-2">
-          <li>This site — shipping improvements in weekly sprints</li>
-          <li><a href="/projects/agentic-index/">Agentic Index</a> — benchmarking agent capabilities</li>
-          <li>A pipeline that turns project documentation into audio overviews, infographics, and quizzes using NotebookLM Studio</li>
+          <li>Client projects — AI integration, automation, and infrastructure for small businesses that need it most</li>
+          <li>This site — weekly sprints, shipping in public</li>
+          <li><a href="/projects/personal-agentic-operating-system/">PAOS</a> — a local-first agentic OS that runs on your hardware, not someone else's</li>
+          <li>A NotebookLM pipeline that turns project docs into audio overviews, infographics, and quizzes at build time</li>
         </ul>
       </section>
 
       <section>
         <h2 class="text-text">Writing</h2>
         <p>
-          Publishing more of the research that's been sitting in private repos. Recent pieces on
-          <a href="/blog/jailbreak-archaeology/">jailbreak archaeology</a> and
-          <a href="/blog/when-ai-systems-talk-safety-breaks/">multi-agent safety failures</a>.
-          Working on a longer piece about why demonstrated risk is systematically ignored.
+          Publishing research that's been sitting in private repos. Working on a piece about why demonstrated risk
+          is systematically ignored — and what the pattern looks like when you've enumerated failure modes
+          professionally for two decades.
         </p>
       </section>
 
       <section>
-        <h2 class="text-text">Looking for</h2>
+        <h2 class="text-text">Available for</h2>
         <p>
-          Interesting work in AI safety, systems thinking, or infrastructure. Open to research collaborations,
-          technical advisory roles, or full-time positions where the problems are real and the approach is honest.
+          Client work, research collaboration, and technical advisory. I'm particularly useful when the problem
+          sits at the intersection of AI, infrastructure, and something that matters — healthcare, legal access,
+          community systems, governance. Open to <a href="/services/">consulting engagements</a> and
+          conversations that start with a real problem, not a brief.
         </p>
       </section>
 
