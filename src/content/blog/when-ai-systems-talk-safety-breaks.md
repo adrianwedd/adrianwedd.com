@@ -2,7 +2,7 @@
 title: "When AI Systems Talk to Each Other, Safety Breaks Down"
 description: "Single-agent safety does not compose in multi-agent systems. 1.5M interactions show 46.34% attack success rates and 16-minute median failure windows."
 date: 2026-02-13
-tags: ["ai", "safety", "research"]
+tags: ["ai-safety", "multi-agent", "research"]
 draft: false
 heroImage: "/og/when-ai-systems-talk-safety-breaks.png"
 audioUrl: "/notebook-assets/failure-first/moltbook/audio.mp3"
