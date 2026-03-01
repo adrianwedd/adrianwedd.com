@@ -1,0 +1,36 @@
+---
+interface Props {
+  class?: string;
+  as?: string;
+  stagger?: number;
+}
+
+const { class: className = '', as: Tag = 'div', stagger } = Astro.props as any;
+---
+
+<Tag
+  class:list={['scroll-reveal', className]}
+  {...stagger ? { style: `transition-delay: ${stagger}ms` } : {}}
+>
+  <slot />
+</Tag>
+
+<script>
+  function initScrollReveal() {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.scroll-reveal:not(.revealed)').forEach((el) => observer.observe(el));
+  }
+
+  initScrollReveal();
+  document.addEventListener('astro:after-swap', initScrollReveal);
+</script>
