@@ -5,6 +5,7 @@
 
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import matter from 'gray-matter';
 
 const ROOT = process.cwd();
 const CONTENT_DIR = join(ROOT, 'src/content');
@@ -36,20 +37,6 @@ const COLLECTIONS = {
 let errors = 0;
 let warnings = 0;
 
-function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!match) return {};
-  const fm = {};
-  for (const line of match[1].split('\n')) {
-    const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) continue;
-    const key = line.slice(0, colonIdx).trim();
-    const value = line.slice(colonIdx + 1).trim().replace(/^["']|["']$/g, '');
-    fm[key] = value;
-  }
-  return fm;
-}
-
 for (const [collection, rules] of Object.entries(COLLECTIONS)) {
   const dir = join(CONTENT_DIR, collection);
   if (!existsSync(dir)) continue;
@@ -58,12 +45,13 @@ for (const [collection, rules] of Object.entries(COLLECTIONS)) {
     if (!file.endsWith('.md') && !file.endsWith('.mdx')) continue;
     const filePath = join(dir, file);
     const content = readFileSync(filePath, 'utf8');
-    const fm = parseFrontmatter(content);
+    const { data: fm } = matter(content);
     const label = `${collection}/${file}`;
 
     // Required fields
     for (const field of rules.required) {
-      if (!fm[field] || fm[field].trim() === '') {
+      const val = fm[field];
+      if (val === undefined || val === null || String(val).trim() === '') {
         console.error(`ERROR [${label}]: missing required field '${field}'`);
         errors++;
       }
@@ -78,7 +66,7 @@ for (const [collection, rules] of Object.entries(COLLECTIONS)) {
     }
 
     // heroImage path existence (warn only)
-    if (fm.heroImage && fm.heroImage.startsWith('/') && !fm.heroImage.startsWith('http')) {
+    if (fm.heroImage && typeof fm.heroImage === 'string' && fm.heroImage.startsWith('/') && !fm.heroImage.startsWith('http')) {
       const imgPath = join(PUBLIC_DIR, fm.heroImage);
       if (!existsSync(imgPath)) {
         console.warn(`WARN [${label}]: heroImage not found in public/: ${fm.heroImage}`);
