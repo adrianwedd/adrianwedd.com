@@ -54,6 +54,16 @@ const recentEpisodes = allEpisodes
           'https://github.com/adrianwedd',
           'https://www.linkedin.com/in/adrianwedd/',
         ],
+        makesOffer: [
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'AI Consulting & Development',
+              url: 'https://adrianwedd.com/services/',
+            },
+          },
+        ],
       },
     })}
   />
@@ -135,6 +145,35 @@ const recentEpisodes = allEpisodes
       </section>
     )
   }
+
+  {/* Consulting CTA */}
+  <section
+    aria-label="Consulting availability"
+    class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8"
+  >
+    <div class="rounded-xl border border-accent/30 bg-surface-alt p-8 sm:flex sm:items-center sm:justify-between">
+      <div>
+        <h2 class="text-lg font-semibold text-text">Available for consulting &amp; builds</h2>
+        <p class="mt-2 max-w-prose text-sm text-text-muted">
+          AI integration, security evaluation, and web development. Fixed-scope projects, monthly retainers, day-rate consulting.
+        </p>
+      </div>
+      <div class="mt-6 flex flex-shrink-0 flex-wrap gap-3 sm:ml-8 sm:mt-0">
+        <a
+          href="/services/"
+          class="inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline transition-opacity hover:opacity-90"
+        >
+          See services
+        </a>
+        <a
+          href="/contact/"
+          class="inline-block rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text no-underline transition-colors hover:border-accent hover:text-accent"
+        >
+          Book a free call
+        </a>
+      </div>
+    </div>
+  </section>
 
   <div class="section-divider mx-auto max-w-6xl"></div>
 
