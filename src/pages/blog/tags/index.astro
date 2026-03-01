@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
@@ -14,8 +15,9 @@ posts.forEach((p) => {
 const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 ---
 
-<BaseLayout title="Blog Tags" description="Browse all blog post tags.">
+<BaseLayout title="Blog Topics & Tags" description="Browse AI safety, economics, engineering, and more. Filter by topic to find what interests you.">
   <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog/' }, { label: 'Tags' }]} />
     <h1 class="text-text">Tags</h1>
     <p class="mt-4 text-text-muted">{sortedTags.length} tags across {posts.length} posts</p>
 
