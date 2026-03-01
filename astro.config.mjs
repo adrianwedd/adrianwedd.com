@@ -10,7 +10,12 @@ export default defineConfig({
   trailingSlash: 'always',
   integrations: [
     mdx(),
-    sitemap(),
+    sitemap({
+      serialize(item) {
+        item.lastmod = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+        return item;
+      },
+    }),
     preact(),
     tailwind(),
   ],
