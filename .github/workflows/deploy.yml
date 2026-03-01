@@ -29,6 +29,22 @@ jobs:
         env:
           GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
           GA4_SERVICE_ACCOUNT_KEY: ${{ secrets.GA4_SERVICE_ACCOUNT_KEY }}
+      - name: Checkout CV data
+        uses: actions/checkout@v4
+        with:
+          repository: adrianwedd/cv
+          path: cv-repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Copy CV data
+        run: |
+          mkdir -p src/data
+          if [ -f cv-repo/data/base-cv.json ]; then
+            cp cv-repo/data/base-cv.json src/data/base-cv.json
+            echo "CV data copied successfully"
+          else
+            echo "CV data not found, using defaults"
+          fi
       - run: npm run build
         env:
           PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
