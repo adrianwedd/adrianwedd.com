@@ -1,5 +1,6 @@
 ---
 import AudioPlayer from './islands/AudioPlayer.tsx';
+import { Picture } from 'astro:assets';
 import MindMap from './islands/MindMap.tsx';
 import Quiz from './islands/Quiz.tsx';
 import Flashcards from './islands/Flashcards.tsx';
@@ -74,11 +75,13 @@ const hasAssets = audioUrl || videoUrl || infographic || mindmap || quiz || flas
         <div>
           <h3 class="mb-3 text-sm font-medium text-text-muted">Infographic</h3>
           <a href={infographic} target="_blank" rel="noopener" class="block">
-            <img
+            <Picture
               src={infographic}
+              width={768}
+              height={1376}
+              widths={[384, 768, 1152]}
+              formats={['avif', 'webp']}
               alt={`Infographic for ${title}`}
-              width="768"
-              height="1376"
               class="hover:border-accent/50 w-full cursor-zoom-in rounded-lg border border-border transition-colors"
               loading="lazy"
               decoding="async"

@@ -242,11 +242,13 @@ const recentEpisodes = allEpisodes
               >
                 {collection.data.coverImage && (
                   <div class="img-placeholder aspect-[4/3] overflow-hidden">
-                    <img
+                    <Picture
                       src={collection.data.coverImage}
+                      width={400}
+                      height={300}
+                      widths={[200, 400, 800]}
+                      formats={['avif', 'webp']}
                       alt={collection.data.title}
-                      width="400"
-                      height="300"
                       class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
                       decoding="async"
