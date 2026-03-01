@@ -1,0 +1,14 @@
+/* TEAM */
+Adrian Wedd — Designer, Developer, Researcher
+Site: https://adrianwedd.com
+Location: Cygnet, Tasmania, Australia
+
+/* SITE */
+Last update: 2026-03-01
+Language: English
+Standards: HTML5, CSS3, WAI-ARIA
+Components: Astro 5, Tailwind CSS, Preact
+Hosting: GitHub Pages
+
+/* THANKS */
+Astro team — https://astro.build
