@@ -1,0 +1,40 @@
+# Lychee link checker config
+# https://lychee.cli.rs/
+
+# Accept these HTTP status codes as valid
+accept = [200, 206, 301, 302, 303, 307, 308]
+
+# Timeout per request in seconds
+timeout = 10
+
+# Number of retries
+max_retries = 2
+
+# Maximum number of concurrent requests
+max_concurrency = 8
+
+# Exclude these URLs/patterns from checking
+exclude = [
+  # Login-walled or rate-limited
+  "https?://(www\\.)?linkedin\\.com",
+  "https?://(www\\.)?twitter\\.com",
+  "https?://x\\.com",
+  "https?://(www\\.)?facebook\\.com",
+  "https?://(www\\.)?instagram\\.com",
+  # Archive sites (can be slow/flaky)
+  "https?://web\\.archive\\.org",
+  "https?://archive\\.today",
+  # Localhost
+  "http://localhost",
+  "http://127\\.0\\.0\\.1",
+  # Schema/vocab URLs (not real pages)
+  "https?://schema\\.org",
+  "https?://www\\.w3\\.org",
+  # Non-http schemes
+  "^mailto:",
+  "^tel:",
+]
+
+# Exclude these file patterns from being checked AS SOURCES
+# (we check dist/ output, not src/)
+exclude_path = []

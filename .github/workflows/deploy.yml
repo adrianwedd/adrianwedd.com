@@ -51,6 +51,18 @@ jobs:
             exit 1
           fi
           echo "✓ No raw <img> tags on local paths found."
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --config .lychee.toml
+            --base https://adrianwedd.com
+            --exclude-all-private
+            --accept 200,206,301,302,303,307,308
+            ./dist/**/*.html
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
