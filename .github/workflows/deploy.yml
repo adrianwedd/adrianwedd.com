@@ -32,6 +32,25 @@ jobs:
       - run: npm run build
         env:
           PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
+      - name: Enforce no raw <img> on local paths
+        run: |
+          if grep -rn '<img[[:space:]]' src/pages/ src/layouts/ src/components/ \
+            --include='*.astro' \
+            | grep -v 'https\?://' \
+            | grep -v 'data:' \
+            | grep -v 'src/components/islands/' \
+            | grep -v 'src=""' \
+            | grep -q .; then
+            echo "ERROR: Raw <img> tags with local paths found. Use Astro <Picture> instead."
+            grep -rn '<img[[:space:]]' src/pages/ src/layouts/ src/components/ \
+              --include='*.astro' \
+              | grep -v 'https\?://' \
+              | grep -v 'data:' \
+              | grep -v 'src/components/islands/' \
+              | grep -v 'src=""'
+            exit 1
+          fi
+          echo "✓ No raw <img> tags on local paths found."
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
