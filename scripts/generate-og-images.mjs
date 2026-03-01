@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Generate OG images (1200x630 PNG) for project pages.
- * Uses sharp + inline SVG. Skips projects that already have an OG image.
+ * Generate OG images (1200x630 PNG) for project and blog pages.
+ * Uses sharp + inline SVG. Skips pages that already have an OG image.
  */
 
 import fs from 'fs';
@@ -13,6 +13,7 @@ import sharp from 'sharp';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const PROJECTS_DIR = path.join(ROOT, 'src', 'content', 'projects');
+const BLOG_DIR = path.join(ROOT, 'src', 'content', 'blog');
 const OG_DIR = path.join(ROOT, 'public', 'og');
 
 const WIDTH = 1200;
@@ -108,6 +109,30 @@ async function main() {
     }
 
     const raw = fs.readFileSync(path.join(PROJECTS_DIR, file), 'utf-8');
+    const { data } = matter(raw);
+
+    if (data.draft) continue;
+
+    const svg = buildSvg(data.title || slug, data.description || '', data.tags || []);
+
+    await sharp(Buffer.from(svg)).png().toFile(outPath);
+    generated++;
+    console.log(`  created: ${slug}.png`);
+  }
+
+  // Blog posts
+  const blogFiles = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.md'));
+
+  for (const file of blogFiles) {
+    const slug = file.replace(/\.md$/, '');
+    const outPath = path.join(OG_DIR, `${slug}.png`);
+
+    if (fs.existsSync(outPath)) {
+      skipped++;
+      continue;
+    }
+
+    const raw = fs.readFileSync(path.join(BLOG_DIR, file), 'utf-8');
     const { data } = matter(raw);
 
     if (data.draft) continue;
