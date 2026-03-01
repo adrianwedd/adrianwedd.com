@@ -227,6 +227,31 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 ---
 
+## Session 2026-03-01: Identity, Services & Infrastructure ✅
+
+Unplanned work completed outside sprint structure.
+
+- ✅ [#157](https://github.com/adrianwedd/adrianwedd.com/issues/157) Services page: rewrite with real client and CV grounding
+- ✅ [#158](https://github.com/adrianwedd/adrianwedd.com/issues/158) Identity sharpening pass: about, index, now, contact, projects/index
+- ✅ [#159](https://github.com/adrianwedd/adrianwedd.com/issues/159) Inline booking widget on /contact via api.book.adrianwedd.com
+- ✅ [#160](https://github.com/adrianwedd/adrianwedd.com/issues/160) Fix analytics route collision: remove stale analytics.astro
+- ✅ [#161](https://github.com/adrianwedd/adrianwedd.com/issues/161) npm audit fix: patch 5 vulnerabilities
+
+---
+
+## Sprint 21: Consulting Presence & Conversion
+
+6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/21).
+
+- [ ] [#162](https://github.com/adrianwedd/adrianwedd.com/issues/162) Services page: add SEO-optimised title and meta for key offering keywords
+- [ ] [#163](https://github.com/adrianwedd/adrianwedd.com/issues/163) Booking widget: confirm AEST offset is DST-aware
+- [ ] [#164](https://github.com/adrianwedd/adrianwedd.com/issues/164) CV sync: wire base-cv.json changes into site content
+- [ ] [#165](https://github.com/adrianwedd/adrianwedd.com/issues/165) Add /services link to contact page 'Available for' section
+- [ ] [#166](https://github.com/adrianwedd/adrianwedd.com/issues/166) failurefirst.org: verify domain is live and owned
+- [ ] [#167](https://github.com/adrianwedd/adrianwedd.com/issues/167) Add 'Work with me' CTA card to homepage featured projects section
+
+---
+
 ## Sprint 18: Advanced SEO & Metadata
 
 6 issues. [Milestone](https://github.com/adrianwedd/adrianwedd.com/milestone/18).
