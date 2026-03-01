@@ -95,6 +95,23 @@ const seriesPosts = post.data.series
       })}
     />
   )}
+  {post.data.faq && post.data.faq.length > 0 && (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: post.data.faq.map((item) => ({
+          '@type': 'Question',
+          name: item.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.a,
+          },
+        })),
+      })}
+    />
+  )}
   {/* Reading progress bar */}
   <div
     id="reading-progress"
