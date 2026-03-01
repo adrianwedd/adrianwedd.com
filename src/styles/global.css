@@ -220,6 +220,11 @@
       opacity: 1;
       transform: none;
     }
+    .scroll-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 }
 

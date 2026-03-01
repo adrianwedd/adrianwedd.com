@@ -16,19 +16,22 @@ const { class: className = '', as: Tag = 'div', stagger } = Astro.props as any;
 </Tag>
 
 <script>
+  let observer: IntersectionObserver | undefined;
+
   function initScrollReveal() {
-    const observer = new IntersectionObserver(
+    if (observer) observer.disconnect();
+    observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('revealed');
-            observer.unobserve(entry.target);
+            observer!.unobserve(entry.target);
           }
         });
       },
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     );
-    document.querySelectorAll('.scroll-reveal:not(.revealed)').forEach((el) => observer.observe(el));
+    document.querySelectorAll('.scroll-reveal:not(.revealed)').forEach((el) => observer!.observe(el));
   }
 
   initScrollReveal();
