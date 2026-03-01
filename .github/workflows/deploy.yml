@@ -52,6 +52,20 @@ jobs:
       - run: npm run build
         env:
           PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
+      - name: Check build size budget
+        run: |
+          DIST_MB=$(du -sm dist/ | cut -f1)
+          echo "dist/ size: ${DIST_MB}MB (budget: 100MB)"
+          if [ "$DIST_MB" -gt 100 ]; then
+            echo "ERROR: dist/ is ${DIST_MB}MB, exceeds 100MB budget"
+            exit 1
+          fi
+          LARGE=$(find dist/_astro -name '*.js' -size +150k 2>/dev/null)
+          if [ -n "$LARGE" ]; then
+            echo "WARN: Large JS chunks found (>150KB uncompressed):"
+            echo "$LARGE" | while read f; do echo "  $(du -sh "$f" | cut -f1)  $f"; done
+          fi
+          echo "✓ Build size within budget"
       - name: Enforce no raw <img> on local paths
         run: |
           if grep -rn '<img' src/pages/ src/layouts/ src/components/ \
