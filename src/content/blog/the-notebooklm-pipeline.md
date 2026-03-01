@@ -67,4 +67,4 @@ The batch script `generate-all-notebook-assets.sh` iterates through every projec
 
 The pipeline itself is more interesting than any individual asset it produces. It's a pattern: take structured content, route it through an AI service, and produce multiple representations of the same material. The source of truth remains the Markdown file. Everything else is a derived view.
 
-The [pipeline documentation](https://github.com/adrianwedd/adrianwedd.com/blob/main/docs/NOTEBOOKLM_PIPELINE.md) and [automation toolkit](https://github.com/adrianwedd/notebooklm) are both open source.
+The [pipeline documentation](https://github.com/adrianwedd/adrianwedd.com/blob/main/docs/NOTEBOOKLM_PIPELINE.md) and [automation toolkit](https://github.com/adrianwedd/notebooklm-automation) are both open source.

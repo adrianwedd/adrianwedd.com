@@ -33,6 +33,12 @@ exclude = [
   # Non-http schemes
   "^mailto:",
   "^tel:",
+  # Build artifacts — Astro hashed asset paths are not content links
+  "/_astro/",
+  # Returns 403 for bots
+  "https?://claude\\.ai",
+  # Private GitHub repos (exist but return 404 to unauthenticated requests)
+  "https://github\\.com/adrianwedd/failure-first-embodied-ai",
 ]
 
 # Exclude these file patterns from being checked AS SOURCES
