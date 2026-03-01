@@ -20,13 +20,13 @@
     "@astrojs/tailwind": "^6.0.2",
     "@google-analytics/data": "^5.2.1",
     "astro": "^5.17.1",
-    "preact": "^10.28.3",
+    "preact": "^10.28.4",
     "satori": "^0.19.2",
     "tailwindcss": "^3.4.19"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
-    "@typescript-eslint/parser": "^8.55.0",
+    "@typescript-eslint/parser": "^8.56.1",
     "eslint": "^9.39.2",
     "eslint-plugin-astro": "^1.6.0",
     "gray-matter": "^4.0.3",
