@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - name: Validate content
         run: node scripts/validate-content.js
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
       - name: Fetch GA4 analytics data
         run: node scripts/fetch-ga4-data.mjs
         env:
