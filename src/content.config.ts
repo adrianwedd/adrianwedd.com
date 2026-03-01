@@ -23,6 +23,7 @@ const blog = defineCollection({
     series: z.string().optional(),
     seriesOrder: z.number().optional(),
     heroImage: z.string().optional(),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
     ...notebookAssets,
   }),
 });
