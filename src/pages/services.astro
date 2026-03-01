@@ -1,43 +1,87 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const services = [
-  { title: 'Public website', desc: 'Fast, accessible, dyslexia-friendly. No frameworks, no bloat. Deploys to Cloudflare Pages.' },
-  { title: 'Operations hub', desc: 'Private dashboard behind a password gate. Kanban board, document viewer, GitHub issues — your project in one place.' },
-  { title: 'AI workflows', desc: 'Automated content pipelines, AI-enhanced CVs, trading agents, NotebookLM audio overviews. Built and maintained.' },
+const capabilities = [
+  {
+    title: 'Build & deliver',
+    desc: 'Websites, operations tooling, automation pipelines, APIs, CLI tools. Production systems at any scale — from a multilingual Bali restaurant site to a four-site AHPRA-regulated healthcare ecosystem. Fast, constraint-led, no bloat.',
+  },
+  {
+    title: 'AI integration',
+    desc: 'LLM pipelines with real safety gates. Multi-agent orchestration with LangGraph and the Anthropic SDK. RAG. Voice AI. MCP servers. Self-hosted inference for data-sovereign deployments. CI/CD that blocks hallucinations before they ship.',
+  },
+  {
+    title: 'Security & evaluation',
+    desc: 'The adversarial instinct came from Greenpeace\'s Actions unit — planning operations against well-resourced opponents teaches you to enumerate failure modes before you move. Applied to security: penetration testing, vulnerability assessment, Essential Eight, ISO 27001, IDAM. Applied to AI: red-teaming across 120+ models and 18,000+ adversarial prompts. I find what breaks before it breaks in production.',
+  },
+];
+
+const domains = [
+  {
+    title: 'Healthcare AI',
+    desc: 'AHPRA-compliant digital presence. Cliniko API integration. NDIS-aware tooling. Clinical decision support systems tested against real case datasets. I understand the regulatory surface and build inside it — not around it.',
+  },
+  {
+    title: 'Legal intelligence',
+    desc: 'Knowledge graph construction, document analysis pipelines, RAG over large legal corpora. Transparency-first AI reasoning with auditable outputs. Built VERITAS from scratch — a full legal intelligence platform with Neo4j, Cypher, and document extraction.',
+  },
+  {
+    title: 'Government & compliance',
+    desc: 'Seven years delivering systems integration and cybersecurity for Tasmania\'s public housing sector. Wrote the department\'s first Generative AI policy. Essential Eight and ISO 27001 implementation. GenAI governance frameworks that procurement officers and executives can actually act on.',
+  },
+  {
+    title: 'Voice & telephony AI',
+    desc: 'Real-time AI phone agents: STT-to-LLM-to-TTS pipelines over Twilio with tool use, tri-layer memory, safety oracle, and human handoff. Appointment automation, customer service, crisis detection. Built and deployed end-to-end.',
+  },
+  {
+    title: 'Agentic systems',
+    desc: 'Multi-agent orchestration for complex autonomous workflows. LangGraph, self-correction loops, Qdrant vector stores, LangFuse observability. Research engines, data pipelines, document processors — systems that do work while you sleep.',
+  },
+  {
+    title: 'AI governance & policy',
+    desc: 'Model trust scoring, evaluation frameworks, red-team reporting, and governance documentation. Technical findings translated into policy-ready language without losing fidelity. Useful for organisations adopting AI who need to know what they\'re actually deploying.',
+  },
+  {
+    title: 'Self-hosted & sovereign AI',
+    desc: 'vLLM inference, local LLM orchestration, data-sovereign RAG. For healthcare providers, legal firms, and government agencies that can\'t send data to US clouds. The capability without the compliance exposure.',
+  },
+  {
+    title: 'Creative & interactive',
+    desc: 'AI-powered art installations, generative audio systems, interactive kiosks, and audiovisual experiences. Face-morphing mirrors, real-time music sequencers, granular synthesis tools. Where technical depth meets creative intent.',
+  },
 ];
 
 const caseStudies = [
   {
-    name: 'Evolve Chiropractic',
+    name: 'Evolve Evolution',
     url: 'https://evolvechiropractictas.com',
-    desc: 'Three-site ecosystem (chiropractic practice, health coaching, author hub). AHPRA-compliant content, shared brand system, private operations hub.',
-    tags: ['Healthcare', 'Multi-site', 'AHPRA'],
+    desc: 'Four-part ecosystem built for a healthcare practice: chiropractic site, personal coaching brand, author hub, and a private operations dashboard. Shared brand system across all four. AHPRA-compliant content. Password-gated hub for internal docs, kanban, and GitHub issues.',
+    tags: ['Healthcare', 'Multi-site', 'Ops hub', 'AHPRA'],
   },
   {
-    name: 'Clutterbusters',
-    url: 'https://clutterbusters.pages.dev',
-    desc: 'Public website and operations hub for a neurodivergent-specialist decluttering service. Dyslexia-first design, Lexend font, audio-first roadmap.',
-    tags: ['ND-led', 'Dyslexia-first', 'Solo operator'],
+    name: 'Tanda Pizza',
+    url: 'https://tandapizza.com',
+    desc: 'Website for an Italian pizzeria in Lovina, Bali. Five languages — English, Italian, Dutch, Indonesian, Chinese — because that\'s who walks through the door. Static, fast, no server. WhatsApp for reservations because that\'s how Bali works. Loads on a patchy connection. Does exactly what it needs to do.',
+    tags: ['Multilingual', 'Static', 'Hospitality'],
   },
   {
-    name: 'AI-Enhanced CV',
+    name: 'Living CV',
     url: 'https://adrianwedd.github.io/cv/',
-    desc: 'Self-healing CV pipeline. GitHub Actions runs twice daily: collects activity data, Claude AI optimises content, hallucination detector gates deployment.',
-    tags: ['AI', 'Self-healing', 'Open source'],
+    desc: 'Self-updating CV pipeline. GitHub Actions runs twice daily: collects real commit and language data, Claude AI refines the content, a hallucination detector validates every claim before deployment gates open. The pipeline won\'t ship fabrications. Built it for myself — which is how I build everything.',
+    tags: ['AI pipeline', 'GitHub Actions', 'Self-healing'],
   },
 ];
 
 const steps = [
-  { n: '1', title: 'Discovery call', desc: "We talk about your business, your needs, and what good looks like. No forms, no pitch deck." },
-  { n: '2', title: 'Build sprint', desc: "I design and build your site, hub, or workflow. You review at each stage. Typically 2–4 weeks." },
-  { n: '3', title: 'Ongoing retainer', desc: "Monthly check-ins, updates, new features as your business grows. You're never left to manage it alone." },
+  { n: '1', title: 'Talk', desc: "Tell me what you're trying to solve. No forms, no pitch deck. I'll tell you honestly if I can help and what I'd do." },
+  { n: '2', title: 'Build', desc: "I move fast. Iterative, visible progress. You stay in the loop at every stage. Scope is agreed upfront — no bill shock." },
+  { n: '3', title: 'Stay', desc: "Most clients keep me on. Monthly retainer: updates, new features, whatever comes up. I don't hand off and disappear." },
 ];
 ---
 
 <BaseLayout
   title="Services"
-  description="Digital infrastructure for ND-led businesses. Websites, operations hubs, and AI-enhanced workflows. Ongoing tech retainer."
+  description="AI integration, security evaluation, voice agents, healthcare and legal systems, and creative AI. Based in Tasmania, working everywhere. I build what needs building and stay involved."
 >
   {/* Hero */}
   <section
@@ -46,12 +90,13 @@ const steps = [
     class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8"
   >
     <h1 id="services-hero-heading" class="text-text">
-      Digital infrastructure for ND-led businesses
+      Consulting. Development.<br />Problem-solving. At velocity.
     </h1>
     <p class="mt-6 max-w-prose text-lg text-text-muted">
-      I build websites, private operations hubs, and AI-enhanced workflows for neurodivergent-led
-      small businesses. Ongoing tech retainer — I stay involved as your digital partner, not just a
-      one-off contractor.
+      Nearly 45 years across the stack. I work with small businesses, regulated industries,
+      and anyone with a problem worth solving — website, AI system, security audit, voice
+      agent, agentic pipeline, governance framework. I figure it out and build it. I stay
+      involved. I don't hand off and disappear.
     </p>
     <a
       href="/contact/"
@@ -63,15 +108,42 @@ const steps = [
 
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
 
-  {/* What I build */}
+  {/* What I do */}
   <section
-    id="what-i-build"
-    aria-labelledby="what-i-build-heading"
+    id="what-i-do"
+    aria-labelledby="what-i-do-heading"
     class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
   >
-    <h2 id="what-i-build-heading" class="text-text">What I build</h2>
+    <h2 id="what-i-do-heading" class="text-text">What I do</h2>
+    <p class="mt-6 max-w-prose text-text-muted">
+      I consult, architect, build, automate, integrate, and evaluate. The range is broad
+      because most real problems don't fit neatly into one category — and the best solution
+      often crosses several.
+    </p>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
-      {services.map(({ title, desc }) => (
+      {capabilities.map(({ title, desc }) => (
+        <div class="rounded-xl border border-border bg-surface-alt p-5">
+          <h3 class="font-semibold text-text">{title}</h3>
+          <p class="mt-2 text-sm text-text-muted">{desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+
+  {/* Specialist domains */}
+  <section
+    id="specialist-domains"
+    aria-labelledby="specialist-domains-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+  >
+    <h2 id="specialist-domains-heading" class="text-text">Where I go deep</h2>
+    <p class="mt-4 max-w-prose text-text-muted">
+      Specific domains where I have production experience, not just familiarity.
+    </p>
+    <div class="mt-8 grid gap-5 sm:grid-cols-2">
+      {domains.map(({ title, desc }) => (
         <div class="rounded-xl border border-border bg-surface-alt p-5">
           <h3 class="font-semibold text-text">{title}</h3>
           <p class="mt-2 text-sm text-text-muted">{desc}</p>
@@ -153,24 +225,31 @@ const steps = [
     class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
   >
     <h2 id="pricing-heading" class="text-text">Pricing</h2>
-    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
       <div class="rounded-xl border border-border bg-surface-alt p-6">
-        <h3 class="font-semibold text-text">Build</h3>
-        <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">One-off</p>
+        <h3 class="font-semibold text-text">Project</h3>
+        <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Fixed scope</p>
         <p class="mt-3 text-sm text-text-muted">
-          One-off scoped project. Public site + operations hub. Fixed price agreed upfront.
+          Scoped, priced, and agreed upfront. No surprises. Right for a defined build with a clear outcome.
         </p>
       </div>
       <div class="rounded-xl border border-border bg-surface-alt p-6">
         <h3 class="font-semibold text-text">Retainer</h3>
         <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Monthly</p>
         <p class="mt-3 text-sm text-text-muted">
-          Ongoing monthly engagement. Updates, new features, tech support. Billed monthly.
+          Ongoing capacity. Updates, new features, support, whatever comes up. Most clients move here after the initial build.
+        </p>
+      </div>
+      <div class="rounded-xl border border-border bg-surface-alt p-6">
+        <h3 class="font-semibold text-text">Consult</h3>
+        <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Day rate</p>
+        <p class="mt-3 text-sm text-text-muted">
+          Strategy, architecture, evaluation, policy. Useful when you need deep expertise for a specific question without a full build.
         </p>
       </div>
     </div>
     <p class="mt-6 text-sm text-text-muted">
-      Prices vary by scope.{' '}
+      Rates depend on scope and engagement type.{' '}
       <a href="/contact/" class="text-accent transition-colors hover:opacity-90">
         Let's talk.
       </a>
@@ -185,9 +264,10 @@ const steps = [
     aria-labelledby="services-cta-heading"
     class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8"
   >
-    <h2 id="services-cta-heading" class="text-text">Ready to get started?</h2>
+    <h2 id="services-cta-heading" class="text-text">Have a problem worth solving?</h2>
     <p class="mt-4 max-w-prose text-text-muted">
-      Based in Cygnet, Tasmania. Working with clients remotely across Australia.
+      Based in Cygnet, Tasmania. Working remotely across Australia and internationally.
+      Tell me what you're trying to do — I'll tell you how I'd approach it.
     </p>
     <a
       href="/contact/"

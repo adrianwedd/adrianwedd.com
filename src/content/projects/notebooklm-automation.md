@@ -1,6 +1,6 @@
 ---
 title: "NotebookLM Automation"
-description: "Automation toolkit for Google NotebookLM—export, generate artifacts, smart research, multi-format export."
+description: "Full programmatic control over Google NotebookLM via reverse-engineered RPC. Export, generate, automate — what Google didn't build."
 tags: ["ai", "automation", "python"]
 repo: "https://github.com/adrianwedd/notebooklm-automation"
 status: "complete"
