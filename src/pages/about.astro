@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Transparency from '../components/islands/Transparency.tsx';
 import { getCollection } from 'astro:content';
 import { slug } from '../lib/utils';
+import { cv } from '../data/cv';
 
 const featuredProjects = (await getCollection('projects'))
   .filter((p) => p.data.featured)
@@ -27,22 +28,16 @@ const recentPosts = (await getCollection('blog'))
       name: 'Adrian Wedd',
       url: 'https://adrianwedd.com',
       description: 'Systems builder, AI safety researcher, adversarial thinker. AuDHD. Formerly Greenpeace Actions unit. Based in Cygnet, Tasmania.',
-      jobTitle: 'Systems Builder & AI Safety Researcher',
+      jobTitle: cv.jobTitle,
       workLocation: {
         '@type': 'Place',
         name: 'Tasmania, Australia',
       },
-      knowsAbout: [
-        'AI Safety',
-        'Systems Analysis',
-        'Cybersecurity',
-        'Multi-agent Systems',
-        'Infrastructure Management',
-      ],
+      knowsAbout: cv.knowsAbout,
       sameAs: ['https://github.com/adrianwedd'],
       hasOccupation: {
         '@type': 'Occupation',
-        name: 'Systems Builder & AI Safety Researcher',
+        name: cv.occupationName,
         occupationLocation: { '@type': 'Country', name: 'Australia' },
       },
     })}
