@@ -4,6 +4,34 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import preact from '@astrojs/preact';
 import tailwind from '@astrojs/tailwind';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Build URL→lastmod map from content frontmatter
+function buildContentDateMap() {
+  const map = new Map();
+  const dirs = ['blog', 'projects', 'gallery', 'audio'];
+  for (const dir of dirs) {
+    const dirPath = path.join(process.cwd(), 'src/content', dir);
+    if (!fs.existsSync(dirPath)) continue;
+    for (const file of fs.readdirSync(dirPath)) {
+      if (!file.endsWith('.md') && !file.endsWith('.mdx')) continue;
+      const content = fs.readFileSync(path.join(dirPath, file), 'utf8');
+      const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+      if (!fmMatch) continue;
+      const fm = fmMatch[1];
+      const updated = fm.match(/^updatedDate:\s*(\d{4}-\d{2}-\d{2})/m)?.[1];
+      const date = fm.match(/^date:\s*(\d{4}-\d{2}-\d{2})/m)?.[1];
+      const dateStr = updated ?? date;
+      if (!dateStr) continue;
+      const slug = file.replace(/\.mdx?$/, '');
+      map.set(`/${dir}/${slug}/`, dateStr);
+    }
+  }
+  return map;
+}
+
+const contentDates = buildContentDateMap();
 
 export default defineConfig({
   site: 'https://adrianwedd.com',
@@ -12,7 +40,9 @@ export default defineConfig({
     mdx(),
     sitemap({
       serialize(item) {
-        item.lastmod = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+        const pathname = new URL(item.url).pathname;
+        const date = contentDates.get(pathname);
+        if (date) item.lastmod = date;
         return item;
       },
     }),
