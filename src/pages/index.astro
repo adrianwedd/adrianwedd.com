@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Personalisation from '../components/islands/Personalisation.tsx';
 import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
 import { slug } from '../lib/utils';
 
 const allProjects = await getCollection('projects');
@@ -119,7 +120,17 @@ const recentEpisodes = allEpisodes
               class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border bg-surface-alt no-underline shadow-subtle transition-all hover:shadow-card"
             >
               {project.data.heroImage && (
-                <img src={project.data.heroImage} alt={`${project.data.title} hero image`} width="600" height="160" class="h-40 w-full object-cover" loading="lazy" decoding="async" />
+                <Picture
+                  src={project.data.heroImage}
+                  width={600}
+                  height={160}
+                  widths={[320, 600, 900]}
+                  formats={['avif', 'webp']}
+                  alt={`${project.data.title} hero image`}
+                  class="h-40 w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
               )}
               <div class="p-6">
                 <h3 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
