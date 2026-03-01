@@ -5,7 +5,7 @@ import { slug } from '../../lib/utils';
 import fs from 'node:fs';
 
 const allProjects = await getCollection('projects');
-const projects = allProjects.sort((a, b) => {
+const projects = allProjects.filter((p) => !p.data.draft).sort((a, b) => {
   if (a.data.featured && !b.data.featured) return -1;
   if (!a.data.featured && b.data.featured) return 1;
   return b.data.date.getTime() - a.data.date.getTime();

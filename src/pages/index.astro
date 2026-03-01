@@ -7,7 +7,7 @@ import { slug } from '../lib/utils';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
-  .filter((p) => p.data.featured)
+  .filter((p) => !p.data.draft && p.data.featured)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const allPosts = await getCollection('blog');

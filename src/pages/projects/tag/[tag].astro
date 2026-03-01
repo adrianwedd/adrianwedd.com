@@ -4,7 +4,8 @@ import { getCollection } from 'astro:content';
 import { slug } from '../../../lib/utils';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
+  const allProjects = await getCollection('projects');
+  const projects = allProjects.filter((p) => !p.data.draft);
   const tags = [...new Set(projects.flatMap((p) => p.data.tags))];
   return tags.map((tag) => ({
     params: { tag },
@@ -19,8 +20,8 @@ export async function getStaticPaths() {
 
 const { tag, projects } = Astro.props;
 
-const allProjects = await getCollection('projects');
-const allTags = [...new Set(allProjects.flatMap((p) => p.data.tags))].sort();
+const allProjectsForTags = await getCollection('projects');
+const allTags = [...new Set(allProjectsForTags.filter((p) => !p.data.draft).flatMap((p) => p.data.tags))].sort();
 
 const statusColors: Record<string, string> = {
   active: 'text-green-400',

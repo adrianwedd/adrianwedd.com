@@ -3,7 +3,7 @@
 // Exit 1 on hard errors (missing required fields, description too long).
 // Prints warnings for soft issues but exits 0.
 
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import matter from 'gray-matter';
 
@@ -14,39 +14,50 @@ const PUBLIC_DIR = join(ROOT, 'public');
 const COLLECTIONS = {
   blog: {
     required: ['title', 'description', 'date', 'tags'],
-    checkAudioUrl: false,
     checkDescription: true,
   },
   projects: {
     required: ['title', 'description', 'date', 'tags'],
-    checkAudioUrl: false,
     checkDescription: true,
   },
   audio: {
     required: ['title', 'description', 'date', 'tags', 'audioUrl'],
-    checkAudioUrl: true,
     checkDescription: true,
   },
   gallery: {
     required: ['title', 'date', 'tags'],
-    checkAudioUrl: false,
     checkDescription: false,
+    checkImages: true,
   },
 };
 
 let errors = 0;
 let warnings = 0;
 
+/** Recursively find all .md/.mdx files in a directory. */
+function findMarkdownFiles(dir) {
+  const results = [];
+  if (!existsSync(dir)) return results;
+  for (const entry of readdirSync(dir)) {
+    const fullPath = join(dir, entry);
+    const stat = statSync(fullPath);
+    if (stat.isDirectory()) {
+      results.push(...findMarkdownFiles(fullPath));
+    } else if (entry.endsWith('.md') || entry.endsWith('.mdx')) {
+      results.push(fullPath);
+    }
+  }
+  return results;
+}
+
 for (const [collection, rules] of Object.entries(COLLECTIONS)) {
   const dir = join(CONTENT_DIR, collection);
   if (!existsSync(dir)) continue;
 
-  for (const file of readdirSync(dir)) {
-    if (!file.endsWith('.md') && !file.endsWith('.mdx')) continue;
-    const filePath = join(dir, file);
+  for (const filePath of findMarkdownFiles(dir)) {
     const content = readFileSync(filePath, 'utf8');
     const { data: fm } = matter(content);
-    const label = `${collection}/${file}`;
+    const label = filePath.replace(CONTENT_DIR + '/', '');
 
     // Required fields
     for (const field of rules.required) {
@@ -71,6 +82,28 @@ for (const [collection, rules] of Object.entries(COLLECTIONS)) {
       if (!existsSync(imgPath)) {
         console.warn(`WARN [${label}]: heroImage not found in public/: ${fm.heroImage}`);
         warnings++;
+      }
+    }
+
+    // Gallery images validation
+    if (rules.checkImages) {
+      if (!fm.images || !Array.isArray(fm.images)) {
+        console.error(`ERROR [${label}]: missing or invalid 'images' array`);
+        errors++;
+      } else if (fm.images.length === 0) {
+        console.warn(`WARN [${label}]: images array is empty`);
+        warnings++;
+      } else {
+        fm.images.forEach((img, i) => {
+          if (!img.src) {
+            console.error(`ERROR [${label}]: images[${i}] missing 'src'`);
+            errors++;
+          }
+          if (!img.alt) {
+            console.warn(`WARN [${label}]: images[${i}] missing 'alt'`);
+            warnings++;
+          }
+        });
       }
     }
   }
