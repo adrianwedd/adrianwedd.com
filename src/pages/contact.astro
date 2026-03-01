@@ -2,20 +2,89 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Contact" description="Get in touch with Adrian Wedd.">
+<BaseLayout title="Contact" description="Get in touch with Adrian Wedd — consulting, research collaboration, advisory, or a conversation about a real problem.">
   <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <h1 class="text-text">Contact</h1>
-    <p class="mt-4 max-w-prose text-text-muted">Based in Cygnet, Tasmania. Best reached by email.</p>
+    <p class="mt-4 max-w-prose text-text-muted">Based in Cygnet, Tasmania. Best reached by email — or book a call directly below.</p>
 
     <div class="mt-8 rounded-lg border border-border bg-surface-alt p-5">
-      <h2 class="text-base font-semibold text-text">I'm interested in</h2>
+      <h2 class="text-base font-semibold text-text">I'm available for</h2>
       <ul class="mt-3 space-y-2 text-sm text-text-muted">
-        <li>Research collaboration on AI safety and multi-agent systems</li>
-        <li>Technical advisory or consulting on AI risk and governance</li>
-        <li>Full-time roles in AI safety, systems, or infrastructure</li>
-        <li>Speaking or writing on demonstrated risk and failure analysis</li>
+        <li>Client projects — AI integration, automation, systems architecture, infrastructure</li>
+        <li>Consulting engagements where the problem is real and the approach needs to be honest</li>
+        <li>Research collaboration on AI safety, multi-agent systems, and adversarial evaluation</li>
+        <li>Technical advisory on AI risk, governance, and responsible deployment</li>
+        <li>Speaking or writing on demonstrated risk, failure analysis, and what actually works</li>
       </ul>
     </div>
+
+    {/* Booking widget */}
+    <div class="mt-12">
+      <h2 class="text-xl font-semibold text-text">Book a call</h2>
+      <p class="mt-1 text-sm text-text-muted">Pick a time that works. AEST (UTC+11). 30 minutes.</p>
+
+      <div id="booking-widget" class="mt-6">
+        {/* Date picker */}
+        <div id="booking-step-date">
+          <div class="flex items-center justify-between">
+            <button id="cal-prev" type="button" class="rounded border border-border px-3 py-1 text-sm text-text-muted transition-colors hover:border-accent hover:text-accent" aria-label="Previous week">&larr;</button>
+            <span id="cal-week-label" class="text-sm font-medium text-text"></span>
+            <button id="cal-next" type="button" class="rounded border border-border px-3 py-1 text-sm text-text-muted transition-colors hover:border-accent hover:text-accent" aria-label="Next week">&rarr;</button>
+          </div>
+          <div id="cal-days" class="mt-4 grid grid-cols-7 gap-2"></div>
+        </div>
+
+        {/* Slot picker */}
+        <div id="booking-step-slots" class="hidden mt-6">
+          <div class="flex items-center gap-3">
+            <button id="slots-back" type="button" class="text-sm text-text-muted transition-colors hover:text-accent">&larr; Back</button>
+            <span id="slots-date-label" class="text-sm font-medium text-text"></span>
+          </div>
+          <div id="slots-grid" class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4"></div>
+          <p id="slots-empty" class="hidden mt-4 text-sm text-text-muted">No slots available on this day.</p>
+          <p id="slots-error" class="hidden mt-4 text-sm text-red-400">Couldn't load slots. Try again.</p>
+        </div>
+
+        {/* Booking form */}
+        <div id="booking-step-form" class="hidden mt-6">
+          <div class="flex items-center gap-3">
+            <button id="form-back" type="button" class="text-sm text-text-muted transition-colors hover:text-accent">&larr; Back</button>
+            <span id="form-slot-label" class="text-sm font-medium text-text"></span>
+          </div>
+          <form id="booking-form" class="mt-4 space-y-4" novalidate>
+            <div>
+              <label for="book-name" class="block text-xs text-text-muted">Name</label>
+              <input id="book-name" name="name" type="text" required autocomplete="name"
+                class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none" placeholder="Your name" />
+            </div>
+            <div>
+              <label for="book-email" class="block text-xs text-text-muted">Email</label>
+              <input id="book-email" name="email" type="email" required autocomplete="email"
+                class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none" placeholder="you@example.com" />
+            </div>
+            <div>
+              <label for="book-note" class="block text-xs text-text-muted">What's it about? <span class="text-text-muted">(optional)</span></label>
+              <textarea id="book-note" name="note" rows="3"
+                class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none resize-none" placeholder="A sentence or two about what you'd like to talk through."></textarea>
+            </div>
+            <p id="form-error" class="hidden text-sm text-red-400"></p>
+            <button type="submit" id="book-submit"
+              class="rounded-lg bg-accent px-5 py-2 text-sm font-medium text-surface transition-opacity hover:opacity-90 disabled:opacity-50">
+              Confirm booking
+            </button>
+          </form>
+        </div>
+
+        {/* Confirmation */}
+        <div id="booking-step-confirm" class="hidden mt-6 rounded-lg border border-green-700 bg-green-700/10 p-5">
+          <p class="font-medium text-green-400">You're booked.</p>
+          <p id="confirm-detail" class="mt-1 text-sm text-text-muted"></p>
+          <p class="mt-2 text-sm text-text-muted">A calendar invite will arrive shortly.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider my-12 max-w-full"></div>
 
     {/* Contact details — rendered as SVG paths to deter scrapers */}
     <div class="mt-10 space-y-6">
@@ -151,6 +220,164 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </p>
   </section>
 </BaseLayout>
+
+<script>
+  const API = 'https://api.book.adrianwedd.com';
+
+  let weekOffset = 0;
+  let selectedSlot: string | null = null;
+
+  const stepDate = document.getElementById('booking-step-date')!;
+  const stepSlots = document.getElementById('booking-step-slots')!;
+  const stepForm = document.getElementById('booking-step-form')!;
+  const stepConfirm = document.getElementById('booking-step-confirm')!;
+  const calDays = document.getElementById('cal-days')!;
+  const calWeekLabel = document.getElementById('cal-week-label')!;
+  const slotsGrid = document.getElementById('slots-grid')!;
+  const slotsEmpty = document.getElementById('slots-empty')!;
+  const slotsError = document.getElementById('slots-error')!;
+  const slotsDateLabel = document.getElementById('slots-date-label')!;
+  const formSlotLabel = document.getElementById('form-slot-label')!;
+  const confirmDetail = document.getElementById('confirm-detail')!;
+  const bookingForm = document.getElementById('booking-form') as HTMLFormElement;
+  const formError = document.getElementById('form-error')!;
+  const bookSubmit = document.getElementById('book-submit') as HTMLButtonElement;
+
+  function isoDate(d: Date) {
+    return d.toISOString().slice(0, 10);
+  }
+
+  function getWeekDates(offset: number) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - ((today.getDay() + 6) % 7) + offset * 7);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      return d;
+    });
+  }
+
+  function renderWeek() {
+    const days = getWeekDates(weekOffset);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const fmt = (d: Date) => d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+    calWeekLabel.textContent = `${fmt(days[0])} – ${fmt(days[6])}`;
+    calDays.textContent = '';
+    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    days.forEach((d, i) => {
+      const isPast = d < today;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.disabled = isPast;
+      btn.dataset.date = isoDate(d);
+      btn.className = [
+        'flex flex-col items-center rounded-lg border py-2 text-xs transition-colors',
+        isPast
+          ? 'border-border text-text-muted opacity-40 cursor-not-allowed'
+          : 'border-border text-text hover:border-accent hover:text-accent cursor-pointer',
+      ].join(' ');
+      const daySpan = document.createElement('span');
+      daySpan.className = 'font-medium';
+      daySpan.textContent = dayNames[i];
+      const numSpan = document.createElement('span');
+      numSpan.className = 'mt-0.5 text-lg font-semibold leading-none';
+      numSpan.textContent = String(d.getDate());
+      btn.appendChild(daySpan);
+      btn.appendChild(numSpan);
+      if (!isPast) {
+        const dateCopy = new Date(d);
+        btn.addEventListener('click', () => selectDate(isoDate(dateCopy), dateCopy));
+      }
+      calDays.appendChild(btn);
+    });
+  }
+
+  async function selectDate(dateStr: string, d: Date) {
+    slotsDateLabel.textContent = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
+    stepDate.classList.add('hidden');
+    stepSlots.classList.remove('hidden');
+    slotsGrid.textContent = '';
+    const loading = document.createElement('p');
+    loading.className = 'col-span-4 text-xs text-text-muted';
+    loading.textContent = 'Loading…';
+    slotsGrid.appendChild(loading);
+    slotsEmpty.classList.add('hidden');
+    slotsError.classList.add('hidden');
+    try {
+      const res = await fetch(`${API}/slots?date=${dateStr}`);
+      if (!res.ok) throw new Error();
+      const data = await res.json() as { slots: string[] };
+      slotsGrid.textContent = '';
+      if (!data.slots.length) { slotsEmpty.classList.remove('hidden'); return; }
+      data.slots.forEach((time: string) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = time;
+        btn.className = 'rounded-lg border border-border px-3 py-2 text-sm text-text transition-colors hover:border-accent hover:text-accent cursor-pointer';
+        const slotIso = `${dateStr}T${time}:00+11:00`;
+        const slotLabel = `${slotsDateLabel.textContent} at ${time}`;
+        btn.addEventListener('click', () => selectSlot(slotIso, slotLabel));
+        slotsGrid.appendChild(btn);
+      });
+    } catch {
+      slotsGrid.textContent = '';
+      slotsError.classList.remove('hidden');
+    }
+  }
+
+  function selectSlot(iso: string, label: string) {
+    selectedSlot = iso;
+    formSlotLabel.textContent = label;
+    stepSlots.classList.add('hidden');
+    stepForm.classList.remove('hidden');
+  }
+
+  document.getElementById('cal-prev')!.addEventListener('click', () => { weekOffset = Math.max(weekOffset - 1, 0); renderWeek(); });
+  document.getElementById('cal-next')!.addEventListener('click', () => { weekOffset++; renderWeek(); });
+  document.getElementById('slots-back')!.addEventListener('click', () => {
+    stepSlots.classList.add('hidden');
+    stepDate.classList.remove('hidden');
+  });
+  document.getElementById('form-back')!.addEventListener('click', () => {
+    stepForm.classList.add('hidden');
+    stepSlots.classList.remove('hidden');
+  });
+
+  bookingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    formError.classList.add('hidden');
+    const name = (document.getElementById('book-name') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('book-email') as HTMLInputElement).value.trim();
+    const note = (document.getElementById('book-note') as HTMLTextAreaElement).value.trim();
+    if (!name || !email || !selectedSlot) {
+      formError.textContent = 'Please fill in your name and email.';
+      formError.classList.remove('hidden');
+      return;
+    }
+    bookSubmit.disabled = true;
+    bookSubmit.textContent = 'Booking…';
+    try {
+      const res = await fetch(`${API}/book`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, slot: selectedSlot, note }),
+      });
+      if (!res.ok) throw new Error();
+      stepForm.classList.add('hidden');
+      stepConfirm.classList.remove('hidden');
+      confirmDetail.textContent = `${name} · ${formSlotLabel.textContent}`;
+    } catch {
+      formError.textContent = 'Something went wrong. Try emailing directly.';
+      formError.classList.remove('hidden');
+      bookSubmit.disabled = false;
+      bookSubmit.textContent = 'Confirm booking';
+    }
+  });
+
+  renderWeek();
+</script>
 
 <style>
   .contact-text {
