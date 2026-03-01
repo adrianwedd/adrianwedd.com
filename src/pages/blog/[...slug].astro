@@ -36,7 +36,7 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
 
 // OG image: use heroImage if set, otherwise generated OG image
 const postSlug = slug(post.id);
-const ogImage = post.data.heroImage || `/og/${postSlug}.png`;
+const ogImage = post.data.heroImage || '/og-default.svg';
 
 // Series support
 const seriesPosts = post.data.series
@@ -53,7 +53,7 @@ const seriesPosts = post.data.series
   type="article"
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
-  preloadImage={post.data.heroImage}
+  preloadImage={typeof post.data.heroImage === 'string' ? post.data.heroImage : undefined}
 >
   <script
     type="application/ld+json"

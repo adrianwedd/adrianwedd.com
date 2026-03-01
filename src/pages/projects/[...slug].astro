@@ -51,7 +51,7 @@ const seriesProjects = project.data.series
   type="article"
   publishedDate={project.data.date.toISOString()}
   tags={project.data.tags}
-  preloadImage={project.data.heroImage}
+  preloadImage={typeof project.data.heroImage === 'string' ? project.data.heroImage : undefined}
 >
   <script
     type="application/ld+json"
