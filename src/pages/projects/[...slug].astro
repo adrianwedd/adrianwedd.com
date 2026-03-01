@@ -79,6 +79,22 @@ const seriesProjects = project.data.series
       mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(Astro.url.pathname, Astro.site).href },
     })}
   />
+  {project.data.videoUrl && (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'VideoObject',
+        name: project.data.title,
+        description: project.data.description,
+        contentUrl: new URL(project.data.videoUrl, Astro.site).href,
+        uploadDate: project.data.date.toISOString(),
+        ...(project.data.heroImage
+          ? { thumbnailUrl: new URL(project.data.heroImage, Astro.site).href }
+          : {}),
+      })}
+    />
+  )}
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumb
       crumbs={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: project.data.title }]}

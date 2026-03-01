@@ -79,6 +79,22 @@ const seriesPosts = post.data.series
       mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(Astro.url.pathname, Astro.site).href },
     })}
   />
+  {post.data.videoUrl && (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'VideoObject',
+        name: post.data.title,
+        description: post.data.description,
+        contentUrl: new URL(post.data.videoUrl, Astro.site).href,
+        uploadDate: post.data.date.toISOString(),
+        ...(post.data.heroImage
+          ? { thumbnailUrl: new URL(post.data.heroImage, Astro.site).href }
+          : {}),
+      })}
+    />
+  )}
   {/* Reading progress bar */}
   <div
     id="reading-progress"
