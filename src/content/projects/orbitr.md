@@ -1,6 +1,6 @@
 ---
 title: "orbitr"
-description: "Multi-track polyphonic AI sequencer with concentric rings. MusicGen-powered sample generation from text prompts."
+description: "Rhythm as geometry. Four tracks orbit a shared centre, each at its own tempo. Polyrhythm made spatial — and MusicGen makes the sounds."
 tags: ["music", "ai", "creative", "typescript"]
 repo: "https://github.com/adrianwedd/orbitr"
 status: "experiment"

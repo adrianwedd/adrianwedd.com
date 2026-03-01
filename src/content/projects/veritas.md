@@ -1,6 +1,6 @@
 ---
 title: "VERITAS"
-description: "AI-native legal intelligence platform for Australian legal practice with privilege protection and precision RAG."
+description: "Legal AI has an integrity problem. VERITAS addresses the efficiency-trust deficit — what AI can do quickly versus what a lawyer can trust it did correctly."
 tags: ["ai", "legal", "python"]
 repo: "https://github.com/adrianwedd/VERITAS"
 status: "active"

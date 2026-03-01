@@ -1,6 +1,6 @@
 ---
 title: "Footnotes at the Edge of Reality"
-description: "A dialogue between physics, language, and what we claim to know."
+description: "General relativity and quantum mechanics are both correct and mutually untranslatable. Two grammars for the same reality, each precise, each incomplete."
 date: 2026-02-12
 tags: ["poetry", "physics", "writing"]
 draft: true

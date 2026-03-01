@@ -1,6 +1,6 @@
 ---
 title: "Latent Self"
-description: "Interactive face-morphing mirror installation. Real-time transformations, emotion banks, and gallery-ready kiosk mode."
+description: "A mirror that shows you what you almost are. Real-time StyleGAN2 face morphing — continuous, responsive, productively uncanny."
 tags: ["art", "ai", "installation", "python"]
 repo: "https://github.com/adrianwedd/latent-self"
 status: "complete"

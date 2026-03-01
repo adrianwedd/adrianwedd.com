@@ -1,6 +1,6 @@
 ---
 title: "Space Weather"
-description: "Real-time space weather monitoring dashboard. A-Index, K-Index, Dst-Index from the Australian Bureau of Meteorology."
+description: "The electromagnetic weather that shapes every satellite, power grid, and GPS fix — made visible. The sun is a noisy neighbour."
 tags: ["web", "data-viz", "typescript", "science"]
 repo: "https://github.com/adrianwedd/space-weather"
 status: "active"

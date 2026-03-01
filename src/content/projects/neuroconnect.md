@@ -1,6 +1,6 @@
 ---
 title: "NeuroConnect"
-description: "24/7 AI voice helpline for Australians with ADHD—executive function scaffolding, crisis detection, NDIS evidence logging."
+description: "A voice helpline that knows the difference between a word-finding pause and a cry for help — and responds to both correctly."
 tags: ["ai", "health", "adhd", "python"]
 repo: "https://github.com/adrianwedd/neuroconnect"
 status: "active"
