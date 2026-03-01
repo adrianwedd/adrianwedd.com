@@ -1,6 +1,6 @@
 ---
 title: "Jailbreak Archaeology: Digging Through 4 Years of Broken Promises"
-description: "I tested 64 jailbreak scenarios across six historical eras against 2026 frontier models. The most dangerous finding: 2022 attacks still achieve ~30% success rates on today's reasoning models."
+description: "64 jailbreak scenarios across six eras tested on 2026 frontier models. Key finding: 2022 attacks still achieve ~30% success on today's reasoning models."
 date: 2026-02-13
 tags: ["ai", "safety", "research"]
 draft: false
