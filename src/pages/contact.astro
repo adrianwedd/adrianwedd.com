@@ -21,7 +21,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     {/* Booking widget */}
     <div class="mt-12">
       <h2 class="text-xl font-semibold text-text">Book a call</h2>
-      <p class="mt-1 text-sm text-text-muted">Pick a time that works. AEST (UTC+11). 30 minutes.</p>
+      <p class="mt-1 text-sm text-text-muted">Pick a time that works. Hobart time (AEST/AEDT). 30 minutes.</p>
 
       <div id="booking-widget" class="mt-6">
         {/* Date picker */}
@@ -316,7 +316,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         btn.type = 'button';
         btn.textContent = time;
         btn.className = 'rounded-lg border border-border px-3 py-2 text-sm text-text transition-colors hover:border-accent hover:text-accent cursor-pointer';
-        const slotIso = `${dateStr}T${time}:00+11:00`;
+        // Derive the correct UTC offset for this date in Australia/Hobart (DST-aware)
+        const slotLocal = new Date(`${dateStr}T${time}:00`);
+        const hobartFmt = new Intl.DateTimeFormat('en-AU', {
+          timeZone: 'Australia/Hobart',
+          timeZoneName: 'shortOffset',
+        });
+        const offsetStr = hobartFmt.formatToParts(slotLocal)
+          .find((p) => p.type === 'timeZoneName')?.value ?? 'GMT+11';
+        // offsetStr is e.g. "GMT+11" or "GMT+10" — convert to ±HH:MM
+        const offsetMatch = offsetStr.match(/GMT([+-]\d+)/);
+        const offsetHours = offsetMatch ? parseInt(offsetMatch[1], 10) : 11;
+        const offsetSign = offsetHours >= 0 ? '+' : '-';
+        const offsetAbs = Math.abs(offsetHours).toString().padStart(2, '0');
+        const slotIso = `${dateStr}T${time}:00${offsetSign}${offsetAbs}:00`;
         const slotLabel = `${slotsDateLabel.textContent} at ${time}`;
         btn.addEventListener('click', () => selectSlot(slotIso, slotLabel));
         slotsGrid.appendChild(btn);
