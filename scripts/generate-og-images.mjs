@@ -1,260 +1,128 @@
 #!/usr/bin/env node
-
 /**
- * Generate OG images for blog posts at build time.
- * Uses satori (SVG from markup) + sharp (SVG → PNG).
- * Run before `astro build` or as part of the build pipeline.
+ * Generate OG images (1200x630 PNG) for project pages.
+ * Uses sharp + inline SVG. Skips projects that already have an OG image.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import satori from 'satori';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import matter from 'gray-matter';
 import sharp from 'sharp';
 
-// Load system font for text rendering
-const FONT_PATHS = [
-  '/System/Library/Fonts/Supplemental/Arial.ttf',           // macOS
-  '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',        // Linux
-  'C:\\Windows\\Fonts\\arial.ttf',                           // Windows
-];
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, '..');
+const PROJECTS_DIR = path.join(ROOT, 'src', 'content', 'projects');
+const OG_DIR = path.join(ROOT, 'public', 'og');
 
-let fontData;
-for (const fp of FONT_PATHS) {
-  try {
-    fontData = fs.readFileSync(fp);
-    break;
-  } catch { /* try next */ }
-}
-
-let boldFontData;
-const BOLD_PATHS = [
-  '/System/Library/Fonts/Supplemental/Arial Bold.ttf',
-  '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
-  'C:\\Windows\\Fonts\\arialbd.ttf',
-];
-for (const fp of BOLD_PATHS) {
-  try {
-    boldFontData = fs.readFileSync(fp);
-    break;
-  } catch { /* try next */ }
-}
-
-if (!fontData) {
-  console.error('No system font found. Install Arial or DejaVu Sans.');
-  process.exit(1);
-}
-
-const CONTENT_DIR = 'src/content/blog';
-const OUTPUT_DIR = 'public/og';
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-// Parse frontmatter from markdown files
-function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!match) return null;
-  const fm = {};
-  for (const line of match[1].split('\n')) {
-    const [key, ...rest] = line.split(':');
-    if (key && rest.length) {
-      let val = rest.join(':').trim();
-      // Strip quotes
-      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        val = val.slice(1, -1);
-      }
-      // Parse arrays
-      if (val.startsWith('[')) {
-        try {
-          val = JSON.parse(val.replace(/'/g, '"'));
-        } catch {
-          val = val.slice(1, -1).split(',').map((s) => s.trim().replace(/"/g, ''));
-        }
-      }
-      fm[key.trim()] = val;
-    }
-  }
-  return fm;
+const COLORS = {
+  bg: '#1a181c',
+  accent: '#c48b6e',
+  text: '#e2ddd8',
+  muted: '#968e96',
+};
+
+function xmlEscape(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
-async function generateOGImage(title, description, tags, date, outputPath) {
-  const tagList = Array.isArray(tags) ? tags.slice(0, 3) : [];
-  const dateStr = date || '';
+/** Split title into lines of ~maxChars, max 2 lines */
+function splitTitle(title, maxChars = 45) {
+  if (title.length <= maxChars) return [title];
+  const words = title.split(' ');
+  let line1 = '';
+  let rest = [];
+  for (const word of words) {
+    if ((line1 + ' ' + word).trim().length <= maxChars) {
+      line1 = (line1 + ' ' + word).trim();
+    } else {
+      rest.push(word);
+    }
+  }
+  const line2 = rest.join(' ');
+  if (line2.length > maxChars + 10) {
+    return [line1, line2.slice(0, maxChars) + '...'];
+  }
+  return [line1, line2];
+}
 
-  const svg = await satori(
-    {
-      type: 'div',
-      props: {
-        style: {
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#1a181c',
-          padding: '60px',
-          fontFamily: 'sans-serif',
-        },
-        children: [
-          // Top: site name
-          {
-            type: 'div',
-            props: {
-              style: { display: 'flex', alignItems: 'center', gap: '12px' },
-              children: [
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      backgroundColor: '#c48b6e',
-                    },
-                  },
-                },
-                {
-                  type: 'span',
-                  props: {
-                    style: { color: '#968e96', fontSize: '20px' },
-                    children: 'adrianwedd.com',
-                  },
-                },
-              ],
-            },
-          },
-          // Middle: title + description
-          {
-            type: 'div',
-            props: {
-              style: { display: 'flex', flexDirection: 'column', gap: '16px' },
-              children: [
-                {
-                  type: 'h1',
-                  props: {
-                    style: {
-                      color: '#e2ddd8',
-                      fontSize: title.length > 60 ? '36px' : '48px',
-                      fontWeight: 700,
-                      lineHeight: 1.2,
-                      margin: 0,
-                    },
-                    children: title,
-                  },
-                },
-                description
-                  ? {
-                      type: 'p',
-                      props: {
-                        style: {
-                          color: '#968e96',
-                          fontSize: '22px',
-                          lineHeight: 1.4,
-                          margin: 0,
-                        },
-                        children: description.length > 120 ? description.slice(0, 117) + '...' : description,
-                      },
-                    }
-                  : null,
-              ].filter(Boolean),
-            },
-          },
-          // Bottom: tags + date
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              },
-              children: [
-                {
-                  type: 'div',
-                  props: {
-                    style: { display: 'flex', gap: '8px' },
-                    children: tagList.map((tag) => ({
-                      type: 'span',
-                      props: {
-                        style: {
-                          color: '#c48b6e',
-                          fontSize: '16px',
-                          border: '1px solid #3a3540',
-                          borderRadius: '999px',
-                          padding: '4px 12px',
-                        },
-                        children: tag,
-                      },
-                    })),
-                  },
-                },
-                dateStr
-                  ? {
-                      type: 'span',
-                      props: {
-                        style: { color: '#968e96', fontSize: '16px' },
-                        children: dateStr,
-                      },
-                    }
-                  : null,
-              ].filter(Boolean),
-            },
-          },
-        ],
-      },
-    },
-    {
-      width: WIDTH,
-      height: HEIGHT,
-      fonts: [
-        { name: 'sans-serif', data: fontData, weight: 400, style: 'normal' },
-        ...(boldFontData ? [{ name: 'sans-serif', data: boldFontData, weight: 700, style: 'normal' }] : []),
-      ],
-    },
-  );
+function truncate(str, max) {
+  if (!str || str.length <= max) return str || '';
+  return str.slice(0, max - 1) + '\u2026';
+}
 
-  const png = await sharp(Buffer.from(svg)).png({ quality: 85 }).toBuffer();
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, png);
+function buildSvg(title, description, tags) {
+  const titleLines = splitTitle(title);
+  const titleY = titleLines.length === 1 ? 280 : 250;
+  const descY = titleLines.length === 1 ? 340 : 330;
+
+  const titleElements = titleLines
+    .map(
+      (line, i) =>
+        `<text x="80" y="${titleY + i * 60}" font-family="system-ui, -apple-system, sans-serif" font-size="48" font-weight="700" fill="${COLORS.text}">${xmlEscape(line)}</text>`
+    )
+    .join('\n    ');
+
+  const desc = truncate(description, 100);
+  const tagsStr = tags.slice(0, 5).join('  \u00b7  ');
+
+  return `<svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="${COLORS.bg}"/>
+  <!-- Accent bar -->
+  <rect width="${WIDTH}" height="6" fill="${COLORS.accent}"/>
+  <!-- Accent glow -->
+  <ellipse cx="900" cy="500" rx="400" ry="200" fill="${COLORS.accent}" opacity="0.06"/>
+  <!-- Site name -->
+  <text x="80" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="${COLORS.muted}">adrianwedd.com</text>
+  <!-- Title -->
+  ${titleElements}
+  <!-- Description -->
+  <text x="80" y="${descY + (titleLines.length === 1 ? 0 : 60)}" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="${COLORS.muted}">${xmlEscape(desc)}</text>
+  <!-- Tags -->
+  <text x="80" y="560" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="${COLORS.accent}">${xmlEscape(tagsStr)}</text>
+</svg>`;
 }
 
 async function main() {
-  const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.md') || f.endsWith('.mdx'));
+  fs.mkdirSync(OG_DIR, { recursive: true });
 
+  const files = fs.readdirSync(PROJECTS_DIR).filter((f) => f.endsWith('.md'));
   let generated = 0;
   let skipped = 0;
 
   for (const file of files) {
-    const content = fs.readFileSync(path.join(CONTENT_DIR, file), 'utf-8');
-    const fm = parseFrontmatter(content);
-    if (!fm || fm.draft === 'true') {
+    const slug = file.replace(/\.md$/, '');
+    const outPath = path.join(OG_DIR, `${slug}.png`);
+
+    if (fs.existsSync(outPath)) {
       skipped++;
       continue;
     }
 
-    const slug = file.replace(/\.mdx?$/, '');
-    const outputPath = path.join(OUTPUT_DIR, `${slug}.png`);
+    const raw = fs.readFileSync(path.join(PROJECTS_DIR, file), 'utf-8');
+    const { data } = matter(raw);
 
-    // Skip if already generated
-    if (fs.existsSync(outputPath)) {
-      skipped++;
-      continue;
-    }
+    if (data.draft) continue;
 
-    const dateStr = fm.date
-      ? new Date(fm.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })
-      : '';
+    const svg = buildSvg(data.title || slug, data.description || '', data.tags || []);
 
-    try {
-      await generateOGImage(fm.title || slug, fm.description || '', fm.tags || [], dateStr, outputPath);
-      generated++;
-      console.log(`  ✓ ${slug}`);
-    } catch (err) {
-      console.error(`  ✗ ${slug}: ${err.message}`);
-    }
+    await sharp(Buffer.from(svg)).png().toFile(outPath);
+    generated++;
+    console.log(`  created: ${slug}.png`);
   }
 
-  console.log(`\nGenerated ${generated} OG images, skipped ${skipped}`);
+  console.log(`\nDone: ${generated} generated, ${skipped} skipped (already exist).`);
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
