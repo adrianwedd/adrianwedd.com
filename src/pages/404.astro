@@ -27,6 +27,40 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div id="search-404"></div>
     </div>
   </section>
+
+  <script>
+    function fire404Event() {
+      const w = window as any;
+      if (typeof w.gtag === 'function') {
+        w.gtag('event', 'page_not_found', {
+          page_path: document.location.pathname,
+          page_referrer: document.referrer || '',
+        });
+      }
+    }
+
+    function checkConsentAndFire() {
+      try {
+        const raw = localStorage.getItem('adrianwedd_consent');
+        const consent = raw ? JSON.parse(raw) : null;
+        if (consent?.analytics) fire404Event();
+      } catch {
+        // ignore
+      }
+    }
+
+    // Fire on load if consent already given
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkConsentAndFire);
+    } else {
+      checkConsentAndFire();
+    }
+
+    // Fire if user grants consent while on this page
+    window.addEventListener('consent-updated', ((e: CustomEvent) => {
+      if ((e as any).detail?.analytics) fire404Event();
+    }) as EventListener);
+  </script>
 </BaseLayout>
 
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
