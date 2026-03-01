@@ -8,6 +8,7 @@ import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
+import { Picture } from 'astro:assets';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -146,12 +147,14 @@ const seriesProjects = project.data.series
       </div>
       {
         project.data.heroImage && (
-          <img
+          <Picture
             src={project.data.heroImage}
+            width={1200}
+            height={630}
+            widths={[640, 1200, 1920]}
+            formats={['avif', 'webp']}
             alt={project.data.title}
-            width="1200"
-            height="630"
-            class="mb-10 w-full rounded-lg border border-border"
+            class="mt-8 w-full rounded-lg border border-border"
             loading="eager"
             fetchpriority="high"
           />
