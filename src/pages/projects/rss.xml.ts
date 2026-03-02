@@ -4,9 +4,9 @@ import { slug } from '../../lib/utils';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const projects = (await getCollection('projects')).sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-  );
+  const projects = (await getCollection('projects'))
+    .filter((p) => !p.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   return rss({
     title: 'Adrian Wedd — Projects',

@@ -31,15 +31,20 @@ export default function AudioPlayer({ src, title }: Props) {
     };
   }, []);
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (playing) {
-      audio.pause();
+    if (audio.paused) {
+      try {
+        await audio.play();
+        setPlaying(true);
+      } catch {
+        // Autoplay policy blocked playback
+      }
     } else {
-      audio.play();
+      audio.pause();
+      setPlaying(false);
     }
-    setPlaying(!playing);
   };
 
   const seek = (e: Event) => {

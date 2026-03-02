@@ -21,7 +21,7 @@ export async function GET(context: APIContext) {
         link: `/blog/${slug(p.id)}/`,
         categories: ['blog', ...p.data.tags],
       })),
-    ...projects.map((p) => ({
+    ...projects.filter((p) => !p.data.draft).map((p) => ({
       title: p.data.title,
       pubDate: p.data.date,
       description: p.data.description,

@@ -55,6 +55,7 @@ const gallery = defineCollection({
     description: z.string().optional(),
     date: z.coerce.date(),
     tags: z.array(z.string()).min(1),
+    draft: z.boolean().default(false),
     images: z.array(
       z.object({
         src: z.string(),
@@ -75,6 +76,7 @@ const audio = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     tags: z.array(z.string()).min(1),
+    draft: z.boolean().default(false),
     audioUrl: z.string(),
     duration: z.string().optional(),
     transcript: z.string().optional(),

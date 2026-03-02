@@ -9,7 +9,7 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title, description, image = '/og-default.svg', type = 'website', publishedDate, tags, noindex } = Astro.props;
+const { title, description, image = '/og-default.png', type = 'website', publishedDate, tags, noindex } = Astro.props;
 
 const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const canonicalUrl = new URL(pathname, Astro.site);
@@ -54,6 +54,9 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
 <meta property="og:site_name" content="Adrian Wedd" />
 
 <!-- Twitter -->
@@ -65,18 +68,18 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 {publishedDate && <meta property="article:published_time" content={publishedDate} />}
 {tags && tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
-<!-- JSON-LD -->
+<!-- JSON-LD: only emit generic WebSite schema; article/project pages emit their own richer schemas -->
+{type !== 'article' && (
 <script
   type="application/ld+json"
   set:html={JSON.stringify({
     '@context': 'https://schema.org',
-    '@type': type === 'article' ? 'Article' : 'WebSite',
+    '@type': 'WebSite',
     name: fullTitle,
     description,
     url: canonicalUrl.href,
     image: ogImageUrl.href,
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl.href },
-    ...(type === 'article' && publishedDate ? { datePublished: publishedDate } : {}),
     ...(tags ? { keywords: tags.join(', ') } : {}),
     author: {
       '@type': 'Person',
@@ -98,3 +101,4 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
     },
   })}
 />
+)}
