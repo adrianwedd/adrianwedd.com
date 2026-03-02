@@ -26,7 +26,7 @@ const { Content } = await render(project);
 const projectSlug = slug(project.id);
 const ogImage = project.data.heroImage || `/og/projects/${projectSlug}.png`;
 const allAudio = await getCollection('audio');
-const relatedEpisodes = allAudio.filter((ep) => ep.data.relatedProject === projectSlug);
+const relatedEpisodes = allAudio.filter((ep) => !ep.data.draft && ep.data.relatedProject === projectSlug);
 
 const allProjects = (await getCollection('projects'))
   .filter((p) => !p.data.draft)

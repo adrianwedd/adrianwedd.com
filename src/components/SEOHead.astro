@@ -41,11 +41,14 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — All Content" href="/rss.xml" />
 <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Blog" href="/blog/rss.xml" />
 <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Audio" href="/audio/feed.xml" />
+<link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Projects" href="/projects/rss.xml" />
 
 <!-- Preconnect for external origins -->
 <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 <link rel="dns-prefetch" href="https://api.github.com" />
+<link rel="dns-prefetch" href="https://snap.licdn.com" />
+<link rel="dns-prefetch" href="https://px.ads.linkedin.com" />
 <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
 
 <!-- Open Graph -->
@@ -68,14 +71,14 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 {publishedDate && <meta property="article:published_time" content={publishedDate} />}
 {tags && tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
-<!-- JSON-LD: only emit generic WebSite schema; article/project pages emit their own richer schemas -->
-{type !== 'article' && (
+<!-- JSON-LD: generic WebSite schema for non-article, non-homepage pages (homepage provides its own richer WebSite schema) -->
+{type !== 'article' && title !== 'Adrian Wedd' && (
 <script
   type="application/ld+json"
   set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: fullTitle,
+    name: 'Adrian Wedd',
     description,
     url: canonicalUrl.href,
     image: ogImageUrl.href,

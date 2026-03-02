@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 import { slug } from '../../../lib/utils';
 
 export async function getStaticPaths() {
-  const galleries = await getCollection('gallery');
+  const galleries = (await getCollection('gallery')).filter((g) => !g.data.draft);
   const tags = [...new Set(galleries.flatMap((g) => g.data.tags))];
   return tags.map((tag) => ({
     params: { tag },
@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 
 const { tag, galleries } = Astro.props;
 
-const allGalleries = await getCollection('gallery');
+const allGalleries = (await getCollection('gallery')).filter((g) => !g.data.draft);
 const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
 ---
 

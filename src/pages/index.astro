@@ -20,11 +20,13 @@ const recentPosts = allPosts
 
 const allGalleries = await getCollection('gallery');
 const recentGalleries = allGalleries
+  .filter((g) => !g.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
 
 const allEpisodes = await getCollection('audio');
 const recentEpisodes = allEpisodes
+  .filter((e) => !e.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
 

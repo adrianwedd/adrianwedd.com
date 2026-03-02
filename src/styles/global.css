@@ -118,7 +118,7 @@
 
   ::selection {
     background-color: var(--color-accent-muted);
-    color: var(--color-surface);
+    color: var(--color-text);
   }
 
   :focus-visible {

@@ -15,25 +15,31 @@ const { class: className = '', as: Tag = 'div', stagger } = Astro.props as any;
   <slot />
 </Tag>
 
-<script>
-  let observer: IntersectionObserver | undefined;
+<script is:inline>
+  (function () {
+    var observer;
 
-  function initScrollReveal() {
-    if (observer) observer.disconnect();
-    observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-            observer!.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
-    );
-    document.querySelectorAll('.scroll-reveal:not(.revealed)').forEach((el) => observer!.observe(el));
-  }
+    function initScrollReveal() {
+      if (observer) observer.disconnect();
+      observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      );
+      document.querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function (el) { observer.observe(el); });
+    }
 
-  initScrollReveal();
-  document.addEventListener('astro:after-swap', initScrollReveal);
+    initScrollReveal();
+    var root = document.documentElement;
+    if (!root.dataset.scrollRevealInit) {
+      root.dataset.scrollRevealInit = '1';
+      document.addEventListener('astro:after-swap', initScrollReveal);
+    }
+  })();
 </script>

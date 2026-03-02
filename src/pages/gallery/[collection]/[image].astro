@@ -13,7 +13,7 @@ interface ImageData {
 }
 
 export async function getStaticPaths() {
-  const galleries = await getCollection('gallery');
+  const galleries = (await getCollection('gallery')).filter((g) => !g.data.draft);
   const paths: Array<{
     params: { collection: string; image: string };
     props: {
