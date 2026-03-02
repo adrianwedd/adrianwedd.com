@@ -37,6 +37,7 @@ const projects = defineCollection({
     url: z.string().url().optional(),
     repo: z.string().optional(),
     updatedDate: z.coerce.date().optional(),
+    draft: z.boolean().default(false),
     status: z.enum(['active', 'complete', 'archived', 'experiment']).default('active'),
     featured: z.boolean().default(false),
     heroImage: z.string().optional(),
