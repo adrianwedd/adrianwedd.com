@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import { slug } from '../../../lib/utils';
 
 export async function getStaticPaths() {
-  const episodes = await getCollection('audio');
+  const episodes = (await getCollection('audio')).filter((e) => !e.data.draft);
   const tags = [...new Set(episodes.flatMap((e) => e.data.tags))];
   return tags.map((tag) => ({
     params: { tag },
@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 
 const { tag, episodes } = Astro.props;
 
-const allEpisodes = await getCollection('audio');
+const allEpisodes = (await getCollection('audio')).filter((e) => !e.data.draft);
 const allTags = [...new Set(allEpisodes.flatMap((e) => e.data.tags))].sort();
 ---
 

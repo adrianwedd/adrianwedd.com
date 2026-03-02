@@ -51,10 +51,10 @@ const allItems: ContentItem[] = [
     description: p.data.description,
     tags: p.data.tags,
     date: p.data.date,
-    href: p.data.url || `/projects/${slug(p.id)}/`,
+    href: `/projects/${slug(p.id)}/`,
     score: 0,
   })),
-  ...galleries.map((p) => ({
+  ...galleries.filter((p) => !p.data.draft).map((p) => ({
     id: `gallery:${p.id}`,
     type: 'gallery' as const,
     title: p.data.title,
@@ -64,7 +64,7 @@ const allItems: ContentItem[] = [
     href: `/gallery/${slug(p.id)}/`,
     score: 0,
   })),
-  ...audios.map((p) => ({
+  ...audios.filter((p) => !p.data.draft).map((p) => ({
     id: `audio:${p.id}`,
     type: 'audio' as const,
     title: p.data.title,

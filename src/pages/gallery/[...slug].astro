@@ -9,7 +9,7 @@ import { getCollection, render } from 'astro:content';
 import { slug, imageSlug } from '../../lib/utils';
 
 export async function getStaticPaths() {
-  const galleries = await getCollection('gallery');
+  const galleries = (await getCollection('gallery')).filter((g) => !g.data.draft);
   return galleries.map((gallery) => ({
     params: { slug: slug(gallery.id) },
     props: { gallery },
@@ -21,6 +21,7 @@ const collectionSlug = slug(gallery.id);
 const { Content } = await render(gallery);
 
 const allGalleries = (await getCollection('gallery'))
+  .filter((g) => !g.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const currentIndex = allGalleries.findIndex((g) => g.id === gallery.id);
 const prevGallery = currentIndex < allGalleries.length - 1 ? allGalleries[currentIndex + 1] : null;

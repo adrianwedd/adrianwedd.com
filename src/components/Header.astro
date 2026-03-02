@@ -96,24 +96,42 @@ const currentPath = Astro.url.pathname;
 <script is:inline>
   (function () {
     function initHeader() {
-      var btn = document.querySelector('.mobile-menu-btn');
-      var menu = document.querySelector('.mobile-menu');
-      var iconOpen = document.querySelector('.menu-icon-open');
-      var iconClose = document.querySelector('.menu-icon-close');
-      if (!btn || !menu || !iconOpen || !iconClose) return;
-      if (btn.dataset.headerInit) return;
-      btn.dataset.headerInit = '1';
+      var root = document.documentElement;
+      if (root.dataset.headerInit) return;
+      root.dataset.headerInit = '1';
 
-      btn.addEventListener('click', function () {
-        var expanded = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!expanded));
-        btn.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
-        menu.classList.toggle('hidden');
-        iconOpen.classList.toggle('hidden');
-        iconClose.classList.toggle('hidden');
+      // Use event delegation on document for mobile menu — avoids
+      // per-element listeners that accumulate across View Transitions
+      document.addEventListener('click', function (e) {
+        var btn = document.querySelector('.mobile-menu-btn');
+        var menu = document.querySelector('.mobile-menu');
+        var iconOpen = document.querySelector('.menu-icon-open');
+        var iconClose = document.querySelector('.menu-icon-close');
+        if (!btn || !menu || !iconOpen || !iconClose) return;
+
+        // Hamburger button click
+        if (e.target.closest && e.target.closest('.mobile-menu-btn')) {
+          var expanded = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!expanded));
+          btn.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
+          menu.classList.toggle('hidden');
+          iconOpen.classList.toggle('hidden');
+          iconClose.classList.toggle('hidden');
+          return;
+        }
+
+        // Mobile nav link click — close menu
+        if (e.target.closest && e.target.closest('.mobile-menu a[href]')) {
+          if (!menu.classList.contains('hidden')) {
+            btn.click();
+          }
+        }
       });
 
       document.addEventListener('keydown', function (e) {
+        var btn = document.querySelector('.mobile-menu-btn');
+        var menu = document.querySelector('.mobile-menu');
+        if (!btn || !menu) return;
         if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
           btn.click();
           btn.focus();
@@ -134,23 +152,12 @@ const currentPath = Astro.url.pathname;
         }
       });
 
-      menu.querySelectorAll('a[href]').forEach(function (link) {
-        link.addEventListener('click', function () {
-          if (!menu.classList.contains('hidden')) {
-            btn.click();
-          }
-        });
-      });
-
-      var header = document.querySelector('header');
-      if (header) {
-        var onScroll = function () { header.classList.toggle('header-scrolled', window.scrollY > 10); };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-      }
+      window.addEventListener('scroll', function () {
+        var header = document.querySelector('header');
+        if (header) header.classList.toggle('header-scrolled', window.scrollY > 10);
+      }, { passive: true });
     }
 
     initHeader();
-    document.addEventListener('astro:after-swap', initHeader);
   })();
 </script>

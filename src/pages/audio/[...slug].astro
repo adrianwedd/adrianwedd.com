@@ -9,7 +9,7 @@ import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
 
 export async function getStaticPaths() {
-  const episodes = await getCollection('audio');
+  const episodes = (await getCollection('audio')).filter((e) => !e.data.draft);
   return episodes.map((episode) => ({
     params: { slug: slug(episode.id) },
     props: { episode },
@@ -20,6 +20,7 @@ const { episode } = Astro.props;
 const { Content } = await render(episode);
 
 const allEpisodes = (await getCollection('audio'))
+  .filter((e) => !e.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const currentIndex = allEpisodes.findIndex((e) => e.id === episode.id);
 const prevEpisode = currentIndex < allEpisodes.length - 1 ? allEpisodes[currentIndex + 1] : null;
@@ -198,20 +199,25 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
       }
     </nav>
   </article>
-  <script>
-    const copyBtn = document.querySelector('.transcript-copy');
-    const transcriptText = document.querySelector('.transcript-text');
-    if (copyBtn && transcriptText) {
-      copyBtn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(transcriptText.textContent || '');
-          copyBtn.textContent = 'Copied!';
-          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
-        } catch {
-          copyBtn.textContent = 'Failed';
-          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
-        }
-      });
-    }
+  <script is:inline>
+    (function () {
+      function initTranscriptCopy() {
+        var copyBtn = document.querySelector('.transcript-copy');
+        var transcriptText = document.querySelector('.transcript-text');
+        if (!copyBtn || !transcriptText || copyBtn.dataset.copyInit) return;
+        copyBtn.dataset.copyInit = '1';
+        copyBtn.addEventListener('click', function () {
+          navigator.clipboard.writeText(transcriptText.textContent || '').then(function () {
+            copyBtn.textContent = 'Copied!';
+            setTimeout(function () { copyBtn.textContent = 'Copy'; }, 2000);
+          }).catch(function () {
+            copyBtn.textContent = 'Failed';
+            setTimeout(function () { copyBtn.textContent = 'Copy'; }, 2000);
+          });
+        });
+      }
+      initTranscriptCopy();
+      document.addEventListener('astro:after-swap', initTranscriptCopy);
+    })();
   </script>
 </BaseLayout>
