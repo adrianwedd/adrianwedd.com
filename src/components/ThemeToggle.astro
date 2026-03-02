@@ -38,37 +38,50 @@
   </svg>
 </button>
 
-<script>
-  function getTheme(): 'dark' | 'light' {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || stored === 'light') return stored;
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  }
-
-  function applyTheme(theme: 'dark' | 'light') {
-    document.documentElement.classList.toggle('light', theme === 'light');
-    document.querySelectorAll('.theme-icon-moon').forEach((el) => {
-      el.classList.toggle('hidden', theme === 'light');
-    });
-    document.querySelectorAll('.theme-icon-sun').forEach((el) => {
-      el.classList.toggle('hidden', theme === 'dark');
-    });
-  }
-
-  applyTheme(getTheme());
-
-  document.querySelectorAll('.theme-toggle').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const current = getTheme();
-      const next = current === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', next);
-      applyTheme(next);
-    });
-  });
-
-  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('theme')) {
-      applyTheme(e.matches ? 'light' : 'dark');
+<script is:inline>
+  (function () {
+    function getTheme() {
+      var stored = localStorage.getItem('theme');
+      if (stored === 'dark' || stored === 'light') return stored;
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     }
-  });
+
+    function applyTheme(theme) {
+      document.documentElement.classList.toggle('light', theme === 'light');
+      document.querySelectorAll('.theme-icon-moon').forEach(function (el) {
+        el.classList.toggle('hidden', theme === 'light');
+      });
+      document.querySelectorAll('.theme-icon-sun').forEach(function (el) {
+        el.classList.toggle('hidden', theme === 'dark');
+      });
+    }
+
+    applyTheme(getTheme());
+
+    var root = document.documentElement;
+    if (!root.dataset.themeToggleInit) {
+      root.dataset.themeToggleInit = '1';
+
+      // Event delegation — survives View Transitions DOM swaps
+      document.addEventListener('click', function (e) {
+        var btn = e.target.closest ? e.target.closest('.theme-toggle') : null;
+        if (!btn) return;
+        var current = getTheme();
+        var next = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', next);
+        applyTheme(next);
+      });
+
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+        if (!localStorage.getItem('theme')) {
+          applyTheme(e.matches ? 'light' : 'dark');
+        }
+      });
+
+      // Re-sync icons after View Transitions swap (new DOM, icons may be wrong)
+      document.addEventListener('astro:after-swap', function () {
+        applyTheme(getTheme());
+      });
+    }
+  })();
 </script>
