@@ -18,7 +18,7 @@ export async function GET(context: APIContext) {
       <link>${site}/audio/${slug(ep.id)}/</link>
       <guid isPermaLink="true">${site}/audio/${slug(ep.id)}/</guid>
       <pubDate>${ep.data.date.toUTCString()}</pubDate>
-      <enclosure url="${escapeXml(audioUrl)}" type="audio/mpeg" />
+      <enclosure url="${escapeXml(audioUrl)}" type="audio/mpeg" length="0" />
       ${ep.data.duration ? `<itunes:duration>${ep.data.duration}</itunes:duration>` : ''}
       <itunes:explicit>false</itunes:explicit>
     </item>`;
@@ -38,6 +38,7 @@ export async function GET(context: APIContext) {
     <itunes:author>Adrian Wedd</itunes:author>
     <itunes:category text="Technology" />
     <itunes:explicit>false</itunes:explicit>
+    <itunes:image href="${site}/og-default.png" />
     ${items}
   </channel>
 </rss>`;

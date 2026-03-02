@@ -93,56 +93,62 @@ const currentPath = Astro.url.pathname;
   </div>
 </header>
 
-<script>
-  const btn = document.querySelector('.mobile-menu-btn')!;
-  const menu = document.querySelector('.mobile-menu')!;
-  const iconOpen = document.querySelector('.menu-icon-open')!;
-  const iconClose = document.querySelector('.menu-icon-close')!;
+<script is:inline>
+  (function () {
+    function initHeader() {
+      var btn = document.querySelector('.mobile-menu-btn');
+      var menu = document.querySelector('.mobile-menu');
+      var iconOpen = document.querySelector('.menu-icon-open');
+      var iconClose = document.querySelector('.menu-icon-close');
+      if (!btn || !menu || !iconOpen || !iconClose) return;
 
-  btn.addEventListener('click', () => {
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!expanded));
-    btn.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
-    menu.classList.toggle('hidden');
-    iconOpen.classList.toggle('hidden');
-    iconClose.classList.toggle('hidden');
-  });
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        btn.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
+        menu.classList.toggle('hidden');
+        iconOpen.classList.toggle('hidden');
+        iconClose.classList.toggle('hidden');
+      });
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
-      (btn as HTMLElement).click();
-      (btn as HTMLElement).focus();
-      return;
-    }
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
+          btn.click();
+          btn.focus();
+          return;
+        }
+        if (e.key === 'Tab' && !menu.classList.contains('hidden')) {
+          var focusable = menu.querySelectorAll('a[href], button');
+          if (focusable.length === 0) return;
+          var first = focusable[0];
+          var last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
 
-    // Focus trap when mobile menu is open
-    if (e.key === 'Tab' && !menu.classList.contains('hidden')) {
-      const focusable = menu.querySelectorAll<HTMLElement>('a[href], button');
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
+      menu.querySelectorAll('a[href]').forEach(function (link) {
+        link.addEventListener('click', function () {
+          if (!menu.classList.contains('hidden')) {
+            btn.click();
+          }
+        });
+      });
 
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
+      var header = document.querySelector('header');
+      if (header) {
+        var onScroll = function () { header.classList.toggle('header-scrolled', window.scrollY > 10); };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
       }
     }
-  });
 
-  // Auto-close mobile menu when a link is clicked
-  menu.querySelectorAll('a[href]').forEach((link) => {
-    link.addEventListener('click', () => {
-      if (!menu.classList.contains('hidden')) {
-        (btn as HTMLElement).click();
-      }
-    });
-  });
-
-  const header = document.querySelector('header')!;
-  const onScroll = () => header.classList.toggle('header-scrolled', window.scrollY > 10);
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+    initHeader();
+    document.addEventListener('astro:after-swap', initHeader);
+  })();
 </script>

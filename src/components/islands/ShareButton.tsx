@@ -83,7 +83,7 @@ export default function ShareButton({ title, url }: Props) {
               key={link.label}
               href={link.href}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               class="block rounded px-3 py-2 text-xs text-text-muted no-underline transition-colors hover:bg-surface-alt hover:text-text"
               onClick={() => setOpen(false)}
             >

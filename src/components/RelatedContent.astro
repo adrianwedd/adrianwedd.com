@@ -44,7 +44,7 @@ const allItems: ContentItem[] = [
       href: `/blog/${slug(p.id)}/`,
       score: 0,
     })),
-  ...projects.map((p) => ({
+  ...projects.filter((p) => !p.data.draft).map((p) => ({
     id: `projects:${p.id}`,
     type: 'projects' as const,
     title: p.data.title,

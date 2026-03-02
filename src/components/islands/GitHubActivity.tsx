@@ -275,14 +275,14 @@ export default function GitHubActivity() {
                 <a
                   href={`https://github.com/${USERNAME}/${a.repo}`}
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   class="font-mono text-xs text-accent hover:underline"
                 >
                   {a.repo}
                 </a>
                 <span class="text-text"> — </span>
                 {a.url ? (
-                  <a href={a.url} target="_blank" rel="noopener" class="text-text hover:text-accent truncate">
+                  <a href={a.url} target="_blank" rel="noopener noreferrer" class="text-text hover:text-accent truncate">
                     {a.description}
                   </a>
                 ) : (
@@ -305,7 +305,7 @@ export default function GitHubActivity() {
                 key={r.name}
                 href={`https://github.com/${USERNAME}/${r.name}`}
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 class="inline-flex items-center gap-1.5 rounded bg-surface-alt px-2.5 py-1 text-xs border border-border hover:border-accent transition-colors"
               >
                 <span class="font-mono text-accent">{r.name}</span>
@@ -321,7 +321,7 @@ export default function GitHubActivity() {
         <a
           href={`https://github.com/${USERNAME}`}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           class="text-accent hover:underline"
         >
           GitHub
