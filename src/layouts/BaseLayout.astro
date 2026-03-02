@@ -129,13 +129,15 @@ const props = Astro.props;
     <script is:inline>
       (function () {
         function initKeyboardShortcuts() {
-          var pending = '';
-          var timer;
           var overlay = document.getElementById('kb-overlay');
           var closeBtn = document.getElementById('kb-close');
-          var helpTrigger = null;
-
           if (!overlay || !closeBtn) return;
+          if (overlay.dataset.kbInit) return;
+          overlay.dataset.kbInit = '1';
+
+          var pending = '';
+          var timer;
+          var helpTrigger = null;
 
           function isTyping(e) {
             var t = e.target;
@@ -207,7 +209,8 @@ const props = Astro.props;
 
         function initBackToTop() {
           var btn = document.getElementById('back-to-top');
-          if (!btn) return;
+          if (!btn || btn.dataset.btInit) return;
+          btn.dataset.btInit = '1';
           var shown = false;
           window.addEventListener('scroll', function () {
             var shouldShow = window.scrollY > window.innerHeight;

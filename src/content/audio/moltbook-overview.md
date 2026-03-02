@@ -2,7 +2,7 @@
 title: "When AI Systems Talk to Each Other, Safety Breaks Down"
 description: "Multi-agent AI research reveals a critical gap: single-agent safety does not compose. 1.5M interactions show 46.34% attack success rates."
 date: 2026-02-13
-tags: ["notebooklm", "ai", "safety", "research", "multi-agent"]
+tags: ["notebooklm", "ai", "ai-safety", "research", "multi-agent"]
 audioUrl: "/notebook-assets/failure-first/moltbook/audio.mp3"
 duration: "14:32"
 relatedPost: "when-ai-systems-talk-safety-breaks"

@@ -3,7 +3,7 @@ import { slug } from '../../lib/utils';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const episodes = (await getCollection('audio')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const episodes = (await getCollection('audio')).filter((e) => !e.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const site = context.site!.toString().replace(/\/$/, '');
 

@@ -24,7 +24,7 @@ images:
     caption: "ordr.fm — music collection organiser"
   - src: "/notebook-assets/dodgylegally/infographic.webp"
     alt: "dodgylegally infographic"
-    caption: "dodgylegally — legal language satire"
+    caption: "dodgylegally — creative audio sampling CLI"
 medium: "AI-generated infographic"
 collection: "project-infographics"
 coverImage: "/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp"
