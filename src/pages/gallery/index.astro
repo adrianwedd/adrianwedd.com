@@ -4,7 +4,7 @@ import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 
-const collections = (await getCollection('gallery')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const collections = (await getCollection('gallery')).filter((g) => !g.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const allTags = [...new Set(collections.flatMap((c) => c.data.tags))].sort();
 const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolean))].sort();
