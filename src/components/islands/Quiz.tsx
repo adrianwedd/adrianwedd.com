@@ -85,7 +85,12 @@ export default function Quiz({ src }: Props) {
           );
         })}
       </div>
-      {revealed && q.explanation && <p class="mt-3 text-xs text-text-muted">{q.explanation}</p>}
+      {revealed && (
+        <p class="mt-3 text-xs font-medium" role="status" aria-live="polite">
+          {selected === q.answer ? 'Correct!' : `Incorrect — the answer is: ${q.options[q.answer]}`}
+        </p>
+      )}
+      {revealed && q.explanation && <p class="mt-2 text-xs text-text-muted">{q.explanation}</p>}
       {revealed && (
         <button
           type="button"

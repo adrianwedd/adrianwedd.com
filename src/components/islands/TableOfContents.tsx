@@ -66,6 +66,7 @@ export default function TableOfContents({ contentSelector }: Props) {
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           class="flex w-full items-center justify-between px-4 py-3 text-sm font-medium text-text"
+          aria-expanded={isOpen}
         >
           On this page
           <svg
@@ -74,6 +75,7 @@ export default function TableOfContents({ contentSelector }: Props) {
             stroke="currentColor"
             stroke-width="2"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
           </svg>

@@ -130,6 +130,7 @@ try {
             <button
               type="button"
               id="project-tags-toggle"
+              aria-expanded="false"
               class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
             >
               +{allTags.length - 10} more
@@ -353,6 +354,7 @@ try {
           (el as HTMLElement).classList.toggle('hidden', !expanded);
         });
         tagToggle.textContent = expanded ? 'Show less' : tagToggle.dataset.label || '';
+        tagToggle.setAttribute('aria-expanded', String(expanded));
       });
     }
 

@@ -80,10 +80,14 @@ export default function DataTable({ src }: Props) {
               <th
                 key={i}
                 onClick={() => handleSort(i)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSort(i); } }}
+                tabIndex={0}
+                role="columnheader"
+                aria-sort={sortCol === i ? (sortAsc ? 'ascending' : 'descending') : 'none'}
                 class="cursor-pointer select-none border-b border-border px-3 py-2 text-left text-xs font-medium text-text-muted transition-colors hover:text-accent"
               >
                 {h}
-                {sortCol === i && <span class="ml-1">{sortAsc ? '\u25b2' : '\u25bc'}</span>}
+                {sortCol === i && <span class="ml-1" aria-hidden="true">{sortAsc ? '\u25b2' : '\u25bc'}</span>}
               </th>
             ))}
           </tr>
