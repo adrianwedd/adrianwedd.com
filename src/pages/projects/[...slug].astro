@@ -29,6 +29,7 @@ const allAudio = await getCollection('audio');
 const relatedEpisodes = allAudio.filter((ep) => ep.data.relatedProject === projectSlug);
 
 const allProjects = (await getCollection('projects'))
+  .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 // Prev/next navigation

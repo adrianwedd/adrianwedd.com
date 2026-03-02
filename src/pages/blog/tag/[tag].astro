@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../../lib/utils';
 
@@ -24,8 +25,9 @@ const allPosts = await getCollection('blog');
 const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) => p.data.tags))].sort();
 ---
 
-<BaseLayout title={`Posts tagged "${tag}"`} description={`Blog posts tagged with ${tag}.`}>
+<BaseLayout title={`Posts tagged "${tag}"`} description={`Blog posts tagged with ${tag} — research, engineering, and analysis.`}>
   <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumb crumbs={[{label:'Home',href:'/'},{label:'Blog',href:'/blog/'},{label:'Tags',href:'/blog/tags/'},{label:tag}]} />
     <h1 class="text-text">Tag: {tag}</h1>
     <p class="mt-2 text-text-muted">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
 

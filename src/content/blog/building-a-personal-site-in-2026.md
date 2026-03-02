@@ -3,7 +3,7 @@ title: "Building a Personal Site in 2026"
 description: "The case for constraint-led web development — Astro, zero custom fonts, no framework overhead, and a site that outlasts its builder's attention."
 date: 2026-02-15
 tags: ["engineering", "web", "astro"]
-heroImage: "/og/building-a-personal-site-in-2026.png"
+heroImage: "/og/blog/building-a-personal-site-in-2026.png"
 ---
 
 This site is built with Astro. It generates 65 static HTML pages, serves them from GitHub Pages, and loads zero custom fonts. The entire JavaScript budget is a handful of Preact islands that hydrate on idle. The rest is HTML and CSS.

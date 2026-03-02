@@ -3,7 +3,7 @@ title: "Building in the Open"
 description: "The commit log is more honest than the readme. Building in public as a practice, not a performance."
 date: 2026-02-12
 tags: ["meta", "craft"]
-heroImage: "/og/hello-world.png"
+heroImage: "/og/blog/hello-world.png"
 ---
 
 Most personal sites are museums. Carefully selected exhibits, arranged chronologically, with the messy work hidden in a drawer somewhere. This is not that.

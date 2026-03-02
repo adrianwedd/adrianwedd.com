@@ -40,19 +40,19 @@ function splitTitle(title, maxChars = 45) {
   if (title.length <= maxChars) return [title];
   const words = title.split(' ');
   let line1 = '';
-  let rest = [];
-  for (const word of words) {
-    if ((line1 + ' ' + word).trim().length <= maxChars) {
-      line1 = (line1 + ' ' + word).trim();
+  for (let i = 0; i < words.length; i++) {
+    const candidate = (line1 + ' ' + words[i]).trim();
+    if (candidate.length <= maxChars) {
+      line1 = candidate;
     } else {
-      rest.push(word);
+      const line2 = words.slice(i).join(' ');
+      if (line2.length > maxChars + 10) {
+        return [line1, line2.slice(0, maxChars) + '\u2026'];
+      }
+      return [line1, line2];
     }
   }
-  const line2 = rest.join(' ');
-  if (line2.length > maxChars + 10) {
-    return [line1, line2.slice(0, maxChars) + '...'];
-  }
-  return [line1, line2];
+  return [line1];
 }
 
 function truncate(str, max) {
