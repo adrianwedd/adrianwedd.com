@@ -46,6 +46,7 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
               <button
                 type="button"
                 id="blog-tags-toggle"
+                aria-expanded="false"
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
               >
                 +{allTags.length - 10} more
@@ -113,6 +114,7 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
           (el as HTMLElement).classList.toggle('hidden', !expanded);
         });
         toggle.textContent = expanded ? 'Show less' : toggle.dataset.label || '';
+        toggle.setAttribute('aria-expanded', String(expanded));
       });
       toggle.dataset.label = toggle.textContent || '';
     }

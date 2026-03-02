@@ -231,6 +231,7 @@ export default function TerminalEasterEgg() {
               class="flex-1 bg-transparent text-green-300 outline-none font-mono text-sm caret-green-400"
               autocomplete="off"
               spellcheck={false}
+              aria-label="Terminal command input"
             />
           </form>
         </div>

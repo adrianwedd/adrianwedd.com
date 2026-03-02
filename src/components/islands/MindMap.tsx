@@ -21,9 +21,10 @@ function Node({ node, depth = 0 }: { node: MindMapNode; depth?: number }) {
         class={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-sm transition-colors hover:bg-surface-alt ${
           hasChildren ? 'cursor-pointer' : 'cursor-default'
         }`}
+        aria-expanded={hasChildren ? open : undefined}
       >
         {hasChildren && (
-          <span class={`text-xs text-text-muted transition-transform ${open ? 'rotate-90' : ''}`}>&#9654;</span>
+          <span class={`text-xs text-text-muted transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden="true">&#9654;</span>
         )}
         {!hasChildren && <span class="w-3" />}
         <span class="text-text">{node.label}</span>
