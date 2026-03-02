@@ -70,7 +70,7 @@ const seriesProjects = project.data.series
       keywords: project.data.tags,
       applicationCategory: 'DeveloperApplication',
       ...(project.data.repo ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
-      ...(project.data.url ? { installUrl: project.data.url } : {}),
+      ...(project.data.url ? { url: project.data.url } : {}),
       ...(project.data.repo
         ? {
             codeRepository: project.data.repo.startsWith('http')
@@ -97,9 +97,9 @@ const seriesProjects = project.data.series
         description: project.data.description,
         contentUrl: new URL(project.data.videoUrl, Astro.site).href,
         uploadDate: project.data.date.toISOString(),
-        ...(project.data.heroImage
-          ? { thumbnailUrl: new URL(project.data.heroImage, Astro.site).href }
-          : {}),
+        thumbnailUrl: project.data.heroImage
+          ? new URL(project.data.heroImage, Astro.site).href
+          : new URL('/og-default.png', Astro.site).href,
       })}
     />
   )}

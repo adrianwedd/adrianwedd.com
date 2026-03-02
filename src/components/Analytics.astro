@@ -73,21 +73,20 @@
     // Send enriched page view
     sendPageView();
 
-    // Engagement tracking
+    // Document/window-level listeners (sentinel-guarded, registered once)
     trackScrollDepth();
     trackReadingTime();
+    readingTimeStart();
     trackOutboundClicks();
     trackCopyEvents();
+    trackPageTiming();
 
-    // Content tracking
+    // Per-element trackers (bind to current DOM)
     trackProjectClicks();
     trackGalleryViews();
     trackAudioPlayback();
     trackTagFilters();
     trackThemeSwitches();
-
-    // Performance
-    trackPageTiming();
   }
 
   // --- Environment helpers ---
@@ -180,66 +179,96 @@
   }
 
   // --- Scroll depth ---
+  // Registered once on window (sentinel-guarded). Resets milestones per page via trackScrollDepthReset().
+
+  let scrollTracked = new Set<number>();
 
   function trackScrollDepth() {
-    const milestones = [25, 50, 75, 100];
-    const tracked = new Set<number>();
+    const root = document.documentElement;
+    if (root.dataset.scrollDepthInit) return;
+    root.dataset.scrollDepthInit = '1';
 
-    const observer = () => {
+    const milestones = [25, 50, 75, 100];
+
+    window.addEventListener('scroll', () => {
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (docHeight <= 0) return;
       const pct = Math.round((window.scrollY / docHeight) * 100);
       for (const m of milestones) {
-        if (pct >= m && !tracked.has(m)) {
-          tracked.add(m);
+        if (pct >= m && !scrollTracked.has(m)) {
+          scrollTracked.add(m);
           gtag('event', 'scroll_depth', {
             depth: m,
             content_type: getContentType(window.location.pathname),
           });
         }
       }
-    };
+    }, { passive: true });
+  }
 
-    window.addEventListener('scroll', observer, { passive: true });
+  function trackScrollDepthReset() {
+    scrollTracked = new Set<number>();
   }
 
   // --- Reading time ---
+  // Registered once (sentinel-guarded). Clears interval on navigation via readingTimeCleanup().
+
+  let readingInterval: ReturnType<typeof setInterval> | null = null;
 
   function trackReadingTime() {
+    const root = document.documentElement;
+    if (root.dataset.readingTimeInit) return;
+    root.dataset.readingTimeInit = '1';
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') readingTimeSend();
+    });
+  }
+
+  function readingTimeStart() {
+    readingTimeCleanup();
     const contentType = getContentType(window.location.pathname);
     if (!['blog_post', 'project', 'about'].includes(contentType)) return;
 
     const start = Date.now();
-    let maxVisible = 0;
+    (window as any).__readingStart = start;
+    (window as any).__readingMax = 0;
+    (window as any).__readingType = contentType;
 
-    const tick = () => {
+    readingInterval = setInterval(() => {
       const elapsed = Math.round((Date.now() - start) / 1000);
-      if (elapsed > maxVisible) maxVisible = elapsed;
-    };
+      if (elapsed > ((window as any).__readingMax || 0)) (window as any).__readingMax = elapsed;
+    }, 1000);
+  }
 
-    const interval = setInterval(tick, 1000);
+  function readingTimeSend() {
+    if (readingInterval) clearInterval(readingInterval);
+    readingInterval = null;
+    const max = (window as any).__readingMax || 0;
+    const contentType = (window as any).__readingType || '';
+    if (max >= 5) {
+      gtag('event', 'reading_time', {
+        seconds: max,
+        content_type: contentType,
+        page_path: window.location.pathname,
+      });
+    }
+    (window as any).__readingMax = 0;
+  }
 
-    const sendReading = () => {
-      clearInterval(interval);
-      if (maxVisible >= 5) {
-        // only send if they stayed 5+ seconds
-        gtag('event', 'reading_time', {
-          seconds: maxVisible,
-          content_type: contentType,
-          page_path: window.location.pathname,
-        });
-      }
-    };
-
-    // Send on page unload or visibility change
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') sendReading();
-    });
+  function readingTimeCleanup() {
+    if (readingInterval) clearInterval(readingInterval);
+    readingInterval = null;
   }
 
   // --- Outbound clicks ---
+  // Single document listener, registered once (sentinel-guarded).
 
   function trackOutboundClicks() {
+    const root = document.documentElement;
+    if (root.dataset.outboundInit) return;
+    root.dataset.outboundInit = '1';
+
     document.addEventListener('click', (e) => {
       const link = (e.target as HTMLElement).closest('a[href]') as HTMLAnchorElement | null;
       if (!link) return;
@@ -259,8 +288,13 @@
   }
 
   // --- Copy events (content engagement signal) ---
+  // Single document listener, registered once (sentinel-guarded).
 
   function trackCopyEvents() {
+    const root = document.documentElement;
+    if (root.dataset.copyInit) return;
+    root.dataset.copyInit = '1';
+
     document.addEventListener('copy', () => {
       gtag('event', 'copy_text', {
         page_path: window.location.pathname,
@@ -357,11 +391,15 @@
   }
 
   // --- Performance: page timing ---
+  // Only meaningful on initial page load (window.load doesn't fire after VT swap).
 
   function trackPageTiming() {
     if (!('performance' in window)) return;
 
-    // Wait for load to complete
+    const root = document.documentElement;
+    if (root.dataset.pageTimingInit) return;
+    root.dataset.pageTimingInit = '1';
+
     window.addEventListener('load', () => {
       setTimeout(() => {
         const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
@@ -392,15 +430,23 @@
 
   initAnalytics();
 
-  // Re-bind per-element trackers after View Transitions DOM swap
+  // Re-bind after View Transitions DOM swap.
+  // Document/window-level listeners are sentinel-guarded (registered once).
+  // Only per-element trackers and page-specific state need re-running.
   document.addEventListener('astro:after-swap', () => {
     const consent = getConsent();
     if (consent?.analytics && typeof (window as any).gtag === 'function') {
+      // Flush reading time for previous page, start fresh for new page
+      readingTimeSend();
+      readingTimeStart();
+
+      // Reset scroll milestones for new page
+      trackScrollDepthReset();
+
+      // Send new page view
       sendPageView();
-      trackScrollDepth();
-      trackReadingTime();
-      trackOutboundClicks();
-      trackCopyEvents();
+
+      // Per-element trackers (safe to re-run — they bind to new DOM elements)
       trackProjectClicks();
       trackGalleryViews();
       trackAudioPlayback();

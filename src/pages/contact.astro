@@ -113,7 +113,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div>
           <p class="mb-1 text-xs text-text-muted">Email</p>
           {/* SVG text rendering — not selectable/indexable as plain text */}
-          <svg viewBox="0 0 280 24" class="contact-svg h-5" role="img" aria-label="Email address">
+          <svg viewBox="0 0 280 24" class="contact-svg h-5" role="img" aria-label="Email: adrian@adrianwedd.com">
             <text x="0" y="17" class="contact-text">adrian@adrianwedd.com</text>
           </svg>
         </div>
@@ -140,7 +140,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
         <div>
           <p class="mb-1 text-xs text-text-muted">Phone</p>
-          <svg viewBox="0 0 200 24" class="contact-svg h-5" role="img" aria-label="Phone number">
+          <svg viewBox="0 0 200 24" class="contact-svg h-5" role="img" aria-label="Phone: +61 407 081 084">
             <text x="0" y="17" class="contact-text">+61 407 081 084</text>
           </svg>
         </div>
@@ -249,6 +249,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   // Guard: only run on contact page
   if (!stepDate || !calDays || !bookingForm) return;
+
+  // Sentinel: prevent duplicate listener registration on VT re-visits
+  if (bookingForm.dataset.bookingInit) return;
+  bookingForm.dataset.bookingInit = '1';
 
   function isoDate(d: Date) {
     return d.toISOString().slice(0, 10);
