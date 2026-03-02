@@ -36,7 +36,7 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
 
 // OG image: use heroImage if set, otherwise generated OG image
 const postSlug = slug(post.id);
-const ogImage = post.data.heroImage || `/og/${postSlug}.png`;
+const ogImage = post.data.heroImage || `/og/blog/${postSlug}.png`;
 
 // Series support
 const seriesPosts = post.data.series
