@@ -4,7 +4,7 @@ import { slug } from '../../lib/utils';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const collections = (await getCollection('gallery')).sort(
+  const collections = (await getCollection('gallery')).filter((g) => !g.data.draft).sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime(),
   );
 

@@ -217,7 +217,11 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
         });
       }
       initTranscriptCopy();
-      document.addEventListener('astro:after-swap', initTranscriptCopy);
+      var root = document.documentElement;
+      if (!root.dataset.transcriptCopyInit) {
+        root.dataset.transcriptCopyInit = '1';
+        document.addEventListener('astro:after-swap', initTranscriptCopy);
+      }
     })();
   </script>
 </BaseLayout>

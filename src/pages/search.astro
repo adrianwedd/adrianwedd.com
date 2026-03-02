@@ -20,27 +20,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </div>
   </section>
-</BaseLayout>
 
-<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-<script is:inline>
-  window.addEventListener('DOMContentLoaded', async () => {
-    const script = document.createElement('script');
-    script.src = '/pagefind/pagefind-ui.js';
-    script.onload = () => {
-      new PagefindUI({
-        element: '#search',
-        showSubResults: true,
-        showImages: true,
-      });
-      var skeleton = document.getElementById('search-skeleton');
-      if (skeleton) skeleton.remove();
-    };
-    document.head.appendChild(script);
-  });
-</script>
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script is:inline>
+    (function () {
+      function initPagefind() {
+        var container = document.getElementById('search');
+        if (!container || container.dataset.pagefindInit) return;
+        container.dataset.pagefindInit = '1';
+        var script = document.createElement('script');
+        script.src = '/pagefind/pagefind-ui.js';
+        script.onload = function () {
+          new PagefindUI({
+            element: '#search',
+            showSubResults: true,
+            showImages: true,
+          });
+          var skeleton = document.getElementById('search-skeleton');
+          if (skeleton) skeleton.remove();
+        };
+        document.head.appendChild(script);
+      }
+      initPagefind();
+      document.addEventListener('astro:page-load', initPagefind);
+    })();
+  </script>
 
-<style is:global>
+  <style is:global>
   /* Pagefind UI theme overrides — maps to site's --color-* custom properties */
   :root {
     --pagefind-ui-scale: 1;
@@ -110,3 +116,4 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     color: var(--color-text) !important;
   }
 </style>
+</BaseLayout>

@@ -61,21 +61,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       if ((e as any).detail?.analytics) fire404Event();
     }) as EventListener);
   </script>
-</BaseLayout>
 
-<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-<script is:inline>
-  window.addEventListener('DOMContentLoaded', async () => {
-    var script = document.createElement('script');
-    script.src = '/pagefind/pagefind-ui.js';
-    script.onload = function () {
-      new PagefindUI({
-        element: '#search-404',
-        showSubResults: false,
-        showImages: false,
-        autofocus: false,
-      });
-    };
-    document.head.appendChild(script);
-  });
-</script>
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script is:inline>
+    (function () {
+      function initPagefind404() {
+        var container = document.getElementById('search-404');
+        if (!container || container.dataset.pagefindInit) return;
+        container.dataset.pagefindInit = '1';
+        var script = document.createElement('script');
+        script.src = '/pagefind/pagefind-ui.js';
+        script.onload = function () {
+          new PagefindUI({
+            element: '#search-404',
+            showSubResults: false,
+            showImages: false,
+            autofocus: false,
+          });
+        };
+        document.head.appendChild(script);
+      }
+      initPagefind404();
+      document.addEventListener('astro:page-load', initPagefind404);
+    })();
+  </script>
+</BaseLayout>

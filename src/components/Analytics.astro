@@ -14,6 +14,7 @@
 
 <script>
   const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '';
+  const LI_PARTNER_ID = '8890876';
 
   type ConsentState = { analytics: boolean; personalisation: boolean; timestamp: number };
 
@@ -29,6 +30,27 @@
   function gtag(...args: any[]) {
     (window as any).dataLayer = (window as any).dataLayer || [];
     (window as any).dataLayer.push(arguments);
+  }
+
+  function loadLinkedInInsight() {
+    if (!LI_PARTNER_ID || document.getElementById('li-insight-script')) return;
+
+    (window as any)._linkedin_partner_id = LI_PARTNER_ID;
+    (window as any)._linkedin_data_partner_ids = (window as any)._linkedin_data_partner_ids || [];
+    (window as any)._linkedin_data_partner_ids.push(LI_PARTNER_ID);
+
+    if (!(window as any).lintrk) {
+      (window as any).lintrk = function (a: any, b: any) {
+        (window as any).lintrk.q.push([a, b]);
+      };
+      (window as any).lintrk.q = [];
+    }
+
+    const script = document.createElement('script');
+    script.id = 'li-insight-script';
+    script.async = true;
+    script.src = 'https://snap.licdn.com/li.lms-analytics/insight.min.js';
+    document.head.appendChild(script);
   }
 
   function loadGA4() {
@@ -363,11 +385,13 @@
   const consent = getConsent();
   if (consent?.analytics) {
     loadGA4();
+    loadLinkedInInsight();
   }
 
   window.addEventListener('consent-updated', ((e: CustomEvent<ConsentState>) => {
     if (e.detail.analytics) {
       loadGA4();
+      loadLinkedInInsight();
     }
   }) as EventListener);
 </script>

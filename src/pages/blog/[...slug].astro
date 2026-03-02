@@ -328,7 +328,11 @@ const seriesPosts = post.data.series
       }
 
       initBlogScripts();
-      document.addEventListener('astro:after-swap', initBlogScripts);
+      var root = document.documentElement;
+      if (!root.dataset.blogScriptInit) {
+        root.dataset.blogScriptInit = '1';
+        document.addEventListener('astro:after-swap', initBlogScripts);
+      }
     })();
   </script>
 </BaseLayout>

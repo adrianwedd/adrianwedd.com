@@ -6,7 +6,7 @@ import { slug } from '../lib/utils';
 import { cv } from '../data/cv';
 
 const featuredProjects = (await getCollection('projects'))
-  .filter((p) => p.data.featured)
+  .filter((p) => !p.data.draft && p.data.featured)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 5);
 
@@ -34,7 +34,7 @@ const recentPosts = (await getCollection('blog'))
         name: 'Tasmania, Australia',
       },
       knowsAbout: cv.knowsAbout,
-      sameAs: ['https://github.com/adrianwedd'],
+      sameAs: ['https://github.com/adrianwedd', 'https://www.linkedin.com/in/adrianwedd/'],
       hasOccupation: {
         '@type': 'Occupation',
         name: cv.occupationName,

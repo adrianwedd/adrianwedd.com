@@ -4,9 +4,9 @@ import GitHubActivity from '../components/islands/GitHubActivity';
 import { getCollection } from 'astro:content';
 
 const blogPosts = (await getCollection('blog')).filter((p) => !p.data.draft);
-const projects = await getCollection('projects');
-const galleries = await getCollection('gallery');
-const episodes = await getCollection('audio');
+const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
+const galleries = (await getCollection('gallery')).filter((g) => !g.data.draft);
+const episodes = (await getCollection('audio')).filter((e) => !e.data.draft);
 
 const totalWords = blogPosts.reduce((sum, p) => sum + (p.body ? p.body.split(/\s+/).length : 0), 0);
 const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);

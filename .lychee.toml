@@ -39,6 +39,8 @@ exclude = [
   "https?://claude\\.ai",
   # Private GitHub repos (exist but return 404 to unauthenticated requests)
   "https://github\\.com/adrianwedd/failure-first-embodied-ai",
+  "https://github\\.com/adrianwedd/VERITAS",
+  "https://github\\.com/adrianwedd/orchestrix",
 ]
 
 # Exclude these file patterns from being checked AS SOURCES
