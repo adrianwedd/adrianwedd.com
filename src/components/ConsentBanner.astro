@@ -60,74 +60,68 @@
   </div>
 </div>
 
-<script>
-  type ConsentState = {
-    analytics: boolean;
-    personalisation: boolean;
-    timestamp: number;
-  };
+<script is:inline>
+  (function () {
+    var CONSENT_KEY = 'adrianwedd_consent';
 
-  const CONSENT_KEY = 'adrianwedd_consent';
-
-  function getConsent(): ConsentState | null {
-    try {
-      const raw = localStorage.getItem(CONSENT_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch {
-      return null;
+    function getConsent() {
+      try {
+        var raw = localStorage.getItem(CONSENT_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
     }
-  }
 
-  function setConsent(state: ConsentState) {
-    localStorage.setItem(CONSENT_KEY, JSON.stringify(state));
-    document.cookie = `consent=${state.analytics ? 'a' : ''}${state.personalisation ? 'p' : ''}; path=/; max-age=31536000; SameSite=Lax`;
-    window.dispatchEvent(new CustomEvent('consent-updated', { detail: state }));
-  }
-
-  function isDNT(): boolean {
-    return navigator.doNotTrack === '1' || (window as any).doNotTrack === '1';
-  }
-
-  function showBanner() {
-    document.getElementById('consent-banner')!.classList.remove('hidden');
-  }
-
-  function hideBanner() {
-    document.getElementById('consent-banner')!.classList.add('hidden');
-  }
-
-  function save(analytics: boolean, personalisation: boolean) {
-    setConsent({ analytics, personalisation, timestamp: Date.now() });
-    hideBanner();
-  }
-
-  // Check if we already have consent
-  const existing = getConsent();
-  if (!existing) {
-    if (isDNT()) {
-      save(false, false);
-    } else {
-      showBanner();
+    function setConsent(state) {
+      localStorage.setItem(CONSENT_KEY, JSON.stringify(state));
+      document.cookie = 'consent=' + (state.analytics ? 'a' : '') + (state.personalisation ? 'p' : '') + '; path=/; max-age=31536000; SameSite=Lax';
+      window.dispatchEvent(new CustomEvent('consent-updated', { detail: state }));
     }
-  }
 
-  // Wire up buttons
-  document.getElementById('consent-accept-all')!.addEventListener('click', () => {
-    save(true, true);
-  });
+    function save(analytics, personalisation) {
+      setConsent({ analytics: analytics, personalisation: personalisation, timestamp: Date.now() });
+      var banner = document.getElementById('consent-banner');
+      if (banner) banner.classList.add('hidden');
+    }
 
-  document.getElementById('consent-reject')!.addEventListener('click', () => {
-    save(false, false);
-  });
+    function initConsent() {
+      var banner = document.getElementById('consent-banner');
+      if (!banner) return;
 
-  document.getElementById('consent-manage')!.addEventListener('click', () => {
-    document.getElementById('consent-expanded')!.classList.toggle('hidden');
-  });
+      var existing = getConsent();
+      if (!existing) {
+        if (navigator.doNotTrack === '1' || window.doNotTrack === '1') {
+          save(false, false);
+        } else {
+          banner.classList.remove('hidden');
+        }
+      }
+    }
 
-  document.getElementById('consent-accept-selected')!.addEventListener('click', () => {
-    const analytics = (document.getElementById('consent-analytics') as HTMLInputElement).checked;
-    const personalisation = (document.getElementById('consent-personalisation') as HTMLInputElement).checked;
-    save(analytics, personalisation);
-  });
+    // Event delegation — survives DOM swaps
+    var root = document.documentElement;
+    if (!root.dataset.consentInit) {
+      root.dataset.consentInit = '1';
+      document.addEventListener('click', function (e) {
+        var target = e.target.closest ? e.target.closest('[id]') : null;
+        if (!target) return;
+        var id = target.id;
+        if (id === 'consent-accept-all') { save(true, true); }
+        else if (id === 'consent-reject') { save(false, false); }
+        else if (id === 'consent-manage') {
+          var expanded = document.getElementById('consent-expanded');
+          if (expanded) expanded.classList.toggle('hidden');
+        }
+        else if (id === 'consent-accept-selected') {
+          var analytics = document.getElementById('consent-analytics');
+          var personalisation = document.getElementById('consent-personalisation');
+          save(analytics ? analytics.checked : false, personalisation ? personalisation.checked : false);
+        }
+      });
+    }
+
+    initConsent();
+    document.addEventListener('astro:after-swap', initConsent);
+  })();
 </script>
