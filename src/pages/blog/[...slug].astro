@@ -92,9 +92,9 @@ const seriesPosts = post.data.series
         description: post.data.description,
         contentUrl: new URL(post.data.videoUrl, Astro.site).href,
         uploadDate: post.data.date.toISOString(),
-        ...(post.data.heroImage
-          ? { thumbnailUrl: new URL(post.data.heroImage, Astro.site).href }
-          : {}),
+        thumbnailUrl: post.data.heroImage
+          ? new URL(post.data.heroImage, Astro.site).href
+          : new URL('/og-default.png', Astro.site).href,
       })}
     />
   )}

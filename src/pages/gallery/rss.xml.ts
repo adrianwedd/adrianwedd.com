@@ -1,7 +1,18 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
+import { statSync } from 'node:fs';
+import { join } from 'node:path';
 import type { APIContext } from 'astro';
+
+function getFileSize(path: string): number {
+  if (path.startsWith('http')) return 0;
+  try {
+    return statSync(join(process.cwd(), 'public', path)).size;
+  } catch {
+    return 0;
+  }
+}
 
 export async function GET(context: APIContext) {
   const collections = (await getCollection('gallery')).filter((g) => !g.data.draft).sort(
@@ -25,7 +36,7 @@ export async function GET(context: APIContext) {
             enclosure: {
               url: `${site}${collection.data.coverImage}`,
               type: 'image/webp',
-              length: 0,
+              length: getFileSize(collection.data.coverImage),
             },
           }
         : {}),
