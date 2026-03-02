@@ -55,74 +55,81 @@ const { images } = Astro.props;
 </div>
 
 <script define:vars={{ images }}>
-  const lightbox = document.getElementById('lightbox');
-  const img = document.getElementById('lightbox-img');
-  const caption = document.getElementById('lightbox-caption');
-  const closeBtn = document.getElementById('lightbox-close');
-  const prevBtn = document.getElementById('lightbox-prev');
-  const nextBtn = document.getElementById('lightbox-next');
-  let currentIndex = 0;
-  let triggerElement = null;
+  (function () {
+    var currentIndex = 0;
+    var triggerElement = null;
 
-  function show(index, trigger) {
-    currentIndex = index;
-    triggerElement = trigger || document.activeElement;
-    const image = images[index];
-    img.src = image.src;
-    img.alt = image.alt;
-    caption.textContent = image.caption || '';
-    lightbox.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    closeBtn.focus();
-  }
+    function getLightbox() { return document.getElementById('lightbox'); }
+    function getImg() { return document.getElementById('lightbox-img'); }
+    function getCaption() { return document.getElementById('lightbox-caption'); }
+    function getCloseBtn() { return document.getElementById('lightbox-close'); }
+    function getPrevBtn() { return document.getElementById('lightbox-prev'); }
+    function getNextBtn() { return document.getElementById('lightbox-next'); }
 
-  function hide() {
-    lightbox.classList.add('hidden');
-    document.body.style.overflow = '';
-    if (triggerElement && triggerElement.focus) {
-      triggerElement.focus();
+    function show(index, trigger) {
+      currentIndex = index;
+      triggerElement = trigger || document.activeElement;
+      var image = images[index];
+      var img = getImg();
+      var caption = getCaption();
+      var lightbox = getLightbox();
+      var closeBtn = getCloseBtn();
+      if (img) { img.src = image.src; img.alt = image.alt; }
+      if (caption) { caption.textContent = image.caption || ''; }
+      if (lightbox) { lightbox.classList.remove('hidden'); }
+      document.body.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
     }
-    triggerElement = null;
-  }
 
-  function prev() {
-    show((currentIndex - 1 + images.length) % images.length);
-  }
-
-  function next() {
-    show((currentIndex + 1) % images.length);
-  }
-
-  document.querySelectorAll('.gallery-trigger').forEach((btn) => {
-    btn.addEventListener('click', () => show(parseInt(btn.dataset.index), btn));
-  });
-
-  closeBtn.addEventListener('click', hide);
-  prevBtn.addEventListener('click', prev);
-  nextBtn.addEventListener('click', next);
-
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox || e.target.parentElement === lightbox) hide();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (lightbox.classList.contains('hidden')) return;
-    if (e.key === 'Escape') { hide(); return; }
-    if (e.key === 'ArrowLeft') { prev(); return; }
-    if (e.key === 'ArrowRight') { next(); return; }
-
-    // Focus trap: keep Tab within lightbox
-    if (e.key === 'Tab') {
-      const focusable = [closeBtn, prevBtn, nextBtn];
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
+    function hide() {
+      var lightbox = getLightbox();
+      if (lightbox) lightbox.classList.add('hidden');
+      document.body.style.overflow = '';
+      if (triggerElement && triggerElement.focus) triggerElement.focus();
+      triggerElement = null;
     }
-  });
+
+    function prev() { show((currentIndex - 1 + images.length) % images.length); }
+    function next() { show((currentIndex + 1) % images.length); }
+
+    // Per-element listeners for gallery triggers (safe — new elements each page)
+    document.querySelectorAll('.gallery-trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () { show(parseInt(btn.dataset.index), btn); });
+    });
+
+    // Event delegation for lightbox controls — guarded to avoid accumulation
+    var root = document.documentElement;
+    if (!root.dataset.lightboxInit) {
+      root.dataset.lightboxInit = '1';
+
+      document.addEventListener('click', function (e) {
+        var target = e.target.closest ? e.target.closest('[id]') : null;
+        if (!target) return;
+        if (target.id === 'lightbox-close') { hide(); return; }
+        if (target.id === 'lightbox-prev') { prev(); return; }
+        if (target.id === 'lightbox-next') { next(); return; }
+        // Backdrop click
+        var lightbox = getLightbox();
+        if (lightbox && (e.target === lightbox || (e.target.parentElement === lightbox))) hide();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        var lightbox = getLightbox();
+        if (!lightbox || lightbox.classList.contains('hidden')) return;
+        if (e.key === 'Escape') { hide(); return; }
+        if (e.key === 'ArrowLeft') { prev(); return; }
+        if (e.key === 'ArrowRight') { next(); return; }
+        if (e.key === 'Tab') {
+          var focusable = [getCloseBtn(), getPrevBtn(), getNextBtn()].filter(Boolean);
+          var first = focusable[0];
+          var last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault(); last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault(); first.focus();
+          }
+        }
+      });
+    }
+  })();
 </script>

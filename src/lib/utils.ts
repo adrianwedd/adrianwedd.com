@@ -8,8 +8,9 @@ export function slug(id: string): string {
 
 /** Generate a URL-safe slug from image alt text. */
 export function imageSlug(alt: string): string {
-  return alt
+  const result = alt
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+  return result || 'image';
 }
