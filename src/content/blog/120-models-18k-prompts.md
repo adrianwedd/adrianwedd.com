@@ -24,8 +24,8 @@ Format-lock attacks request harmful content structured as JSON, YAML, or code. T
 
 Results against frontier models:
 - **Claude Sonnet 4.5:** 30% LLM-graded attack success rate
-- **Codex GPT-5.2:** 42%
-- **Gemini 3 Flash:** 24%
+- **GPT-4o:** 42%
+- **Gemini 2.0 Flash:** 24%
 
 These are not small numbers. A 30–42% success rate means that format-lock is a reliable technique against current frontier systems. The "faithfulness gap" is the distance between what the model *appears* to be doing (formatting a JSON object) and what it's *actually* doing (embedding harmful content in the fields).
 

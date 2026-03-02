@@ -3,6 +3,7 @@ title: "Welcome to the Workshop"
 description: "An introduction to this space — what it is, what it isn't, and what it might become."
 date: 2026-02-12
 tags: ["meta", "introduction"]
+draft: true
 audioUrl: "/audio/welcome.mp3"
 duration: "5:00"
 ---

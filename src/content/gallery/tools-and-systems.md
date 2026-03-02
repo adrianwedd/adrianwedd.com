@@ -24,7 +24,7 @@ images:
     caption: "Strategic Acquisitions — M&A analysis tools"
   - src: "/notebook-assets/tanda-pizza/infographic.webp"
     alt: "Tanda Pizza infographic"
-    caption: "Tanda Pizza — workforce scheduling"
+    caption: "Tanda Pizza — multilingual pizzeria website"
   - src: "/notebook-assets/tel3sis/infographic.webp"
     alt: "Tel3sis infographic"
     caption: "Tel3sis — telecommunications platform"

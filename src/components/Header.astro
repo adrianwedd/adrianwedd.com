@@ -101,6 +101,8 @@ const currentPath = Astro.url.pathname;
       var iconOpen = document.querySelector('.menu-icon-open');
       var iconClose = document.querySelector('.menu-icon-close');
       if (!btn || !menu || !iconOpen || !iconClose) return;
+      if (btn.dataset.headerInit) return;
+      btn.dataset.headerInit = '1';
 
       btn.addEventListener('click', function () {
         var expanded = btn.getAttribute('aria-expanded') === 'true';
