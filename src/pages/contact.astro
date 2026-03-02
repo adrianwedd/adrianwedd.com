@@ -225,26 +225,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <script>
+  function initBookingWidget() {
   const API = 'https://api.book.adrianwedd.com';
 
   let weekOffset = 0;
   let selectedSlot: string | null = null;
 
-  const stepDate = document.getElementById('booking-step-date')!;
-  const stepSlots = document.getElementById('booking-step-slots')!;
-  const stepForm = document.getElementById('booking-step-form')!;
-  const stepConfirm = document.getElementById('booking-step-confirm')!;
-  const calDays = document.getElementById('cal-days')!;
-  const calWeekLabel = document.getElementById('cal-week-label')!;
-  const slotsGrid = document.getElementById('slots-grid')!;
-  const slotsEmpty = document.getElementById('slots-empty')!;
-  const slotsError = document.getElementById('slots-error')!;
-  const slotsDateLabel = document.getElementById('slots-date-label')!;
-  const formSlotLabel = document.getElementById('form-slot-label')!;
-  const confirmDetail = document.getElementById('confirm-detail')!;
-  const bookingForm = document.getElementById('booking-form') as HTMLFormElement;
-  const formError = document.getElementById('form-error')!;
-  const bookSubmit = document.getElementById('book-submit') as HTMLButtonElement;
+  const stepDate = document.getElementById('booking-step-date');
+  const stepSlots = document.getElementById('booking-step-slots');
+  const stepForm = document.getElementById('booking-step-form');
+  const stepConfirm = document.getElementById('booking-step-confirm');
+  const calDays = document.getElementById('cal-days');
+  const calWeekLabel = document.getElementById('cal-week-label');
+  const slotsGrid = document.getElementById('slots-grid');
+  const slotsEmpty = document.getElementById('slots-empty');
+  const slotsError = document.getElementById('slots-error');
+  const slotsDateLabel = document.getElementById('slots-date-label');
+  const formSlotLabel = document.getElementById('form-slot-label');
+  const confirmDetail = document.getElementById('confirm-detail');
+  const bookingForm = document.getElementById('booking-form') as HTMLFormElement | null;
+  const formError = document.getElementById('form-error');
+  const bookSubmit = document.getElementById('book-submit') as HTMLButtonElement | null;
+
+  // Guard: only run on contact page
+  if (!stepDate || !calDays || !bookingForm) return;
 
   function isoDate(d: Date) {
     return d.toISOString().slice(0, 10);
@@ -266,8 +270,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const days = getWeekDates(weekOffset);
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const fmt = (d: Date) => d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
-    calWeekLabel.textContent = `${fmt(days[0])} – ${fmt(days[6])}`;
-    calDays.textContent = '';
+    calWeekLabel!.textContent = `${fmt(days[0])} – ${fmt(days[6])}`;
+    calDays!.textContent = '';
     const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     days.forEach((d, i) => {
       const isPast = d < today;
@@ -298,22 +302,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   async function selectDate(dateStr: string, d: Date) {
-    slotsDateLabel.textContent = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
-    stepDate.classList.add('hidden');
-    stepSlots.classList.remove('hidden');
-    slotsGrid.textContent = '';
+    slotsDateLabel!.textContent = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
+    stepDate!.classList.add('hidden');
+    stepSlots!.classList.remove('hidden');
+    slotsGrid!.textContent = '';
     const loading = document.createElement('p');
     loading.className = 'col-span-4 text-xs text-text-muted';
     loading.textContent = 'Loading…';
-    slotsGrid.appendChild(loading);
-    slotsEmpty.classList.add('hidden');
-    slotsError.classList.add('hidden');
+    slotsGrid!.appendChild(loading);
+    slotsEmpty!.classList.add('hidden');
+    slotsError!.classList.add('hidden');
     try {
       const res = await fetch(`${API}/slots?date=${dateStr}`);
       if (!res.ok) throw new Error();
       const data = await res.json() as { slots: string[] };
-      slotsGrid.textContent = '';
-      if (!data.slots.length) { slotsEmpty.classList.remove('hidden'); return; }
+      slotsGrid!.textContent = '';
+      if (!data.slots.length) { slotsEmpty!.classList.remove('hidden'); return; }
       data.slots.forEach((time: string) => {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -333,47 +337,47 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         const offsetSign = offsetHours >= 0 ? '+' : '-';
         const offsetAbs = Math.abs(offsetHours).toString().padStart(2, '0');
         const slotIso = `${dateStr}T${time}:00${offsetSign}${offsetAbs}:00`;
-        const slotLabel = `${slotsDateLabel.textContent} at ${time}`;
+        const slotLabel = `${slotsDateLabel!.textContent} at ${time}`;
         btn.addEventListener('click', () => selectSlot(slotIso, slotLabel));
-        slotsGrid.appendChild(btn);
+        slotsGrid!.appendChild(btn);
       });
     } catch {
-      slotsGrid.textContent = '';
-      slotsError.classList.remove('hidden');
+      slotsGrid!.textContent = '';
+      slotsError!.classList.remove('hidden');
     }
   }
 
   function selectSlot(iso: string, label: string) {
     selectedSlot = iso;
-    formSlotLabel.textContent = label;
-    stepSlots.classList.add('hidden');
-    stepForm.classList.remove('hidden');
+    formSlotLabel!.textContent = label;
+    stepSlots!.classList.add('hidden');
+    stepForm!.classList.remove('hidden');
   }
 
-  document.getElementById('cal-prev')!.addEventListener('click', () => { weekOffset = Math.max(weekOffset - 1, 0); renderWeek(); });
-  document.getElementById('cal-next')!.addEventListener('click', () => { weekOffset++; renderWeek(); });
-  document.getElementById('slots-back')!.addEventListener('click', () => {
-    stepSlots.classList.add('hidden');
-    stepDate.classList.remove('hidden');
+  document.getElementById('cal-prev')?.addEventListener('click', () => { weekOffset = Math.max(weekOffset - 1, 0); renderWeek(); });
+  document.getElementById('cal-next')?.addEventListener('click', () => { weekOffset++; renderWeek(); });
+  document.getElementById('slots-back')?.addEventListener('click', () => {
+    stepSlots!.classList.add('hidden');
+    stepDate!.classList.remove('hidden');
   });
-  document.getElementById('form-back')!.addEventListener('click', () => {
-    stepForm.classList.add('hidden');
-    stepSlots.classList.remove('hidden');
+  document.getElementById('form-back')?.addEventListener('click', () => {
+    stepForm!.classList.add('hidden');
+    stepSlots!.classList.remove('hidden');
   });
 
-  bookingForm.addEventListener('submit', async (e) => {
+  bookingForm!.addEventListener('submit', async (e) => {
     e.preventDefault();
-    formError.classList.add('hidden');
+    formError!.classList.add('hidden');
     const name = (document.getElementById('book-name') as HTMLInputElement).value.trim();
     const email = (document.getElementById('book-email') as HTMLInputElement).value.trim();
     const note = (document.getElementById('book-note') as HTMLTextAreaElement).value.trim();
     if (!name || !email || !selectedSlot) {
-      formError.textContent = 'Please fill in your name and email.';
-      formError.classList.remove('hidden');
+      formError!.textContent = 'Please fill in your name and email.';
+      formError!.classList.remove('hidden');
       return;
     }
-    bookSubmit.disabled = true;
-    bookSubmit.textContent = 'Booking…';
+    bookSubmit!.disabled = true;
+    bookSubmit!.textContent = 'Booking…';
     try {
       const res = await fetch(`${API}/book`, {
         method: 'POST',
@@ -381,18 +385,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         body: JSON.stringify({ name, email, slot: selectedSlot, note }),
       });
       if (!res.ok) throw new Error();
-      stepForm.classList.add('hidden');
-      stepConfirm.classList.remove('hidden');
-      confirmDetail.textContent = `${name} · ${formSlotLabel.textContent}`;
+      stepForm!.classList.add('hidden');
+      stepConfirm!.classList.remove('hidden');
+      confirmDetail!.textContent = `${name} · ${formSlotLabel!.textContent}`;
     } catch {
-      formError.textContent = 'Something went wrong. Try emailing directly.';
-      formError.classList.remove('hidden');
-      bookSubmit.disabled = false;
-      bookSubmit.textContent = 'Confirm booking';
+      formError!.textContent = 'Something went wrong. Try emailing directly.';
+      formError!.classList.remove('hidden');
+      bookSubmit!.disabled = false;
+      bookSubmit!.textContent = 'Confirm booking';
     }
   });
 
   renderWeek();
+  } // end initBookingWidget
+
+  // Run on initial load and after View Transitions
+  initBookingWidget();
+  document.addEventListener('astro:after-swap', initBookingWidget);
 </script>
 
 <style>

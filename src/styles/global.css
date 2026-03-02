@@ -228,6 +228,17 @@
   }
 }
 
+@media (prefers-contrast: more) {
+  :root {
+    --color-text-muted: #b5aeb5;
+    --color-border: #544e5c;
+  }
+  .light {
+    --color-text-muted: #3d373d;
+    --color-border: #a09898;
+  }
+}
+
 @media print {
   /* Reset to readable defaults */
   body {

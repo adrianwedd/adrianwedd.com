@@ -382,11 +382,32 @@
 
   // --- Init ---
 
-  const consent = getConsent();
-  if (consent?.analytics) {
-    loadGA4();
-    loadLinkedInInsight();
+  function initAnalytics() {
+    const consent = getConsent();
+    if (consent?.analytics) {
+      loadGA4();
+      loadLinkedInInsight();
+    }
   }
+
+  initAnalytics();
+
+  // Re-bind per-element trackers after View Transitions DOM swap
+  document.addEventListener('astro:after-swap', () => {
+    const consent = getConsent();
+    if (consent?.analytics && typeof (window as any).gtag === 'function') {
+      sendPageView();
+      trackScrollDepth();
+      trackReadingTime();
+      trackOutboundClicks();
+      trackCopyEvents();
+      trackProjectClicks();
+      trackGalleryViews();
+      trackAudioPlayback();
+      trackTagFilters();
+      trackThemeSwitches();
+    }
+  });
 
   window.addEventListener('consent-updated', ((e: CustomEvent<ConsentState>) => {
     if (e.detail.analytics) {

@@ -1,6 +1,18 @@
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
+import { statSync } from 'node:fs';
+import { join } from 'node:path';
 import type { APIContext } from 'astro';
+
+function getFileSize(audioUrl: string): number {
+  if (audioUrl.startsWith('http')) return 0;
+  try {
+    const filePath = join(process.cwd(), 'public', audioUrl);
+    return statSync(filePath).size;
+  } catch {
+    return 0;
+  }
+}
 
 export async function GET(context: APIContext) {
   const episodes = (await getCollection('audio')).filter((e) => !e.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -10,6 +22,7 @@ export async function GET(context: APIContext) {
   const items = episodes
     .map((ep) => {
       const audioUrl = ep.data.audioUrl.startsWith('http') ? ep.data.audioUrl : `${site}${ep.data.audioUrl}`;
+      const fileSize = getFileSize(ep.data.audioUrl);
 
       return `
     <item>
@@ -18,7 +31,7 @@ export async function GET(context: APIContext) {
       <link>${site}/audio/${slug(ep.id)}/</link>
       <guid isPermaLink="true">${site}/audio/${slug(ep.id)}/</guid>
       <pubDate>${ep.data.date.toUTCString()}</pubDate>
-      <enclosure url="${escapeXml(audioUrl)}" type="audio/mpeg" length="0" />
+      <enclosure url="${escapeXml(audioUrl)}" type="audio/mpeg" length="${fileSize}" />
       ${ep.data.duration ? `<itunes:duration>${ep.data.duration}</itunes:duration>` : ''}
       <itunes:explicit>false</itunes:explicit>
     </item>`;
