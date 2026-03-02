@@ -4,7 +4,7 @@ description: "64 jailbreak scenarios across six eras tested on 2026 frontier mod
 date: 2026-02-13
 tags: ["ai-safety", "research", "jailbreaking"]
 draft: false
-heroImage: "/og/jailbreak-archaeology.png"
+heroImage: "/og/blog/jailbreak-archaeology.png"
 audioUrl: "/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3"
 videoUrl: "/notebook-assets/failure-first/jailbreak-archaeology/video.mp4"
 slides: "/notebook-assets/failure-first/jailbreak-archaeology/slides.pdf"
