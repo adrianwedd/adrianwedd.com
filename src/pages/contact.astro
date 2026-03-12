@@ -79,8 +79,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
 
         {/* Confirmation */}
-        <div id="booking-step-confirm" class="hidden mt-6 rounded-lg border border-green-700 bg-green-700/10 p-5">
-          <p class="font-medium text-green-400">You're booked.</p>
+        <div id="booking-step-confirm" class="hidden mt-6 rounded-lg border border-accent/30 bg-accent/10 p-5">
+          <p class="font-medium text-accent">You're booked.</p>
           <p id="confirm-detail" class="mt-1 text-sm text-text-muted"></p>
           <p class="mt-2 text-sm text-text-muted">A calendar invite will arrive shortly.</p>
         </div>
@@ -224,188 +224,214 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </section>
 </BaseLayout>
 
-<script>
-  function initBookingWidget() {
-  const API = 'https://api.book.adrianwedd.com';
+<script is:inline>
+  (function () {
+  var API = 'https://api.book.adrianwedd.com';
+  var weekOffset = 0;
+  var selectedSlot = null;
 
-  let weekOffset = 0;
-  let selectedSlot: string | null = null;
+  function el(id) { return document.getElementById(id); }
 
-  const stepDate = document.getElementById('booking-step-date');
-  const stepSlots = document.getElementById('booking-step-slots');
-  const stepForm = document.getElementById('booking-step-form');
-  const stepConfirm = document.getElementById('booking-step-confirm');
-  const calDays = document.getElementById('cal-days');
-  const calWeekLabel = document.getElementById('cal-week-label');
-  const slotsGrid = document.getElementById('slots-grid');
-  const slotsEmpty = document.getElementById('slots-empty');
-  const slotsError = document.getElementById('slots-error');
-  const slotsDateLabel = document.getElementById('slots-date-label');
-  const formSlotLabel = document.getElementById('form-slot-label');
-  const confirmDetail = document.getElementById('confirm-detail');
-  const bookingForm = document.getElementById('booking-form') as HTMLFormElement | null;
-  const formError = document.getElementById('form-error');
-  const bookSubmit = document.getElementById('book-submit') as HTMLButtonElement | null;
-
-  // Guard: only run on contact page
-  if (!stepDate || !calDays || !bookingForm) return;
-
-  // Sentinel: prevent duplicate listener registration on VT re-visits
-  if (bookingForm.dataset.bookingInit) return;
-  bookingForm.dataset.bookingInit = '1';
-
-  function isoDate(d: Date) {
-    return d.toISOString().slice(0, 10);
+  function isoDate(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
   }
 
-  function getWeekDates(offset: number) {
-    const today = new Date();
+  function getWeekDates(offset) {
+    var today = new Date();
     today.setHours(0, 0, 0, 0);
-    const monday = new Date(today);
+    var monday = new Date(today);
     monday.setDate(today.getDate() - ((today.getDay() + 6) % 7) + offset * 7);
-    return Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(monday);
+    return Array.from({ length: 7 }, function (_, i) {
+      var d = new Date(monday);
       d.setDate(monday.getDate() + i);
       return d;
     });
   }
 
   function renderWeek() {
-    const days = getWeekDates(weekOffset);
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    const fmt = (d: Date) => d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
-    calWeekLabel!.textContent = `${fmt(days[0])} – ${fmt(days[6])}`;
-    calDays!.textContent = '';
-    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    days.forEach((d, i) => {
-      const isPast = d < today;
-      const btn = document.createElement('button');
+    var calDays = el('cal-days');
+    var calWeekLabel = el('cal-week-label');
+    if (!calDays || !calWeekLabel) return;
+    var days = getWeekDates(weekOffset);
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var fmt = function (d) { return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }); };
+    calWeekLabel.textContent = fmt(days[0]) + ' \u2013 ' + fmt(days[6]);
+    calDays.textContent = '';
+    var dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    days.forEach(function (d, i) {
+      var isPast = d < today;
+      var btn = document.createElement('button');
       btn.type = 'button';
       btn.disabled = isPast;
       btn.dataset.date = isoDate(d);
-      btn.className = [
-        'flex flex-col items-center rounded-lg border py-2 text-xs transition-colors',
-        isPast
+      btn.className = 'flex flex-col items-center rounded-lg border py-2 text-xs transition-colors ' +
+        (isPast
           ? 'border-border text-text-muted opacity-40 cursor-not-allowed'
-          : 'border-border text-text hover:border-accent hover:text-accent cursor-pointer',
-      ].join(' ');
-      const daySpan = document.createElement('span');
+          : 'border-border text-text hover:border-accent hover:text-accent cursor-pointer');
+      var daySpan = document.createElement('span');
       daySpan.className = 'font-medium';
       daySpan.textContent = dayNames[i];
-      const numSpan = document.createElement('span');
+      var numSpan = document.createElement('span');
       numSpan.className = 'mt-0.5 text-lg font-semibold leading-none';
       numSpan.textContent = String(d.getDate());
       btn.appendChild(daySpan);
       btn.appendChild(numSpan);
       if (!isPast) {
-        const dateCopy = new Date(d);
-        btn.addEventListener('click', () => selectDate(isoDate(dateCopy), dateCopy));
+        var dateCopy = new Date(d);
+        btn.addEventListener('click', function () { selectDate(isoDate(dateCopy), dateCopy); });
       }
       calDays.appendChild(btn);
     });
   }
 
-  async function selectDate(dateStr: string, d: Date) {
-    slotsDateLabel!.textContent = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
-    stepDate!.classList.add('hidden');
-    stepSlots!.classList.remove('hidden');
-    slotsGrid!.textContent = '';
-    const loading = document.createElement('p');
+  function selectDate(dateStr, d) {
+    var slotsDateLabel = el('slots-date-label');
+    var stepDate = el('booking-step-date');
+    var stepSlots = el('booking-step-slots');
+    var slotsGrid = el('slots-grid');
+    var slotsEmpty = el('slots-empty');
+    var slotsError = el('slots-error');
+    if (!slotsDateLabel || !stepDate || !stepSlots || !slotsGrid) return;
+    slotsDateLabel.textContent = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
+    stepDate.classList.add('hidden');
+    stepSlots.classList.remove('hidden');
+    slotsGrid.textContent = '';
+    var loading = document.createElement('p');
     loading.className = 'col-span-4 text-xs text-text-muted';
-    loading.textContent = 'Loading…';
-    slotsGrid!.appendChild(loading);
-    slotsEmpty!.classList.add('hidden');
-    slotsError!.classList.add('hidden');
-    try {
-      const res = await fetch(`${API}/slots?date=${dateStr}`);
-      if (!res.ok) throw new Error();
-      const data = await res.json() as { slots: string[] };
-      slotsGrid!.textContent = '';
-      if (!data.slots.length) { slotsEmpty!.classList.remove('hidden'); return; }
-      data.slots.forEach((time: string) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.textContent = time;
-        btn.className = 'rounded-lg border border-border px-3 py-2 text-sm text-text transition-colors hover:border-accent hover:text-accent cursor-pointer';
-        // Derive the correct UTC offset for this date in Australia/Hobart (DST-aware)
-        const slotLocal = new Date(`${dateStr}T${time}:00`);
-        const hobartFmt = new Intl.DateTimeFormat('en-AU', {
-          timeZone: 'Australia/Hobart',
-          timeZoneName: 'shortOffset',
+    loading.textContent = 'Loading\u2026';
+    slotsGrid.appendChild(loading);
+    if (slotsEmpty) slotsEmpty.classList.add('hidden');
+    if (slotsError) slotsError.classList.add('hidden');
+    fetch(API + '/slots?date=' + dateStr)
+      .then(function (res) { if (!res.ok) throw new Error(); return res.json(); })
+      .then(function (data) {
+        slotsGrid.textContent = '';
+        if (!data.slots.length) { if (slotsEmpty) slotsEmpty.classList.remove('hidden'); return; }
+        data.slots.forEach(function (time) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = time;
+          btn.className = 'rounded-lg border border-border px-3 py-2 text-sm text-text transition-colors hover:border-accent hover:text-accent cursor-pointer';
+          var slotLocal = new Date(dateStr + 'T' + time + ':00');
+          var hobartFmt = new Intl.DateTimeFormat('en-AU', {
+            timeZone: 'Australia/Hobart',
+            timeZoneName: 'shortOffset',
+          });
+          var offsetStr = (hobartFmt.formatToParts(slotLocal).find(function (p) { return p.type === 'timeZoneName'; }) || {}).value || 'GMT+11';
+          var offsetMatch = offsetStr.match(/GMT([+-]\d+)/);
+          var offsetHours = offsetMatch ? parseInt(offsetMatch[1], 10) : 11;
+          var offsetSign = offsetHours >= 0 ? '+' : '-';
+          var offsetAbs = Math.abs(offsetHours).toString().padStart(2, '0');
+          var slotIso = dateStr + 'T' + time + ':00' + offsetSign + offsetAbs + ':00';
+          var slotLabel = slotsDateLabel.textContent + ' at ' + time;
+          btn.addEventListener('click', function () { selectSlot(slotIso, slotLabel); });
+          slotsGrid.appendChild(btn);
         });
-        const offsetStr = hobartFmt.formatToParts(slotLocal)
-          .find((p) => p.type === 'timeZoneName')?.value ?? 'GMT+11';
-        // offsetStr is e.g. "GMT+11" or "GMT+10" — convert to ±HH:MM
-        const offsetMatch = offsetStr.match(/GMT([+-]\d+)/);
-        const offsetHours = offsetMatch ? parseInt(offsetMatch[1], 10) : 11;
-        const offsetSign = offsetHours >= 0 ? '+' : '-';
-        const offsetAbs = Math.abs(offsetHours).toString().padStart(2, '0');
-        const slotIso = `${dateStr}T${time}:00${offsetSign}${offsetAbs}:00`;
-        const slotLabel = `${slotsDateLabel!.textContent} at ${time}`;
-        btn.addEventListener('click', () => selectSlot(slotIso, slotLabel));
-        slotsGrid!.appendChild(btn);
+      })
+      .catch(function () {
+        slotsGrid.textContent = '';
+        if (slotsError) slotsError.classList.remove('hidden');
       });
-    } catch {
-      slotsGrid!.textContent = '';
-      slotsError!.classList.remove('hidden');
-    }
   }
 
-  function selectSlot(iso: string, label: string) {
+  function selectSlot(iso, label) {
     selectedSlot = iso;
-    formSlotLabel!.textContent = label;
-    stepSlots!.classList.add('hidden');
-    stepForm!.classList.remove('hidden');
+    var formSlotLabel = el('form-slot-label');
+    var stepSlots = el('booking-step-slots');
+    var stepForm = el('booking-step-form');
+    if (formSlotLabel) formSlotLabel.textContent = label;
+    if (stepSlots) stepSlots.classList.add('hidden');
+    if (stepForm) stepForm.classList.remove('hidden');
   }
 
-  document.getElementById('cal-prev')?.addEventListener('click', () => { weekOffset = Math.max(weekOffset - 1, 0); renderWeek(); });
-  document.getElementById('cal-next')?.addEventListener('click', () => { weekOffset++; renderWeek(); });
-  document.getElementById('slots-back')?.addEventListener('click', () => {
-    stepSlots!.classList.add('hidden');
-    stepDate!.classList.remove('hidden');
-  });
-  document.getElementById('form-back')?.addEventListener('click', () => {
-    stepForm!.classList.add('hidden');
-    stepSlots!.classList.remove('hidden');
-  });
+  function initBooking() {
+    var bookingForm = el('booking-form');
+    if (!bookingForm || bookingForm.dataset.bookingInit) return;
+    bookingForm.dataset.bookingInit = '1';
+    weekOffset = 0;
+    selectedSlot = null;
+    renderWeek();
+  }
 
-  bookingForm!.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    formError!.classList.add('hidden');
-    const name = (document.getElementById('book-name') as HTMLInputElement).value.trim();
-    const email = (document.getElementById('book-email') as HTMLInputElement).value.trim();
-    const note = (document.getElementById('book-note') as HTMLTextAreaElement).value.trim();
-    if (!name || !email || !selectedSlot) {
-      formError!.textContent = 'Please fill in your name and email.';
-      formError!.classList.remove('hidden');
-      return;
-    }
-    bookSubmit!.disabled = true;
-    bookSubmit!.textContent = 'Booking…';
-    try {
-      const res = await fetch(`${API}/book`, {
+  // Event delegation on document for booking widget buttons
+  if (!document.documentElement.dataset.bookingDelegateInit) {
+    document.documentElement.dataset.bookingDelegateInit = '1';
+
+    document.addEventListener('click', function (e) {
+      var target = e.target;
+      if (!target || typeof target.closest !== 'function') return;
+
+      if (target.closest('#cal-prev')) {
+        weekOffset = Math.max(weekOffset - 1, 0);
+        renderWeek();
+        return;
+      }
+      if (target.closest('#cal-next')) {
+        weekOffset++;
+        renderWeek();
+        return;
+      }
+      if (target.closest('#slots-back')) {
+        var stepSlots = el('booking-step-slots');
+        var stepDate = el('booking-step-date');
+        if (stepSlots) stepSlots.classList.add('hidden');
+        if (stepDate) stepDate.classList.remove('hidden');
+        return;
+      }
+      if (target.closest('#form-back')) {
+        var stepForm = el('booking-step-form');
+        var stepSlots2 = el('booking-step-slots');
+        if (stepForm) stepForm.classList.add('hidden');
+        if (stepSlots2) stepSlots2.classList.remove('hidden');
+        return;
+      }
+    });
+
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      if (!form || form.id !== 'booking-form') return;
+      e.preventDefault();
+      var formError = el('form-error');
+      var bookSubmit = el('book-submit');
+      if (formError) formError.classList.add('hidden');
+      var name = (el('book-name') || {}).value || '';
+      var email = (el('book-email') || {}).value || '';
+      var note = (el('book-note') || {}).value || '';
+      name = name.trim(); email = email.trim(); note = note.trim();
+      if (!name || !email || !selectedSlot) {
+        if (formError) { formError.textContent = 'Please fill in your name and email.'; formError.classList.remove('hidden'); }
+        return;
+      }
+      if (bookSubmit) { bookSubmit.disabled = true; bookSubmit.textContent = 'Booking\u2026'; }
+      fetch(API + '/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, slot: selectedSlot, note }),
-      });
-      if (!res.ok) throw new Error();
-      stepForm!.classList.add('hidden');
-      stepConfirm!.classList.remove('hidden');
-      confirmDetail!.textContent = `${name} · ${formSlotLabel!.textContent}`;
-    } catch {
-      formError!.textContent = 'Something went wrong. Try emailing directly.';
-      formError!.classList.remove('hidden');
-      bookSubmit!.disabled = false;
-      bookSubmit!.textContent = 'Confirm booking';
-    }
-  });
+        body: JSON.stringify({ name: name, email: email, slot: selectedSlot, note: note }),
+      })
+        .then(function (res) { if (!res.ok) throw new Error(); return res; })
+        .then(function () {
+          var stepForm = el('booking-step-form');
+          var stepConfirm = el('booking-step-confirm');
+          var confirmDetail = el('confirm-detail');
+          var formSlotLabel = el('form-slot-label');
+          if (stepForm) stepForm.classList.add('hidden');
+          if (stepConfirm) stepConfirm.classList.remove('hidden');
+          if (confirmDetail) confirmDetail.textContent = name + ' \u00b7 ' + (formSlotLabel ? formSlotLabel.textContent : '');
+        })
+        .catch(function () {
+          if (formError) { formError.textContent = 'Something went wrong. Try emailing directly.'; formError.classList.remove('hidden'); }
+          if (bookSubmit) { bookSubmit.disabled = false; bookSubmit.textContent = 'Confirm booking'; }
+        });
+    });
 
-  renderWeek();
-  } // end initBookingWidget
+    document.addEventListener('astro:after-swap', initBooking);
+  }
 
-  // Run on initial load and after View Transitions
-  initBookingWidget();
-  document.addEventListener('astro:after-swap', initBookingWidget);
+  initBooking();
+  })();
 </script>
 
 <style>

@@ -104,19 +104,39 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
     </div>
   </section>
 
-  <script>
-    const toggle = document.getElementById('blog-tags-toggle');
-    if (toggle) {
-      let expanded = false;
-      toggle.addEventListener('click', () => {
-        expanded = !expanded;
-        document.querySelectorAll('.blog-tag-overflow').forEach((el) => {
-          (el as HTMLElement).classList.toggle('hidden', !expanded);
-        });
-        toggle.textContent = expanded ? 'Show less' : toggle.dataset.label || '';
-        toggle.setAttribute('aria-expanded', String(expanded));
-      });
-      toggle.dataset.label = toggle.textContent || '';
+  <script is:inline>
+  (function () {
+    var blogTagExpanded = false;
+
+    function initBlogToggle() {
+      var toggle = document.getElementById('blog-tags-toggle');
+      if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
+      blogTagExpanded = false;
     }
+
+    if (!document.documentElement.dataset.blogTagInit) {
+      document.documentElement.dataset.blogTagInit = '1';
+
+      document.addEventListener('click', function (e) {
+        var target = e.target;
+        if (!target || typeof target.closest !== 'function') return;
+        if (target.closest('#blog-tags-toggle')) {
+          blogTagExpanded = !blogTagExpanded;
+          document.querySelectorAll('.blog-tag-overflow').forEach(function (el) {
+            el.classList.toggle('hidden', !blogTagExpanded);
+          });
+          var toggle = document.getElementById('blog-tags-toggle');
+          if (toggle) {
+            toggle.textContent = blogTagExpanded ? 'Show less' : toggle.dataset.label || '';
+            toggle.setAttribute('aria-expanded', String(blogTagExpanded));
+          }
+        }
+      });
+
+      document.addEventListener('astro:after-swap', initBlogToggle);
+    }
+
+    initBlogToggle();
+  })();
   </script>
 </BaseLayout>
