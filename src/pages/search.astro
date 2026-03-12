@@ -28,21 +28,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         var container = document.getElementById('search');
         if (!container || container.dataset.pagefindInit) return;
         container.dataset.pagefindInit = '1';
+        if (typeof PagefindUI !== 'undefined') {
+          new PagefindUI({ element: '#search', showSubResults: true, showImages: true });
+          var sk = document.getElementById('search-skeleton');
+          if (sk) sk.remove();
+          return;
+        }
         var script = document.createElement('script');
         script.src = '/pagefind/pagefind-ui.js';
         script.onload = function () {
-          new PagefindUI({
-            element: '#search',
-            showSubResults: true,
-            showImages: true,
-          });
-          var skeleton = document.getElementById('search-skeleton');
-          if (skeleton) skeleton.remove();
+          new PagefindUI({ element: '#search', showSubResults: true, showImages: true });
+          var sk = document.getElementById('search-skeleton');
+          if (sk) sk.remove();
         };
         document.head.appendChild(script);
       }
       initPagefind();
-      document.addEventListener('astro:page-load', initPagefind);
+      if (!document.documentElement.dataset.pagefindListenerInit) {
+        document.documentElement.dataset.pagefindListenerInit = '1';
+        document.addEventListener('astro:page-load', initPagefind);
+      }
     })();
   </script>
 
