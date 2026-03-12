@@ -8,6 +8,8 @@ status: "active"
 featured: true
 date: 2026-02-08
 heroImage: "/images/projects/this-wasnt-in-the-brochure-hero.webp"
+series: "This Wasn't in the Brochure"
+seriesOrder: 1
 ---
 
 A book and companion site for co-parents navigating ADHD, autism, PDA, and ODD — built on a simple premise: the brochure they gave you was for a different trip.
