@@ -41,6 +41,8 @@ exclude = [
   "https://github\\.com/adrianwedd/failure-first-embodied-ai",
   "https://github\\.com/adrianwedd/VERITAS",
   "https://github\\.com/adrianwedd/orchestrix",
+  # Own domain — new pages 404 on production until this deploy completes
+  "https?://adrianwedd\\.com",
 ]
 
 # Exclude these file patterns from being checked AS SOURCES
