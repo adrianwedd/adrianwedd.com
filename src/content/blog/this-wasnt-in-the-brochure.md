@@ -4,6 +4,8 @@ description: "A field guide for co-parenting neurodivergent children — written
 date: 2026-02-15
 tags: ["writing", "neurodivergence", "parenting", "books"]
 heroImage: "/og/blog/this-wasnt-in-the-brochure.png"
+series: "This Wasn't in the Brochure"
+seriesOrder: 1
 ---
 
 You packed for a picnic. You ended up in the Drake Passage.
