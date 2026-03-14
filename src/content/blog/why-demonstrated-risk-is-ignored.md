@@ -100,3 +100,7 @@ More quietly, repeated suppression of demonstrated truth damages the organisatio
 Demonstrated risk is ignored not because people are irrational, but because the systems they operate within make inaction locally rational. The fix isn't better evidence or louder warnings. It's redesigning the structures — authority, incentives, accountability — so that truth can move and remediation becomes the default rather than the exception.
 
 Every organisation says it wants to know what's broken. The test is whether it has built the machinery to act on the answer.
+
+---
+
+*This essay is adapted from the [Why Demonstrated Risk Is Ignored](/projects/why-demonstrated-risk-is-ignored/) research project. The full paper, case studies, and structural analysis are available in the [research repository](https://github.com/adrianwedd/why-demonstrated-risk-is-ignored).*

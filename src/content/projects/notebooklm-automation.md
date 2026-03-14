@@ -21,3 +21,5 @@ The parallel generation system launches multiple artefacts concurrently—three 
 Multi-format export converts notebooks to Obsidian vaults with wikilinks, Notion-compatible markdown, or Anki flashcard CSVs. The whole pipeline—from topic to populated notebook to generated artefacts to exported knowledge base—runs in a single command.
 
 It uses unofficial APIs that could break with any frontend update. The README says to use a burner account. I mean it. But the capability gap between what NotebookLM can do and what you can automate around it was too wide to leave alone.
+
+[How the pipeline works →](/blog/the-notebooklm-pipeline/)
