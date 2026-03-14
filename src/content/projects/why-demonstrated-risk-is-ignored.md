@@ -18,3 +18,5 @@ The pattern appears across domains: financial systems that ignored early warning
 The research draws on case studies from financial regulation, public health, and technology deployment, with a particular focus on what these patterns mean for AI governance. Because we're now building systems whose failure modes may not offer a second chance to update our priors.
 
 The question the paper asks is not whether we can see the risks. We can. The question is why we keep looking past them—and what structural changes might make that harder to do.
+
+[Read the essay →](/blog/why-demonstrated-risk-is-ignored/)
