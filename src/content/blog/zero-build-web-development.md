@@ -18,7 +18,7 @@ The club needed a website. I could have reached for Astro (which I use for [this
 
 The reasoning was practical, not ideological. Cloudflare Pages serves static files and runs edge functions. If I write HTML files and JavaScript functions, deployment is pushing to GitHub. No build cache to debug. No dependency tree to audit. No framework release cycle to track. The mental model is: files go up, site comes down.
 
-Eight months later, the site is 8KB of CSS across nine files, all driven by design tokens. The middleware is 480 lines. The member portal has 79 lesson plans, engagement analytics, and family billing. And the deployment story is still "push to GitHub."
+Two weeks later, the site is nine CSS files, all driven by design tokens. The middleware is 480 lines. The member portal has 79 lesson plans, engagement analytics, and family billing. And the deployment story is still "push to GitHub."
 
 ## Three zones, one middleware
 
@@ -63,7 +63,7 @@ This lets the club identify members who are drifting before they cancel. A membe
 
 **Type safety.** The API endpoints pass data as plain objects. In a codebase this size, TypeScript would catch bugs that currently surface as runtime errors. Vanilla JS is fine until your D1 query returns a column name you typo'd — and nothing catches it until a user hits the endpoint.
 
-**CSS architecture.** Design tokens via custom properties work well for theming, but 8KB across nine files with no tooling means no dead code elimination and no minification. It's small enough not to matter today. It might not stay small.
+**CSS architecture.** Design tokens via custom properties work well for theming, but nine files with no tooling means no dead code elimination and no minification. It's manageable today. It might not stay manageable.
 
 These are real costs. They just happen to be smaller, for this project, than the costs of the tooling that would prevent them.
 
