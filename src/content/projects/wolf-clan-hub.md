@@ -14,13 +14,13 @@ Every local club I've trained at runs on a Facebook page and a spreadsheet. Wolf
 
 The system serves three audiences through a single codebase with path-based auth gating:
 
-- **Public site** — marketing pages, blog, class schedules, enrollment pathway. Schema.org structured data, dark/light theming, responsive glassmorphism nav. 25+ blog posts across four series, including a Warriors Library with NotebookLM audio overviews of classical martial arts texts.
+- **Public site** — marketing pages, blog, class schedules, enrollment pathway. Schema.org structured data, dark/light theming, responsive glassmorphism nav. 24 blog posts across four series, including a Warriors Library with NotebookLM audio overviews of classical martial arts texts.
 - **Ops hub** (`/hub/`) — password-gated with timing-safe SHA-256 verification. Live GitHub Issues kanban board, markdown document viewer serving 40+ operational docs (syllabus, compliance, policies, research papers), all behind an allowlist that prevents directory traversal.
 - **Member portal** (`/member/`) — JWT-authenticated via magic-link email login. Member profiles, attendance tracking, training logs, belt progression, grading eligibility calculator. 79 structured lesson plans. Instructor-only views for roster management, attendance analytics, and grading administration.
 
 ## Why vanilla
 
-No npm. No React. No build step. Vanilla HTML, CSS, and JavaScript — 8KB of CSS across nine files, all driven by design tokens. The security model is simpler to reason about when there's no abstraction layer between you and the request. Development iterations are faster when deployment means pushing a file. Hosting cost is negligible.
+No npm. No React. No build step. Vanilla HTML, CSS, and JavaScript — nine CSS files, all driven by design tokens. The security model is simpler to reason about when there's no abstraction layer between you and the request. Development iterations are faster when deployment means pushing a file. Hosting cost is negligible.
 
 Cloudflare Pages handles the edge compute: D1 (SQLite) for structured data, Pages Functions for 20+ API endpoints, Pages middleware for the auth gates. The entire platform runs at the edge with no origin server.
 
