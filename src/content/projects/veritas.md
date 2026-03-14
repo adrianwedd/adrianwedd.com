@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/VERITAS"
 status: "active"
 featured: false
 date: 2025-03-01
+audioUrl: "/notebook-assets/veritas/audio.mp3"
 heroImage: "/images/projects/veritas-hero.webp"
 ---
 
