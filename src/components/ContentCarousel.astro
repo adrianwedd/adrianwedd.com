@@ -2,7 +2,6 @@
 /**
  * ContentCarousel — dynamic image carousel for content collections.
  * Renders all items with heroImage as slides (image left, text right).
- * Reuses the same carousel pattern as the homepage hero.
  *
  * Props:
  *   items: { href: string; title: string; description: string; heroImage: string; date: Date; tags?: string[] }[]
@@ -27,18 +26,17 @@ interface Props {
 }
 
 const { items, id, label } = Astro.props;
-const trackId = `${id}-track`;
-const liveId = `${id}-live`;
-const prevId = `${id}-prev`;
-const nextId = `${id}-next`;
 ---
 
 {items.length > 0 && (
   <section class="mx-auto max-w-4xl px-4 pb-12 sm:px-6 lg:px-8" aria-label={label}>
-    <div id={id} class="content-carousel relative overflow-hidden rounded-xl border border-border bg-surface-alt shadow-subtle">
-      <div id={trackId} class="carousel-track flex transition-transform duration-500 ease-in-out">
+    <div
+      class="content-carousel relative overflow-hidden rounded-xl border border-border bg-surface-alt shadow-subtle"
+      data-carousel={id}
+    >
+      <div class="cc-track flex transition-transform duration-500 ease-in-out">
         {items.map((item, i) => (
-          <div class="carousel-slide w-full flex-shrink-0">
+          <div class="cc-slide w-full flex-shrink-0">
             <a href={item.href} class="group block no-underline sm:flex sm:items-stretch">
               <div class="aspect-[16/9] overflow-hidden sm:aspect-auto sm:w-1/2">
                 <Picture
@@ -73,7 +71,7 @@ const nextId = `${id}-next`;
         ))}
       </div>
 
-      <div id={liveId} class="sr-only" aria-live="polite" aria-atomic="true">Slide 1 of {items.length}</div>
+      <div class="cc-live sr-only" aria-live="polite" aria-atomic="true">Slide 1 of {items.length}</div>
 
       {items.length > 1 && (
         <>
@@ -82,7 +80,7 @@ const nextId = `${id}-next`;
               <button
                 type="button"
                 class:list={[
-                  'carousel-dot rounded-full transition-all',
+                  'cc-dot rounded-full transition-all',
                   i === 0 ? 'h-2 w-5 bg-accent' : 'h-2 w-2 bg-border hover:bg-accent/50',
                 ]}
                 data-slide={i}
@@ -92,10 +90,10 @@ const nextId = `${id}-next`;
             ))}
           </div>
 
-          <button type="button" id={prevId} class="carousel-prev absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-border bg-surface/80 p-1.5 text-text-muted backdrop-blur-sm transition-colors hover:border-accent hover:text-accent" aria-label="Previous slide">
+          <button type="button" class="cc-prev absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-border bg-surface/80 p-1.5 text-text-muted backdrop-blur-sm transition-colors hover:border-accent hover:text-accent" aria-label="Previous slide">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
           </button>
-          <button type="button" id={nextId} class="carousel-next absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-border bg-surface/80 p-1.5 text-text-muted backdrop-blur-sm transition-colors hover:border-accent hover:text-accent" aria-label="Next slide">
+          <button type="button" class="cc-next absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-border bg-surface/80 p-1.5 text-text-muted backdrop-blur-sm transition-colors hover:border-accent hover:text-accent" aria-label="Next slide">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
           </button>
         </>
@@ -104,21 +102,29 @@ const nextId = `${id}-next`;
   </section>
 )}
 
-<script is:inline define:vars={{ id, trackId, liveId, prevId, nextId }}>
+<script is:inline>
 (function () {
-  var current = 0;
-  var total = 0;
-  var autoplay = null;
-  var sentinel = id + 'Init';
+  if (document.documentElement.dataset.ccInit) return;
+  document.documentElement.dataset.ccInit = '1';
 
-  function go(n) {
-    total = document.querySelectorAll('#' + id + ' .carousel-slide').length;
+  var carousels = {};
+
+  function getState(el) {
+    var key = el.dataset.carousel;
+    if (!carousels[key]) carousels[key] = { current: 0, autoplay: null };
+    return carousels[key];
+  }
+
+  function go(el, n) {
+    var state = getState(el);
+    var slides = el.querySelectorAll('.cc-slide');
+    var total = slides.length;
     if (!total) return;
-    current = ((n % total) + total) % total;
-    var track = document.getElementById(trackId);
-    if (track) track.style.transform = 'translateX(-' + (current * 100) + '%)';
-    document.querySelectorAll('#' + id + ' .carousel-dot').forEach(function (dot) {
-      var active = Number(dot.dataset.slide) === current;
+    state.current = ((n % total) + total) % total;
+    var track = el.querySelector('.cc-track');
+    if (track) track.style.transform = 'translateX(-' + (state.current * 100) + '%)';
+    el.querySelectorAll('.cc-dot').forEach(function (dot) {
+      var active = Number(dot.dataset.slide) === state.current;
       dot.classList.toggle('bg-accent', active);
       dot.classList.toggle('w-5', active);
       dot.classList.toggle('bg-border', !active);
@@ -126,44 +132,81 @@ const nextId = `${id}-next`;
       if (active) dot.setAttribute('aria-current', 'true');
       else dot.removeAttribute('aria-current');
     });
-    var live = document.getElementById(liveId);
-    if (live) live.textContent = 'Slide ' + (current + 1) + ' of ' + total;
+    var live = el.querySelector('.cc-live');
+    if (live) live.textContent = 'Slide ' + (state.current + 1) + ' of ' + total;
   }
 
-  function start() { stop(); if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) autoplay = setInterval(function () { go(current + 1); }, 6000); }
-  function stop() { if (autoplay) { clearInterval(autoplay); autoplay = null; } }
-
-  function init() {
-    stop();
-    if (!document.getElementById(id)) return;
-    total = document.querySelectorAll('#' + id + ' .carousel-slide').length;
-    current = 0;
-    go(0);
-    start();
+  function startAutoplay(el) {
+    stopAutoplay(el);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var state = getState(el);
+    state.autoplay = setInterval(function () { go(el, state.current + 1); }, 6000);
   }
 
-  if (!document.documentElement.dataset[sentinel]) {
-    document.documentElement.dataset[sentinel] = '1';
+  function stopAutoplay(el) {
+    var state = getState(el);
+    if (state.autoplay) { clearInterval(state.autoplay); state.autoplay = null; }
+  }
 
-    document.addEventListener('click', function (e) {
-      var t = e.target;
-      if (!t || typeof t.closest !== 'function') return;
-      if (t.closest('#' + prevId)) { stop(); go(current - 1); start(); return; }
-      if (t.closest('#' + nextId)) { stop(); go(current + 1); start(); return; }
-      var dot = t.closest('#' + id + ' .carousel-dot');
-      if (dot && dot.dataset.slide !== undefined) { stop(); go(Number(dot.dataset.slide)); start(); }
+  function initAll() {
+    document.querySelectorAll('[data-carousel]').forEach(function (el) {
+      var state = getState(el);
+      stopAutoplay(el);
+      state.current = 0;
+      go(el, 0);
+      startAutoplay(el);
     });
-
-    document.addEventListener('mouseenter', function (e) { if (e.target && e.target.id === id) stop(); }, true);
-    document.addEventListener('mouseleave', function (e) { if (e.target && e.target.id === id) start(); }, true);
-
-    var touchX = 0;
-    document.addEventListener('touchstart', function (e) { var c = e.target.closest && e.target.closest('#' + id); if (c) touchX = e.touches[0].clientX; }, { passive: true });
-    document.addEventListener('touchend', function (e) { var c = e.target.closest && e.target.closest('#' + id); if (!c) return; var d = touchX - e.changedTouches[0].clientX; if (Math.abs(d) > 50) { stop(); go(current + (d > 0 ? 1 : -1)); start(); } });
-
-    document.addEventListener('astro:after-swap', init);
   }
 
-  init();
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || typeof t.closest !== 'function') return;
+
+    var prev = t.closest('.cc-prev');
+    if (prev) {
+      var carousel = prev.closest('[data-carousel]');
+      if (carousel) { stopAutoplay(carousel); go(carousel, getState(carousel).current - 1); startAutoplay(carousel); }
+      return;
+    }
+
+    var next = t.closest('.cc-next');
+    if (next) {
+      var carousel = next.closest('[data-carousel]');
+      if (carousel) { stopAutoplay(carousel); go(carousel, getState(carousel).current + 1); startAutoplay(carousel); }
+      return;
+    }
+
+    var dot = t.closest('.cc-dot');
+    if (dot) {
+      var carousel = dot.closest('[data-carousel]');
+      if (carousel && dot.dataset.slide !== undefined) { stopAutoplay(carousel); go(carousel, Number(dot.dataset.slide)); startAutoplay(carousel); }
+    }
+  });
+
+  document.addEventListener('mouseenter', function (e) {
+    if (e.target && e.target.closest && e.target.closest('[data-carousel]')) stopAutoplay(e.target.closest('[data-carousel]'));
+  }, true);
+  document.addEventListener('mouseleave', function (e) {
+    if (e.target && e.target.closest && e.target.closest('[data-carousel]')) startAutoplay(e.target.closest('[data-carousel]'));
+  }, true);
+
+  var touchX = 0;
+  document.addEventListener('touchstart', function (e) {
+    var c = e.target.closest && e.target.closest('[data-carousel]');
+    if (c) touchX = e.touches[0].clientX;
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    var c = e.target.closest && e.target.closest('[data-carousel]');
+    if (!c) return;
+    var d = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(d) > 50) { stopAutoplay(c); go(c, getState(c).current + (d > 0 ? 1 : -1)); startAutoplay(c); }
+  });
+
+  document.addEventListener('astro:after-swap', function () {
+    carousels = {};
+    initAll();
+  });
+
+  initAll();
 })();
 </script>
