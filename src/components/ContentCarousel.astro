@@ -38,7 +38,7 @@ const { items, id, label } = Astro.props;
         {items.map((item, i) => (
           <div class="cc-slide w-full flex-shrink-0">
             <a href={item.href} class="group block no-underline sm:flex sm:items-stretch">
-              <div class="aspect-[16/9] overflow-hidden sm:aspect-auto sm:w-1/2">
+              <div class="aspect-[16/9] overflow-hidden sm:aspect-[4/3] sm:w-1/2">
                 <Picture
                   src={item.heroImage}
                   width={600}
