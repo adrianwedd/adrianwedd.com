@@ -4,6 +4,7 @@ description: "A probabilistic risk model for VLA-driven humanoid fatalities proj
 date: 2026-03-01
 tags: ["ai-safety", "robotics", "engineering", "research"]
 draft: false
+heroImage: "/notebook-assets/the-cognitive-cage/infographic.webp"
 ---
 
 For fifty years, robot safety was a solved problem. The answer was a cage: a physical enclosure that kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.

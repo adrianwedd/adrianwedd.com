@@ -4,6 +4,7 @@ description: "Goldman Sachs, PwC, McKinsey, and Acemoglu all model AI's economic
 date: 2026-03-01
 tags: ["ai", "economics", "research", "policy"]
 draft: false
+heroImage: "/notebook-assets/reconciling-the-great-divergence/infographic.webp"
 ---
 
 Goldman Sachs says AI could add $7 trillion to global GDP. MIT economist Daron Acemoglu says the near-term impact is closer to 0.5%. PwC projects $15.7 trillion in additional economic value by 2030. McKinsey puts annual productivity gains at $2.6–4.4 trillion.

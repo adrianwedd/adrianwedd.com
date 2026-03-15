@@ -4,6 +4,7 @@ description: "120 models, 18k prompts: supply chain injection at 90–100% attac
 date: 2026-03-01
 tags: ["ai-safety", "research", "security", "engineering"]
 draft: false
+heroImage: "/notebook-assets/120-models-18k-prompts/infographic.webp"
 ---
 
 Over the past year, I've run one of the more comprehensive adversarial evaluations of language models I'm aware of: 120 models, 18,176 prompts, 5 attack families, 79 distinct techniques. The full dataset, benchmark infrastructure, and methodology live at [failurefirst.org](https://failurefirst.org). Here's what stood out.

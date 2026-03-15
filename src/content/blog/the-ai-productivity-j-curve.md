@@ -4,6 +4,7 @@ description: "90% of companies plan to increase AI investment. Only 1% consider 
 date: 2026-03-02
 tags: ["ai", "economics", "enterprise", "research"]
 draft: false
+heroImage: "/notebook-assets/the-ai-productivity-j-curve/infographic.webp"
 faq:
   - q: "What is the AI Productivity J-Curve?"
     a: "An economic framework showing that transformative technologies initially reduce measured productivity before generating gains — because the critical intangible investments (process redesign, data governance, workforce reskilling) aren't captured in traditional metrics."
