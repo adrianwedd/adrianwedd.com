@@ -7,7 +7,7 @@ repo: "This-Wasn-t-in-the-Brochure"
 status: "active"
 featured: true
 date: 2026-02-08
-heroImage: "/images/projects/this-wasnt-in-the-brochure-hero.webp"
+heroImage: "/notebook-assets/this-wasnt-in-the-brochure/infographic.webp"
 series: "This Wasn't in the Brochure"
 seriesOrder: 1
 ---
