@@ -4,6 +4,7 @@ description: "75% of lawyers cite accuracy as their top AI concern. The legal pr
 date: 2026-03-02
 tags: ["ai", "legal-tech", "research", "trust"]
 draft: false
+heroImage: "/notebook-assets/the-legal-ai-trust-deficit/infographic.webp"
 faq:
   - q: "Why are lawyers slow to adopt AI?"
     a: "The legal profession values accuracy, confidentiality, and accountability — all areas where current AI systems have demonstrated weaknesses. 75% of lawyers cite accuracy concerns as the top barrier."
