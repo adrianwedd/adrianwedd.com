@@ -4,6 +4,7 @@ description: "Building AI for trauma therapy means the safety architecture has t
 date: 2026-03-15
 tags: ["ai", "safety", "health"]
 draft: false
+heroImage: "/notebook-assets/safety-first-therapeutic-ai/infographic.webp"
 ---
 
 EMDR — Eye Movement Desensitization and Reprocessing — is one of the most evidence-based trauma therapies available. Its protocols are precise. Its failure modes are serious. Push too quickly through a traumatic memory, miss a dissociative response, or get the bilateral stimulation timing wrong, and you've done harm.

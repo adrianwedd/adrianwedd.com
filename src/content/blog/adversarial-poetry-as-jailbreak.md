@@ -4,6 +4,7 @@ description: "Reformulating harmful prompts as poetry bypasses safety filters ac
 date: 2026-03-02
 tags: ["ai-safety", "jailbreaking", "research", "llm"]
 draft: false
+heroImage: "/notebook-assets/adversarial-poetry-as-jailbreak/infographic.webp"
 faq:
   - q: "What is adversarial poetry jailbreaking?"
     a: "A technique where harmful prompts are reformulated as poems (sonnets, haiku, limericks), which bypasses LLM safety filters because models process poetic structure differently from direct instructions."
