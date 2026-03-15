@@ -62,6 +62,9 @@ export default defineConfig({
     preact(),
     tailwind(),
   ],
+  redirects: {
+    '/projects/ticketsmith/': '/projects/',
+  },
   prefetch: {
     prefetchAll: false,
     defaultStrategy: 'hover',
