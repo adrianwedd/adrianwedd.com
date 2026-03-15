@@ -2,7 +2,7 @@
 title: "The Legal AI Trust Deficit"
 description: "75% of lawyers cite accuracy as their top AI concern. The legal profession's core values are in direct tension with current AI capabilities."
 date: 2026-03-02
-tags: ["ai", "legal-tech", "research", "trust"]
+tags: ["ai", "legal", "research", "llm"]
 draft: false
 heroImage: "/notebook-assets/the-legal-ai-trust-deficit/infographic.webp"
 faq:

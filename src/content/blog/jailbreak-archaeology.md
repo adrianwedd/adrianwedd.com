@@ -2,7 +2,7 @@
 title: "Jailbreak Archaeology: 4 Years of Broken Promises"
 description: "64 jailbreak scenarios across six eras tested on 2026 frontier models. Key finding: 2022 attacks still achieve ~30% success on today's reasoning models."
 date: 2026-02-13
-tags: ["ai-safety", "research", "jailbreaking"]
+tags: ["ai", "ai-safety", "research", "jailbreaking", "llm"]
 draft: false
 heroImage: "/og/blog/jailbreak-archaeology.png"
 audioUrl: "/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3"

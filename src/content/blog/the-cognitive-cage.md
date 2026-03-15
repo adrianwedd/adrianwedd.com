@@ -2,7 +2,7 @@
 title: "The Cognitive Cage: Humanoid Robot Fatality Risk"
 description: "A probabilistic risk model for VLA-driven humanoid fatalities projects a 'Danger Zone' between 2027–2029: the mechanism, timeline, and what follows."
 date: 2026-03-01
-tags: ["ai-safety", "robotics", "engineering", "research"]
+tags: ["ai", "ai-safety", "robotics", "research", "engineering"]
 draft: false
 heroImage: "/notebook-assets/the-cognitive-cage/infographic.webp"
 ---

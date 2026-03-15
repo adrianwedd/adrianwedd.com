@@ -2,7 +2,7 @@
 title: "The AI Productivity J-Curve: Why Most Enterprise AI Fails"
 description: "90% of companies plan to increase AI investment. Only 1% consider themselves AI-mature. The J-Curve explains why."
 date: 2026-03-02
-tags: ["ai", "economics", "enterprise", "research"]
+tags: ["ai", "economics", "enterprise", "research", "policy"]
 draft: false
 heroImage: "/notebook-assets/the-ai-productivity-j-curve/infographic.webp"
 faq:

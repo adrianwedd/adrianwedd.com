@@ -1,7 +1,7 @@
 ---
 title: "VERITAS"
 description: "Legal AI has an integrity problem. VERITAS addresses the efficiency-trust deficit — what AI can do quickly versus what a lawyer can trust it did correctly."
-tags: ["ai", "legal", "python"]
+tags: ["ai", "legal", "research", "python"]
 repo: "https://github.com/adrianwedd/VERITAS"
 status: "active"
 featured: false

@@ -1,7 +1,7 @@
 ---
 title: "Failure First"
 description: "Adversarial evaluation framework for embodied AI. 120+ models, 18,000+ prompts, four headline findings, one arXiv preprint."
-tags: ["ai-safety", "methodology", "research"]
+tags: ["ai", "ai-safety", "research", "adversarial", "llm"]
 url: "https://failurefirst.org"
 repo: "failure-first"
 status: "active"

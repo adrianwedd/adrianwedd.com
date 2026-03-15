@@ -2,7 +2,7 @@
 title: "Getting Google Nest Cameras Into Frigate NVR"
 description: "The full story of getting Nest cameras streaming into Frigate with Hailo-8L AI detection — including the bugs Google won't tell you about."
 date: 2026-03-16
-tags: ["engineering", "homelab", "raspberry-pi"]
+tags: ["engineering", "homelab", "raspberry-pi", "python", "home-assistant"]
 draft: false
 ---
 

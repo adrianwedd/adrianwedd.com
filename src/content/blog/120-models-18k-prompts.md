@@ -2,7 +2,7 @@
 title: "120 Models, 18,176 Prompts: What We Found"
 description: "120 models, 18k prompts: supply chain injection at 90–100% attack success, faithfulness gaps in frontier models, and why your benchmark numbers are wrong."
 date: 2026-03-01
-tags: ["ai-safety", "research", "security", "engineering"]
+tags: ["ai", "ai-safety", "research", "llm", "security", "adversarial"]
 draft: false
 heroImage: "/notebook-assets/120-models-18k-prompts/infographic.webp"
 ---

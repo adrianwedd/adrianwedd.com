@@ -2,7 +2,7 @@
 title: "Beyond Context Windows"
 description: "What if the LLM didn't read your document — what if it queried it? The Recursive Language Model pattern treats long texts as environment, not input."
 date: 2026-03-15
-tags: ["ai", "engineering", "mcp"]
+tags: ["ai", "engineering", "mcp", "llm", "python"]
 draft: false
 heroImage: "/notebook-assets/beyond-context-windows/infographic.webp"
 ---
