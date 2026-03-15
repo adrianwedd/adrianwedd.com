@@ -3,11 +3,23 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 import ScrollReveal from '../../components/ScrollReveal.astro';
+import ContentCarousel from '../../components/ContentCarousel.astro';
 
 const allPosts = await getCollection('blog');
 const posts = allPosts.filter((p) => !p.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+
+const carouselItems = posts
+  .filter((p) => p.data.heroImage)
+  .map((p) => ({
+    href: `/blog/${slug(p.id)}/`,
+    title: p.data.title,
+    description: p.data.description,
+    heroImage: p.data.heroImage as string,
+    date: p.data.date,
+    tags: p.data.tags,
+  }));
 ---
 
 <BaseLayout
@@ -19,7 +31,13 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
     <p class="mt-4 max-w-prose text-text-muted">
       Writing where the thinking shows. Research notes, failure analysis, and ideas still taking shape.
     </p>
+  </section>
 
+  {carouselItems.length > 0 && (
+    <ContentCarousel items={carouselItems} id="blog-carousel" label="Featured blog posts" />
+  )}
+
+  <section class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
     {/* Tag filter */}
     {
       allTags.length > 0 && (

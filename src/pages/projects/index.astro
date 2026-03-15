@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 import ScrollReveal from '../../components/ScrollReveal.astro';
+import ContentCarousel from '../../components/ContentCarousel.astro';
 import fs from 'node:fs';
 
 const allProjects = await getCollection('projects');
@@ -59,13 +60,29 @@ try {
 } catch {
   // No repos.json yet — sync-repos.sh hasn't run
 }
+const projectCarouselItems = projects
+  .filter((p) => p.data.heroImage)
+  .map((p) => ({
+    href: `/projects/${slug(p.id)}/`,
+    title: p.data.title,
+    description: p.data.description,
+    heroImage: p.data.heroImage as string,
+    date: p.data.date,
+    tags: p.data.tags,
+  }));
 ---
 
 <BaseLayout title="Projects" description="Thirty-odd things built in public — AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.">
-  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+  <section class="mx-auto max-w-6xl px-4 py-16 pb-8 sm:px-6 lg:px-8">
     <h1 class="text-text">Projects</h1>
     <p class="mt-4 max-w-prose text-text-muted">Thirty-odd things built in public. AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.</p>
+  </section>
 
+  {projectCarouselItems.length > 0 && (
+    <ContentCarousel items={projectCarouselItems} id="projects-carousel" label="Project highlights" />
+  )}
+
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
     {/* Status filter */}
     <div class="mt-8 flex flex-wrap gap-2" id="status-filters" role="group" aria-label="Filter by status">
       <button
