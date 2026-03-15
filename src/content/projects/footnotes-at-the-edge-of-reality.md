@@ -7,6 +7,7 @@ repo: "Footnotes-at-the-Edge-of-Reality"
 status: "complete"
 featured: true
 date: 2026-02-06
+heroImage: "/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp"
 audioUrl: "/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3"
 ---
 
