@@ -4,6 +4,7 @@ description: "General relativity and quantum mechanics are both correct and mutu
 date: 2026-02-12
 tags: ["poetry", "physics", "writing"]
 draft: true
+heroImage: "/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp"
 ---
 
 # Footnotes at the Edge of Reality
