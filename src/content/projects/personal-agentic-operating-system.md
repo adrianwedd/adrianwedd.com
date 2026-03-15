@@ -6,6 +6,7 @@ repo: "https://github.com/adrianwedd/personal-agentic-operating-system"
 status: "active"
 featured: false
 date: 2025-07-01
+audioUrl: "/notebook-assets/personal-agentic-operating-system/audio.mp3"
 heroImage: "/notebook-assets/personal-agentic-operating-system/infographic.webp"
 ---
 
