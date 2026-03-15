@@ -2,7 +2,7 @@
 title: "The NotebookLM Pipeline"
 description: "How I automated audio overviews, quizzes, mind maps, and infographics for 32 projects using NotebookLM's API and some shell scripts."
 date: 2026-02-15
-tags: ["engineering", "automation", "notebooklm", "ai"]
+tags: ["engineering", "automation", "ai", "python"]
 heroImage: "/og/blog/the-notebooklm-pipeline.png"
 faq:
   - q: "What is the NotebookLM pipeline?"

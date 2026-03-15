@@ -2,7 +2,7 @@
 title: "Why Demonstrated Risk Is Ignored"
 description: "Large organisations rarely fail because risks are unknown. They fail because known risks are structurally difficult to act on."
 date: 2026-03-02
-tags: ["risk", "organisations", "research", "policy"]
+tags: ["research", "risk", "organisations", "policy", "ai-safety"]
 draft: false
 heroImage: "/notebook-assets/why-demonstrated-risk-is-ignored/infographic.webp"
 faq:

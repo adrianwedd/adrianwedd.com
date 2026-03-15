@@ -2,7 +2,7 @@
 title: "Building a Personal Site in 2026"
 description: "The case for constraint-led web development — Astro, zero custom fonts, no framework overhead, and a site that outlasts its builder's attention."
 date: 2026-02-15
-tags: ["engineering", "web", "astro"]
+tags: ["engineering", "web", "astro", "open-source"]
 heroImage: "/og/blog/building-a-personal-site-in-2026.png"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "EMDR Agent"
 description: "What safety architecture does AI-assisted trauma therapy require before it has any business existing? Built to find out."
-tags: ["ai", "health", "typescript"]
+tags: ["ai", "ai-safety", "health", "typescript"]
 repo: "https://github.com/adrianwedd/emdr-agent"
 status: "experiment"
 featured: false

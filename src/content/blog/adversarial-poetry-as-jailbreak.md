@@ -2,7 +2,7 @@
 title: "Adversarial Poetry: When Rhyme Bypasses Reason"
 description: "Reformulating harmful prompts as poetry bypasses safety filters across every major LLM family. A single-turn, universal jailbreak mechanism."
 date: 2026-03-02
-tags: ["ai-safety", "jailbreaking", "research", "llm"]
+tags: ["ai", "ai-safety", "jailbreaking", "research", "llm", "adversarial"]
 draft: false
 heroImage: "/notebook-assets/adversarial-poetry-as-jailbreak/infographic.webp"
 faq:

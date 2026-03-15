@@ -1,7 +1,7 @@
 ---
 title: "Home Assistant Obsidian"
 description: "Obsidian inside Home Assistant — your knowledge base and your smart home on the same box, same backup, same UI."
-tags: ["homelab", "docker", "home-assistant"]
+tags: ["homelab", "home-assistant", "docker", "python"]
 repo: "https://github.com/adrianwedd/home-assistant-obsidian"
 status: "active"
 featured: false

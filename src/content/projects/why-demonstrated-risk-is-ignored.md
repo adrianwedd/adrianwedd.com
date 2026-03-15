@@ -1,7 +1,7 @@
 ---
 title: "Why Demonstrated Risk Is Ignored"
 description: "Why do people acknowledge evidence of harm and then proceed as if it doesn't exist? A deep dive into structural risk dismissal."
-tags: ["research", "risk", "psychology"]
+tags: ["research", "risk", "psychology", "ai-safety"]
 repo: "why-demonstrated-risk-is-ignored"
 status: "complete"
 featured: true

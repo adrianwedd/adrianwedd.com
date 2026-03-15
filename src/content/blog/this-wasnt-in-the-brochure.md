@@ -2,7 +2,7 @@
 title: "This Wasn't in the Brochure"
 description: "A field guide for co-parenting neurodivergent children — written from inside the storm, not the clinical sidelines."
 date: 2026-02-15
-tags: ["writing", "neurodivergence", "parenting", "books"]
+tags: ["writing", "neurodivergence", "parenting", "books", "co-parenting"]
 heroImage: "/og/blog/this-wasnt-in-the-brochure.png"
 series: "This Wasn't in the Brochure"
 seriesOrder: 1

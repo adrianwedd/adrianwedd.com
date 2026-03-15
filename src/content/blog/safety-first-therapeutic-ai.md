@@ -2,7 +2,7 @@
 title: "Safety-First Therapeutic AI"
 description: "Building AI for trauma therapy means the safety architecture has to exist before a single therapeutic feature does. Here's why."
 date: 2026-03-15
-tags: ["ai", "safety", "health"]
+tags: ["ai", "ai-safety", "health", "typescript"]
 draft: false
 heroImage: "/notebook-assets/safety-first-therapeutic-ai/infographic.webp"
 ---

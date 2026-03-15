@@ -2,7 +2,7 @@
 title: "Building in the Open"
 description: "The commit log is more honest than the readme. Building in public as a practice, not a performance."
 date: 2026-02-12
-tags: ["meta", "craft"]
+tags: ["meta", "craft", "open-source"]
 heroImage: "/og/blog/hello-world.png"
 ---
 
