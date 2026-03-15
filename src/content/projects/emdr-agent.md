@@ -19,3 +19,5 @@ The architecture starts with safety, not features. Three layers of distress moni
 The adaptive protocol engine adjusts EMDR phases—desensitization, installation, body scan—based on real-time distress signals. Multi-modal bilateral stimulation supports visual tracking, auditory tones, and tactile pulses. Progress tracking generates a legible session record for both the user and any supervising clinician.
 
 This is not a replacement for a therapist. It cannot be, and the README states that clearly. But the question of what responsible AI-assisted therapeutic tooling looks like is worth taking seriously—especially in contexts where the alternative is no access at all.
+
+[Read the safety architecture deep dive →](/blog/safety-first-therapeutic-ai/)

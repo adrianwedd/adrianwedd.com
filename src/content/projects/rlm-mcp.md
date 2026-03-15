@@ -15,4 +15,6 @@ rlm-mcp implements the Recursive Language Model pattern as an MCP server—sessi
 
 I built this for the workflow where context windows aren't enough: long-form research, multi-chapter manuscripts, regulatory documents that run to hundreds of pages. Sub-second searches, under 100ms index loads, concurrent session safety with per-session locks. The architecture assumes a team environment where multiple people need simultaneous access to the same corpus without stepping on each other's state.
 
-One hundred and three tests. All passing. Because when the tool's job is to extend the reach of a language model, it needs to be the most reliable thing in the chain.
+Comprehensive test suite. All passing. Because when the tool's job is to extend the reach of a language model, it needs to be the most reliable thing in the chain.
+
+[Read the deep dive →](/blog/beyond-context-windows/)
