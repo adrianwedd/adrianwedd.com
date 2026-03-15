@@ -4,6 +4,7 @@ description: "Large organisations rarely fail because risks are unknown. They fa
 date: 2026-03-02
 tags: ["risk", "organisations", "research", "policy"]
 draft: false
+heroImage: "/notebook-assets/why-demonstrated-risk-is-ignored/infographic.webp"
 faq:
   - q: "Why do organisations ignore demonstrated risk?"
     a: "Four structural reasons: responsibility without authority, misaligned incentives, organisational scar tissue from past failures, and evidence that threatens institutional identity."
