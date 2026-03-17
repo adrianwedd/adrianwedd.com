@@ -7,6 +7,7 @@ status: "active"
 featured: false
 date: 2025-11-01
 heroImage: "/notebook-assets/rlm-mcp/infographic.webp"
+audioUrl: "/notebook-assets/rlm-mcp/audio.mp3"
 ---
 
 Context windows have limits. Documents don't. The mismatch creates a practical problem: if your working document exceeds what the model can hold in a single pass, you're forced into chunking strategies that lose coherence, or summarisation that loses detail, or simply giving up on using the document at all.
