@@ -3,6 +3,7 @@ title: "The Resonant Fringe"
 description: "Auditory Spiral, RTRFM, and how Perth's electronic music underground was built on overnight radio, borrowed turntables, and cassette tapes."
 date: 2026-03-18
 tags: ["history", "music", "perth", "radio"]
+heroImage: "/notebook-assets/the-resonant-fringe/infographic.webp"
 ---
 
 In the early 1990s, if you wanted to hear Detroit techno in Perth, you had two options: find someone who'd imported the vinyl, or stay up past midnight on a Sunday and tune your FM dial to 92.1.
