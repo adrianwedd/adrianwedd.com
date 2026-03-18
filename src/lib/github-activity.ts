@@ -209,7 +209,10 @@ export async function fetchAllRepos(): Promise<GitHubRepo[]> {
   const maxPages = 5;
   for (let page = 1; page <= maxPages; page++) {
     const res = await fetch(`${REPOS_URL}?per_page=100&sort=updated&page=${page}`);
-    if (!res.ok) break;
+    if (!res.ok) {
+      if (page === 1) throw new Error(`HTTP ${res.status}`);
+      break; // partial results OK for subsequent pages
+    }
     const repos: GitHubRepo[] = await res.json();
     allRepos.push(...repos);
     if (repos.length < 100) break;
