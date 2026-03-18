@@ -261,10 +261,14 @@ const props = Astro.props;
 
         initKeyboardShortcuts();
         initBackToTop();
-        document.addEventListener('astro:after-swap', function () {
-          initKeyboardShortcuts();
-          initBackToTop();
-        });
+        var root = document.documentElement;
+        if (!root.dataset.layoutSwapInit) {
+          root.dataset.layoutSwapInit = '1';
+          document.addEventListener('astro:after-swap', function () {
+            initKeyboardShortcuts();
+            initBackToTop();
+          });
+        }
       })();
     </script>
   </body>

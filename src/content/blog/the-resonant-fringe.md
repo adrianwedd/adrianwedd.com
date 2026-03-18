@@ -87,4 +87,6 @@ The most profound cultural movements are often broadcast at the extreme margins 
 
 ---
 
+[View the Auditory Spiral project page →](/projects/auditory-spiral/)
+
 *Sources: [X-Press Magazine](https://xpressmag.com.au/rtrfm-goes-full-frequency/), [RTRFM Wikipedia](https://en.wikipedia.org/wiki/RTRFM), [r/perth](https://www.reddit.com/r/perth/comments/ry6pvj/921_in_the_early_90s_techno_dj/)*

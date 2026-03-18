@@ -35,11 +35,12 @@ const contentDates = buildContentDateMap();
 
 function getSitemapMeta(pathname) {
   if (pathname === '/') return { priority: 1.0, changefreq: 'daily' };
-  if (/^\/blog\/[^/]+\/$/.test(pathname)) return { priority: 0.8, changefreq: 'weekly' };
+  if (['/blog/', '/projects/'].includes(pathname)) return { priority: 0.8, changefreq: 'weekly' };
+  if (/^\/blog\/(?!tag\/)[^/]+\/$/.test(pathname)) return { priority: 0.8, changefreq: 'weekly' };
   if (/^\/projects\/[^/]+\/$/.test(pathname)) return { priority: 0.8, changefreq: 'monthly' };
   if (/^\/audio\/[^/]+\/$/.test(pathname)) return { priority: 0.7, changefreq: 'weekly' };
   if (/^\/gallery\//.test(pathname)) return { priority: 0.6, changefreq: 'monthly' };
-  if (['/services/', '/about/', '/contact/', '/new/'].includes(pathname)) return { priority: 0.7, changefreq: 'monthly' };
+  if (['/services/', '/about/', '/contact/', '/new/', '/now/'].includes(pathname)) return { priority: 0.7, changefreq: 'monthly' };
   return { priority: 0.5, changefreq: 'monthly' };
 }
 
