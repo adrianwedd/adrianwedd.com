@@ -1,6 +1,6 @@
 ---
 title: "Reconciling the Great Divergence"
-description: "Goldman Sachs, PwC, McKinsey, and Acemoglu all model AI's economic impact and arrive at wildly different numbers. A framework for understanding the divergence."
+description: "Goldman Sachs, PwC, McKinsey, and Acemoglu all model AI's economic impact and arrive at wildly different numbers. Why the divergence?"
 date: 2026-03-01
 tags: ["ai", "economics", "research", "policy"]
 draft: false
