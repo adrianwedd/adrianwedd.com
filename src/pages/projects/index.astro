@@ -203,7 +203,7 @@ const projectCarouselItems = projects
                 <p class="mt-2 text-sm leading-relaxed text-text-muted">{project.data.description}</p>
                 <div class="mt-4 flex flex-wrap items-center gap-2">
                   {project.data.tags.slice(0, 4).map((tag: string) => (
-                    <span class="rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-text-muted">
+                    <span class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">
                       {tag}
                     </span>
                   ))}
@@ -238,7 +238,7 @@ const projectCarouselItems = projects
                   {repo.name}
                 </h3>
                 {repo.language && (
-                  <span class="shrink-0 rounded-full border border-border px-2 py-0.5 text-xs text-text-muted">
+                  <span class="shrink-0 rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">
                     {repo.language}
                   </span>
                 )}

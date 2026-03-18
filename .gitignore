@@ -41,3 +41,4 @@ public/notebook-assets/*/audio-original.mp3
 
 # CV data synced at build time
 src/data/base-cv.json
+.superpowers/

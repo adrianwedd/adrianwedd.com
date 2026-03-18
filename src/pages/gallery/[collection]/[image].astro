@@ -134,7 +134,7 @@ const collectionSlug = slug(gallery.id);
       {gallery.data.tags.map((tag: string) => (
         <a
           href={`/gallery/tag/${tag}/`}
-          class="rounded-full border border-border bg-surface-alt px-2 py-0.5 text-xs text-text-muted no-underline transition-colors hover:border-accent hover:text-accent"
+          class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted no-underline transition-colors hover:bg-accent/15 hover:text-accent"
         >
           {tag}
         </a>
