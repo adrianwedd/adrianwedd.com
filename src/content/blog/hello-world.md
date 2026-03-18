@@ -4,6 +4,7 @@ description: "The commit log is more honest than the readme. Building in public 
 date: 2026-02-12
 tags: ["meta", "craft", "open-source"]
 heroImage: "/notebook-assets/hello-world/infographic.webp"
+audioUrl: "/notebook-assets/hello-world/audio.mp3"
 ---
 
 Most personal sites are museums. Carefully selected exhibits, arranged chronologically, with the messy work hidden in a drawer somewhere. This is not that.
