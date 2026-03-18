@@ -46,13 +46,35 @@ export default function ActivityDashboard() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [selectedActivity, setSelectedActivity] = useState<ProcessedActivity | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
-  // Focus management and Escape handler for modal
+  // Focus management, focus trap, and Escape handler for modal
   useEffect(() => {
     if (!selectedActivity) return;
     closeButtonRef.current?.focus();
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') setSelectedActivity(null);
+      if (e.key === 'Escape') {
+        setSelectedActivity(null);
+        (triggerRef.current as HTMLElement | null)?.focus();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const modal = closeButtonRef.current?.closest('[role="dialog"]');
+        if (!modal) return;
+        const focusable = Array.from(
+          modal.querySelectorAll<HTMLElement>('a[href], button, [tabindex]:not([tabindex="-1"])')
+        ).filter((el) => !el.hasAttribute('disabled'));
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
@@ -63,6 +85,7 @@ export default function ActivityDashboard() {
 
     async function load() {
       try {
+        if (!cancelled) setError(null);
         const [evts, rps] = await Promise.all([fetchEvents(), fetchAllRepos()]);
         if (!cancelled) {
           setEvents(evts);
@@ -76,7 +99,7 @@ export default function ActivityDashboard() {
     }
 
     load();
-    const interval = setInterval(load, 120_000);
+    const interval = setInterval(load, 300_000);
     return () => { cancelled = true; clearInterval(interval); };
   }, []);
 
@@ -217,25 +240,30 @@ export default function ActivityDashboard() {
         {filteredActivities.length === 0 ? (
           <p class="text-sm text-text-muted italic">No matching activity.</p>
         ) : (
-          <ul aria-live="polite">
-            {filteredActivities.map((a) => (
-              <li key={a.id} class="flex items-start gap-3 border-b border-border py-3 last:border-0">
-                <span class="mt-0.5 w-5 shrink-0 text-center text-text-muted" aria-hidden="true">
-                  {eventIcon(a.type)}
-                </span>
-                <button
-                  class="min-w-0 flex-1 text-left"
-                  onClick={() => setSelectedActivity(a)}
-                  aria-label={`View details: ${a.description}`}
-                >
-                  <span class="font-mono text-xs text-accent">{a.repo}</span>
-                  <span class="text-text"> — </span>
-                  <span class="text-sm text-text">{a.description}</span>
-                </button>
-                <span class="shrink-0 text-xs text-text-muted whitespace-nowrap">{a.time}</span>
-              </li>
-            ))}
-          </ul>
+          <>
+            <p role="status" aria-live="polite" class="sr-only">
+              Showing {filteredActivities.length} {filteredActivities.length === 1 ? 'activity' : 'activities'}
+            </p>
+            <ul>
+              {filteredActivities.map((a) => (
+                <li key={a.id} class="flex items-start gap-3 border-b border-border py-3 last:border-0">
+                  <span class="mt-0.5 w-5 shrink-0 text-center text-text-muted" aria-hidden="true">
+                    {eventIcon(a.type)}
+                  </span>
+                  <button
+                    class="min-w-0 flex-1 text-left"
+                    onClick={(e: Event) => { triggerRef.current = e.currentTarget as HTMLElement; setSelectedActivity(a); }}
+                    aria-label={`View details: ${a.description}`}
+                  >
+                    <span class="font-mono text-xs text-accent">{a.repo}</span>
+                    <span class="text-text"> — </span>
+                    <span class="text-sm text-text">{a.description}</span>
+                  </button>
+                  <span class="shrink-0 text-xs text-text-muted whitespace-nowrap">{a.time}</span>
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </div>
 
@@ -286,7 +314,7 @@ export default function ActivityDashboard() {
       {selectedActivity && (
         <div
           class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={(e: Event) => { if (e.target === e.currentTarget) setSelectedActivity(null); }}
+          onClick={(e: Event) => { if (e.target === e.currentTarget) { setSelectedActivity(null); (triggerRef.current as HTMLElement | null)?.focus(); } }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="activity-modal-title"
@@ -297,7 +325,7 @@ export default function ActivityDashboard() {
           >
             <div class="mb-4 flex items-center justify-between">
               <h3 id="activity-modal-title" class="text-sm font-medium text-text">Activity Detail</h3>
-              <button ref={closeButtonRef} onClick={() => setSelectedActivity(null)} class="text-text-muted hover:text-text" aria-label="Close">✕</button>
+              <button ref={closeButtonRef} onClick={() => { setSelectedActivity(null); (triggerRef.current as HTMLElement | null)?.focus(); }} class="text-text-muted hover:text-text" aria-label="Close">✕</button>
             </div>
             <dl class="space-y-2 text-sm">
               <div><dt class="text-text-muted">Type</dt><dd class="text-text">{selectedActivity.type.replace('Event', '')}</dd></div>
@@ -318,7 +346,7 @@ export default function ActivityDashboard() {
         <a href={`https://github.com/${USERNAME}`} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
           GitHub
         </a>
-        . Refreshes every 2 minutes. Rate limit: 60 requests/hour.
+        . Refreshes every 5 minutes. Rate limit: 60 requests/hour.
       </p>
     </div>
   );
