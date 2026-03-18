@@ -24,10 +24,10 @@ const allProjectsForTags = await getCollection('projects');
 const allTags = [...new Set(allProjectsForTags.filter((p) => !p.data.draft).flatMap((p) => p.data.tags))].sort();
 
 const statusColors: Record<string, string> = {
-  active: 'text-green-400',
+  active: 'text-status-active',
   complete: 'text-accent',
   archived: 'text-text-muted',
-  experiment: 'text-purple-400',
+  experiment: 'text-status-experiment',
 };
 ---
 

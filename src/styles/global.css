@@ -24,6 +24,10 @@
   --color-accent-muted: #9a6d52;
   --color-border: #3d3844;
   --color-shadow: rgb(0 0 0 / 0.3);
+  --color-status-active: #4ade80;
+  --color-status-active-border: #166534;
+  --color-status-experiment: #c084fc;
+  --color-status-experiment-border: #6b21a8;
 
   color-scheme: dark;
 }
@@ -40,6 +44,10 @@
   --color-accent-muted: #c4a08a;
   --color-border: #d4cec8;
   --color-shadow: rgb(0 0 0 / 0.08);
+  --color-status-active: #16a34a;
+  --color-status-active-border: #86efac;
+  --color-status-experiment: #7c3aed;
+  --color-status-experiment-border: #c4b5fd;
 
   color-scheme: light;
 }

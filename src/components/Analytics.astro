@@ -433,7 +433,9 @@
   // Re-bind after View Transitions DOM swap.
   // Document/window-level listeners are sentinel-guarded (registered once).
   // Only per-element trackers and page-specific state need re-running.
-  document.addEventListener('astro:after-swap', () => {
+  if (!(document.documentElement as any).dataset.analyticsSwapInit) {
+    (document.documentElement as any).dataset.analyticsSwapInit = '1';
+    document.addEventListener('astro:after-swap', () => {
     const consent = getConsent();
     if (consent?.analytics && typeof (window as any).gtag === 'function') {
       // Flush reading time for previous page, start fresh for new page
@@ -454,6 +456,7 @@
       trackThemeSwitches();
     }
   });
+  } // end analyticsSwapInit sentinel
 
   window.addEventListener('consent-updated', ((e: CustomEvent<ConsentState>) => {
     if (e.detail.analytics) {

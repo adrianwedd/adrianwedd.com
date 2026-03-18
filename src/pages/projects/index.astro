@@ -24,10 +24,10 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  active: 'border-green-700 text-green-400',
+  active: 'border-status-active-border text-status-active',
   complete: 'border-accent/30 text-accent',
   archived: 'border-border text-text-muted',
-  experiment: 'border-purple-700 text-purple-400',
+  experiment: 'border-status-experiment-border text-status-experiment',
 };
 
 // Load auto-discovered repos from cached data
@@ -111,10 +111,10 @@ const projectCarouselItems = projects
     <details class="mt-2">
       <summary class="cursor-pointer text-xs text-text-muted hover:text-accent">What do these mean?</summary>
       <div class="mt-2 grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-text-muted sm:grid-cols-4">
-        <p><span class="text-green-400">Active</span> — in development</p>
+        <p><span class="text-status-active">Active</span> — in development</p>
         <p><span class="text-accent">Complete</span> — finished, stable</p>
         <p><span class="text-text-muted">Archived</span> — no longer maintained</p>
-        <p><span class="text-purple-400">Experiment</span> — exploratory, may not ship</p>
+        <p><span class="text-status-experiment">Experiment</span> — exploratory, may not ship</p>
       </div>
     </details>
 
