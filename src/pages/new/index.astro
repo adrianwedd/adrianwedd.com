@@ -1,0 +1,282 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ScrollReveal from '../../components/ScrollReveal.astro';
+import { getCollection } from 'astro:content';
+import { slug } from '../../lib/utils';
+
+const blogs = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .map((p) => ({
+    type: 'blog' as const,
+    title: p.data.title,
+    description: p.data.description,
+    date: p.data.date,
+    href: `/blog/${slug(p.id)}/`,
+    tags: p.data.tags,
+  }));
+
+const projectItems = (await getCollection('projects'))
+  .filter((p) => !p.data.draft)
+  .map((p) => ({
+    type: 'project' as const,
+    title: p.data.title,
+    description: p.data.description,
+    date: p.data.date,
+    href: `/projects/${slug(p.id)}/`,
+    tags: p.data.tags,
+    status: p.data.status,
+  }));
+
+const galleries = (await getCollection('gallery'))
+  .filter((g) => !g.data.draft)
+  .map((g) => ({
+    type: 'gallery' as const,
+    title: g.data.title,
+    description: g.data.description ?? '',
+    date: g.data.date,
+    href: `/gallery/${slug(g.id)}/`,
+    tags: g.data.tags,
+    imageCount: g.data.images.length,
+  }));
+
+const episodes = (await getCollection('audio'))
+  .filter((e) => !e.data.draft)
+  .map((e) => ({
+    type: 'audio' as const,
+    title: e.data.title,
+    description: e.data.description,
+    date: e.data.date,
+    href: `/audio/${slug(e.id)}/`,
+    tags: e.data.tags,
+    duration: e.data.duration,
+  }));
+
+type Item = (typeof blogs)[number] | (typeof projectItems)[number] | (typeof galleries)[number] | (typeof episodes)[number];
+
+const all: Item[] = [...blogs, ...projectItems, ...galleries, ...episodes]
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+// Group by month
+const grouped = new Map<string, Item[]>();
+for (const item of all) {
+  const key = item.date.toLocaleDateString('en-AU', { year: 'numeric', month: 'long' });
+  if (!grouped.has(key)) grouped.set(key, []);
+  grouped.get(key)!.push(item);
+}
+
+const typeLabel: Record<string, string> = {
+  blog: 'Blog',
+  project: 'Project',
+  gallery: 'Gallery',
+  audio: 'Audio',
+};
+
+function formatDate(d: Date) {
+  return d.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+---
+
+<BaseLayout
+  title="What's New"
+  description="All content by date — blog posts, projects, gallery collections, and audio episodes."
+>
+  <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumb crumbs={[{ label: "What's New" }]} />
+
+    <h1 class="text-text">What's New</h1>
+    <p class="mt-2 text-sm text-text-muted">All content by date published.</p>
+
+    <div class="new-stats">
+      <span>{blogs.length} posts</span>
+      <span class="opacity-30">/</span>
+      <span>{projectItems.length} projects</span>
+      <span class="opacity-30">/</span>
+      <span>{galleries.length} galleries</span>
+      <span class="opacity-30">/</span>
+      <span>{episodes.length} audio</span>
+      <span class="opacity-30">/</span>
+      <span>{all.length} total</span>
+    </div>
+
+    {[...grouped.entries()].map(([month, items]) => (
+      <ScrollReveal>
+        <section class="new-month">
+          <h2 class="new-month-heading">{month}</h2>
+          <div class="new-list">
+            {items.map((item) => (
+              <a href={item.href} class="new-card">
+                <div class="new-card-header">
+                  <span class:list={['new-card-type', `new-card-type--${item.type}`]}>
+                    {typeLabel[item.type]}
+                  </span>
+                  <time class="new-card-date" datetime={item.date.toISOString()}>
+                    {formatDate(item.date)}
+                  </time>
+                  {'status' in item && item.status && (
+                    <span class="new-card-badge">{item.status}</span>
+                  )}
+                  {'duration' in item && item.duration && (
+                    <span class="new-card-badge">{item.duration}</span>
+                  )}
+                  {'imageCount' in item && (
+                    <span class="new-card-badge">{item.imageCount} images</span>
+                  )}
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                {item.tags && item.tags.length > 0 && (
+                  <div class="new-card-tags">
+                    {item.tags.slice(0, 5).map((tag: string) => (
+                      <span class="new-card-tag">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </a>
+            ))}
+          </div>
+        </section>
+      </ScrollReveal>
+    ))}
+
+    <div class="mt-10 border-t border-border pt-6">
+      <a href="/rss.xml" class="text-sm text-text-muted transition-colors hover:text-accent no-underline">
+        RSS Feed
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .new-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .new-month {
+    margin-bottom: 2.5rem;
+  }
+
+  .new-month-heading {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1rem;
+  }
+
+  .new-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .new-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .new-card:hover {
+    border-color: var(--color-border);
+    background-color: var(--color-surface-alt);
+  }
+
+  .new-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+
+  .new-card-type {
+    font-size: 0.5625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.0625rem 0.375rem;
+    border: 1px solid;
+    border-radius: 2px;
+  }
+
+  .new-card-type--blog {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .new-card-type--project {
+    border-color: #6b9e78;
+    color: #6b9e78;
+  }
+
+  .new-card-type--gallery {
+    border-color: #8b7ec8;
+    color: #8b7ec8;
+  }
+
+  .new-card-type--audio {
+    border-color: #c4956b;
+    color: #c4956b;
+  }
+
+  .new-card-date {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .new-card-badge {
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.0625rem 0.375rem;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: 2px;
+  }
+
+  .new-card h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    line-height: 1.35;
+    color: var(--color-text);
+  }
+
+  .new-card p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .new-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3125rem;
+    margin-top: 0.5rem;
+  }
+
+  .new-card-tag {
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.0625rem 0.3125rem;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: 2px;
+  }
+</style>
