@@ -27,7 +27,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
           <button
             type="button"
             data-tag=""
-            class="tag-filter bg-accent/10 cursor-pointer rounded-full border border-accent px-3 py-1 text-xs font-medium text-accent transition-colors"
+            class="tag-filter bg-accent/15 cursor-pointer rounded-full px-3 py-1 text-xs font-medium text-accent transition-colors"
             aria-pressed="true"
           >
             All
@@ -47,7 +47,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
               type="button"
               data-tag={tag}
               class:list={[
-                'tag-filter cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:border-accent hover:text-accent',
+                'tag-filter cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:bg-accent/15 hover:text-accent',
                 i >= 10 && 'gallery-tag-overflow hidden',
               ]}
               aria-pressed="false"
@@ -60,7 +60,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
               type="button"
               id="gallery-tags-toggle"
               aria-expanded="false"
-              class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+              class="cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:bg-accent/15 hover:text-accent"
             >
               +{allTags.length - 10} more
             </button>
