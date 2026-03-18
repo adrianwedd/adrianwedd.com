@@ -3,7 +3,7 @@ title: "The Robot That Refuses to Give Orders"
 description: "How SPARK is rewriting the rules of neurodivergent support — a non-coercive AI companion for AuDHD children."
 date: 2026-03-12
 tags: ["ai", "neurodivergence", "robotics", "parenting", "raspberry-pi"]
-heroImage: "/notebook-assets/spark/infographic.webp"
+heroImage: "/notebook-assets/the-robot-that-refuses-to-give-orders/infographic.webp"
 audioUrl: "/notebook-assets/spark/audio.mp3"
 videoUrl: "/notebook-assets/spark/video.mp4"
 series: "This Wasn't in the Brochure"
