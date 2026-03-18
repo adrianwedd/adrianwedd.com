@@ -1,6 +1,6 @@
 // src/components/islands/ActivityDashboard.tsx
 
-import { useState, useEffect, useMemo } from 'preact/hooks';
+import { useState, useEffect, useMemo, useRef } from 'preact/hooks';
 import {
   type GitHubEvent,
   type GitHubRepo,
@@ -45,6 +45,18 @@ export default function ActivityDashboard() {
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [selectedActivity, setSelectedActivity] = useState<ProcessedActivity | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Focus management and Escape handler for modal
+  useEffect(() => {
+    if (!selectedActivity) return;
+    closeButtonRef.current?.focus();
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setSelectedActivity(null);
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [selectedActivity]);
 
   useEffect(() => {
     let cancelled = false;
@@ -135,7 +147,7 @@ export default function ActivityDashboard() {
   }
 
   return (
-    <div class="space-y-8" aria-live="polite">
+    <div class="space-y-8">
       {/* Metrics bar */}
       <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {[
@@ -155,7 +167,7 @@ export default function ActivityDashboard() {
       <div class="flex flex-wrap items-center gap-3">
         <select
           value={typeFilter}
-          onChange={(e) => setTypeFilter((e.target as HTMLSelectElement).value)}
+          onChange={(e: Event) => setTypeFilter((e.target as HTMLSelectElement).value)}
           class="rounded border border-border bg-surface-alt px-3 py-1.5 text-sm text-text"
           aria-label="Filter by event type"
         >
@@ -167,7 +179,7 @@ export default function ActivityDashboard() {
 
         <select
           value={timeRange}
-          onChange={(e) => setTimeRange((e.target as HTMLSelectElement).value as TimeRange)}
+          onChange={(e: Event) => setTimeRange((e.target as HTMLSelectElement).value as TimeRange)}
           class="rounded border border-border bg-surface-alt px-3 py-1.5 text-sm text-text"
           aria-label="Filter by time range"
         >
@@ -179,7 +191,7 @@ export default function ActivityDashboard() {
 
         <select
           value={repoFilter}
-          onChange={(e) => setRepoFilter((e.target as HTMLSelectElement).value)}
+          onChange={(e: Event) => setRepoFilter((e.target as HTMLSelectElement).value)}
           class="rounded border border-border bg-surface-alt px-3 py-1.5 text-sm text-text"
           aria-label="Filter by repository"
         >
@@ -193,7 +205,7 @@ export default function ActivityDashboard() {
           type="search"
           placeholder="Search..."
           value={search}
-          onInput={(e) => setSearch((e.target as HTMLInputElement).value)}
+          onInput={(e: Event) => setSearch((e.target as HTMLInputElement).value)}
           class="rounded border border-border bg-surface-alt px-3 py-1.5 text-sm text-text placeholder:text-text-muted"
           aria-label="Search activity"
         />
@@ -205,7 +217,7 @@ export default function ActivityDashboard() {
         {filteredActivities.length === 0 ? (
           <p class="text-sm text-text-muted italic">No matching activity.</p>
         ) : (
-          <ul class="space-y-0">
+          <ul aria-live="polite">
             {filteredActivities.map((a) => (
               <li key={a.id} class="flex items-start gap-3 border-b border-border py-3 last:border-0">
                 <span class="mt-0.5 w-5 shrink-0 text-center text-text-muted" aria-hidden="true">
@@ -274,18 +286,18 @@ export default function ActivityDashboard() {
       {selectedActivity && (
         <div
           class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setSelectedActivity(null)}
+          onClick={(e: Event) => { if (e.target === e.currentTarget) setSelectedActivity(null); }}
           role="dialog"
           aria-modal="true"
-          aria-label="Activity details"
+          aria-labelledby="activity-modal-title"
         >
           <div
             class="w-full max-w-md rounded-lg border border-border bg-surface-raised p-6 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: Event) => e.stopPropagation()}
           >
             <div class="mb-4 flex items-center justify-between">
-              <h3 class="text-sm font-medium text-text">Activity Detail</h3>
-              <button onClick={() => setSelectedActivity(null)} class="text-text-muted hover:text-text" aria-label="Close">✕</button>
+              <h3 id="activity-modal-title" class="text-sm font-medium text-text">Activity Detail</h3>
+              <button ref={closeButtonRef} onClick={() => setSelectedActivity(null)} class="text-text-muted hover:text-text" aria-label="Close">✕</button>
             </div>
             <dl class="space-y-2 text-sm">
               <div><dt class="text-text-muted">Type</dt><dd class="text-text">{selectedActivity.type.replace('Event', '')}</dd></div>
