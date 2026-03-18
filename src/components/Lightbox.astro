@@ -50,6 +50,7 @@ const { images } = Astro.props;
     <figure class="flex max-h-full max-w-full flex-col items-center">
       <img id="lightbox-img" src="" alt="Gallery image" class="max-h-[80vh] max-w-full rounded-lg object-contain" />
       <figcaption id="lightbox-caption" class="mt-3 text-center text-sm text-text-muted"></figcaption>
+      <a id="lightbox-detail" href="#" class="mt-2 text-xs text-text-muted no-underline transition-colors hover:text-accent">View details &rarr;</a>
     </figure>
   </div>
 </div>
@@ -79,6 +80,10 @@ const { images } = Astro.props;
       var closeBtn = getCloseBtn();
       if (img) { img.src = image.src; img.alt = image.alt; }
       if (caption) { caption.textContent = image.caption || ''; }
+      var detailLink = document.getElementById('lightbox-detail');
+      if (detailLink && window.__lightboxHrefs && window.__lightboxHrefs[index]) {
+        detailLink.href = window.__lightboxHrefs[index];
+      }
       if (lightbox) { lightbox.classList.remove('hidden'); }
       document.body.style.overflow = 'hidden';
       if (closeBtn) closeBtn.focus();
@@ -95,8 +100,10 @@ const { images } = Astro.props;
     function prev() { show((currentIndex - 1 + window.__lightboxImages.length) % window.__lightboxImages.length); }
     function next() { show((currentIndex + 1) % window.__lightboxImages.length); }
 
-    // Per-element listeners for gallery triggers (safe — new elements each page)
+    // Store trigger hrefs for detail page links
+    window.__lightboxHrefs = [];
     document.querySelectorAll('.gallery-trigger').forEach(function (btn) {
+      window.__lightboxHrefs.push(btn.getAttribute('href') || '#');
       btn.addEventListener('click', function (e) { e.preventDefault(); show(parseInt(btn.dataset.index), btn); });
     });
 

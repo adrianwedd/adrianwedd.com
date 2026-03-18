@@ -23,6 +23,12 @@ export default {
         border: {
           DEFAULT: 'var(--color-border)',
         },
+        status: {
+          active: 'var(--color-status-active)',
+          'active-border': 'var(--color-status-active-border)',
+          experiment: 'var(--color-status-experiment)',
+          'experiment-border': 'var(--color-status-experiment-border)',
+        },
       },
       fontFamily: {
         sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
