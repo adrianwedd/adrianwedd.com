@@ -29,6 +29,13 @@ const isPortraitHero = typeof project.data.heroImage === 'string' && project.dat
 const allAudio = await getCollection('audio');
 const relatedEpisodes = allAudio.filter((ep) => !ep.data.draft && ep.data.relatedProject === projectSlug);
 
+const statusColors: Record<string, string> = {
+  active: 'border-status-active-border text-status-active',
+  complete: 'border-accent/30 text-accent',
+  archived: 'border-border text-text-muted',
+  experiment: 'border-status-experiment-border text-status-experiment',
+};
+
 const allProjects = (await getCollection('projects'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -109,7 +116,7 @@ const seriesProjects = project.data.series
     />
     <header class="mb-10">
       <div class="mb-4 flex items-center gap-3 text-sm text-text-muted">
-        <span class="border-accent/30 rounded-full border px-2 py-0.5 text-xs text-accent">
+        <span class:list={['rounded-full border px-2 py-0.5 text-xs', statusColors[project.data.status] || 'border-border text-text-muted']}>
           {project.data.status}
         </span>
         {project.data.updatedDate ? (

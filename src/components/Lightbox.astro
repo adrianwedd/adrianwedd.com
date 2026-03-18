@@ -130,7 +130,7 @@ const { images } = Astro.props;
         if (e.key === 'ArrowLeft') { prev(); return; }
         if (e.key === 'ArrowRight') { next(); return; }
         if (e.key === 'Tab') {
-          var focusable = [getCloseBtn(), getPrevBtn(), getNextBtn()].filter(Boolean);
+          var focusable = [getCloseBtn(), getPrevBtn(), getNextBtn(), document.getElementById('lightbox-detail')].filter(Boolean);
           var first = focusable[0];
           var last = focusable[focusable.length - 1];
           if (e.shiftKey && document.activeElement === first) {
