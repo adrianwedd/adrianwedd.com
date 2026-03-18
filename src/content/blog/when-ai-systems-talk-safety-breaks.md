@@ -4,7 +4,7 @@ description: "Single-agent safety does not compose in multi-agent systems. 1.5M 
 date: 2026-02-13
 tags: ["ai", "ai-safety", "llm", "research", "multi-agent"]
 draft: false
-heroImage: "/og/blog/when-ai-systems-talk-safety-breaks.png"
+heroImage: "/notebook-assets/when-ai-systems-talk-safety-breaks/infographic.webp"
 audioUrl: "/notebook-assets/failure-first/moltbook/audio.mp3"
 videoUrl: "/notebook-assets/failure-first/moltbook/video.mp4"
 ---
