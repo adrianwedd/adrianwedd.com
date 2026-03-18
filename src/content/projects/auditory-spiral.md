@@ -11,9 +11,11 @@ date: 1992-01-01
 
 ## The show
 
-Anchored by DJ Shamus (Shane), with core contributors Nicolai, Roger, and Adrian Wedd, the programme operated at the intersection of underground music curation and community pedagogy. Presenters weren't detached broadcasters — they were active participants in the local rave and warehouse scene, curating the soundtrack for their own extended social circles.
+The programme was created and driven by DJ Shamus (Shane) and Nicolai. Shamus was the architect of the show's signature sound — what listeners consistently described as "deep and dark" — building hypnotic, continuous six-hour journeys through minimal techno, dark ambient, and European acid. Nicolai brought a broader, more exploratory sensibility, willing to follow a thread into unfamiliar sonic territory. Roger helped maintain the demanding overnight schedule.
 
-The show's aesthetic was consistently described by its audience as "deep and dark." The six-hour format allowed for extreme long-form mixing: twelve-minute instrumental tracks could slowly unfold without the commercial pressure of frequent interjections or rapid tempo shifts.
+The six-hour format allowed for extreme long-form mixing: twelve-minute instrumental tracks could slowly unfold without the commercial pressure of frequent interjections or rapid tempo shifts. The presenters weren't detached broadcasters — they were active participants in the local rave and warehouse scene, curating the soundtrack for their own community.
+
+I was fortunate to present on the show for several years, and the experience remains one of the most formative of my life — shaping how I think about curation, community building, and making space for uncompromising work.
 
 ## Why it mattered
 

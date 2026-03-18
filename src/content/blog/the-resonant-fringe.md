@@ -35,9 +35,11 @@ Bux and Robert Fletcher lobbied hard against the decision. Their advocacy led to
 
 Commercial broadcasters call the overnight slot "dead air." For us, it was the opposite — a zone of absolute creative freedom where the constraints of daytime formatting simply didn't apply. No need for broad demographic appeal. No pressure to keep things accessible. Just six hours to let a twelve-minute instrumental track slowly unfold without interruption.
 
-The show was anchored by DJ Shamus (Shane), who cultivated the signature aesthetic that listeners consistently described as "deep and dark." Shamus took the Monday 12–6 AM shifts and built hypnotic, continuous journeys through minimal techno, dark ambient, early Detroit techno, and European acid. Working alongside him were Nicolai and Roger, who helped maintain the demanding overnight schedule.
+The show belonged to Shamus and Nicolai. DJ Shamus (Shane) was the architect — he built the signature aesthetic that listeners consistently described as "deep and dark." Shamus took the Monday 12–6 AM shifts and constructed hypnotic, continuous journeys through minimal techno, dark ambient, early Detroit techno, and European acid. He had an extraordinary ear for pacing a six-hour broadcast, knowing exactly when to drop the floor out and when to let a groove build for twenty minutes without touching the mixer.
 
-I came to the show the way most people came to everything in that scene — through the gigs. I'd been listening since 1992, and after crossing paths with Shamus, Roger, and Nicolai at underground parties, I transitioned from the dancefloor to the broadcasting booth. That porousness was the point. The presenters weren't detached broadcasters — we were participants in the same community, curating the soundtrack for our own extended social circles.
+Nicolai brought a different sensibility — broader, more willing to follow a tangent into unfamiliar territory. Between the two of them, they defined what the show was. Roger helped maintain the demanding overnight schedule, and together they created something that was genuinely unlike anything else on the dial.
+
+I was lucky enough to present on the show for several years, and the experience shaped how I think about curation, community, and the value of making space for difficult music. But *Auditory Spiral* was Shamus and Nicolai's creation. I came to it the way most people came to everything in that scene — through the gigs, through the dancefloor, through friendships built at 3 AM in warehouses where nobody checked your credentials. That porousness was the point.
 
 ## The Sunday night decompression chamber
 
@@ -70,7 +72,7 @@ This analogue archiving had a profound pedagogical effect. The overnight broadca
 | Thursday → Friday | *Beats Per Minute* | 1–6 AM | Colin Bridges | Acid trance, French disco, European imports, camp anthems |
 | Friday → Saturday | *Looney Tunes* | Overnight | Various | Experimental electronic, breakcore, nascent sub-genres |
 | Saturday → Sunday | *Rhythm Trippin* | 2–6 AM | Various | Drum and bass, jungle, breakbeat, sound system culture |
-| Sunday → Monday | *Auditory Spiral* | 12–6 AM | DJ Shamus, Nicolai, Roger, Adrian Wedd | Minimal techno, industrial, atmospheric, long-form mixing |
+| Sunday → Monday | *Auditory Spiral* | 12–6 AM | DJ Shamus, Nicolai, Roger | Minimal techno, industrial, atmospheric, long-form mixing |
 | Variable | *Difficult Listening* | Overnight | Various | Avant-garde, noise, electro-acoustic, pure experimentation |
 
 Each night offered a distinctly different acoustic environment tailored to the psychological flow of the weekend.
