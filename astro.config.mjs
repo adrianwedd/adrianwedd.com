@@ -39,7 +39,7 @@ function getSitemapMeta(pathname) {
   if (/^\/projects\/[^/]+\/$/.test(pathname)) return { priority: 0.8, changefreq: 'monthly' };
   if (/^\/audio\/[^/]+\/$/.test(pathname)) return { priority: 0.7, changefreq: 'weekly' };
   if (/^\/gallery\//.test(pathname)) return { priority: 0.6, changefreq: 'monthly' };
-  if (['/services/', '/about/', '/contact/'].includes(pathname)) return { priority: 0.7, changefreq: 'monthly' };
+  if (['/services/', '/about/', '/contact/', '/new/'].includes(pathname)) return { priority: 0.7, changefreq: 'monthly' };
   return { priority: 0.5, changefreq: 'monthly' };
 }
 
