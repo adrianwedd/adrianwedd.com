@@ -48,7 +48,7 @@ const { images } = Astro.props;
     </button>
 
     <figure class="flex max-h-full max-w-full flex-col items-center">
-      <img id="lightbox-img" src="" alt="" class="max-h-[80vh] max-w-full rounded-lg object-contain" />
+      <img id="lightbox-img" src="" alt="Gallery image" class="max-h-[80vh] max-w-full rounded-lg object-contain" />
       <figcaption id="lightbox-caption" class="mt-3 text-center text-sm text-text-muted"></figcaption>
     </figure>
   </div>
@@ -97,7 +97,7 @@ const { images } = Astro.props;
 
     // Per-element listeners for gallery triggers (safe — new elements each page)
     document.querySelectorAll('.gallery-trigger').forEach(function (btn) {
-      btn.addEventListener('click', function () { show(parseInt(btn.dataset.index), btn); });
+      btn.addEventListener('click', function (e) { e.preventDefault(); show(parseInt(btn.dataset.index), btn); });
     });
 
     // Event delegation for lightbox controls — guarded to avoid accumulation
