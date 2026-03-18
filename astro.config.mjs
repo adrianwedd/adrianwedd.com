@@ -41,6 +41,7 @@ function getSitemapMeta(pathname) {
   if (/^\/audio\/[^/]+\/$/.test(pathname)) return { priority: 0.7, changefreq: 'weekly' };
   if (/^\/gallery\//.test(pathname)) return { priority: 0.6, changefreq: 'monthly' };
   if (['/services/', '/about/', '/contact/', '/new/', '/now/'].includes(pathname)) return { priority: 0.7, changefreq: 'monthly' };
+  if (pathname === '/activity/') return { priority: 0.7, changefreq: 'weekly' };
   return { priority: 0.5, changefreq: 'monthly' };
 }
 
