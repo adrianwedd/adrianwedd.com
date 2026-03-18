@@ -2,11 +2,11 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-auto border-t border-border">
-  <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+<footer class="mt-auto border-t border-border bg-surface-alt/50">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
     <div class="grid gap-8 text-sm text-text-muted sm:grid-cols-3">
       <nav aria-label="Site pages">
-        <p class="mb-2 text-xs font-medium text-text">Site</p>
+        <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-text">Site</p>
         <div class="flex flex-wrap gap-x-4 gap-y-1">
           <a href="/projects/" class="transition-colors hover:text-text">Projects</a>
           <a href="/blog/" class="transition-colors hover:text-text">Blog</a>
@@ -18,7 +18,7 @@ const year = new Date().getFullYear();
         </div>
       </nav>
       <nav aria-label="About and meta">
-        <p class="mb-2 text-xs font-medium text-text">Meta</p>
+        <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-text">Meta</p>
         <div class="flex flex-wrap gap-x-4 gap-y-1">
           <a href="/about/" class="transition-colors hover:text-text">About</a>
           <a href="/now/" class="transition-colors hover:text-text">Now</a>
@@ -28,7 +28,7 @@ const year = new Date().getFullYear();
         </div>
       </nav>
       <nav aria-label="External links">
-        <p class="mb-2 text-xs font-medium text-text">Elsewhere</p>
+        <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-text">Elsewhere</p>
         <div class="flex flex-wrap gap-x-4 gap-y-1">
           <a href="https://github.com/adrianwedd" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-text">GitHub</a>
           <a href="https://linkedin.com/in/adrianwedd" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-text">LinkedIn</a>
@@ -37,7 +37,7 @@ const year = new Date().getFullYear();
         </div>
       </nav>
     </div>
-    <div class="mt-6 flex items-center justify-between border-t border-border pt-4 text-xs text-text-muted">
+    <div class="mt-8 flex items-center justify-between border-t border-border pt-6 text-xs text-text-muted font-mono tracking-wide">
       <p>&copy; {year} Adrian Wedd</p>
       <button
         type="button"

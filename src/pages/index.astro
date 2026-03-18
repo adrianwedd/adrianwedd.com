@@ -89,7 +89,7 @@ for (const project of featuredProjects) {
     })}
   />
   {/* Hero */}
-  <section class="hero-glow mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+  <section class="hero-glow mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
     <Personalisation client:load />
     <h1 class="animate-in text-text">Adrian Wedd</h1>
     <p
@@ -105,7 +105,7 @@ for (const project of featuredProjects) {
     <div class="animate-in mt-8 flex flex-wrap gap-4" style="animation-delay: 0.3s">
       <a
         href="/projects/"
-        class="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline transition-colors hover:bg-accent/90"
+        class="btn-primary inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline hover:opacity-90"
       >
         View Projects
         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -114,7 +114,7 @@ for (const project of featuredProjects) {
       </a>
       <a
         href="/blog/"
-        class="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-muted no-underline transition-colors hover:border-accent hover:text-accent"
+        class="btn-secondary inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-muted no-underline hover:border-accent hover:text-accent"
       >
         Read Blog
       </a>
@@ -122,7 +122,7 @@ for (const project of featuredProjects) {
   </section>
 
   {/* Hero carousel — flagship projects */}
-  <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8" aria-label="Flagship projects">
+  <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8" aria-label="Flagship projects">
     <div id="hero-carousel" class="relative overflow-hidden rounded-xl border border-border bg-surface-alt shadow-subtle">
       <div id="carousel-track" class="flex transition-transform duration-500 ease-in-out">
         {/* SPARK */}
@@ -338,7 +338,7 @@ for (const project of featuredProjects) {
   {/* Featured projects */}
   {
     featuredProjects.length > 0 && (
-      <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+      <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div class="mb-8 flex items-baseline justify-between">
             <h2 class="text-text">Featured Work</h2>
@@ -379,7 +379,7 @@ for (const project of featuredProjects) {
                   <p class="mt-2 text-sm leading-relaxed text-text-muted">{project.data.description}</p>
                   <div class="mt-4 flex flex-wrap gap-2">
                     {project.data.tags.slice(0, 3).map((tag: string) => (
-                      <span class="rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-text-muted">
+                      <span class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">
                         {tag}
                       </span>
                     ))}
@@ -413,13 +413,13 @@ for (const project of featuredProjects) {
       <div class="mt-6 flex flex-shrink-0 flex-wrap gap-3 sm:ml-8 sm:mt-0">
         <a
           href="/services/"
-          class="inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline transition-opacity hover:opacity-90"
+          class="btn-primary inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline hover:opacity-90"
         >
           See services
         </a>
         <a
           href="/contact/"
-          class="inline-block rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text no-underline transition-colors hover:border-accent hover:text-accent"
+          class="btn-secondary inline-block rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text no-underline hover:border-accent hover:text-accent"
         >
           Book a free call
         </a>
@@ -432,7 +432,7 @@ for (const project of featuredProjects) {
   {/* Recent posts */}
   {
     recentPosts.length > 0 && (
-      <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+      <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div class="mb-8 flex items-baseline justify-between">
             <h2 class="text-text">Recent Writing</h2>
@@ -472,7 +472,7 @@ for (const project of featuredProjects) {
     recentGalleries.length > 0 && (
       <>
         <div class="section-divider mx-auto max-w-6xl" />
-        <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+        <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div class="mb-8 flex items-baseline justify-between">
               <h2 class="text-text">Gallery</h2>
@@ -528,7 +528,7 @@ for (const project of featuredProjects) {
     recentEpisodes.length > 0 && (
       <>
         <div class="section-divider mx-auto max-w-6xl" />
-        <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+        <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div class="mb-8 flex items-baseline justify-between">
               <h2 class="text-text">Audio</h2>
