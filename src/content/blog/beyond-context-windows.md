@@ -5,6 +5,7 @@ date: 2026-03-15
 tags: ["ai", "engineering", "mcp", "llm", "python"]
 draft: false
 heroImage: "/notebook-assets/beyond-context-windows/infographic.webp"
+audioUrl: "/notebook-assets/beyond-context-windows/audio.mp3"
 ---
 
 Every LLM has a context window. Even the largest ones — a million tokens, two million — are finite. And documents aren't. A regulatory corpus, a research archive, a novel-length manuscript: these routinely exceed what any model can process in a single pass.
