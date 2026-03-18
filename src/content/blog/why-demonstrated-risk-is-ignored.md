@@ -5,6 +5,7 @@ date: 2026-03-02
 tags: ["research", "risk", "organisations", "policy", "ai-safety"]
 draft: false
 heroImage: "/notebook-assets/why-demonstrated-risk-is-ignored/infographic.webp"
+audioUrl: "/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3"
 faq:
   - q: "Why do organisations ignore demonstrated risk?"
     a: "Four structural reasons: responsibility without authority, misaligned incentives, organisational scar tissue from past failures, and evidence that threatens institutional identity."

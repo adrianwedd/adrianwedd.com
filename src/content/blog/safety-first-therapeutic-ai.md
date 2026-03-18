@@ -5,6 +5,7 @@ date: 2026-03-15
 tags: ["ai", "ai-safety", "health", "typescript"]
 draft: false
 heroImage: "/notebook-assets/safety-first-therapeutic-ai/infographic.webp"
+audioUrl: "/notebook-assets/safety-first-therapeutic-ai/audio.mp3"
 ---
 
 EMDR — Eye Movement Desensitization and Reprocessing — is one of the most evidence-based trauma therapies available. Its protocols are precise. Its failure modes are serious. Push too quickly through a traumatic memory, miss a dissociative response, or get the bilateral stimulation timing wrong, and you've done harm.
