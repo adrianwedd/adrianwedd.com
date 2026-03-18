@@ -4,6 +4,7 @@ description: "How I automated audio overviews, quizzes, mind maps, and infograph
 date: 2026-02-15
 tags: ["engineering", "automation", "ai", "python"]
 heroImage: "/notebook-assets/the-notebooklm-pipeline/infographic.webp"
+audioUrl: "/notebook-assets/the-notebooklm-pipeline/audio.mp3"
 faq:
   - q: "What is the NotebookLM pipeline?"
     a: "An automated system that takes structured Markdown content (blog posts, project docs) and routes it through Google's NotebookLM to produce audio overviews, video summaries, infographics, and other derived assets — all triggered from a single config file."

@@ -5,6 +5,7 @@ date: 2026-03-14
 tags: ["engineering", "web", "security", "cloudflare"]
 draft: false
 heroImage: "/notebook-assets/zero-build-web-development/infographic.webp"
+audioUrl: "/notebook-assets/zero-build-web-development/audio.mp3"
 ---
 
 I built a complete operations platform for my Zen Do Kai club. Public marketing site, password-gated ops hub, JWT-authenticated member portal with attendance tracking, grading administration, lesson plans, and Stripe billing. Three zones, 20+ API endpoints, a D1 database, and security-hardened middleware.

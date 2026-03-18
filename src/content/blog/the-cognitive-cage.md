@@ -5,6 +5,7 @@ date: 2026-03-01
 tags: ["ai", "ai-safety", "robotics", "research", "engineering"]
 draft: false
 heroImage: "/notebook-assets/the-cognitive-cage/infographic.webp"
+audioUrl: "/notebook-assets/the-cognitive-cage/audio.mp3"
 ---
 
 For fifty years, robot safety was a solved problem. The answer was a cage: a physical enclosure that kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.
