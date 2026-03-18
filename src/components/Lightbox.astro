@@ -56,6 +56,9 @@ const { images } = Astro.props;
 
 <script define:vars={{ images }}>
   (function () {
+    // Store images on window so re-executions on VT swap update the array
+    // without stale closures in the delegated handlers
+    window.__lightboxImages = images;
     var currentIndex = 0;
     var triggerElement = null;
 
@@ -69,7 +72,7 @@ const { images } = Astro.props;
     function show(index, trigger) {
       currentIndex = index;
       triggerElement = trigger || document.activeElement;
-      var image = images[index];
+      var image = window.__lightboxImages[index];
       var img = getImg();
       var caption = getCaption();
       var lightbox = getLightbox();
@@ -89,8 +92,8 @@ const { images } = Astro.props;
       triggerElement = null;
     }
 
-    function prev() { show((currentIndex - 1 + images.length) % images.length); }
-    function next() { show((currentIndex + 1) % images.length); }
+    function prev() { show((currentIndex - 1 + window.__lightboxImages.length) % window.__lightboxImages.length); }
+    function next() { show((currentIndex + 1) % window.__lightboxImages.length); }
 
     // Per-element listeners for gallery triggers (safe — new elements each page)
     document.querySelectorAll('.gallery-trigger').forEach(function (btn) {

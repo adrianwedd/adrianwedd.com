@@ -299,14 +299,16 @@ const seriesPosts = post.data.series
           wrapper.appendChild(btn);
         });
 
-        // Reading progress
-        var bar = document.getElementById('reading-progress');
-        var remaining = document.getElementById('reading-remaining');
-        var article = document.querySelector('article');
-        if (bar && article && !bar.dataset.progressInit) {
-          bar.dataset.progressInit = '1';
-          var totalReadMin = Math.max(1, Math.ceil((article.textContent || '').split(/\s+/).length / 200));
-          var update = function () {
+        // Reading progress — single scroll listener, persists across VT swaps
+        var root = document.documentElement;
+        if (!root.dataset.scrollProgressInit) {
+          root.dataset.scrollProgressInit = '1';
+          window.addEventListener('scroll', function () {
+            var bar = document.getElementById('reading-progress');
+            var remaining = document.getElementById('reading-remaining');
+            var article = document.querySelector('article');
+            if (!bar || !article) return;
+            var totalReadMin = Math.max(1, Math.ceil((article.textContent || '').split(/\s+/).length / 200));
             var rect = article.getBoundingClientRect();
             var total = article.scrollHeight - window.innerHeight;
             var scrolled = -rect.top;
@@ -322,9 +324,7 @@ const seriesPosts = post.data.series
                 remaining.style.opacity = '0';
               }
             }
-          };
-          window.addEventListener('scroll', update, { passive: true });
-          update();
+          }, { passive: true });
         }
       }
 
