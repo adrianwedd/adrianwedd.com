@@ -93,7 +93,7 @@ The difference is dramatic. PyTorch treats unified memory like it's VRAM — all
 
 Qwen3-TTS's Base model does zero-shot voice cloning. You give it a reference audio clip, a transcript of what's said in the clip, and the text you want spoken. It generates new speech in the reference voice's timbre.
 
-We had a 2-minute 42-second recording of a woman reading a children's poem. The question was: how much of it does the model need?
+We had a 2-minute 42-second recording of a friend reading a children's book she wrote. The question was: how much of it does the model need?
 
 ### 5 seconds
 
@@ -262,7 +262,7 @@ The multi-model approach costs more tokens but catches bugs that any single mode
 
 ## The Result
 
-SPARK now has three distinct voices. GREMLIN growls through a Portal-grade vocoder. VIXEN purrs through a voice cloned from a stranger reading a children's poem. And SPARK — SPARK still sounds like a microwave. But it's an honest microwave, and the upgrade path is clear: a bigger Mac, the 1.7B CustomVoice model, and an `instruct` parameter that actually works.
+SPARK now has three distinct voices. GREMLIN growls through a Portal-grade vocoder. VIXEN purrs through a voice cloned from a friend reading a children's book she wrote. And SPARK — SPARK still sounds like a microwave. But it's an honest microwave, and the upgrade path is clear: a bigger Mac, the 1.7B CustomVoice model, and an `instruct` parameter that actually works.
 
 The full source is available:
 - [SPARK robot](https://github.com/adrianwedd/spark) — the robot's code, tool-voice routing, GLaDOS server, and the MLX voice cloning server (in the `qwen3-tts-server/` directory)
