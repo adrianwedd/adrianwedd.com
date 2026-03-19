@@ -11,7 +11,10 @@ const capabilities = [
       'Multi-site ecosystems with shared brand systems',
       'Fast, constraint-led, zero bloat',
     ],
-    example: { label: 'Evolve Evolution — four-site healthcare ecosystem', href: '#recent-work' },
+    examples: [
+      { label: 'Evolve Evolution — four-site healthcare ecosystem', href: '#recent-work' },
+      { label: 'Wolf Clan — three-zone martial arts platform', href: '#recent-work' },
+    ],
   },
   {
     title: 'AI integration',
@@ -22,7 +25,10 @@ const capabilities = [
       'RAG, voice AI, MCP servers, self-hosted inference',
       'Evaluation frameworks and red-team reporting',
     ],
-    example: { label: 'Living CV — self-healing AI pipeline', href: '#recent-work' },
+    examples: [
+      { label: 'SPARK — non-coercive AI robot companion', href: 'https://spark.wedd.au' },
+      { label: 'Living CV — self-healing AI pipeline', href: 'https://adrianwedd.github.io/cv/' },
+    ],
   },
   {
     title: 'Security & evaluation',
@@ -33,7 +39,7 @@ const capabilities = [
       'AI red-teaming across models and prompt surfaces',
       'GenAI governance frameworks for procurement and executives',
     ],
-    example: null,
+    examples: [],
   },
 ];
 
@@ -86,10 +92,10 @@ const caseStudies = [
     tags: ['Multilingual', 'Static', 'Hospitality'],
   },
   {
-    name: 'Living CV',
-    url: 'https://adrianwedd.github.io/cv/',
-    desc: 'Self-updating CV pipeline. GitHub Actions runs twice daily: collects real commit and language data, Claude AI refines the content, a hallucination detector validates every claim before deployment gates open. The pipeline won\'t ship fabrications. Built it for myself — which is how I build everything.',
-    tags: ['AI pipeline', 'GitHub Actions', 'Self-healing'],
+    name: 'Wolf Clan Zen Do Kai',
+    url: 'https://wolfclanmartialarts.com',
+    desc: 'Three-zone operations platform for a martial arts club. Public site with 24 blog posts and schema.org structured data. Password-gated ops hub with live GitHub Issues kanban and 40+ operational docs. JWT member portal with attendance tracking, belt progression, and 79 lesson plans. Zero build tools — vanilla HTML/CSS/JS on Cloudflare edge.',
+    tags: ['Community', 'Ops platform', 'Cloudflare', 'Zero-build'],
   },
 ];
 
@@ -183,7 +189,7 @@ const pricing = [
       often crosses several.
     </p>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
-      {capabilities.map(({ title, outcome, deliverables, example }) => (
+      {capabilities.map(({ title, outcome, deliverables, examples }) => (
         <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
           <h3 class="font-semibold text-text">{title}</h3>
           <p class="mt-2 text-sm font-medium text-accent">{outcome}</p>
@@ -195,13 +201,17 @@ const pricing = [
               </li>
             ))}
           </ul>
-          {example && (
-            <p class="mt-4 text-xs text-text-muted">
-              e.g.{' '}
-              <a href={example.href} class="text-accent hover:underline">
-                {example.label}
-              </a>
-            </p>
+          {examples.length > 0 && (
+            <div class="mt-4 space-y-1">
+              {examples.map((ex) => (
+                <p class="text-xs text-text-muted">
+                  e.g.{' '}
+                  <a href={ex.href} class="text-accent hover:underline">
+                    {ex.label}
+                  </a>
+                </p>
+              ))}
+            </div>
           )}
         </div>
       ))}

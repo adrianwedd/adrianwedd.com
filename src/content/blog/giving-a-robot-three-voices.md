@@ -5,7 +5,7 @@ date: 2026-03-19
 tags: ["ai", "tts", "mlx", "raspberry-pi", "robotics", "apple-silicon", "voice-cloning", "spark"]
 heroImage: "/notebook-assets/giving-a-robot-three-voices/infographic.webp"
 audioUrl: "/notebook-assets/giving-a-robot-three-voices/audio.mp3"
-series: "This Wasn't in the Brochure"
+series: "PiCar-X"
 seriesOrder: 2
 faq:
   - q: "Can Qwen3-TTS run on a Raspberry Pi?"
