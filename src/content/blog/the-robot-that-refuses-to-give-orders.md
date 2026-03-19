@@ -6,7 +6,7 @@ tags: ["ai", "neurodivergence", "robotics", "parenting", "raspberry-pi"]
 heroImage: "/notebook-assets/the-robot-that-refuses-to-give-orders/infographic.webp"
 audioUrl: "/notebook-assets/spark/audio.mp3"
 videoUrl: "/notebook-assets/spark/video.mp4"
-series: "This Wasn't in the Brochure"
+series: "PiCar-X"
 seriesOrder: 1
 ---
 
