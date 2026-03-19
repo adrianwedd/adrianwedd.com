@@ -39,7 +39,9 @@ const capabilities = [
       'AI red-teaming across models and prompt surfaces',
       'GenAI governance frameworks for procurement and executives',
     ],
-    examples: [],
+    examples: [
+      { label: 'Failure First — 120 models, 18K adversarial prompts', href: '/blog/120-models-18k-prompts/' },
+    ],
   },
 ];
 
@@ -151,24 +153,39 @@ const pricing = [
       'Agentic Systems',
     ],
   })} />
-  {/* Hero */}
+
+  {/* Hero — character first, capabilities follow */}
   <section
     id="services-hero"
     aria-labelledby="services-hero-heading"
     class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8"
   >
     <h1 id="services-hero-heading" class="text-text">
-      Consulting. Development.<br />Problem-solving. At velocity.
+      I build things that work for people who need them.<br />
+      <span class="text-text-muted">And I break things on purpose to make sure they actually do.</span>
     </h1>
-    <p class="mt-6 max-w-prose text-lg text-text-muted">
-      Nearly 45 years across the stack. I work with small businesses, regulated industries,
-      and anyone with a problem worth solving — website, AI system, security audit, voice
-      agent, agentic pipeline, governance framework. I figure it out and build it. I stay
-      involved. I don't hand off and disappear.
-    </p>
+    <div class="mt-10 max-w-prose space-y-5 leading-relaxed text-text">
+      <p>
+        I spent years planning direct actions for Greenpeace — not communications, not fundraising,
+        the <a href="/about/" class="text-accent hover:underline">Actions unit</a>. Operations against
+        well-resourced opponents who would rather you didn't succeed. That work teaches you one thing
+        above everything else: the optimistic plan is the dangerous plan. Enumerate failure modes
+        before you move.
+      </p>
+      <p>
+        That thinking didn't leave. It followed me into government cybersecurity, then AI safety
+        research — <a href="/blog/120-models-18k-prompts/" class="text-accent hover:underline">120 models, 18,000 adversarial prompts</a>,
+        a published methodology — then into everything I build for clients. It is the methodology.
+      </p>
+      <p>
+        Now I consult, architect, build, automate, and evaluate. Websites, AI systems, security
+        audits, voice agents, agentic pipelines, governance frameworks. Small businesses, regulated
+        industries, anyone with a problem worth solving properly.
+      </p>
+    </div>
     <a
       href="/contact/"
-      class="btn-primary mt-8 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline hover:opacity-90"
+      class="btn-primary mt-10 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline hover:opacity-90"
     >
       Work with me
     </a>
@@ -176,35 +193,35 @@ const pricing = [
 
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
 
-  {/* Why me — the positioning statement */}
+  {/* The through-line — why the rigour doesn't change */}
   <section
     id="why-me"
     aria-labelledby="why-me-heading"
     class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
   >
-    <h2 id="why-me-heading" class="text-text">Why me</h2>
+    <h2 id="why-me-heading" class="text-text">Same rigour. Every time.</h2>
     <div class="mt-6 max-w-prose space-y-5 leading-relaxed text-text">
       <p>
-        Most of what I build, I build for people who need it more than for people who can
-        afford it. A <a href="/projects/freedom-engine/" class="text-accent hover:underline">legal AI system</a> for
-        US federal inmates navigating their rights. An <a href="/projects/wolf-clan-hub/" class="text-accent hover:underline">operations platform</a> for
-        a local martial arts club. A <a href="/projects/spark/" class="text-accent hover:underline">robot companion</a> for
-        my own neurodivergent children. The quality doesn't change based on the invoice.
+        I built a <a href="/projects/freedom-engine/" class="text-accent hover:underline">legal AI system</a> for
+        US federal inmates navigating sentence reductions nobody was explaining to them.
+        I built an <a href="/projects/wolf-clan-hub/" class="text-accent hover:underline">operations platform</a> for
+        a local martial arts club — 79 lesson plans, JWT member portal, live kanban, zero build tools.
+        I built a <a href="/projects/spark/" class="text-accent hover:underline">non-coercive AI companion</a> for
+        my own neurodivergent children. I put a <a href="https://adrianwedd.github.io/cv/" class="text-accent hover:underline">hallucination detector</a> on
+        my own CV so fabricated claims can't deploy.
       </p>
       <p>
-        The approach comes from Greenpeace — not communications, not fundraising, the
-        Actions unit. Years of planning operations against well-resourced opponents who
-        would rather you didn't succeed. That teaches you to enumerate failure modes before
-        you move. It teaches you that the optimistic plan is the dangerous plan. It followed
-        me into government cybersecurity, then into AI safety research, then into everything
-        I build for clients.
+        No one was paying for most of it. The standard didn't change.
       </p>
       <p>
-        I'm Autistic and ADHD. I name this because it directly explains why I'm good at
-        this work: hyperfocus means I go deeper than most people can sustain. Pattern
-        recognition means I notice the failure mode hiding inside the working system.
-        Directness means if your system has a problem, I'll tell you what it is — not a
-        version of it that's easier to hear.
+        This is not altruism. It is how I'm wired: the problem is either worth solving properly
+        or it isn't. The invoice doesn't change the answer.
+      </p>
+      <p>
+        I'm Autistic and ADHD. I name this because it directly explains the work: hyperfocus
+        means I go to a depth most people can't sustain. Pattern recognition means I notice
+        the failure mode hiding inside the working system. Directness means if your system has
+        a problem, I'll tell you what it is — not a version that's easier to hear.
       </p>
       <p class="text-text-muted">
         <a href="/about/" class="text-accent hover:underline">More about how I got here →</a>
@@ -222,9 +239,8 @@ const pricing = [
   >
     <h2 id="what-i-do-heading" class="text-text">What I do</h2>
     <p class="mt-6 max-w-prose text-text-muted">
-      I consult, architect, build, automate, integrate, and evaluate. The range is broad
-      because most real problems don't fit neatly into one category — and the best solution
-      often crosses several.
+      The range is broad because most real problems don't fit neatly into one category — and the
+      best solution often crosses several.
     </p>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
       {capabilities.map(({ title, outcome, deliverables, examples }) => (
@@ -280,13 +296,13 @@ const pricing = [
 
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
 
-  {/* Recent work */}
+  {/* Recent work — framed by the methodology */}
   <section
     id="recent-work"
     aria-labelledby="recent-work-heading"
     class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
   >
-    <h2 id="recent-work-heading" class="text-text">Recent work</h2>
+    <h2 id="recent-work-heading" class="text-text">Here's what that looks like</h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
       {caseStudies.map(({ name, url, desc, tags }) => (
         <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
@@ -324,14 +340,14 @@ const pricing = [
     <h2 id="testimonials-heading" class="text-text">What clients say</h2>
     <div class="mt-8">
       <p class="text-xl font-medium text-accent leading-snug tracking-tight">
-        "I would recommend working with Adrian without hesitation."
+        "He has a unique ability to truly listen and understand the essence of someone's work, then translate it into a clear and beautiful digital presence."
       </p>
       <blockquote class="mt-6 rounded-lg border border-border bg-surface-alt p-6">
         <p class="text-text leading-relaxed">
-          "Working with Adrian was exceptional. He has a unique ability to truly listen and understand the essence of someone's work, then translate it into a clear and beautiful digital presence."
+          "Working with Adrian was exceptional. The process felt thoughtful, collaborative and surprisingly easy, and the result already feels like a true extension of my practice — helping people find solutions to their problems, and answers to their questions."
         </p>
         <p class="mt-4 text-text leading-relaxed">
-          "The process felt thoughtful, collaborative and surprisingly easy, and the result already feels like a true extension of my practice — helping people find solutions to their problems, and answers to their questions."
+          "I would recommend working with Adrian without hesitation."
         </p>
         <footer class="mt-5 flex items-center justify-between flex-wrap gap-3">
           <span class="text-sm text-text-muted">— Dr Annica Larsdotter DC DICCP</span>
