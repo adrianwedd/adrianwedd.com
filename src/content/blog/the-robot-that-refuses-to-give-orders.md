@@ -14,7 +14,7 @@ seriesOrder: 2
 
 When you are handed a neurodivergent child, you are rarely handed a manual. Most parents find themselves navigating a dense fog of clinical terms and behavioral challenges, searching for a brochure that doesn't exist. The foundational framework for this project, [This Wasn't in the Brochure](/blog/this-wasnt-in-the-brochure/), articulates a reality many families live: the standard parenting "operating system" simply doesn't boot on this hardware.
 
-[SPARK](https://spark.wedd.au) (Support Partner for Awareness, Regulation & Kindness) was built to bridge that gap. A Raspberry Pi 5-based robotics platform powered by Claude Haiku, SPARK is a "robot friend" designed for a child with an AuDHD (ADHD + ASD comorbid) profile. It isn't a tutor designed to optimize a child's productivity or a therapist designed to "fix" their behavior.
+[SPARK](https://spark.wedd.au) (Support Partner for Awareness, Regulation & Kindness) was built to bridge that gap. A Raspberry Pi 4-based robotics platform powered by Claude Haiku, SPARK is a "robot friend" designed for a child with an AuDHD (ADHD + ASD comorbid) profile. It isn't a tutor designed to optimize a child's productivity or a therapist designed to "fix" their behavior.
 
 The most radical thing about SPARK isn't the code — it is the philosophy. It is a machine that rejects the traditional AI hierarchy of master and servant, choosing instead to exist as a non-coercive companion that adapts to the human, rather than demanding the human adapt to the machine.
 
