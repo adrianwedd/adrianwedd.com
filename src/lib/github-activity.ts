@@ -78,8 +78,10 @@ export function processEvents(events: GitHubEvent[]): {
     const time = relativeTime(event.created_at);
     const eventTime = new Date(event.created_at).getTime();
 
-    if (event.type === 'PushEvent' && event.payload.commits && eventTime > thirtyDaysAgo) {
-      const count = event.payload.commits.length;
+    if (event.type === 'PushEvent' && eventTime > thirtyDaysAgo) {
+      // GitHub Actions automated pushes often have empty commits arrays —
+      // count at least 1 per push event so activity isn't invisible
+      const count = Math.max(event.payload.commits?.length ?? 0, 1);
       commitCount += count;
       const existing = repoMap.get(repoShort);
       if (existing) {
@@ -95,9 +97,12 @@ export function processEvents(events: GitHubEvent[]): {
     switch (event.type) {
       case 'PushEvent': {
         const commits = event.payload.commits ?? [];
-        const msg = commits[0]?.message?.split('\n')[0] ?? 'pushed code';
-        const count = commits.length;
-        description = count > 1 ? `${count} commits: ${msg}` : msg;
+        if (commits.length === 0) {
+          description = 'pushed code';
+        } else {
+          const msg = commits[0]?.message?.split('\n')[0] ?? 'pushed code';
+          description = commits.length > 1 ? `${commits.length} commits: ${msg}` : msg;
+        }
         url = `https://github.com/${event.repo.name}`;
         break;
       }
@@ -196,13 +201,23 @@ export async function fetchEvents(): Promise<GitHubEvent[]> {
   const cached = getCached();
   if (cached) return cached;
 
-  const res = await fetch(`${EVENTS_URL}?per_page=100`);
-  if (res.status === 403) throw new Error('rate-limit');
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const allEvents: GitHubEvent[] = [];
+  const maxPages = 3; // GitHub Events API caps at 10 pages total
 
-  const events: GitHubEvent[] = await res.json();
-  setCache(events);
-  return events;
+  for (let page = 1; page <= maxPages; page++) {
+    const res = await fetch(`${EVENTS_URL}?per_page=100&page=${page}`);
+    if (res.status === 403) throw new Error('rate-limit');
+    if (!res.ok) {
+      if (page === 1) throw new Error(`HTTP ${res.status}`);
+      break;
+    }
+    const events: GitHubEvent[] = await res.json();
+    allEvents.push(...events);
+    if (events.length < 100) break;
+  }
+
+  setCache(allEvents);
+  return allEvents;
 }
 
 type RepoCacheData = { repos: GitHubRepo[]; timestamp: number };
