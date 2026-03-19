@@ -209,27 +209,26 @@ function formatDate(d: Date) {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     padding: 0.0625rem 0.375rem;
-    border: 1px solid;
-    border-radius: 2px;
+    border-radius: 9999px;
   }
 
   .new-card-type--blog {
-    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
     color: var(--color-accent);
   }
 
   .new-card-type--project {
-    border-color: #6b9e78;
+    background: color-mix(in srgb, #6b9e78 12%, transparent);
     color: #6b9e78;
   }
 
   .new-card-type--gallery {
-    border-color: #8b7ec8;
+    background: color-mix(in srgb, #8b7ec8 12%, transparent);
     color: #8b7ec8;
   }
 
   .new-card-type--audio {
-    border-color: #c4956b;
+    background: color-mix(in srgb, #c4956b 12%, transparent);
     color: #c4956b;
   }
 
@@ -244,9 +243,9 @@ function formatDate(d: Date) {
     text-transform: uppercase;
     letter-spacing: 0.04em;
     padding: 0.0625rem 0.375rem;
-    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
     color: var(--color-text-muted);
-    border-radius: 2px;
+    border-radius: 9999px;
   }
 
   .new-card h3 {
