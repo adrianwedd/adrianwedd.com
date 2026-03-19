@@ -3,6 +3,7 @@ title: "Giving a Robot Three Voices"
 description: "Building a three-persona TTS pipeline for a Pi robot — MLX voice cloning, a GLaDOS model, and engineering graceful fallback."
 date: 2026-03-19
 tags: ["ai", "tts", "mlx", "raspberry-pi", "robotics", "apple-silicon", "voice-cloning", "spark"]
+audioUrl: "/notebook-assets/giving-a-robot-three-voices/audio.mp3"
 series: "This Wasn't in the Brochure"
 seriesOrder: 3
 faq:
