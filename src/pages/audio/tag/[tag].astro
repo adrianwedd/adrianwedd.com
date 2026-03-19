@@ -40,10 +40,10 @@ const allTags = [...new Set(allEpisodes.flatMap((e) => e.data.tags))].sort();
           <a
             href={`/audio/tag/${t}/`}
             class:list={[
-              'rounded-full border px-3 py-1 text-xs no-underline',
+              'rounded-full px-3 py-1 text-xs no-underline',
               t === tag
-                ? 'bg-accent/10 border-accent font-medium text-accent'
-                : 'border-border text-text-muted transition-colors hover:border-accent hover:text-accent',
+                ? 'bg-accent/15 font-medium text-accent'
+                : 'bg-surface-raised text-text-muted transition-colors hover:bg-accent/15 hover:text-accent',
             ]}
           >
             {t}

@@ -142,7 +142,7 @@ export default function GitHubActivity() {
       )}
 
       <p class="text-xs text-text-muted">
-        Live from{' '}
+        Loaded from{' '}
         <a
           href={`https://github.com/${USERNAME}`}
           target="_blank"
@@ -151,7 +151,7 @@ export default function GitHubActivity() {
         >
           GitHub
         </a>
-        . Updates every few minutes.
+        . Refreshes on page load.
       </p>
     </div>
   );
