@@ -67,7 +67,7 @@ responding to ArrowLeft/ArrowRight when the carousel or a child has focus."
 
 - [ ] **Step 1: Add scrollbar-hide utility class**
 
-In `src/styles/global.css`, inside the `@layer utilities` block (after the `@media (prefers-reduced-motion: reduce)` block that closes around line 256), add:
+In `src/styles/global.css`, INSIDE the `@layer utilities { }` block (after the `@media (prefers-reduced-motion: reduce) { }` block at ~line 256, but BEFORE the closing `}` of `@layer utilities` at ~line 257), add:
 
 ```css
 .scrollbar-hide {
@@ -196,6 +196,7 @@ const animations = [
   var dpr = 1;
   var adaptiveQuality = 1.0;
   var fastFrameCount = 0;
+  var pendingIndex = -1; // tracks animation being transitioned to
 
   // --- Color reading ---
   function readColors() {
@@ -256,7 +257,8 @@ const animations = [
 
   // --- Animation switching with fade ---
   function switchAnimation(index, canvas, ctx, section) {
-    if (index === currentIndex) return;
+    if (index === currentIndex || index === pendingIndex) return;
+    pendingIndex = index;
     var anim = getAnim(ANIM_KEYS[currentIndex]);
     if (anim && anim.cleanup) { try { anim.cleanup(); } catch (e) { console.warn('HeroCanvas cleanup error:', e); } }
 
@@ -265,7 +267,10 @@ const animations = [
     canvas.style.opacity = '0';
 
     setTimeout(function () {
+      // Only proceed if this is still the pending animation (guards against rapid clicks)
+      if (pendingIndex !== index) return;
       currentIndex = index;
+      pendingIndex = -1;
       try { sessionStorage.setItem('adrianwedd_heroAnimation', String(index)); } catch (e) {}
       // Clear canvas between animations to prevent bleed-through
       var c = document.getElementById('hero-canvas');
@@ -287,6 +292,8 @@ const animations = [
     function loop(timestamp) {
       rafId = requestAnimationFrame(loop);
       if (!isVisible) return;
+      // Discard first frame (lastTime is 0, dt would be huge)
+      if (lastTime === 0) { lastTime = timestamp; return; }
       var dt = timestamp - lastTime;
       lastTime = timestamp;
 
@@ -327,7 +334,17 @@ const animations = [
     if (themeObs) { themeObs.disconnect(); themeObs = null; }
     var anim = getAnim(ANIM_KEYS[currentIndex]);
     if (anim && anim.cleanup) { try { anim.cleanup(); } catch (e) {} }
+    // Restore hero-glow and remove overflow-hidden if canvas is being destroyed
+    var canvas = document.getElementById('hero-canvas');
+    if (canvas) {
+      var section = canvas.closest('section');
+      if (section) {
+        section.classList.remove('overflow-hidden');
+        section.classList.add('hero-glow');
+      }
+    }
     currentIndex = -1;
+    pendingIndex = -1;
   }
 
   function initCanvas() {
@@ -1542,10 +1559,14 @@ ANIMATIONS.erosion = (function () {
     var path = [];
     var cx = Math.floor(sx / hmRes), cy = Math.floor(sy / hmRes);
     var flow = new Float32Array(hmCols * hmRows);
+    var visited = {};
     var maxSteps = 500;
 
     for (var step = 0; step < maxSteps; step++) {
       if (cx < 0 || cx >= hmCols || cy < 0 || cy >= hmRows) break;
+      var cellKey = cx + ',' + cy;
+      if (visited[cellKey]) break; // prevent ping-pong between basins
+      visited[cellKey] = true;
       var idx = cy * hmCols + cx;
       flow[idx]++;
       path.push({ x: cx * hmRes, y: cy * hmRes, flow: flow[idx] });
