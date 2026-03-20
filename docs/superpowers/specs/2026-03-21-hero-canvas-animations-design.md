@@ -20,7 +20,7 @@ Inspired by the animated canvas splash on sybilsolutions.ai. Rather than a splas
 
 In `src/pages/index.astro`, the hero `<section>` is modified:
 
-1. Add `relative overflow-hidden` to the hero section classes.
+1. Add `relative` to the hero section classes. Do **not** add `overflow-hidden` statically — it clips the `hero-glow::before` pseudo-element. Instead, `overflow-hidden` is applied via JS only when the canvas initializes successfully, and removed if `prefers-reduced-motion` is active.
 2. Insert `<HeroCanvas />` as the first child inside the hero section.
 3. Add `relative z-10` to all existing hero content (h1, paragraphs, buttons, Personalisation island) so they float above the canvas.
 
@@ -94,22 +94,24 @@ A horizontal row of pill-shaped labels at the bottom of the hero section, center
 - **Inactive pills:** `bg-transparent`, `text-text-muted`, `border border-border`, `rounded-full`.
 - **Hover:** `text-accent` with `border-accent` transition.
 - **Font:** `text-xs`, `px-3 py-1`.
-- **Container:** `flex gap-2 justify-center flex-wrap` on mobile (pills wrap to second row). On desktop (`sm:` and up), single row. If wrapping produces more than 2 rows, consider shortening labels.
-- **Mobile affordance:** On narrow screens where pills wrap, left/right edge pills get subtle fade-mask indicators if horizontally scrollable (CSS `mask-image` gradient).
+- **Container:** `flex gap-2 justify-center overflow-x-auto` with `scrollbar-hide`. No wrapping — horizontal scroll on narrow screens.
+- **Mobile affordance:** Left and right edges of the switcher container get a CSS `mask-image` fade gradient (8px) to signal scrollability. On screens < 400px, pills use shorter labels: `Myc · Fern · Flow · Root · Neur · Terr · Spor · Eros` (4-char truncations). Implemented via a `<span class="sm:hidden">` short label and `<span class="hidden sm:inline">` full label inside each button.
 
 ### Behaviour
 
 - Clicking a pill switches the active animation. Canvas fades to 0 opacity over 150ms, animation swaps, canvas fades back in.
 - First animation on page load is chosen randomly from the 8 options.
-- Active animation index stored in `sessionStorage('adrianwedd_heroAnimation')` so back-navigation preserves the choice. Fresh sessions get a new random pick.
+- Active animation index stored in `sessionStorage.setItem('adrianwedd_heroAnimation', index)` / `sessionStorage.getItem('adrianwedd_heroAnimation')` so back-navigation preserves the choice. Fresh sessions get a new random pick.
 
 ### Semantics
 
 - Switcher container: `role="tablist"`, `aria-label="Background animation"`.
 - Each pill: `<button role="tab">`, `aria-selected="true|false"`.
 - Active pill: `tabindex="0"`. Inactive pills: `tabindex="-1"`.
-- Arrow keys move focus and activate (auto-activation pattern per WAI-ARIA tabs). Left/Right cycle through pills with wrapping. Home/End jump to first/last.
+- Arrow keys move focus and activate (auto-activation pattern per WAI-ARIA tabs). Left/Right cycle through pills with wrapping. Home/End jump to first/last. Arrow key handlers are **focus-scoped**: only fire when a pill button has focus (check `document.activeElement`), not globally on the document.
 - Canvas: `aria-hidden="true"`.
+
+**Keyboard conflict note:** The existing carousel script listens for ArrowLeft/ArrowRight globally on `document` with no focus guard. As a prerequisite fix, scope the carousel's keyboard handler to only fire when the carousel or a child has focus. This prevents arrow keys from simultaneously controlling both the carousel and the animation switcher.
 
 ## Readability Overlay
 
@@ -140,7 +142,11 @@ This handles responsive hero sizing (`py-20 sm:py-28`) and orientation changes o
 
 ## `hero-glow` Class
 
-The existing hero section has a `hero-glow` class that applies a subtle radial glow effect. When `HeroCanvas` is present, `hero-glow` is removed from the section — the canvas animations replace this visual treatment. On pages without the canvas (or with `prefers-reduced-motion`), `hero-glow` remains.
+The existing hero section has a `hero-glow` class that applies a subtle radial glow via a `::before` pseudo-element with `z-index: -1` extending beyond the section bounds (`top: -20%; height: 120%`).
+
+- When canvas initializes: JS removes `hero-glow` class and adds `overflow-hidden` to the hero section.
+- When `prefers-reduced-motion: reduce` is active: JS does neither — `hero-glow` remains, `overflow-hidden` is not added, canvas and switcher are hidden via CSS.
+- On pages without HeroCanvas: `hero-glow` remains untouched.
 
 ## Performance
 
@@ -171,10 +177,12 @@ The existing hero section has a `hero-glow` class that applies a subtle radial g
 
 Follows the established project pattern:
 
+Follows the carousel pattern (index.astro lines 271-334):
+
 - `<script is:inline>` (not module) so it re-executes on VT swap.
-- `documentElement.dataset.heroCanvasInit` sentinel prevents duplicate global listeners.
+- `documentElement.dataset.heroCanvasInit` sentinel wraps only event listener registration (click delegation, resize, theme MutationObserver). The `initCanvas()` function is called **unconditionally** at the end of the IIFE, outside the sentinel — so it runs both on first load and after every VT swap.
+- `astro:after-swap` listener registered inside the sentinel calls `destroyCanvas()` (cancels RAF via stored `rafId`, disconnects IntersectionObserver and MutationObserver) then calls `initCanvas()`. This prevents duplicate render loops.
 - Event delegation on `document` for switcher clicks.
-- `astro:after-swap` handler cancels any existing RAF loop (via stored `rafId`) and disconnects the IntersectionObserver before re-initializing canvas and animation. This prevents duplicate render loops.
 - Lazy DOM lookups (functions, not cached references) since elements get replaced on VT.
 
 ## Error Handling
@@ -188,7 +196,7 @@ Follows the established project pattern:
 | File | Change |
 |------|--------|
 | `src/components/HeroCanvas.astro` | **New.** Canvas, switcher, overlay, all animation logic. |
-| `src/pages/index.astro` | Add `relative overflow-hidden` to hero section. Import and insert `<HeroCanvas />`. Add `relative z-10` to hero content elements. |
+| `src/pages/index.astro` | Add `relative` to hero section (not `overflow-hidden` — applied via JS). Import and insert `<HeroCanvas />`. Add `relative z-10` to hero content elements. Scope carousel keyboard handler to focus. |
 | `src/styles/global.css` | Add `scrollbar-hide` utility if not present (for mobile switcher scroll). |
 
 No other files changed. No new dependencies.
