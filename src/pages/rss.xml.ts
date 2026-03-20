@@ -46,7 +46,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: 'Adrian Wedd',
-    description: 'AI safety researcher and systems thinker. Projects, writing, audio, and visual work.',
+    description: 'AI safety, systems architecture, adversarial thinking. Projects, writing, audio, and visual work.',
     site: context.site!.toString(),
     items,
   });
