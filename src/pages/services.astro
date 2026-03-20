@@ -52,7 +52,7 @@ const domains = [
   },
   {
     title: 'Legal intelligence',
-    desc: 'Knowledge graph construction, document analysis pipelines, RAG over large legal corpora. Transparency-first AI reasoning with auditable outputs. Built VERITAS from scratch — a full legal intelligence platform with Neo4j, Cypher, and document extraction.',
+    desc: 'Knowledge graph construction, document analysis pipelines, RAG over large legal corpora. Transparency-first AI reasoning with auditable outputs. Built <a href="/projects/veritas/" class="text-accent hover:underline">VERITAS</a> from scratch — a full legal intelligence platform with Neo4j, Cypher, and document extraction.',
   },
   {
     title: 'Government & compliance',
@@ -284,7 +284,7 @@ const pricing = [
       {domains.map(({ title, desc }) => (
         <div class="rounded-xl border border-border bg-surface-alt p-5">
           <h3 class="font-semibold text-text">{title}</h3>
-          <p class="mt-2 text-sm text-text-muted">{desc}</p>
+          <p class="mt-2 text-sm text-text-muted" set:html={desc} />
         </div>
       ))}
     </div>

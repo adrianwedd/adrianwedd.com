@@ -16,7 +16,7 @@ const COMMANDS: Record<string, (args: string[]) => string> = {
   whoami: () =>
     `Adrian Wedd
 Tasmania, Australia
-AI safety researcher, builder, systems thinker
+AI safety, systems architecture, adversarial thinking
 https://adrianwedd.com/about/`,
 
   ls: () =>
@@ -42,7 +42,7 @@ about.md     now.md       colophon.md  contact.md`,
 
 const CAT_FILES: Record<string, string> = {
   'about.md': `# Adrian Wedd
-AI safety researcher focused on multi-agent failure modes.
+AI safety focused on multi-agent failure modes.
 Building tools that surface what models actually do.
 Based in Tasmania. Looking for interesting work.`,
 
