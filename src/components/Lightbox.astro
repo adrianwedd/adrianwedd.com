@@ -12,6 +12,7 @@ const { images } = Astro.props;
   role="dialog"
   aria-modal="true"
   aria-label="Image viewer"
+  data-images={JSON.stringify(images)}
 >
   <div class="flex h-full items-center justify-center p-4 sm:p-8">
     <button
@@ -55,10 +56,12 @@ const { images } = Astro.props;
   </div>
 </div>
 
-<script define:vars={{ images }}>
+<script is:inline>
   (function () {
-    // Store images on window so re-executions on VT swap update the array
-    // without stale closures in the delegated handlers
+    // Read images from data attribute — re-reads on each VT swap
+    var lightboxEl = document.getElementById('lightbox');
+    if (!lightboxEl) return;
+    var images = JSON.parse(lightboxEl.dataset.images || '[]');
     window.__lightboxImages = images;
     var currentIndex = 0;
     var triggerElement = null;
@@ -100,19 +103,25 @@ const { images } = Astro.props;
     function prev() { show((currentIndex - 1 + window.__lightboxImages.length) % window.__lightboxImages.length); }
     function next() { show((currentIndex + 1) % window.__lightboxImages.length); }
 
-    // Store trigger hrefs for detail page links
+    // Build trigger hrefs from current DOM (refreshed on each VT swap)
     window.__lightboxHrefs = [];
     document.querySelectorAll('.gallery-trigger').forEach(function (btn) {
       window.__lightboxHrefs.push(btn.getAttribute('href') || '#');
-      btn.addEventListener('click', function (e) { e.preventDefault(); show(parseInt(btn.dataset.index), btn); });
     });
 
-    // Event delegation for lightbox controls — guarded to avoid accumulation
+    // Event delegation for all lightbox interactions — guarded to avoid accumulation
     var root = document.documentElement;
     if (!root.dataset.lightboxInit) {
       root.dataset.lightboxInit = '1';
 
       document.addEventListener('click', function (e) {
+        // Gallery trigger clicks (delegated — works after VT swap)
+        var trigger = e.target.closest ? e.target.closest('.gallery-trigger') : null;
+        if (trigger) {
+          e.preventDefault();
+          show(parseInt(trigger.dataset.index), trigger);
+          return;
+        }
         var target = e.target.closest ? e.target.closest('[id]') : null;
         if (!target) return;
         if (target.id === 'lightbox-close') { hide(); return; }
