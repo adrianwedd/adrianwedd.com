@@ -1,0 +1,331 @@
+---
+// HeroCanvas.astro — generative canvas animations behind the homepage hero.
+// All animation logic is in the inline script below.
+// See docs/superpowers/specs/2026-03-21-hero-canvas-animations-design.md
+
+const animations = [
+  { id: 'mycelium', short: 'Myc', full: 'Mycelium' },
+  { id: 'fern', short: 'Fern', full: 'Fern' },
+  { id: 'flow', short: 'Flow', full: 'Flow' },
+  { id: 'roots', short: 'Root', full: 'Roots' },
+  { id: 'neural', short: 'Neur', full: 'Neural' },
+  { id: 'terrain', short: 'Terr', full: 'Terrain' },
+  { id: 'spores', short: 'Spor', full: 'Spores' },
+  { id: 'erosion', short: 'Eros', full: 'Erosion' },
+];
+---
+
+{/* Canvas layer — absolute positioned behind hero content */}
+<div class="hero-canvas-wrap absolute inset-0 z-0">
+  <canvas id="hero-canvas" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
+  <div class="hero-canvas-overlay pointer-events-none absolute inset-0 z-[1]"
+    style="background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 40%, transparent) 30%, color-mix(in srgb, var(--color-surface) 70%, transparent) 60%, var(--color-surface) 100%);"
+  ></div>
+</div>
+
+{/* Switcher — rendered separately via Astro.slots, see index.astro */}
+<div
+  id="hero-canvas-switcher"
+  class="hero-canvas-switcher relative z-10 flex justify-center gap-2 overflow-x-auto px-4 pb-4 scrollbar-hide"
+  role="tablist"
+  aria-label="Background animation"
+  style="-webkit-mask-image: linear-gradient(to right, transparent, black 8px, black calc(100% - 8px), transparent); mask-image: linear-gradient(to right, transparent, black 8px, black calc(100% - 8px), transparent);"
+>
+  {animations.map((anim, i) => (
+    <button
+      type="button"
+      role="tab"
+      class="hero-anim-tab flex-shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-xs transition-colors"
+      data-anim={anim.id}
+      data-index={i}
+      aria-selected="false"
+      tabindex="-1"
+    >
+      <span class="sm:hidden">{anim.short}</span>
+      <span class="hidden sm:inline">{anim.full}</span>
+    </button>
+  ))}
+</div>
+
+<script is:inline>
+(function () {
+  // --- Shared state (persists across VT swaps within IIFE re-executions) ---
+  var rafId = null;
+  var intersectionObs = null;
+  var themeObs = null;
+  var resizePending = false;
+  var currentIndex = -1;
+  var isVisible = true;
+  var colors = {};
+  var canvasW = 0, canvasH = 0;
+  var dpr = 1;
+  var adaptiveQuality = 1.0;
+  var fastFrameCount = 0;
+  var pendingIndex = -1; // tracks animation being transitioned to
+
+  // --- Color reading ---
+  function readColors() {
+    var s = getComputedStyle(document.documentElement);
+    colors.accent = s.getPropertyValue('--color-accent').trim();
+    colors.surface = s.getPropertyValue('--color-surface').trim();
+    colors.muted = s.getPropertyValue('--color-text-muted').trim();
+    colors.border = s.getPropertyValue('--color-border').trim();
+  }
+
+  // --- Canvas sizing ---
+  function sizeCanvas(canvas, section) {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvasW = section.clientWidth;
+    canvasH = section.clientHeight;
+    canvas.width = canvasW * dpr;
+    canvas.height = canvasH * dpr;
+    canvas.style.width = canvasW + 'px';
+    canvas.style.height = canvasH + 'px';
+  }
+
+  // --- Animation registry (populated by subsequent tasks) ---
+  var ANIMATIONS = {};
+  // Each animation is { init: fn(w, h, colors), frame: fn(ctx, w, h, t, colors, quality), cleanup: fn() }
+  // w/h are CSS pixels. ctx is already scaled by dpr.
+
+  // Placeholder until real animations are added
+  ANIMATIONS.placeholder = {
+    init: function () {},
+    frame: function (ctx, w, h) {
+      ctx.clearRect(0, 0, w * dpr, h * dpr);
+    },
+    cleanup: function () {}
+  };
+
+  var ANIM_KEYS = ['mycelium', 'fern', 'flow', 'roots', 'neural', 'terrain', 'spores', 'erosion'];
+
+  function getAnim(key) {
+    return ANIMATIONS[key] || ANIMATIONS.placeholder;
+  }
+
+  // --- Switcher UI ---
+  function updateSwitcherUI(index) {
+    var tabs = document.querySelectorAll('.hero-anim-tab');
+    tabs.forEach(function (tab, i) {
+      var active = i === index;
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      tab.setAttribute('tabindex', active ? '0' : '-1');
+      if (active) {
+        tab.classList.add('bg-accent', 'text-surface', 'border-accent');
+        tab.classList.remove('text-text-muted', 'border-border', 'bg-transparent');
+      } else {
+        tab.classList.remove('bg-accent', 'text-surface', 'border-accent');
+        tab.classList.add('text-text-muted', 'border-border', 'bg-transparent');
+      }
+    });
+  }
+
+  // --- Animation switching with fade ---
+  function switchAnimation(index, canvas, ctx, section) {
+    if (index === currentIndex || index === pendingIndex) return;
+    pendingIndex = index;
+    var anim = getAnim(ANIM_KEYS[currentIndex]);
+    if (anim && anim.cleanup) { try { anim.cleanup(); } catch (e) { console.warn('HeroCanvas cleanup error:', e); } }
+
+    canvas.style.willChange = 'opacity';
+    canvas.style.transition = 'opacity 150ms ease';
+    canvas.style.opacity = '0';
+
+    setTimeout(function () {
+      // Only proceed if this is still the pending animation (guards against rapid clicks)
+      if (pendingIndex !== index) return;
+      currentIndex = index;
+      pendingIndex = -1;
+      try { sessionStorage.setItem('adrianwedd_heroAnimation', String(index)); } catch (e) {}
+      // Clear canvas between animations to prevent bleed-through
+      var c = document.getElementById('hero-canvas');
+      if (c) { var x = c.getContext('2d'); if (x) x.clearRect(0, 0, c.width, c.height); }
+      var newAnim = getAnim(ANIM_KEYS[index]);
+      try { newAnim.init(canvasW, canvasH, colors); } catch (e) { console.warn('HeroCanvas init error:', e); }
+      updateSwitcherUI(index);
+      canvas.style.opacity = '1';
+      setTimeout(function () {
+        canvas.style.willChange = '';
+        canvas.style.transition = '';
+      }, 160);
+    }, 150);
+  }
+
+  // --- Render loop ---
+  function startLoop(canvas, ctx) {
+    var lastTime = 0;
+    function loop(timestamp) {
+      rafId = requestAnimationFrame(loop);
+      if (!isVisible) return;
+      // Discard first frame (lastTime is 0, dt would be huge)
+      if (lastTime === 0) { lastTime = timestamp; return; }
+      var dt = timestamp - lastTime;
+      lastTime = timestamp;
+
+      // Adaptive quality
+      if (dt > 20) {
+        adaptiveQuality = Math.max(0.25, adaptiveQuality * 0.8);
+        fastFrameCount = 0;
+      } else if (dt < 10) {
+        fastFrameCount++;
+        if (fastFrameCount >= 10) {
+          adaptiveQuality = Math.min(1.0, adaptiveQuality * 1.1);
+          fastFrameCount = 0;
+        }
+      } else {
+        fastFrameCount = 0;
+      }
+
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      var anim = getAnim(ANIM_KEYS[currentIndex]);
+      try {
+        anim.frame(ctx, canvasW, canvasH, timestamp, colors, adaptiveQuality);
+      } catch (e) {
+        console.warn('HeroCanvas frame error on ' + ANIM_KEYS[currentIndex] + ':', e);
+        // Skip to next animation on error
+        var nextIdx = (currentIndex + 1) % ANIM_KEYS.length;
+        switchAnimation(nextIdx, canvas, ctx, canvas.closest('section'));
+      }
+      ctx.restore();
+    }
+    rafId = requestAnimationFrame(loop);
+  }
+
+  // --- Lifecycle ---
+  function destroyCanvas() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    if (intersectionObs) { intersectionObs.disconnect(); intersectionObs = null; }
+    if (themeObs) { themeObs.disconnect(); themeObs = null; }
+    var anim = getAnim(ANIM_KEYS[currentIndex]);
+    if (anim && anim.cleanup) { try { anim.cleanup(); } catch (e) {} }
+    // Restore hero-glow and remove overflow-hidden if canvas is being destroyed
+    var canvas = document.getElementById('hero-canvas');
+    if (canvas) {
+      var section = canvas.closest('section');
+      if (section) {
+        section.classList.remove('overflow-hidden');
+        section.classList.add('hero-glow');
+      }
+    }
+    currentIndex = -1;
+    pendingIndex = -1;
+  }
+
+  function initCanvas() {
+    var canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    var section = canvas.closest('section');
+    if (!section) return;
+
+    // Reduced motion check
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Hero-glow swap + overflow-hidden
+    section.classList.remove('hero-glow');
+    section.classList.add('overflow-hidden');
+
+    readColors();
+    sizeCanvas(canvas, section);
+
+    // Pick animation
+    var stored = null;
+    try { stored = sessionStorage.getItem('adrianwedd_heroAnimation'); } catch (e) {}
+    var startIndex = stored !== null ? parseInt(stored, 10) : Math.floor(Math.random() * ANIM_KEYS.length);
+    if (isNaN(startIndex) || startIndex < 0 || startIndex >= ANIM_KEYS.length) startIndex = 0;
+    currentIndex = startIndex;
+
+    var anim = getAnim(ANIM_KEYS[currentIndex]);
+    try { anim.init(canvasW, canvasH, colors); } catch (e) { console.warn('HeroCanvas init error:', e); }
+    updateSwitcherUI(currentIndex);
+
+    // Theme change observer (re-created on each init since destroyCanvas disconnects it)
+    themeObs = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        if (mutations[i].attributeName === 'class') { readColors(); break; }
+      }
+    });
+    themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    // IntersectionObserver — pause when not visible
+    intersectionObs = new IntersectionObserver(function (entries) {
+      isVisible = entries[0].isIntersecting;
+    }, { threshold: 0 });
+    intersectionObs.observe(section);
+
+    // Start render loop
+    adaptiveQuality = 1.0;
+    fastFrameCount = 0;
+    startLoop(canvas, ctx);
+  }
+
+  // --- Sentinel-guarded global listeners (registered once, survive VT swaps) ---
+  if (!document.documentElement.dataset.heroCanvasInit) {
+    document.documentElement.dataset.heroCanvasInit = '1';
+
+    // Click delegation for switcher pills
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest && e.target.closest('.hero-anim-tab');
+      if (!tab) return;
+      var index = parseInt(tab.dataset.index, 10);
+      var canvas = document.getElementById('hero-canvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      switchAnimation(index, canvas, ctx, canvas.closest('section'));
+    });
+
+    // Keyboard navigation for switcher (focus-scoped)
+    document.addEventListener('keydown', function (e) {
+      var active = document.activeElement;
+      if (!active || !active.classList.contains('hero-anim-tab')) return;
+      var tabs = Array.from(document.querySelectorAll('.hero-anim-tab'));
+      var idx = tabs.indexOf(active);
+      if (idx === -1) return;
+
+      var newIdx = -1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        newIdx = (idx + 1) % tabs.length;
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        newIdx = (idx - 1 + tabs.length) % tabs.length;
+      } else if (e.key === 'Home') {
+        newIdx = 0;
+      } else if (e.key === 'End') {
+        newIdx = tabs.length - 1;
+      }
+      if (newIdx === -1) return;
+      e.preventDefault();
+      tabs[newIdx].focus();
+      tabs[newIdx].click();
+    });
+
+    // Resize handler (debounced)
+    window.addEventListener('resize', function () {
+      if (resizePending) return;
+      resizePending = true;
+      requestAnimationFrame(function () {
+        resizePending = false;
+        var canvas = document.getElementById('hero-canvas');
+        if (!canvas) return;
+        var section = canvas.closest('section');
+        if (!section) return;
+        sizeCanvas(canvas, section);
+        var anim = getAnim(ANIM_KEYS[currentIndex]);
+        try { anim.init(canvasW, canvasH, colors); } catch (e) {}
+      });
+    });
+
+    // VT swap handler
+    document.addEventListener('astro:after-swap', function () {
+      destroyCanvas();
+      initCanvas();
+    });
+  }
+
+  // Unconditional init (runs on first load AND after VT swap re-execution)
+  initCanvas();
+})();
+</script>
