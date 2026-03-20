@@ -199,7 +199,7 @@ const recentPosts = (await getCollection('blog'))
     {
       featuredProjects.length > 0 && (
         <aside class="mt-16 border-t border-border pt-8">
-          <h2 class="mb-4 text-lg font-semibold text-text">Featured Work</h2>
+          <h3 class="mb-4 text-lg font-semibold text-text">Featured Work</h3>
           <div class="space-y-3">
             {featuredProjects.map((project) => (
               <a href={`/projects/${slug(project.id)}/`} class="group flex items-center gap-3 no-underline">
@@ -215,7 +215,7 @@ const recentPosts = (await getCollection('blog'))
     {
       recentPosts.length > 0 && (
         <aside class="mt-8 border-t border-border pt-8">
-          <h2 class="mb-4 text-lg font-semibold text-text">Recent Writing</h2>
+          <h3 class="mb-4 text-lg font-semibold text-text">Recent Writing</h3>
           <div class="space-y-3">
             {recentPosts.map((post) => (
               <a href={`/blog/${slug(post.id)}/`} class="group flex items-center gap-3 no-underline">
