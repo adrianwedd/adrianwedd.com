@@ -1,50 +1,13 @@
 ---
 // HeroCanvas.astro — generative canvas animations behind the homepage hero.
-// All animation logic is in the inline script below.
-// See docs/superpowers/specs/2026-03-21-hero-canvas-animations-design.md
-
-const animations = [
-  { id: 'mycelium', short: 'Myc', full: 'Mycelium' },
-  { id: 'fern', short: 'Fern', full: 'Fern' },
-  { id: 'flow', short: 'Flow', full: 'Flow' },
-  { id: 'roots', short: 'Root', full: 'Roots' },
-  { id: 'neural', short: 'Neur', full: 'Neural' },
-  { id: 'terrain', short: 'Terr', full: 'Terrain' },
-  { id: 'spores', short: 'Spor', full: 'Spores' },
-  { id: 'erosion', short: 'Eros', full: 'Erosion' },
-];
+// Auto-rotates through 8 animations on a 30s timer.
 ---
 
-{/* Canvas layer — absolute positioned behind hero content */}
 <div class="hero-canvas-wrap absolute inset-0 z-0">
   <canvas id="hero-canvas" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
   <div class="hero-canvas-overlay pointer-events-none absolute inset-0 z-[1]"
     style="background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 40%, transparent) 30%, color-mix(in srgb, var(--color-surface) 70%, transparent) 60%, var(--color-surface) 100%);"
   ></div>
-</div>
-
-{/* Switcher — rendered separately via Astro.slots, see index.astro */}
-<div
-  id="hero-canvas-switcher"
-  class="hero-canvas-switcher relative z-10 flex justify-center gap-2 overflow-x-auto px-4 pb-4 scrollbar-hide"
-  role="tablist"
-  aria-label="Background animation"
-  style="-webkit-mask-image: linear-gradient(to right, transparent, black 8px, black calc(100% - 8px), transparent); mask-image: linear-gradient(to right, transparent, black 8px, black calc(100% - 8px), transparent);"
->
-  {animations.map((anim, i) => (
-    <button
-      type="button"
-      role="tab"
-      class="hero-anim-tab flex-shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-xs transition-colors"
-      data-anim={anim.id}
-      data-index={i}
-      aria-selected="false"
-      tabindex="-1"
-    >
-      <span class="sm:hidden">{anim.short}</span>
-      <span class="hidden sm:inline">{anim.full}</span>
-    </button>
-  ))}
 </div>
 
 <script is:inline>
@@ -62,6 +25,7 @@ const animations = [
   var adaptiveQuality = 1.0;
   var fastFrameCount = 0;
   var pendingIndex = -1; // tracks animation being transitioned to
+  var autoRotateTimer = null;
 
   // --- Color reading ---
   function readColors() {
@@ -969,23 +933,6 @@ const animations = [
     return ANIMATIONS[key] || ANIMATIONS.placeholder;
   }
 
-  // --- Switcher UI ---
-  function updateSwitcherUI(index) {
-    var tabs = document.querySelectorAll('.hero-anim-tab');
-    tabs.forEach(function (tab, i) {
-      var active = i === index;
-      tab.setAttribute('aria-selected', active ? 'true' : 'false');
-      tab.setAttribute('tabindex', active ? '0' : '-1');
-      if (active) {
-        tab.classList.add('bg-accent', 'text-surface', 'border-accent');
-        tab.classList.remove('text-text-muted', 'border-border', 'bg-transparent');
-      } else {
-        tab.classList.remove('bg-accent', 'text-surface', 'border-accent');
-        tab.classList.add('text-text-muted', 'border-border', 'bg-transparent');
-      }
-    });
-  }
-
   // --- Animation switching with fade ---
   function switchAnimation(index, canvas, ctx, section) {
     if (index === currentIndex || index === pendingIndex) return;
@@ -1008,7 +955,7 @@ const animations = [
       if (c) { var x = c.getContext('2d'); if (x) x.clearRect(0, 0, c.width, c.height); }
       var newAnim = getAnim(ANIM_KEYS[index]);
       try { newAnim.init(canvasW, canvasH, colors); } catch (e) { console.warn('HeroCanvas init error:', e); }
-      updateSwitcherUI(index);
+
       canvas.style.opacity = '1';
       setTimeout(function () {
         canvas.style.willChange = '';
@@ -1060,6 +1007,7 @@ const animations = [
 
   // --- Lifecycle ---
   function destroyCanvas() {
+    if (autoRotateTimer) { clearInterval(autoRotateTimer); autoRotateTimer = null; }
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
     if (intersectionObs) { intersectionObs.disconnect(); intersectionObs = null; }
     if (themeObs) { themeObs.disconnect(); themeObs = null; }
@@ -1126,47 +1074,23 @@ const animations = [
     adaptiveQuality = 1.0;
     fastFrameCount = 0;
     startLoop(canvas, ctx);
+
+    // Auto-rotate through animations every 30 seconds
+    if (autoRotateTimer) clearInterval(autoRotateTimer);
+    autoRotateTimer = setInterval(function () {
+      if (!isVisible) return;
+      var nextIdx = (currentIndex + 1) % ANIM_KEYS.length;
+      var c = document.getElementById('hero-canvas');
+      if (!c) return;
+      var x = c.getContext('2d');
+      if (!x) return;
+      switchAnimation(nextIdx, c, x, c.closest('section'));
+    }, 30000);
   }
 
   // --- Sentinel-guarded global listeners (registered once, survive VT swaps) ---
   if (!document.documentElement.dataset.heroCanvasInit) {
     document.documentElement.dataset.heroCanvasInit = '1';
-
-    // Click delegation for switcher pills
-    document.addEventListener('click', function (e) {
-      var tab = e.target.closest && e.target.closest('.hero-anim-tab');
-      if (!tab) return;
-      var index = parseInt(tab.dataset.index, 10);
-      var canvas = document.getElementById('hero-canvas');
-      if (!canvas) return;
-      var ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      switchAnimation(index, canvas, ctx, canvas.closest('section'));
-    });
-
-    // Keyboard navigation for switcher (focus-scoped)
-    document.addEventListener('keydown', function (e) {
-      var active = document.activeElement;
-      if (!active || !active.classList.contains('hero-anim-tab')) return;
-      var tabs = Array.from(document.querySelectorAll('.hero-anim-tab'));
-      var idx = tabs.indexOf(active);
-      if (idx === -1) return;
-
-      var newIdx = -1;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        newIdx = (idx + 1) % tabs.length;
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        newIdx = (idx - 1 + tabs.length) % tabs.length;
-      } else if (e.key === 'Home') {
-        newIdx = 0;
-      } else if (e.key === 'End') {
-        newIdx = tabs.length - 1;
-      }
-      if (newIdx === -1) return;
-      e.preventDefault();
-      tabs[newIdx].focus();
-      tabs[newIdx].click();
-    });
 
     // Resize handler (debounced)
     window.addEventListener('resize', function () {
