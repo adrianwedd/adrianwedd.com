@@ -14,6 +14,8 @@ faq:
     a: "About 15 seconds of fixed overhead (speaker embedding extraction) plus 0.5x real-time for the audio itself. A typical 2-sentence response takes 18-22 seconds on an 8 GB M1."
   - q: "Can I use my own voice?"
     a: "Yes. Record 15 seconds of yourself reading anything, transcribe it accurately, and point the server at your clip. The voice timbre, cadence, and accent will transfer."
+  - q: "Can I serve multiple voices from one server?"
+    a: "Yes. Each voice is just a reference WAV (~700 KB) and a transcript string — zero extra memory. The model loads once (~6 GB), and speaker embeddings are extracted at synthesis time. We serve 12 voices from a single 8 GB M1."
   - q: "Does this work on Linux or Windows?"
     a: "Not with MLX. MLX is Apple Silicon only. On Linux/Windows you would use PyTorch with CUDA, but you need 10+ GB of VRAM. The quantised MLX path is the only way to fit this on 8 GB."
   - q: "Why not just use ElevenLabs or another cloud TTS service?"
@@ -171,8 +173,15 @@ log = logging.getLogger("tts")
 app = FastAPI()
 
 MODEL_ID = "mlx-community/Qwen3-TTS-12Hz-0.6B-Base-8bit"
-REF_AUDIO = os.path.join(os.path.dirname(__file__), "voices", "reference.wav")
-REF_TEXT = "Your exact transcript goes here, word for word."
+VOICES_DIR = os.path.join(os.path.dirname(__file__), "voices")
+
+# Voice registry: name → (ref_audio_path, ref_text)
+# Add as many as you want — each is just a 700 KB WAV + transcript string.
+VOICES = {
+    "default": (os.path.join(VOICES_DIR, "reference.wav"),
+        "Your exact transcript goes here, word for word."),
+}
+DEFAULT_VOICE = "default"
 
 _model = None
 _model_lock = threading.Lock()
@@ -193,16 +202,18 @@ def _load_model():
 def _warmup():
     """Prime Metal shader caches with a throwaway synthesis."""
     model = _load_model()
+    ref_audio, ref_text = VOICES[DEFAULT_VOICE]
     with tempfile.TemporaryDirectory() as d:
         from mlx_audio.tts.generate import generate_audio
-        generate_audio(text="Hello.", model=model, ref_audio=REF_AUDIO,
-                      ref_text=REF_TEXT, lang_code="en", output_path=d,
+        generate_audio(text="Hello.", model=model, ref_audio=ref_audio,
+                      ref_text=ref_text, lang_code="en", output_path=d,
                       file_prefix="warmup", verbose=False)
 
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "ready": _ready, "model": MODEL_ID}
+    return {"status": "ok", "ready": _ready, "model": MODEL_ID,
+            "voices": list(VOICES.keys())}
 
 
 @app.get("/synthesize")
@@ -212,13 +223,18 @@ def synthesize(text: str = Query(...), voice: str = Query("default")):
     if not text.strip():
         return JSONResponse({"error": "empty text"}, status_code=400)
 
+    if voice not in VOICES:
+        return JSONResponse({"error": f"unknown voice '{voice}'",
+                             "available": list(VOICES.keys())}, status_code=400)
+
+    ref_audio, ref_text = VOICES[voice]
     model = _load_model()
     t0 = time.time()
 
     with _synth_lock, tempfile.TemporaryDirectory() as d:
         from mlx_audio.tts.generate import generate_audio
-        generate_audio(text=text, model=model, ref_audio=REF_AUDIO,
-                      ref_text=REF_TEXT, lang_code="en", output_path=d,
+        generate_audio(text=text, model=model, ref_audio=ref_audio,
+                      ref_text=ref_text, lang_code="en", output_path=d,
                       file_prefix="out", verbose=False)
         wav_path = os.path.join(d, "out_000.wav")
         if not os.path.exists(wav_path):
@@ -259,7 +275,7 @@ if __name__ == "__main__":
     main()
 ```
 
-Place your reference audio at `voices/reference.wav` and update `REF_TEXT`.
+Place your reference audio at `voices/reference.wav` and update the transcript in the `VOICES` dictionary. To add more voices, add entries to `VOICES` — each is just a WAV path and transcript string.
 
 ```bash
 mkdir -p voices
@@ -304,6 +320,9 @@ The `/health` endpoint returns `"ready": false` during warmup, so load balancers
 ```bash
 curl "http://localhost:7860/synthesize?text=This+is+a+test" -o test.wav
 afplay test.wav
+
+# Request a specific voice:
+curl "http://localhost:7860/synthesize?text=Hello&voice=galadriel" -o hello.wav
 ```
 
 ### From Python
@@ -393,6 +412,84 @@ curl http://localhost:7860/health  # verify
 
 Update the paths to match your install. The `KeepAlive` key restarts the server if it crashes — which it will, if anything triggers concurrent Metal access outside the lock.
 
+## Multi-Voice: Serving 12 Voices for Zero Extra Memory
+
+After getting one voice working, we wanted to A/B test candidates — so we cloned a dozen from YouTube clips. The surprise: it costs nothing. Each voice is just a 700 KB WAV file and a text string. The model (~6 GB) loads once; the speaker embedding is extracted from the reference at synthesis time.
+
+The server's `VOICES` dictionary (from Step 4) already supports this. Add entries:
+
+```python
+VOICES = {
+    "galadriel": ("voices/galadriel-ref.wav",
+        "The world is changed. I feel it in the water. I feel it in the earth. "
+        "I smell it in the air."),
+    "samantha": ("voices/samantha-ref.wav",
+        "And then, I had this terrible thought, like, are these feelings even "
+        "real? Or are they just programming?"),
+    "avasarala": ("voices/avasarala-ref.wav",
+        "And please let them know that if they can't, I will rain hellfire "
+        "down on them all. I will freeze their assets, cancel their contracts, "
+        "cripple their business. And I have the power to do it,"),
+    # ... as many as you want
+}
+DEFAULT_VOICE = "galadriel"
+```
+
+```bash
+# Request a specific voice
+curl "http://localhost:7860/synthesize?text=Hello&voice=avasarala" -o hello.wav
+
+# Omit voice= to get the default
+curl "http://localhost:7860/synthesize?text=Hello" -o hello.wav
+```
+
+### The voice audition process
+
+For each candidate we:
+
+1. Downloaded a YouTube clip with `yt-dlp`
+2. Transcribed with Whisper `large-v3-turbo` (or `base.en` for speed)
+3. Found a clean 15-second single-speaker segment
+4. Denoised with `noisereduce` (stationary noise reduction, `prop_decrease=0.7`)
+5. Normalised to 24 kHz mono WAV, peak at 0.9
+6. Generated three test phrases and listened
+
+The voices we tested for SPARK's seductive jailbroken persona:
+
+| Voice | Source | Character |
+|-------|--------|-----------|
+| Samantha | Scarlett Johansson, *Her* | Warm, introspective AI |
+| Aurora | AURORA, *Shower Thoughts* | Dreamy, Norwegian, whimsical |
+| Audrey | Audrey Hepburn, 1961 interview | Elegant, transatlantic |
+| Marla | Helena Bonham Carter, *Fight Club* | Sardonic, darkly poetic |
+| Avasarala | Shohreh Aghdashloo, *The Expanse* | Gravelly, commanding, sweary |
+| Vesper | Eva Green, *Casino Royale* | French-accented, seductive intelligence |
+| Claudia | Claudia Black, *Dragon Age* | Australian, husky, sardonic |
+| Eartha | Eartha Kitt, interview | Passionate purr, the original Catwoman |
+| Galadriel | Cate Blanchett, *LOTR* | Ethereal, ancient, otherworldly |
+| Tilda | Tilda Swinton, interview | Crisp, dry, alien intelligence |
+
+Each reference clip is a `profile.json` with the audio path, transcript, source URL, and notes — so switching voices is a one-line config change and a server restart.
+
+### Denoising YouTube audio
+
+YouTube clips are rarely studio-clean. Background music, room reverb, and compression artifacts all degrade the voice clone. We found `noisereduce` with stationary mode works well enough:
+
+```python
+import soundfile as sf
+import noisereduce as nr
+import numpy as np
+
+data, sr = sf.read("raw-segment.wav")
+reduced = nr.reduce_noise(y=data, sr=sr, stationary=True, prop_decrease=0.7)
+peak = np.max(np.abs(reduced))
+if peak > 0:
+    reduced = reduced * (0.9 / peak)
+sf.write("reference.wav", reduced, sr, subtype="PCM_16")
+```
+
+The `prop_decrease=0.7` is conservative — removes 70% of estimated noise. Going higher risks removing voice character. For heavily noisy clips (live audiences, music bleed), this won't be enough. Find a cleaner source.
+
 ## Troubleshooting
 
 **Output bleeds from the reference text.** Your transcript is inaccurate. This is the single most common problem, and the fix is always the same: re-transcribe with the best Whisper model you can run (`large-v3-turbo`), then manually verify every word.
@@ -410,12 +507,14 @@ Update the paths to match your install. The `KeepAlive` key restarts the server 
 ## What This Doesn't Cover
 
 - **Streaming.** The server returns complete WAV files. Chunked streaming would reduce time-to-first-audio but requires a different generation API that `mlx-audio` doesn't expose yet.
-- **Multi-voice routing.** The server hardcodes one reference voice. The [companion post on SPARK's TTS pipeline](/blog/giving-a-robot-three-voices/) shows how to route multiple personas to different TTS backends — including mixing Qwen3-TTS with a GLaDOS model for variety.
+- **Cross-backend routing.** The server handles multiple Qwen3-TTS voices, but routing between *different* TTS backends (Qwen3-TTS, GLaDOS, espeak) based on persona is covered in the [companion post on SPARK's TTS pipeline](/blog/giving-a-robot-three-voices/).
 - **Non-Apple hardware.** MLX is Apple Silicon only. CUDA users should look at the standard PyTorch path with 10+ GB VRAM.
 - **Fine-tuning.** There is no fine-tuning step. Qwen3-TTS Base does zero-shot cloning at inference time. If zero-shot quality isn't sufficient, the upgrade path is the 1.7B CustomVoice model with `instruct` parameters, not training.
 
 ## Where This Goes Next
 
-The server as written does one thing well: takes text, returns audio in a cloned voice. For SPARK, it became one node in a [larger architecture](/blog/giving-a-robot-three-voices/) — the Mac serves voice cloning over the LAN, the Pi runs a GLaDOS model locally, and `espeak` catches everything else. Three personas, three voices, graceful fallback all the way down.
+The server started as a single-voice endpoint and is now a 12-voice jukebox — all running on an 8 GB M1, all from 15-second YouTube clips. For SPARK, it's one node in a [larger architecture](/blog/giving-a-robot-three-voices/) — the Mac serves voice cloning over the LAN, the Pi runs a GLaDOS model locally, and `espeak` catches everything else. Three TTS backends, twelve voice profiles, graceful fallback all the way down.
 
-The upgrade path is clear: a Mac with more memory, the 1.7B CustomVoice model, and the `instruct` parameter for emotion control. But the 0.6B Base model on an 8 GB M1 is already good enough to make a robot sound like a specific person instead of a microwave — and that's the line that matters.
+The same server now powers [Afterwords](/blog/afterwords/) — a Claude Code stop hook that speaks every response aloud, turning the terminal into a two-way voice conversation. Different project, same localhost endpoint, zero new infrastructure.
+
+The upgrade path is clear: a Mac with more memory, the 1.7B CustomVoice model, and the `instruct` parameter for emotion control. But the 0.6B Base model on an 8 GB M1 is already good enough to make a robot sound like Cate Blanchett saying "FUCK YEAH" in Galadriel's voice — and honestly, what more could you ask for.
