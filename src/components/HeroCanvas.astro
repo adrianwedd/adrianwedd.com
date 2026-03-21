@@ -1054,8 +1054,6 @@
 
     var anim = getAnim(ANIM_KEYS[currentIndex]);
     try { anim.init(canvasW, canvasH, colors); } catch (e) { console.warn('HeroCanvas init error:', e); }
-    updateSwitcherUI(currentIndex);
-
     // Theme change observer (re-created on each init since destroyCanvas disconnects it)
     themeObs = new MutationObserver(function (mutations) {
       for (var i = 0; i < mutations.length; i++) {
