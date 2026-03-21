@@ -253,6 +253,18 @@
     .btn-secondary:active {
       transform: none;
     }
+    .hero-canvas-wrap,
+    .hero-canvas-switcher {
+      display: none !important;
+    }
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -283,6 +295,9 @@
   #consent-banner,
   #kb-overlay,
   #reading-progress,
+  #hero-canvas,
+  .hero-canvas-wrap,
+  .hero-canvas-switcher,
   .mobile-menu,
   .mobile-menu-btn,
   [data-pagefind-ui],
