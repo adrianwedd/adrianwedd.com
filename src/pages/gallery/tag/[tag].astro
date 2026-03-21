@@ -24,7 +24,7 @@ const allGalleries = (await getCollection('gallery')).filter((g) => !g.data.draf
 const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
 ---
 
-<BaseLayout title={`Gallery tagged "${tag}"`} description={`Gallery collections tagged with ${tag}.`}>
+<BaseLayout title={`Gallery tagged "${tag}"`} description={`Gallery collections tagged with ${tag}.`} noindex>
   <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
     <h1 class="text-text">Tag: {tag}</h1>
     <p class="mt-2 text-text-muted">{galleries.length} collection{galleries.length !== 1 ? 's' : ''}</p>
