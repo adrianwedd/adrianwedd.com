@@ -222,38 +222,45 @@
 
   ANIMATIONS.fern = (function () {
     var w, h, col;
-    var px, py; // current point
+    var px, py;
     var pointsPerFrame = 200;
-    var windPhase = 0;
     var totalPoints = 0;
-    var maxPoints = 50000;
+    var maxPoints = 40000;
+    var phase = 'growing'; // 'growing' | 'breathing'
+    var breathStart = 0;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       px = 0; py = 0;
-      windPhase = 0; totalPoints = 0;
+      totalPoints = 0;
+      phase = 'growing';
+      breathStart = 0;
     }
 
     function frame(ctx, cw, ch, t, colors, quality) {
       w = cw; h = ch; col = colors;
       var ppf = Math.floor(pointsPerFrame * quality);
-      windPhase = t * 0.001 * 0.785; // ~8s period
-      var windAngle = Math.sin(windPhase) * 0.02;
+
+      // Wind: layered sway for organic movement
+      var wind1 = Math.sin(t * 0.0005) * 0.06;
+      var wind2 = Math.sin(t * 0.0013 + 1.7) * 0.025;
+      var windAngle = wind1 + wind2;
       var cosW = Math.cos(windAngle), sinW = Math.sin(windAngle);
 
-      // Barnsley fern transforms
-      for (var i = 0; i < ppf; i++) {
-        if (totalPoints >= maxPoints) {
-          // Reset with fade
-          ctx.fillStyle = col.surface;
-          ctx.globalAlpha = 0.02;
-          ctx.fillRect(0, 0, w, h);
-          ctx.globalAlpha = 1;
-          totalPoints = 0;
-          px = 0; py = 0;
-          return;
-        }
+      // Continuous fade — old points dissolve, new ones replace them
+      ctx.fillStyle = col.surface;
+      ctx.globalAlpha = phase === 'growing' ? 0.005 : 0.015;
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalAlpha = 1;
 
+      // Scale pulses gently
+      var breathScale = 1.0;
+      if (phase === 'breathing') {
+        breathScale = 1.0 + Math.sin(t * 0.0008) * 0.015;
+      }
+
+      // Draw fern points
+      for (var i = 0; i < ppf; i++) {
         var r = Math.random();
         var nx, ny;
         if (r < 0.01) {
@@ -274,23 +281,30 @@
         var swayedX = px * cosW - py * sinW;
         var swayedY = px * sinW + py * cosW;
 
-        // Map to canvas: fern range is roughly x:[-2.2, 2.7], y:[0, 10]
-        var scale = h * 0.06;
+        // Map to canvas
+        var scale = h * 0.06 * breathScale;
         var sx = w * 0.5 + swayedX * scale;
         var sy = h * 0.95 - swayedY * scale;
 
-        // Color gradient based on height
+        // Height-based color and opacity
         var heightRatio = swayedY / 10;
-        ctx.globalAlpha = 0.4 + heightRatio * 0.3;
+        var shimmer = 0.3 + heightRatio * 0.4 + Math.sin(t * 0.002 + heightRatio * 6) * 0.1;
+        ctx.globalAlpha = Math.min(shimmer, 0.8);
         ctx.fillStyle = col.accent;
         ctx.fillRect(sx, sy, 1.2, 1.2);
 
         totalPoints++;
       }
       ctx.globalAlpha = 1;
+
+      // Transition from growing to breathing once initial shape is drawn
+      if (phase === 'growing' && totalPoints >= maxPoints) {
+        phase = 'breathing';
+        breathStart = t;
+      }
     }
 
-    function cleanup() { totalPoints = maxPoints; }
+    function cleanup() { totalPoints = 0; }
 
     return { init: init, frame: frame, cleanup: cleanup };
   })();
@@ -927,7 +941,7 @@
     return { init: init, frame: frame, cleanup: cleanup };
   })();
 
-  var ANIM_KEYS = ['mycelium', 'fern', 'flow', 'roots', 'neural', 'terrain', 'spores', 'erosion'];
+  var ANIM_KEYS = ['mycelium', 'fern', 'flow', 'neural', 'terrain', 'erosion'];
 
   function getAnim(key) {
     return ANIMATIONS[key] || ANIMATIONS.placeholder;
