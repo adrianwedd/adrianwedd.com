@@ -6,6 +6,7 @@ import TableOfContents from '../../components/islands/TableOfContents';
 import ShareButton from '../../components/islands/ShareButton';
 import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
+import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
 
@@ -42,6 +43,13 @@ const ogImage = post.data.heroImage || `/og/blog/${postSlug}.png`;
 const seriesPosts = post.data.series
   ? allPosts
       .filter((p) => p.data.series === post.data.series)
+      .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+  : [];
+
+// Projects in the same series
+const seriesProjectsList = post.data.series
+  ? (await getCollection('projects'))
+      .filter((p) => !p.data.draft && p.data.series === post.data.series)
       .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
   : [];
 ---
@@ -172,6 +180,14 @@ const seriesPosts = post.data.series
         </span>
       </div>
       {
+        post.data.audioUrl && (
+          <div class="mt-8 mb-6">
+            <p class="mb-2 text-sm text-text-muted">Listen while you read</p>
+            <AudioPlayer src={post.data.audioUrl} title={`${post.data.title} — Audio Overview`} client:load />
+          </div>
+        )
+      }
+      {
         post.data.heroImage && (
           <Picture
             src={post.data.heroImage}
@@ -214,6 +230,28 @@ const seriesPosts = post.data.series
       )
     }
 
+    {
+      seriesProjectsList.length > 0 && (
+        <div class="mb-8 rounded-lg border border-border bg-surface-alt p-4">
+          <p class="mb-2 text-xs font-medium text-text-muted">
+            Projects in <span class="text-accent">{post.data.series}</span>
+          </p>
+          <ol class="space-y-1">
+            {seriesProjectsList.map((p, i) => (
+              <li class="text-sm">
+                <a
+                  href={`/projects/${slug(p.id)}/`}
+                  class="text-text-muted no-underline transition-colors hover:text-accent"
+                >
+                  {i + 1}. {p.data.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )
+    }
+
     <TableOfContents contentSelector=".prose" client:idle />
 
     <div
@@ -223,7 +261,6 @@ const seriesPosts = post.data.series
     </div>
 
     <NotebookAssets
-      audioUrl={post.data.audioUrl}
       videoUrl={post.data.videoUrl}
       infographic={post.data.infographic}
       mindmap={post.data.mindmap}
@@ -272,7 +309,7 @@ const seriesPosts = post.data.series
   <script is:inline>
     (function () {
       function initBlogScripts() {
-        // Code block copy buttons
+        // Code block copy buttons — DOM setup per element, click via delegation
         document.querySelectorAll('.prose pre').forEach(function (pre) {
           if (pre.dataset.copyInit) return;
           pre.dataset.copyInit = '1';
@@ -283,19 +320,9 @@ const seriesPosts = post.data.series
           wrapper.appendChild(pre);
 
           var btn = document.createElement('button');
-          btn.className = 'absolute right-2 top-2 rounded border border-border bg-surface-alt px-2 py-1 text-xs text-text-muted opacity-0 transition-all hover:border-accent hover:text-accent group-hover/code:opacity-100';
+          btn.className = 'code-copy-btn absolute right-2 top-2 rounded border border-border bg-surface-alt px-2 py-1 text-xs text-text-muted opacity-0 transition-all hover:border-accent hover:text-accent group-hover/code:opacity-100';
           btn.textContent = 'Copy';
           btn.setAttribute('aria-label', 'Copy code to clipboard');
-          btn.addEventListener('click', function () {
-            var code = pre.querySelector('code');
-            navigator.clipboard.writeText(code ? code.textContent || '' : pre.textContent || '').then(function () {
-              btn.textContent = 'Copied!';
-              setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
-            }).catch(function () {
-              btn.textContent = 'Failed';
-              setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
-            });
-          });
           wrapper.appendChild(btn);
         });
 
@@ -325,6 +352,7 @@ const seriesPosts = post.data.series
               }
             }
           }, { passive: true });
+
         }
       }
 
@@ -333,6 +361,27 @@ const seriesPosts = post.data.series
       if (!root.dataset.blogScriptInit) {
         root.dataset.blogScriptInit = '1';
         document.addEventListener('astro:after-swap', initBlogScripts);
+      }
+
+      // Code copy — delegated click handler (own sentinel, independent of scroll progress)
+      if (!root.dataset.codeCopyInit) {
+        root.dataset.codeCopyInit = '1';
+        document.addEventListener('click', function (e) {
+          if (!e.target || typeof e.target.closest !== 'function') return;
+          var btn = e.target.closest('.code-copy-btn');
+          if (!btn) return;
+          var wrapper = btn.closest('.group\\/code');
+          var pre = wrapper ? wrapper.querySelector('pre') : null;
+          if (!pre) return;
+          var code = pre.querySelector('code');
+          navigator.clipboard.writeText(code ? code.textContent || '' : pre.textContent || '').then(function () {
+            btn.textContent = 'Copied!';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+          }).catch(function () {
+            btn.textContent = 'Failed';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+          });
+        });
       }
     })();
   </script>

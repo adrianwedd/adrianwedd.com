@@ -14,15 +14,14 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
   title="Gallery"
   description="Visual thinking—process documentation, experiments that didn't need words, and patterns noticed before they had names."
 >
-  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-    <h1 class="text-text">Gallery</h1>
-    <p class="mt-4 max-w-prose text-text-muted">
-      Visual thinking — process documentation, experiments that didn't need words, and patterns noticed before they had
-      names.
-    </p>
-    <p class="mt-2 max-w-prose text-sm text-text-muted">
-      The camera is another instrument for noticing what doesn't fit.
-    </p>
+  <section class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+    <h1 class="text-text">
+      Visual thinking.<br />
+      <span class="text-text-muted">Process documentation, experiments that didn't need words, and patterns noticed before they had names.</span>
+    </h1>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
     {
       (allTags.length > 0 || allMedia.length > 0) && (

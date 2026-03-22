@@ -59,9 +59,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     // Fire if user grants consent while on this page
-    window.addEventListener('consent-updated', ((e: CustomEvent) => {
-      if ((e as any).detail?.analytics) fire404Event();
-    }) as EventListener);
+    if (!(document.documentElement as any).dataset.consent404Init) {
+      (document.documentElement as any).dataset.consent404Init = '1';
+      window.addEventListener('consent-updated', ((e: CustomEvent) => {
+        if ((e as any).detail?.analytics) fire404Event();
+      }) as EventListener);
+    }
   </script>
 
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
@@ -84,7 +87,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         document.head.appendChild(script);
       }
       initPagefind404();
-      document.addEventListener('astro:page-load', initPagefind404);
+      if (!document.documentElement.dataset.pagefind404Init) {
+        document.documentElement.dataset.pagefind404Init = '1';
+        document.addEventListener('astro:page-load', initPagefind404);
+      }
     })();
   </script>
 </BaseLayout>

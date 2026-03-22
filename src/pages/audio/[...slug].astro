@@ -201,26 +201,22 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
   </article>
   <script is:inline>
     (function () {
-      function initTranscriptCopy() {
-        var copyBtn = document.querySelector('.transcript-copy');
-        var transcriptText = document.querySelector('.transcript-text');
-        if (!copyBtn || !transcriptText || copyBtn.dataset.copyInit) return;
-        copyBtn.dataset.copyInit = '1';
-        copyBtn.addEventListener('click', function () {
-          navigator.clipboard.writeText(transcriptText.textContent || '').then(function () {
-            copyBtn.textContent = 'Copied!';
-            setTimeout(function () { copyBtn.textContent = 'Copy'; }, 2000);
-          }).catch(function () {
-            copyBtn.textContent = 'Failed';
-            setTimeout(function () { copyBtn.textContent = 'Copy'; }, 2000);
-          });
-        });
-      }
-      initTranscriptCopy();
       var root = document.documentElement;
       if (!root.dataset.transcriptCopyInit) {
         root.dataset.transcriptCopyInit = '1';
-        document.addEventListener('astro:after-swap', initTranscriptCopy);
+        document.addEventListener('click', function (e) {
+          var btn = e.target.closest('.transcript-copy');
+          if (!btn) return;
+          var transcriptText = document.querySelector('.transcript-text');
+          if (!transcriptText) return;
+          navigator.clipboard.writeText(transcriptText.textContent || '').then(function () {
+            btn.textContent = 'Copied!';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+          }).catch(function () {
+            btn.textContent = 'Failed';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+          });
+        });
       }
     })();
   </script>

@@ -51,6 +51,13 @@ const seriesProjects = project.data.series
       .filter((p) => p.data.series === project.data.series)
       .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
   : [];
+
+// Blog posts in the same series
+const allBlogPosts = project.data.series
+  ? (await getCollection('blog'))
+      .filter((p) => !p.data.draft && p.data.series === project.data.series)
+      .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+  : [];
 ---
 
 <BaseLayout
@@ -176,6 +183,14 @@ const seriesProjects = project.data.series
         </span>
       </div>
       {
+        project.data.audioUrl && (
+          <div class="mt-8 mb-6">
+            <p class="mb-2 text-sm text-text-muted">Listen while you read</p>
+            <AudioPlayer src={project.data.audioUrl} title={`${project.data.title} — Audio Overview`} client:load />
+          </div>
+        )
+      }
+      {
         project.data.heroImage && (
           <Picture
             src={project.data.heroImage}
@@ -191,15 +206,6 @@ const seriesProjects = project.data.series
         )
       }
     </header>
-
-    {
-      project.data.audioUrl && (
-        <div class="mb-10">
-          <p class="mb-2 text-sm text-text-muted">Listen while you read</p>
-          <AudioPlayer src={project.data.audioUrl} title={`${project.data.title} — Audio Overview`} client:load />
-        </div>
-      )
-    }
 
     {
       relatedEpisodes.length > 0 && (
@@ -250,6 +256,28 @@ const seriesProjects = project.data.series
             ))}
           </ol>
         </nav>
+      )
+    }
+
+    {
+      allBlogPosts.length > 0 && (
+        <div class="mb-8 rounded-lg border border-border bg-surface-alt p-4">
+          <p class="mb-2 text-xs font-medium text-text-muted">
+            Blog posts in <span class="text-accent">{project.data.series}</span>
+          </p>
+          <ol class="space-y-1">
+            {allBlogPosts.map((p, i) => (
+              <li class="text-sm">
+                <a
+                  href={`/blog/${slug(p.id)}/`}
+                  class="text-text-muted no-underline transition-colors hover:text-accent"
+                >
+                  {i + 1}. {p.data.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
       )
     }
 
@@ -311,7 +339,6 @@ const seriesProjects = project.data.series
     }
 
     <NotebookAssets
-      audioUrl={project.data.audioUrl}
       videoUrl={project.data.videoUrl}
       infographic={project.data.infographic}
       mindmap={project.data.mindmap}
