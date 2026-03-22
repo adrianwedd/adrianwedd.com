@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCanvas from '../components/HeroCanvas.astro';
 import Transparency from '../components/islands/Transparency.tsx';
 import { getCollection } from 'astro:content';
 import { slug } from '../lib/utils';
@@ -42,14 +43,17 @@ const recentPosts = (await getCollection('blog'))
       },
     })}
   />
-  <article class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-    <header class="mb-12">
-      <h1 class="text-text">
+  <section class="relative mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="relative z-10">
+      <h1 id="about-heading" class="text-text">
         Systems builder. Adversarial thinker.<br />
         <span class="text-text-muted">Nearly 45 years across the stack.</span>
       </h1>
-    </header>
+    </div>
+    <HeroCanvas animation="terrain" />
+  </section>
 
+  <article class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8" aria-labelledby="about-heading">
     <div class="space-y-6 leading-relaxed text-text">
       <p>
         I'm Adrian Wedd. I live in Cygnet, Tasmania. I build systems, break them deliberately,

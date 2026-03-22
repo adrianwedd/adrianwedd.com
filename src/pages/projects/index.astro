@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroCanvas from '../../components/HeroCanvas.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 import ScrollReveal from '../../components/ScrollReveal.astro';
@@ -73,15 +74,18 @@ const projectCarouselItems = projects
 ---
 
 <BaseLayout title="Projects" description="Thirty-odd things built in public — AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.">
-  <section class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-    <h1 class="text-text">
-      Thirty-odd things built in public.<br />
-      <span class="text-text-muted">AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.</span>
-    </h1>
-    <p class="mt-6 max-w-prose text-text-muted">
-      The range is deliberate. Most real problems don't stay inside one domain, and the capacity
-      to work across them came from not specialising artificially.
-    </p>
+  <section class="relative mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="relative z-10">
+      <h1 class="text-text">
+        Thirty-odd things built in public.<br />
+        <span class="text-text-muted">AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.</span>
+      </h1>
+      <p class="mt-6 max-w-prose text-text-muted">
+        The range is deliberate. Most real problems don't stay inside one domain, and the capacity
+        to work across them came from not specialising artificially.
+      </p>
+    </div>
+    <HeroCanvas animation="mycelium" />
   </section>
 
   {projectCarouselItems.length > 0 && (
