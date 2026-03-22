@@ -45,8 +45,7 @@ const year = new Date().getFullYear();
       <p>&copy; {year} Adrian Wedd</p>
       <button
         type="button"
-        class="transition-colors hover:text-accent"
-        onclick="window.scrollTo({top:0,behavior:'smooth'})"
+        class="footer-back-to-top transition-colors hover:text-accent"
         aria-label="Back to top"
       >
         Back to top &uarr;
@@ -54,3 +53,15 @@ const year = new Date().getFullYear();
     </div>
   </div>
 </footer>
+<script is:inline>
+  (function () {
+    if (!document.documentElement.dataset.footerTopInit) {
+      document.documentElement.dataset.footerTopInit = '1';
+      document.addEventListener('click', function (e) {
+        if (e.target.closest('.footer-back-to-top')) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+  })();
+</script>

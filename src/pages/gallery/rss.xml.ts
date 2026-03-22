@@ -14,6 +14,14 @@ function getFileSize(path: string): number {
   }
 }
 
+function getMimeType(path: string): string {
+  const ext = path.split('.').pop()?.toLowerCase();
+  if (ext === 'webp') return 'image/webp';
+  if (ext === 'png') return 'image/png';
+  if (ext === 'jpg' || ext === 'jpeg') return 'image/jpeg';
+  return 'image/webp';
+}
+
 export async function GET(context: APIContext) {
   const collections = (await getCollection('gallery')).filter((g) => !g.data.draft).sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime(),
@@ -35,7 +43,7 @@ export async function GET(context: APIContext) {
         ? {
             enclosure: {
               url: `${site}${collection.data.coverImage}`,
-              type: 'image/webp',
+              type: getMimeType(collection.data.coverImage),
               length: getFileSize(collection.data.coverImage),
             },
           }

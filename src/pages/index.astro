@@ -90,7 +90,7 @@ for (const project of featuredProjects) {
     })}
   />
   {/* Hero */}
-  <section class="hero-glow relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
+  <section class="hero-glow relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8" aria-label="Introduction">
     <div class="relative z-10 mx-auto max-w-6xl">
       <Personalisation client:load />
       <h1 class="animate-in text-text">Adrian Wedd</h1>
@@ -102,24 +102,26 @@ for (const project of featuredProjects) {
       </p>
       <p class="animate-in mt-6 max-w-prose text-base leading-relaxed text-text-muted" style="animation-delay: 0.2s">
         Greenpeace Actions to government cybersecurity to AI safety. Nearly 45 years across the
-        stack. Same methodology every time: enumerate failure modes before you move. This is the
-        workshop — finished work, active research, and raw thinking.
+        stack. Same methodology every time: enumerate failure modes before you move.
+      </p>
+      <p class="animate-in mt-4 max-w-prose text-base leading-relaxed text-text" style="animation-delay: 0.25s">
+        If you're not sure what the problem actually is yet, that's usually where I'm most useful.
       </p>
       <div class="animate-in mt-8 flex flex-wrap gap-4" style="animation-delay: 0.3s">
         <a
-          href="/projects/"
+          href="/services/"
           class="btn-primary inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline hover:opacity-90"
         >
-          View Projects
+          Work with me
           <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
         </a>
         <a
-          href="/blog/"
+          href="/projects/"
           class="btn-secondary inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-muted no-underline hover:border-accent hover:text-accent"
         >
-          Read Blog
+          View Projects
         </a>
       </div>
     </div>

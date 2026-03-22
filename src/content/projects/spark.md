@@ -7,6 +7,8 @@ repo: "spark"
 status: "active"
 featured: true
 date: 2026-03-12
+series: "PiCar-X"
+seriesOrder: 1
 heroImage: "/notebook-assets/spark/infographic.webp"
 audioUrl: "/notebook-assets/spark/audio.mp3"
 videoUrl: "/notebook-assets/spark/video.mp4"
