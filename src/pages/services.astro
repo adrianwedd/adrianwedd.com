@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCanvas from '../components/HeroCanvas.astro';
 
 const capabilities = [
   {
@@ -158,40 +159,43 @@ const pricing = [
   <section
     id="services-hero"
     aria-labelledby="services-hero-heading"
-    class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8"
+    class="relative mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8"
   >
-    <h1 id="services-hero-heading" class="text-text">
-      I build things that work for people who need them.<br />
-      <span class="text-text-muted">And I break things on purpose to make sure they actually do.</span>
-    </h1>
-    <div class="mt-10 max-w-prose space-y-5 leading-relaxed text-text">
-      <p>
-        I spent years planning direct actions for Greenpeace — not communications, not fundraising,
-        the <a href="/about/" class="text-accent hover:underline">Actions unit</a>. Operations against
-        well-resourced opponents who would rather you didn't succeed. That work teaches you one thing
-        above everything else: the optimistic plan is the dangerous plan. Enumerate failure modes
-        before you move.
-      </p>
-      <p>
-        That thinking didn't leave. It followed me into government cybersecurity, then AI
-        safety — <a href="/blog/120-models-18k-prompts/" class="text-accent hover:underline">120 models, 18,000 adversarial prompts</a>,
-        a published methodology — then into everything I build for clients. It is the methodology.
-      </p>
-      <p>
-        Now I consult, architect, build, automate, and evaluate. Websites, AI systems, security
-        audits, voice agents, agentic pipelines, governance frameworks. Small businesses, regulated
-        industries, anyone with a problem worth solving properly.
-      </p>
-      <p>
-        If you're not sure what the problem actually is yet — that's usually where I'm most useful.
-      </p>
+    <div class="relative z-10">
+      <h1 id="services-hero-heading" class="text-text">
+        I build things that work for people who need them.<br />
+        <span class="text-text-muted">And I break things on purpose to make sure they actually do.</span>
+      </h1>
+      <div class="mt-10 max-w-prose space-y-5 leading-relaxed text-text">
+        <p>
+          I spent years planning direct actions for Greenpeace — not communications, not fundraising,
+          the <a href="/about/" class="text-accent hover:underline">Actions unit</a>. Operations against
+          well-resourced opponents who would rather you didn't succeed. That work teaches you one thing
+          above everything else: the optimistic plan is the dangerous plan. Enumerate failure modes
+          before you move.
+        </p>
+        <p>
+          That thinking didn't leave. It followed me into government cybersecurity, then AI
+          safety — <a href="/blog/120-models-18k-prompts/" class="text-accent hover:underline">120 models, 18,000 adversarial prompts</a>,
+          a published methodology — then into everything I build for clients. It is the methodology.
+        </p>
+        <p>
+          Now I consult, architect, build, automate, and evaluate. Websites, AI systems, security
+          audits, voice agents, agentic pipelines, governance frameworks. Small businesses, regulated
+          industries, anyone with a problem worth solving properly.
+        </p>
+        <p>
+          If you're not sure what the problem actually is yet — that's usually where I'm most useful.
+        </p>
+      </div>
+      <a
+        href="/contact/"
+        class="btn-primary mt-10 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline hover:opacity-90"
+      >
+        Work with me
+      </a>
     </div>
-    <a
-      href="/contact/"
-      class="btn-primary mt-10 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline hover:opacity-90"
-    >
-      Work with me
-    </a>
+    <HeroCanvas animation="mycelium" />
   </section>
 
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroCanvas from '../../components/HeroCanvas.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 import ScrollReveal from '../../components/ScrollReveal.astro';
@@ -26,15 +27,18 @@ const carouselItems = posts
   title="Blog"
   description="Writing where the thinking shows. Research notes, failure analysis, and ideas still taking shape."
 >
-  <section class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-    <h1 class="text-text">
-      Writing where the thinking shows.<br />
-      <span class="text-text-muted">Research notes, failure analysis, and ideas still taking shape.</span>
-    </h1>
-    <p class="mt-6 max-w-prose text-text-muted">
-      What actually breaks, and why. Who knew about it before it broke. What the gap between
-      demonstrated risk and organisational response looks like from the inside.
-    </p>
+  <section class="relative mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="relative z-10">
+      <h1 class="text-text">
+        Writing where the thinking shows.<br />
+        <span class="text-text-muted">Research notes, failure analysis, and ideas still taking shape.</span>
+      </h1>
+      <p class="mt-6 max-w-prose text-text-muted">
+        What actually breaks, and why. Who knew about it before it broke. What the gap between
+        demonstrated risk and organisational response looks like from the inside.
+      </p>
+    </div>
+    <HeroCanvas animation="neural" />
   </section>
 
   {carouselItems.length > 0 && (

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroCanvas from '../../components/HeroCanvas.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 
@@ -11,16 +12,19 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
   title="Audio"
   description="Conversations with AI tools about failure modes, risk frameworks, and ideas too raw for text. The workshop extended—thinking aloud."
 >
-  <section class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-    <h1 class="text-text">
-      The workshop extended — thinking aloud.<br />
-      <span class="text-text-muted">Conversations about failure modes, risk frameworks, and ideas too raw for text.</span>
-    </h1>
-    <p class="mt-6">
-      <a href="/audio/feed.xml" class="text-sm text-text-muted transition-colors hover:text-accent">
-        Podcast RSS &nearr;
-      </a>
-    </p>
+  <section class="relative mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="relative z-10">
+      <h1 class="text-text">
+        The workshop extended — thinking aloud.<br />
+        <span class="text-text-muted">Conversations about failure modes, risk frameworks, and ideas too raw for text.</span>
+      </h1>
+      <p class="mt-6">
+        <a href="/audio/feed.xml" class="text-sm text-text-muted transition-colors hover:text-accent">
+          Podcast RSS &nearr;
+        </a>
+      </p>
+    </div>
+    <HeroCanvas animation="erosion" />
   </section>
 
   <section class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">

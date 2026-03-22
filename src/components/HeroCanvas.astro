@@ -1,9 +1,13 @@
 ---
-// HeroCanvas.astro — generative canvas animations behind the homepage hero.
-// Auto-rotates through 8 animations on a 30s timer.
+// HeroCanvas.astro — generative canvas animations behind page heroes.
+// If animation prop is set, locks to that animation. Otherwise auto-rotates.
+interface Props {
+  animation?: 'mycelium' | 'fern' | 'flow' | 'neural' | 'terrain' | 'erosion';
+}
+const { animation } = Astro.props;
 ---
 
-<div class="hero-canvas-wrap absolute inset-0 z-0">
+<div class="hero-canvas-wrap absolute inset-0 z-0" data-animation={animation || ''}>
   <canvas id="hero-canvas" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
   <div class="hero-canvas-overlay pointer-events-none absolute inset-0 z-[1]"
     style="background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 40%, transparent) 30%, color-mix(in srgb, var(--color-surface) 70%, transparent) 60%, var(--color-surface) 100%);"
@@ -1059,10 +1063,18 @@
     readColors();
     sizeCanvas(canvas, section);
 
-    // Pick animation
-    var stored = null;
-    try { stored = sessionStorage.getItem('adrianwedd_heroAnimation'); } catch (e) {}
-    var startIndex = stored !== null ? parseInt(stored, 10) : Math.floor(Math.random() * ANIM_KEYS.length);
+    // Pick animation — fixed if data-animation is set, otherwise rotate
+    var wrap = canvas.closest('.hero-canvas-wrap');
+    var fixedAnim = wrap ? wrap.dataset.animation : '';
+    var fixedIndex = fixedAnim ? ANIM_KEYS.indexOf(fixedAnim) : -1;
+    var startIndex;
+    if (fixedIndex >= 0) {
+      startIndex = fixedIndex;
+    } else {
+      var stored = null;
+      try { stored = sessionStorage.getItem('adrianwedd_heroAnimation'); } catch (e) {}
+      startIndex = stored !== null ? parseInt(stored, 10) : Math.floor(Math.random() * ANIM_KEYS.length);
+    }
     if (isNaN(startIndex) || startIndex < 0 || startIndex >= ANIM_KEYS.length) startIndex = 0;
     currentIndex = startIndex;
 
@@ -1087,17 +1099,19 @@
     fastFrameCount = 0;
     startLoop(canvas, ctx);
 
-    // Auto-rotate through animations every 30 seconds
+    // Auto-rotate through animations every 30 seconds (only when not locked)
     if (autoRotateTimer) clearInterval(autoRotateTimer);
-    autoRotateTimer = setInterval(function () {
-      if (!isVisible) return;
-      var nextIdx = (currentIndex + 1) % ANIM_KEYS.length;
-      var c = document.getElementById('hero-canvas');
-      if (!c) return;
-      var x = c.getContext('2d');
-      if (!x) return;
-      switchAnimation(nextIdx, c, x, c.closest('section'));
-    }, 30000);
+    if (fixedIndex < 0) {
+      autoRotateTimer = setInterval(function () {
+        if (!isVisible) return;
+        var nextIdx = (currentIndex + 1) % ANIM_KEYS.length;
+        var c = document.getElementById('hero-canvas');
+        if (!c) return;
+        var x = c.getContext('2d');
+        if (!x) return;
+        switchAnimation(nextIdx, c, x, c.closest('section'));
+      }, 30000);
+    }
   }
 
   // --- Sentinel-guarded global listeners (registered once, survive VT swaps) ---

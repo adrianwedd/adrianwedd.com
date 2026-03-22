@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroCanvas from '../../components/HeroCanvas.astro';
 import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
@@ -14,11 +15,14 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
   title="Gallery"
   description="Visual thinking—process documentation, experiments that didn't need words, and patterns noticed before they had names."
 >
-  <section class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-    <h1 class="text-text">
-      Visual thinking.<br />
-      <span class="text-text-muted">Process documentation, experiments that didn't need words, and patterns noticed before they had names.</span>
-    </h1>
+  <section class="relative mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="relative z-10">
+      <h1 class="text-text">
+        Visual thinking.<br />
+        <span class="text-text-muted">Process documentation, experiments that didn't need words, and patterns noticed before they had names.</span>
+      </h1>
+    </div>
+    <HeroCanvas animation="flow" />
   </section>
 
   <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

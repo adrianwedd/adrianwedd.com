@@ -1,17 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCanvas from '../components/HeroCanvas.astro';
 ---
 
 <BaseLayout title="Contact" description="Get in touch with Adrian Wedd — consulting, research collaboration, advisory, or a conversation about a real problem.">
-  <section class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-    <h1 class="text-text">
-      Tell me what you're trying to solve.<br />
-      <span class="text-text-muted">I'll tell you honestly if I can help.</span>
-    </h1>
-    <p class="mt-6 max-w-prose text-text-muted">
-      Most of the conversations worth having start with a problem that hasn't been fully named yet.
-    </p>
-    <p class="mt-2 text-sm text-text-muted">Based in Cygnet, Tasmania. Best reached by email — or book a call directly below.</p>
+  <section class="relative mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="relative z-10">
+      <h1 class="text-text">
+        Tell me what you're trying to solve.<br />
+        <span class="text-text-muted">I'll tell you honestly if I can help.</span>
+      </h1>
+      <p class="mt-6 max-w-prose text-text-muted">
+        Most of the conversations worth having start with a problem that hasn't been fully named yet.
+      </p>
+      <p class="mt-2 text-sm text-text-muted">Based in Cygnet, Tasmania. Best reached by email — or book a call directly below.</p>
+    </div>
+    <HeroCanvas animation="fern" />
+  </section>
+
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
 
     <div class="mt-8 rounded-lg border border-border bg-surface-alt p-5">
       <h2 class="text-base font-semibold text-text">I'm available for</h2>
