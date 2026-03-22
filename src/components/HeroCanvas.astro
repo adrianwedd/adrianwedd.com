@@ -959,9 +959,10 @@ const { animation } = Astro.props;
     function frame(ctx, cw, ch, t, colors, quality) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
-      var cy = h * 0.55;
-      var maxAmp = h * 0.25;
+      var cy = h * 0.5;
+      var maxAmp = h * 0.38;
       var step = Math.max(1, Math.round(1 / quality));
+      var barW = 2 * step;
 
       for (var i = 0; i < cols; i += step) {
         var x = (i / cols) * w;
@@ -969,14 +970,15 @@ const { animation } = Astro.props;
         var wave1 = Math.sin(i * 0.04 + tt) * 0.5;
         var wave2 = Math.sin(i * 0.02 - tt * 0.7) * 0.3;
         var wave3 = Math.sin(i * 0.07 + tt * 1.3) * 0.2;
+        var wave4 = Math.sin(i * 0.11 - tt * 0.4) * 0.15;
         var envelope = Math.sin((i / cols) * Math.PI);
-        var amp = (wave1 + wave2 + wave3) * envelope * maxAmp;
+        var amp = (wave1 + wave2 + wave3 + wave4) * envelope * maxAmp;
 
-        var alpha = 0.12 + Math.abs(amp / maxAmp) * 0.18;
+        var alpha = 0.25 + Math.abs(amp / maxAmp) * 0.45;
         ctx.fillStyle = col.accent;
         ctx.globalAlpha = alpha;
-        var barH = Math.max(1, Math.abs(amp));
-        ctx.fillRect(x, cy - barH, 1.5 * step, barH * 2);
+        var barH = Math.max(2, Math.abs(amp));
+        ctx.fillRect(x, cy - barH, barW, barH * 2);
       }
       time += 0.016;
       ctx.globalAlpha = 1;
