@@ -2,7 +2,7 @@
 // HeroCanvas.astro — generative canvas animations behind page heroes.
 // If animation prop is set, locks to that animation. Otherwise auto-rotates.
 interface Props {
-  animation?: 'terrain' | 'flow' | 'soundwave';
+  animation?: 'terrain' | 'flow' | 'soundwave' | 'strata' | 'forge' | 'signal' | 'ink' | 'blueprint';
 }
 const { animation } = Astro.props;
 ---
@@ -381,7 +381,626 @@ const { animation } = Astro.props;
     return { init: init, frame: frame, cleanup: cleanup };
   })();
 
-  var ANIM_KEYS = ['terrain', 'flow', 'soundwave'];
+  ANIMATIONS.strata = (function () {
+    var w, h, col;
+    var bands = [];
+    var BAND_COUNT = 10;
+    var faultTimer = 0;
+    var FAULT_INTERVAL = 900; // ~15s at 60fps
+    var faultOffsets = [];
+    var frameCount = 0;
+
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      bands = [];
+      faultOffsets = [];
+      faultTimer = 0;
+      frameCount = 0;
+      var bandH = h / BAND_COUNT;
+      for (var i = 0; i < BAND_COUNT; i++) {
+        bands.push({
+          y: i * bandH,
+          height: bandH,
+          opacity: 0.08 + Math.random() * 0.12,
+          texture: i % 4 // 0=stipple, 1=crosshatch, 2=wavy, 3=dots
+        });
+        faultOffsets.push(0);
+      }
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality) {
+      w = cw; h = ch; col = colors;
+      ctx.clearRect(0, 0, w, h);
+      frameCount++;
+      faultTimer++;
+
+      // Fault event
+      if (faultTimer >= FAULT_INTERVAL) {
+        faultTimer = 0;
+        for (var i = 0; i < BAND_COUNT; i++) {
+          if (i % 2 === 0) faultOffsets[i] = 2 + Math.random() * 2;
+        }
+      }
+
+      // Settle fault offsets
+      for (var i = 0; i < BAND_COUNT; i++) {
+        faultOffsets[i] *= 0.98;
+      }
+
+      var bandH = h / BAND_COUNT;
+
+      for (var i = 0; i < BAND_COUNT; i++) {
+        var band = bands[i];
+        // Sinusoidal compression
+        var yOff = Math.sin(frameCount * 0.002 + i * 0.5) * 3 + faultOffsets[i];
+        var by = i * bandH + yOff;
+
+        ctx.fillStyle = col.accent;
+        ctx.globalAlpha = band.opacity;
+        ctx.fillRect(0, by, w, bandH);
+
+        // Procedural textures (skip below quality 0.5)
+        if (quality >= 0.5) {
+          ctx.globalAlpha = band.opacity * 0.6;
+          ctx.strokeStyle = col.accent;
+          ctx.fillStyle = col.accent;
+          ctx.lineWidth = 0.5;
+
+          switch (band.texture) {
+            case 0: // stipple
+              for (var sx = 0; sx < w; sx += 8) {
+                for (var sy = 0; sy < bandH; sy += 8) {
+                  if (Math.random() > 0.6) {
+                    ctx.fillRect(sx, by + sy, 1, 1);
+                  }
+                }
+              }
+              break;
+            case 1: // crosshatch
+              ctx.beginPath();
+              for (var cx = 0; cx < w + bandH; cx += 12) {
+                ctx.moveTo(cx, by);
+                ctx.lineTo(cx - bandH, by + bandH);
+                ctx.moveTo(cx - bandH, by);
+                ctx.lineTo(cx, by + bandH);
+              }
+              ctx.stroke();
+              break;
+            case 2: // wavy lines
+              for (var wy = 4; wy < bandH; wy += 8) {
+                ctx.beginPath();
+                for (var wx = 0; wx < w; wx += 4) {
+                  var yy = by + wy + Math.sin(wx * 0.05 + i + frameCount * 0.01) * 2;
+                  if (wx === 0) ctx.moveTo(wx, yy);
+                  else ctx.lineTo(wx, yy);
+                }
+                ctx.stroke();
+              }
+              break;
+            case 3: // dots
+              for (var dx = 4; dx < w; dx += 10) {
+                for (var dy = 4; dy < bandH; dy += 10) {
+                  ctx.beginPath();
+                  ctx.arc(dx, by + dy, 1, 0, 6.2832);
+                  ctx.fill();
+                }
+              }
+              break;
+          }
+        }
+      }
+
+      // Core glow at bottom
+      ctx.globalAlpha = 1;
+      var grd = ctx.createLinearGradient(0, h - 30, 0, h);
+      grd.addColorStop(0, 'transparent');
+      grd.addColorStop(1, col.accent);
+      ctx.globalAlpha = 0.1;
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, h - 30, w, 30);
+
+      ctx.globalAlpha = 1;
+    }
+
+    function cleanup() { bands = []; faultOffsets = []; }
+
+    return { init: init, frame: frame, cleanup: cleanup };
+  })();
+
+  ANIMATIONS.forge = (function () {
+    var w, h, col;
+    var streams = [];
+    var STREAM_COUNT = 8;
+    var fadeOut = 0;
+    var fading = false;
+
+    function initStreams(cw, ch) {
+      streams = [];
+      fading = false;
+      fadeOut = 0;
+      var gap = ch / (STREAM_COUNT + 1);
+      for (var i = 0; i < STREAM_COUNT; i++) {
+        streams.push({
+          y: gap * (i + 1),
+          width: cw,
+          coolProgress: 0,
+          speed: 0.003 + Math.random() * 0.004,
+          fractures: []
+        });
+      }
+    }
+
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      initStreams(cw, ch);
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality) {
+      w = cw; h = ch; col = colors;
+      ctx.clearRect(0, 0, w, h);
+
+      var count = quality < 0.7 ? Math.floor(STREAM_COUNT * 0.6) : STREAM_COUNT;
+      var allCooled = true;
+
+      for (var i = 0; i < Math.min(count, streams.length); i++) {
+        var s = streams[i];
+        s.coolProgress += s.speed;
+        if (s.coolProgress > 1) s.coolProgress = 1;
+        if (s.coolProgress < 1) allCooled = false;
+
+        var bandH = 12;
+        var coolX = s.coolProgress * w;
+
+        // Hot section (left to coolfront)
+        if (coolX < w) {
+          var hotGrd = ctx.createLinearGradient(coolX, 0, w, 0);
+          hotGrd.addColorStop(0, col.accent);
+          hotGrd.addColorStop(1, col.accent);
+          ctx.globalAlpha = 0.7 * (1 - s.coolProgress * 0.5);
+          ctx.fillStyle = hotGrd;
+          ctx.fillRect(coolX, s.y - bandH / 2, w - coolX, bandH);
+        }
+
+        // Cooled section (0 to coolfront)
+        if (coolX > 0) {
+          var coolGrd = ctx.createLinearGradient(0, 0, coolX, 0);
+          coolGrd.addColorStop(0, col.accent);
+          coolGrd.addColorStop(1, col.accent);
+          ctx.globalAlpha = 0.1 + 0.1 * (1 - s.coolProgress);
+          ctx.fillStyle = coolGrd;
+          ctx.fillRect(0, s.y - bandH / 2, coolX, bandH);
+        }
+
+        // Fractures in cooled region
+        if (s.coolProgress >= 1 && s.fractures.length === 0) {
+          var numFractures = 2 + Math.floor(Math.random() * 2);
+          for (var f = 0; f < numFractures; f++) {
+            s.fractures.push({
+              x: Math.random() * w,
+              y: s.y - bandH / 2 + Math.random() * bandH,
+              dx: (Math.random() - 0.5) * 30,
+              dy: (Math.random() - 0.5) * 20
+            });
+          }
+        }
+
+        if (s.fractures.length > 0) {
+          ctx.strokeStyle = col.accent;
+          ctx.globalAlpha = 0.15;
+          ctx.lineWidth = 0.5;
+          for (var f = 0; f < s.fractures.length; f++) {
+            var fr = s.fractures[f];
+            ctx.beginPath();
+            ctx.moveTo(fr.x, fr.y);
+            ctx.lineTo(fr.x + fr.dx, fr.y + fr.dy);
+            ctx.stroke();
+          }
+        }
+      }
+
+      if (allCooled && !fading) {
+        fading = true;
+        fadeOut = 60;
+      }
+
+      if (fading) {
+        fadeOut--;
+        ctx.globalAlpha = Math.max(0, fadeOut / 60);
+        if (fadeOut <= 0) {
+          initStreams(w, h);
+        }
+      }
+
+      ctx.globalAlpha = 1;
+    }
+
+    function cleanup() { streams = []; }
+
+    return { init: init, frame: frame, cleanup: cleanup };
+  })();
+
+  ANIMATIONS.signal = (function () {
+    var w, h, col;
+    var emitters = [];
+    var wavefronts = [];
+    var spawnCounter = 0;
+    var MAX_WAVEFRONTS = 30;
+
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      emitters = [
+        { x: w * 0.3, y: h * 0.5 },
+        { x: w * 0.7, y: h * 0.5 }
+      ];
+      wavefronts = [];
+      spawnCounter = 0;
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality) {
+      w = cw; h = ch; col = colors;
+      ctx.clearRect(0, 0, w, h);
+      spawnCounter++;
+
+      var maxWf = quality < 0.5 ? 12 : MAX_WAVEFRONTS;
+
+      // Spawn new wavefronts every 90 frames
+      if (spawnCounter % 90 === 0) {
+        for (var e = 0; e < emitters.length; e++) {
+          if (wavefronts.length < maxWf) {
+            wavefronts.push({
+              emitterIdx: e,
+              radius: 0,
+              born: spawnCounter,
+              startAngle: Math.random() * Math.PI * 2,
+              sweep: (200 + Math.random() * 80) * Math.PI / 180
+            });
+          }
+        }
+      }
+
+      ctx.strokeStyle = col.accent;
+
+      // Draw wavefronts
+      var maxDim = Math.max(w, h);
+      for (var i = wavefronts.length - 1; i >= 0; i--) {
+        var wf = wavefronts[i];
+        wf.radius += 1.2;
+        if (wf.radius > maxDim) {
+          wavefronts.splice(i, 1);
+          continue;
+        }
+
+        var em = emitters[wf.emitterIdx];
+        var alpha = 0.3 / (1 + wf.radius * 0.008);
+        ctx.globalAlpha = alpha;
+
+        // Draw arc with modulated line width by using segments
+        var segments = 40;
+        var segAngle = wf.sweep / segments;
+        for (var s = 0; s < segments; s++) {
+          var a1 = wf.startAngle + s * segAngle;
+          var a2 = a1 + segAngle;
+          ctx.lineWidth = 0.5 + Math.sin(a1 * 4) * 0.5;
+          ctx.beginPath();
+          ctx.arc(em.x, em.y, wf.radius, a1, a2);
+          ctx.stroke();
+        }
+      }
+
+      // Interference nodes (skip below quality 0.5)
+      if (quality >= 0.5) {
+        ctx.fillStyle = col.accent;
+        for (var i = 0; i < wavefronts.length; i++) {
+          for (var j = i + 1; j < wavefronts.length; j++) {
+            if (wavefronts[i].emitterIdx === wavefronts[j].emitterIdx) continue;
+            var wfA = wavefronts[i];
+            var wfB = wavefronts[j];
+            var emA = emitters[wfA.emitterIdx];
+            var emB = emitters[wfB.emitterIdx];
+            // Find intersection points of two circles
+            var dx = emB.x - emA.x;
+            var dy = emB.y - emA.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > wfA.radius + wfB.radius + 8) continue;
+            if (dist < Math.abs(wfA.radius - wfB.radius) - 8) continue;
+            if (dist === 0) continue;
+            // Check proximity at a few sample points
+            var checkAngles = 8;
+            for (var ca = 0; ca < checkAngles; ca++) {
+              var angle = wfA.startAngle + (ca / checkAngles) * wfA.sweep;
+              var px = emA.x + Math.cos(angle) * wfA.radius;
+              var py = emA.y + Math.sin(angle) * wfA.radius;
+              var distB = Math.sqrt((px - emB.x) * (px - emB.x) + (py - emB.y) * (py - emB.y));
+              if (Math.abs(distB - wfB.radius) < 8) {
+                ctx.globalAlpha = 0.6;
+                ctx.beginPath();
+                ctx.arc(px, py, 2, 0, 6.2832);
+                ctx.fill();
+              }
+            }
+          }
+        }
+      }
+
+      ctx.globalAlpha = 1;
+    }
+
+    function cleanup() { wavefronts = []; }
+
+    return { init: init, frame: frame, cleanup: cleanup };
+  })();
+
+  ANIMATIONS.ink = (function () {
+    var w, h, col;
+    var drops = [];
+    var DROP_COUNT = 3;
+
+    function spawnDrop(cw, ch) {
+      return {
+        x: cw * 0.2 + Math.random() * cw * 0.3,
+        y: ch * 0.2 + Math.random() * ch * 0.6,
+        radius: 0,
+        maxRadius: 30 + Math.random() * 50,
+        age: 0,
+        maxAge: 300 + Math.floor(Math.random() * 200),
+        seed: Math.random() * 100,
+        fadeAge: 0
+      };
+    }
+
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      drops = [];
+      var count = DROP_COUNT;
+      for (var i = 0; i < count; i++) {
+        var d = spawnDrop(cw, ch);
+        d.age = Math.floor(Math.random() * d.maxAge * 0.5); // stagger
+        drops.push(d);
+      }
+    }
+
+    function drawDrop(ctx, drop, mirrorX) {
+      var cx = mirrorX !== undefined ? mirrorX : drop.x;
+      var cy = drop.y;
+      var r = drop.radius;
+      if (r < 1) return;
+
+      var alpha = 0.15;
+      if (drop.age > drop.maxAge) {
+        alpha *= Math.max(0, 1 - drop.fadeAge / 120);
+      }
+      if (alpha <= 0) return;
+
+      var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      grd.addColorStop(0, col.accent);
+      grd.addColorStop(1, 'transparent');
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = grd;
+
+      // Draw noise-modulated edge using small arcs
+      ctx.beginPath();
+      var steps = 36;
+      for (var i = 0; i <= steps; i++) {
+        var angle = (i / steps) * Math.PI * 2;
+        var noiseR = r + noise3D(angle * 3, drop.seed, drop.age * 0.01) * r * 0.3;
+        var px = cx + Math.cos(angle) * noiseR;
+        var py = cy + Math.sin(angle) * noiseR;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality) {
+      w = cw; h = ch; col = colors;
+      ctx.clearRect(0, 0, w, h);
+
+      var count = quality < 0.5 ? 2 : DROP_COUNT;
+      var doMirror = quality >= 0.5;
+
+      ctx.globalCompositeOperation = 'lighter';
+
+      for (var i = 0; i < Math.min(count, drops.length); i++) {
+        var d = drops[i];
+        d.age++;
+        if (d.radius < d.maxRadius) d.radius += 0.3;
+
+        if (d.age > d.maxAge) {
+          d.fadeAge++;
+          if (d.fadeAge > 120) {
+            drops[i] = spawnDrop(w, h);
+            continue;
+          }
+        }
+
+        drawDrop(ctx, d);
+
+        if (doMirror) {
+          var mirrorX = w - d.x + (Math.random() > 0.5 ? 10 : -10);
+          drawDrop(ctx, d, mirrorX);
+        }
+      }
+
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    }
+
+    function cleanup() { drops = []; }
+
+    return { init: init, frame: frame, cleanup: cleanup };
+  })();
+
+  ANIMATIONS.blueprint = (function () {
+    var w, h, col;
+    var lines = [];
+    var holdTimer = 0;
+    var fadeAlpha = 1;
+    var phase = 'drawing'; // 'drawing' | 'holding' | 'fading'
+    var seqIndex = 0;
+
+    function generateSequence(cw, ch, type) {
+      var result = [];
+      var cx = cw * 0.2 + Math.random() * cw * 0.6;
+      var cy = ch * 0.2 + Math.random() * ch * 0.6;
+
+      switch (type) {
+        case 0: // Floor plan: 4-6 rectangles
+          var count = 4 + Math.floor(Math.random() * 3);
+          for (var i = 0; i < count; i++) {
+            var rx = cx + (Math.random() - 0.5) * cw * 0.4;
+            var ry = cy + (Math.random() - 0.5) * ch * 0.3;
+            var rw = 30 + Math.random() * 80;
+            var rh = 20 + Math.random() * 60;
+            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry, progress: 0 });
+            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh, progress: 0 });
+            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh, progress: 0 });
+            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry, progress: 0 });
+          }
+          break;
+        case 1: // Elevation: stepped profile
+          var steps = 8 + Math.floor(Math.random() * 6);
+          var sx = cw * 0.1;
+          var sy = ch * 0.6;
+          for (var i = 0; i < steps; i++) {
+            var nx = sx + 20 + Math.random() * 40;
+            var ny = sy - (Math.random() - 0.3) * 40;
+            result.push({ x1: sx, y1: sy, x2: nx, y2: sy, progress: 0 });
+            result.push({ x1: nx, y1: sy, x2: nx, y2: ny, progress: 0 });
+            sx = nx;
+            sy = ny;
+          }
+          break;
+        case 2: // Cross-section: nested rectangles with divisions
+          for (var n = 0; n < 3; n++) {
+            var m = 20 * n;
+            var rx = cx - 60 + m;
+            var ry = cy - 40 + m;
+            var rw = 120 - m * 2;
+            var rh = 80 - m * 2;
+            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry, progress: 0 });
+            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh, progress: 0 });
+            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh, progress: 0 });
+            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry, progress: 0 });
+          }
+          // Internal divisions
+          for (var d = 1; d < 3; d++) {
+            var dx = cx - 60 + d * 40;
+            result.push({ x1: dx, y1: cy - 40, x2: dx, y2: cy + 40, progress: 0 });
+          }
+          break;
+        case 3: // Detail: circle approximated with lines + radiating lines
+          var segments = 24;
+          var radius = 30 + Math.random() * 20;
+          for (var i = 0; i < segments; i++) {
+            var a1 = (i / segments) * Math.PI * 2;
+            var a2 = ((i + 1) / segments) * Math.PI * 2;
+            result.push({
+              x1: cx + Math.cos(a1) * radius,
+              y1: cy + Math.sin(a1) * radius,
+              x2: cx + Math.cos(a2) * radius,
+              y2: cy + Math.sin(a2) * radius,
+              progress: 0
+            });
+          }
+          // Radiating lines
+          for (var i = 0; i < 8; i++) {
+            var a = (i / 8) * Math.PI * 2;
+            result.push({
+              x1: cx + Math.cos(a) * radius,
+              y1: cy + Math.sin(a) * radius,
+              x2: cx + Math.cos(a) * (radius + 15),
+              y2: cy + Math.sin(a) * (radius + 15),
+              progress: 0
+            });
+          }
+          break;
+      }
+      return result;
+    }
+
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      seqIndex = 0;
+      phase = 'drawing';
+      holdTimer = 0;
+      fadeAlpha = 1;
+      lines = generateSequence(cw, ch, 0);
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality) {
+      w = cw; h = ch; col = colors;
+      ctx.clearRect(0, 0, w, h);
+
+      // Background grid
+      if (quality >= 0.5) {
+        ctx.strokeStyle = col.border;
+        ctx.globalAlpha = 0.1;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        for (var gx = 0; gx < w; gx += 20) {
+          ctx.moveTo(gx, 0);
+          ctx.lineTo(gx, h);
+        }
+        for (var gy = 0; gy < h; gy += 20) {
+          ctx.moveTo(0, gy);
+          ctx.lineTo(w, gy);
+        }
+        ctx.stroke();
+      }
+
+      // Draw lines
+      ctx.strokeStyle = col.muted;
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.4 * fadeAlpha;
+
+      var allDone = true;
+      var lineCount = quality < 0.5 ? Math.floor(lines.length * 0.6) : lines.length;
+
+      for (var i = 0; i < Math.min(lineCount, lines.length); i++) {
+        var ln = lines[i];
+        if (phase === 'drawing') {
+          ln.progress = Math.min(1, ln.progress + 0.02);
+          if (ln.progress < 1) allDone = false;
+        }
+
+        var ex = ln.x1 + (ln.x2 - ln.x1) * ln.progress;
+        var ey = ln.y1 + (ln.y2 - ln.y1) * ln.progress;
+        ctx.beginPath();
+        ctx.moveTo(ln.x1, ln.y1);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+      }
+
+      if (phase === 'drawing' && allDone) {
+        phase = 'holding';
+        holdTimer = 60;
+      } else if (phase === 'holding') {
+        holdTimer--;
+        if (holdTimer <= 0) {
+          phase = 'fading';
+          fadeAlpha = 1;
+        }
+      } else if (phase === 'fading') {
+        fadeAlpha -= 1 / 60;
+        if (fadeAlpha <= 0) {
+          fadeAlpha = 1;
+          phase = 'drawing';
+          seqIndex = (seqIndex + 1) % 4;
+          lines = generateSequence(w, h, seqIndex);
+        }
+      }
+
+      ctx.globalAlpha = 1;
+    }
+
+    function cleanup() { lines = []; }
+
+    return { init: init, frame: frame, cleanup: cleanup };
+  })();
+
+  var ANIM_KEYS = ['terrain', 'flow', 'soundwave', 'strata', 'forge', 'signal', 'ink', 'blueprint'];
 
   function getAnim(key) {
     return ANIMATIONS[key] || ANIMATIONS.placeholder;
