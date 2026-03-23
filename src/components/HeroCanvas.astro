@@ -183,9 +183,23 @@ const { animation } = Astro.props;
     var w, h, col;
     var zOff = 0;
     var gridRes = 8;
+    var particles = [];
+    var tectonicTimer = 0;
+    var tectonicActive = false;
+    var TECTONIC_INTERVAL = 1200; // ~20s at 60fps
+    var TECTONIC_DURATION = 150;  // ~2.5s at 60fps
+    var PARTICLE_COUNT = 40;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
+      particles = [];
+      for (var i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push(spawnParticle());
+      }
+    }
+
+    function spawnParticle() {
+      return { x: Math.random() * (w || 800), y: Math.random() * (h || 600), life: Math.floor(Math.random() * 500) };
     }
 
     function isoLerp(a, b, va, vb, threshold) { var t = (threshold - va) / (vb - va); return a + t * (b - a); }
@@ -193,7 +207,22 @@ const { animation } = Astro.props;
     function frame(ctx, cw, ch, t, colors, quality) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
-      zOff += 0.0003;
+
+      // Tectonic event logic
+      tectonicTimer++;
+      if (!tectonicActive && tectonicTimer >= TECTONIC_INTERVAL) {
+        tectonicActive = true;
+        tectonicTimer = 0;
+      }
+      if (tectonicActive) {
+        zOff += 0.003;
+        if (tectonicTimer >= TECTONIC_DURATION) {
+          tectonicActive = false;
+          tectonicTimer = 0;
+        }
+      } else {
+        zOff += 0.0003;
+      }
 
       var noiseScale = 0.005;
       var levels = Math.floor(10 * quality);
@@ -213,12 +242,15 @@ const { animation } = Astro.props;
 
       // Marching squares for each contour level
       ctx.strokeStyle = col.accent;
-      ctx.lineWidth = 1;
       ctx.lineCap = 'round';
 
       for (var level = 0; level < levels; level++) {
-        var threshold = -0.8 + (level / levels) * 1.6;
-        ctx.globalAlpha = 0.15 + (level / levels) * 0.35;
+        var levelFrac = level / levels;
+        var threshold = -0.8 + levelFrac * 1.6;
+        // Elevation-dependent alpha: valleys 0.08, ridges 0.5
+        ctx.globalAlpha = 0.08 + levelFrac * 0.42;
+        // Contour thickness: lower levels (valleys) thicker, upper levels (ridges) thinner
+        ctx.lineWidth = 1.5 - levelFrac * 1.0; // 1.5px valleys → 0.5px ridges
 
         ctx.beginPath();
         for (var r = 0; r < rows - 1; r++) {
@@ -265,10 +297,42 @@ const { animation } = Astro.props;
         }
         ctx.stroke();
       }
+
+      // Contour-tracing particles
+      var activeParticles = quality < 0.7 ? Math.floor(PARTICLE_COUNT * 0.5) : PARTICLE_COUNT;
+      // Adjust particle array size
+      while (particles.length < activeParticles) particles.push(spawnParticle());
+
+      ctx.fillStyle = col.accent;
+      ctx.globalAlpha = 0.4;
+      var eps = 0.5; // epsilon for gradient estimation
+      for (var i = 0; i < activeParticles; i++) {
+        var p = particles[i];
+        p.life--;
+        if (p.life <= 0 || p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
+          particles[i] = spawnParticle();
+          p = particles[i];
+        }
+        // Compute noise gradient at particle position
+        var nx = p.x * noiseScale, ny = p.y * noiseScale;
+        var nv = noise3D(nx, ny, zOff);
+        var dx = noise3D(nx + eps * noiseScale, ny, zOff) - nv;
+        var dy = noise3D(nx, ny + eps * noiseScale, zOff) - nv;
+        // Move perpendicular to gradient (follow contour)
+        var mag = Math.sqrt(dx * dx + dy * dy) || 1;
+        var speed = 0.3 + 0.2 * Math.random();
+        p.x += (-dy / mag) * speed;
+        p.y += (dx / mag) * speed;
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1, 0, 6.2832);
+        ctx.fill();
+      }
+
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() {}
+    function cleanup() { particles = []; }
 
     return { init: init, frame: frame, cleanup: cleanup };
   })();
