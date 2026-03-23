@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCanvas from '../components/HeroCanvas.astro';
 import GitHubActivity from '../components/islands/GitHubActivity';
 import { getCollection } from 'astro:content';
 
@@ -13,11 +14,18 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
 ---
 
 <BaseLayout title="Now" description="What I'm focused on right now. Updated March 2026.">
+  <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
+    <div class="relative z-10 mx-auto max-w-3xl">
+      <h1 class="text-text">Now</h1>
+      <p class="mt-2 text-text-muted">What I'm focused on right now. Updated March 2026.</p>
+    </div>
+    <HeroCanvas animation="orbit" />
+  </section>
+
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <header class="mb-12">
-      <h1 class="text-text">Now</h1>
       <p class="mt-2 text-sm text-text-muted">
-        Updated March 2026. This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener noreferrer">/now page</a>.
+        This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener noreferrer">/now page</a>.
       </p>
     </header>
 

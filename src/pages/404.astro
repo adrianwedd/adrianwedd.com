@@ -1,33 +1,37 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCanvas from '../components/HeroCanvas.astro';
 ---
 
 <BaseLayout title="Page not found" description="The page you're looking for doesn't exist.">
-  <section class="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6 lg:px-8">
-    <p class="text-6xl font-bold text-accent">404</p>
-    <h1 class="mt-4 text-text">Page not found</h1>
-    <p class="mx-auto mt-4 max-w-md text-text-muted">
-      This page doesn't exist. I'd tell you the same thing regardless of how long you've been looking for it.
-    </p>
-    <div class="mt-8 flex justify-center gap-4">
-      <a
-        href="/"
-        class="btn-primary inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline shadow-subtle hover:bg-accent-hover hover:shadow-card"
-      >
-        Back to the workshop
-      </a>
-      <a
-        href="/projects/"
-        class="btn-secondary inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-muted no-underline hover:border-accent hover:text-accent"
-      >
-        Browse projects
-      </a>
-    </div>
+  <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
+    <div class="relative z-10 mx-auto max-w-3xl text-center">
+      <p class="text-6xl font-bold text-accent">404</p>
+      <h1 class="mt-4 text-text">Page not found</h1>
+      <p class="mx-auto mt-4 max-w-md text-text-muted">
+        This page doesn't exist. I'd tell you the same thing regardless of how long you've been looking for it.
+      </p>
+      <div class="mt-8 flex justify-center gap-4">
+        <a
+          href="/"
+          class="btn-primary inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-surface no-underline shadow-subtle hover:bg-accent-hover hover:shadow-card"
+        >
+          Back to the workshop
+        </a>
+        <a
+          href="/projects/"
+          class="btn-secondary inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-muted no-underline hover:border-accent hover:text-accent"
+        >
+          Browse projects
+        </a>
+      </div>
 
-    <div class="mx-auto mt-12 max-w-md text-left">
-      <p class="mb-4 text-sm text-text-muted">Or search for what you were looking for:</p>
-      <div id="search-404"></div>
+      <div class="mx-auto mt-12 max-w-md text-left">
+        <p class="mb-4 text-sm text-text-muted">Or search for what you were looking for:</p>
+        <div id="search-404"></div>
+      </div>
     </div>
+    <HeroCanvas animation="entropy" />
   </section>
 
   <script>
