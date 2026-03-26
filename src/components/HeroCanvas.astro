@@ -141,71 +141,131 @@ const { animation } = Astro.props;
   };
 
   ANIMATIONS.flow = (function () {
-    var particles = [];
     var w, h, col;
+    var particles = [];
     var zOff = 0;
-    var baseCount = 400;
+    var BASE_COUNT = 2000;
+    var vortexActive = 0;
+    var vortexX = 0, vortexY = 0;
 
-    function Particle() {
-      this.x = Math.random() * w;
-      this.y = Math.random() * h;
-      this.prevX = this.x;
-      this.prevY = this.y;
+    function spawnParticle(cw, ch, stagger) {
+      return {
+        x: Math.random() * cw,
+        y: Math.random() * ch,
+        prevX: 0, prevY: 0,
+        age: stagger ? Math.floor(Math.random() * 300) : 0,
+        maxAge: 200 + Math.floor(Math.random() * 300),
+        isSecondary: Math.random() < 0.2,
+        shedVx: 0, shedVy: 0, shedLife: 0
+      };
     }
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
-      particles = [];
       zOff = 0;
-      for (var i = 0; i < baseCount; i++) particles.push(new Particle());
+      vortexActive = 0;
+      particles = [];
+      var count = w < 768 ? Math.floor(BASE_COUNT * 0.5) : BASE_COUNT;
+      for (var i = 0; i < count; i++) {
+        particles.push(spawnParticle(cw, ch, true));
+      }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
-      var count = Math.floor(baseCount * quality);
+      // Trail persistence handled by render loop via fadeRate
 
-      // Fade trail
-      ctx.fillStyle = col.surface;
-      ctx.globalAlpha = 0.02;
-      ctx.fillRect(0, 0, w, h);
-      ctx.globalAlpha = 0.8;
-
+      var count = Math.floor(particles.length * quality);
       zOff += 0.0005;
       var noiseScale = 0.003;
       var speed = 1.5;
 
-      ctx.strokeStyle = col.accent;
+      // Mouse vortex
+      var mx = mouse && mouse.active ? mouse.x * w : -9999;
+      var my = mouse && mouse.active ? mouse.y * h : -9999;
+      var vortexRadius = 150;
+      if (mouse && mouse.active) {
+        vortexActive++;
+        vortexX = mx; vortexY = my;
+      } else {
+        if (vortexActive >= 60) {
+          for (var i = 0; i < count; i++) {
+            var p = particles[i];
+            var dx = p.x - vortexX, dy = p.y - vortexY;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 50 && dist > 0) {
+              p.shedVx = -dy / dist * 1.5;
+              p.shedVy = dx / dist * 1.5;
+              p.shedLife = 120;
+            }
+          }
+        }
+        vortexActive = 0;
+      }
+
       ctx.lineWidth = 1.5;
 
-      for (var i = 0; i < Math.min(count, particles.length); i++) {
+      for (var i = 0; i < count; i++) {
         var p = particles[i];
         p.prevX = p.x;
         p.prevY = p.y;
+        p.age++;
 
-        var angle = noise3D(p.x * noiseScale, p.y * noiseScale, zOff) * Math.PI * 4;
-        p.x += Math.cos(angle) * speed;
-        p.y += Math.sin(angle) * speed;
+        if (p.age > p.maxAge || p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
+          particles[i] = spawnParticle(w, h, false);
+          continue;
+        }
 
-        // Draw trail segment
+        var zLayer = p.isSecondary ? zOff + 10 : zOff;
+        var angle = noise3D(p.x * noiseScale, p.y * noiseScale, zLayer) * Math.PI * 4;
+        var vx = Math.cos(angle) * speed;
+        var vy = Math.sin(angle) * speed;
+
+        if (mouse && mouse.active) {
+          var dx = p.x - mx, dy = p.y - my;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < vortexRadius && dist > 1) {
+            var tangentX = -dy / dist * 2;
+            var tangentY = dx / dist * 2;
+            var influence = 1 - dist / vortexRadius;
+            vx += tangentX * influence;
+            vy += tangentY * influence;
+          }
+        }
+
+        if (p.shedLife > 0) {
+          vx += p.shedVx * (p.shedLife / 120);
+          vy += p.shedVy * (p.shedLife / 120);
+          p.shedLife--;
+        }
+
+        p.x += vx;
+        p.y += vy;
+
+        var fadeIn = p.age < 20 ? p.age / 20 : 1;
+        var fadeOut = (p.maxAge - p.age) < 40 ? (p.maxAge - p.age) / 40 : 1;
+        var alpha = 0.5 * fadeIn * fadeOut;
+        if (alpha < 0.01) continue;
+
+        if (p.isSecondary) {
+          ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',' + alpha + ')';
+        } else {
+          ctx.strokeStyle = col.accent;
+          ctx.globalAlpha = alpha;
+        }
         ctx.beginPath();
         ctx.moveTo(p.prevX, p.prevY);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
-
-        // Respawn if off-canvas
-        if (p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
-          p.x = Math.random() * w;
-          p.y = Math.random() * h;
-          p.prevX = p.x;
-          p.prevY = p.y;
-        }
+        if (!p.isSecondary) ctx.globalAlpha = 1;
       }
+
       ctx.globalAlpha = 1;
     }
 
     function cleanup() { particles = []; }
 
-    return { init: init, frame: frame, cleanup: cleanup };
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.015 };
   })();
 
   ANIMATIONS.terrain = (function () {
