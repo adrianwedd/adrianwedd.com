@@ -9,10 +9,19 @@ const { animation } = Astro.props;
 
 <div class="hero-canvas-wrap absolute inset-0 z-0" data-animation={animation || ''}>
   <canvas id="hero-canvas" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
-  <div class="hero-canvas-overlay pointer-events-none absolute inset-0 z-[1]"
-    style="background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 40%, transparent) 30%, color-mix(in srgb, var(--color-surface) 70%, transparent) 60%, var(--color-surface) 100%);"
-  ></div>
+  <div class="hero-canvas-overlay pointer-events-none absolute inset-0 z-[1]"></div>
 </div>
+
+<style>
+  .hero-canvas-overlay {
+    background: linear-gradient(to bottom, transparent 0%, var(--color-surface) 100%);
+  }
+  @supports (background: color-mix(in srgb, red 50%, blue)) {
+    .hero-canvas-overlay {
+      background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 40%, transparent) 30%, color-mix(in srgb, var(--color-surface) 70%, transparent) 60%, var(--color-surface) 100%);
+    }
+  }
+</style>
 
 <script is:inline>
 (function () {
@@ -20,7 +29,6 @@ const { animation } = Astro.props;
   var rafId = null;
   var intersectionObs = null;
   var themeObs = null;
-  var resizePending = false;
   var currentIndex = -1;
   var isVisible = true;
   var colors = {};
@@ -30,6 +38,9 @@ const { animation } = Astro.props;
   var fastFrameCount = 0;
   var pendingIndex = -1; // tracks animation being transitioned to
   var autoRotateTimer = null;
+  var switchTimeoutA = null;
+  var switchTimeoutB = null;
+  var resizeTimeout = null;
 
   // --- Color reading ---
   function readColors() {
@@ -184,6 +195,8 @@ const { animation } = Astro.props;
     var zOff = 0;
     var gridRes = 8;
     var particles = [];
+    var cachedGrid = null;
+    var cachedGridLen = 0;
     var tectonicTimer = 0;
     var tectonicActive = false;
     var TECTONIC_INTERVAL = 1200; // ~20s at 60fps
@@ -232,8 +245,13 @@ const { animation } = Astro.props;
       var cols = Math.ceil(w / actualRes) + 1;
       var rows = Math.ceil(h / actualRes) + 1;
 
-      // Sample noise grid
-      var grid = new Float32Array(cols * rows);
+      // Sample noise grid (reuse buffer across frames)
+      var gridLen = cols * rows;
+      if (!cachedGrid || cachedGridLen < gridLen) {
+        cachedGrid = new Float32Array(gridLen);
+        cachedGridLen = gridLen;
+      }
+      var grid = cachedGrid;
       for (var r = 0; r < rows; r++) {
         for (var c = 0; c < cols; c++) {
           grid[r * cols + c] = noise3D(c * actualRes * noiseScale, r * actualRes * noiseScale, zOff);
@@ -332,7 +350,7 @@ const { animation } = Astro.props;
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { particles = []; }
+    function cleanup() { particles = []; cachedGrid = null; cachedGridLen = 0; }
 
     return { init: init, frame: frame, cleanup: cleanup };
   })();
@@ -552,22 +570,15 @@ const { animation } = Astro.props;
         var coolX = s.coolProgress * w;
 
         // Hot section (left to coolfront)
+        ctx.fillStyle = col.accent;
         if (coolX < w) {
-          var hotGrd = ctx.createLinearGradient(coolX, 0, w, 0);
-          hotGrd.addColorStop(0, col.accent);
-          hotGrd.addColorStop(1, col.accent);
           ctx.globalAlpha = 0.7 * (1 - s.coolProgress * 0.5);
-          ctx.fillStyle = hotGrd;
           ctx.fillRect(coolX, s.y - bandH / 2, w - coolX, bandH);
         }
 
         // Cooled section (0 to coolfront)
         if (coolX > 0) {
-          var coolGrd = ctx.createLinearGradient(0, 0, coolX, 0);
-          coolGrd.addColorStop(0, col.accent);
-          coolGrd.addColorStop(1, col.accent);
           ctx.globalAlpha = 0.1 + 0.1 * (1 - s.coolProgress);
-          ctx.fillStyle = coolGrd;
           ctx.fillRect(0, s.y - bandH / 2, coolX, bandH);
         }
 
@@ -666,7 +677,8 @@ const { animation } = Astro.props;
         var wf = wavefronts[i];
         wf.radius += 1.2;
         if (wf.radius > maxDim) {
-          wavefronts.splice(i, 1);
+          wavefronts[i] = wavefronts[wavefronts.length - 1];
+          wavefronts.pop();
           continue;
         }
 
@@ -1131,11 +1143,6 @@ const { animation } = Astro.props;
       ctx.clearRect(0, 0, w, h);
       frameCount++;
 
-      var effectiveTileSize = quality < 0.5 ? 15 : tileSize;
-      if (effectiveTileSize !== tileSize && tiles.length > 0) {
-        // just use current tiles at whatever size they were initialized
-      }
-
       // Check if we need to reform
       if (dissolvedCount > totalTiles * 0.8 && !reforming) {
         reforming = true;
@@ -1220,7 +1227,7 @@ const { animation } = Astro.props;
         fr.y += fr.vy;
         fr.rot += fr.rotV;
         fr.alpha -= 0.003;
-        if (fr.alpha <= 0) { fragments.splice(i, 1); continue; }
+        if (fr.alpha <= 0) { fragments[i] = fragments[fragments.length - 1]; fragments.pop(); continue; }
         if (i >= fragLimit) continue;
 
         // 5% glitch chance
@@ -1256,6 +1263,7 @@ const { animation } = Astro.props;
     var rowLockFrame = 0;
     var rowLockY = 0;
     var frameCount = 0;
+    var cachedChars = null; // pre-rendered random chars, updated every 3 frames
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
@@ -1274,6 +1282,8 @@ const { animation } = Astro.props;
       }
       frameCount = 0;
       rowLockFrame = 0;
+      rowLockY = 0;
+      cachedChars = null;
     }
 
     function frame(ctx, cw, ch, t, colors, quality) {
@@ -1284,6 +1294,17 @@ const { animation } = Astro.props;
       var rows = Math.floor(h / charSize);
       var colCount = quality < 0.5 ? Math.floor(columns.length * 0.6) : columns.length;
       var fontSize = quality < 0.5 ? 14 : charSize;
+
+      // Regenerate random chars every 3 frames to cut draw overhead
+      var needRefresh = !cachedChars || frameCount % 3 === 0 || (cachedChars.length !== colCount * rows);
+      if (needRefresh) {
+        cachedChars = [];
+        for (var ci = 0; ci < colCount; ci++) {
+          for (var ri = 0; ri < rows; ri++) {
+            cachedChars.push(charSet[Math.floor(Math.random() * charSet.length)]);
+          }
+        }
+      }
 
       ctx.font = fontSize + 'px monospace';
       ctx.textAlign = 'center';
@@ -1321,9 +1342,9 @@ const { animation } = Astro.props;
             ctx.fillStyle = col.accent;
             ctx.globalAlpha = 0.4;
           } else {
-            ch2 = charSet[Math.floor(Math.random() * charSet.length)];
+            ch2 = cachedChars[c * rows + r];
             ctx.fillStyle = col.accent;
-            ctx.globalAlpha = 0.08 + Math.random() * 0.08;
+            ctx.globalAlpha = 0.08;
           }
 
           if (showLock && Math.abs(y - rowLockY - fontSize / 2) < fontSize) {
@@ -1882,7 +1903,8 @@ const { animation } = Astro.props;
     canvas.style.transition = 'opacity 150ms ease';
     canvas.style.opacity = '0';
 
-    setTimeout(function () {
+    switchTimeoutA = setTimeout(function () {
+      switchTimeoutA = null;
       // Only proceed if this is still the pending animation (guards against rapid clicks)
       if (pendingIndex !== index) return;
       currentIndex = index;
@@ -1895,7 +1917,8 @@ const { animation } = Astro.props;
       try { newAnim.init(canvasW, canvasH, colors); } catch (e) { console.warn('HeroCanvas init error:', e); }
 
       canvas.style.opacity = '1';
-      setTimeout(function () {
+      switchTimeoutB = setTimeout(function () {
+        switchTimeoutB = null;
         canvas.style.willChange = '';
         canvas.style.transition = '';
       }, 160);
@@ -1945,6 +1968,9 @@ const { animation } = Astro.props;
 
   // --- Lifecycle ---
   function destroyCanvas() {
+    if (switchTimeoutA) { clearTimeout(switchTimeoutA); switchTimeoutA = null; }
+    if (switchTimeoutB) { clearTimeout(switchTimeoutB); switchTimeoutB = null; }
+    if (resizeTimeout) { clearTimeout(resizeTimeout); resizeTimeout = null; }
     if (autoRotateTimer) { clearInterval(autoRotateTimer); autoRotateTimer = null; }
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
     if (intersectionObs) { intersectionObs.disconnect(); intersectionObs = null; }
@@ -2038,12 +2064,11 @@ const { animation } = Astro.props;
   if (!document.documentElement.dataset.heroCanvasInit) {
     document.documentElement.dataset.heroCanvasInit = '1';
 
-    // Resize handler (debounced)
+    // Resize handler (debounced 200ms — avoids iOS Safari toolbar churn)
     window.addEventListener('resize', function () {
-      if (resizePending) return;
-      resizePending = true;
-      requestAnimationFrame(function () {
-        resizePending = false;
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function () {
+        resizeTimeout = null;
         var canvas = document.getElementById('hero-canvas');
         if (!canvas) return;
         var section = canvas.closest('section');
@@ -2051,13 +2076,22 @@ const { animation } = Astro.props;
         sizeCanvas(canvas, section);
         var anim = getAnim(ANIM_KEYS[currentIndex]);
         try { anim.init(canvasW, canvasH, colors); } catch (e) {}
-      });
+      }, 200);
     });
 
-    // VT swap handler
+    // Respond dynamically to prefers-reduced-motion changes (WCAG 2.3.3)
+    var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var motionHandler = function (e) {
+      if (e.matches) destroyCanvas();
+      else initCanvas();
+    };
+    // Safari <14 only has addListener
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', motionHandler);
+    else if (motionQuery.addListener) motionQuery.addListener(motionHandler);
+
+    // VT swap handler — only teardown; the new page's is:inline re-execution calls initCanvas()
     document.addEventListener('astro:after-swap', function () {
       destroyCanvas();
-      initCanvas();
     });
   }
 
