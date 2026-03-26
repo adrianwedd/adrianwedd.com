@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCanvas from '../components/HeroCanvas.astro';
 import { execFileSync } from 'node:child_process';
 // noindex: utility page
 import fs from 'node:fs';
@@ -61,10 +62,16 @@ try {
 ---
 
 <BaseLayout title="Colophon" description="How this site is built, what powers it, and who helped." noindex>
+  <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
+    <div class="relative z-10 mx-auto max-w-3xl">
+      <h1 class="text-text">Colophon</h1>
+      <p class="mt-2 text-text-muted">How this site is built, who helped, and what powers it.</p>
+    </div>
+    <HeroCanvas animation="loom" />
+  </section>
+
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <header class="mb-12">
-      <h1 class="text-text">Colophon</h1>
-      <p class="mt-4 text-lg text-text-muted">How this site is built, who helped, and what powers it.</p>
       <p class="mt-4 max-w-prose text-sm text-text-muted">
         Built the way I build client work: the smallest thing that does the job correctly.
         No framework theatre, no dependency sprawl, no features acquired before there's a reason for them.
