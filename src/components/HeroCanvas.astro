@@ -150,14 +150,14 @@ const { animation } = Astro.props;
       ctx.fillStyle = col.surface;
       ctx.globalAlpha = 0.02;
       ctx.fillRect(0, 0, w, h);
-      ctx.globalAlpha = 0.6;
+      ctx.globalAlpha = 0.8;
 
       zOff += 0.0005;
       var noiseScale = 0.003;
       var speed = 1.5;
 
       ctx.strokeStyle = col.accent;
-      ctx.lineWidth = 0.8;
+      ctx.lineWidth = 1.5;
 
       for (var i = 0; i < Math.min(count, particles.length); i++) {
         var p = particles[i];
@@ -419,7 +419,7 @@ const { animation } = Astro.props;
         bands.push({
           y: i * bandH,
           height: bandH,
-          opacity: 0.08 + Math.random() * 0.12,
+          opacity: 0.12 + Math.random() * 0.15,
           texture: i % 4 // 0=stipple, 1=crosshatch, 2=wavy, 3=dots
         });
         faultOffsets.push(0);
@@ -459,10 +459,10 @@ const { animation } = Astro.props;
 
         // Procedural textures (skip below quality 0.5)
         if (quality >= 0.5) {
-          ctx.globalAlpha = band.opacity * 0.6;
+          ctx.globalAlpha = band.opacity * 0.8;
           ctx.strokeStyle = col.accent;
           ctx.fillStyle = col.accent;
-          ctx.lineWidth = 0.5;
+          ctx.lineWidth = 0.8;
 
           switch (band.texture) {
             case 0: // stipple
@@ -513,7 +513,7 @@ const { animation } = Astro.props;
       var grd = ctx.createLinearGradient(0, h - 30, 0, h);
       grd.addColorStop(0, 'transparent');
       grd.addColorStop(1, col.accent);
-      ctx.globalAlpha = 0.1;
+      ctx.globalAlpha = 0.18;
       ctx.fillStyle = grd;
       ctx.fillRect(0, h - 30, w, 30);
 
@@ -566,19 +566,19 @@ const { animation } = Astro.props;
         if (s.coolProgress > 1) s.coolProgress = 1;
         if (s.coolProgress < 1) allCooled = false;
 
-        var bandH = 12;
+        var bandH = 24;
         var coolX = s.coolProgress * w;
 
         // Hot section (left to coolfront)
         ctx.fillStyle = col.accent;
         if (coolX < w) {
-          ctx.globalAlpha = 0.7 * (1 - s.coolProgress * 0.5);
+          ctx.globalAlpha = 0.85 * (1 - s.coolProgress * 0.5);
           ctx.fillRect(coolX, s.y - bandH / 2, w - coolX, bandH);
         }
 
         // Cooled section (0 to coolfront)
         if (coolX > 0) {
-          ctx.globalAlpha = 0.1 + 0.1 * (1 - s.coolProgress);
+          ctx.globalAlpha = 0.25 + 0.1 * (1 - s.coolProgress);
           ctx.fillRect(0, s.y - bandH / 2, coolX, bandH);
         }
 
@@ -597,8 +597,8 @@ const { animation } = Astro.props;
 
         if (s.fractures.length > 0) {
           ctx.strokeStyle = col.accent;
-          ctx.globalAlpha = 0.15;
-          ctx.lineWidth = 0.5;
+          ctx.globalAlpha = 0.3;
+          ctx.lineWidth = 1;
           for (var f = 0; f < s.fractures.length; f++) {
             var fr = s.fractures[f];
             ctx.beginPath();
@@ -654,8 +654,8 @@ const { animation } = Astro.props;
 
       var maxWf = quality < 0.5 ? 12 : MAX_WAVEFRONTS;
 
-      // Spawn new wavefronts every 90 frames
-      if (spawnCounter % 90 === 0) {
+      // Spawn new wavefronts every 45 frames
+      if (spawnCounter % 45 === 0) {
         for (var e = 0; e < emitters.length; e++) {
           if (wavefronts.length < maxWf) {
             wavefronts.push({
@@ -683,7 +683,7 @@ const { animation } = Astro.props;
         }
 
         var em = emitters[wf.emitterIdx];
-        var alpha = 0.3 / (1 + wf.radius * 0.008);
+        var alpha = 0.5 / (1 + wf.radius * 0.008);
         ctx.globalAlpha = alpha;
 
         // Draw arc with modulated line width by using segments
@@ -692,7 +692,7 @@ const { animation } = Astro.props;
         for (var s = 0; s < segments; s++) {
           var a1 = wf.startAngle + s * segAngle;
           var a2 = a1 + segAngle;
-          ctx.lineWidth = 0.5 + Math.sin(a1 * 4) * 0.5;
+          ctx.lineWidth = 1.5 + Math.sin(a1 * 4) * 0.5;
           ctx.beginPath();
           ctx.arc(em.x, em.y, wf.radius, a1, a2);
           ctx.stroke();
@@ -724,9 +724,9 @@ const { animation } = Astro.props;
               var py = emA.y + Math.sin(angle) * wfA.radius;
               var distB = Math.sqrt((px - emB.x) * (px - emB.x) + (py - emB.y) * (py - emB.y));
               if (Math.abs(distB - wfB.radius) < 8) {
-                ctx.globalAlpha = 0.6;
+                ctx.globalAlpha = 0.8;
                 ctx.beginPath();
-                ctx.arc(px, py, 2, 0, 6.2832);
+                ctx.arc(px, py, 3, 0, 6.2832);
                 ctx.fill();
               }
             }
@@ -752,7 +752,7 @@ const { animation } = Astro.props;
         x: cw * 0.2 + Math.random() * cw * 0.3,
         y: ch * 0.2 + Math.random() * ch * 0.6,
         radius: 0,
-        maxRadius: 30 + Math.random() * 50,
+        maxRadius: 50 + Math.random() * 70,
         age: 0,
         maxAge: 300 + Math.floor(Math.random() * 200),
         seed: Math.random() * 100,
@@ -777,7 +777,7 @@ const { animation } = Astro.props;
       var r = drop.radius;
       if (r < 1) return;
 
-      var alpha = 0.15;
+      var alpha = 0.35;
       if (drop.age > drop.maxAge) {
         alpha *= Math.max(0, 1 - drop.fadeAge / 120);
       }
@@ -858,13 +858,13 @@ const { animation } = Astro.props;
       var cy = ch * 0.2 + Math.random() * ch * 0.6;
 
       switch (type) {
-        case 0: // Floor plan: 4-6 rectangles
-          var count = 4 + Math.floor(Math.random() * 3);
+        case 0: // Floor plan: 5-8 rectangles
+          var count = 5 + Math.floor(Math.random() * 4);
           for (var i = 0; i < count; i++) {
-            var rx = cx + (Math.random() - 0.5) * cw * 0.4;
-            var ry = cy + (Math.random() - 0.5) * ch * 0.3;
-            var rw = 30 + Math.random() * 80;
-            var rh = 20 + Math.random() * 60;
+            var rx = cx + (Math.random() - 0.5) * cw * 0.6;
+            var ry = cy + (Math.random() - 0.5) * ch * 0.5;
+            var rw = 50 + Math.random() * 120;
+            var rh = 35 + Math.random() * 90;
             result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry, progress: 0 });
             result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh, progress: 0 });
             result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh, progress: 0 });
@@ -872,12 +872,12 @@ const { animation } = Astro.props;
           }
           break;
         case 1: // Elevation: stepped profile
-          var steps = 8 + Math.floor(Math.random() * 6);
-          var sx = cw * 0.1;
+          var steps = 10 + Math.floor(Math.random() * 8);
+          var sx = cw * 0.05;
           var sy = ch * 0.6;
           for (var i = 0; i < steps; i++) {
-            var nx = sx + 20 + Math.random() * 40;
-            var ny = sy - (Math.random() - 0.3) * 40;
+            var nx = sx + 30 + Math.random() * 60;
+            var ny = sy - (Math.random() - 0.3) * 60;
             result.push({ x1: sx, y1: sy, x2: nx, y2: sy, progress: 0 });
             result.push({ x1: nx, y1: sy, x2: nx, y2: ny, progress: 0 });
             sx = nx;
@@ -886,11 +886,11 @@ const { animation } = Astro.props;
           break;
         case 2: // Cross-section: nested rectangles with divisions
           for (var n = 0; n < 3; n++) {
-            var m = 20 * n;
-            var rx = cx - 60 + m;
-            var ry = cy - 40 + m;
-            var rw = 120 - m * 2;
-            var rh = 80 - m * 2;
+            var m = 30 * n;
+            var rx = cx - 100 + m;
+            var ry = cy - 70 + m;
+            var rw = 200 - m * 2;
+            var rh = 140 - m * 2;
             result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry, progress: 0 });
             result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh, progress: 0 });
             result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh, progress: 0 });
@@ -898,13 +898,13 @@ const { animation } = Astro.props;
           }
           // Internal divisions
           for (var d = 1; d < 3; d++) {
-            var dx = cx - 60 + d * 40;
-            result.push({ x1: dx, y1: cy - 40, x2: dx, y2: cy + 40, progress: 0 });
+            var dx = cx - 100 + d * 67;
+            result.push({ x1: dx, y1: cy - 70, x2: dx, y2: cy + 70, progress: 0 });
           }
           break;
         case 3: // Detail: circle approximated with lines + radiating lines
           var segments = 24;
-          var radius = 30 + Math.random() * 20;
+          var radius = 50 + Math.random() * 40;
           for (var i = 0; i < segments; i++) {
             var a1 = (i / segments) * Math.PI * 2;
             var a2 = ((i + 1) / segments) * Math.PI * 2;
@@ -922,8 +922,8 @@ const { animation } = Astro.props;
             result.push({
               x1: cx + Math.cos(a) * radius,
               y1: cy + Math.sin(a) * radius,
-              x2: cx + Math.cos(a) * (radius + 15),
-              y2: cy + Math.sin(a) * (radius + 15),
+              x2: cx + Math.cos(a) * (radius + 25),
+              y2: cy + Math.sin(a) * (radius + 25),
               progress: 0
             });
           }
@@ -948,7 +948,7 @@ const { animation } = Astro.props;
       // Background grid
       if (quality >= 0.5) {
         ctx.strokeStyle = col.border;
-        ctx.globalAlpha = 0.1;
+        ctx.globalAlpha = 0.2;
         ctx.lineWidth = 0.5;
         ctx.beginPath();
         for (var gx = 0; gx < w; gx += 20) {
@@ -964,8 +964,8 @@ const { animation } = Astro.props;
 
       // Draw lines
       ctx.strokeStyle = col.muted;
-      ctx.lineWidth = 1;
-      ctx.globalAlpha = 0.4 * fadeAlpha;
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.7 * fadeAlpha;
 
       var allDone = true;
       var lineCount = quality < 0.5 ? Math.floor(lines.length * 0.6) : lines.length;
@@ -1029,7 +1029,7 @@ const { animation } = Astro.props;
         points.push({
           x: cx + Math.cos(angle) * dist,
           y: cy + Math.sin(angle) * dist,
-          size: 1 + Math.random() * 2,
+          size: 2 + Math.random() * 3,
           lastHit: -9999
         });
       }
@@ -1046,8 +1046,8 @@ const { animation } = Astro.props;
       // Range rings
       ctx.strokeStyle = col.accent;
       for (var r = 1; r <= 3; r++) {
-        ctx.globalAlpha = 0.05;
-        ctx.lineWidth = 0.5;
+        ctx.globalAlpha = 0.12;
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(cx, cy, radius * r / 3, 0, Math.PI * 2);
         ctx.stroke();
@@ -1058,10 +1058,10 @@ const { animation } = Astro.props;
       var wedgeWidth = 12 * Math.PI / 180;
       for (var s = 0; s < 20; s++) {
         var a = sweepAngle - wedgeWidth * s / 20;
-        var alpha = 0.15 * (1 - s / 20);
+        var alpha = 0.25 * (1 - s / 20);
         ctx.strokeStyle = col.accent;
         ctx.globalAlpha = alpha;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.lineTo(cx + Math.cos(a) * radius, cy + Math.sin(a) * radius);
@@ -1070,8 +1070,8 @@ const { animation } = Astro.props;
 
       // Sweep main line
       ctx.strokeStyle = col.accent;
-      ctx.globalAlpha = 0.3;
-      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.5;
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(cx + Math.cos(sweepAngle) * radius, cy + Math.sin(sweepAngle) * radius);
@@ -1203,14 +1203,14 @@ const { animation } = Astro.props;
         ctx.fillStyle = col.accent;
 
         if (tile.state === 'intact') {
-          ctx.globalAlpha = 0.08 * globalAlpha;
+          ctx.globalAlpha = 0.2 * globalAlpha;
           ctx.fillRect(tile.x, tile.y, tileSize - 1, tileSize - 1);
         } else if (tile.state === 'cracked') {
-          ctx.globalAlpha = 0.06 * globalAlpha;
+          ctx.globalAlpha = 0.15 * globalAlpha;
           ctx.fillRect(tile.x, tile.y, tileSize - 1, tileSize - 1);
           ctx.strokeStyle = col.accent;
-          ctx.globalAlpha = 0.1 * globalAlpha;
-          ctx.lineWidth = 0.5;
+          ctx.globalAlpha = 0.25 * globalAlpha;
+          ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(tile.x, tile.y);
           ctx.lineTo(tile.x + tileSize, tile.y + tileSize);
@@ -1242,7 +1242,7 @@ const { animation } = Astro.props;
         ctx.translate(drawX, drawY);
         ctx.rotate(fr.rot);
         ctx.fillStyle = col.accent;
-        ctx.globalAlpha = fr.alpha * 0.3 * globalAlpha;
+        ctx.globalAlpha = fr.alpha * 0.5 * globalAlpha;
         ctx.fillRect(-fr.w / 2, -fr.h / 2, fr.w, fr.h);
         ctx.restore();
       }
@@ -1318,8 +1318,8 @@ const { animation } = Astro.props;
 
       if (showLock) {
         ctx.strokeStyle = col.accent;
-        ctx.globalAlpha = 0.15 * (1 - (frameCount - rowLockFrame) / 10);
-        ctx.lineWidth = 0.5;
+        ctx.globalAlpha = 0.3 * (1 - (frameCount - rowLockFrame) / 10);
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(0, rowLockY + fontSize / 2);
         ctx.lineTo(w, rowLockY + fontSize / 2);
@@ -1340,11 +1340,11 @@ const { animation } = Astro.props;
             var pi = r - plainWindowStart;
             ch2 = column.plainText[pi % column.plainText.length];
             ctx.fillStyle = col.accent;
-            ctx.globalAlpha = 0.4;
+            ctx.globalAlpha = 0.7;
           } else {
             ch2 = cachedChars[c * rows + r];
             ctx.fillStyle = col.accent;
-            ctx.globalAlpha = 0.08;
+            ctx.globalAlpha = 0.2;
           }
 
           if (showLock && Math.abs(y - rowLockY - fontSize / 2) < fontSize) {
@@ -1400,8 +1400,8 @@ const { animation } = Astro.props;
 
         // Draw orbit guide
         ctx.strokeStyle = col.accent;
-        ctx.globalAlpha = 0.04;
-        ctx.lineWidth = 0.5;
+        ctx.globalAlpha = 0.12;
+        ctx.lineWidth = 1;
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(orb.tilt);
@@ -1420,9 +1420,9 @@ const { animation } = Astro.props;
         // Draw trail
         if (orb.trail.length > 1) {
           ctx.strokeStyle = col.accent;
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 1.5;
           for (var j = 1; j < orb.trail.length; j++) {
-            ctx.globalAlpha = (j / orb.trail.length) * 0.3;
+            ctx.globalAlpha = (j / orb.trail.length) * 0.5;
             ctx.beginPath();
             ctx.moveTo(orb.trail[j - 1].x, orb.trail[j - 1].y);
             ctx.lineTo(orb.trail[j].x, orb.trail[j].y);
@@ -1432,9 +1432,9 @@ const { animation } = Astro.props;
 
         // Draw object
         ctx.fillStyle = col.accent;
-        ctx.globalAlpha = 0.7;
+        ctx.globalAlpha = 0.85;
         ctx.beginPath();
-        ctx.arc(ox, oy, 3, 0, Math.PI * 2);
+        ctx.arc(ox, oy, 5, 0, Math.PI * 2);
         ctx.fill();
 
         positions.push({ x: ox, y: oy, angle: angle });
@@ -1448,8 +1448,8 @@ const { animation } = Astro.props;
             if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
             if (angleDiff < 15 * Math.PI / 180) {
               ctx.strokeStyle = col.accent;
-              ctx.globalAlpha = 0.15 * (1 - angleDiff / (15 * Math.PI / 180));
-              ctx.lineWidth = 0.5;
+              ctx.globalAlpha = 0.3 * (1 - angleDiff / (15 * Math.PI / 180));
+              ctx.lineWidth = 1;
               ctx.beginPath();
               ctx.moveTo(positions[a].x, positions[a].y);
               ctx.lineTo(positions[b].x, positions[b].y);
@@ -1491,8 +1491,8 @@ const { animation } = Astro.props;
 
       // Draw warp threads
       ctx.strokeStyle = col.accent;
-      ctx.globalAlpha = 0.06;
-      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.15;
+      ctx.lineWidth = 1.5;
       for (var i = 0; i < effectiveWarpCount; i++) {
         var x = i * warpSpacing + warpSpacing / 2;
         ctx.beginPath();
@@ -1530,8 +1530,8 @@ const { animation } = Astro.props;
 
         var endX = weft.progress * w;
         ctx.strokeStyle = weft.useAccent ? col.accent : col.muted;
-        ctx.globalAlpha = 0.2;
-        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.4;
+        ctx.lineWidth = 1.5;
 
         ctx.beginPath();
         var startX = 0;
@@ -1643,12 +1643,12 @@ const { animation } = Astro.props;
 
       // Draw edges
       ctx.strokeStyle = col.accent;
-      ctx.lineWidth = 0.5;
+      ctx.lineWidth = 1.5;
       for (var e = 0; e < edges.length; e++) {
         var edge = edges[e];
         if (edge.a >= nodeCount || edge.b >= nodeCount) continue;
         var bright = Math.max(nodes[edge.a].brightness, nodes[edge.b].brightness);
-        ctx.globalAlpha = 0.06 + bright * 0.2;
+        ctx.globalAlpha = 0.15 + bright * 0.35;
         ctx.beginPath();
         ctx.moveTo(nodes[edge.a].x, nodes[edge.a].y);
         ctx.lineTo(nodes[edge.b].x, nodes[edge.b].y);
@@ -1658,9 +1658,9 @@ const { animation } = Astro.props;
       // Draw nodes
       for (var i = 0; i < nodeCount; i++) {
         var node = nodes[i];
-        var r = 3 + node.brightness * 2;
+        var r = 4 + node.brightness * 3;
         ctx.fillStyle = col.accent;
-        ctx.globalAlpha = 0.15 + node.brightness * 0.6;
+        ctx.globalAlpha = 0.3 + node.brightness * 0.6;
         ctx.beginPath();
         ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
         ctx.fill();
@@ -1723,7 +1723,7 @@ const { animation } = Astro.props;
           ctx.lineTo(points[p].x, points[p].y + points[p].w / 2);
         }
         ctx.closePath();
-        ctx.globalAlpha = 0.06;
+        ctx.globalAlpha = 0.15;
         ctx.fill();
 
         // Particles
@@ -1734,9 +1734,9 @@ const { animation } = Astro.props;
 
           var py = stream.baseY + noise3D(particle.x * 0.005, stream.idx, t * 0.0003) * 30;
           ctx.fillStyle = col.accent;
-          ctx.globalAlpha = 0.4;
+          ctx.globalAlpha = 0.6;
           ctx.beginPath();
-          ctx.arc(particle.x, py, 2, 0, Math.PI * 2);
+          ctx.arc(particle.x, py, 3, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -1854,11 +1854,11 @@ const { animation } = Astro.props;
       // Draw branches
       for (var i = 0; i < branches.length; i++) {
         var br = branches[i];
-        var thickness = Math.max(0.5, 2 - br.generation * 0.4);
+        var thickness = Math.max(1, 3 - br.generation * 0.5);
         ctx.strokeStyle = col.accent;
         ctx.lineWidth = thickness;
 
-        var tipGlow = br.growing ? 0.4 : 0.15;
+        var tipGlow = br.growing ? 0.6 : 0.35;
         ctx.globalAlpha = tipGlow * fadeAlpha;
 
         // Draw from origin to current position
@@ -1872,9 +1872,9 @@ const { animation } = Astro.props;
         // Bright tip
         if (br.growing) {
           ctx.fillStyle = col.accent;
-          ctx.globalAlpha = 0.6 * fadeAlpha;
+          ctx.globalAlpha = 0.8 * fadeAlpha;
           ctx.beginPath();
-          ctx.arc(br.x, br.y, thickness, 0, Math.PI * 2);
+          ctx.arc(br.x, br.y, thickness + 1, 0, Math.PI * 2);
           ctx.fill();
         }
       }
