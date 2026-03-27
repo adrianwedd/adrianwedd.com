@@ -38,6 +38,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
     <div class="mt-12">
       <h2 class="text-xl font-semibold text-text">Book a call</h2>
       <p class="mt-1 text-sm text-text-muted">Pick a time that works. Hobart time (AEST/AEDT). 30 minutes.</p>
+      <p class="mt-1 text-xs text-text-muted">Prefer email? <a href="mailto:adrian@adrianwedd.com" class="text-accent hover:underline">adrian@adrianwedd.com</a></p>
 
       <div id="booking-widget" class="mt-6">
         {/* Date picker */}
@@ -269,6 +270,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
     calWeekLabel.textContent = fmt(days[0]) + ' \u2013 ' + fmt(days[6]);
     calDays.textContent = '';
     var dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    var buttons = [];
     days.forEach(function (d, i) {
       var isPast = d < today;
       var btn = document.createElement('button');
@@ -292,6 +294,24 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         btn.addEventListener('click', function () { selectDate(isoDate(dateCopy), dateCopy); });
       }
       calDays.appendChild(btn);
+      buttons.push({ btn: btn, date: d, isPast: isPast });
+    });
+
+    // Pre-fetch slot availability to grey out days with no slots
+    buttons.forEach(function (item) {
+      if (item.isPast) return;
+      var dateStr = isoDate(item.date);
+      fetch(API + '/slots?date=' + dateStr)
+        .then(function (r) { return r.ok ? r.json() : { slots: [] }; })
+        .then(function (data) {
+          var slots = data.slots || data || [];
+          if (Array.isArray(slots) && slots.length === 0) {
+            item.btn.disabled = true;
+            item.btn.className = 'flex flex-col items-center rounded-lg border py-2 text-xs transition-colors border-border text-text-muted opacity-40 cursor-not-allowed';
+            item.btn.title = 'No slots available';
+          }
+        })
+        .catch(function () { /* leave day clickable on fetch failure */ });
     });
   }
 
