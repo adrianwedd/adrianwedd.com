@@ -5,6 +5,8 @@ date: 2026-03-19
 tags: ["ai", "tts", "mlx", "apple-silicon", "voice-cloning", "tutorial", "spark"]
 series: "PiCar-X"
 seriesOrder: 3
+audioUrl: "/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.mp3"
+audioDuration: "23:50"
 faq:
   - q: "Do I need to fine-tune or train anything?"
     a: "No. Qwen3-TTS Base does zero-shot voice cloning — you provide a reference audio clip and its transcript at inference time. No training loop, no GPU hours, no dataset preparation."
