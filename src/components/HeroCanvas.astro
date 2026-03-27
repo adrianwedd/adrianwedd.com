@@ -1478,145 +1478,175 @@ const { animation } = Astro.props;
     var w, h, col;
     var tiles = [];
     var fragments = [];
-    var seeds = [];
-    var tileSize = 10;
+    var tileSize = 15;
     var dissolvedCount = 0;
     var totalTiles = 0;
-    var reforming = false;
-    var reformAlpha = 1;
+    var reassembling = false;
+    var reassembleFrame = 0;
     var frameCount = 0;
-
-    function init(cw, ch, colors) {
-      w = cw; h = ch; col = colors;
-      tileSize = 10;
-      buildGrid();
-    }
 
     function buildGrid() {
       tiles = [];
       fragments = [];
       dissolvedCount = 0;
-      reforming = false;
-      reformAlpha = 1;
+      reassembling = false;
+      reassembleFrame = 0;
       var cols = Math.floor(w / tileSize);
       var rows = Math.floor(h / tileSize);
       totalTiles = cols * rows;
       for (var r = 0; r < rows; r++) {
         for (var c = 0; c < cols; c++) {
-          tiles.push({ x: c * tileSize, y: r * tileSize, stability: 1.0, state: 'intact' });
+          tiles.push({ x: c * tileSize, y: r * tileSize, stability: 1.0, state: 'intact', glitchX: 0, glitchY: 0 });
         }
       }
-      seeds = [
-        { x: w * 0.3, y: h * 0.4 },
-        { x: w * 0.7, y: h * 0.6 }
-      ];
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      frameCount = 0;
+      buildGrid();
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
       frameCount++;
 
-      // Check if we need to reform
-      if (dissolvedCount > totalTiles * 0.8 && !reforming) {
-        reforming = true;
-        reformAlpha = 1;
+      // Reassembly cycle
+      if (dissolvedCount > totalTiles * 0.8 && !reassembling) {
+        reassembling = true;
+        reassembleFrame = 0;
       }
 
-      if (reforming) {
-        reformAlpha -= 0.005;
-        if (reformAlpha <= 0) {
+      if (reassembling) {
+        reassembleFrame++;
+        if (reassembleFrame > 120) {
           buildGrid();
           return;
         }
+        // Reverse fragment velocities, snap toward grid
+        for (var i = fragments.length - 1; i >= 0; i--) {
+          var fr = fragments[i];
+          fr.vx *= 0.9;
+          fr.vy *= 0.9;
+          fr.alpha = Math.min(0.6, fr.alpha + 0.01);
+        }
       }
 
-      // Erode tiles from seed points
-      for (var i = 0; i < tiles.length; i++) {
-        var tile = tiles[i];
-        if (tile.state === 'dissolved') continue;
-        for (var s = 0; s < seeds.length; s++) {
-          var dx = tile.x + tileSize / 2 - seeds[s].x;
-          var dy = tile.y + tileSize / 2 - seeds[s].y;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          var erosion = 0.002 / (1 + dist * 0.01);
-          tile.stability -= erosion;
-        }
+      // Dissolution seeds
+      var seeds = [{ x: w * 0.3, y: h * 0.4 }, { x: w * 0.7, y: h * 0.6 }];
 
-        if (tile.stability < 0 && tile.state !== 'dissolved') {
-          tile.state = 'dissolved';
-          dissolvedCount++;
-        } else if (tile.stability < 0.3 && tile.state !== 'fragmenting') {
-          tile.state = 'fragmenting';
-          // Spawn fragments
-          for (var f = 0; f < 3; f++) {
-            fragments.push({
-              x: tile.x + Math.random() * tileSize,
-              y: tile.y + Math.random() * tileSize,
-              w: tileSize * 0.4,
-              h: tileSize * 0.4,
-              vx: (Math.random() - 0.5) * 0.5,
-              vy: (Math.random() - 0.5) * 0.5,
-              rot: Math.random() * Math.PI * 2,
-              rotV: (Math.random() - 0.5) * 0.02,
-              alpha: 0.6,
-              glitch: false
-            });
+      // Mouse dissolution seed
+      if (mouse && mouse.active) {
+        seeds.push({ x: mouse.x * w, y: mouse.y * h });
+      }
+
+      // Glitch: teleport max 3 intact tiles per frame
+      var glitchCount = 0;
+      for (var i = 0; i < tiles.length && glitchCount < 3; i++) {
+        tiles[i].glitchX = 0;
+        tiles[i].glitchY = 0;
+        if (tiles[i].state === 'intact' && Math.random() < 0.001) {
+          tiles[i].glitchX = (Math.random() - 0.5) * 60;
+          tiles[i].glitchY = (Math.random() - 0.5) * 60;
+          glitchCount++;
+        }
+      }
+
+      // Erode tiles
+      if (!reassembling) {
+        for (var i = 0; i < tiles.length; i++) {
+          var tile = tiles[i];
+          if (tile.state === 'dissolved') continue;
+
+          for (var s = 0; s < seeds.length; s++) {
+            var dx = tile.x + tileSize / 2 - seeds[s].x;
+            var dy = tile.y + tileSize / 2 - seeds[s].y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            // Mouse seed has stronger erosion within 50px
+            var rate = s >= 2 && dist < 50 ? 0.02 : 0.002 / (1 + dist * 0.01);
+            tile.stability -= rate;
           }
-        } else if (tile.stability < 0.7 && tile.state === 'intact') {
-          tile.state = 'cracked';
+
+          // Mouse proximity: cursor within 50px of intact tiles sets them cracked
+          if (mouse && mouse.active && tile.state === 'intact') {
+            var mdx = tile.x + tileSize / 2 - mouse.x * w;
+            var mdy = tile.y + tileSize / 2 - mouse.y * h;
+            var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+            if (mdist < 50) {
+              tile.state = 'cracked';
+            }
+          }
+
+          if (tile.stability < 0 && tile.state !== 'dissolved') {
+            tile.state = 'dissolved';
+            dissolvedCount++;
+          } else if (tile.stability < 0.3 && tile.state !== 'fragmenting' && tile.state !== 'dissolved') {
+            tile.state = 'fragmenting';
+            for (var f = 0; f < 3; f++) {
+              var goesUp = Math.random() < 0.05;
+              fragments.push({
+                x: tile.x + Math.random() * tileSize,
+                y: tile.y + Math.random() * tileSize,
+                w: tileSize * 0.4,
+                h: tileSize * 0.4,
+                vx: (Math.random() - 0.5) * 1,
+                vy: goesUp ? -0.3 : 0,
+                gravity: goesUp ? -0.01 : 0.05,
+                rot: Math.random() * Math.PI * 2,
+                rotV: (Math.random() - 0.5) * 0.04,
+                alpha: 0.5
+              });
+            }
+          } else if (tile.stability < 0.7 && tile.state === 'intact') {
+            tile.state = 'cracked';
+          }
         }
       }
 
       // Draw tiles
-      var globalAlpha = reforming ? reformAlpha : 1;
       for (var i = 0; i < tiles.length; i++) {
         var tile = tiles[i];
         if (tile.state === 'dissolved') continue;
 
-        ctx.fillStyle = col.accent;
+        var drawX = tile.x + tile.glitchX;
+        var drawY = tile.y + tile.glitchY;
 
         if (tile.state === 'intact') {
-          ctx.globalAlpha = 0.2 * globalAlpha;
-          ctx.fillRect(tile.x, tile.y, tileSize - 1, tileSize - 1);
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.2;
+          ctx.fillRect(drawX, drawY, tileSize - 1, tileSize - 1);
         } else if (tile.state === 'cracked') {
-          ctx.globalAlpha = 0.15 * globalAlpha;
-          ctx.fillRect(tile.x, tile.y, tileSize - 1, tileSize - 1);
-          ctx.strokeStyle = col.accent;
-          ctx.globalAlpha = 0.25 * globalAlpha;
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.15;
+          ctx.fillRect(drawX, drawY, tileSize - 1, tileSize - 1);
+          // Slate blue crack line
+          ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.25)';
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(tile.x, tile.y);
-          ctx.lineTo(tile.x + tileSize, tile.y + tileSize);
+          ctx.moveTo(drawX, drawY);
+          ctx.lineTo(drawX + tileSize, drawY + tileSize);
           ctx.stroke();
         }
-        // fragmenting tiles are represented by fragments array
       }
 
-      // Draw and update fragments
+      // Draw fragments
       var fragLimit = quality < 0.5 ? Math.floor(fragments.length * 0.5) : fragments.length;
       for (var i = fragments.length - 1; i >= 0; i--) {
         var fr = fragments[i];
         fr.x += fr.vx;
+        fr.vy += fr.gravity;
         fr.y += fr.vy;
         fr.rot += fr.rotV;
         fr.alpha -= 0.003;
         if (fr.alpha <= 0) { fragments[i] = fragments[fragments.length - 1]; fragments.pop(); continue; }
         if (i >= fragLimit) continue;
 
-        // 5% glitch chance
-        var drawX = fr.x;
-        var drawY = fr.y;
-        if (Math.random() < 0.05) {
-          drawX += (Math.random() - 0.5) * 10;
-          drawY += (Math.random() - 0.5) * 10;
-        }
-
         ctx.save();
-        ctx.translate(drawX, drawY);
+        ctx.translate(fr.x, fr.y);
         ctx.rotate(fr.rot);
         ctx.fillStyle = col.accent;
-        ctx.globalAlpha = fr.alpha * 0.5 * globalAlpha;
+        ctx.globalAlpha = fr.alpha * 0.5;
         ctx.fillRect(-fr.w / 2, -fr.h / 2, fr.w, fr.h);
         ctx.restore();
       }
