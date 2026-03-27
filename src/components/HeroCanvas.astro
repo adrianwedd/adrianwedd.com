@@ -959,103 +959,161 @@ const { animation } = Astro.props;
   ANIMATIONS.ink = (function () {
     var w, h, col;
     var drops = [];
-    var DROP_COUNT = 3;
+    var DROP_COUNT = 5;
 
     function spawnDrop(cw, ch) {
       return {
-        x: cw * 0.2 + Math.random() * cw * 0.3,
-        y: ch * 0.2 + Math.random() * ch * 0.6,
+        x: cw * 0.15 + Math.random() * cw * 0.35,
+        y: ch * 0.05 + Math.random() * ch * 0.25,
         radius: 0,
-        maxRadius: 50 + Math.random() * 70,
+        maxRadius: 60 + Math.random() * 80,
         age: 0,
-        maxAge: 300 + Math.floor(Math.random() * 200),
+        phase: 'growing', // growing | bleeding | fading
         seed: Math.random() * 100,
-        fadeAge: 0
+        tendrils: [],
+        bleedProgress: 0
       };
     }
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       drops = [];
-      var count = DROP_COUNT;
-      for (var i = 0; i < count; i++) {
+      for (var i = 0; i < DROP_COUNT; i++) {
         var d = spawnDrop(cw, ch);
-        d.age = Math.floor(Math.random() * d.maxAge * 0.5); // stagger
+        d.age = Math.floor(Math.random() * 100); // stagger
         drops.push(d);
       }
     }
 
-    function drawDrop(ctx, drop, mirrorX) {
-      var cx = mirrorX !== undefined ? mirrorX : drop.x;
-      var cy = drop.y;
-      var r = drop.radius;
-      if (r < 1) return;
-
-      var alpha = 0.35;
-      if (drop.age > drop.maxAge) {
-        alpha *= Math.max(0, 1 - drop.fadeAge / 120);
-      }
-      if (alpha <= 0) return;
-
-      var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      grd.addColorStop(0, col.accent);
-      grd.addColorStop(1, 'transparent');
-
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = grd;
-
-      // Draw noise-modulated edge using small arcs
-      ctx.beginPath();
-      var steps = 36;
-      for (var i = 0; i <= steps; i++) {
-        var angle = (i / steps) * Math.PI * 2;
-        var noiseR = r + noise3D(angle * 3, drop.seed, drop.age * 0.01) * r * 0.3;
-        var px = cx + Math.cos(angle) * noiseR;
-        var py = cy + Math.sin(angle) * noiseR;
-        if (i === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
-      ctx.clearRect(0, 0, w, h);
+      // No clearRect — trail persistence via fadeRate
 
-      var count = quality < 0.5 ? 2 : DROP_COUNT;
-      var doMirror = quality >= 0.5;
-
-      ctx.globalCompositeOperation = 'lighter';
+      var mx = mouse && mouse.active ? mouse.x * w : -9999;
+      var my = mouse && mouse.active ? mouse.y * h : -9999;
+      var count = quality < 0.5 ? 3 : DROP_COUNT;
 
       for (var i = 0; i < Math.min(count, drops.length); i++) {
         var d = drops[i];
         d.age++;
-        if (d.radius < d.maxRadius) d.radius += 0.3;
 
-        if (d.age > d.maxAge) {
-          d.fadeAge++;
-          if (d.fadeAge > 120) {
+        // Mouse proximity acceleration
+        var mouseDist = Math.sqrt((d.x - mx) * (d.x - mx) + (d.y - my) * (d.y - my));
+        var speedMult = (mouseDist < 150) ? 2 : 1;
+
+        if (d.phase === 'growing') {
+          d.radius += 0.5 * speedMult;
+          if (d.radius >= d.maxRadius) {
+            d.phase = 'bleeding';
+            d.bleedProgress = 0;
+            // Generate tendrils
+            var tendrilCount = 8 + Math.floor(Math.random() * 5);
+            d.tendrils = [];
+            for (var ti = 0; ti < tendrilCount; ti++) {
+              d.tendrils.push({
+                angle: (ti / tendrilCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.3,
+                length: 0,
+                maxLength: 30 + Math.random() * 50,
+                width: 1 + Math.random() * 2
+              });
+            }
+          }
+        } else if (d.phase === 'bleeding') {
+          d.bleedProgress += 0.005 * speedMult;
+          for (var ti = 0; ti < d.tendrils.length; ti++) {
+            var tend = d.tendrils[ti];
+            if (tend.length < tend.maxLength) {
+              tend.length += 0.5 * speedMult;
+              // Noise-driven angle deviation
+              tend.angle += noise3D(tend.length * 0.1, d.seed + ti, t * 0.0001) * 0.05;
+            }
+          }
+          if (d.bleedProgress >= 1) {
+            d.phase = 'fading';
+          }
+        } else if (d.phase === 'fading') {
+          d.age++;
+          if (d.age > 500) {
             drops[i] = spawnDrop(w, h);
             continue;
           }
         }
 
-        drawDrop(ctx, d);
+        // Draw drop body (copper)
+        var bodyAlpha = d.phase === 'fading' ? Math.max(0, 0.35 - (d.age - 400) * 0.003) : 0.35;
+        if (bodyAlpha <= 0) continue;
 
-        if (doMirror) {
-          var mirrorX = w - d.x + (Math.random() > 0.5 ? 10 : -10);
-          drawDrop(ctx, d, mirrorX);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = col.accent;
+        ctx.globalAlpha = bodyAlpha;
+
+        // Noise-modulated edge
+        ctx.beginPath();
+        var steps = quality < 0.5 ? 18 : 36;
+        for (var s = 0; s <= steps; s++) {
+          var angle = (s / steps) * Math.PI * 2;
+          var noiseR = d.radius + noise3D(angle * 3, d.seed, d.age * 0.01) * d.radius * 0.3;
+          var px = d.x + Math.cos(angle) * noiseR;
+          var py = d.y + Math.sin(angle) * noiseR;
+          if (s === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fill();
+
+        // Draw mirror drop (right side)
+        if (quality >= 0.5) {
+          var mirrorX = w - d.x + (Math.sin(d.seed) > 0 ? 10 : -10);
+          ctx.globalAlpha = bodyAlpha * 0.6;
+          ctx.beginPath();
+          for (var s = 0; s <= steps; s++) {
+            var angle = (s / steps) * Math.PI * 2;
+            var noiseR = d.radius * 0.8 + noise3D(angle * 3, d.seed + 50, d.age * 0.01) * d.radius * 0.2;
+            var px = mirrorX + Math.cos(angle) * noiseR;
+            var py = d.y + Math.sin(angle) * noiseR;
+            if (s === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        // Draw tendrils (slate blue, lighter compositing)
+        if (d.tendrils.length > 0) {
+          ctx.globalCompositeOperation = 'lighter';
+          ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.2)';
+
+          for (var ti = 0; ti < d.tendrils.length; ti++) {
+            var tend = d.tendrils[ti];
+            if (tend.length < 1) continue;
+            ctx.lineWidth = tend.width;
+            ctx.globalAlpha = 0.2;
+            ctx.beginPath();
+            var tx = d.x + Math.cos(tend.angle) * d.radius * 0.9;
+            var ty = d.y + Math.sin(tend.angle) * d.radius * 0.9;
+            ctx.moveTo(tx, ty);
+            // Draw tendril with noise curves
+            var segCount = Math.floor(tend.length / 5);
+            var cAngle = tend.angle;
+            for (var seg = 0; seg < segCount; seg++) {
+              cAngle += noise3D(seg * 0.3, d.seed + ti, t * 0.0001) * 0.15;
+              tx += Math.cos(cAngle) * 5;
+              ty += Math.sin(cAngle) * 5;
+              ctx.lineTo(tx, ty);
+            }
+            ctx.stroke();
+          }
+          ctx.globalCompositeOperation = 'source-over';
         }
       }
 
-      ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
     }
 
     function cleanup() { drops = []; }
 
-    return { init: init, frame: frame, cleanup: cleanup };
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.02 };
   })();
 
   ANIMATIONS.blueprint = (function () {
