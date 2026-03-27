@@ -18,7 +18,7 @@ const { animation } = Astro.props;
   }
   @supports (background: color-mix(in srgb, red 50%, blue)) {
     .hero-canvas-overlay {
-      background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 40%, transparent) 30%, color-mix(in srgb, var(--color-surface) 70%, transparent) 60%, var(--color-surface) 100%);
+      background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 25%, transparent) 40%, color-mix(in srgb, var(--color-surface) 55%, transparent) 65%, var(--color-surface) 100%);
     }
   }
 </style>
@@ -42,6 +42,17 @@ const { animation } = Astro.props;
   var switchTimeoutB = null;
   var resizeTimeout = null;
 
+  // --- v2 Color constants ---
+  var SECONDARY_RGB = [110, 142, 196];  // #6e8ec4 slate blue
+  var TERTIARY_RGB = [142, 170, 126];   // #8eaa7e sage green
+  var surfaceR = 26, surfaceG = 24, surfaceB = 28; // parsed from --color-surface
+
+  // --- Mouse tracking ---
+  var mouseRawX = 0.5, mouseRawY = 0.5;
+  var mouseSmoothX = 0.5, mouseSmoothY = 0.5;
+  var mouseActive = false;
+  var mouseExitFrames = 0;
+
   // --- Color reading ---
   function readColors() {
     var s = getComputedStyle(document.documentElement);
@@ -49,6 +60,13 @@ const { animation } = Astro.props;
     colors.surface = s.getPropertyValue('--color-surface').trim();
     colors.muted = s.getPropertyValue('--color-text-muted').trim();
     colors.border = s.getPropertyValue('--color-border').trim();
+    // Parse surface to RGB for trail persistence
+    var sv = colors.surface;
+    if (sv.charAt(0) === '#' && sv.length === 7) {
+      surfaceR = parseInt(sv.substring(1,3), 16);
+      surfaceG = parseInt(sv.substring(3,5), 16);
+      surfaceB = parseInt(sv.substring(5,7), 16);
+    }
   }
 
   // --- Simplex noise (compact 3D) ---
@@ -123,71 +141,131 @@ const { animation } = Astro.props;
   };
 
   ANIMATIONS.flow = (function () {
-    var particles = [];
     var w, h, col;
+    var particles = [];
     var zOff = 0;
-    var baseCount = 400;
+    var BASE_COUNT = 2000;
+    var vortexActive = 0;
+    var vortexX = 0, vortexY = 0;
 
-    function Particle() {
-      this.x = Math.random() * w;
-      this.y = Math.random() * h;
-      this.prevX = this.x;
-      this.prevY = this.y;
+    function spawnParticle(cw, ch, stagger) {
+      return {
+        x: Math.random() * cw,
+        y: Math.random() * ch,
+        prevX: 0, prevY: 0,
+        age: stagger ? Math.floor(Math.random() * 300) : 0,
+        maxAge: 200 + Math.floor(Math.random() * 300),
+        isSecondary: Math.random() < 0.2,
+        shedVx: 0, shedVy: 0, shedLife: 0
+      };
     }
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
-      particles = [];
       zOff = 0;
-      for (var i = 0; i < baseCount; i++) particles.push(new Particle());
+      vortexActive = 0;
+      particles = [];
+      var count = w < 768 ? Math.floor(BASE_COUNT * 0.5) : BASE_COUNT;
+      for (var i = 0; i < count; i++) {
+        particles.push(spawnParticle(cw, ch, true));
+      }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
-      var count = Math.floor(baseCount * quality);
+      // Trail persistence handled by render loop via fadeRate
 
-      // Fade trail
-      ctx.fillStyle = col.surface;
-      ctx.globalAlpha = 0.02;
-      ctx.fillRect(0, 0, w, h);
-      ctx.globalAlpha = 0.8;
-
+      var count = Math.floor(particles.length * quality);
       zOff += 0.0005;
       var noiseScale = 0.003;
       var speed = 1.5;
 
-      ctx.strokeStyle = col.accent;
+      // Mouse vortex
+      var mx = mouse && mouse.active ? mouse.x * w : -9999;
+      var my = mouse && mouse.active ? mouse.y * h : -9999;
+      var vortexRadius = 150;
+      if (mouse && mouse.active) {
+        vortexActive++;
+        vortexX = mx; vortexY = my;
+      } else {
+        if (vortexActive >= 60) {
+          for (var i = 0; i < count; i++) {
+            var p = particles[i];
+            var dx = p.x - vortexX, dy = p.y - vortexY;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 50 && dist > 0) {
+              p.shedVx = -dy / dist * 1.5;
+              p.shedVy = dx / dist * 1.5;
+              p.shedLife = 120;
+            }
+          }
+        }
+        vortexActive = 0;
+      }
+
       ctx.lineWidth = 1.5;
 
-      for (var i = 0; i < Math.min(count, particles.length); i++) {
+      for (var i = 0; i < count; i++) {
         var p = particles[i];
         p.prevX = p.x;
         p.prevY = p.y;
+        p.age++;
 
-        var angle = noise3D(p.x * noiseScale, p.y * noiseScale, zOff) * Math.PI * 4;
-        p.x += Math.cos(angle) * speed;
-        p.y += Math.sin(angle) * speed;
+        if (p.age > p.maxAge || p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
+          particles[i] = spawnParticle(w, h, false);
+          continue;
+        }
 
-        // Draw trail segment
+        var zLayer = p.isSecondary ? zOff + 10 : zOff;
+        var angle = noise3D(p.x * noiseScale, p.y * noiseScale, zLayer) * Math.PI * 4;
+        var vx = Math.cos(angle) * speed;
+        var vy = Math.sin(angle) * speed;
+
+        if (mouse && mouse.active) {
+          var dx = p.x - mx, dy = p.y - my;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < vortexRadius && dist > 1) {
+            var tangentX = -dy / dist * 2;
+            var tangentY = dx / dist * 2;
+            var influence = 1 - dist / vortexRadius;
+            vx += tangentX * influence;
+            vy += tangentY * influence;
+          }
+        }
+
+        if (p.shedLife > 0) {
+          vx += p.shedVx * (p.shedLife / 120);
+          vy += p.shedVy * (p.shedLife / 120);
+          p.shedLife--;
+        }
+
+        p.x += vx;
+        p.y += vy;
+
+        var fadeIn = p.age < 20 ? p.age / 20 : 1;
+        var fadeOut = (p.maxAge - p.age) < 40 ? (p.maxAge - p.age) / 40 : 1;
+        var alpha = 0.5 * fadeIn * fadeOut;
+        if (alpha < 0.01) continue;
+
+        if (p.isSecondary) {
+          ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',' + alpha + ')';
+        } else {
+          ctx.strokeStyle = col.accent;
+          ctx.globalAlpha = alpha;
+        }
         ctx.beginPath();
         ctx.moveTo(p.prevX, p.prevY);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
-
-        // Respawn if off-canvas
-        if (p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
-          p.x = Math.random() * w;
-          p.y = Math.random() * h;
-          p.prevX = p.x;
-          p.prevY = p.y;
-        }
+        if (!p.isSecondary) ctx.globalAlpha = 1;
       }
+
       ctx.globalAlpha = 1;
     }
 
     function cleanup() { particles = []; }
 
-    return { init: init, frame: frame, cleanup: cleanup };
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.015 };
   })();
 
   ANIMATIONS.terrain = (function () {
@@ -199,29 +277,37 @@ const { animation } = Astro.props;
     var cachedGridLen = 0;
     var tectonicTimer = 0;
     var tectonicActive = false;
-    var TECTONIC_INTERVAL = 1200; // ~20s at 60fps
-    var TECTONIC_DURATION = 150;  // ~2.5s at 60fps
+    var TECTONIC_INTERVAL = 1200;
+    var TECTONIC_DURATION = 150;
     var PARTICLE_COUNT = 40;
+    var accentR = 196, accentG = 139, accentB = 110;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       particles = [];
       for (var i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(spawnParticle());
+        particles.push({ x: Math.random() * w, y: Math.random() * h, life: Math.floor(Math.random() * 500) });
       }
     }
 
-    function spawnParticle() {
-      return { x: Math.random() * (w || 800), y: Math.random() * (h || 600), life: Math.floor(Math.random() * 500) };
+    function parseAccent() {
+      var av = col.accent;
+      if (av && av.charAt(0) === '#' && av.length === 7) {
+        accentR = parseInt(av.substring(1,3), 16);
+        accentG = parseInt(av.substring(3,5), 16);
+        accentB = parseInt(av.substring(5,7), 16);
+      }
     }
 
     function isoLerp(a, b, va, vb, threshold) { var t = (threshold - va) / (vb - va); return a + t * (b - a); }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
+      // Re-parse accent each frame to catch theme toggles
+      if (col.accent !== colors.accent) { col = colors; parseAccent(); }
+      else { col = colors; }
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
 
-      // Tectonic event logic
       tectonicTimer++;
       if (!tectonicActive && tectonicTimer >= TECTONIC_INTERVAL) {
         tectonicActive = true;
@@ -229,23 +315,27 @@ const { animation } = Astro.props;
       }
       if (tectonicActive) {
         zOff += 0.003;
-        if (tectonicTimer >= TECTONIC_DURATION) {
-          tectonicActive = false;
-          tectonicTimer = 0;
-        }
+        if (tectonicTimer >= TECTONIC_DURATION) { tectonicActive = false; tectonicTimer = 0; }
       } else {
         zOff += 0.0003;
+      }
+
+      // Mouse gravity well
+      var gravX = 0, gravY = 0;
+      if (mouse && mouse.active) {
+        gravX = (mouse.x - 0.5) * 0.3;
+        gravY = (mouse.y - 0.5) * 0.3;
       }
 
       var noiseScale = 0.005;
       var levels = Math.floor(10 * quality);
       if (levels < 3) levels = 3;
       var actualRes = gridRes;
-      if (quality < 0.5) actualRes = gridRes * 2; // reduce grid density under load
+      if (quality < 0.5) actualRes = gridRes * 2;
       var cols = Math.ceil(w / actualRes) + 1;
       var rows = Math.ceil(h / actualRes) + 1;
 
-      // Sample noise grid (reuse buffer across frames)
+      // Sample noise grid (reuse buffer)
       var gridLen = cols * rows;
       if (!cachedGrid || cachedGridLen < gridLen) {
         cachedGrid = new Float32Array(gridLen);
@@ -254,21 +344,28 @@ const { animation } = Astro.props;
       var grid = cachedGrid;
       for (var r = 0; r < rows; r++) {
         for (var c = 0; c < cols; c++) {
-          grid[r * cols + c] = noise3D(c * actualRes * noiseScale, r * actualRes * noiseScale, zOff);
+          grid[r * cols + c] = noise3D(c * actualRes * noiseScale + gravX, r * actualRes * noiseScale + gravY, zOff);
         }
       }
 
-      // Marching squares for each contour level
-      ctx.strokeStyle = col.accent;
       ctx.lineCap = 'round';
 
       for (var level = 0; level < levels; level++) {
         var levelFrac = level / levels;
         var threshold = -0.8 + levelFrac * 1.6;
-        // Elevation-dependent alpha: valleys 0.08, ridges 0.5
-        ctx.globalAlpha = 0.08 + levelFrac * 0.42;
-        // Contour thickness: lower levels (valleys) thicker, upper levels (ridges) thinner
-        ctx.lineWidth = 1.5 - levelFrac * 1.0; // 1.5px valleys → 0.5px ridges
+
+        // Color by elevation: blue valleys → sage mid → copper ridges
+        var cr, cg, cb;
+        if (levelFrac < 0.33) {
+          cr = SECONDARY_RGB[0]; cg = SECONDARY_RGB[1]; cb = SECONDARY_RGB[2];
+        } else if (levelFrac < 0.66) {
+          cr = TERTIARY_RGB[0]; cg = TERTIARY_RGB[1]; cb = TERTIARY_RGB[2];
+        } else {
+          cr = accentR; cg = accentG; cb = accentB;
+        }
+
+        ctx.strokeStyle = 'rgba(' + cr + ',' + cg + ',' + cb + ',' + (0.1 + levelFrac * 0.5) + ')';
+        ctx.lineWidth = 1.5 - levelFrac * 0.8;
 
         ctx.beginPath();
         for (var r = 0; r < rows - 1; r++) {
@@ -288,63 +385,57 @@ const { animation } = Astro.props;
 
             var x = c * actualRes, y = r * actualRes;
             var g = actualRes;
-
             var top = isoLerp(x, x + g, tl, tr, threshold);
             var right = isoLerp(y, y + g, tr, br, threshold);
             var bottom = isoLerp(x, x + g, bl, br, threshold);
             var left = isoLerp(y, y + g, tl, bl, threshold);
 
-            // Draw line segments based on marching squares case
             switch (config) {
               case 1: case 14: ctx.moveTo(x, left); ctx.lineTo(bottom, y + g); break;
               case 2: case 13: ctx.moveTo(bottom, y + g); ctx.lineTo(x + g, right); break;
               case 3: case 12: ctx.moveTo(x, left); ctx.lineTo(x + g, right); break;
               case 4: case 11: ctx.moveTo(top, y); ctx.lineTo(x + g, right); break;
-              case 5:
-                ctx.moveTo(x, left); ctx.lineTo(top, y);
-                ctx.moveTo(bottom, y + g); ctx.lineTo(x + g, right);
-                break;
+              case 5: ctx.moveTo(x, left); ctx.lineTo(top, y); ctx.moveTo(bottom, y + g); ctx.lineTo(x + g, right); break;
               case 6: case 9: ctx.moveTo(top, y); ctx.lineTo(bottom, y + g); break;
               case 7: case 8: ctx.moveTo(x, left); ctx.lineTo(top, y); break;
-              case 10:
-                ctx.moveTo(x, left); ctx.lineTo(bottom, y + g);
-                ctx.moveTo(top, y); ctx.lineTo(x + g, right);
-                break;
+              case 10: ctx.moveTo(x, left); ctx.lineTo(bottom, y + g); ctx.moveTo(top, y); ctx.lineTo(x + g, right); break;
             }
           }
         }
         ctx.stroke();
       }
 
-      // Contour-tracing particles
-      var activeParticles = quality < 0.7 ? Math.floor(PARTICLE_COUNT * 0.5) : PARTICLE_COUNT;
-      // Adjust particle array size
-      while (particles.length < activeParticles) particles.push(spawnParticle());
-
+      // Contour-tracing particles with elevation-based glow
       ctx.fillStyle = col.accent;
-      ctx.globalAlpha = 0.4;
-      var eps = 0.5; // epsilon for gradient estimation
+      var activeParticles = quality < 0.7 ? Math.floor(PARTICLE_COUNT * 0.5) : PARTICLE_COUNT;
+      var eps = 0.5;
       for (var i = 0; i < activeParticles; i++) {
         var p = particles[i];
         p.life--;
         if (p.life <= 0 || p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
-          particles[i] = spawnParticle();
-          p = particles[i];
+          p.x = Math.random() * w; p.y = Math.random() * h; p.life = Math.floor(Math.random() * 500);
         }
-        // Compute noise gradient at particle position
-        var nx = p.x * noiseScale, ny = p.y * noiseScale;
+        var nx = p.x * noiseScale + gravX, ny = p.y * noiseScale + gravY;
         var nv = noise3D(nx, ny, zOff);
         var dx = noise3D(nx + eps * noiseScale, ny, zOff) - nv;
         var dy = noise3D(nx, ny + eps * noiseScale, zOff) - nv;
-        // Move perpendicular to gradient (follow contour)
         var mag = Math.sqrt(dx * dx + dy * dy) || 1;
-        var speed = 0.3 + 0.2 * Math.random();
-        p.x += (-dy / mag) * speed;
-        p.y += (dx / mag) * speed;
-        // Draw particle
+        p.x += (-dy / mag) * 0.3;
+        p.y += (dx / mag) * 0.3;
+
+        var elevation = (nv + 1) * 0.5;
+        ctx.globalAlpha = 0.15 + elevation * 0.35;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 1, 0, 6.2832);
+        ctx.arc(p.x, p.y, 1 + elevation * 2, 0, 6.2832);
         ctx.fill();
+
+        // Ridge halo at high elevation
+        if (elevation > 0.7 && quality >= 0.5) {
+          ctx.globalAlpha = 0.1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 6, 0, 6.2832);
+          ctx.fill();
+        }
       }
 
       ctx.globalAlpha = 1;
@@ -534,7 +625,6 @@ const { animation } = Astro.props;
     var embers = [];
     var time = 0;
     var MAX_BRANCHES = 200;
-    var surfaceR = 26, surfaceG = 24, surfaceB = 28; // dark theme default
     var SECONDARY = 'rgba(110,142,196,';  // slate blue for fractures
 
     function initForge(cw, ch) {
@@ -565,24 +655,12 @@ const { animation } = Astro.props;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
-      // Parse surface color for trail persistence
-      var s = getComputedStyle(document.documentElement);
-      var sv = s.getPropertyValue('--color-surface').trim();
-      if (sv.charAt(0) === '#' && sv.length === 7) {
-        surfaceR = parseInt(sv.substring(1,3), 16);
-        surfaceG = parseInt(sv.substring(3,5), 16);
-        surfaceB = parseInt(sv.substring(5,7), 16);
-      }
       initForge(cw, ch);
     }
 
     function frame(ctx, cw, ch, t, colors, quality) {
       w = cw; h = ch; col = colors;
       time += 0.016;
-
-      // Trail persistence instead of clearRect
-      ctx.fillStyle = 'rgba(' + surfaceR + ',' + surfaceG + ',' + surfaceB + ',0.018)';
-      ctx.fillRect(0, 0, w, h);
 
       var count = quality < 0.7 ? Math.floor(STREAM_COUNT * 0.6) : STREAM_COUNT;
       var allCooled = true;
@@ -703,7 +781,7 @@ const { animation } = Astro.props;
 
     function cleanup() { streams = []; branches = []; sparks = []; embers = []; }
 
-    return { init: init, frame: frame, cleanup: cleanup };
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.018 };
   })();
 
   ANIMATIONS.signal = (function () {
@@ -1640,112 +1718,192 @@ const { animation } = Astro.props;
     var w, h, col;
     var nodes = [];
     var edges = [];
+    var pulses = [];
     var frameCount = 0;
     var nextFire = 30;
+    var NODE_COUNT = 50;
+    var MAX_DIST = 180;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
-      nodes = [];
-      edges = [];
-      frameCount = 0;
-      nextFire = 30;
+      nodes = []; edges = []; pulses = [];
+      frameCount = 0; nextFire = 30;
 
-      for (var i = 0; i < 20; i++) {
+      for (var i = 0; i < NODE_COUNT; i++) {
         nodes.push({
-          x: Math.random() * w * 0.8 + w * 0.1,
-          y: Math.random() * h * 0.8 + h * 0.1,
+          x: w * 0.1 + Math.random() * w * 0.8,
+          y: h * 0.1 + Math.random() * h * 0.8,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
           brightness: 0,
-          cooldown: 0,
-          pendingFire: []
+          failed: false,
+          failTimer: 0
         });
       }
+      rebuildEdges(1);
+    }
 
-      // Build edges
+    function rebuildEdges(quality) {
+      edges = [];
+      var maxDist = MAX_DIST * Math.max(0.6, quality);
       for (var a = 0; a < nodes.length; a++) {
         for (var b = a + 1; b < nodes.length; b++) {
           var dx = nodes[a].x - nodes[b].x;
           var dy = nodes[a].y - nodes[b].y;
-          if (Math.sqrt(dx * dx + dy * dy) < 200) {
-            edges.push({ a: a, b: b });
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDist) {
+            edges.push({ a: a, b: b, dist: dist });
           }
         }
       }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
       frameCount++;
 
-      var nodeCount = quality < 0.5 ? Math.floor(nodes.length * 0.6) : nodes.length;
+      var maxDist = MAX_DIST * Math.max(0.6, quality);
+      var nodeCount = quality < 0.5 ? Math.floor(NODE_COUNT * 0.5) : NODE_COUNT;
 
-      // Fire events
+      // Update node positions — drift with bounce
+      for (var i = 0; i < nodeCount; i++) {
+        var nd = nodes[i];
+        nd.x += nd.vx; nd.y += nd.vy;
+        if (nd.x < 0 || nd.x > w) nd.vx *= -1;
+        if (nd.y < 0 || nd.y > h) nd.vy *= -1;
+        nd.x = Math.max(0, Math.min(w, nd.x));
+        nd.y = Math.max(0, Math.min(h, nd.y));
+
+        // Mouse attractor
+        if (mouse && mouse.active && quality >= 0.3) {
+          var mx = mouse.x * w, my = mouse.y * h;
+          var adx = mx - nd.x, ady = my - nd.y;
+          var adist = Math.sqrt(adx * adx + ady * ady);
+          if (adist < 200 && adist > 1) {
+            nd.x += (adx / adist) * 0.3;
+            nd.y += (ady / adist) * 0.3;
+          }
+        }
+
+        // Node failure: 0.05% per frame (~1-2 steady-state failures)
+        if (!nd.failed && Math.random() < 0.0005) {
+          nd.failed = true;
+          nd.failTimer = 150;
+        }
+        if (nd.failed) {
+          nd.failTimer--;
+          if (nd.failTimer <= 0) nd.failed = false;
+        }
+
+        nd.brightness *= 0.97;
+      }
+
+      // Rebuild edges every 30 frames
+      if (frameCount % 30 === 0) rebuildEdges(quality);
+
+      // Fire signal
       if (frameCount >= nextFire) {
-        var idx = Math.floor(Math.random() * nodeCount);
-        nodes[idx].brightness = 1;
-        // Schedule propagation
-        for (var e = 0; e < edges.length; e++) {
-          var edge = edges[e];
-          if (edge.a === idx) nodes[edge.b].pendingFire.push({ frame: frameCount + 15, intensity: 0.7, hops: 1 });
-          if (edge.b === idx) nodes[edge.a].pendingFire.push({ frame: frameCount + 15, intensity: 0.7, hops: 1 });
+        var src = Math.floor(Math.random() * nodeCount);
+        if (!nodes[src].failed) {
+          nodes[src].brightness = 1;
+          for (var e = 0; e < edges.length; e++) {
+            var edge = edges[e];
+            var target = -1;
+            if (edge.a === src) target = edge.b;
+            if (edge.b === src) target = edge.a;
+            if (target >= 0 && target < nodeCount && !nodes[target].failed) {
+              pulses.push({ from: src, to: target, progress: 0, speed: 3 / edge.dist, intensity: 0.8, hops: 0 });
+            }
+          }
         }
         nextFire = frameCount + 30 + Math.floor(Math.random() * 60);
       }
 
-      // Process pending fires
-      for (var i = 0; i < nodeCount; i++) {
-        var node = nodes[i];
-        for (var p = node.pendingFire.length - 1; p >= 0; p--) {
-          var pf = node.pendingFire[p];
-          if (frameCount >= pf.frame) {
-            node.brightness = Math.max(node.brightness, pf.intensity);
-            // Propagate further if hops remain
-            if (pf.hops < 3) {
-              for (var e = 0; e < edges.length; e++) {
+      // Update pulses
+      for (var i = pulses.length - 1; i >= 0; i--) {
+        var pu = pulses[i];
+        pu.progress += pu.speed;
+        if (pu.progress >= 1) {
+          var tgt = nodes[pu.to];
+          if (tgt) {
+            tgt.brightness = Math.max(tgt.brightness, pu.intensity);
+            if (pu.hops < 3 && pu.intensity > 0.1) {
+              var pcount = 0;
+              for (var e = 0; e < edges.length && pcount < 3; e++) {
                 var edge = edges[e];
-                var target = -1;
-                if (edge.a === i) target = edge.b;
-                if (edge.b === i) target = edge.a;
-                if (target >= 0 && target < nodeCount) {
-                  nodes[target].pendingFire.push({ frame: frameCount + 15, intensity: pf.intensity * 0.7, hops: pf.hops + 1 });
+                var next = -1;
+                if (edge.a === pu.to && edge.b !== pu.from) next = edge.b;
+                if (edge.b === pu.to && edge.a !== pu.from) next = edge.a;
+                if (next >= 0 && next < nodeCount && !nodes[next].failed) {
+                  pulses.push({ from: pu.to, to: next, progress: 0, speed: 3 / edge.dist, intensity: pu.intensity * 0.7, hops: pu.hops + 1 });
+                  pcount++;
                 }
               }
             }
-            node.pendingFire.splice(p, 1);
           }
+          pulses[i] = pulses[pulses.length - 1]; pulses.pop();
+          continue;
         }
-        node.brightness *= 0.97;
       }
 
       // Draw edges
-      ctx.strokeStyle = col.accent;
-      ctx.lineWidth = 1.5;
       for (var e = 0; e < edges.length; e++) {
         var edge = edges[e];
         if (edge.a >= nodeCount || edge.b >= nodeCount) continue;
-        var bright = Math.max(nodes[edge.a].brightness, nodes[edge.b].brightness);
-        ctx.globalAlpha = 0.15 + bright * 0.35;
+        var na = nodes[edge.a], nb = nodes[edge.b];
+        var bright = Math.max(na.brightness, nb.brightness);
+        var fail = na.failed || nb.failed;
+
+        if (fail) {
+          ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.08)';
+        } else {
+          ctx.strokeStyle = col.accent;
+          ctx.globalAlpha = 0.15 + bright * 0.35;
+        }
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(nodes[edge.a].x, nodes[edge.a].y);
-        ctx.lineTo(nodes[edge.b].x, nodes[edge.b].y);
+        ctx.moveTo(na.x, na.y);
+        ctx.lineTo(nb.x, nb.y);
         ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      // Draw traveling pulses
+      ctx.fillStyle = col.accent;
+      for (var i = 0; i < pulses.length; i++) {
+        var pu = pulses[i];
+        if (pu.from >= nodes.length || pu.to >= nodes.length) continue;
+        var na = nodes[pu.from], nb = nodes[pu.to];
+        var px = na.x + (nb.x - na.x) * pu.progress;
+        var py = na.y + (nb.y - na.y) * pu.progress;
+        ctx.globalAlpha = pu.intensity * 0.8;
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, 6.2832);
+        ctx.fill();
       }
 
       // Draw nodes
       for (var i = 0; i < nodeCount; i++) {
-        var node = nodes[i];
-        var r = 4 + node.brightness * 3;
-        ctx.fillStyle = col.accent;
-        ctx.globalAlpha = 0.3 + node.brightness * 0.6;
+        var nd = nodes[i];
+        var r = 4 + nd.brightness * 3;
+
+        if (nd.failed) {
+          ctx.fillStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',' + (0.3 + nd.brightness * 0.3) + ')';
+        } else {
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.3 + nd.brightness * 0.6;
+        }
         ctx.beginPath();
-        ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+        ctx.arc(nd.x, nd.y, r, 0, 6.2832);
         ctx.fill();
+        ctx.globalAlpha = 1;
       }
 
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { nodes = []; edges = []; }
+    function cleanup() { nodes = []; edges = []; pulses = []; }
     return { init: init, frame: frame, cleanup: cleanup };
   })();
 
@@ -2026,11 +2184,33 @@ const { animation } = Astro.props;
         fastFrameCount = 0;
       }
 
+      // Pointer smoothing
+      if (mouseActive) {
+        mouseSmoothX += (mouseRawX - mouseSmoothX) * 0.08;
+        mouseSmoothY += (mouseRawY - mouseSmoothY) * 0.08;
+      } else {
+        mouseExitFrames++;
+        if (mouseExitFrames < 30) {
+          mouseSmoothX += (0.5 - mouseSmoothX) * 0.05;
+          mouseSmoothY += (0.5 - mouseSmoothY) * 0.05;
+        }
+      }
+      var mouse = { x: mouseSmoothX, y: mouseSmoothY, active: mouseActive };
+
+      // Trail persistence dispatch
+      var anim = getAnim(ANIM_KEYS[currentIndex]);
+      if (anim.fadeRate) {
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.fillStyle = 'rgba(' + surfaceR + ',' + surfaceG + ',' + surfaceB + ',' + anim.fadeRate + ')';
+        ctx.fillRect(0, 0, canvasW, canvasH);
+        ctx.restore();
+      }
+
       ctx.save();
       ctx.scale(dpr, dpr);
-      var anim = getAnim(ANIM_KEYS[currentIndex]);
       try {
-        anim.frame(ctx, canvasW, canvasH, timestamp, colors, adaptiveQuality);
+        anim.frame(ctx, canvasW, canvasH, timestamp, colors, adaptiveQuality, mouse);
       } catch (e) {
         console.warn('HeroCanvas frame error on ' + ANIM_KEYS[currentIndex] + ':', e);
         // Skip to next animation on error
@@ -2063,6 +2243,11 @@ const { animation } = Astro.props;
       }
     }
     currentIndex = -1;
+    // Reset pointer state to prevent stale attractor on re-init
+    mouseRawX = 0.5; mouseRawY = 0.5;
+    mouseSmoothX = 0.5; mouseSmoothY = 0.5;
+    mouseActive = false;
+    mouseExitFrames = 0;
     pendingIndex = -1;
   }
 
@@ -2153,6 +2338,53 @@ const { animation } = Astro.props;
         var anim = getAnim(ANIM_KEYS[currentIndex]);
         try { anim.init(canvasW, canvasH, colors); } catch (e) {}
       }, 200);
+    });
+
+    // Mouse tracking (sentinel-guarded, document-level for event delegation)
+    document.addEventListener('mousemove', function (e) {
+      var canvas = document.getElementById('hero-canvas');
+      if (!canvas) return;
+      var section = canvas.closest('section');
+      if (!section) return;
+      var rect = section.getBoundingClientRect();
+      if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        mouseRawX = (e.clientX - rect.left) / rect.width;
+        mouseRawY = (e.clientY - rect.top) / rect.height;
+        mouseActive = true;
+        mouseExitFrames = 0;
+      } else {
+        mouseActive = false;
+      }
+    });
+
+    // Touch tracking (same normalization)
+    document.addEventListener('touchmove', function (e) {
+      var canvas = document.getElementById('hero-canvas');
+      if (!canvas) return;
+      var section = canvas.closest('section');
+      if (!section) return;
+      var rect = section.getBoundingClientRect();
+      var touch = e.touches[0];
+      if (touch && touch.clientX >= rect.left && touch.clientX <= rect.right && touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+        mouseRawX = (touch.clientX - rect.left) / rect.width;
+        mouseRawY = (touch.clientY - rect.top) / rect.height;
+        mouseActive = true;
+        mouseExitFrames = 0;
+      } else {
+        mouseActive = false;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchend', function () {
+      mouseActive = false;
+    });
+
+    document.addEventListener('touchcancel', function () {
+      mouseActive = false;
+    });
+
+    document.addEventListener('mouseleave', function () {
+      mouseActive = false;
     });
 
     // Respond dynamically to prefers-reduced-motion changes (WCAG 2.3.3)
