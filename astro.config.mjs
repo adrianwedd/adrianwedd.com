@@ -66,6 +66,8 @@ export default defineConfig({
   ],
   redirects: {
     '/projects/ticketsmith/': '/projects/',
+    // Legacy WordPress URLs still indexed by Google
+    '/2023/03/paperclip-maximizer/': '/',
   },
   prefetch: {
     prefetchAll: false,

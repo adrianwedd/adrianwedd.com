@@ -112,19 +112,19 @@ const pricing = [
   {
     title: 'Project',
     cadence: 'Fixed scope',
-    typical: '2–8 weeks, fixed quote',
-    desc: 'Scoped, priced, and agreed upfront. No surprises. Right for a defined build with a clear outcome.',
+    typical: 'Typically $3K–$25K',
+    desc: 'Scoped, priced, and agreed upfront. No surprises. 2–8 weeks depending on complexity. Right for a defined build with a clear outcome.',
   },
   {
     title: 'Retainer',
     cadence: 'Monthly',
-    typical: 'From the month after delivery',
+    typical: 'From $1.5K/month',
     desc: 'Ongoing capacity. Updates, new features, support, whatever comes up. Most clients move here after the initial build.',
   },
   {
     title: 'Consult',
     cadence: 'Day rate',
-    typical: 'Half-day or full-day engagements',
+    typical: '$800/half-day, $1,400/full-day',
     desc: 'Strategy, architecture, evaluation, policy. Useful when you need deep expertise for a specific question without a full build.',
   },
 ];
@@ -155,7 +155,7 @@ const pricing = [
     ],
   })} />
 
-  {/* Hero — character first, capabilities follow */}
+  {/* Hero — outcome-focused, concise */}
   <section
     id="services-hero"
     aria-labelledby="services-hero-heading"
@@ -166,41 +166,55 @@ const pricing = [
         I build things that work for people who need them.<br />
         <span class="text-text-muted">And I break things on purpose to make sure they actually do.</span>
       </h1>
-      <div class="mt-10 max-w-prose space-y-5 leading-relaxed text-text">
-        <p>
-          I spent years planning direct actions for Greenpeace — not communications, not fundraising,
-          the <a href="/about/" class="text-accent hover:underline">Actions unit</a>. Operations against
-          well-resourced opponents who would rather you didn't succeed. That work teaches you one thing
-          above everything else: the optimistic plan is the dangerous plan. Enumerate failure modes
-          before you move.
-        </p>
-        <p>
-          That thinking didn't leave. It followed me into government cybersecurity, then AI
-          safety — <a href="/blog/120-models-18k-prompts/" class="text-accent hover:underline">120 models, 18,000 adversarial prompts</a>,
-          a published methodology — then into everything I build for clients. It is the methodology.
-        </p>
-        <p>
-          Now I consult, architect, build, automate, and evaluate. Websites, AI systems, security
-          audits, voice agents, agentic pipelines, governance frameworks. Small businesses, regulated
-          industries, anyone with a problem worth solving properly.
-        </p>
-        <p>
-          If you're not sure what the problem actually is yet — that's usually where I'm most useful.
-        </p>
+      <p class="mt-6 max-w-prose text-base leading-relaxed text-text-muted">
+        Consulting, architecture, and development for websites, AI systems, security audits, agentic
+        pipelines, and governance frameworks. If you're not sure what the problem actually is yet —
+        that's usually where I'm most useful.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a
+          href="/contact/"
+          class="btn-primary inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline hover:opacity-90"
+        >
+          Book a free call
+        </a>
+        <a
+          href="#what-i-do"
+          class="btn-secondary inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-muted no-underline hover:border-accent hover:text-accent"
+        >
+          See what I do
+        </a>
       </div>
-      <a
-        href="/contact/"
-        class="btn-primary mt-10 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline hover:opacity-90"
-      >
-        Work with me
-      </a>
     </div>
     <HeroCanvas animation="pulse" />
   </section>
 
+  {/* Social proof — immediately after hero */}
+  <section
+    id="testimonials"
+    aria-labelledby="testimonials-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+  >
+    <p class="text-xl font-medium text-accent leading-snug tracking-tight">
+      "He has a unique ability to truly listen and understand the essence of someone's work, then translate it into a clear and beautiful digital presence."
+    </p>
+    <blockquote class="mt-6 rounded-lg border border-border bg-surface-alt p-6">
+      <p class="text-text leading-relaxed">
+        "Working with Adrian was exceptional. The process felt thoughtful, collaborative and surprisingly easy, and the result already feels like a true extension of my practice — helping people find solutions to their problems, and answers to their questions."
+      </p>
+      <p class="mt-4 text-text leading-relaxed">
+        "I would recommend working with Adrian without hesitation."
+      </p>
+      <footer class="mt-5 flex items-center justify-between flex-wrap gap-3">
+        <span class="text-sm text-text-muted">— Dr Annica Larsdotter DC DICCP</span>
+        <a href="https://evolvechiropractictas.com/" target="_blank" rel="noopener noreferrer" class="text-sm text-accent transition-colors hover:underline">Evolve Chiropractic Tasmania &nearr;</a>
+      </footer>
+    </blockquote>
+  </section>
+
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
 
-  {/* The through-line — why the rigour doesn't change */}
+  {/* The through-line — why the rigour doesn't change (moved below proof) */}
   <section
     id="why-me"
     aria-labelledby="why-me-heading"
@@ -329,34 +343,6 @@ const pricing = [
           </div>
         </div>
       ))}
-    </div>
-  </section>
-
-  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
-
-  {/* What clients say */}
-  <section
-    id="testimonials"
-    aria-labelledby="testimonials-heading"
-    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
-  >
-    <h2 id="testimonials-heading" class="text-text">What clients say</h2>
-    <div class="mt-8">
-      <p class="text-xl font-medium text-accent leading-snug tracking-tight">
-        "He has a unique ability to truly listen and understand the essence of someone's work, then translate it into a clear and beautiful digital presence."
-      </p>
-      <blockquote class="mt-6 rounded-lg border border-border bg-surface-alt p-6">
-        <p class="text-text leading-relaxed">
-          "Working with Adrian was exceptional. The process felt thoughtful, collaborative and surprisingly easy, and the result already feels like a true extension of my practice — helping people find solutions to their problems, and answers to their questions."
-        </p>
-        <p class="mt-4 text-text leading-relaxed">
-          "I would recommend working with Adrian without hesitation."
-        </p>
-        <footer class="mt-5 flex items-center justify-between flex-wrap gap-3">
-          <span class="text-sm text-text-muted">— Dr Annica Larsdotter DC DICCP</span>
-          <a href="https://evolvechiropractictas.com/" target="_blank" rel="noopener noreferrer" class="text-sm text-accent transition-colors hover:underline">Evolve Chiropractic Tasmania &nearr;</a>
-        </footer>
-      </blockquote>
     </div>
   </section>
 
