@@ -102,7 +102,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
 
     <div class="section-divider my-12 max-w-full"></div>
 
-    {/* Contact details — rendered as SVG paths to deter scrapers */}
+    {/* Contact details — real links for usability and accessibility */}
     <div class="mt-10 space-y-6">
       <div class="flex items-center gap-4">
         <div
@@ -125,10 +125,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         </div>
         <div>
           <p class="mb-1 text-xs text-text-muted">Email</p>
-          {/* SVG text rendering — not selectable/indexable as plain text */}
-          <svg viewBox="0 0 280 24" class="contact-svg h-5" role="img" aria-label="Email: adrian@adrianwedd.com">
-            <text x="0" y="17" class="contact-text">adrian@adrianwedd.com</text>
-          </svg>
+          <a href="mailto:adrian@adrianwedd.com" class="text-sm text-text transition-colors hover:text-accent">adrian@adrianwedd.com</a>
         </div>
       </div>
 
@@ -153,9 +150,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         </div>
         <div>
           <p class="mb-1 text-xs text-text-muted">Phone</p>
-          <svg viewBox="0 0 200 24" class="contact-svg h-5" role="img" aria-label="Phone: +61 407 081 084">
-            <text x="0" y="17" class="contact-text">+61 407 081 084</text>
-          </svg>
+          <a href="tel:+61407081084" class="text-sm text-text transition-colors hover:text-accent">+61 407 081 084</a>
         </div>
       </div>
     </div>
