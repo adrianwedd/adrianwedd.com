@@ -8,6 +8,8 @@ status: "active"
 date: 2026-03-22
 series: "PiCar-X"
 seriesOrder: 2
+audioUrl: "/notebook-assets/afterwords/audio.mp3"
+audioDuration: "21:43"
 ---
 
 Afterwords completes the voice loop in Claude Code. Claude Code already listens — hold Space, talk, it transcribes. But every response comes back as text. Afterwords intercepts every response via a stop hook, sends the text to a local TTS server, and plays it through the speaker. Two-way voice conversation with your coding assistant, running entirely on your machine.
