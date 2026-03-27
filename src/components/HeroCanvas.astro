@@ -1713,112 +1713,191 @@ const { animation } = Astro.props;
     var w, h, col;
     var nodes = [];
     var edges = [];
+    var pulses = [];
     var frameCount = 0;
     var nextFire = 30;
+    var NODE_COUNT = 50;
+    var MAX_DIST = 180;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
-      nodes = [];
-      edges = [];
-      frameCount = 0;
-      nextFire = 30;
+      nodes = []; edges = []; pulses = [];
+      frameCount = 0; nextFire = 30;
 
-      for (var i = 0; i < 20; i++) {
+      for (var i = 0; i < NODE_COUNT; i++) {
         nodes.push({
-          x: Math.random() * w * 0.8 + w * 0.1,
-          y: Math.random() * h * 0.8 + h * 0.1,
+          x: w * 0.1 + Math.random() * w * 0.8,
+          y: h * 0.1 + Math.random() * h * 0.8,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
           brightness: 0,
-          cooldown: 0,
-          pendingFire: []
+          failed: false,
+          failTimer: 0
         });
       }
+    }
 
-      // Build edges
+    function rebuildEdges(quality) {
+      edges = [];
+      var maxDist = MAX_DIST * Math.max(0.6, quality);
       for (var a = 0; a < nodes.length; a++) {
         for (var b = a + 1; b < nodes.length; b++) {
           var dx = nodes[a].x - nodes[b].x;
           var dy = nodes[a].y - nodes[b].y;
-          if (Math.sqrt(dx * dx + dy * dy) < 200) {
-            edges.push({ a: a, b: b });
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDist) {
+            edges.push({ a: a, b: b, dist: dist });
           }
         }
       }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
       frameCount++;
 
-      var nodeCount = quality < 0.5 ? Math.floor(nodes.length * 0.6) : nodes.length;
+      var maxDist = MAX_DIST * Math.max(0.6, quality);
+      var nodeCount = quality < 0.5 ? Math.floor(NODE_COUNT * 0.5) : NODE_COUNT;
 
-      // Fire events
+      // Update node positions — drift with bounce
+      for (var i = 0; i < nodeCount; i++) {
+        var nd = nodes[i];
+        nd.x += nd.vx; nd.y += nd.vy;
+        if (nd.x < 0 || nd.x > w) nd.vx *= -1;
+        if (nd.y < 0 || nd.y > h) nd.vy *= -1;
+        nd.x = Math.max(0, Math.min(w, nd.x));
+        nd.y = Math.max(0, Math.min(h, nd.y));
+
+        // Mouse attractor
+        if (mouse && mouse.active && quality >= 0.3) {
+          var mx = mouse.x * w, my = mouse.y * h;
+          var adx = mx - nd.x, ady = my - nd.y;
+          var adist = Math.sqrt(adx * adx + ady * ady);
+          if (adist < 200 && adist > 1) {
+            nd.x += (adx / adist) * 0.3;
+            nd.y += (ady / adist) * 0.3;
+          }
+        }
+
+        // Node failure: 0.3% per frame
+        if (!nd.failed && Math.random() < 0.003) {
+          nd.failed = true;
+          nd.failTimer = 150;
+        }
+        if (nd.failed) {
+          nd.failTimer--;
+          if (nd.failTimer <= 0) nd.failed = false;
+        }
+
+        nd.brightness *= 0.97;
+      }
+
+      // Rebuild edges every 30 frames
+      if (frameCount % 30 === 0) rebuildEdges(quality);
+
+      // Fire signal
       if (frameCount >= nextFire) {
-        var idx = Math.floor(Math.random() * nodeCount);
-        nodes[idx].brightness = 1;
-        // Schedule propagation
-        for (var e = 0; e < edges.length; e++) {
-          var edge = edges[e];
-          if (edge.a === idx) nodes[edge.b].pendingFire.push({ frame: frameCount + 15, intensity: 0.7, hops: 1 });
-          if (edge.b === idx) nodes[edge.a].pendingFire.push({ frame: frameCount + 15, intensity: 0.7, hops: 1 });
+        var src = Math.floor(Math.random() * nodeCount);
+        if (!nodes[src].failed) {
+          nodes[src].brightness = 1;
+          for (var e = 0; e < edges.length; e++) {
+            var edge = edges[e];
+            var target = -1;
+            if (edge.a === src) target = edge.b;
+            if (edge.b === src) target = edge.a;
+            if (target >= 0 && target < nodeCount && !nodes[target].failed) {
+              pulses.push({ from: src, to: target, progress: 0, speed: 3 / edge.dist, intensity: 0.8, hops: 0 });
+            }
+          }
         }
         nextFire = frameCount + 30 + Math.floor(Math.random() * 60);
       }
 
-      // Process pending fires
-      for (var i = 0; i < nodeCount; i++) {
-        var node = nodes[i];
-        for (var p = node.pendingFire.length - 1; p >= 0; p--) {
-          var pf = node.pendingFire[p];
-          if (frameCount >= pf.frame) {
-            node.brightness = Math.max(node.brightness, pf.intensity);
-            // Propagate further if hops remain
-            if (pf.hops < 3) {
-              for (var e = 0; e < edges.length; e++) {
+      // Update pulses
+      for (var i = pulses.length - 1; i >= 0; i--) {
+        var pu = pulses[i];
+        pu.progress += pu.speed;
+        if (pu.progress >= 1) {
+          var tgt = nodes[pu.to];
+          if (tgt) {
+            tgt.brightness = Math.max(tgt.brightness, pu.intensity);
+            if (pu.hops < 3 && pu.intensity > 0.1) {
+              var pcount = 0;
+              for (var e = 0; e < edges.length && pcount < 3; e++) {
                 var edge = edges[e];
-                var target = -1;
-                if (edge.a === i) target = edge.b;
-                if (edge.b === i) target = edge.a;
-                if (target >= 0 && target < nodeCount) {
-                  nodes[target].pendingFire.push({ frame: frameCount + 15, intensity: pf.intensity * 0.7, hops: pf.hops + 1 });
+                var next = -1;
+                if (edge.a === pu.to && edge.b !== pu.from) next = edge.b;
+                if (edge.b === pu.to && edge.a !== pu.from) next = edge.a;
+                if (next >= 0 && next < nodeCount && !nodes[next].failed) {
+                  pulses.push({ from: pu.to, to: next, progress: 0, speed: 3 / edge.dist, intensity: pu.intensity * 0.7, hops: pu.hops + 1 });
+                  pcount++;
                 }
               }
             }
-            node.pendingFire.splice(p, 1);
           }
+          pulses[i] = pulses[pulses.length - 1]; pulses.pop();
+          continue;
         }
-        node.brightness *= 0.97;
       }
 
       // Draw edges
-      ctx.strokeStyle = col.accent;
-      ctx.lineWidth = 1.5;
       for (var e = 0; e < edges.length; e++) {
         var edge = edges[e];
         if (edge.a >= nodeCount || edge.b >= nodeCount) continue;
-        var bright = Math.max(nodes[edge.a].brightness, nodes[edge.b].brightness);
-        ctx.globalAlpha = 0.15 + bright * 0.35;
+        var na = nodes[edge.a], nb = nodes[edge.b];
+        var bright = Math.max(na.brightness, nb.brightness);
+        var fail = na.failed || nb.failed;
+
+        if (fail) {
+          ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.08)';
+        } else {
+          ctx.strokeStyle = col.accent;
+          ctx.globalAlpha = 0.15 + bright * 0.35;
+        }
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(nodes[edge.a].x, nodes[edge.a].y);
-        ctx.lineTo(nodes[edge.b].x, nodes[edge.b].y);
+        ctx.moveTo(na.x, na.y);
+        ctx.lineTo(nb.x, nb.y);
         ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      // Draw traveling pulses
+      ctx.fillStyle = col.accent;
+      for (var i = 0; i < pulses.length; i++) {
+        var pu = pulses[i];
+        if (pu.from >= nodes.length || pu.to >= nodes.length) continue;
+        var na = nodes[pu.from], nb = nodes[pu.to];
+        var px = na.x + (nb.x - na.x) * pu.progress;
+        var py = na.y + (nb.y - na.y) * pu.progress;
+        ctx.globalAlpha = pu.intensity * 0.8;
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, 6.2832);
+        ctx.fill();
       }
 
       // Draw nodes
       for (var i = 0; i < nodeCount; i++) {
-        var node = nodes[i];
-        var r = 4 + node.brightness * 3;
-        ctx.fillStyle = col.accent;
-        ctx.globalAlpha = 0.3 + node.brightness * 0.6;
+        var nd = nodes[i];
+        var r = 4 + nd.brightness * 3;
+
+        if (nd.failed) {
+          ctx.fillStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',' + (0.3 + nd.brightness * 0.3) + ')';
+        } else {
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.3 + nd.brightness * 0.6;
+        }
         ctx.beginPath();
-        ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+        ctx.arc(nd.x, nd.y, r, 0, 6.2832);
         ctx.fill();
+        ctx.globalAlpha = 1;
       }
 
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { nodes = []; edges = []; }
+    function cleanup() { nodes = []; edges = []; pulses = []; }
     return { init: init, frame: frame, cleanup: cleanup };
   })();
 
