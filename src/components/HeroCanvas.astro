@@ -450,14 +450,24 @@ const { animation } = Astro.props;
     var w, h, col;
     var cols = 0;
     var time = 0;
+    var resonanceTimer = 0;
+    var resonanceMult = 1;
+    var resonancePhase = 'idle'; // idle | rising | holding | decaying
+    var resonanceFrame = 0;
+    var shimmerX = 0;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       cols = Math.floor(w / 3);
       time = 0;
+      resonanceTimer = 0;
+      resonanceMult = 1;
+      resonancePhase = 'idle';
+      resonanceFrame = 0;
+      shimmerX = 0;
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
       var cy = h * 0.5;
@@ -465,27 +475,93 @@ const { animation } = Astro.props;
       var step = Math.max(1, Math.round(1 / quality));
       var barW = 2 * step;
 
+      // Resonance timer
+      resonanceTimer++;
+      if (resonancePhase === 'idle' && resonanceTimer >= 480) {
+        resonancePhase = 'rising';
+        resonanceFrame = 0;
+        resonanceTimer = 0;
+      }
+      if (resonancePhase === 'rising') {
+        resonanceFrame++;
+        resonanceMult = 1 + (resonanceFrame / 30);
+        if (resonanceFrame >= 30) { resonancePhase = 'holding'; resonanceFrame = 0; }
+      } else if (resonancePhase === 'holding') {
+        resonanceMult = 2;
+        resonanceFrame++;
+        if (resonanceFrame >= 30) { resonancePhase = 'decaying'; resonanceFrame = 0; }
+      } else if (resonancePhase === 'decaying') {
+        resonanceFrame++;
+        resonanceMult = 2 - (resonanceFrame / 60);
+        if (resonanceFrame >= 60) { resonancePhase = 'idle'; resonanceMult = 1; }
+      }
+
+      // Shimmer wave
+      shimmerX += 2;
+      if (shimmerX > w + 40) shimmerX = -40;
+
+      // Mouse Y -> frequency modulation
+      var freqMod = 0.04; // default
+      if (mouse && mouse.active) {
+        freqMod = 0.02 + mouse.y * 0.04; // 0.02 at top, 0.06 at bottom
+      }
+
+      // Ghost harmonic layer (slate blue, phase-shifted by pi)
+      if (quality >= 0.5) {
+        ctx.fillStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',1)';
+        for (var gi = 0; gi < cols; gi += step) {
+          var gx = (gi / cols) * w;
+          var gtt = time * 0.4;
+          var gwave1 = Math.sin(gi * freqMod + gtt + Math.PI) * 0.5;
+          var gwave2 = Math.sin(gi * 0.02 - gtt * 0.7 + Math.PI) * 0.3;
+          var gwave3 = Math.sin(gi * 0.07 + gtt * 1.3 + Math.PI) * 0.2;
+          var genvelope = Math.sin((gi / cols) * Math.PI);
+          var gamp = (gwave1 + gwave2 + gwave3) * genvelope * maxAmp * 0.7;
+          ctx.globalAlpha = 0.15;
+          var gbarH = Math.max(1, Math.abs(gamp));
+          ctx.fillRect(gx, cy - gbarH, barW, gbarH * 2);
+        }
+      }
+
+      // Primary copper waveform
+      var useCompositing = resonanceMult > 1.5;
+      if (useCompositing) ctx.globalCompositeOperation = 'lighter';
+
       for (var i = 0; i < cols; i += step) {
         var x = (i / cols) * w;
         var tt = time * 0.4;
-        var wave1 = Math.sin(i * 0.04 + tt) * 0.5;
+        var wave1 = Math.sin(i * freqMod + tt) * 0.5;
         var wave2 = Math.sin(i * 0.02 - tt * 0.7) * 0.3;
         var wave3 = Math.sin(i * 0.07 + tt * 1.3) * 0.2;
         var wave4 = Math.sin(i * 0.11 - tt * 0.4) * 0.15;
         var envelope = Math.sin((i / cols) * Math.PI);
-        var amp = (wave1 + wave2 + wave3 + wave4) * envelope * maxAmp;
+        var amp = (wave1 + wave2 + wave3 + wave4) * envelope * maxAmp * resonanceMult;
 
-        var alpha = 0.25 + Math.abs(amp / maxAmp) * 0.45;
+        var alpha = 0.25 + Math.abs(amp / (maxAmp * resonanceMult)) * 0.45;
+
+        // Center bars wider/brighter, edge bars narrower
+        var centerFactor = 1 - Math.abs(i / cols - 0.5) * 2; // 1 at center, 0 at edges
+        var adjustedBarW = barW * (0.7 + centerFactor * 0.8); // 0.7x at edges, 1.5x at center
+        alpha += centerFactor * 0.1 - (1 - centerFactor) * 0.05;
+
+        // Shimmer boost
+        if (Math.abs(x - shimmerX) < 20) {
+          alpha += 0.1 * (1 - Math.abs(x - shimmerX) / 20);
+        }
+
         ctx.fillStyle = col.accent;
-        ctx.globalAlpha = alpha;
+        ctx.globalAlpha = Math.min(0.9, alpha);
         var barH = Math.max(2, Math.abs(amp));
-        ctx.fillRect(x, cy - barH, barW, barH * 2);
+        ctx.fillRect(x - adjustedBarW / 2, cy - barH, adjustedBarW, barH * 2);
       }
+
+      if (useCompositing) ctx.globalCompositeOperation = 'source-over';
+
       time += 0.016;
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { time = 0; }
+    function cleanup() { time = 0; resonanceMult = 1; resonancePhase = 'idle'; }
 
     return { init: init, frame: frame, cleanup: cleanup };
   })();
