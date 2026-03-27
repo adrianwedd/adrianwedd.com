@@ -850,43 +850,87 @@ const { animation } = Astro.props;
     var wavefronts = [];
     var spawnCounter = 0;
     var MAX_WAVEFRONTS = 30;
+    var cascadeTimer = 0;
+    var CASCADE_INTERVAL = 1200;
+    var cascadeAlpha = 0;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       emitters = [
-        { x: w * 0.3, y: h * 0.5 },
-        { x: w * 0.7, y: h * 0.5 }
+        { x: w * 0.25, y: h * 0.5, baseX: w * 0.25, baseY: h * 0.5 },
+        { x: w * 0.75, y: h * 0.5, baseX: w * 0.75, baseY: h * 0.5 },
+        { x: w * 0.5, y: h * 0.3, baseX: w * 0.5, baseY: h * 0.3 }
       ];
       wavefronts = [];
       spawnCounter = 0;
+      cascadeTimer = 0;
+      cascadeAlpha = 0;
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
-      ctx.clearRect(0, 0, w, h);
+      // No clearRect — trail persistence via fadeRate
       spawnCounter++;
+      cascadeTimer++;
 
-      var maxWf = quality < 0.5 ? 12 : MAX_WAVEFRONTS;
+      var maxWf = quality < 0.5 ? 15 : MAX_WAVEFRONTS;
 
-      // Spawn new wavefronts every 45 frames
-      if (spawnCounter % 45 === 0) {
+      // Mouse shifts emitter[0]
+      if (mouse && mouse.active) {
+        var targetX = emitters[0].baseX + (mouse.x * w - emitters[0].baseX) * 0.3;
+        var targetY = emitters[0].baseY + (mouse.y * h - emitters[0].baseY) * 0.3;
+        var dx = targetX - emitters[0].baseX;
+        var dy = targetY - emitters[0].baseY;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 100) { dx = dx / dist * 100; dy = dy / dist * 100; }
+        emitters[0].x += (emitters[0].baseX + dx - emitters[0].x) * 0.05;
+        emitters[0].y += (emitters[0].baseY + dy - emitters[0].y) * 0.05;
+      } else {
+        emitters[0].x += (emitters[0].baseX - emitters[0].x) * 0.03;
+        emitters[0].y += (emitters[0].baseY - emitters[0].y) * 0.03;
+      }
+
+      // Resonance cascade event
+      if (cascadeTimer >= CASCADE_INTERVAL) {
+        cascadeTimer = 0;
+        cascadeAlpha = 0.01; // start swell
+        // Fire all emitters simultaneously
         for (var e = 0; e < emitters.length; e++) {
           if (wavefronts.length < maxWf) {
             wavefronts.push({
-              emitterIdx: e,
-              radius: 0,
-              born: spawnCounter,
+              emitterIdx: e, radius: 0,
               startAngle: Math.random() * Math.PI * 2,
-              sweep: (200 + Math.random() * 80) * Math.PI / 180
+              sweep: (280) * Math.PI / 180,
+              cascade: true
+            });
+          }
+        }
+      }
+      // Cascade alpha envelope: swell over 60 frames, decay over 120
+      if (cascadeAlpha > 0) {
+        if (cascadeTimer < 60) cascadeAlpha = Math.min(0.6, cascadeAlpha + 0.01);
+        else cascadeAlpha *= 0.98;
+        if (cascadeAlpha < 0.01) cascadeAlpha = 0;
+      }
+
+      // Normal wavefront spawn every 30 frames
+      if (spawnCounter % 30 === 0) {
+        for (var e = 0; e < emitters.length; e++) {
+          if (wavefronts.length < maxWf) {
+            wavefronts.push({
+              emitterIdx: e, radius: 0,
+              startAngle: Math.random() * Math.PI * 2,
+              sweep: (200 + Math.random() * 80) * Math.PI / 180,
+              cascade: false
             });
           }
         }
       }
 
-      ctx.strokeStyle = col.accent;
+      var maxDim = Math.max(w, h);
 
       // Draw wavefronts
-      var maxDim = Math.max(w, h);
+      ctx.strokeStyle = col.accent;
       for (var i = wavefronts.length - 1; i >= 0; i--) {
         var wf = wavefronts[i];
         wf.radius += 1.2;
@@ -897,11 +941,12 @@ const { animation } = Astro.props;
         }
 
         var em = emitters[wf.emitterIdx];
-        var alpha = 0.5 / (1 + wf.radius * 0.008);
-        ctx.globalAlpha = alpha;
+        var baseAlpha = 0.5 / (1 + wf.radius * 0.008);
+        if (wf.cascade) baseAlpha = Math.max(baseAlpha, cascadeAlpha);
+        ctx.globalAlpha = baseAlpha;
 
-        // Draw arc with modulated line width by using segments
-        var segments = 40;
+        // Draw arc with modulated line width
+        var segments = quality < 0.5 ? 20 : 40;
         var segAngle = wf.sweep / segments;
         for (var s = 0; s < segments; s++) {
           var a1 = wf.startAngle + s * segAngle;
@@ -913,7 +958,7 @@ const { animation } = Astro.props;
         }
       }
 
-      // Interference nodes (skip below quality 0.5)
+      // Interference detection (constructive)
       if (quality >= 0.5) {
         ctx.fillStyle = col.accent;
         for (var i = 0; i < wavefronts.length; i++) {
@@ -923,24 +968,31 @@ const { animation } = Astro.props;
             var wfB = wavefronts[j];
             var emA = emitters[wfA.emitterIdx];
             var emB = emitters[wfB.emitterIdx];
-            // Find intersection points of two circles
+
             var dx = emB.x - emA.x;
             var dy = emB.y - emA.y;
             var dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist > wfA.radius + wfB.radius + 8) continue;
-            if (dist < Math.abs(wfA.radius - wfB.radius) - 8) continue;
+            if (dist > wfA.radius + wfB.radius + 10) continue;
+            if (dist < Math.abs(wfA.radius - wfB.radius) - 10) continue;
             if (dist === 0) continue;
-            // Check proximity at a few sample points
+
+            // Sample points along wfA arc
             var checkAngles = 8;
             for (var ca = 0; ca < checkAngles; ca++) {
               var angle = wfA.startAngle + (ca / checkAngles) * wfA.sweep;
               var px = emA.x + Math.cos(angle) * wfA.radius;
               var py = emA.y + Math.sin(angle) * wfA.radius;
               var distB = Math.sqrt((px - emB.x) * (px - emB.x) + (py - emB.y) * (py - emB.y));
-              if (Math.abs(distB - wfB.radius) < 8) {
+              if (Math.abs(distB - wfB.radius) < 10) {
+                // Resonance node
                 ctx.globalAlpha = 0.8;
                 ctx.beginPath();
                 ctx.arc(px, py, 3, 0, 6.2832);
+                ctx.fill();
+                // Radial glow
+                ctx.globalAlpha = 0.15;
+                ctx.beginPath();
+                ctx.arc(px, py, 8, 0, 6.2832);
                 ctx.fill();
               }
             }
@@ -951,9 +1003,9 @@ const { animation } = Astro.props;
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { wavefronts = []; }
+    function cleanup() { wavefronts = []; emitters = []; }
 
-    return { init: init, frame: frame, cleanup: cleanup };
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.012 };
   })();
 
   ANIMATIONS.ink = (function () {
