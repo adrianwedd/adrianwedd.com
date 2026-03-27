@@ -1662,12 +1662,14 @@ const { animation } = Astro.props;
     var w, h, col;
     var columns = [];
     var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-    var plainTexts = ['priv','lock','safe','hash','key','seal','gate','mask'];
+    var plainTexts = ['seal','lock','hash','gate','key','safe','mask','code'];
     var charSize = 12;
-    var rowLockFrame = 0;
-    var rowLockY = 0;
     var frameCount = 0;
-    var cachedChars = null; // pre-rendered random chars, updated every 3 frames
+    var cachedChars = null;
+    var sweepY = -1;
+    var sweepFrame = 0;
+    var SWEEP_INTERVAL = 300;
+    var lockPositions = [];
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
@@ -1685,23 +1687,30 @@ const { animation } = Astro.props;
         });
       }
       frameCount = 0;
-      rowLockFrame = 0;
-      rowLockY = 0;
+      sweepFrame = 0;
+      sweepY = -1;
       cachedChars = null;
+      // Lock positions
+      lockPositions = [];
+      for (var i = 0; i < 3; i++) {
+        lockPositions.push({
+          x: Math.floor(Math.random() * colCount) * 16 + 8,
+          y: Math.floor(Math.random() * Math.floor(ch / charSize)) * charSize + charSize
+        });
+      }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
       frameCount++;
 
       var rows = Math.floor(h / charSize);
       var colCount = quality < 0.5 ? Math.floor(columns.length * 0.6) : columns.length;
-      var fontSize = quality < 0.5 ? 14 : charSize;
+      var fontSize = charSize;
 
-      // Regenerate random chars every 3 frames to cut draw overhead
-      var needRefresh = !cachedChars || frameCount % 3 === 0 || (cachedChars.length !== colCount * rows);
-      if (needRefresh) {
+      // Refresh random chars every 5 frames
+      if (!cachedChars || frameCount % 5 === 0 || (cachedChars.length !== colCount * rows)) {
         cachedChars = [];
         for (var ci = 0; ci < colCount; ci++) {
           for (var ri = 0; ri < rows; ri++) {
@@ -1710,25 +1719,21 @@ const { animation } = Astro.props;
         }
       }
 
+      // Decryption sweep
+      sweepFrame++;
+      if (sweepFrame >= SWEEP_INTERVAL) {
+        sweepFrame = 0;
+        sweepY = Math.floor(Math.random() * rows) * fontSize;
+      }
+      var sweepActive = sweepFrame < 30; // sweep visible for 30 frames
+      var sweepProgress = sweepFrame / 30; // 0-1 over sweep duration
+
+      // Mouse position in canvas coords
+      var mx = mouse && mouse.active ? mouse.x * w : -9999;
+      var my = mouse && mouse.active ? mouse.y * h : -9999;
+
       ctx.font = fontSize + 'px monospace';
       ctx.textAlign = 'center';
-
-      // Row lock effect
-      if (frameCount - rowLockFrame > 300) {
-        rowLockFrame = frameCount;
-        rowLockY = Math.floor(Math.random() * rows) * fontSize;
-      }
-      var showLock = (frameCount - rowLockFrame) < 10;
-
-      if (showLock) {
-        ctx.strokeStyle = col.accent;
-        ctx.globalAlpha = 0.3 * (1 - (frameCount - rowLockFrame) / 10);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(0, rowLockY + fontSize / 2);
-        ctx.lineTo(w, rowLockY + fontSize / 2);
-        ctx.stroke();
-      }
 
       for (var c = 0; c < colCount; c++) {
         var column = columns[c];
@@ -1739,30 +1744,58 @@ const { animation } = Astro.props;
           var y = r * fontSize + fontSize;
           var isPlain = r >= plainWindowStart && r < plainWindowStart + column.plainLen;
 
+          // Mouse proximity decrypt
+          var dx = column.x - mx;
+          var dy = y - my;
+          var mouseDist = Math.sqrt(dx * dx + dy * dy);
+          var mouseDecrypt = mouseDist < 80;
+
+          // Sweep decrypt
+          var sweepDecrypt = sweepActive && Math.abs(y - sweepY) < fontSize * 2 && sweepFrame < 20;
+
           var ch2;
-          if (isPlain) {
-            var pi = r - plainWindowStart;
-            ch2 = column.plainText[pi % column.plainText.length];
+          if (isPlain || mouseDecrypt || sweepDecrypt) {
+            var pi = r % column.plainText.length;
+            ch2 = column.plainText[pi];
             ctx.fillStyle = col.accent;
-            ctx.globalAlpha = 0.7;
+            ctx.globalAlpha = mouseDecrypt ? 0.5 : (sweepDecrypt ? 0.6 : 0.6);
           } else {
             ch2 = cachedChars[c * rows + r];
-            ctx.fillStyle = col.accent;
-            ctx.globalAlpha = 0.2;
-          }
-
-          if (showLock && Math.abs(y - rowLockY - fontSize / 2) < fontSize) {
-            ctx.globalAlpha = 0.5;
+            ctx.fillStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',1)';
+            ctx.globalAlpha = 0.15;
           }
 
           ctx.fillText(ch2, column.x, y);
         }
       }
 
+      // Sweep scanline
+      if (sweepActive) {
+        ctx.strokeStyle = col.accent;
+        ctx.globalAlpha = 0.4 * (1 - sweepProgress);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, sweepY);
+        ctx.lineTo(w, sweepY);
+        ctx.stroke();
+      }
+
+      // Lock icons pulsing
+      ctx.font = fontSize + 'px monospace';
+      ctx.textAlign = 'center';
+      for (var i = 0; i < lockPositions.length; i++) {
+        var lp = lockPositions[i];
+        var lockAlpha = 0.3 + Math.sin(frameCount * 0.1 + i * 2) * 0.15;
+        ctx.fillStyle = col.accent;
+        ctx.globalAlpha = lockAlpha;
+        ctx.fillText('[', lp.x - 6, lp.y);
+        ctx.fillText(']', lp.x + 6, lp.y);
+      }
+
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { columns = []; }
+    function cleanup() { columns = []; cachedChars = null; lockPositions = []; }
     return { init: init, frame: frame, cleanup: cleanup };
   })();
 
