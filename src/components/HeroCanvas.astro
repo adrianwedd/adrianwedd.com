@@ -2,7 +2,7 @@
 // HeroCanvas.astro — generative canvas animations behind page heroes.
 // If animation prop is set, locks to that animation. Otherwise auto-rotates.
 interface Props {
-  animation?: 'terrain' | 'flow' | 'soundwave' | 'strata' | 'forge' | 'signal' | 'ink' | 'blueprint' | 'radar' | 'entropy' | 'cipher' | 'orbit' | 'loom' | 'pulse' | 'stream' | 'crystallise';
+  animation?: 'terrain' | 'flow' | 'soundwave' | 'strata' | 'forge' | 'signal' | 'ink' | 'blueprint' | 'radar' | 'entropy' | 'cipher' | 'orbit' | 'loom' | 'pulse' | 'stream' | 'crystallise' | 'dataflow';
 }
 const { animation } = Astro.props;
 ---
@@ -2798,7 +2798,281 @@ const { animation } = Astro.props;
     return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.01 };
   })();
 
-  var ANIM_KEYS = ['terrain', 'flow', 'soundwave', 'strata', 'forge', 'signal', 'ink', 'blueprint', 'radar', 'entropy', 'cipher', 'orbit', 'loom', 'pulse', 'stream', 'crystallise'];
+  ANIMATIONS.dataflow = (function () {
+    var w, h, col;
+    var nodes = [];
+    var edges = [];
+    var packets = [];
+    var bursts = [];
+    var frameCount = 0;
+    var NODE_COUNT = 30;
+    var MAX_PACKETS = 60;
+
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      nodes = []; edges = []; packets = []; bursts = [];
+      frameCount = 0;
+
+      // Create nodes in a semi-random grid layout (hub-and-spoke feel)
+      for (var i = 0; i < NODE_COUNT; i++) {
+        var tier = Math.floor(i / 6); // 5 tiers
+        var posInTier = i % 6;
+        var tierX = (tier + 0.5) / 5 * w;
+        var tierY = (posInTier + 0.5) / 6 * h;
+        nodes.push({
+          x: tierX + (Math.random() - 0.5) * w * 0.12,
+          y: tierY + (Math.random() - 0.5) * h * 0.1,
+          size: 3 + Math.random() * 4,
+          throughput: 0, // 0-1, visual brightness
+          isHub: i % 7 === 0 // every 7th is a hub (larger, brighter)
+        });
+      }
+      if (nodes.length > 0) {
+        for (var i = 0; i < nodes.length; i++) {
+          if (nodes[i].isHub) nodes[i].size = 6 + Math.random() * 3;
+        }
+      }
+
+      // Build edges: connect nearby nodes, prefer left-to-right flow
+      for (var a = 0; a < nodes.length; a++) {
+        for (var b = a + 1; b < nodes.length; b++) {
+          var dx = nodes[b].x - nodes[a].x;
+          var dy = nodes[b].y - nodes[a].y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var maxDist = 200;
+          // Prefer rightward connections (data flows left to right)
+          if (dist < maxDist && dx > -30) {
+            edges.push({ a: a, b: b, dist: dist, active: 0 });
+          }
+        }
+      }
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
+      w = cw; h = ch; col = colors;
+      // No clearRect — trail persistence via fadeRate
+      frameCount++;
+
+      var nodeCount = quality < 0.5 ? Math.floor(NODE_COUNT * 0.6) : NODE_COUNT;
+
+      // Spawn packets from left-side nodes
+      if (frameCount % 8 === 0 && packets.length < MAX_PACKETS) {
+        // Pick a left-side node as source
+        var sources = [];
+        for (var i = 0; i < nodeCount; i++) {
+          if (nodes[i].x < w * 0.25) sources.push(i);
+        }
+        if (sources.length > 0) {
+          var srcIdx = sources[Math.floor(Math.random() * sources.length)];
+          // Find an outgoing edge
+          for (var e = 0; e < edges.length; e++) {
+            var edge = edges[e];
+            if ((edge.a === srcIdx || edge.b === srcIdx) && packets.length < MAX_PACKETS) {
+              var target = edge.a === srcIdx ? edge.b : edge.a;
+              if (target < nodeCount) {
+                packets.push({
+                  edgeIdx: e,
+                  from: srcIdx,
+                  to: target,
+                  progress: 0,
+                  speed: 2 + Math.random() * 3,
+                  size: 2 + Math.random() * 2,
+                  isSecondary: Math.random() < 0.25
+                });
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      // Also spawn from hubs periodically
+      if (frameCount % 20 === 0 && packets.length < MAX_PACKETS) {
+        for (var i = 0; i < nodeCount; i++) {
+          if (!nodes[i].isHub) continue;
+          // Pick random outgoing edge
+          var hubEdges = [];
+          for (var e = 0; e < edges.length; e++) {
+            if (edges[e].a === i || edges[e].b === i) hubEdges.push(e);
+          }
+          if (hubEdges.length > 0) {
+            var eIdx = hubEdges[Math.floor(Math.random() * hubEdges.length)];
+            var edge = edges[eIdx];
+            var target = edge.a === i ? edge.b : edge.a;
+            if (target < nodeCount) {
+              packets.push({
+                edgeIdx: eIdx,
+                from: i,
+                to: target,
+                progress: 0,
+                speed: 3 + Math.random() * 2,
+                size: 2 + Math.random() * 1.5,
+                isSecondary: Math.random() < 0.15
+              });
+            }
+          }
+          break; // one hub spawn per cycle
+        }
+      }
+
+      // Update packets
+      for (var i = packets.length - 1; i >= 0; i--) {
+        var pkt = packets[i];
+        var edge = edges[pkt.edgeIdx];
+        if (!edge) { packets[i] = packets[packets.length - 1]; packets.pop(); continue; }
+
+        pkt.progress += pkt.speed / edge.dist;
+
+        if (pkt.progress >= 1) {
+          // Arrived — burst at destination
+          var dest = nodes[pkt.to];
+          if (dest) {
+            dest.throughput = Math.min(1, dest.throughput + 0.3);
+            bursts.push({ x: dest.x, y: dest.y, radius: 0, maxRadius: 12 + dest.size, alpha: 0.5 });
+
+            // Propagate: pick a random outgoing edge from destination
+            if (packets.length < MAX_PACKETS && Math.random() < 0.7) {
+              var outEdges = [];
+              for (var e = 0; e < edges.length; e++) {
+                if ((edges[e].a === pkt.to || edges[e].b === pkt.to) && e !== pkt.edgeIdx) outEdges.push(e);
+              }
+              if (outEdges.length > 0) {
+                var nextEdge = outEdges[Math.floor(Math.random() * outEdges.length)];
+                var ne = edges[nextEdge];
+                var nextTarget = ne.a === pkt.to ? ne.b : ne.a;
+                if (nextTarget < nodeCount) {
+                  packets.push({
+                    edgeIdx: nextEdge,
+                    from: pkt.to,
+                    to: nextTarget,
+                    progress: 0,
+                    speed: pkt.speed * (0.8 + Math.random() * 0.4),
+                    size: pkt.size * 0.9,
+                    isSecondary: pkt.isSecondary
+                  });
+                }
+              }
+            }
+          }
+          edge.active = Math.min(1, edge.active + 0.4);
+          packets[i] = packets[packets.length - 1]; packets.pop();
+          continue;
+        }
+      }
+
+      // Decay node throughput and edge activity
+      for (var i = 0; i < nodeCount; i++) {
+        nodes[i].throughput *= 0.98;
+      }
+      for (var e = 0; e < edges.length; e++) {
+        edges[e].active *= 0.97;
+      }
+
+      // Draw edges
+      for (var e = 0; e < edges.length; e++) {
+        var edge = edges[e];
+        if (edge.a >= nodeCount || edge.b >= nodeCount) continue;
+        var na = nodes[edge.a], nb = nodes[edge.b];
+        var baseAlpha = 0.04 + edge.active * 0.2;
+        ctx.strokeStyle = col.accent;
+        ctx.globalAlpha = baseAlpha;
+        ctx.lineWidth = 0.5 + edge.active * 1.5;
+        ctx.beginPath();
+        ctx.moveTo(na.x, na.y);
+        ctx.lineTo(nb.x, nb.y);
+        ctx.stroke();
+      }
+
+      // Draw packets traveling along edges
+      for (var i = 0; i < packets.length; i++) {
+        var pkt = packets[i];
+        var edge = edges[pkt.edgeIdx];
+        if (!edge || edge.a >= nodeCount || edge.b >= nodeCount) continue;
+        var na = nodes[pkt.from], nb = nodes[pkt.to];
+        var px = na.x + (nb.x - na.x) * pkt.progress;
+        var py = na.y + (nb.y - na.y) * pkt.progress;
+
+        if (pkt.isSecondary) {
+          ctx.fillStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.7)';
+          ctx.globalAlpha = 1;
+        } else {
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.8;
+        }
+        ctx.beginPath();
+        ctx.arc(px, py, pkt.size, 0, 6.2832);
+        ctx.fill();
+
+        // Packet trail (3 ghost positions behind)
+        if (quality >= 0.5) {
+          for (var g = 1; g <= 3; g++) {
+            var gProgress = pkt.progress - g * 0.03;
+            if (gProgress < 0) break;
+            var gx = na.x + (nb.x - na.x) * gProgress;
+            var gy = na.y + (nb.y - na.y) * gProgress;
+            ctx.globalAlpha = (0.3 - g * 0.08);
+            ctx.beginPath();
+            ctx.arc(gx, gy, pkt.size * 0.6, 0, 6.2832);
+            ctx.fill();
+          }
+        }
+      }
+
+      // Draw arrival bursts
+      for (var i = bursts.length - 1; i >= 0; i--) {
+        var b = bursts[i];
+        b.radius += 1.5;
+        b.alpha *= 0.88;
+        if (b.alpha < 0.02 || b.radius > b.maxRadius) {
+          bursts[i] = bursts[bursts.length - 1]; bursts.pop(); continue;
+        }
+        ctx.strokeStyle = col.accent;
+        ctx.globalAlpha = b.alpha;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.radius, 0, 6.2832);
+        ctx.stroke();
+      }
+
+      // Draw nodes
+      for (var i = 0; i < nodeCount; i++) {
+        var nd = nodes[i];
+        var nodeAlpha = 0.15 + nd.throughput * 0.5;
+        var nodeSize = nd.size + nd.throughput * 3;
+
+        // Hub glow
+        if (nd.isHub && quality >= 0.5) {
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.06 + nd.throughput * 0.1;
+          ctx.beginPath();
+          ctx.arc(nd.x, nd.y, nodeSize + 10, 0, 6.2832);
+          ctx.fill();
+        }
+
+        ctx.fillStyle = col.accent;
+        ctx.globalAlpha = nodeAlpha;
+        ctx.beginPath();
+        ctx.arc(nd.x, nd.y, nodeSize, 0, 6.2832);
+        ctx.fill();
+
+        // Inner bright core for hubs
+        if (nd.isHub) {
+          ctx.globalAlpha = 0.4 + nd.throughput * 0.4;
+          ctx.beginPath();
+          ctx.arc(nd.x, nd.y, nd.size * 0.4, 0, 6.2832);
+          ctx.fill();
+        }
+      }
+
+      ctx.globalAlpha = 1;
+    }
+
+    function cleanup() { nodes = []; edges = []; packets = []; bursts = []; frameCount = 0; }
+
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.025 };
+  })();
+
+  var ANIM_KEYS = ['terrain', 'flow', 'soundwave', 'strata', 'forge', 'signal', 'ink', 'blueprint', 'radar', 'entropy', 'cipher', 'orbit', 'loom', 'pulse', 'stream', 'crystallise', 'dataflow'];
 
   function getAnim(key) {
     return ANIMATIONS[key] || ANIMATIONS.placeholder;
