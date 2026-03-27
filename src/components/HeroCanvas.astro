@@ -2462,24 +2462,28 @@ const { animation } = Astro.props;
   ANIMATIONS.crystallise = (function () {
     var w, h, col;
     var branches = [];
-    var fadeAlpha = 1;
-    var fading = false;
-    var nucleating = false;
+    var dissolving = false;
     var coverage = 0;
-    var maxGen = 4;
-    var spawnInterval = 18;
+    var MAX_BRANCHES = 300;
+    var shimmerDist = 0;
+    var shimmerActive = false;
+    var shimmerTimer = 0;
+    var grainFlashes = [];
 
-    function seed(x, y) {
+    function seed(x, y, seedId) {
       var count = 1 + Math.floor(Math.random() * 2);
       for (var i = 0; i < count; i++) {
+        if (branches.length >= MAX_BRANCHES) return;
         branches.push({
           x: x, y: y,
-          angle: Math.random() * Math.PI * 2,
+          originX: x, originY: y,
+          angle: (i / count) * Math.PI * 2 + Math.random() * 0.3,
           length: 0,
           maxLength: 40 + Math.random() * 40,
           generation: 0,
           growing: true,
-          spawnDist: 0
+          spawnDist: 0,
+          seedId: seedId
         });
       }
     }
@@ -2487,33 +2491,52 @@ const { animation } = Astro.props;
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       branches = [];
-      fadeAlpha = 1;
-      fading = false;
-      nucleating = false;
+      dissolving = false;
       coverage = 0;
-      seed(w * 0.3 + Math.random() * w * 0.4, h * 0.3 + Math.random() * h * 0.4);
+      shimmerDist = 0;
+      shimmerActive = false;
+      shimmerTimer = 0;
+      grainFlashes = [];
+      // 3 nucleation points in center 60%
+      for (var s = 0; s < 3; s++) {
+        seed(w * 0.2 + Math.random() * w * 0.6, h * 0.2 + Math.random() * h * 0.6, s);
+      }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
-      ctx.clearRect(0, 0, w, h);
+      // No clearRect — trail persistence via fadeRate
 
-      var effMaxGen = quality < 0.5 ? 2 : maxGen;
-      var effSpawnInterval = quality < 0.5 ? 28 : spawnInterval;
+      var effMaxGen = quality < 0.5 ? 2 : 4;
+      var effSpawnInterval = quality < 0.5 ? 28 : 18;
 
-      if (fading) {
-        fadeAlpha -= 0.008;
-        if (fadeAlpha <= 0.5 && !nucleating) {
-          nucleating = true;
+      // Shimmer wave timer
+      shimmerTimer++;
+      if (shimmerTimer >= 300 && !shimmerActive) {
+        shimmerActive = true;
+        shimmerDist = 0;
+      }
+      if (shimmerActive) {
+        shimmerDist += 5;
+        if (shimmerDist > Math.max(w, h)) {
+          shimmerActive = false;
+          shimmerTimer = 0;
+        }
+      }
+
+      // Check coverage for dissolve/reseed
+      if (dissolving) {
+        // Trail persistence handles fade. Check if coverage is low enough to reseed.
+        coverage *= 0.995;
+        if (coverage < 0.05) {
+          dissolving = false;
           branches = [];
-          coverage = 0;
-          seed(w * 0.2 + Math.random() * w * 0.6, h * 0.2 + Math.random() * h * 0.6);
+          grainFlashes = [];
+          for (var s = 0; s < 3; s++) {
+            seed(w * 0.2 + Math.random() * w * 0.6, h * 0.2 + Math.random() * h * 0.6, s);
+          }
         }
-        if (fadeAlpha <= 0) {
-          fadeAlpha = 1;
-          fading = false;
-          nucleating = false;
-        }
+        return;
       }
 
       // Grow branches
@@ -2523,7 +2546,7 @@ const { animation } = Astro.props;
         var br = branches[i];
         if (!br.growing) { totalLength += br.length; continue; }
 
-        var deviation = (Math.random() - 0.5) * 0.1;
+        var deviation = noise3D(br.x * 0.02, br.y * 0.02, br.seedId * 10) * 0.1;
         br.angle += deviation;
         br.x += Math.cos(br.angle) * 2;
         br.y += Math.sin(br.angle) * 2;
@@ -2531,48 +2554,74 @@ const { animation } = Astro.props;
         br.spawnDist += 2;
         totalLength += br.length;
 
-        // Spawn sub-branches
-        if (br.spawnDist >= effSpawnInterval && br.generation < effMaxGen) {
+        // Hexagonal sub-branch spawning
+        if (br.spawnDist >= effSpawnInterval && br.generation < effMaxGen && branches.length + newBranches.length < MAX_BRANCHES) {
           br.spawnDist = 0;
           var childMaxLen = br.maxLength * 0.7;
           for (var side = -1; side <= 1; side += 2) {
             newBranches.push({
               x: br.x, y: br.y,
-              angle: br.angle + side * Math.PI / 3,
+              originX: br.x, originY: br.y,
+              angle: br.angle + side * Math.PI / 3, // ±60°
               length: 0,
               maxLength: childMaxLen,
               generation: br.generation + 1,
               growing: true,
-              spawnDist: 0
+              spawnDist: 0,
+              seedId: br.seedId
             });
           }
         }
 
+        // Check bounds and max length
         if (br.length >= br.maxLength || br.x < 0 || br.x > w || br.y < 0 || br.y > h) {
           br.growing = false;
+        }
+
+        // Grain boundary detection: check against branches from other seeds
+        for (var j = 0; j < branches.length; j++) {
+          if (j === i || branches[j].seedId === br.seedId) continue;
+          var dx = br.x - branches[j].x;
+          var dy = br.y - branches[j].y;
+          if (dx * dx + dy * dy < 225) { // 15px
+            br.growing = false;
+            grainFlashes.push({ x: (br.x + branches[j].x) / 2, y: (br.y + branches[j].y) / 2, alpha: 0.4, life: 18 });
+            break;
+          }
         }
       }
 
       for (var i = 0; i < newBranches.length; i++) branches.push(newBranches[i]);
 
-      // Estimate coverage
+      // Coverage check
       coverage = totalLength / (w * h) * 500;
-      if (coverage > 0.3 && !fading) {
-        fading = true;
-        fadeAlpha = 1;
+      if (coverage > 0.4 && !dissolving) {
+        dissolving = true;
       }
 
       // Draw branches
       for (var i = 0; i < branches.length; i++) {
         var br = branches[i];
         var thickness = Math.max(1, 3 - br.generation * 0.5);
-        ctx.strokeStyle = col.accent;
+
+        // Color: growing tips in sage, established in copper
+        if (br.growing) {
+          ctx.strokeStyle = 'rgba(' + TERTIARY_RGB[0] + ',' + TERTIARY_RGB[1] + ',' + TERTIARY_RGB[2] + ',0.6)';
+          ctx.globalAlpha = 1;
+        } else {
+          ctx.strokeStyle = col.accent;
+          ctx.globalAlpha = 0.35;
+        }
         ctx.lineWidth = thickness;
 
-        var tipGlow = br.growing ? 0.6 : 0.35;
-        ctx.globalAlpha = tipGlow * fadeAlpha;
+        // Shimmer: boost alpha for branches within shimmer wave radius
+        if (shimmerActive) {
+          var distFromOrigin = Math.sqrt((br.originX - w / 2) * (br.originX - w / 2) + (br.originY - h / 2) * (br.originY - h / 2));
+          if (Math.abs(shimmerDist - distFromOrigin) < 30) {
+            ctx.globalAlpha = Math.min(0.7, ctx.globalAlpha + 0.15);
+          }
+        }
 
-        // Draw from origin to current position
         var originX = br.x - Math.cos(br.angle) * br.length;
         var originY = br.y - Math.sin(br.angle) * br.length;
         ctx.beginPath();
@@ -2580,21 +2629,39 @@ const { animation } = Astro.props;
         ctx.lineTo(br.x, br.y);
         ctx.stroke();
 
-        // Bright tip
+        // Bright tip for growing branches
         if (br.growing) {
-          ctx.fillStyle = col.accent;
-          ctx.globalAlpha = 0.8 * fadeAlpha;
+          ctx.fillStyle = 'rgba(' + TERTIARY_RGB[0] + ',' + TERTIARY_RGB[1] + ',' + TERTIARY_RGB[2] + ',0.8)';
+          ctx.globalAlpha = 1;
           ctx.beginPath();
           ctx.arc(br.x, br.y, thickness + 1, 0, Math.PI * 2);
           ctx.fill();
         }
       }
 
+      // Grain boundary flashes
+      for (var i = grainFlashes.length - 1; i >= 0; i--) {
+        var gf = grainFlashes[i];
+        gf.life--;
+        gf.alpha *= 0.9;
+        ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',' + gf.alpha + ')';
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(gf.x, gf.y, 8, 0, Math.PI * 2);
+        ctx.stroke();
+        if (gf.life <= 0) {
+          grainFlashes[i] = grainFlashes[grainFlashes.length - 1];
+          grainFlashes.pop();
+        }
+      }
+
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { branches = []; }
-    return { init: init, frame: frame, cleanup: cleanup };
+    function cleanup() { branches = []; grainFlashes = []; }
+
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.01 };
   })();
 
   var ANIM_KEYS = ['terrain', 'flow', 'soundwave', 'strata', 'forge', 'signal', 'ink', 'blueprint', 'radar', 'entropy', 'cipher', 'orbit', 'loom', 'pulse', 'stream', 'crystallise'];
