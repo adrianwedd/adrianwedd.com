@@ -561,7 +561,7 @@ const { animation } = Astro.props;
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { time = 0; resonanceMult = 1; resonancePhase = 'idle'; }
+    function cleanup() { time = 0; resonanceMult = 1; resonancePhase = 'idle'; resonanceTimer = 0; resonanceFrame = 0; shimmerX = 0; cols = 0; }
 
     return { init: init, frame: frame, cleanup: cleanup };
   })();
@@ -1079,7 +1079,7 @@ const { animation } = Astro.props;
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { wavefronts = []; emitters = []; }
+    function cleanup() { wavefronts = []; emitters = []; spawnCounter = 0; cascadeTimer = 0; cascadeAlpha = 0; }
 
     return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.012 };
   })();
@@ -2262,7 +2262,7 @@ const { animation } = Astro.props;
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { weftThreads = []; snapFlash = null; }
+    function cleanup() { weftThreads = []; snapFlash = null; frameCount = 0; patternCycle = 0; }
 
     return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.025 };
   })();
@@ -2588,7 +2588,7 @@ const { animation } = Astro.props;
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { streams = []; }
+    function cleanup() { streams = []; burstTimer = 0; burstStream = -1; }
 
     return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.02 };
   })();
@@ -2752,7 +2752,7 @@ const { animation } = Astro.props;
         if (shimmerActive) {
           var distFromOrigin = Math.sqrt((br.originX - w / 2) * (br.originX - w / 2) + (br.originY - h / 2) * (br.originY - h / 2));
           if (Math.abs(shimmerDist - distFromOrigin) < 30) {
-            ctx.globalAlpha = Math.min(0.7, ctx.globalAlpha + 0.15);
+            ctx.globalAlpha = Math.min(0.6, ctx.globalAlpha + 0.15);
           }
         }
 
