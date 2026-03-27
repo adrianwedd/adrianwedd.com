@@ -1059,17 +1059,11 @@ const { animation } = Astro.props;
 
   ANIMATIONS.blueprint = (function () {
     var w, h, col;
-    var lines = [];
-    var holdTimer = 0;
-    var fadeAlpha = 1;
-    var phase = 'drawing'; // 'drawing' | 'holding' | 'fading'
-    var seqIndex = 0;
+    var panels = []; // two independent drawing panels (left/right)
+    var frameCount = 0;
 
-    function generateSequence(cw, ch, type) {
+    function generateSequence(cx, cy, cw, ch, type) {
       var result = [];
-      var cx = cw * 0.2 + Math.random() * cw * 0.6;
-      var cy = ch * 0.2 + Math.random() * ch * 0.6;
-
       switch (type) {
         case 0: // Floor plan: 5-8 rectangles
           var count = 5 + Math.floor(Math.random() * 4);
@@ -1078,90 +1072,99 @@ const { animation } = Astro.props;
             var ry = cy + (Math.random() - 0.5) * ch * 0.5;
             var rw = 50 + Math.random() * 120;
             var rh = 35 + Math.random() * 90;
-            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry, progress: 0 });
-            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh, progress: 0 });
-            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh, progress: 0 });
-            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry, progress: 0 });
+            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry });
+            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh });
+            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh });
+            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry });
           }
           break;
         case 1: // Elevation: stepped profile
           var steps = 10 + Math.floor(Math.random() * 8);
-          var sx = cw * 0.05;
-          var sy = ch * 0.6;
+          var sx = cx - cw * 0.35;
+          var sy = cy + ch * 0.15;
           for (var i = 0; i < steps; i++) {
-            var nx = sx + 30 + Math.random() * 60;
-            var ny = sy - (Math.random() - 0.3) * 60;
-            result.push({ x1: sx, y1: sy, x2: nx, y2: sy, progress: 0 });
-            result.push({ x1: nx, y1: sy, x2: nx, y2: ny, progress: 0 });
-            sx = nx;
-            sy = ny;
+            var nx = sx + 20 + Math.random() * 50;
+            var ny = sy - (Math.random() - 0.3) * 50;
+            result.push({ x1: sx, y1: sy, x2: nx, y2: sy });
+            result.push({ x1: nx, y1: sy, x2: nx, y2: ny });
+            sx = nx; sy = ny;
           }
           break;
         case 2: // Cross-section: nested rectangles with divisions
-          for (var n = 0; n < 3; n++) {
-            var m = 30 * n;
-            var rx = cx - 100 + m;
-            var ry = cy - 70 + m;
-            var rw = 200 - m * 2;
-            var rh = 140 - m * 2;
-            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry, progress: 0 });
-            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh, progress: 0 });
-            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh, progress: 0 });
-            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry, progress: 0 });
+          for (var n = 0; n < 4; n++) {
+            var m = 25 * n;
+            var rx = cx - 90 + m;
+            var ry = cy - 60 + m;
+            var rw = 180 - m * 2;
+            var rh = 120 - m * 2;
+            if (rw < 10 || rh < 10) break;
+            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry });
+            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh });
+            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh });
+            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry });
           }
-          // Internal divisions
-          for (var d = 1; d < 3; d++) {
-            var dx = cx - 100 + d * 67;
-            result.push({ x1: dx, y1: cy - 70, x2: dx, y2: cy + 70, progress: 0 });
+          for (var d = 1; d < 4; d++) {
+            var dx = cx - 90 + d * 45;
+            result.push({ x1: dx, y1: cy - 60, x2: dx, y2: cy + 60 });
           }
           break;
-        case 3: // Detail: circle approximated with lines + radiating lines
+        case 3: // Detail: circle with radiating lines
           var segments = 24;
           var radius = 50 + Math.random() * 40;
           for (var i = 0; i < segments; i++) {
             var a1 = (i / segments) * Math.PI * 2;
             var a2 = ((i + 1) / segments) * Math.PI * 2;
-            result.push({
-              x1: cx + Math.cos(a1) * radius,
-              y1: cy + Math.sin(a1) * radius,
-              x2: cx + Math.cos(a2) * radius,
-              y2: cy + Math.sin(a2) * radius,
-              progress: 0
-            });
+            result.push({ x1: cx + Math.cos(a1) * radius, y1: cy + Math.sin(a1) * radius, x2: cx + Math.cos(a2) * radius, y2: cy + Math.sin(a2) * radius });
           }
-          // Radiating lines
           for (var i = 0; i < 8; i++) {
             var a = (i / 8) * Math.PI * 2;
-            result.push({
-              x1: cx + Math.cos(a) * radius,
-              y1: cy + Math.sin(a) * radius,
-              x2: cx + Math.cos(a) * (radius + 25),
-              y2: cy + Math.sin(a) * (radius + 25),
-              progress: 0
-            });
+            result.push({ x1: cx + Math.cos(a) * radius, y1: cy + Math.sin(a) * radius, x2: cx + Math.cos(a) * (radius + 25), y2: cy + Math.sin(a) * (radius + 25) });
           }
           break;
+      }
+      // Add progress and overshoot state to each line
+      for (var i = 0; i < result.length; i++) {
+        result[i].progress = 0;
+        result[i].overshoot = 0;
+        result[i].settling = 0;
       }
       return result;
     }
 
-    function init(cw, ch, colors) {
-      w = cw; h = ch; col = colors;
-      seqIndex = 0;
-      phase = 'drawing';
-      holdTimer = 0;
-      fadeAlpha = 1;
-      lines = generateSequence(cw, ch, 0);
+    function initPanel(panelX, panelW, ch) {
+      var cx = panelX + panelW * 0.5;
+      var cy = ch * 0.5;
+      var type = Math.floor(Math.random() * 4);
+      return {
+        lines: generateSequence(cx, cy, panelW, ch, type),
+        phase: 'drawing', // drawing | holding | fading
+        holdTimer: 0,
+        fadeAlpha: 1,
+        seqIndex: type,
+        cursorX: cx, cursorY: cy,
+        targetIdx: 0,
+        cx: cx, cy: cy,
+        panelX: panelX, panelW: panelW
+      };
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      frameCount = 0;
+      panels = [
+        initPanel(0, w * 0.48, h),
+        initPanel(w * 0.52, w * 0.48, h)
+      ];
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
+      frameCount++;
 
-      // Background grid
+      // Background grid (slate blue)
       if (quality >= 0.5) {
-        ctx.strokeStyle = col.border;
-        ctx.globalAlpha = 0.2;
+        ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.15)';
         ctx.lineWidth = 0.5;
         ctx.beginPath();
         for (var gx = 0; gx < w; gx += 20) {
@@ -1175,52 +1178,126 @@ const { animation } = Astro.props;
         ctx.stroke();
       }
 
-      // Draw lines
-      ctx.strokeStyle = col.muted;
-      ctx.lineWidth = 2;
-      ctx.globalAlpha = 0.7 * fadeAlpha;
+      // Draw each panel
+      for (var p = 0; p < panels.length; p++) {
+        var panel = panels[p];
+        var lines = panel.lines;
+        var lineCount = quality < 0.5 ? Math.floor(lines.length * 0.6) : lines.length;
 
-      var allDone = true;
-      var lineCount = quality < 0.5 ? Math.floor(lines.length * 0.6) : lines.length;
+        // Drawing phase
+        ctx.strokeStyle = col.accent;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
 
-      for (var i = 0; i < Math.min(lineCount, lines.length); i++) {
-        var ln = lines[i];
-        if (phase === 'drawing') {
-          ln.progress = Math.min(1, ln.progress + 0.02);
-          if (ln.progress < 1) allDone = false;
+        var allDone = true;
+        for (var i = 0; i < Math.min(lineCount, lines.length); i++) {
+          var ln = lines[i];
+          if (panel.phase === 'drawing') {
+            ln.progress = Math.min(1, ln.progress + 2 / Math.max(1, Math.sqrt(Math.pow(ln.x2 - ln.x1, 2) + Math.pow(ln.y2 - ln.y1, 2))));
+            if (ln.progress < 1) allDone = false;
+
+            // Overshoot: extend 3px past endpoint when newly complete
+            if (ln.progress >= 1 && ln.overshoot < 3 && ln.settling === 0) {
+              ln.overshoot = 3;
+              ln.settling = 5;
+            }
+            if (ln.settling > 0) {
+              ln.settling--;
+              ln.overshoot *= 0.6; // retract
+            }
+          }
+
+          var ex = ln.x1 + (ln.x2 - ln.x1) * ln.progress;
+          var ey = ln.y1 + (ln.y2 - ln.y1) * ln.progress;
+
+          // Add overshoot
+          if (ln.overshoot > 0.1) {
+            var dx = ln.x2 - ln.x1;
+            var dy = ln.y2 - ln.y1;
+            var len = Math.sqrt(dx * dx + dy * dy) || 1;
+            ex += (dx / len) * ln.overshoot;
+            ey += (dy / len) * ln.overshoot;
+          }
+
+          ctx.globalAlpha = 0.7 * panel.fadeAlpha;
+          ctx.beginPath();
+          ctx.moveTo(ln.x1, ln.y1);
+          ctx.lineTo(ex, ey);
+          ctx.stroke();
+
+          // Dimension tick marks at endpoints of completed lines
+          if (ln.progress >= 1 && quality >= 0.5) {
+            ctx.globalAlpha = 0.5 * panel.fadeAlpha;
+            ctx.lineWidth = 1;
+            var perpX = -(ln.y2 - ln.y1);
+            var perpY = ln.x2 - ln.x1;
+            var perpLen = Math.sqrt(perpX * perpX + perpY * perpY) || 1;
+            perpX = perpX / perpLen * 4;
+            perpY = perpY / perpLen * 4;
+            ctx.beginPath();
+            ctx.moveTo(ln.x1 - perpX, ln.y1 - perpY);
+            ctx.lineTo(ln.x1 + perpX, ln.y1 + perpY);
+            ctx.moveTo(ln.x2 - perpX, ln.y2 - perpY);
+            ctx.lineTo(ln.x2 + perpX, ln.y2 + perpY);
+            ctx.stroke();
+
+            // Dashed leader line between ticks
+            ctx.globalAlpha = 0.3 * panel.fadeAlpha;
+            ctx.setLineDash([2, 4]);
+            ctx.beginPath();
+            ctx.moveTo(ln.x1 + perpX * 2, ln.y1 + perpY * 2);
+            ctx.lineTo(ln.x2 + perpX * 2, ln.y2 + perpY * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.lineWidth = 2.5;
+          }
         }
 
-        var ex = ln.x1 + (ln.x2 - ln.x1) * ln.progress;
-        var ey = ln.y1 + (ln.y2 - ln.y1) * ln.progress;
-        ctx.beginPath();
-        ctx.moveTo(ln.x1, ln.y1);
-        ctx.lineTo(ex, ey);
-        ctx.stroke();
-      }
-
-      if (phase === 'drawing' && allDone) {
-        phase = 'holding';
-        holdTimer = 60;
-      } else if (phase === 'holding') {
-        holdTimer--;
-        if (holdTimer <= 0) {
-          phase = 'fading';
-          fadeAlpha = 1;
+        // Phase transitions
+        if (panel.phase === 'drawing' && allDone) {
+          panel.phase = 'holding';
+          panel.holdTimer = 60;
+        } else if (panel.phase === 'holding') {
+          panel.holdTimer--;
+          if (panel.holdTimer <= 0) { panel.phase = 'fading'; panel.fadeAlpha = 1; }
+        } else if (panel.phase === 'fading') {
+          panel.fadeAlpha -= 1 / 60;
+          if (panel.fadeAlpha <= 0) {
+            panel.seqIndex = (panel.seqIndex + 1) % 4;
+            var newPanel = initPanel(panel.panelX, panel.panelW, h);
+            newPanel.seqIndex = panel.seqIndex;
+            newPanel.lines = generateSequence(newPanel.cx, newPanel.cy, newPanel.panelW, h, panel.seqIndex);
+            panels[p] = newPanel;
+          }
         }
-      } else if (phase === 'fading') {
-        fadeAlpha -= 1 / 60;
-        if (fadeAlpha <= 0) {
-          fadeAlpha = 1;
-          phase = 'drawing';
-          seqIndex = (seqIndex + 1) % 4;
-          lines = generateSequence(w, h, seqIndex);
+
+        // Crosshair cursor following drawing progress
+        if (panel.phase === 'drawing' && panel.targetIdx < lines.length) {
+          var target = lines[panel.targetIdx];
+          if (target.progress >= 1 && panel.targetIdx < lines.length - 1) panel.targetIdx++;
+          var tgt = lines[panel.targetIdx];
+          var tx = tgt.x1 + (tgt.x2 - tgt.x1) * tgt.progress;
+          var ty = tgt.y1 + (tgt.y2 - tgt.y1) * tgt.progress;
+          panel.cursorX += (tx - panel.cursorX) * 0.15;
+          panel.cursorY += (ty - panel.cursorY) * 0.15;
+
+          ctx.strokeStyle = col.accent;
+          ctx.globalAlpha = 0.4;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(panel.cursorX - 10, panel.cursorY);
+          ctx.lineTo(panel.cursorX + 10, panel.cursorY);
+          ctx.moveTo(panel.cursorX, panel.cursorY - 10);
+          ctx.lineTo(panel.cursorX, panel.cursorY + 10);
+          ctx.stroke();
         }
       }
 
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { lines = []; }
+    function cleanup() { panels = []; }
 
     return { init: init, frame: frame, cleanup: cleanup };
   })();
