@@ -3075,9 +3075,10 @@ const { animation } = Astro.props;
     if (motionQuery.addEventListener) motionQuery.addEventListener('change', motionHandler);
     else if (motionQuery.addListener) motionQuery.addListener(motionHandler);
 
-    // VT swap handler — only teardown; the new page's is:inline re-execution calls initCanvas()
+    // VT swap handler — teardown then re-init for the new page's animation
     document.addEventListener('astro:after-swap', function () {
       destroyCanvas();
+      initCanvas();
     });
   }
 
