@@ -1803,6 +1803,8 @@ const { animation } = Astro.props;
     var w, h, col;
     var orbits = [];
     var cx, cy;
+    var ORBIT_COUNT = 7;
+    var precessionOffset = 0;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
@@ -1810,82 +1812,127 @@ const { animation } = Astro.props;
       cy = h / 2;
       var baseRadius = Math.min(w, h) * 0.08;
       orbits = [];
-      for (var i = 0; i < 5; i++) {
+      precessionOffset = 0;
+      for (var i = 0; i < ORBIT_COUNT; i++) {
         orbits.push({
           semiMajor: baseRadius * (i + 1.5),
           eccentricity: 0.1 + Math.random() * 0.2,
-          tilt: (Math.random() - 0.5) * 0.15,
+          tilt: (Math.random() - 0.5) * 0.3,
           period: 2000 + i * 2000 + Math.random() * 2000,
-          trail: []
+          bodySize: 3 + Math.random() * 5,
+          trail: [],
+          trailIdx: 0
         });
       }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       cx = w / 2;
       cy = h / 2;
       ctx.clearRect(0, 0, w, h);
 
+      precessionOffset += 0.001;
       var trailLen = quality < 0.5 ? 15 : 30;
       var positions = [];
+
+      // Central star glow
+      ctx.fillStyle = col.accent;
+      ctx.globalAlpha = 0.3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 0.08;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+      ctx.fill();
 
       for (var i = 0; i < orbits.length; i++) {
         var orb = orbits[i];
         var semiMinor = orb.semiMajor * (1 - orb.eccentricity);
+        var tilt = orb.tilt + precessionOffset;
         var angle = (t / orb.period) * Math.PI * 2;
 
         // Draw orbit guide
         ctx.strokeStyle = col.accent;
-        ctx.globalAlpha = 0.12;
-        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.06;
+        ctx.lineWidth = 0.5;
         ctx.save();
         ctx.translate(cx, cy);
-        ctx.rotate(orb.tilt);
+        ctx.rotate(tilt);
         ctx.beginPath();
         ctx.ellipse(0, 0, orb.semiMajor, semiMinor, 0, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
 
         // Object position
-        var ox = cx + Math.cos(angle) * orb.semiMajor * Math.cos(orb.tilt) - Math.sin(angle) * semiMinor * Math.sin(orb.tilt);
-        var oy = cy + Math.cos(angle) * orb.semiMajor * Math.sin(orb.tilt) + Math.sin(angle) * semiMinor * Math.cos(orb.tilt);
+        var cosTilt = Math.cos(tilt), sinTilt = Math.sin(tilt);
+        var ox = cx + Math.cos(angle) * orb.semiMajor * cosTilt - Math.sin(angle) * semiMinor * sinTilt;
+        var oy = cy + Math.cos(angle) * orb.semiMajor * sinTilt + Math.sin(angle) * semiMinor * cosTilt;
 
-        orb.trail.push({ x: ox, y: oy });
-        if (orb.trail.length > trailLen) orb.trail.shift();
+        // Ring buffer trail
+        if (orb.trail.length < trailLen) {
+          orb.trail.push({ x: ox, y: oy });
+        } else {
+          orb.trail[orb.trailIdx] = { x: ox, y: oy };
+          orb.trailIdx = (orb.trailIdx + 1) % trailLen;
+        }
 
-        // Draw trail
+        // Draw trail as gradient path
         if (orb.trail.length > 1) {
           ctx.strokeStyle = col.accent;
           ctx.lineWidth = 1.5;
-          for (var j = 1; j < orb.trail.length; j++) {
+          for (var j = 0; j < orb.trail.length; j++) {
+            var idx = (orb.trailIdx + j) % orb.trail.length;
+            var nextIdx = (orb.trailIdx + j + 1) % orb.trail.length;
+            if (j >= orb.trail.length - 1) break;
             ctx.globalAlpha = (j / orb.trail.length) * 0.5;
             ctx.beginPath();
-            ctx.moveTo(orb.trail[j - 1].x, orb.trail[j - 1].y);
-            ctx.lineTo(orb.trail[j].x, orb.trail[j].y);
+            ctx.moveTo(orb.trail[idx].x, orb.trail[idx].y);
+            ctx.lineTo(orb.trail[nextIdx].x, orb.trail[nextIdx].y);
             ctx.stroke();
           }
         }
 
-        // Draw object
+        // Body with halo glow
         ctx.fillStyle = col.accent;
+        ctx.globalAlpha = 0.15;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 12, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.globalAlpha = 0.85;
         ctx.beginPath();
-        ctx.arc(ox, oy, 5, 0, Math.PI * 2);
+        ctx.arc(ox, oy, orb.bodySize, 0, Math.PI * 2);
         ctx.fill();
 
         positions.push({ x: ox, y: oy, angle: angle });
+
+        // Lagrange points (L4, L5 at ±60° from body)
+        if (quality >= 0.5) {
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.1;
+          for (var l = -1; l <= 1; l += 2) {
+            var la = angle + l * Math.PI / 3;
+            var lx = cx + Math.cos(la) * orb.semiMajor * cosTilt - Math.sin(la) * semiMinor * sinTilt;
+            var ly = cy + Math.cos(la) * orb.semiMajor * sinTilt + Math.sin(la) * semiMinor * cosTilt;
+            ctx.beginPath();
+            ctx.arc(lx, ly, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
       }
 
-      // Conjunction lines
+      // Conjunction lines (slate blue)
       if (quality >= 0.5) {
         for (var a = 0; a < positions.length; a++) {
           for (var b = a + 1; b < positions.length; b++) {
             var angleDiff = Math.abs(positions[a].angle - positions[b].angle) % (Math.PI * 2);
             if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
-            if (angleDiff < 15 * Math.PI / 180) {
-              ctx.strokeStyle = col.accent;
-              ctx.globalAlpha = 0.3 * (1 - angleDiff / (15 * Math.PI / 180));
+            var threshold = 15 * Math.PI / 180;
+            if (angleDiff < threshold) {
+              var alpha = 0.3 * (1 - angleDiff / threshold);
+              ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',' + alpha + ')';
               ctx.lineWidth = 1;
               ctx.beginPath();
               ctx.moveTo(positions[a].x, positions[a].y);
