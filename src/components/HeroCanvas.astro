@@ -558,8 +558,9 @@ const { animation } = Astro.props;
 
       for (var i = 0; i < BAND_COUNT; i++) {
         var band = bands[i];
-        var yOff = Math.sin(frameCount * 0.002 + i * 0.5) * 3 + faultOffsets[i];
+        var yOff = Math.sin(frameCount * 0.002 + i * 0.5) * 3;
         var by = i * bandH + yOff;
+        var xOff = faultOffsets[i]; // lateral shear
 
         // Band color: alternating copper / slate blue
         var cr, cg, cb;
@@ -577,7 +578,7 @@ const { animation } = Astro.props;
 
         ctx.fillStyle = 'rgba(' + cr + ',' + cg + ',' + cb + ',' + band.opacity + ')';
         ctx.globalAlpha = 1;
-        ctx.fillRect(0, by, w, bandH);
+        ctx.fillRect(xOff, by, w, bandH);
 
         // Procedural textures (skip below quality 0.5)
         if (quality >= 0.5) {
@@ -1179,7 +1180,8 @@ const { animation } = Astro.props;
       }
 
       // Draw each panel
-      for (var p = 0; p < panels.length; p++) {
+      var panelCount = quality < 0.5 ? 1 : panels.length;
+      for (var p = 0; p < panelCount; p++) {
         var panel = panels[p];
         var lines = panel.lines;
         var lineCount = quality < 0.5 ? Math.floor(lines.length * 0.6) : lines.length;
@@ -1547,8 +1549,8 @@ const { animation } = Astro.props;
         tiles[i].glitchX = 0;
         tiles[i].glitchY = 0;
         if (tiles[i].state === 'intact' && Math.random() < 0.001) {
-          tiles[i].glitchX = (Math.random() - 0.5) * 60;
-          tiles[i].glitchY = (Math.random() - 0.5) * 60;
+          tiles[i].glitchX = (Math.random() - 0.5) * 30;
+          tiles[i].glitchY = (Math.random() - 0.5) * 30;
           glitchCount++;
         }
       }
@@ -1583,6 +1585,7 @@ const { animation } = Astro.props;
             dissolvedCount++;
           } else if (tile.stability < 0.3 && tile.state !== 'fragmenting' && tile.state !== 'dissolved') {
             tile.state = 'fragmenting';
+            if (fragments.length >= 500) continue;
             for (var f = 0; f < 3; f++) {
               var goesUp = Math.random() < 0.05;
               fragments.push({
@@ -1590,11 +1593,11 @@ const { animation } = Astro.props;
                 y: tile.y + Math.random() * tileSize,
                 w: tileSize * 0.4,
                 h: tileSize * 0.4,
-                vx: (Math.random() - 0.5) * 1,
+                vx: (Math.random() - 0.5) * 0.5,
                 vy: goesUp ? -0.3 : 0,
                 gravity: goesUp ? -0.01 : 0.05,
                 rot: Math.random() * Math.PI * 2,
-                rotV: (Math.random() - 0.5) * 0.04,
+                rotV: (Math.random() - 0.5) * 0.02,
                 alpha: 0.5
               });
             }
@@ -1751,11 +1754,11 @@ const { animation } = Astro.props;
           var mouseDecrypt = mouseDist < 80;
 
           // Sweep decrypt
-          var sweepDecrypt = sweepActive && Math.abs(y - sweepY) < fontSize * 2 && sweepFrame < 20;
+          var sweepDecrypt = sweepActive && Math.abs(y - sweepY) < fontSize * 2;
 
           var ch2;
           if (isPlain || mouseDecrypt || sweepDecrypt) {
-            var pi = r % column.plainText.length;
+            var pi = (r - plainWindowStart) % column.plainText.length;
             ch2 = column.plainText[pi];
             ctx.fillStyle = col.accent;
             ctx.globalAlpha = mouseDecrypt ? 0.5 : (sweepDecrypt ? 0.6 : 0.6);
@@ -1832,7 +1835,7 @@ const { animation } = Astro.props;
       cy = h / 2;
       ctx.clearRect(0, 0, w, h);
 
-      precessionOffset += 0.001;
+      precessionOffset += 0.001 / 60;
       var trailLen = quality < 0.5 ? 15 : 30;
       var positions = [];
 
