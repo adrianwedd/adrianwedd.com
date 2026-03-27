@@ -2387,30 +2387,51 @@ const { animation } = Astro.props;
   ANIMATIONS.stream = (function () {
     var w, h, col;
     var streams = [];
+    var STREAM_COUNT = 10;
+    var burstTimer = 0;
+    var burstStream = -1;
+    var burstX = 0;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       streams = [];
-      for (var i = 0; i < 6; i++) {
+      burstTimer = 0;
+      burstStream = -1;
+      for (var i = 0; i < STREAM_COUNT; i++) {
         var particles = [];
-        for (var p = 0; p < 4; p++) {
+        for (var p = 0; p < 8; p++) {
           particles.push({ x: Math.random() * w, phase: Math.random() * Math.PI * 2 });
         }
         streams.push({
-          baseY: (i + 1) * h / 7,
-          baseWidth: 15 + Math.random() * 20,
+          baseY: (i + 1) * h / (STREAM_COUNT + 1),
+          baseWidth: 25 + Math.random() * 20,
           speed: 0.5 + Math.random() * 1,
           particles: particles,
-          idx: i
+          idx: i,
+          anomalyX: w - Math.random() * w * 0.3
         });
       }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
-      ctx.clearRect(0, 0, w, h);
+      // No clearRect — trail persistence via fadeRate
 
-      var particleCount = quality < 0.5 ? 2 : 4;
+      burstTimer++;
+      var particleCount = quality < 0.5 ? 4 : 8;
+      var mx = mouse && mouse.active ? mouse.x * w : -9999;
+      var my = mouse && mouse.active ? mouse.y * h : -9999;
+
+      // Data burst
+      if (burstTimer >= 600) {
+        burstTimer = 0;
+        burstStream = Math.floor(Math.random() * STREAM_COUNT);
+        burstX = 0;
+      }
+      if (burstStream >= 0) {
+        burstX += streams[burstStream].speed * 4;
+        if (burstX > w) burstStream = -1;
+      }
 
       for (var s = 0; s < streams.length; s++) {
         var stream = streams[s];
@@ -2420,10 +2441,17 @@ const { animation } = Astro.props;
         for (var x = 0; x <= w; x += step) {
           var yMod = noise3D(x * 0.005, stream.idx, t * 0.0003) * 30;
           var wMod = stream.baseWidth + noise3D(x * 0.003, stream.idx + 10, t * 0.0005) * stream.baseWidth * 0.5;
+
+          // Mouse rock: split around cursor
+          if (Math.abs(stream.baseY + yMod - my) < 60 && Math.abs(x - mx) < 80) {
+            var pushDir = (stream.baseY + yMod > my) ? 1 : -1;
+            yMod += pushDir * 30;
+          }
+
           points.push({ x: x, y: stream.baseY + yMod, w: Math.abs(wMod) });
         }
 
-        // Draw stream as filled path
+        // Draw stream as filled path (copper)
         ctx.fillStyle = col.accent;
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y - points[0].w / 2);
@@ -2434,20 +2462,49 @@ const { animation } = Astro.props;
           ctx.lineTo(points[p].x, points[p].y + points[p].w / 2);
         }
         ctx.closePath();
-        ctx.globalAlpha = 0.15;
+        ctx.globalAlpha = 0.1;
         ctx.fill();
 
-        // Particles
+        // Flow particles (copper)
         for (var p = 0; p < Math.min(particleCount, stream.particles.length); p++) {
           var particle = stream.particles[p];
           particle.x += stream.speed;
           if (particle.x > w) particle.x = 0;
 
           var py = stream.baseY + noise3D(particle.x * 0.005, stream.idx, t * 0.0003) * 30;
+
+          // Confluence: lateral drift when near another stream
+          for (var os = 0; os < streams.length; os++) {
+            if (os === s) continue;
+            if (Math.abs(streams[os].baseY - stream.baseY) < 40) {
+              py += (streams[os].baseY > stream.baseY ? 0.3 : -0.3);
+            }
+          }
+
           ctx.fillStyle = col.accent;
-          ctx.globalAlpha = 0.6;
+          ctx.globalAlpha = 0.5;
           ctx.beginPath();
           ctx.arc(particle.x, py, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Anomaly particle (slate blue, upstream)
+        stream.anomalyX -= stream.speed * 0.3;
+        if (stream.anomalyX < 0) stream.anomalyX = w;
+        var anomalyY = stream.baseY + noise3D(stream.anomalyX * 0.005, stream.idx, t * 0.0003) * 30;
+        ctx.fillStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.4)';
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(stream.anomalyX, anomalyY, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Data burst dot
+        if (burstStream === s && burstX > 0 && burstX < w) {
+          var burstY = stream.baseY + noise3D(burstX * 0.005, stream.idx, t * 0.0003) * 30;
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.7;
+          ctx.beginPath();
+          ctx.arc(burstX, burstY, 5, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -2456,7 +2513,8 @@ const { animation } = Astro.props;
     }
 
     function cleanup() { streams = []; }
-    return { init: init, frame: frame, cleanup: cleanup };
+
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.02 };
   })();
 
   ANIMATIONS.crystallise = (function () {
