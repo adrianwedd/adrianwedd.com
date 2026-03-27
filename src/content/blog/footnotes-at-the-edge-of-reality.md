@@ -5,6 +5,8 @@ date: 2026-02-12
 tags: ["poetry", "physics", "writing", "creative"]
 draft: true
 heroImage: "/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp"
+audioUrl: "/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3"
+audioDuration: "17:58"
 ---
 
 # Footnotes at the Edge of Reality
