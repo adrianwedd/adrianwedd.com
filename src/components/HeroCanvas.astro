@@ -2068,27 +2068,28 @@ const { animation } = Astro.props;
     var warpCount = 0;
     var weftThreads = [];
     var frameCount = 0;
-    var patternCycle = 0; // 0=plain, 1=twill, 2=satin
+    var patternCycle = 0;
+    var snapFlash = null;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
-      warpCount = Math.floor(w / 25);
+      warpCount = Math.floor(w / 15);
       weftThreads = [];
       frameCount = 0;
       patternCycle = 0;
+      snapFlash = null;
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
-      ctx.clearRect(0, 0, w, h);
+      // No clearRect — trail persistence via fadeRate
       frameCount++;
 
       var effectiveWarpCount = quality < 0.5 ? Math.floor(warpCount * 0.6) : warpCount;
       var warpSpacing = w / effectiveWarpCount;
 
-      // Draw warp threads
-      ctx.strokeStyle = col.accent;
-      ctx.globalAlpha = 0.15;
+      // Draw warp threads (slate blue, structural)
+      ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.15)';
       ctx.lineWidth = 1.5;
       for (var i = 0; i < effectiveWarpCount; i++) {
         var x = i * warpSpacing + warpSpacing / 2;
@@ -2100,61 +2101,94 @@ const { animation } = Astro.props;
 
       // Spawn new weft
       if (frameCount % 60 === 0) {
-        var useAccent = weftThreads.length % 2 === 0;
         weftThreads.push({
           y: weftThreads.length * 6 + 20,
           progress: 0,
-          useAccent: useAccent,
-          row: weftThreads.length
+          row: weftThreads.length,
+          done: false,
+          shuttleX: 0
         });
         if (weftThreads.length % 15 === 0) {
           patternCycle = (patternCycle + 1) % 3;
         }
       }
 
-      // Check if fabric too tall — reset
-      if (weftThreads.length > 0 && weftThreads[weftThreads.length - 1].y > h * 0.7) {
+      // Reset when fabric too tall
+      var maxWefts = Math.floor(h * 0.7 / 6);
+      if (weftThreads.length > maxWefts) {
         weftThreads = [];
         frameCount = 0;
         patternCycle = (patternCycle + 1) % 3;
         return;
       }
 
-      // Draw and advance weft threads
+      // Draw weft threads (copper)
+      ctx.strokeStyle = col.accent;
+      ctx.lineWidth = 1.5;
+
       for (var i = 0; i < weftThreads.length; i++) {
         var weft = weftThreads[i];
-        weft.progress = Math.min(1, weft.progress + 2 / w);
+        if (!weft.done) {
+          weft.progress = Math.min(1, weft.progress + 2 / w);
+          weft.shuttleX = weft.progress * w;
+        }
 
         var endX = weft.progress * w;
-        ctx.strokeStyle = weft.useAccent ? col.accent : col.muted;
         ctx.globalAlpha = 0.4;
-        ctx.lineWidth = 1.5;
 
         ctx.beginPath();
-        var startX = 0;
         for (var wp = 0; wp < effectiveWarpCount; wp++) {
           var wx = wp * warpSpacing + warpSpacing / 2;
           if (wx > endX) break;
 
           var over;
-          if (patternCycle === 0) over = (wp + weft.row) % 2 === 0; // plain
-          else if (patternCycle === 1) over = (wp + weft.row) % 3 === 0; // twill
-          else over = (wp % 5) < 4 && weft.row % 5 !== wp % 5; // satin-like
+          if (patternCycle === 0) over = (wp + weft.row) % 2 === 0;
+          else if (patternCycle === 1) over = (wp + weft.row) % 3 === 0;
+          else over = (wp % 5) < 4 && weft.row % 5 !== wp % 5;
 
           var yOff = over ? -2 : 2;
-          if (wp === 0) {
-            ctx.moveTo(startX, weft.y + yOff);
-          }
+          if (wp === 0) ctx.moveTo(0, weft.y + yOff);
           ctx.lineTo(wx, weft.y + yOff);
         }
         ctx.stroke();
+
+        // Shuttle head (bright copper dot)
+        if (!weft.done) {
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.6;
+          ctx.beginPath();
+          ctx.arc(weft.shuttleX, weft.y, 4, 0, 6.2832);
+          ctx.fill();
+        }
+
+        // Check completion
+        if (weft.progress >= 1 && !weft.done) {
+          weft.done = true;
+          // Thread snap: 1% chance
+          if (Math.random() < 0.01) {
+            snapFlash = { x: weft.shuttleX, y: weft.y, alpha: 0.5, life: 12 };
+          }
+        }
+      }
+
+      // Draw snap flash
+      if (snapFlash) {
+        snapFlash.life--;
+        snapFlash.alpha *= 0.85;
+        ctx.fillStyle = col.accent;
+        ctx.globalAlpha = snapFlash.alpha;
+        ctx.beginPath();
+        ctx.arc(snapFlash.x, snapFlash.y, 4, 0, 6.2832);
+        ctx.fill();
+        if (snapFlash.life <= 0) snapFlash = null;
       }
 
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { weftThreads = []; }
-    return { init: init, frame: frame, cleanup: cleanup };
+    function cleanup() { weftThreads = []; snapFlash = null; }
+
+    return { init: init, frame: frame, cleanup: cleanup, fadeRate: 0.025 };
   })();
 
   ANIMATIONS.pulse = (function () {
