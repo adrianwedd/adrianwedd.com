@@ -493,31 +493,41 @@ const { animation } = Astro.props;
   ANIMATIONS.strata = (function () {
     var w, h, col;
     var bands = [];
-    var BAND_COUNT = 10;
+    var BAND_COUNT = 12;
     var faultTimer = 0;
-    var FAULT_INTERVAL = 900; // ~15s at 60fps
+    var FAULT_INTERVAL = 900;
     var faultOffsets = [];
+    var faultFlashAlpha = 0;
+    var faultFlashY = 0;
     var frameCount = 0;
+    var sparkles = [];
+    var SPARKLE_COUNT = 20;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       bands = [];
       faultOffsets = [];
       faultTimer = 0;
+      faultFlashAlpha = 0;
       frameCount = 0;
+      sparkles = [];
       var bandH = h / BAND_COUNT;
       for (var i = 0; i < BAND_COUNT; i++) {
         bands.push({
           y: i * bandH,
           height: bandH,
           opacity: 0.12 + Math.random() * 0.15,
-          texture: i % 4 // 0=stipple, 1=crosshatch, 2=wavy, 3=dots
+          texture: i % 4, // 0=stipple, 1=crosshatch, 2=wavy, 3=crystalline
+          isSecondary: i % 2 === 1
         });
         faultOffsets.push(0);
       }
+      for (var i = 0; i < SPARKLE_COUNT; i++) {
+        sparkles.push({ x: Math.random() * cw, y: ch * 0.5 + Math.random() * ch * 0.5, alpha: 0.1 + Math.random() * 0.2 });
+      }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
       frameCount++;
@@ -526,40 +536,62 @@ const { animation } = Astro.props;
       // Fault event
       if (faultTimer >= FAULT_INTERVAL) {
         faultTimer = 0;
+        faultFlashY = h * 0.3 + Math.random() * h * 0.4;
+        faultFlashAlpha = 0.4;
         for (var i = 0; i < BAND_COUNT; i++) {
-          if (i % 2 === 0) faultOffsets[i] = 2 + Math.random() * 2;
+          if (i % 2 === 0) faultOffsets[i] = 4;
+          else faultOffsets[i] = -4;
         }
       }
 
-      // Settle fault offsets
+      // Settle fault offsets over 30 frames
       for (var i = 0; i < BAND_COUNT; i++) {
-        faultOffsets[i] *= 0.98;
+        faultOffsets[i] *= 0.93;
+      }
+
+      // Fault flash decay
+      if (faultFlashAlpha > 0) {
+        faultFlashAlpha -= 0.4 / 30; // fade over 30 frames
       }
 
       var bandH = h / BAND_COUNT;
 
       for (var i = 0; i < BAND_COUNT; i++) {
         var band = bands[i];
-        // Sinusoidal compression
-        var yOff = Math.sin(frameCount * 0.002 + i * 0.5) * 3 + faultOffsets[i];
+        var yOff = Math.sin(frameCount * 0.002 + i * 0.5) * 3;
         var by = i * bandH + yOff;
+        var xOff = faultOffsets[i]; // lateral shear
 
-        ctx.fillStyle = col.accent;
-        ctx.globalAlpha = band.opacity;
-        ctx.fillRect(0, by, w, bandH);
+        // Band color: alternating copper / slate blue
+        var cr, cg, cb;
+        if (band.isSecondary) {
+          cr = SECONDARY_RGB[0]; cg = SECONDARY_RGB[1]; cb = SECONDARY_RGB[2];
+        } else {
+          cr = 196; cg = 139; cb = 110; // copper fallback
+          var av = col.accent;
+          if (av && av.charAt(0) === '#' && av.length === 7) {
+            cr = parseInt(av.substring(1,3), 16);
+            cg = parseInt(av.substring(3,5), 16);
+            cb = parseInt(av.substring(5,7), 16);
+          }
+        }
+
+        ctx.fillStyle = 'rgba(' + cr + ',' + cg + ',' + cb + ',' + band.opacity + ')';
+        ctx.globalAlpha = 1;
+        ctx.fillRect(xOff, by, w, bandH);
 
         // Procedural textures (skip below quality 0.5)
         if (quality >= 0.5) {
           ctx.globalAlpha = band.opacity * 0.8;
-          ctx.strokeStyle = col.accent;
-          ctx.fillStyle = col.accent;
+          ctx.strokeStyle = 'rgba(' + cr + ',' + cg + ',' + cb + ',1)';
+          ctx.fillStyle = 'rgba(' + cr + ',' + cg + ',' + cb + ',1)';
           ctx.lineWidth = 0.8;
 
           switch (band.texture) {
             case 0: // stipple
               for (var sx = 0; sx < w; sx += 8) {
                 for (var sy = 0; sy < bandH; sy += 8) {
-                  if (Math.random() > 0.6) {
+                  if (((sx * 7 + sy * 13 + i * 37) % 10) > 5) {
                     ctx.fillRect(sx, by + sy, 1, 1);
                   }
                 }
@@ -579,14 +611,14 @@ const { animation } = Astro.props;
               for (var wy = 4; wy < bandH; wy += 8) {
                 ctx.beginPath();
                 for (var wx = 0; wx < w; wx += 4) {
-                  var yy = by + wy + Math.sin(wx * 0.05 + i + frameCount * 0.01) * 2;
+                  var yy = by + wy + Math.sin(wx * 0.05 + i * 1.5) * 2;
                   if (wx === 0) ctx.moveTo(wx, yy);
                   else ctx.lineTo(wx, yy);
                 }
                 ctx.stroke();
               }
               break;
-            case 3: // dots
+            case 3: // crystalline dots
               for (var dx = 4; dx < w; dx += 10) {
                 for (var dy = 4; dy < bandH; dy += 10) {
                   ctx.beginPath();
@@ -599,11 +631,39 @@ const { animation } = Astro.props;
         }
       }
 
-      // Core glow at bottom
+      // Fault flash line
+      if (faultFlashAlpha > 0) {
+        ctx.strokeStyle = col.accent;
+        ctx.globalAlpha = faultFlashAlpha;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, faultFlashY);
+        ctx.lineTo(w, faultFlashY);
+        ctx.stroke();
+      }
+
+      // Sparkle particles drifting upward
+      ctx.fillStyle = col.accent;
+      for (var i = 0; i < sparkles.length; i++) {
+        var sp = sparkles[i];
+        sp.y -= 0.2;
+        sp.alpha = 0.15 + Math.sin(frameCount * 0.05 + i * 2) * 0.15;
+        if (sp.y < 0) { sp.y = h; sp.x = Math.random() * w; }
+        ctx.globalAlpha = sp.alpha;
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, 1, 0, 6.2832);
+        ctx.fill();
+      }
+
+      // Core glow at bottom pulsing between copper and sage
+      var glowCycle = (Math.sin(frameCount * 0.01) + 1) * 0.5; // 0-1
+      var glowR = Math.floor(196 + (TERTIARY_RGB[0] - 196) * glowCycle);
+      var glowG = Math.floor(139 + (TERTIARY_RGB[1] - 139) * glowCycle);
+      var glowB = Math.floor(110 + (TERTIARY_RGB[2] - 110) * glowCycle);
       ctx.globalAlpha = 1;
       var grd = ctx.createLinearGradient(0, h - 30, 0, h);
       grd.addColorStop(0, 'transparent');
-      grd.addColorStop(1, col.accent);
+      grd.addColorStop(1, 'rgba(' + glowR + ',' + glowG + ',' + glowB + ',1)');
       ctx.globalAlpha = 0.18;
       ctx.fillStyle = grd;
       ctx.fillRect(0, h - 30, w, 30);
@@ -611,7 +671,7 @@ const { animation } = Astro.props;
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { bands = []; faultOffsets = []; }
+    function cleanup() { bands = []; faultOffsets = []; sparkles = []; }
 
     return { init: init, frame: frame, cleanup: cleanup };
   })();
@@ -1000,17 +1060,11 @@ const { animation } = Astro.props;
 
   ANIMATIONS.blueprint = (function () {
     var w, h, col;
-    var lines = [];
-    var holdTimer = 0;
-    var fadeAlpha = 1;
-    var phase = 'drawing'; // 'drawing' | 'holding' | 'fading'
-    var seqIndex = 0;
+    var panels = []; // two independent drawing panels (left/right)
+    var frameCount = 0;
 
-    function generateSequence(cw, ch, type) {
+    function generateSequence(cx, cy, cw, ch, type) {
       var result = [];
-      var cx = cw * 0.2 + Math.random() * cw * 0.6;
-      var cy = ch * 0.2 + Math.random() * ch * 0.6;
-
       switch (type) {
         case 0: // Floor plan: 5-8 rectangles
           var count = 5 + Math.floor(Math.random() * 4);
@@ -1019,90 +1073,99 @@ const { animation } = Astro.props;
             var ry = cy + (Math.random() - 0.5) * ch * 0.5;
             var rw = 50 + Math.random() * 120;
             var rh = 35 + Math.random() * 90;
-            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry, progress: 0 });
-            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh, progress: 0 });
-            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh, progress: 0 });
-            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry, progress: 0 });
+            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry });
+            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh });
+            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh });
+            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry });
           }
           break;
         case 1: // Elevation: stepped profile
           var steps = 10 + Math.floor(Math.random() * 8);
-          var sx = cw * 0.05;
-          var sy = ch * 0.6;
+          var sx = cx - cw * 0.35;
+          var sy = cy + ch * 0.15;
           for (var i = 0; i < steps; i++) {
-            var nx = sx + 30 + Math.random() * 60;
-            var ny = sy - (Math.random() - 0.3) * 60;
-            result.push({ x1: sx, y1: sy, x2: nx, y2: sy, progress: 0 });
-            result.push({ x1: nx, y1: sy, x2: nx, y2: ny, progress: 0 });
-            sx = nx;
-            sy = ny;
+            var nx = sx + 20 + Math.random() * 50;
+            var ny = sy - (Math.random() - 0.3) * 50;
+            result.push({ x1: sx, y1: sy, x2: nx, y2: sy });
+            result.push({ x1: nx, y1: sy, x2: nx, y2: ny });
+            sx = nx; sy = ny;
           }
           break;
         case 2: // Cross-section: nested rectangles with divisions
-          for (var n = 0; n < 3; n++) {
-            var m = 30 * n;
-            var rx = cx - 100 + m;
-            var ry = cy - 70 + m;
-            var rw = 200 - m * 2;
-            var rh = 140 - m * 2;
-            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry, progress: 0 });
-            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh, progress: 0 });
-            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh, progress: 0 });
-            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry, progress: 0 });
+          for (var n = 0; n < 4; n++) {
+            var m = 25 * n;
+            var rx = cx - 90 + m;
+            var ry = cy - 60 + m;
+            var rw = 180 - m * 2;
+            var rh = 120 - m * 2;
+            if (rw < 10 || rh < 10) break;
+            result.push({ x1: rx, y1: ry, x2: rx + rw, y2: ry });
+            result.push({ x1: rx + rw, y1: ry, x2: rx + rw, y2: ry + rh });
+            result.push({ x1: rx + rw, y1: ry + rh, x2: rx, y2: ry + rh });
+            result.push({ x1: rx, y1: ry + rh, x2: rx, y2: ry });
           }
-          // Internal divisions
-          for (var d = 1; d < 3; d++) {
-            var dx = cx - 100 + d * 67;
-            result.push({ x1: dx, y1: cy - 70, x2: dx, y2: cy + 70, progress: 0 });
+          for (var d = 1; d < 4; d++) {
+            var dx = cx - 90 + d * 45;
+            result.push({ x1: dx, y1: cy - 60, x2: dx, y2: cy + 60 });
           }
           break;
-        case 3: // Detail: circle approximated with lines + radiating lines
+        case 3: // Detail: circle with radiating lines
           var segments = 24;
           var radius = 50 + Math.random() * 40;
           for (var i = 0; i < segments; i++) {
             var a1 = (i / segments) * Math.PI * 2;
             var a2 = ((i + 1) / segments) * Math.PI * 2;
-            result.push({
-              x1: cx + Math.cos(a1) * radius,
-              y1: cy + Math.sin(a1) * radius,
-              x2: cx + Math.cos(a2) * radius,
-              y2: cy + Math.sin(a2) * radius,
-              progress: 0
-            });
+            result.push({ x1: cx + Math.cos(a1) * radius, y1: cy + Math.sin(a1) * radius, x2: cx + Math.cos(a2) * radius, y2: cy + Math.sin(a2) * radius });
           }
-          // Radiating lines
           for (var i = 0; i < 8; i++) {
             var a = (i / 8) * Math.PI * 2;
-            result.push({
-              x1: cx + Math.cos(a) * radius,
-              y1: cy + Math.sin(a) * radius,
-              x2: cx + Math.cos(a) * (radius + 25),
-              y2: cy + Math.sin(a) * (radius + 25),
-              progress: 0
-            });
+            result.push({ x1: cx + Math.cos(a) * radius, y1: cy + Math.sin(a) * radius, x2: cx + Math.cos(a) * (radius + 25), y2: cy + Math.sin(a) * (radius + 25) });
           }
           break;
+      }
+      // Add progress and overshoot state to each line
+      for (var i = 0; i < result.length; i++) {
+        result[i].progress = 0;
+        result[i].overshoot = 0;
+        result[i].settling = 0;
       }
       return result;
     }
 
-    function init(cw, ch, colors) {
-      w = cw; h = ch; col = colors;
-      seqIndex = 0;
-      phase = 'drawing';
-      holdTimer = 0;
-      fadeAlpha = 1;
-      lines = generateSequence(cw, ch, 0);
+    function initPanel(panelX, panelW, ch) {
+      var cx = panelX + panelW * 0.5;
+      var cy = ch * 0.5;
+      var type = Math.floor(Math.random() * 4);
+      return {
+        lines: generateSequence(cx, cy, panelW, ch, type),
+        phase: 'drawing', // drawing | holding | fading
+        holdTimer: 0,
+        fadeAlpha: 1,
+        seqIndex: type,
+        cursorX: cx, cursorY: cy,
+        targetIdx: 0,
+        cx: cx, cy: cy,
+        panelX: panelX, panelW: panelW
+      };
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      frameCount = 0;
+      panels = [
+        initPanel(0, w * 0.48, h),
+        initPanel(w * 0.52, w * 0.48, h)
+      ];
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
+      frameCount++;
 
-      // Background grid
+      // Background grid (slate blue)
       if (quality >= 0.5) {
-        ctx.strokeStyle = col.border;
-        ctx.globalAlpha = 0.2;
+        ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.15)';
         ctx.lineWidth = 0.5;
         ctx.beginPath();
         for (var gx = 0; gx < w; gx += 20) {
@@ -1116,105 +1179,194 @@ const { animation } = Astro.props;
         ctx.stroke();
       }
 
-      // Draw lines
-      ctx.strokeStyle = col.muted;
-      ctx.lineWidth = 2;
-      ctx.globalAlpha = 0.7 * fadeAlpha;
+      // Draw each panel
+      var panelCount = quality < 0.5 ? 1 : panels.length;
+      for (var p = 0; p < panelCount; p++) {
+        var panel = panels[p];
+        var lines = panel.lines;
+        var lineCount = quality < 0.5 ? Math.floor(lines.length * 0.6) : lines.length;
 
-      var allDone = true;
-      var lineCount = quality < 0.5 ? Math.floor(lines.length * 0.6) : lines.length;
+        // Drawing phase
+        ctx.strokeStyle = col.accent;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
 
-      for (var i = 0; i < Math.min(lineCount, lines.length); i++) {
-        var ln = lines[i];
-        if (phase === 'drawing') {
-          ln.progress = Math.min(1, ln.progress + 0.02);
-          if (ln.progress < 1) allDone = false;
+        var allDone = true;
+        for (var i = 0; i < Math.min(lineCount, lines.length); i++) {
+          var ln = lines[i];
+          if (panel.phase === 'drawing') {
+            ln.progress = Math.min(1, ln.progress + 2 / Math.max(1, Math.sqrt(Math.pow(ln.x2 - ln.x1, 2) + Math.pow(ln.y2 - ln.y1, 2))));
+            if (ln.progress < 1) allDone = false;
+
+            // Overshoot: extend 3px past endpoint when newly complete
+            if (ln.progress >= 1 && ln.overshoot < 3 && ln.settling === 0) {
+              ln.overshoot = 3;
+              ln.settling = 5;
+            }
+            if (ln.settling > 0) {
+              ln.settling--;
+              ln.overshoot *= 0.6; // retract
+            }
+          }
+
+          var ex = ln.x1 + (ln.x2 - ln.x1) * ln.progress;
+          var ey = ln.y1 + (ln.y2 - ln.y1) * ln.progress;
+
+          // Add overshoot
+          if (ln.overshoot > 0.1) {
+            var dx = ln.x2 - ln.x1;
+            var dy = ln.y2 - ln.y1;
+            var len = Math.sqrt(dx * dx + dy * dy) || 1;
+            ex += (dx / len) * ln.overshoot;
+            ey += (dy / len) * ln.overshoot;
+          }
+
+          ctx.globalAlpha = 0.7 * panel.fadeAlpha;
+          ctx.beginPath();
+          ctx.moveTo(ln.x1, ln.y1);
+          ctx.lineTo(ex, ey);
+          ctx.stroke();
+
+          // Dimension tick marks at endpoints of completed lines
+          if (ln.progress >= 1 && quality >= 0.5) {
+            ctx.globalAlpha = 0.5 * panel.fadeAlpha;
+            ctx.lineWidth = 1;
+            var perpX = -(ln.y2 - ln.y1);
+            var perpY = ln.x2 - ln.x1;
+            var perpLen = Math.sqrt(perpX * perpX + perpY * perpY) || 1;
+            perpX = perpX / perpLen * 4;
+            perpY = perpY / perpLen * 4;
+            ctx.beginPath();
+            ctx.moveTo(ln.x1 - perpX, ln.y1 - perpY);
+            ctx.lineTo(ln.x1 + perpX, ln.y1 + perpY);
+            ctx.moveTo(ln.x2 - perpX, ln.y2 - perpY);
+            ctx.lineTo(ln.x2 + perpX, ln.y2 + perpY);
+            ctx.stroke();
+
+            // Dashed leader line between ticks
+            ctx.globalAlpha = 0.3 * panel.fadeAlpha;
+            ctx.setLineDash([2, 4]);
+            ctx.beginPath();
+            ctx.moveTo(ln.x1 + perpX * 2, ln.y1 + perpY * 2);
+            ctx.lineTo(ln.x2 + perpX * 2, ln.y2 + perpY * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.lineWidth = 2.5;
+          }
         }
 
-        var ex = ln.x1 + (ln.x2 - ln.x1) * ln.progress;
-        var ey = ln.y1 + (ln.y2 - ln.y1) * ln.progress;
-        ctx.beginPath();
-        ctx.moveTo(ln.x1, ln.y1);
-        ctx.lineTo(ex, ey);
-        ctx.stroke();
-      }
-
-      if (phase === 'drawing' && allDone) {
-        phase = 'holding';
-        holdTimer = 60;
-      } else if (phase === 'holding') {
-        holdTimer--;
-        if (holdTimer <= 0) {
-          phase = 'fading';
-          fadeAlpha = 1;
+        // Phase transitions
+        if (panel.phase === 'drawing' && allDone) {
+          panel.phase = 'holding';
+          panel.holdTimer = 60;
+        } else if (panel.phase === 'holding') {
+          panel.holdTimer--;
+          if (panel.holdTimer <= 0) { panel.phase = 'fading'; panel.fadeAlpha = 1; }
+        } else if (panel.phase === 'fading') {
+          panel.fadeAlpha -= 1 / 60;
+          if (panel.fadeAlpha <= 0) {
+            panel.seqIndex = (panel.seqIndex + 1) % 4;
+            var newPanel = initPanel(panel.panelX, panel.panelW, h);
+            newPanel.seqIndex = panel.seqIndex;
+            newPanel.lines = generateSequence(newPanel.cx, newPanel.cy, newPanel.panelW, h, panel.seqIndex);
+            panels[p] = newPanel;
+          }
         }
-      } else if (phase === 'fading') {
-        fadeAlpha -= 1 / 60;
-        if (fadeAlpha <= 0) {
-          fadeAlpha = 1;
-          phase = 'drawing';
-          seqIndex = (seqIndex + 1) % 4;
-          lines = generateSequence(w, h, seqIndex);
+
+        // Crosshair cursor following drawing progress
+        if (panel.phase === 'drawing' && panel.targetIdx < lines.length) {
+          var target = lines[panel.targetIdx];
+          if (target.progress >= 1 && panel.targetIdx < lines.length - 1) panel.targetIdx++;
+          var tgt = lines[panel.targetIdx];
+          var tx = tgt.x1 + (tgt.x2 - tgt.x1) * tgt.progress;
+          var ty = tgt.y1 + (tgt.y2 - tgt.y1) * tgt.progress;
+          panel.cursorX += (tx - panel.cursorX) * 0.15;
+          panel.cursorY += (ty - panel.cursorY) * 0.15;
+
+          ctx.strokeStyle = col.accent;
+          ctx.globalAlpha = 0.4;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(panel.cursorX - 10, panel.cursorY);
+          ctx.lineTo(panel.cursorX + 10, panel.cursorY);
+          ctx.moveTo(panel.cursorX, panel.cursorY - 10);
+          ctx.lineTo(panel.cursorX, panel.cursorY + 10);
+          ctx.stroke();
         }
       }
 
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { lines = []; }
+    function cleanup() { panels = []; }
 
     return { init: init, frame: frame, cleanup: cleanup };
   })();
 
   ANIMATIONS.radar = (function () {
     var w, h, col;
-    var points = [];
-    var cx, cy;
+    var targets = [];
+    var cx, cy, radius;
+    var TARGET_COUNT = 30;
+    var moveTimer = 0;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
       cx = w / 2;
       cy = h * 0.45;
-      points = [];
-      var radius = Math.min(w, h) * 0.4;
-      for (var i = 0; i < 30; i++) {
+      radius = Math.min(w, h) * 0.4;
+      targets = [];
+      moveTimer = 0;
+      for (var i = 0; i < TARGET_COUNT; i++) {
         var angle = Math.random() * Math.PI * 2;
         var dist = Math.random() * radius;
-        points.push({
+        targets.push({
           x: cx + Math.cos(angle) * dist,
           y: cy + Math.sin(angle) * dist,
           size: 2 + Math.random() * 3,
-          lastHit: -9999
+          lastHit: -9999,
+          bloomSize: 0,
+          moveTrail: []
         });
       }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
+      moveTimer++;
 
-      var radius = Math.min(w, h) * 0.4;
+      cx = w / 2;
+      cy = h * 0.45;
+      radius = Math.min(w, h) * 0.4;
       var sweepAngle = t * 0.001;
-      var pointCount = Math.floor(points.length * Math.max(quality, 0.4));
+      var wedgeWidth = 20 * Math.PI / 180;
+      var pointCount = Math.floor(TARGET_COUNT * Math.max(quality, 0.4));
 
-      // Range rings
-      ctx.strokeStyle = col.accent;
+      // Range rings (slate blue)
+      ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.12)';
+      ctx.lineWidth = 1;
       for (var r = 1; r <= 3; r++) {
-        ctx.globalAlpha = 0.12;
-        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(cx, cy, radius * r / 3, 0, Math.PI * 2);
         ctx.stroke();
       }
 
-      // Sweep wedge gradient
-      ctx.globalAlpha = 1;
-      var wedgeWidth = 12 * Math.PI / 180;
+      // Crosshair (slate blue)
+      ctx.globalAlpha = 0.08;
+      ctx.beginPath();
+      ctx.moveTo(cx - radius, cy);
+      ctx.lineTo(cx + radius, cy);
+      ctx.moveTo(cx, cy - radius);
+      ctx.lineTo(cx, cy + radius);
+      ctx.stroke();
+
+      // Sweep wedge trail (copper, fading)
+      ctx.strokeStyle = col.accent;
       for (var s = 0; s < 20; s++) {
         var a = sweepAngle - wedgeWidth * s / 20;
-        var alpha = 0.25 * (1 - s / 20);
-        ctx.strokeStyle = col.accent;
-        ctx.globalAlpha = alpha;
+        ctx.globalAlpha = 0.25 * (1 - s / 20);
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(cx, cy);
@@ -1222,7 +1374,7 @@ const { animation } = Astro.props;
         ctx.stroke();
       }
 
-      // Sweep main line
+      // Main sweep line
       ctx.strokeStyle = col.accent;
       ctx.globalAlpha = 0.5;
       ctx.lineWidth = 2;
@@ -1231,26 +1383,96 @@ const { animation } = Astro.props;
       ctx.lineTo(cx + Math.cos(sweepAngle) * radius, cy + Math.sin(sweepAngle) * radius);
       ctx.stroke();
 
-      // Points
+      // Target movement (1 per 5s = 300 frames)
+      if (moveTimer % 300 === 0 && targets.length > 0) {
+        var mi = Math.floor(Math.random() * pointCount);
+        var tgt = targets[mi];
+        var oldX = tgt.x, oldY = tgt.y;
+        var newAngle = Math.random() * Math.PI * 2;
+        var newDist = Math.random() * radius;
+        tgt.x = cx + Math.cos(newAngle) * newDist;
+        tgt.y = cy + Math.sin(newAngle) * newDist;
+        tgt.moveTrail = [];
+        for (var f = 0; f < 10; f++) {
+          tgt.moveTrail.push({ x: oldX + (tgt.x - oldX) * f / 10, y: oldY + (tgt.y - oldY) * f / 10, frame: moveTimer + f });
+        }
+      }
+
+      // Targets
+      ctx.fillStyle = col.accent;
       for (var i = 0; i < pointCount; i++) {
-        var p = points[i];
+        var p = targets[i];
+
+        // Sweep hit detection
         var pAngle = Math.atan2(p.y - cy, p.x - cx);
         var diff = ((sweepAngle - pAngle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-        if (diff < wedgeWidth) p.lastHit = t;
+        if (diff < wedgeWidth) {
+          p.lastHit = t;
+          p.bloomSize = 8;
+        }
 
-        var brightness = Math.exp(-(t - p.lastHit) * 0.003);
+        // Bloom decay
+        if (p.bloomSize > p.size) {
+          p.bloomSize *= 0.9;
+          if (p.bloomSize < p.size + 0.5) p.bloomSize = p.size;
+        }
+
+        var brightness = 0.8 * Math.exp(-(t - p.lastHit) * 0.003);
         if (brightness < 0.02) continue;
-        ctx.fillStyle = col.accent;
-        ctx.globalAlpha = brightness * 0.8;
+
+        ctx.globalAlpha = brightness;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.bloomSize > p.size ? p.bloomSize : p.size, 0, Math.PI * 2);
         ctx.fill();
+
+        // Move trail
+        if (p.moveTrail.length > 0) {
+          ctx.globalAlpha = 0.3;
+          ctx.strokeStyle = col.accent;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          for (var f = 0; f < p.moveTrail.length; f++) {
+            var mt = p.moveTrail[f];
+            if (moveTimer - mt.frame > 10) continue;
+            if (f === 0) ctx.moveTo(mt.x, mt.y);
+            else ctx.lineTo(mt.x, mt.y);
+          }
+          ctx.stroke();
+          if (moveTimer - p.moveTrail[0].frame > 15) p.moveTrail = [];
+        }
       }
+
+      // Target clusters (connect 3+ within 40px)
+      if (quality >= 0.5) {
+        ctx.strokeStyle = col.accent;
+        ctx.globalAlpha = 0.1;
+        ctx.lineWidth = 0.5;
+        for (var i = 0; i < pointCount; i++) {
+          for (var j = i + 1; j < pointCount; j++) {
+            var dx = targets[i].x - targets[j].x;
+            var dy = targets[i].y - targets[j].y;
+            if (Math.sqrt(dx * dx + dy * dy) < 40) {
+              ctx.beginPath();
+              ctx.moveTo(targets[i].x, targets[i].y);
+              ctx.lineTo(targets[j].x, targets[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      // Center heartbeat
+      var heartbeat = 0.3 + Math.sin(t * 0.003) * 0.1;
+      ctx.fillStyle = col.accent;
+      ctx.globalAlpha = heartbeat;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.fill();
 
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { points = []; }
+    function cleanup() { targets = []; }
     return { init: init, frame: frame, cleanup: cleanup };
   })();
 
@@ -1258,145 +1480,176 @@ const { animation } = Astro.props;
     var w, h, col;
     var tiles = [];
     var fragments = [];
-    var seeds = [];
-    var tileSize = 10;
+    var tileSize = 15;
     var dissolvedCount = 0;
     var totalTiles = 0;
-    var reforming = false;
-    var reformAlpha = 1;
+    var reassembling = false;
+    var reassembleFrame = 0;
     var frameCount = 0;
-
-    function init(cw, ch, colors) {
-      w = cw; h = ch; col = colors;
-      tileSize = 10;
-      buildGrid();
-    }
 
     function buildGrid() {
       tiles = [];
       fragments = [];
       dissolvedCount = 0;
-      reforming = false;
-      reformAlpha = 1;
+      reassembling = false;
+      reassembleFrame = 0;
       var cols = Math.floor(w / tileSize);
       var rows = Math.floor(h / tileSize);
       totalTiles = cols * rows;
       for (var r = 0; r < rows; r++) {
         for (var c = 0; c < cols; c++) {
-          tiles.push({ x: c * tileSize, y: r * tileSize, stability: 1.0, state: 'intact' });
+          tiles.push({ x: c * tileSize, y: r * tileSize, stability: 1.0, state: 'intact', glitchX: 0, glitchY: 0 });
         }
       }
-      seeds = [
-        { x: w * 0.3, y: h * 0.4 },
-        { x: w * 0.7, y: h * 0.6 }
-      ];
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function init(cw, ch, colors) {
+      w = cw; h = ch; col = colors;
+      frameCount = 0;
+      buildGrid();
+    }
+
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
       frameCount++;
 
-      // Check if we need to reform
-      if (dissolvedCount > totalTiles * 0.8 && !reforming) {
-        reforming = true;
-        reformAlpha = 1;
+      // Reassembly cycle
+      if (dissolvedCount > totalTiles * 0.8 && !reassembling) {
+        reassembling = true;
+        reassembleFrame = 0;
       }
 
-      if (reforming) {
-        reformAlpha -= 0.005;
-        if (reformAlpha <= 0) {
+      if (reassembling) {
+        reassembleFrame++;
+        if (reassembleFrame > 120) {
           buildGrid();
           return;
         }
+        // Reverse fragment velocities, snap toward grid
+        for (var i = fragments.length - 1; i >= 0; i--) {
+          var fr = fragments[i];
+          fr.vx *= 0.9;
+          fr.vy *= 0.9;
+          fr.alpha = Math.min(0.6, fr.alpha + 0.01);
+        }
       }
 
-      // Erode tiles from seed points
-      for (var i = 0; i < tiles.length; i++) {
-        var tile = tiles[i];
-        if (tile.state === 'dissolved') continue;
-        for (var s = 0; s < seeds.length; s++) {
-          var dx = tile.x + tileSize / 2 - seeds[s].x;
-          var dy = tile.y + tileSize / 2 - seeds[s].y;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          var erosion = 0.002 / (1 + dist * 0.01);
-          tile.stability -= erosion;
-        }
+      // Dissolution seeds
+      var seeds = [{ x: w * 0.3, y: h * 0.4 }, { x: w * 0.7, y: h * 0.6 }];
 
-        if (tile.stability < 0 && tile.state !== 'dissolved') {
-          tile.state = 'dissolved';
-          dissolvedCount++;
-        } else if (tile.stability < 0.3 && tile.state !== 'fragmenting') {
-          tile.state = 'fragmenting';
-          // Spawn fragments
-          for (var f = 0; f < 3; f++) {
-            fragments.push({
-              x: tile.x + Math.random() * tileSize,
-              y: tile.y + Math.random() * tileSize,
-              w: tileSize * 0.4,
-              h: tileSize * 0.4,
-              vx: (Math.random() - 0.5) * 0.5,
-              vy: (Math.random() - 0.5) * 0.5,
-              rot: Math.random() * Math.PI * 2,
-              rotV: (Math.random() - 0.5) * 0.02,
-              alpha: 0.6,
-              glitch: false
-            });
+      // Mouse dissolution seed
+      if (mouse && mouse.active) {
+        seeds.push({ x: mouse.x * w, y: mouse.y * h });
+      }
+
+      // Glitch: teleport max 3 intact tiles per frame
+      var glitchCount = 0;
+      for (var i = 0; i < tiles.length && glitchCount < 3; i++) {
+        tiles[i].glitchX = 0;
+        tiles[i].glitchY = 0;
+        if (tiles[i].state === 'intact' && Math.random() < 0.001) {
+          tiles[i].glitchX = (Math.random() - 0.5) * 30;
+          tiles[i].glitchY = (Math.random() - 0.5) * 30;
+          glitchCount++;
+        }
+      }
+
+      // Erode tiles
+      if (!reassembling) {
+        for (var i = 0; i < tiles.length; i++) {
+          var tile = tiles[i];
+          if (tile.state === 'dissolved') continue;
+
+          for (var s = 0; s < seeds.length; s++) {
+            var dx = tile.x + tileSize / 2 - seeds[s].x;
+            var dy = tile.y + tileSize / 2 - seeds[s].y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            // Mouse seed has stronger erosion within 50px
+            var rate = s >= 2 && dist < 50 ? 0.02 : 0.002 / (1 + dist * 0.01);
+            tile.stability -= rate;
           }
-        } else if (tile.stability < 0.7 && tile.state === 'intact') {
-          tile.state = 'cracked';
+
+          // Mouse proximity: cursor within 50px of intact tiles sets them cracked
+          if (mouse && mouse.active && tile.state === 'intact') {
+            var mdx = tile.x + tileSize / 2 - mouse.x * w;
+            var mdy = tile.y + tileSize / 2 - mouse.y * h;
+            var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+            if (mdist < 50) {
+              tile.state = 'cracked';
+            }
+          }
+
+          if (tile.stability < 0 && tile.state !== 'dissolved') {
+            tile.state = 'dissolved';
+            dissolvedCount++;
+          } else if (tile.stability < 0.3 && tile.state !== 'fragmenting' && tile.state !== 'dissolved') {
+            tile.state = 'fragmenting';
+            if (fragments.length >= 500) continue;
+            for (var f = 0; f < 3; f++) {
+              var goesUp = Math.random() < 0.05;
+              fragments.push({
+                x: tile.x + Math.random() * tileSize,
+                y: tile.y + Math.random() * tileSize,
+                w: tileSize * 0.4,
+                h: tileSize * 0.4,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: goesUp ? -0.3 : 0,
+                gravity: goesUp ? -0.01 : 0.05,
+                rot: Math.random() * Math.PI * 2,
+                rotV: (Math.random() - 0.5) * 0.02,
+                alpha: 0.5
+              });
+            }
+          } else if (tile.stability < 0.7 && tile.state === 'intact') {
+            tile.state = 'cracked';
+          }
         }
       }
 
       // Draw tiles
-      var globalAlpha = reforming ? reformAlpha : 1;
       for (var i = 0; i < tiles.length; i++) {
         var tile = tiles[i];
         if (tile.state === 'dissolved') continue;
 
-        ctx.fillStyle = col.accent;
+        var drawX = tile.x + tile.glitchX;
+        var drawY = tile.y + tile.glitchY;
 
         if (tile.state === 'intact') {
-          ctx.globalAlpha = 0.2 * globalAlpha;
-          ctx.fillRect(tile.x, tile.y, tileSize - 1, tileSize - 1);
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.2;
+          ctx.fillRect(drawX, drawY, tileSize - 1, tileSize - 1);
         } else if (tile.state === 'cracked') {
-          ctx.globalAlpha = 0.15 * globalAlpha;
-          ctx.fillRect(tile.x, tile.y, tileSize - 1, tileSize - 1);
-          ctx.strokeStyle = col.accent;
-          ctx.globalAlpha = 0.25 * globalAlpha;
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.15;
+          ctx.fillRect(drawX, drawY, tileSize - 1, tileSize - 1);
+          // Slate blue crack line
+          ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',0.25)';
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(tile.x, tile.y);
-          ctx.lineTo(tile.x + tileSize, tile.y + tileSize);
+          ctx.moveTo(drawX, drawY);
+          ctx.lineTo(drawX + tileSize, drawY + tileSize);
           ctx.stroke();
         }
-        // fragmenting tiles are represented by fragments array
       }
 
-      // Draw and update fragments
+      // Draw fragments
       var fragLimit = quality < 0.5 ? Math.floor(fragments.length * 0.5) : fragments.length;
       for (var i = fragments.length - 1; i >= 0; i--) {
         var fr = fragments[i];
         fr.x += fr.vx;
+        fr.vy += fr.gravity;
         fr.y += fr.vy;
         fr.rot += fr.rotV;
         fr.alpha -= 0.003;
         if (fr.alpha <= 0) { fragments[i] = fragments[fragments.length - 1]; fragments.pop(); continue; }
         if (i >= fragLimit) continue;
 
-        // 5% glitch chance
-        var drawX = fr.x;
-        var drawY = fr.y;
-        if (Math.random() < 0.05) {
-          drawX += (Math.random() - 0.5) * 10;
-          drawY += (Math.random() - 0.5) * 10;
-        }
-
         ctx.save();
-        ctx.translate(drawX, drawY);
+        ctx.translate(fr.x, fr.y);
         ctx.rotate(fr.rot);
         ctx.fillStyle = col.accent;
-        ctx.globalAlpha = fr.alpha * 0.5 * globalAlpha;
+        ctx.globalAlpha = fr.alpha * 0.5;
         ctx.fillRect(-fr.w / 2, -fr.h / 2, fr.w, fr.h);
         ctx.restore();
       }
@@ -1412,12 +1665,14 @@ const { animation } = Astro.props;
     var w, h, col;
     var columns = [];
     var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-    var plainTexts = ['priv','lock','safe','hash','key','seal','gate','mask'];
+    var plainTexts = ['seal','lock','hash','gate','key','safe','mask','code'];
     var charSize = 12;
-    var rowLockFrame = 0;
-    var rowLockY = 0;
     var frameCount = 0;
-    var cachedChars = null; // pre-rendered random chars, updated every 3 frames
+    var cachedChars = null;
+    var sweepY = -1;
+    var sweepFrame = 0;
+    var SWEEP_INTERVAL = 300;
+    var lockPositions = [];
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
@@ -1435,23 +1690,30 @@ const { animation } = Astro.props;
         });
       }
       frameCount = 0;
-      rowLockFrame = 0;
-      rowLockY = 0;
+      sweepFrame = 0;
+      sweepY = -1;
       cachedChars = null;
+      // Lock positions
+      lockPositions = [];
+      for (var i = 0; i < 3; i++) {
+        lockPositions.push({
+          x: Math.floor(Math.random() * colCount) * 16 + 8,
+          y: Math.floor(Math.random() * Math.floor(ch / charSize)) * charSize + charSize
+        });
+      }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       ctx.clearRect(0, 0, w, h);
       frameCount++;
 
       var rows = Math.floor(h / charSize);
       var colCount = quality < 0.5 ? Math.floor(columns.length * 0.6) : columns.length;
-      var fontSize = quality < 0.5 ? 14 : charSize;
+      var fontSize = charSize;
 
-      // Regenerate random chars every 3 frames to cut draw overhead
-      var needRefresh = !cachedChars || frameCount % 3 === 0 || (cachedChars.length !== colCount * rows);
-      if (needRefresh) {
+      // Refresh random chars every 5 frames
+      if (!cachedChars || frameCount % 5 === 0 || (cachedChars.length !== colCount * rows)) {
         cachedChars = [];
         for (var ci = 0; ci < colCount; ci++) {
           for (var ri = 0; ri < rows; ri++) {
@@ -1460,25 +1722,21 @@ const { animation } = Astro.props;
         }
       }
 
+      // Decryption sweep
+      sweepFrame++;
+      if (sweepFrame >= SWEEP_INTERVAL) {
+        sweepFrame = 0;
+        sweepY = Math.floor(Math.random() * rows) * fontSize;
+      }
+      var sweepActive = sweepFrame < 30; // sweep visible for 30 frames
+      var sweepProgress = sweepFrame / 30; // 0-1 over sweep duration
+
+      // Mouse position in canvas coords
+      var mx = mouse && mouse.active ? mouse.x * w : -9999;
+      var my = mouse && mouse.active ? mouse.y * h : -9999;
+
       ctx.font = fontSize + 'px monospace';
       ctx.textAlign = 'center';
-
-      // Row lock effect
-      if (frameCount - rowLockFrame > 300) {
-        rowLockFrame = frameCount;
-        rowLockY = Math.floor(Math.random() * rows) * fontSize;
-      }
-      var showLock = (frameCount - rowLockFrame) < 10;
-
-      if (showLock) {
-        ctx.strokeStyle = col.accent;
-        ctx.globalAlpha = 0.3 * (1 - (frameCount - rowLockFrame) / 10);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(0, rowLockY + fontSize / 2);
-        ctx.lineTo(w, rowLockY + fontSize / 2);
-        ctx.stroke();
-      }
 
       for (var c = 0; c < colCount; c++) {
         var column = columns[c];
@@ -1489,30 +1747,58 @@ const { animation } = Astro.props;
           var y = r * fontSize + fontSize;
           var isPlain = r >= plainWindowStart && r < plainWindowStart + column.plainLen;
 
+          // Mouse proximity decrypt
+          var dx = column.x - mx;
+          var dy = y - my;
+          var mouseDist = Math.sqrt(dx * dx + dy * dy);
+          var mouseDecrypt = mouseDist < 80;
+
+          // Sweep decrypt
+          var sweepDecrypt = sweepActive && Math.abs(y - sweepY) < fontSize * 2;
+
           var ch2;
-          if (isPlain) {
-            var pi = r - plainWindowStart;
-            ch2 = column.plainText[pi % column.plainText.length];
+          if (isPlain || mouseDecrypt || sweepDecrypt) {
+            var pi = (r - plainWindowStart) % column.plainText.length;
+            ch2 = column.plainText[pi];
             ctx.fillStyle = col.accent;
-            ctx.globalAlpha = 0.7;
+            ctx.globalAlpha = mouseDecrypt ? 0.5 : (sweepDecrypt ? 0.6 : 0.6);
           } else {
             ch2 = cachedChars[c * rows + r];
-            ctx.fillStyle = col.accent;
-            ctx.globalAlpha = 0.2;
-          }
-
-          if (showLock && Math.abs(y - rowLockY - fontSize / 2) < fontSize) {
-            ctx.globalAlpha = 0.5;
+            ctx.fillStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',1)';
+            ctx.globalAlpha = 0.15;
           }
 
           ctx.fillText(ch2, column.x, y);
         }
       }
 
+      // Sweep scanline
+      if (sweepActive) {
+        ctx.strokeStyle = col.accent;
+        ctx.globalAlpha = 0.4 * (1 - sweepProgress);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, sweepY);
+        ctx.lineTo(w, sweepY);
+        ctx.stroke();
+      }
+
+      // Lock icons pulsing
+      ctx.font = fontSize + 'px monospace';
+      ctx.textAlign = 'center';
+      for (var i = 0; i < lockPositions.length; i++) {
+        var lp = lockPositions[i];
+        var lockAlpha = 0.3 + Math.sin(frameCount * 0.1 + i * 2) * 0.15;
+        ctx.fillStyle = col.accent;
+        ctx.globalAlpha = lockAlpha;
+        ctx.fillText('[', lp.x - 6, lp.y);
+        ctx.fillText(']', lp.x + 6, lp.y);
+      }
+
       ctx.globalAlpha = 1;
     }
 
-    function cleanup() { columns = []; }
+    function cleanup() { columns = []; cachedChars = null; lockPositions = []; }
     return { init: init, frame: frame, cleanup: cleanup };
   })();
 
@@ -1520,6 +1806,8 @@ const { animation } = Astro.props;
     var w, h, col;
     var orbits = [];
     var cx, cy;
+    var ORBIT_COUNT = 7;
+    var precessionOffset = 0;
 
     function init(cw, ch, colors) {
       w = cw; h = ch; col = colors;
@@ -1527,82 +1815,127 @@ const { animation } = Astro.props;
       cy = h / 2;
       var baseRadius = Math.min(w, h) * 0.08;
       orbits = [];
-      for (var i = 0; i < 5; i++) {
+      precessionOffset = 0;
+      for (var i = 0; i < ORBIT_COUNT; i++) {
         orbits.push({
           semiMajor: baseRadius * (i + 1.5),
           eccentricity: 0.1 + Math.random() * 0.2,
-          tilt: (Math.random() - 0.5) * 0.15,
+          tilt: (Math.random() - 0.5) * 0.3,
           period: 2000 + i * 2000 + Math.random() * 2000,
-          trail: []
+          bodySize: 3 + Math.random() * 5,
+          trail: [],
+          trailIdx: 0
         });
       }
     }
 
-    function frame(ctx, cw, ch, t, colors, quality) {
+    function frame(ctx, cw, ch, t, colors, quality, mouse) {
       w = cw; h = ch; col = colors;
       cx = w / 2;
       cy = h / 2;
       ctx.clearRect(0, 0, w, h);
 
+      precessionOffset += 0.001 / 60;
       var trailLen = quality < 0.5 ? 15 : 30;
       var positions = [];
+
+      // Central star glow
+      ctx.fillStyle = col.accent;
+      ctx.globalAlpha = 0.3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 0.08;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+      ctx.fill();
 
       for (var i = 0; i < orbits.length; i++) {
         var orb = orbits[i];
         var semiMinor = orb.semiMajor * (1 - orb.eccentricity);
+        var tilt = orb.tilt + precessionOffset;
         var angle = (t / orb.period) * Math.PI * 2;
 
         // Draw orbit guide
         ctx.strokeStyle = col.accent;
-        ctx.globalAlpha = 0.12;
-        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.06;
+        ctx.lineWidth = 0.5;
         ctx.save();
         ctx.translate(cx, cy);
-        ctx.rotate(orb.tilt);
+        ctx.rotate(tilt);
         ctx.beginPath();
         ctx.ellipse(0, 0, orb.semiMajor, semiMinor, 0, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
 
         // Object position
-        var ox = cx + Math.cos(angle) * orb.semiMajor * Math.cos(orb.tilt) - Math.sin(angle) * semiMinor * Math.sin(orb.tilt);
-        var oy = cy + Math.cos(angle) * orb.semiMajor * Math.sin(orb.tilt) + Math.sin(angle) * semiMinor * Math.cos(orb.tilt);
+        var cosTilt = Math.cos(tilt), sinTilt = Math.sin(tilt);
+        var ox = cx + Math.cos(angle) * orb.semiMajor * cosTilt - Math.sin(angle) * semiMinor * sinTilt;
+        var oy = cy + Math.cos(angle) * orb.semiMajor * sinTilt + Math.sin(angle) * semiMinor * cosTilt;
 
-        orb.trail.push({ x: ox, y: oy });
-        if (orb.trail.length > trailLen) orb.trail.shift();
+        // Ring buffer trail
+        if (orb.trail.length < trailLen) {
+          orb.trail.push({ x: ox, y: oy });
+        } else {
+          orb.trail[orb.trailIdx] = { x: ox, y: oy };
+          orb.trailIdx = (orb.trailIdx + 1) % trailLen;
+        }
 
-        // Draw trail
+        // Draw trail as gradient path
         if (orb.trail.length > 1) {
           ctx.strokeStyle = col.accent;
           ctx.lineWidth = 1.5;
-          for (var j = 1; j < orb.trail.length; j++) {
+          for (var j = 0; j < orb.trail.length; j++) {
+            var idx = (orb.trailIdx + j) % orb.trail.length;
+            var nextIdx = (orb.trailIdx + j + 1) % orb.trail.length;
+            if (j >= orb.trail.length - 1) break;
             ctx.globalAlpha = (j / orb.trail.length) * 0.5;
             ctx.beginPath();
-            ctx.moveTo(orb.trail[j - 1].x, orb.trail[j - 1].y);
-            ctx.lineTo(orb.trail[j].x, orb.trail[j].y);
+            ctx.moveTo(orb.trail[idx].x, orb.trail[idx].y);
+            ctx.lineTo(orb.trail[nextIdx].x, orb.trail[nextIdx].y);
             ctx.stroke();
           }
         }
 
-        // Draw object
+        // Body with halo glow
         ctx.fillStyle = col.accent;
+        ctx.globalAlpha = 0.15;
+        ctx.beginPath();
+        ctx.arc(ox, oy, 12, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.globalAlpha = 0.85;
         ctx.beginPath();
-        ctx.arc(ox, oy, 5, 0, Math.PI * 2);
+        ctx.arc(ox, oy, orb.bodySize, 0, Math.PI * 2);
         ctx.fill();
 
         positions.push({ x: ox, y: oy, angle: angle });
+
+        // Lagrange points (L4, L5 at ±60° from body)
+        if (quality >= 0.5) {
+          ctx.fillStyle = col.accent;
+          ctx.globalAlpha = 0.1;
+          for (var l = -1; l <= 1; l += 2) {
+            var la = angle + l * Math.PI / 3;
+            var lx = cx + Math.cos(la) * orb.semiMajor * cosTilt - Math.sin(la) * semiMinor * sinTilt;
+            var ly = cy + Math.cos(la) * orb.semiMajor * sinTilt + Math.sin(la) * semiMinor * cosTilt;
+            ctx.beginPath();
+            ctx.arc(lx, ly, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
       }
 
-      // Conjunction lines
+      // Conjunction lines (slate blue)
       if (quality >= 0.5) {
         for (var a = 0; a < positions.length; a++) {
           for (var b = a + 1; b < positions.length; b++) {
             var angleDiff = Math.abs(positions[a].angle - positions[b].angle) % (Math.PI * 2);
             if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
-            if (angleDiff < 15 * Math.PI / 180) {
-              ctx.strokeStyle = col.accent;
-              ctx.globalAlpha = 0.3 * (1 - angleDiff / (15 * Math.PI / 180));
+            var threshold = 15 * Math.PI / 180;
+            if (angleDiff < threshold) {
+              var alpha = 0.3 * (1 - angleDiff / threshold);
+              ctx.strokeStyle = 'rgba(' + SECONDARY_RGB[0] + ',' + SECONDARY_RGB[1] + ',' + SECONDARY_RGB[2] + ',' + alpha + ')';
               ctx.lineWidth = 1;
               ctx.beginPath();
               ctx.moveTo(positions[a].x, positions[a].y);
