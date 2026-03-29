@@ -45,6 +45,8 @@ exclude = [
   "https?://adrianwedd\\.com",
   # Social media Worker endpoint — no HTML pages, lychee would get false 404s
   "https?://social\\.adrianwedd\\.com",
+  # Expired SSL cert (not our problem)
+  "https?://nownownow\\.com",
 ]
 
 # Exclude these file patterns from being checked AS SOURCES
