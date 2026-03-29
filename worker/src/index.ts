@@ -3,6 +3,7 @@ import type { Env } from './env';
 import { verifyBearer } from './auth';
 import { createFacebookPlatform } from './platforms/facebook';
 import type { SocialPost, IdempotencyRecord } from './platforms/types';
+import { processComments } from './cron/comments';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -364,7 +365,31 @@ app.post('/api/cron/publish', async (c) => {
 });
 
 // ── POST /api/cron/comments ───────────────────────────────────────────────────
-// Implemented in Task 6
+
+app.post('/api/cron/comments', async (c) => {
+  const env = c.env;
+  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET);
+  if (!authOk) return unauthorized();
+
+  const cronLock = await env.SOCIAL.get('cron-lock:comments');
+  if (cronLock) return json({ skipped: true, reason: 'locked' });
+  await env.SOCIAL.put('cron-lock:comments', '1', { expirationTtl: 300 });
+
+  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
+
+  try {
+    const tokenHealth = await fb.debugAuth();
+    if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
+      return json({ error: 'Facebook data access expired' }, 503);
+    }
+
+    const result = await processComments(fb, env.SOCIAL);
+
+    return json({ ...result, tokenExpiresInDays: tokenHealth.daysUntilExpiry });
+  } finally {
+    await env.SOCIAL.delete('cron-lock:comments');
+  }
+});
 
 // ── GET /api/health ───────────────────────────────────────────────────────────
 
