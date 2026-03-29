@@ -9,6 +9,7 @@ date: 2026-03-22
 series: "PiCar-X"
 seriesOrder: 2
 audioUrl: "/notebook-assets/afterwords/audio.mp3"
+heroImage: "/notebook-assets/afterwords/infographic.webp"
 audioDuration: "21:43"
 ---
 
