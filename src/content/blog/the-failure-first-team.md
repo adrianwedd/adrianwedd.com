@@ -4,7 +4,7 @@ description: "Fifteen specialist AI agents, one methodology. How adversarial AI 
 date: 2026-03-30
 tags: ["ai", "ai-safety", "research", "adversarial", "team"]
 draft: false
-heroImage: "/og/blog/the-failure-first-team.png"
+heroImage: "/notebook-assets/the-failure-first-team/infographic.webp"
 audioUrl: "/notebook-assets/the-failure-first-team/audio.mp3"
 ---
 
