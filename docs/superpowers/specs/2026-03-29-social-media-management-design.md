@@ -20,7 +20,7 @@ Automated social media management for adrianwedd.com — auto-publishing new blo
 
 - **Site:** adrianwedd.com (Astro 5, GitHub Pages, fully static)
 - **Meta App ID:** `160779818397`
-- **Facebook Page ID:** `213409802761321` ([AdrianWeddDotCom](https://www.facebook.com/AdrianWeddDotCom/))
+- **Facebook Page ID:** `35753603727` ([AdrianWeddDotCom](https://www.facebook.com/AdrianWeddDotCom/))
 - **API version:** v21.0
 - **Domain verification:** TXT record added 2026-03-29 (`facebook-domain-verification=ijht0ednfdllp47fypz3w5hhyyx72s`)
 - **Reference implementation:** `../thiswasntinthebrochure.wtf/website/src/lib/facebook.ts` (ported with modifications)
@@ -349,7 +349,7 @@ Idempotency record schema:
 {
   "key": "auto-the-cognitive-cage-a1b2c3d",
   "status": "published",           // or "failed"
-  "platformPostId": "213409802761321_123456",
+  "platformPostId": "35753603727_123456",
   "completedAt": "2026-03-29T09:15:00Z",
   "error": null
 }
@@ -733,7 +733,7 @@ binding = "SOCIAL"
 id = "<created-id>"
 
 [vars]
-FACEBOOK_PAGE_ID = "213409802761321"
+FACEBOOK_PAGE_ID = "35753603727"
 GRAPH_API_VERSION = "v21.0"
 ```
 
@@ -1006,7 +1006,7 @@ Every cron run calls `debugToken()` and:
 {
   "version": 1,
   "description": "Facebook post queue — seed input for scheduled content (KV is authoritative for state)",
-  "pageId": "213409802761321",
+  "pageId": "35753603727",
   "posts": [
     {
       "id": "adhoc-20260401-01",

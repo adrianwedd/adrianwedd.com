@@ -115,7 +115,7 @@ binding = "SOCIAL"
 id = "PLACEHOLDER_UNTIL_CREATED"
 
 [vars]
-FACEBOOK_PAGE_ID = "213409802761321"
+FACEBOOK_PAGE_ID = "35753603727"
 GRAPH_API_VERSION = "v21.0"
 ```
 
@@ -378,7 +378,7 @@ describe('classifyGraphError', () => {
 });
 
 describe('publishPost', () => {
-  const fb = createFacebookPlatform('213409802761321', 'fake-token', 'fake-app-token', 'v21.0');
+  const fb = createFacebookPlatform('35753603727', 'fake-token', 'fake-app-token', 'v21.0');
 
   const basePost: SocialPost = {
     id: 'test-001',
@@ -396,15 +396,15 @@ describe('publishPost', () => {
   it('publishes a text post with Bearer auth header', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ id: '213409802761321_123456' }),
+      json: async () => ({ id: '35753603727_123456' }),
     });
 
     const result = await fb.publishPost(basePost);
     expect(result.success).toBe(true);
-    expect(result.platformPostId).toBe('213409802761321_123456');
+    expect(result.platformPostId).toBe('35753603727_123456');
 
     const [url, options] = mockFetch.mock.calls[0];
-    expect(url).toContain('/213409802761321/feed');
+    expect(url).toContain('/35753603727/feed');
     expect(options.headers['Authorization']).toBe('Bearer fake-token');
     expect(options.body).not.toContain('access_token');
   });
@@ -412,7 +412,7 @@ describe('publishPost', () => {
   it('publishes a photo post to /photos endpoint', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ id: 'photo_123', post_id: '213409802761321_789' }),
+      json: async () => ({ id: 'photo_123', post_id: '35753603727_789' }),
     });
 
     const photoPost: SocialPost = { ...basePost, type: 'photo', imageUrl: 'https://example.com/img.png' };
@@ -420,7 +420,7 @@ describe('publishPost', () => {
     expect(result.success).toBe(true);
 
     const [url, options] = mockFetch.mock.calls[0];
-    expect(url).toContain('/213409802761321/photos');
+    expect(url).toContain('/35753603727/photos');
     expect(options.body).toContain('caption=');
   });
 
@@ -435,7 +435,7 @@ describe('publishPost', () => {
   it('publishes a link post with link param', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ id: '213409802761321_456' }),
+      json: async () => ({ id: '35753603727_456' }),
     });
 
     const linkPost: SocialPost = { ...basePost, type: 'link', link: 'https://adrianwedd.com/blog/test/' };
@@ -1804,7 +1804,7 @@ git commit -m "feat(social): github actions for autopublish and cron triggers"
 {
   "version": 1,
   "description": "Facebook post queue — seed input for scheduled content (KV is authoritative for state)",
-  "pageId": "213409802761321",
+  "pageId": "35753603727",
   "posts": []
 }
 ```

@@ -1,0 +1,121 @@
+name: Social Auto-Publish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/content/blog/**'
+      - 'src/content/projects/**'
+      - 'social/facebook-posts.json'
+
+jobs:
+  autopublish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0    # Full history for push range diff
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install frontmatter extractor deps
+        run: npm install --no-save gray-matter
+
+      - name: Detect new content
+        id: detect
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+        run: |
+          # Full push range — catches multi-commit pushes
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            # First push to branch — compare against parent
+            BEFORE="HEAD~1"
+          fi
+          NEW_FILES=$(git diff "$BEFORE".."$AFTER" --name-only --diff-filter=A -- \
+            'src/content/blog/*.md' 'src/content/projects/*.md')
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NEW_FILES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Publish new content to social
+        if: steps.detect.outputs.files != ''
+        env:
+          SOCIAL_WORKER_URL: ${{ secrets.SOCIAL_WORKER_URL }}
+          SOCIAL_PUBLISH_SECRET: ${{ secrets.SOCIAL_PUBLISH_SECRET }}
+          DETECTED_FILES: ${{ steps.detect.outputs.files }}
+        run: |
+          echo "$DETECTED_FILES" | while IFS= read -r file; do
+            [ -z "$file" ] && continue
+
+            # Extract frontmatter with Node (handles colons, multiline, quotes)
+            FRONTMATTER=$(node scripts/extract-frontmatter.mjs "$file")
+            TITLE=$(echo "$FRONTMATTER" | jq -r '.title // empty')
+            DESC=$(echo "$FRONTMATTER" | jq -r '.description // empty')
+            DRAFT=$(echo "$FRONTMATTER" | jq -r '.draft // false')
+
+            [ "$DRAFT" = "true" ] && { echo "Skipping draft: $file"; continue; }
+            [ -z "$TITLE" ] && { echo "Skipping (no title): $file"; continue; }
+
+            # Determine content type and slug
+            if echo "$file" | grep -q "^src/content/blog/"; then
+              SLUG=$(basename "$file" .md)
+              URL="https://adrianwedd.com/blog/${SLUG}/"
+              MESSAGE=$(printf "%s\n\n%s\n\n%s" "$TITLE" "$DESC" "$URL")
+            elif echo "$file" | grep -q "^src/content/projects/"; then
+              SLUG=$(basename "$file" .md)
+              URL="https://adrianwedd.com/projects/${SLUG}/"
+              MESSAGE=$(printf "New project: %s\n\n%s\n\n%s" "$TITLE" "$DESC" "$URL")
+            else
+              continue
+            fi
+
+            IDEMPOTENCY_KEY="auto-${SLUG}-$(git rev-parse --short HEAD)"
+
+            RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${SOCIAL_WORKER_URL}/api/publish" \
+              -H "Authorization: Bearer ${SOCIAL_PUBLISH_SECRET}" \
+              -H "Content-Type: application/json" \
+              --data "$(jq -n \
+                --arg platform "facebook" \
+                --arg type "link" \
+                --arg message "$MESSAGE" \
+                --arg link "$URL" \
+                --arg key "$IDEMPOTENCY_KEY" \
+                '{platform: $platform, type: $type, message: $message, link: $link, idempotencyKey: $key}')" \
+              --max-time 30)
+            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+            BODY=$(echo "$RESPONSE" | sed '$d')
+            echo "HTTP status: $HTTP_CODE"
+            echo "Response: $BODY"
+            if [ "$HTTP_CODE" != "200" ]; then
+              echo "::warning::Publish returned HTTP $HTTP_CODE for $SLUG"
+            else
+              echo "Published: $SLUG"
+            fi
+          done
+
+      - name: Sync queue if changed
+        env:
+          SOCIAL_WORKER_URL: ${{ secrets.SOCIAL_WORKER_URL }}
+          SOCIAL_PUBLISH_SECRET: ${{ secrets.SOCIAL_PUBLISH_SECRET }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+        run: |
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            BEFORE="HEAD~1"
+          fi
+          if git diff "$BEFORE".."$AFTER" --name-only -- 'social/facebook-posts.json' | grep -q .; then
+            echo "Queue file changed — syncing to KV"
+            HASH=$(sha256sum social/facebook-posts.json | cut -d' ' -f1)
+            POSTS=$(jq '.posts' social/facebook-posts.json)
+            curl -s -X POST "${SOCIAL_WORKER_URL}/api/queue/sync" \
+              -H "Authorization: Bearer ${SOCIAL_PUBLISH_SECRET}" \
+              -H "Content-Type: application/json" \
+              --data "$(jq -n --arg hash "$HASH" --argjson posts "$POSTS" '{hash: $hash, posts: $posts}')" \
+              --max-time 30
+            echo "Queue sync complete"
+          else
+            echo "Queue file unchanged — skipping sync"
+          fi

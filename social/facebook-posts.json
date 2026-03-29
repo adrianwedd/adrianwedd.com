@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "description": "Facebook post queue — seed input for scheduled content (KV is authoritative for state)",
+  "pageId": "35753603727",
+  "posts": []
+}
