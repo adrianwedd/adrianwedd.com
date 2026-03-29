@@ -49,6 +49,11 @@ export function createFacebookPlatform(
       }
     }
 
+    // Backdate post to appear at an earlier date in the page timeline
+    if (post.backdatedTime) {
+      params.set('backdated_time', post.backdatedTime);
+    }
+
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
