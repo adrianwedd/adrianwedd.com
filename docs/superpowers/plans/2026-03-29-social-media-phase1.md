@@ -173,7 +173,7 @@ export interface PublishResult {
 export interface Comment {
   id: string;
   postId: string;
-  authorIdHash: string;
+  rawAuthorId: string;          // Platform user ID — caller is responsible for hashing before storage
   message: string;
   createdTime: string;
   isFromPage: boolean;
@@ -378,7 +378,7 @@ describe('classifyGraphError', () => {
 });
 
 describe('publishPost', () => {
-  const fb = createFacebookPlatform('213409802761321', 'fake-token', 'fake-app-token');
+  const fb = createFacebookPlatform('213409802761321', 'fake-token', 'fake-app-token', 'v21.0');
 
   const basePost: SocialPost = {
     id: 'test-001',
@@ -512,8 +512,9 @@ export function createFacebookPlatform(
   pageId: string,
   pageToken: string,
   appToken: string,
+  graphVersion = 'v21.0',
 ): SocialPlatform {
-  const graphBase = `https://graph.facebook.com/v21.0`;
+  const graphBase = `https://graph.facebook.com/${graphVersion}`;
 
   async function publishPost(post: SocialPost): Promise<PublishResult> {
     if (post.type === 'photo' && !post.imageUrl) {
@@ -559,7 +560,9 @@ export function createFacebookPlatform(
       }
 
       const data = await res.json() as Record<string, unknown>;
-      const postId = (data.id as string) ?? (data.post_id as string) ?? undefined;
+      // For photo posts, Graph API returns { id: photo_id, post_id: page_post_id }
+      // Prefer post_id (the page feed entry) over id (the photo object)
+      const postId = (data.post_id as string) ?? (data.id as string) ?? undefined;
       return { success: true, platformPostId: postId, isTransient: false, isAuthError: false };
     } catch (error) {
       console.error('Graph API fetch failed:', error);
@@ -638,7 +641,7 @@ export function createFacebookPlatform(
         comments.push({
           id: c.id,
           postId,
-          authorIdHash: '', // Hashing is caller's responsibility
+          rawAuthorId: c.from?.id ?? '',  // Caller is responsible for hashing before storage
           message: c.message,
           createdTime: c.created_time,
           isFromPage: c.from?.id === pageId,
@@ -660,7 +663,7 @@ export function createFacebookPlatform(
     return (body.data ?? []).map(c => ({
       id: c.id,
       postId: commentId,
-      authorIdHash: '',
+      rawAuthorId: c.from?.id ?? '',
       message: c.message,
       createdTime: c.created_time,
       isFromPage: c.from?.id === pageId,
@@ -900,7 +903,8 @@ function json(body: Record<string, unknown>, status = 200): Response {
 
 app.post('/api/publish', async (c) => {
   const env = c.env;
-  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET);
+  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)
+    || await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET);
   if (!authOk) return unauthorized();
 
   const body = await c.req.json<{
@@ -922,7 +926,7 @@ app.post('/api/publish', async (c) => {
     return json({ alreadyFailed: true, error: existing.error });
   }
 
-  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN);
+  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
 
   const post: SocialPost = {
     id: body.idempotencyKey,
@@ -979,6 +983,9 @@ app.post('/api/queue', async (c) => {
   }>();
 
   const epoch = new Date(body.scheduledAt).getTime();
+  if (!Number.isFinite(epoch) || epoch <= 0) {
+    return json({ error: 'Invalid scheduledAt — must be valid ISO 8601 datetime' }, 400);
+  }
   const randomSuffix = Math.random().toString(36).slice(2, 8);
   const id = `adhoc-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${randomSuffix}`;
 
@@ -1007,7 +1014,8 @@ app.post('/api/queue', async (c) => {
 
 app.post('/api/queue/sync', async (c) => {
   const env = c.env;
-  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET);
+  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)
+    || await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET);
   if (!authOk) return unauthorized();
 
   const body = await c.req.json<{
@@ -1126,99 +1134,110 @@ app.post('/api/cron/publish', async (c) => {
   if (cronLock) return json({ skipped: true, reason: 'locked' });
   await env.SOCIAL.put('cron-lock:publish', '1', { expirationTtl: 300 });
 
-  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN);
+  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
 
-  // Token health
-  const tokenHealth = await fb.debugAuth();
-  if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
-    console.error('Facebook data access has expired');
+  try {
+    // Token health
+    const tokenHealth = await fb.debugAuth();
+    if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
+      console.error('Facebook data access has expired');
+      return json({ error: 'Facebook data access expired' }, 503);
+    }
+    if (tokenHealth.daysUntilExpiry <= 7) {
+      console.error(`Facebook data access expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
+    } else if (tokenHealth.daysUntilExpiry <= 14) {
+      console.warn(`Facebook data access expires in ${tokenHealth.daysUntilExpiry} days`);
+    }
+
+    // Discover queued posts
+    const duePosts: Array<{ key: string; post: SocialPost }> = [];
+    let cursor: string | undefined;
+    do {
+      const list = await env.SOCIAL.list({ prefix: 'post:queued:', limit: 100, ...(cursor ? { cursor } : {}) });
+      for (const key of list.keys) {
+        const raw = await env.SOCIAL.get(key.name);
+        if (!raw) continue;
+        try {
+          const post: SocialPost = JSON.parse(raw);
+          if (post.scheduledAtEpoch <= Date.now()) {
+            duePosts.push({ key: key.name, post });
+          }
+        } catch { continue; }
+      }
+      cursor = list.list_complete ? undefined : list.cursor;
+    } while (cursor);
+
+    duePosts.sort((a, b) => a.post.scheduledAtEpoch - b.post.scheduledAtEpoch);
+
+    let published = 0;
+    let failed = 0;
+
+    for (const { key, post } of duePosts.slice(0, 5)) {
+      // Check idempotency
+      const existing = await env.SOCIAL.get(`idempotent:${post.id}`);
+      if (existing) {
+        await env.SOCIAL.delete(key); // Clean up stale queued key
+        continue;
+      }
+
+      // Move to publishing state (optimistic lock)
+      await env.SOCIAL.put(`post:publishing:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify({ ...post, status: 'publishing' }));
+      await env.SOCIAL.delete(key);
+
+      const result = await fb.publishPost(post);
+
+      if (result.success) {
+        const publishedPost: SocialPost = {
+          ...post,
+          status: 'published',
+          publishedId: result.platformPostId ?? null,
+          publishedAt: new Date().toISOString(),
+        };
+        await env.SOCIAL.put(
+          `post:published:${post.scheduledAtEpoch}:${post.id}`,
+          JSON.stringify(publishedPost),
+          { expirationTtl: 180 * 24 * 60 * 60 },
+        );
+        await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
+          key: post.id, status: 'published',
+          platformPostId: result.platformPostId ?? null,
+          completedAt: new Date().toISOString(), error: null,
+        }), { expirationTtl: 30 * 24 * 60 * 60 });
+        await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+        published++;
+      } else if (result.isAuthError) {
+        // Revert to queued
+        await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
+        await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+        console.error(`Facebook token invalid — halting run`);
+        return json({ error: 'Token invalid', published, failed, tokenExpiresInDays: tokenHealth.daysUntilExpiry }, 503);
+      } else if (result.isTransient) {
+        // Revert to queued
+        await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
+        await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+        console.warn(`Transient error for ${post.id}: ${result.error} — skipping remaining`);
+        break; // Spec: skip remaining posts on transient error
+      } else {
+        const failedPost: SocialPost = { ...post, status: 'failed', error: result.error ?? 'Unknown' };
+        await env.SOCIAL.put(`post:failed:${post.id}`, JSON.stringify(failedPost));
+        await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
+          key: post.id, status: 'failed',
+          platformPostId: null,
+          completedAt: new Date().toISOString(), error: result.error ?? 'Unknown',
+        }), { expirationTtl: 30 * 24 * 60 * 60 });
+        await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+        failed++;
+      }
+    }
+
+    const remaining = Math.max(0, duePosts.length - 5);
+    if (remaining > 10) console.error(`Post queue backlog: ${remaining}`);
+    else if (remaining > 0) console.warn(`${remaining} posts still queued`);
+
+    return json({ published, failed, remaining, tokenExpiresInDays: tokenHealth.daysUntilExpiry });
+  } finally {
     await env.SOCIAL.delete('cron-lock:publish');
-    return json({ error: 'Facebook data access expired' }, 503);
   }
-  if (tokenHealth.daysUntilExpiry <= 7) {
-    console.error(`Facebook data access expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
-  } else if (tokenHealth.daysUntilExpiry <= 14) {
-    console.warn(`Facebook data access expires in ${tokenHealth.daysUntilExpiry} days`);
-  }
-
-  // Discover queued posts
-  const duePosts: Array<{ key: string; post: SocialPost }> = [];
-  let cursor: string | undefined;
-  do {
-    const list = await env.SOCIAL.list({ prefix: 'post:queued:', limit: 100, ...(cursor ? { cursor } : {}) });
-    for (const key of list.keys) {
-      const raw = await env.SOCIAL.get(key.name);
-      if (!raw) continue;
-      try {
-        const post: SocialPost = JSON.parse(raw);
-        if (post.scheduledAtEpoch <= Date.now()) {
-          duePosts.push({ key: key.name, post });
-        }
-      } catch { continue; }
-    }
-    cursor = list.list_complete ? undefined : list.cursor;
-  } while (cursor);
-
-  duePosts.sort((a, b) => a.post.scheduledAtEpoch - b.post.scheduledAtEpoch);
-
-  let published = 0;
-  let failed = 0;
-
-  for (const { key, post } of duePosts.slice(0, 5)) {
-    // Check idempotency
-    const existing = await env.SOCIAL.get(`idempotent:${post.id}`);
-    if (existing) {
-      await env.SOCIAL.delete(key); // Clean up stale queued key
-      continue;
-    }
-
-    const result = await fb.publishPost(post);
-
-    if (result.success) {
-      const publishedPost: SocialPost = {
-        ...post,
-        status: 'published',
-        publishedId: result.platformPostId ?? null,
-        publishedAt: new Date().toISOString(),
-      };
-      await env.SOCIAL.put(
-        `post:published:${post.scheduledAtEpoch}:${post.id}`,
-        JSON.stringify(publishedPost),
-        { expirationTtl: 180 * 24 * 60 * 60 },
-      );
-      await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
-        key: post.id, status: 'published',
-        platformPostId: result.platformPostId ?? null,
-        completedAt: new Date().toISOString(), error: null,
-      }), { expirationTtl: 30 * 24 * 60 * 60 });
-      await env.SOCIAL.delete(key);
-      published++;
-    } else if (result.isAuthError) {
-      console.error(`Facebook token invalid — halting run`);
-      await env.SOCIAL.delete('cron-lock:publish');
-      return json({ error: 'Token invalid', published, failed, tokenExpiresInDays: tokenHealth.daysUntilExpiry }, 503);
-    } else if (result.isTransient) {
-      console.warn(`Transient error for ${post.id}: ${result.error}`);
-      // Leave queued — retry next run
-    } else {
-      const failedPost: SocialPost = { ...post, status: 'failed', error: result.error ?? 'Unknown' };
-      await env.SOCIAL.put(`post:failed:${post.id}`, JSON.stringify(failedPost));
-      await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
-        key: post.id, status: 'failed',
-        platformPostId: null,
-        completedAt: new Date().toISOString(), error: result.error ?? 'Unknown',
-      }), { expirationTtl: 30 * 24 * 60 * 60 });
-      await env.SOCIAL.delete(key);
-      failed++;
-    }
-  }
-
-  const remaining = Math.max(0, duePosts.length - 5);
-  if (remaining > 10) console.error(`Post queue backlog: ${remaining}`);
-  else if (remaining > 0) console.warn(`${remaining} posts still queued`);
-
-  await env.SOCIAL.delete('cron-lock:publish');
-  return json({ published, failed, remaining, tokenExpiresInDays: tokenHealth.daysUntilExpiry });
 });
 
 // ── POST /api/cron/comments ───────────────────────────────────────────────────
@@ -1234,26 +1253,54 @@ app.get('/api/health', async (c) => {
 
   if (!authOk) return json({ ok: true });
 
-  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN);
+  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
   const authStatus = await fb.debugAuth();
 
-  // Count queued posts
+  // Count posts by status
   let queued = 0;
-  let listCursor: string | undefined;
+  let published = 0;
+  let failed = 0;
+  let nextScheduled: string | null = null;
+
+  for (const prefix of ['post:queued:', 'post:published:', 'post:failed:']) {
+    let listCursor: string | undefined;
+    do {
+      const list = await env.SOCIAL.list({ prefix, limit: 100, ...(listCursor ? { cursor: listCursor } : {}) });
+      if (prefix === 'post:queued:') {
+        queued += list.keys.length;
+        // Find next scheduled (keys are time-ordered)
+        if (!nextScheduled && list.keys.length > 0) {
+          const raw = await env.SOCIAL.get(list.keys[0].name);
+          if (raw) {
+            try { nextScheduled = JSON.parse(raw).scheduledAt; } catch {}
+          }
+        }
+      }
+      else if (prefix === 'post:published:') published += list.keys.length;
+      else failed += list.keys.length;
+      listCursor = list.list_complete ? undefined : list.cursor;
+    } while (listCursor);
+  }
+
+  // Count flagged comments
+  let flaggedComments = 0;
+  let flagCursor: string | undefined;
   do {
-    const list = await env.SOCIAL.list({ prefix: 'post:queued:', limit: 100, ...(listCursor ? { cursor: listCursor } : {}) });
-    queued += list.keys.length;
-    listCursor = list.list_complete ? undefined : list.cursor;
-  } while (listCursor);
+    const list = await env.SOCIAL.list({ prefix: 'fb-flag:', limit: 100, ...(flagCursor ? { cursor: flagCursor } : {}) });
+    flaggedComments += list.keys.length;
+    flagCursor = list.list_complete ? undefined : list.cursor;
+  } while (flagCursor);
 
   return json({
     platforms: {
       facebook: {
         tokenValid: authStatus.valid,
+        dataAccessExpiresAt: authStatus.dataAccessExpiresAt,
         daysUntilExpiry: authStatus.daysUntilExpiry,
       },
     },
-    queue: { facebook: { queued } },
+    queue: { facebook: { queued, published, failed, nextScheduled } },
+    recentActivity: { flaggedComments },
   });
 });
 
@@ -1318,7 +1365,7 @@ describe('processComments', () => {
     const platform = mockPlatform({
       listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
       getComments: vi.fn().mockResolvedValue([
-        { id: 'c1', postId: 'post_1', authorIdHash: '', message: 'Hello', createdTime: new Date().toISOString(), isFromPage: true },
+        { id: 'c1', postId: 'post_1', rawAuthorId: 'user_456', message: 'Hello', createdTime: new Date().toISOString(), isFromPage: true },
       ]),
     });
     const kv = mockKV();
@@ -1332,7 +1379,7 @@ describe('processComments', () => {
     const platform = mockPlatform({
       listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
       getComments: vi.fn().mockResolvedValue([
-        { id: 'c1', postId: 'post_1', authorIdHash: '', message: 'Hello', createdTime: new Date().toISOString(), isFromPage: false },
+        { id: 'c1', postId: 'post_1', rawAuthorId: 'user_456', message: 'Hello', createdTime: new Date().toISOString(), isFromPage: false },
       ]),
     });
     const kv = mockKV();
@@ -1346,7 +1393,7 @@ describe('processComments', () => {
     const platform = mockPlatform({
       listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
       getComments: vi.fn().mockResolvedValue([
-        { id: 'c1', postId: 'post_1', authorIdHash: '', message: 'What are your consulting rates?', createdTime: new Date().toISOString(), isFromPage: false },
+        { id: 'c1', postId: 'post_1', rawAuthorId: 'user_456', message: 'What are your consulting rates?', createdTime: new Date().toISOString(), isFromPage: false },
       ]),
       getCommentReplies: vi.fn().mockResolvedValue([]),
       replyToComment: replyFn,
@@ -1362,7 +1409,7 @@ describe('processComments', () => {
     const platform = mockPlatform({
       listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
       getComments: vi.fn().mockResolvedValue([
-        { id: 'c1', postId: 'post_1', authorIdHash: '', message: "I can't cope anymore", createdTime: new Date().toISOString(), isFromPage: false },
+        { id: 'c1', postId: 'post_1', rawAuthorId: 'user_456', message: "I can't cope anymore", createdTime: new Date().toISOString(), isFromPage: false },
       ]),
       replyToComment: replyFn,
     });
@@ -1378,7 +1425,7 @@ describe('processComments', () => {
     const platform = mockPlatform({
       listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
       getComments: vi.fn().mockResolvedValue([
-        { id: 'c1', postId: 'post_1', authorIdHash: '', message: 'What are your rates?', createdTime: oldDate, isFromPage: false },
+        { id: 'c1', postId: 'post_1', rawAuthorId: 'user_456', message: 'What are your rates?', createdTime: oldDate, isFromPage: false },
       ]),
     });
     const kv = mockKV();
@@ -1451,7 +1498,7 @@ export async function processComments(
       newComments++;
 
       const classification = classifyComment(comment.message);
-      const authorHash = comment.authorIdHash || hashAuthorId(comment.id); // Use provided hash or generate from ID
+      const authorHash = hashAuthorId(comment.rawAuthorId); // Hash the platform user ID, not the comment ID
 
       // Store comment record (no message body)
       await kv.put(`fb-comment:${comment.id}`, JSON.stringify({
@@ -1523,18 +1570,20 @@ app.post('/api/cron/comments', async (c) => {
   if (cronLock) return json({ skipped: true, reason: 'locked' });
   await env.SOCIAL.put('cron-lock:comments', '1', { expirationTtl: 300 });
 
-  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN);
+  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
 
-  const tokenHealth = await fb.debugAuth();
-  if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
+  try {
+    const tokenHealth = await fb.debugAuth();
+    if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
+      return json({ error: 'Facebook data access expired' }, 503);
+    }
+
+    const result = await processComments(fb, env.SOCIAL);
+
+    return json({ ...result, tokenExpiresInDays: tokenHealth.daysUntilExpiry });
+  } finally {
     await env.SOCIAL.delete('cron-lock:comments');
-    return json({ error: 'Facebook data access expired' }, 503);
   }
-
-  const result = await processComments(fb, env.SOCIAL);
-
-  await env.SOCIAL.delete('cron-lock:comments');
-  return json({ ...result, tokenExpiresInDays: tokenHealth.daysUntilExpiry });
 });
 ```
 
@@ -1718,11 +1767,21 @@ git commit -m "feat(social): CLI script for posting and queue management"
 
 - [ ] **Step 1: Create `social-autopublish.yml`**
 
-Use the exact YAML from spec Section 13, `social-autopublish.yml`. Copy it verbatim from the spec.
+Copy from spec Section 13 with this fix: in the "Publish new content to social" step, add HTTP status checking after the `curl` call (matching the cron workflow pattern):
+```bash
+RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${SOCIAL_WORKER_URL}/api/publish" ...)
+HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+if [ "$HTTP_CODE" != "200" ]; then
+  echo "::warning::Publish failed for $SLUG (HTTP $HTTP_CODE)"
+fi
+```
 
 - [ ] **Step 2: Create `social-cron.yml`**
 
-Use the exact YAML from spec Section 13, `social-cron.yml` (two separate jobs gated by `github.event.schedule`). Copy it verbatim from the spec.
+Copy from spec Section 13 with this fix: add explicit parentheses to `if:` conditions for clarity:
+```yaml
+if: (github.event_name == 'workflow_dispatch' && github.event.inputs.endpoint == 'publish') || github.event.schedule == '15 * * * *'
+```
 
 - [ ] **Step 3: Commit**
 
@@ -1759,6 +1818,161 @@ Read `.lychee.toml` and add `social.adrianwedd.com` to the exclude list.
 ```bash
 git add social/facebook-posts.json .lychee.toml
 git commit -m "feat(social): empty queue seed file and lychee exclude"
+```
+
+---
+
+## Task 10a: Publish Cron Tests
+
+**Files:**
+- Create: `worker/src/__tests__/publish.test.ts`
+
+- [ ] **Step 1: Write tests for publish cron logic**
+
+Create `worker/src/__tests__/publish.test.ts`:
+
+```typescript
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+// Test the publish cron logic by importing the Hono app and calling /api/cron/publish
+// with mocked KV and Facebook platform
+
+describe('POST /api/cron/publish', () => {
+  it('skips when cron lock exists', async () => {
+    // Mock KV.get('cron-lock:publish') returning '1'
+    // Expect: 200 + { skipped: true, reason: 'locked' }
+  });
+
+  it('returns 503 when token is expired', async () => {
+    // Mock debugAuth returning { valid: false }
+    // Expect: 503 + { error: 'Facebook data access expired' }
+  });
+
+  it('publishes due posts oldest-first, max 5', async () => {
+    // Mock 7 queued posts, all due
+    // Expect: 5 published, remaining: 2
+  });
+
+  it('skips posts with existing idempotency records', async () => {
+    // Mock idempotent:{id} exists
+    // Expect: post's queued key deleted, not published
+  });
+
+  it('halts on auth error and reverts post to queued', async () => {
+    // Mock publishPost returning isAuthError: true
+    // Expect: 503 + post reverted to queued key
+  });
+
+  it('breaks on transient error and reverts post to queued', async () => {
+    // Mock first post succeeds, second returns isTransient: true
+    // Expect: published: 1, second post reverted to queued
+  });
+
+  it('marks permanent failures with idempotency record', async () => {
+    // Mock publishPost returning permanent error
+    // Expect: post:failed:{id} created, idempotent:{id} created with status 'failed'
+  });
+
+  it('moves post through publishing intermediate state', async () => {
+    // Verify post:publishing:{epoch}:{id} is written before publishPost()
+    // and deleted after success
+  });
+
+  it('releases cron lock even on unexpected error (finally)', async () => {
+    // Mock an exception during processing
+    // Expect: cron-lock:publish deleted
+  });
+});
+```
+
+**Note:** These are test stubs showing the required scenarios. The implementer must fill in the mock setup and assertions using the patterns from `auth.test.ts` and `facebook.test.ts`. Each test should mock the Hono `c.env` object with a fake KV implementation.
+
+- [ ] **Step 2: Run tests**
+
+Run: `cd worker && npx vitest run src/__tests__/publish.test.ts`
+Expected: All tests PASS.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add worker/src/__tests__/publish.test.ts
+git commit -m "test(social): publish cron logic tests"
+```
+
+---
+
+## Task 10b: Queue Sync Tests
+
+**Files:**
+- Create: `worker/src/__tests__/sync.test.ts`
+
+- [ ] **Step 1: Write tests for queue sync reconciliation**
+
+Create `worker/src/__tests__/sync.test.ts`:
+
+```typescript
+import { describe, it, expect, vi } from 'vitest';
+
+describe('POST /api/queue/sync', () => {
+  it('skips sync when hash is unchanged', async () => {
+    // Mock KV.get('queue-hash') returning same hash as request
+    // Expect: { unchanged: true }
+  });
+
+  it('creates new posts from incoming JSON', async () => {
+    // Mock empty KV, 3 incoming posts
+    // Expect: { created: 3, updated: 0, cancelled: 0, skippedTerminal: 0 }
+  });
+
+  it('updates queued posts when content changes', async () => {
+    // Mock KV has post with old message, incoming has new message
+    // Expect: { updated: 1 } and KV value contains new message
+  });
+
+  it('moves KV key when scheduledAtEpoch changes', async () => {
+    // Mock KV has post at epoch X, incoming has epoch Y
+    // Expect: old key deleted, new key created at epoch Y
+  });
+
+  it('cancels queued posts missing from incoming JSON', async () => {
+    // Mock KV has 3 queued posts, incoming has 2
+    // Expect: { cancelled: 1 } and missing post's KV key deleted
+  });
+
+  it('skips terminal posts (published/failed) even if in incoming', async () => {
+    // Mock idempotent:{id} exists with status 'published'
+    // Expect: { skippedTerminal: 1 }
+  });
+
+  it('does not delete published/failed posts missing from incoming', async () => {
+    // Mock KV has published post not in incoming
+    // Expect: published post key is NOT deleted (only queued keys are cancelled)
+  });
+
+  it('rejects requests with wrong auth', async () => {
+    // Send with wrong bearer token
+    // Expect: 401
+  });
+
+  it('accepts both PUBLISH_SECRET and CLI_SECRET', async () => {
+    // Send with CLI_SECRET
+    // Expect: 200 (not 401)
+  });
+});
+```
+
+**Note:** Same pattern as Task 10a — test stubs requiring full mock implementation.
+
+- [ ] **Step 2: Run tests**
+
+Run: `cd worker && npx vitest run src/__tests__/sync.test.ts`
+Expected: All tests PASS.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add worker/src/__tests__/sync.test.ts
+git commit -m "test(social): queue sync reconciliation tests"
 ```
 
 ---
@@ -1806,10 +2020,17 @@ curl -s -X POST "https://api.cloudflare.com/client/v4/zones/109eaa3abaa7785f3340
   --data '{"type":"CNAME","name":"social","content":"adrianwedd-social.workers.dev","proxied":true}'
 ```
 
-- [ ] **Step 5: Deploy worker**
+- [ ] **Step 5: Deploy worker and configure custom domain**
 
 Run: `cd worker && npx wrangler deploy`
-Expected: Deployed to `social.adrianwedd.com`.
+
+Then add the custom domain (DNS CNAME alone is not sufficient — need Worker route binding):
+```bash
+cd worker && npx wrangler domains add social.adrianwedd.com
+```
+This binds the Worker to the custom hostname. If `wrangler domains` is not available, configure via Cloudflare dashboard: Workers & Pages > adrianwedd-social > Settings > Domains & Routes > Add Custom Domain > `social.adrianwedd.com`.
+
+Expected: Worker accessible at `https://social.adrianwedd.com`.
 
 - [ ] **Step 6: Verify health endpoint**
 
