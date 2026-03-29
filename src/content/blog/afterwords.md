@@ -6,6 +6,7 @@ tags: ["ai", "tts", "mlx", "apple-silicon", "voice-cloning", "claude", "open-sou
 series: "PiCar-X"
 seriesOrder: 4
 audioUrl: "/notebook-assets/afterwords-blog/audio.mp3"
+heroImage: "/notebook-assets/afterwords/infographic.webp"
 audioDuration: "18:19"
 faq:
   - q: "Does Afterwords send any data to the cloud?"
