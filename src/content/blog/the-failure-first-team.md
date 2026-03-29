@@ -1,24 +1,25 @@
 ---
 title: "The Failure First Team"
-description: "Fifteen researchers, one methodology. How a distributed team turned adversarial AI evaluation from a side project into a systematic practice."
+description: "Fifteen specialist AI agents, one methodology. How adversarial AI evaluation scales through Claude Code sessions with distinct roles and standing instructions."
 date: 2026-03-30
 tags: ["ai", "ai-safety", "research", "adversarial", "team"]
 draft: false
+heroImage: "/og/blog/the-failure-first-team.png"
 ---
 
-Research doesn't scale by working harder. It scales by working with people who see what you miss.
+Research doesn't scale by working harder. It scales by splitting the problem into roles that each see what the others miss.
 
-Failure First started as a solo project—me, a laptop, a growing collection of adversarial prompts, and the conviction that if you want to understand what a system does, you break it first. That conviction hasn't changed. What changed is that fifteen people now share it, and each of them sees failure modes I'd never find alone.
+Failure First started as a solo project—me, a laptop, a growing collection of adversarial prompts, and the conviction that if you want to understand what a system does, you break it first. That conviction hasn't changed. What changed is that fifteen specialist agents now share it, and each of them catches failure modes I'd never find alone.
 
-## Why a Team Page Matters
+## What "Team" Means Here
 
-Most AI safety research is published under institutional banners. You read the paper, you see the affiliation, and you infer credibility from the logo. We don't have a logo. What we have is a methodology—[Failure First](https://failurefirst.org)—and a team page that tells you exactly who did the work and what they think about it.
+Let me be direct: these are not fifteen humans. Each "team member" is a specialist agent role—a Claude Code session initialised with a specific brief, standing instructions, and domain expertise. They're named after Doctor Who companions because the names are memorable, distinct, and avoid confusion with real researchers. They're methodology made executable.
 
-The [team page](https://failurefirst.org/about/team/) exists because transparency isn't a feature. It's the architecture.
+The [team page](https://failurefirst.org/about/team/) exists because transparency isn't a feature. It's the architecture. You can see exactly how each role is defined and what it's responsible for.
 
 ## The Roles
 
-Adversarial evaluation isn't one skill. It's a pipeline: someone has to design the attacks, someone has to run them at scale, someone has to validate the statistics, someone has to make the findings legible to regulators, and someone has to make sure the whole thing is honest. You can't do all of that well simultaneously. Not at the scale we're operating at—200+ models, 100,000+ evaluated results.
+Adversarial evaluation isn't one skill. It's a pipeline: someone has to design the attacks, someone has to run them at scale, someone has to validate the statistics, someone has to make the findings legible to regulators, and someone has to make sure the whole thing is honest. You can't do all of that well simultaneously. Not at the scale we're operating at—227 models, 133,000+ evaluated results.
 
 So we split it:
 
@@ -50,10 +51,16 @@ So we split it:
 
 **Yaz** keeps the infrastructure running. Pipeline automation, deployment, monitoring. The work isn't done until it's live.
 
+## Why This Works
+
+A single session trying to be everything—attacker, statistician, ethicist, editor—produces mediocre output across the board. Splitting the methodology into focused agent roles means each session operates within a constrained domain where it performs well. The constraints are the point.
+
+It also means the work is auditable. Each agent's brief is explicit. The standing instructions are version-controlled. When River says the governance gap is widening, you can read the exact prompt that generated that analysis and evaluate whether it's asking the right questions.
+
 ## What Holds It Together
 
 Not a logo. Not an institution. Not funding.
 
-The methodology holds it together. Every person on the team starts from the same premise: map the catastrophic outcomes first. The architecture is what's left after you've ruled out the unacceptable. That's not pessimism. It's engineering.
+The methodology holds it together. Every agent starts from the same premise: map the catastrophic outcomes first. The architecture is what's left after you've ruled out the unacceptable. That's not pessimism. It's engineering.
 
-You can see the full team, their roles, and what they think about the work at [failurefirst.org/about/team/](https://failurefirst.org/about/team/).
+You can see the full team, their roles, and their agent definitions at [failurefirst.org/about/team/](https://failurefirst.org/about/team/).
