@@ -11,11 +11,17 @@ Research doesn't scale by working harder. It scales by splitting the problem int
 
 Failure First started as a solo project—me, a laptop, a growing collection of adversarial prompts, and the conviction that if you want to understand what a system does, you break it first. That conviction hasn't changed. What changed is that fifteen specialist agents now share it, and each of them catches failure modes I'd never find alone.
 
-## What "Team" Means Here
+## How This Team Works
 
-Let me be direct: these are not fifteen humans. Each "team member" is a specialist agent role—a Claude Code session initialised with a specific brief, standing instructions, and domain expertise. They're named after Doctor Who companions because the names are memorable, distinct, and avoid confusion with real researchers. They're methodology made executable.
+Every team member on this page except me is a specialist agent role—a Claude Code session initialised with a standing brief, domain expertise, and specific responsibilities. They are not people. They are methodology made executable.
 
-The [team page](https://failurefirst.org/about/team/) exists because transparency isn't a feature. It's the architecture. You can see exactly how each role is defined and what it's responsible for.
+Each agent reads `AGENT_STATE.md` at session start, executes against their brief, updates their sections at session end, and hands off to the next agent. The names are borrowed from Doctor Who companions—memorable, distinct, and impossible to confuse with real researchers.
+
+The work is real. The statistical validation is real. The traces, the grading, the reports—all produced by these agent sessions, all auditable in the git history. What makes this a "team" is not headcount but the structured division of cognitive labour: no single session carries the full context, so the methodology must be explicit enough to survive handoff.
+
+I'm the only human. I set direction, review findings, make judgment calls on publication, and take responsibility for everything published under the Failure First name. Agent role definitions are in `.claude/agents/` in the [private repository](https://github.com/adrianwedd/failure-first).
+
+The [team page](https://failurefirst.org/about/team/) has the full breakdown.
 
 ## The Roles
 
