@@ -5,7 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [[kv_namespaces]]
 binding = "SOCIAL"
-id = "PLACEHOLDER_UNTIL_CREATED"
+id = "b85557255f9c475abd4af15d4a9dd458"
 
 [vars]
 FACEBOOK_PAGE_ID = "213409802761321"
