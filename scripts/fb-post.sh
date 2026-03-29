@@ -31,16 +31,21 @@ usage() {
   cat <<'EOF'
 Usage:
   fb-post.sh "message"                          # Immediate text post
-  fb-post.sh "message" --link URL               # Immediate link post
-  fb-post.sh "message" --image URL              # Immediate photo post
+  fb-post.sh "message" --link "URL"             # Immediate link post
+  fb-post.sh "message" --image "URL"            # Immediate photo post
   fb-post.sh "message" --schedule ISO_DATETIME  # Schedule a post
   fb-post.sh "message" --backdate ISO_DATETIME  # Post with past date
   fb-post.sh --sync                             # Sync queue from JSON
   fb-post.sh --status                           # Queue status
   fb-post.sh --health                           # Token health
+
+Note: Always quote URLs containing ? or & to prevent shell glob expansion.
 EOF
   exit 1
 }
+
+# Disable glob expansion — URLs with ? and & should not be treated as globs
+set -f
 
 [ $# -eq 0 ] && usage
 
