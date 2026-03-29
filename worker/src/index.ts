@@ -37,6 +37,7 @@ app.post('/api/publish', async (c) => {
     message: string;
     link?: string;
     imageUrl?: string;
+    backdatedTime?: string;
     idempotencyKey: string;
   }>();
 
@@ -59,6 +60,7 @@ app.post('/api/publish', async (c) => {
     message: body.message,
     link: body.link,
     imageUrl: body.imageUrl,
+    backdatedTime: body.backdatedTime,
     scheduledAt: new Date().toISOString(),
     scheduledAtEpoch: Date.now(),
     status: 'queued',

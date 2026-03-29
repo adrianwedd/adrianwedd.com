@@ -34,6 +34,7 @@ Usage:
   fb-post.sh "message" --link URL               # Immediate link post
   fb-post.sh "message" --image URL              # Immediate photo post
   fb-post.sh "message" --schedule ISO_DATETIME  # Schedule a post
+  fb-post.sh "message" --backdate ISO_DATETIME  # Post with past date
   fb-post.sh --sync                             # Sync queue from JSON
   fb-post.sh --status                           # Queue status
   fb-post.sh --health                           # Token health
@@ -66,12 +67,14 @@ case "$1" in
     LINK=""
     IMAGE=""
     SCHEDULE=""
+    BACKDATE=""
 
     while [ $# -gt 0 ]; do
       case "$1" in
         --link) TYPE="link"; LINK="$2"; shift 2 ;;
         --image) TYPE="photo"; IMAGE="$2"; shift 2 ;;
         --schedule) SCHEDULE="$2"; shift 2 ;;
+        --backdate) BACKDATE="$2"; shift 2 ;;
         *) echo "Unknown option: $1"; usage ;;
       esac
     done
@@ -100,7 +103,8 @@ case "$1" in
           --arg link "$LINK" \
           --arg image "$IMAGE" \
           --arg key "$KEY" \
-          '{platform: $platform, type: $type, message: $message, link: (if $link == "" then null else $link end), imageUrl: (if $image == "" then null else $image end), idempotencyKey: $key}')" | jq .
+          --arg backdate "$BACKDATE" \
+          '{platform: $platform, type: $type, message: $message, link: (if $link == "" then null else $link end), imageUrl: (if $image == "" then null else $image end), backdatedTime: (if $backdate == "" then null else $backdate end), idempotencyKey: $key}')" | jq .
     fi
     ;;
 esac

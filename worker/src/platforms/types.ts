@@ -9,6 +9,7 @@ export interface SocialPost {
   message: string;
   imageUrl?: string;
   link?: string;
+  backdatedTime?: string;     // ISO 8601 — sets post date in the past (Facebook backdated_time)
   scheduledAt: string;
   scheduledAtEpoch: number;
   status: PostStatus;
