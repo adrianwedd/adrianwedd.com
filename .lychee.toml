@@ -43,6 +43,8 @@ exclude = [
   "https://github\\.com/adrianwedd/orchestrix",
   # Own domain — new pages 404 on production until this deploy completes
   "https?://adrianwedd\\.com",
+  # Social media Worker endpoint — no HTML pages, lychee would get false 404s
+  "https?://social\\.adrianwedd\\.com",
 ]
 
 # Exclude these file patterns from being checked AS SOURCES
