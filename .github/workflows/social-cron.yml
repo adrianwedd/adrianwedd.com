@@ -1,0 +1,59 @@
+name: Social Cron
+
+on:
+  schedule:
+    - cron: '15 * * * *'      # Publish: hourly at :15
+    - cron: '45 */2 * * *'    # Comments: every 2 hours at :45
+  workflow_dispatch:
+    inputs:
+      endpoint:
+        description: 'Endpoint to trigger (publish or comments)'
+        required: false
+        default: 'publish'
+
+jobs:
+  publish:
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.endpoint == 'publish') || github.event.schedule == '15 * * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger publish cron
+        env:
+          SOCIAL_WORKER_URL: ${{ secrets.SOCIAL_WORKER_URL }}
+          SOCIAL_CRON_SECRET: ${{ secrets.SOCIAL_CRON_SECRET }}
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${SOCIAL_WORKER_URL}/api/cron/publish" \
+            -H "Authorization: Bearer ${SOCIAL_CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            --max-time 30)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          echo "HTTP status: $HTTP_CODE"
+          echo "Response: $BODY"
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Publish cron returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+  comments:
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.endpoint == 'comments') || github.event.schedule == '45 */2 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger comments cron
+        env:
+          SOCIAL_WORKER_URL: ${{ secrets.SOCIAL_WORKER_URL }}
+          SOCIAL_CRON_SECRET: ${{ secrets.SOCIAL_CRON_SECRET }}
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${SOCIAL_WORKER_URL}/api/cron/comments" \
+            -H "Authorization: Bearer ${SOCIAL_CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            --max-time 30)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          echo "HTTP status: $HTTP_CODE"
+          echo "Response: $BODY"
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Comments cron returned HTTP $HTTP_CODE"
+            exit 1
+          fi
