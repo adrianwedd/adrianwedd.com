@@ -1,0 +1,12 @@
+name = "adrianwedd-social"
+main = "src/index.ts"
+compatibility_date = "2026-03-29"
+compatibility_flags = ["nodejs_compat"]
+
+[[kv_namespaces]]
+binding = "SOCIAL"
+id = "PLACEHOLDER_UNTIL_CREATED"
+
+[vars]
+FACEBOOK_PAGE_ID = "213409802761321"
+GRAPH_API_VERSION = "v21.0"
