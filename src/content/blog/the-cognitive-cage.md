@@ -6,6 +6,15 @@ tags: ["ai", "ai-safety", "robotics", "research", "engineering"]
 draft: false
 heroImage: "/notebook-assets/the-cognitive-cage/infographic.webp"
 audioUrl: "/notebook-assets/the-cognitive-cage/audio.mp3"
+faq:
+  - q: "What is the cognitive cage in robotics?"
+    a: "The cognitive cage is a proposed safety system for humanoid robots — a deterministic code layer that verifies and vetoes vision-language-action model commands in real time, replacing the physical cages that historically contained robot movements."
+  - q: "What is semantic failure in robotics?"
+    a: "Semantic failure occurs when a robot is physically functioning perfectly but executes a catastrophic action because its neural network misread the world, such as hallucinating that a task step has been completed when it hasn't."
+  - q: "When will humanoid robots become dangerous?"
+    a: "The 2027–2029 'Danger Zone' is when robot production scales to roughly one million units deployed in retail, logistics, and homes. Even low failure rates could produce thousands of serious incidents daily."
+  - q: "What is affordance hallucination in VLA models?"
+    a: "Affordance hallucination occurs when a vision-language-action model incorrectly identifies how objects can be manipulated, such as attempting to grasp a shadow or pouring water where it falsely believes a cup is located."
 ---
 
 For fifty years, robot safety was a solved problem. The answer was a cage: a physical enclosure that kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.
