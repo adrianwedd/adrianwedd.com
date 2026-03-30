@@ -4,7 +4,7 @@ description: "Audio overview of Failure First — adversarial AI evaluation acro
 date: 2026-02-09
 tags: ["notebooklm", "ai-safety", "adversarial", "research"]
 audioUrl: "/notebook-assets/failure-first/audio.mp3"
-duration: "0:00"
+duration: "12:44"
 relatedProject: "failure-first"
 ---
 

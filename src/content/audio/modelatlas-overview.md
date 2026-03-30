@@ -4,7 +4,7 @@ description: "Forensic-grade metadata for thousands of foundation models — rec
 date: 2025-04-15
 tags: ["notebooklm", "ai", "research", "python"]
 audioUrl: "/notebook-assets/modelatlas/audio.mp3"
-duration: "0:00"
+duration: "13:29"
 relatedProject: "modelatlas"
 ---
 

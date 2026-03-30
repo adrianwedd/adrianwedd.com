@@ -4,7 +4,7 @@ description: "Audio overview of ordr.fm — a CLI for music library organisation
 date: 2025-07-01
 tags: ["notebooklm", "music", "cli", "audio"]
 audioUrl: "/notebook-assets/ordr-fm/audio.mp3"
-duration: "0:00"
+duration: "16:27"
 relatedProject: "ordr-fm"
 ---
 

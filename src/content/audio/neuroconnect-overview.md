@@ -4,7 +4,7 @@ description: "A 24/7 voice helpline built around neurodivergent communication â€
 date: 2025-05-01
 tags: ["notebooklm", "ai", "health", "adhd"]
 audioUrl: "/notebook-assets/neuroconnect/audio.mp3"
-duration: "0:00"
+duration: "16:43"
 relatedProject: "neuroconnect"
 ---
 

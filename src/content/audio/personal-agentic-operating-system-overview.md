@@ -4,7 +4,7 @@ description: "Audio overview of PAOS — a local-first LLM operating system with
 date: 2025-07-01
 tags: ["notebooklm", "ai", "infrastructure", "agents"]
 audioUrl: "/notebook-assets/personal-agentic-operating-system/audio.mp3"
-duration: "0:00"
+duration: "18:42"
 relatedProject: "personal-agentic-operating-system"
 ---
 

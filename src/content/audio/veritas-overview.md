@@ -4,7 +4,7 @@ description: "Audio deep dive into VERITAS — a legal AI platform where trust i
 date: 2025-03-01
 tags: ["notebooklm", "ai", "legal", "research"]
 audioUrl: "/notebook-assets/veritas/audio.mp3"
-duration: "0:00"
+duration: "18:42"
 relatedProject: "veritas"
 ---
 

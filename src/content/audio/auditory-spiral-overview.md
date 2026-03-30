@@ -4,7 +4,7 @@ description: "Audio overview of Auditory Spiral — overnight electronic music o
 date: 1992-01-01
 tags: ["notebooklm", "music", "radio", "history"]
 audioUrl: "/notebook-assets/auditory-spiral/audio.mp3"
-duration: "0:00"
+duration: "18:13"
 relatedProject: "auditory-spiral"
 ---
 

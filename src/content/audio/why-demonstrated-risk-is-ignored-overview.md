@@ -4,7 +4,7 @@ description: "Audio deep dive into why people acknowledge demonstrated risk and 
 date: 2026-02-07
 tags: ["notebooklm", "research", "risk", "ai-safety"]
 audioUrl: "/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3"
-duration: "0:00"
+duration: "22:17"
 relatedProject: "why-demonstrated-risk-is-ignored"
 ---
 

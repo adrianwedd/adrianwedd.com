@@ -4,7 +4,7 @@ description: "Audio overview of NotebookLM Automation — reverse-engineered RPC
 date: 2025-12-01
 tags: ["notebooklm", "ai", "automation"]
 audioUrl: "/notebook-assets/notebooklm-automation/audio.mp3"
-duration: "0:00"
+duration: "14:57"
 relatedProject: "notebooklm-automation"
 ---
 

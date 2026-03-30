@@ -4,7 +4,7 @@ description: "A scholarly close reading arguing Gibson's Neuromancer encoded the
 date: 2026-02-10
 tags: ["notebooklm", "neurodivergence", "literary-criticism", "adhd"]
 audioUrl: "/notebook-assets/before-the-words-existed/audio.mp3"
-duration: "0:00"
+duration: "16:50"
 relatedProject: "before-the-words-existed"
 ---
 

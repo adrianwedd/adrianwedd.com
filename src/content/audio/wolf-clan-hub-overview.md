@@ -4,7 +4,7 @@ description: "Audio overview of a three-zone martial arts operations platform â€
 date: 2026-03-02
 tags: ["notebooklm", "web", "cloudflare", "community"]
 audioUrl: "/notebook-assets/wolf-clan-hub/audio.mp3"
-duration: "0:00"
+duration: "20:55"
 relatedProject: "wolf-clan-hub"
 ---
 

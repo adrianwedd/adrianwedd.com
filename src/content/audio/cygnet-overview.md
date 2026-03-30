@@ -4,7 +4,7 @@ description: "Audio overview of Cygnet — 28 AI agents coordinating 3D-printed 
 date: 2025-04-01
 tags: ["notebooklm", "ai", "housing", "agents"]
 audioUrl: "/notebook-assets/cygnet/audio.mp3"
-duration: "0:00"
+duration: "16:03"
 relatedProject: "cygnet"
 ---
 

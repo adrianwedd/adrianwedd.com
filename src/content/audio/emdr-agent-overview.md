@@ -4,7 +4,7 @@ description: "Audio overview of EMDR Agent — exploring what responsible AI-ass
 date: 2025-06-01
 tags: ["notebooklm", "ai-safety", "health", "ai"]
 audioUrl: "/notebook-assets/emdr-agent/audio.mp3"
-duration: "0:00"
+duration: "15:08"
 relatedProject: "emdr-agent"
 ---
 
