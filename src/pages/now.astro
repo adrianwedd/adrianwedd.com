@@ -13,11 +13,11 @@ const totalWords = blogPosts.reduce((sum, p) => sum + (p.body ? p.body.split(/\s
 const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
 ---
 
-<BaseLayout title="Now" description="What I'm focused on right now. Updated March 2026.">
+<BaseLayout title="Now" description="What I'm focused on right now. Updated April 2026.">
   <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">Now</h1>
-      <p class="mt-2 text-text-muted">What I'm focused on right now. Updated March 2026.</p>
+      <p class="mt-2 text-text-muted">What I'm focused on right now. Updated April 2026.</p>
     </div>
     <HeroCanvas animation="orbit" />
   </section>
@@ -40,7 +40,8 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
         <h2 class="text-text">Focus</h2>
         <p>
           Multi-agent AI safety and adversarial evaluation. The <a href="/projects/failure-first/">Failure First</a> research
-          — 120+ models, 18,000+ adversarial prompts — is now published, alongside a growing series on
+          — now 227+ models across 133,000+ evaluated results — keeps expanding. Recent writing covers
+          <a href="/blog/the-failure-first-team/">the fifteen-agent research team</a> that runs it,
           <a href="/blog/when-ai-systems-talk-safety-breaks/">what breaks when AI systems talk to each other</a>,
           <a href="/blog/the-cognitive-cage/">embodied AI risk</a>, and
           <a href="/blog/why-demonstrated-risk-is-ignored/">why organisations ignore demonstrated risk</a>.
@@ -51,8 +52,9 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
         <h2 class="text-text">Building</h2>
         <ul class="mt-2 space-y-2">
           <li>Client projects — AI integration, automation, and infrastructure for small businesses</li>
-          <li>This site — weekly sprints, shipping in public</li>
-          <li><a href="/projects/spark/">SPARK</a> — a non-coercive AI companion for neurodivergent children</li>
+          <li>This site — weekly sprints, shipping in public, now with automated social publishing to Facebook</li>
+          <li><a href="/projects/spark/">SPARK</a> — a non-coercive AI companion for neurodivergent children, now with <a href="/blog/giving-a-robot-three-voices/">three distinct voices</a></li>
+          <li><a href="/projects/afterwords/">Afterwords</a> — local voice output for Claude Code with <a href="/blog/voice-cloning-qwen3-tts-mlx/">voice cloning on Apple Silicon</a></li>
           <li><a href="/projects/personal-agentic-operating-system/">PAOS</a> — a local-first agentic OS that runs on your hardware</li>
           <li>Homelab — Frigate NVR with Hailo-8L AI detection on a Pi 5, Home Assistant automations, self-hosted infrastructure</li>
         </ul>
@@ -61,12 +63,12 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
       <section>
         <h2 class="text-text">Writing</h2>
         <p>
-          Publishing steadily — recent pieces cover <a href="/blog/giving-a-robot-three-voices/">giving a robot three voices</a>,
-          <a href="/blog/voice-cloning-qwen3-tts-mlx/">voice cloning with Qwen3-TTS on Apple Silicon</a>,
+          Publishing steadily — recent pieces cover <a href="/blog/the-failure-first-team/">the AI research team</a>,
+          <a href="/blog/giving-a-robot-three-voices/">giving a robot three voices</a>,
+          <a href="/blog/voice-cloning-qwen3-tts-mlx/">voice cloning on Apple Silicon</a>,
           <a href="/blog/the-resonant-fringe/">Perth's electronic music underground</a>,
           <a href="/blog/getting-google-nest-cameras-into-frigate-nvr/">homelab engineering</a>,
-          <a href="/blog/safety-first-therapeutic-ai/">therapeutic AI safety</a>,
-          <a href="/blog/zero-build-web-development/">zero-build web development</a>, and
+          <a href="/blog/safety-first-therapeutic-ai/">therapeutic AI safety</a>, and
           <a href="/blog/the-legal-ai-trust-deficit/">legal AI trust</a>.
           Also running a <a href="/projects/notebooklm-automation/">NotebookLM pipeline</a> that generates audio overviews and
           infographics for every post and project. See <a href="/new/">what's new</a> for everything in one feed.

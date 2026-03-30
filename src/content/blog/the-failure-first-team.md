@@ -6,6 +6,15 @@ tags: ["ai", "ai-safety", "research", "adversarial", "team"]
 draft: false
 heroImage: "/notebook-assets/the-failure-first-team/infographic.webp"
 audioUrl: "/notebook-assets/the-failure-first-team/audio.mp3"
+faq:
+  - q: "What is the Failure First team?"
+    a: "The Failure First team consists of fifteen specialist AI agents, each initialized with distinct roles and standing instructions. They work on adversarial AI evaluation across 227 models and 133,000+ evaluated results, with a human coordinator overseeing direction and publication."
+  - q: "How many AI agents are in the Failure First team?"
+    a: "There are fifteen specialist agents, each named after Doctor Who companions. They include roles like River (risk tracking), Clara (pattern synthesis), Rose (adversarial campaigns), and Romana (statistical validation)."
+  - q: "What does adversarial evaluation mean in AI research?"
+    a: "Adversarial evaluation tests AI systems to find failure modes by deliberately trying to break them. It involves designing attacks, running them at scale, validating statistics, and translating findings for regulators."
+  - q: "Why split AI research into different agent roles?"
+    a: "Splitting research into specialized agent roles means each session operates within a constrained domain where it performs well. It also makes the work auditable since each agent's brief is explicit and version-controlled."
 ---
 
 Research doesn't scale by working harder. It scales by splitting the problem into roles that each see what the others miss.

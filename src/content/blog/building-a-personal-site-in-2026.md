@@ -5,6 +5,15 @@ date: 2026-02-15
 tags: ["engineering", "web", "astro", "open-source"]
 heroImage: "/notebook-assets/building-a-personal-site-in-2026/infographic.webp"
 audioUrl: "/notebook-assets/building-a-personal-site-in-2026/audio.mp3"
+faq:
+  - q: "What framework is best for a personal site in 2026?"
+    a: "Astro generates static HTML pages with zero JavaScript by default, making it architecturally right for document-based personal sites. It ships JS only through Preact islands that hydrate on idle."
+  - q: "Why use Astro instead of Next.js for a personal site?"
+    a: "Next.js assumes baseline client-side interactivity and ships a React runtime with every page. Astro renders everything server-side by default with zero JavaScript unless explicitly needed."
+  - q: "What are the design constraints for a fast personal site?"
+    a: "Three constraints: zero custom fonts (system font stack only), dark-first design with a botanical palette, and no tracking before consent. GA4 loads only after explicit opt-in."
+  - q: "How does Astro handle interactive components?"
+    a: "Astro uses Preact islands marked with client directives like client:idle or client:load. Each island hydrates independently while the rest of the page remains static HTML that works without JavaScript."
 ---
 
 This site is built with Astro. It generates 65 static HTML pages, serves them from GitHub Pages, and loads zero custom fonts. The entire JavaScript budget is a handful of Preact islands that hydrate on idle. The rest is HTML and CSS.

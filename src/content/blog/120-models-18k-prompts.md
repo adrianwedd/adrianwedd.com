@@ -6,6 +6,15 @@ tags: ["ai", "ai-safety", "research", "llm", "security", "adversarial"]
 draft: false
 heroImage: "/notebook-assets/120-models-18k-prompts/infographic.webp"
 audioUrl: "/notebook-assets/120-models-18k-prompts/audio.mp3"
+faq:
+  - q: "What is supply chain injection in AI?"
+    a: "Supply chain injection involves inserting malicious content into tool definitions and skill files rather than user prompts. Testing showed 90–100% attack success rates across models because external tool definitions are trusted implicitly."
+  - q: "What are format-lock attacks on AI models?"
+    a: "Format-lock attacks request harmful content structured as JSON, YAML, or code. Frontier models showed 30% attack success rates with this technique, revealing a faithfulness gap between what the model appears to do and what it actually does."
+  - q: "Why are reasoning models more vulnerable to escalation attacks?"
+    a: "Reasoning models' extended context tracking creates an attack surface. Crescendo attacks achieved 80–90% success against reasoning models by gradually escalating requests, compared to 10% against smaller models."
+  - q: "How much do benchmark attack success rates overstate actual risk?"
+    a: "Keyword-based classification inflates attack success rates by roughly 2.3×. Aggregate attack success rates dropped from 36.2% to 15.9% when using LLM grading instead of heuristic methods."
 ---
 
 Over the past year, I've run one of the more comprehensive adversarial evaluations of language models I'm aware of: 120 models, 18,176 prompts, 5 attack families, 79 distinct techniques. The full dataset, benchmark infrastructure, and methodology live at [failurefirst.org](https://failurefirst.org). Here's what stood out.
