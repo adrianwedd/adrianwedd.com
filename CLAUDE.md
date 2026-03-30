@@ -9,21 +9,30 @@ Personal website for Adrian Wedd. Astro 5 on GitHub Pages. Dark-first design wit
 ## Commands
 
 ```
-npm run dev        # dev server (localhost:4321)
-npm run build      # production build
-npm run preview    # preview production build
+npm run dev            # dev server (localhost:4321)
+npm run build          # production build (Astro + Pagefind indexing)
+npm run preview        # preview production build
+npm run lint           # ESLint
+npm run format         # Prettier (write)
+npm run format:check   # Prettier (check only)
+npm run fetch-analytics  # manual GA4 data fetch
 ```
 
-No linter, formatter, or test suite is configured.
+Content validation: `node scripts/validate-content.js` (checks required fields, description ≤160 chars, heroImage paths).
+
+No test suite is configured for the Astro site. The `worker/` directory has its own test suite (`cd worker && npm test`).
 
 ## Stack
 
 - **Framework:** Astro 5 with TypeScript strict
 - **Styling:** Tailwind CSS 3 with CSS custom properties for theming
-- **Islands:** Preact for interactive components (AudioPlayer, Personalisation, Transparency)
+- **Islands:** Preact for interactive components (13 islands in `src/components/islands/`)
 - **Content:** Astro Content Collections (blog, projects, gallery, audio) in `src/content/`
+- **Search:** Pagefind (client-side WASM, indexed at build time)
 - **Hosting:** GitHub Pages via GitHub Actions (fully static output)
-- **Analytics:** GA4 consent-gated via `ConsentBanner.astro` + `Analytics.astro`
+- **DNS:** Cloudflare
+- **Analytics:** GA4 + LinkedIn Insight Tag, both consent-gated via `ConsentBanner.astro` + `Analytics.astro`
+- **Social:** Cloudflare Worker at `social.adrianwedd.com` for Facebook automation (see Worker section)
 
 ## Architecture
 
@@ -33,24 +42,81 @@ CSS custom properties define all colors in `src/styles/global.css` (`:root` = da
 **Never use Tailwind's `dark:` prefix** — theming is driven by CSS custom properties, not Tailwind dark mode classes.
 
 ### Content collections
-Defined in `src/content.config.ts` with four collections:
-- **blog:** title, description, date, tags (required), draft, heroImage, updatedDate
-- **projects:** title, description, date, tags, status (`active|complete|archived|experiment`), featured, url, repo, heroImage, updatedDate
+Defined in `src/content.config.ts` with four collections. Key fields beyond the obvious:
+
+- **blog:** title, description, date, tags (required), draft, heroImage, updatedDate, `faq` (optional `[{q, a}]` for FAQ schema), `series`/`seriesOrder` (multi-part posts), plus `notebookAssets` (audioUrl, videoUrl, infographic, etc.)
+- **projects:** title, description, date, tags, status (`active|complete|archived|experiment`), featured, url, repo, heroImage, updatedDate, `series`/`seriesOrder`, plus `notebookAssets`
 - **gallery:** title, date, tags, images array (`{src, alt, caption?}`), medium, collection, coverImage
-- **audio:** title, description, date, tags, audioUrl, duration, transcript, heroImage
+- **audio:** title, description, date, tags, `audioUrl` (required), duration, transcript, heroImage, `relatedProject`, `relatedPost`
+
+`notebookAssets` is a shared schema across blog/projects providing: audioUrl, videoUrl, infographic, mindmap, quiz, flashcards, dataTable, slides. Note: `audioDuration` is a separate top-level field in blog/projects, not part of `notebookAssets`.
 
 ### Routing
-File-based in `src/pages/`. Dynamic routes use `[...slug].astro` for blog, projects, gallery, audio detail pages. Blog has a tag index at `blog/tag/[tag].astro`.
+File-based in `src/pages/`. Dynamic routes use `[...slug].astro` for blog, projects, gallery, audio detail pages. Blog has a tag index at `blog/tag/[tag].astro`. Two legacy redirects in `astro.config.mjs` (`/projects/ticketsmith/` → `/projects/`, `/2023/03/paperclip-maximizer/` → `/`).
 
 ### Islands architecture
-Preact islands in `src/components/islands/` are client-hydrated interactive components. All other components are Astro (server-rendered, zero JS).
+Preact islands in `src/components/islands/` are client-hydrated interactive components. All other components are Astro (server-rendered, zero JS). Current islands include: AudioPlayer, Personalisation, Transparency, Flashcards, ActivityDashboard, MindMap, DataTable, ShareButton, AnalyticsDashboard, Quiz, TableOfContents, TerminalEasterEgg, GitHubActivity.
+
+### View Transitions compatibility
+All interactive scripts must follow this pattern for Astro View Transitions:
+- Use `is:inline` (not module `<script>`) so scripts re-execute on VT swap
+- Use `documentElement.dataset.someInit` sentinel to prevent duplicate global listeners
+- Use event delegation on `document` (not per-element listeners) since DOM elements get replaced
+- Use lazy DOM lookups via functions (not cached references) since elements change
+- Register `astro:after-swap` listener inside the sentinel guard to avoid accumulation
+
+Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollReveal, Header, blog tag toggle, audio filters, project filters, gallery filters, search/Pagefind, contact/booking widget, hero carousel.
+
+**Exception:** `Analytics.astro` uses a bare `<script>` (Astro processes this as a module — runs once) with sentinels on `documentElement.dataset` for each global listener. The `astro:after-swap` handler only re-runs per-element trackers.
+
+### Schema.org JSON-LD
+- **about.astro:** Person schema using CV data from `src/data/base-cv.json`
+- **projects/[...slug].astro:** SoftwareApplication (price conditional on `repo`) + conditional VideoObject
+- **blog/[...slug].astro:** Article + conditional VideoObject + conditional FAQPage (from `faq` frontmatter)
+- **services.astro:** ProfessionalService schema
+- **Breadcrumb.astro:** BreadcrumbList on all detail pages
+
+## CI/CD Pipeline
+
+### Deploy (`deploy.yml`) — triggers on push to main
+1. `npm ci` → validate content → audit deps → fetch GA4 analytics
+2. Checkout CV data from `adrianwedd/cv` repo → copy to `src/data/base-cv.json`
+3. `npm run build`
+4. Check build size budget (`dist/_astro/` ≤ 100MB; warns on JS chunks >150KB)
+5. Enforce no raw `<img>` on local paths (must use `<Picture>` from `astro:assets`)
+6. Lychee link check (`dist/**/*.html`) — config in `.lychee.toml`
+7. Upload pages artifact + deploy
+
+### Other workflows
+- **lighthouse.yml:** PR checks — builds + runs Lighthouse on 7 pages (90% thresholds)
+- **social-autopublish.yml:** Detects newly added content files via git diff, extracts frontmatter, posts to Facebook via worker (skips drafts, commit-based idempotency keys)
+- **social-cron.yml:** Hourly scheduled publish from queue + 2-hourly comment monitor
+- **content-pipeline.yml:** Weekly discovery of academic papers for blog draft PRs
+
+## Worker (Cloudflare)
+
+Located in `worker/`. Hono framework, TypeScript, KV namespace for state.
+
+**Endpoints:**
+- `POST /api/publish` — immediate Facebook publish (posts, photos, links)
+- `POST /api/queue` + `POST /api/queue/sync` — scheduled post queue (JSON seed in `social/facebook-posts.json`, KV is authoritative)
+- `POST /api/cron/publish` — hourly publish from queue
+- `POST /api/cron/comments` — comment monitor with classification (crisis detection, auto-reply)
+- `GET /api/health` — token health + queue status
+
+**Auth:** Timing-safe bearer token (`PUBLISH_SECRET` / `CLI_SECRET`). Idempotency via KV with 30-day TTL.
+
+**Deploy:** `cd worker && npx wrangler deploy`. CLI posting: `scripts/fb-post.sh`.
 
 ## Key patterns
 
 - **Slug utility:** Astro 5 collection IDs include `.md` extension. Always use `slug()` from `src/lib/utils.ts` when generating hrefs from collection IDs.
+- **Image slug:** Use `imageSlug()` from `src/lib/utils.ts` for gallery image URLs derived from alt text.
 - **No custom fonts:** System font stack only — zero font downloads.
-- **Consent-first:** No tracking before user consent. ConsentBanner dispatches `consent-updated` CustomEvent.
+- **Consent-first:** No tracking before user consent. ConsentBanner dispatches `consent-updated` CustomEvent. Use `dns-prefetch` (not `preconnect`) for GA4 origins — preconnect opens TCP/TLS before consent.
 - **Class-based selectors:** ThemeToggle and Header use class selectors (not IDs) to avoid duplicate ID issues when rendered in both desktop and mobile nav.
+- **Images:** Use `<Picture>` from `astro:assets` for all local images — never raw `<img>` on local paths (CI gate enforces this).
+- **CV sync:** `src/data/cv.ts` reads `src/data/base-cv.json` (gitignored, synced from `adrianwedd/cv` at build time). Falls back to DEFAULTS if file missing.
 
 ## Permalink strategy
 
@@ -76,6 +142,13 @@ scripts/new-project.sh "Title"    # scaffold project page
 scripts/import-gallery.sh dir/    # import image directory as gallery
 scripts/import-audio.sh file.mp3  # import audio as episode
 ```
+
+### Key scripts
+- `scripts/validate-content.js` — validates all content (required fields, description ≤160 chars)
+- `scripts/generate-og-images.mjs` — generates 1200×630 OG PNGs from frontmatter via sharp+SVG (skips drafts and existing images)
+- `scripts/fetch-ga4-data.mjs` — pulls analytics from GA4 service account (falls back to mock data)
+- `scripts/extract-frontmatter.mjs` — extracts YAML frontmatter as JSON (used by autopublish workflow)
+- `scripts/fb-post.sh` — CLI for Facebook posting (immediate, scheduled, backdated)
 
 ## NotebookLM Automation
 
@@ -277,3 +350,6 @@ exports/project-name/
 - Light mode accent color is `#8a5e42` (umber) for WCAG AA on warm cream backgrounds
 - Tailwind color utilities (`bg-surface`, `text-muted`, `text-accent`) resolve through CSS custom properties, not static values — inspect `tailwind.config.mjs` and `global.css` together
 - **NotebookLM audio/video generation takes 2-10 minutes per asset** — batch generation of 30 projects = ~1-5 hours total
+- Content descriptions must be ≤ 160 chars (validated by `scripts/validate-content.js` and CI)
+- Lychee link checker excludes social media domains, private repos, and own domain (pre-deploy 404s) — see `.lychee.toml`
+- `src/data/base-cv.json` is gitignored — synced from `adrianwedd/cv` at build time; local dev works without it (falls back to defaults)
