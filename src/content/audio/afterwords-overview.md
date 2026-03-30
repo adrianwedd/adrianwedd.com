@@ -4,7 +4,7 @@ description: "Audio overview of Afterwords — local voice output for Claude Cod
 date: 2026-03-22
 tags: ["notebooklm", "ai", "tts", "voice-cloning"]
 audioUrl: "/notebook-assets/afterwords/audio.mp3"
-duration: "0:00"
+duration: "21:43"
 relatedProject: "afterwords"
 ---
 

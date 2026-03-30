@@ -4,7 +4,7 @@ description: "Audio overview of rlm-mcp — an MCP server for processing million
 date: 2025-11-01
 tags: ["notebooklm", "ai", "mcp", "tools"]
 audioUrl: "/notebook-assets/rlm-mcp/audio.mp3"
-duration: "0:00"
+duration: "18:31"
 relatedProject: "rlm-mcp"
 ---
 

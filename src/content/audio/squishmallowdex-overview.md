@@ -4,7 +4,7 @@ description: "Audio overview of Squishmallowdex — a kid-friendly collection tr
 date: 2024-12-01
 tags: ["notebooklm", "web", "kids", "open-source"]
 audioUrl: "/notebook-assets/squishmallowdex/audio.mp3"
-duration: "0:00"
+duration: "17:56"
 relatedProject: "squishmallowdex"
 ---
 

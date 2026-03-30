@@ -4,7 +4,7 @@ description: "Audio overview of Home Assistant Obsidian — your knowledge base 
 date: 2024-06-01
 tags: ["notebooklm", "homelab", "home-assistant", "docker"]
 audioUrl: "/notebook-assets/home-assistant-obsidian/audio.mp3"
-duration: "0:00"
+duration: "15:06"
 relatedProject: "home-assistant-obsidian"
 ---
 

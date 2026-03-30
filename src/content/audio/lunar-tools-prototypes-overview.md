@@ -4,7 +4,7 @@ description: "Twenty-plus interactive art installations where visitors speak, si
 date: 2025-06-15
 tags: ["notebooklm", "art", "ai", "installation"]
 audioUrl: "/notebook-assets/lunar-tools-prototypes/audio.mp3"
-duration: "0:00"
+duration: "18:43"
 relatedProject: "lunar-tools-prototypes"
 ---
 

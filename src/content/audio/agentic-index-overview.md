@@ -4,7 +4,7 @@ description: "An opinionated, scored catalogue of autonomous AI tooling — beca
 date: 2025-08-01
 tags: ["notebooklm", "ai", "agents", "curation"]
 audioUrl: "/notebook-assets/agentic-index/audio.mp3"
-duration: "0:00"
+duration: "17:17"
 relatedProject: "agentic-index"
 ---
 

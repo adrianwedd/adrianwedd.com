@@ -4,7 +4,7 @@ description: "Audio overview of Freedom Engine — AI-assisted legal Q&A helping
 date: 2025-04-01
 tags: ["notebooklm", "ai", "justice", "legal"]
 audioUrl: "/notebook-assets/freedom-engine/audio.mp3"
-duration: "0:00"
+duration: "15:51"
 relatedProject: "freedom-engine"
 ---
 

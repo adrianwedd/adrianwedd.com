@@ -4,7 +4,7 @@ description: "Real-time StyleGAN2 face morphing as art installation — continuo
 date: 2025-02-01
 tags: ["notebooklm", "art", "ai", "installation"]
 audioUrl: "/notebook-assets/latent-self/audio.mp3"
-duration: "0:00"
+duration: "15:28"
 relatedProject: "latent-self"
 ---
 

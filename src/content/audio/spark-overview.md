@@ -4,7 +4,7 @@ description: "Audio deep dive into SPARK — a non-coercive AI robot companion f
 date: 2026-03-12
 tags: ["notebooklm", "ai", "robotics", "neurodivergence"]
 audioUrl: "/notebook-assets/spark/audio.mp3"
-duration: "0:00"
+duration: "43:05"
 relatedProject: "spark"
 ---
 

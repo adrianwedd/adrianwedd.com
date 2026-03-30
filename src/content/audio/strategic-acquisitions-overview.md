@@ -4,7 +4,7 @@ description: "Audio overview of an AI-powered property analysis pipeline for pub
 date: 2025-01-15
 tags: ["notebooklm", "ai", "housing", "python"]
 audioUrl: "/notebook-assets/strategic-acquisitions/audio.mp3"
-duration: "0:00"
+duration: "21:13"
 relatedProject: "strategic-acquisitions"
 ---
 

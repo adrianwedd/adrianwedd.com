@@ -4,7 +4,7 @@ description: "A self-updating CV pipeline where GitHub Actions runs twice daily,
 date: 2026-02-04
 tags: ["notebooklm", "craft", "web", "career"]
 audioUrl: "/notebook-assets/cv/audio.mp3"
-duration: "0:00"
+duration: "15:06"
 relatedProject: "cv"
 ---
 

@@ -4,7 +4,7 @@ description: "Audio archaeology for musicians — how Afterglow Engine extracts 
 date: 2026-02-02
 tags: ["notebooklm", "music", "audio", "creative"]
 audioUrl: "/notebook-assets/afterglow-engine/audio.mp3"
-duration: "0:00"
+duration: "14:33"
 relatedProject: "afterglow-engine"
 ---
 

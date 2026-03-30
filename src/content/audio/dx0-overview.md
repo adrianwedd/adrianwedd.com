@@ -4,7 +4,7 @@ description: "Multi-agent AI diagnostic system with five physician personas, 304
 date: 2025-05-01
 tags: ["notebooklm", "ai", "healthcare", "agents"]
 audioUrl: "/notebook-assets/dx0/audio.mp3"
-duration: "0:00"
+duration: "14:30"
 relatedProject: "dx0"
 ---
 

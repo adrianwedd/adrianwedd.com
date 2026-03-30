@@ -4,7 +4,7 @@ description: "Audio overview of a real-time space weather dashboard — making t
 date: 2025-01-01
 tags: ["notebooklm", "data-viz", "science", "web"]
 audioUrl: "/notebook-assets/space-weather/audio.mp3"
-duration: "0:00"
+duration: "18:15"
 relatedProject: "space-weather"
 ---
 

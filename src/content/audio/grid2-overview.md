@@ -4,7 +4,7 @@ description: "A deterministic website builder where LLMs interpret intent but be
 date: 2025-05-01
 tags: ["notebooklm", "ai", "web", "typescript"]
 audioUrl: "/notebook-assets/grid2/audio.mp3"
-duration: "0:00"
+duration: "16:33"
 relatedProject: "grid2"
 ---
 
