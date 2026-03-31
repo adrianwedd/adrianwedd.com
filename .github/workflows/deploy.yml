@@ -98,6 +98,8 @@ jobs:
           fail: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run site tests
+        run: bash scripts/test-site.sh
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
