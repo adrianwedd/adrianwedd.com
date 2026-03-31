@@ -32,6 +32,7 @@ No test suite is configured for the Astro site. The `worker/` directory has its 
 - **Hosting:** GitHub Pages via GitHub Actions (fully static output)
 - **DNS:** Cloudflare
 - **Analytics:** GA4 + LinkedIn Insight Tag, both consent-gated via `ConsentBanner.astro` + `Analytics.astro`
+- **Media CDN:** Cloudflare R2 at `cdn.adrianwedd.com` — audio + video served from R2, infographics remain in git
 - **Social:** Cloudflare Worker at `social.adrianwedd.com` for Facebook automation (see Worker section)
 
 ## Architecture
@@ -214,27 +215,32 @@ cd scripts/notebooklm
   --export ./exports/project-name
 ```
 
-**3. Move assets to site**:
+**3. Upload to R2 and update frontmatter**:
+
+Audio and video are served from `cdn.adrianwedd.com` (Cloudflare R2 bucket `adrianwedd-com-media`). Infographics remain in `public/notebook-assets/` (committed to git).
 
 ```bash
-# Create asset directory
-mkdir -p public/notebook-assets/project-name
+# Compress audio to 64kbps mono
+ffmpeg -y -i exports/project-name/studio/audio/overview.mp3 \
+  -vn -ac 1 -ar 44100 -c:a libmp3lame -b:a 64k \
+  public/notebook-assets/project-name/audio.mp3
 
-# Copy generated files
-cp scripts/notebooklm/exports/project-name/studio/audio/*.mp3 \
-   public/notebook-assets/project-name/audio.mp3
+# Upload audio + video to R2
+./scripts/upload-media-to-r2.sh
 
-cp scripts/notebooklm/exports/project-name/studio/video/*.mp4 \
-   public/notebook-assets/project-name/video.mp4
+# Copy infographic to git-tracked directory
+cp exports/project-name/studio/infographic/*.png \
+   public/notebook-assets/project-name/infographic.webp
 ```
 
-**4. Update project frontmatter**:
+**4. Update project frontmatter** (CDN URLs for audio/video, local for infographic):
 
 ```markdown
 ---
 title: "Project Name"
-audioUrl: "/notebook-assets/project-name/audio.mp3"
-videoUrl: "/notebook-assets/project-name/video.mp4"
+audioUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/audio.mp3"
+videoUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/video.mp4"
+heroImage: "/notebook-assets/project-name/infographic.webp"
 ---
 ```
 
@@ -246,7 +252,7 @@ title: "Project Name Overview"
 description: "Audio deep dive into..."
 date: 2026-02-13
 tags: ["notebooklm", "relevant-tags"]
-audioUrl: "/notebook-assets/project-name/audio.mp3"
+audioUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/audio.mp3"
 duration: "8:47"
 relatedProject: "project-name"
 ---
