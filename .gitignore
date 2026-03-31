@@ -45,3 +45,10 @@ public/notebook-assets/*/audio-original.mp3
 # CV data synced at build time
 src/data/base-cv.json
 .superpowers/
+
+# Media served from R2 CDN (cdn.adrianwedd.com)
+public/notebook-assets/*/audio.mp3
+public/notebook-assets/*/video.mp4
+public/notebook-assets/*/*/audio.mp3
+public/notebook-assets/*/*/video.mp4
+.wrangler/
