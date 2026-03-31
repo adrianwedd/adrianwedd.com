@@ -137,15 +137,13 @@ fi
 # --- 3.6 CDN Reference Integrity ---
 echo ""
 echo "CDN Reference Integrity..."
-# Check for local-path audio/video references that are NOT CDN URLs.
-# Local paths look like: "/notebook-assets/foo/audio.mp3"
-# CDN URLs look like: "https://cdn.adrianwedd.com/notebook-assets/foo/audio.mp3"
-# We grep for the pattern then exclude lines containing cdn.adrianwedd.com
-LOCAL_MEDIA_COUNT=$(grep -roh '[^a-z]"/notebook-assets/[^"]*\.mp[34]"' "$DIST" --include='*.html' 2>/dev/null | grep -cv 'cdn\.adrianwedd\.com' || true)
-if [ "$LOCAL_MEDIA_COUNT" -eq 0 ]; then
-  pass "No local audio/video references in built HTML"
+# Check for local-path audio/video references (="/notebook-assets/...mp3")
+# CDN URLs use ="https://cdn..." so they DON'T match ="/notebook-assets/"
+if grep -rq '="/notebook-assets/[^"]*\.mp[34]' "$DIST" --include='*.html' 2>/dev/null; then
+  LOCAL_COUNT=$(grep -rc '="/notebook-assets/[^"]*\.mp[34]' "$DIST" --include='*.html' 2>/dev/null | awk -F: '{s+=$NF} END{print s}')
+  fail "$LOCAL_COUNT HTML references still use local audio/video paths"
 else
-  fail "$LOCAL_MEDIA_COUNT HTML references still use local audio/video paths"
+  pass "No local audio/video references in built HTML"
 fi
 
 # --- 3.7 Image Reference Check ---
