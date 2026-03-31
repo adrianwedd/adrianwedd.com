@@ -26,7 +26,7 @@ The site has no automated tests beyond build + lychee link check + Lighthouse (P
 `scripts/test-site.sh` — runs against `dist/` after build, before deploy.
 
 ### Integration
-Add as a step in `.github/workflows/deploy.yml` between build and upload:
+Add as a step in `.github/workflows/deploy.yml` after lychee link check, before artifact upload. This runs after all existing post-build checks (size budget, raw img, lychee) so it doesn't interfere with them:
 
 ```yaml
 - name: Run site tests
@@ -46,14 +46,14 @@ https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.mp3
 https://cdn.adrianwedd.com/notebook-assets/hello-world/audio.mp3
 ```
 
-HEAD requests only. Fail the build if any return non-200. Timeout: 10s per URL.
+HEAD requests only. Timeout: 10s per URL. **Soft fail** (warning, not build failure) — CDN transient errors should not block deploys of code-only changes. Log the failure for investigation.
 
 #### 3.2 Schema Validation
 Parse JSON-LD `<script type="application/ld+json">` from built HTML files. Validate:
 - Homepage has `WebSite` schema
 - Blog posts have `Article` schema with required fields (headline, datePublished, author)
 - Blog posts with `faq` frontmatter have `FAQPage` schema
-- Project pages have `SoftwareApplication` schema
+- Project pages have `SoftwareApplication` schema (when `repo` or `url` is set) or `CreativeWork` (otherwise)
 - All schemas have valid `@context` and `@type`
 
 Implementation: Node script (`scripts/validate-schema.mjs`) using `node-html-parser` (lightweight, no browser dependency) to read `dist/**/*.html`, extract JSON-LD blocks, JSON.parse each, and validate required fields. No regex extraction — proper DOM parsing.
@@ -132,10 +132,11 @@ sites:
     expectedStatusCodes:
       - 200
 
-  - name: Social Worker
+  - name: Social Worker (reachability)
     url: https://social.adrianwedd.com/api/health
     expectedStatusCodes:
       - 200
+    __note: "Only confirms route is reachable. Token health and queue state require authenticated /api/health?debug=true — monitor separately if needed."
 
   - name: Failure First
     url: https://failurefirst.org
@@ -157,34 +158,30 @@ sites:
     expectedStatusCodes:
       - 200
 
+assignees:
+  - adrianwedd
+
 status-website:
   cname: status.adrianwedd.com
   name: Adrian Wedd Status
   theme: dark
   logoUrl: https://adrianwedd.com/favicon.svg
-
-notifications:
-  - type: telegram
-    botToken: $TELEGRAM_BOT_TOKEN
-    chatId: $TELEGRAM_CHAT_ID
-
-  - type: issues
-    repo: adrianwedd/upptime
-    assignees:
-      - adrianwedd
-    labels:
-      - incident
-
-cron: "*/15 * * * *"
 ```
 
 ### How Upptime Works
-- GitHub Actions cron runs every 15 minutes
+- GitHub Actions cron runs every 5 minutes (default, configurable in workflow)
 - Pings each URL, records response time and status
 - Commits results to the repo (public history)
-- On failure: creates a GitHub Issue labeled `incident` + sends Telegram notification
-- On recovery: closes the issue + sends recovery notification
+- On failure: creates a GitHub Issue labeled `incident` assigned to `adrianwedd`
+- On recovery: closes the issue automatically
 - Generates a static status page deployed to GitHub Pages at `status.adrianwedd.com`
+
+### Notifications (repo secrets, not YAML config)
+Upptime notifications are configured via GitHub repository secrets, not in `.upptimerc.yml`:
+- `NOTIFICATION_TELEGRAM=true`
+- `NOTIFICATION_TELEGRAM_BOT_KEY=<bot-token>`
+- `NOTIFICATION_TELEGRAM_CHAT_ID=<chat-id>`
+These trigger Telegram messages on incident open/close.
 
 ### DNS
 Add CNAME record: `status` → `adrianwedd.github.io` (proxied via Cloudflare).
@@ -237,7 +234,13 @@ Public at `status.adrianwedd.com`:
 7. Configure Cloudflare Health Check via dashboard
 8. Verify all monitors fire and alert correctly
 
-## 9. What This Doesn't Cover (Intentionally)
+## 9. Future Considerations (Not in Scope, But Worth Tracking)
+
+- **Worker test suite in CI** — `worker/` has vitest tests (`npm test`) not currently run in GitHub Actions. Consider adding a worker CI workflow.
+- **Booking API** (`api.book.adrianwedd.com`) — referenced in contact page, should be monitored if it's production-critical.
+- **Social worker authenticated health** — the `/api/health` endpoint only confirms reachability. Token expiry and queue health require authenticated checks.
+
+## 10. What This Doesn't Cover (Intentionally)
 
 - **APM/tracing** — overkill for static sites
 - **Error tracking (Sentry)** — no server-side code to track; client JS errors are minimal (Preact islands)
