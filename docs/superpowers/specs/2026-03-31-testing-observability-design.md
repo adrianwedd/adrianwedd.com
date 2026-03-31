@@ -56,7 +56,7 @@ Parse JSON-LD `<script type="application/ld+json">` from built HTML files. Valid
 - Project pages have `SoftwareApplication` schema
 - All schemas have valid `@context` and `@type`
 
-Implementation: Node script (`scripts/validate-schema.mjs`) that reads `dist/**/*.html`, extracts JSON-LD blocks, and validates structure.
+Implementation: Node script (`scripts/validate-schema.mjs`) using `node-html-parser` (lightweight, no browser dependency) to read `dist/**/*.html`, extract JSON-LD blocks, JSON.parse each, and validate required fields. No regex extraction — proper DOM parsing.
 
 #### 3.3 RSS Feed Validation
 Parse `dist/audio/feed.xml`:
@@ -76,7 +76,7 @@ Grep `dist/` for known draft slugs:
 
 Assert none appear as directories in `dist/blog/` or `dist/audio/`.
 
-Also: count HTML files in `dist/blog/` and compare against non-draft blog posts in `src/content/blog/`. Numbers must match.
+Also: count post directories in `dist/blog/` (excluding `tag/`, `tags/`, and the index) and compare against non-draft blog posts in `src/content/blog/`. Numbers must match.
 
 #### 3.5 CSP Validation
 Extract the CSP meta tag from `dist/index.html`. Assert:
@@ -90,6 +90,12 @@ Grep all HTML files in `dist/` for `/notebook-assets/` followed by `.mp3` or `.m
 
 #### 3.7 Image Reference Check
 Grep all HTML files in `dist/` for `src="/notebook-assets/`. Assert all referenced `.webp` and `.png` files exist in `dist/notebook-assets/`. Catches broken infographic references.
+
+#### 3.8 Sitemap Validation
+Assert `dist/sitemap-index.xml` exists and is non-empty well-formed XML.
+
+#### 3.9 OG Image Validation
+For each HTML file in `dist/blog/` and `dist/projects/`, extract `og:image` meta tag. Assert the URL is non-empty. For local paths, assert the file exists in `dist/`.
 
 ### Existing Checks (already in deploy.yml, keep as-is)
 - `node scripts/validate-content.js` — frontmatter validation
@@ -121,9 +127,8 @@ sites:
     expectedStatusCodes:
       - 200
 
-  - name: CDN (infographic)
-    url: https://cdn.adrianwedd.com/notebook-assets/spark/infographic.webp
-    method: HEAD
+  - name: Sitemap
+    url: https://adrianwedd.com/sitemap-index.xml
     expectedStatusCodes:
       - 200
 
