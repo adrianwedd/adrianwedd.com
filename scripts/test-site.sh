@@ -137,13 +137,11 @@ fi
 # --- 3.6 CDN Reference Integrity ---
 echo ""
 echo "CDN Reference Integrity..."
-# Check for local-path audio/video references (starts with "/notebook-assets/", not CDN URL)
-# CDN URLs contain "cdn.adrianwedd.com/notebook-assets/" which should NOT be flagged.
-LOCAL_MEDIA=$(grep -rl '"/notebook-assets/[^"]*\.mp[34]"' "$DIST" --include='*.html' 2>/dev/null | xargs grep -l '"/notebook-assets/[^"]*\.mp[34]"' 2>/dev/null | xargs grep -lv 'cdn.adrianwedd.com/notebook-assets/' 2>/dev/null || true)
-LOCAL_MEDIA_COUNT=0
-if [ -n "$LOCAL_MEDIA" ]; then
-  LOCAL_MEDIA_COUNT=$(echo "$LOCAL_MEDIA" | wc -l | tr -d ' ')
-fi
+# Check for local-path audio/video references that are NOT CDN URLs.
+# Local paths look like: "/notebook-assets/foo/audio.mp3"
+# CDN URLs look like: "https://cdn.adrianwedd.com/notebook-assets/foo/audio.mp3"
+# We grep for the pattern then exclude lines containing cdn.adrianwedd.com
+LOCAL_MEDIA_COUNT=$(grep -roh '[^a-z]"/notebook-assets/[^"]*\.mp[34]"' "$DIST" --include='*.html' 2>/dev/null | grep -cv 'cdn\.adrianwedd\.com' || true)
 if [ "$LOCAL_MEDIA_COUNT" -eq 0 ]; then
   pass "No local audio/video references in built HTML"
 else
