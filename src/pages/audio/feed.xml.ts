@@ -4,8 +4,16 @@ import { statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { APIContext } from 'astro';
 
-function getFileSize(audioUrl: string): number {
-  if (audioUrl.startsWith('http')) return 0;
+async function getFileSize(audioUrl: string): Promise<number> {
+  if (audioUrl.startsWith('http')) {
+    try {
+      const res = await fetch(audioUrl, { method: 'HEAD' });
+      const len = res.headers.get('content-length');
+      return len ? parseInt(len, 10) : 0;
+    } catch {
+      return 0;
+    }
+  }
   try {
     const filePath = join(process.cwd(), 'public', audioUrl);
     return statSync(filePath).size;
@@ -19,10 +27,10 @@ export async function GET(context: APIContext) {
 
   const site = context.site!.toString().replace(/\/$/, '');
 
-  const items = episodes
-    .map((ep) => {
+  const items = await Promise.all(episodes
+    .map(async (ep) => {
       const audioUrl = ep.data.audioUrl.startsWith('http') ? ep.data.audioUrl : `${site}${ep.data.audioUrl}`;
-      const fileSize = getFileSize(ep.data.audioUrl);
+      const fileSize = await getFileSize(ep.data.audioUrl);
 
       return `
     <item>
@@ -35,8 +43,9 @@ export async function GET(context: APIContext) {
       ${ep.data.duration ? `<itunes:duration>${ep.data.duration}</itunes:duration>` : ''}
       <itunes:explicit>false</itunes:explicit>
     </item>`;
-    })
-    .join('\n');
+    }));
+
+  const itemsXml = items.join('\n');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
@@ -52,7 +61,7 @@ export async function GET(context: APIContext) {
     <itunes:category text="Technology" />
     <itunes:explicit>false</itunes:explicit>
     <itunes:image href="${site}/og-default.png" />
-    ${items}
+    ${itemsXml}
   </channel>
 </rss>`;
 
