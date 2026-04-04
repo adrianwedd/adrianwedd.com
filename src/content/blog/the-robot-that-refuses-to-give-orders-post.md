@@ -1,12 +1,12 @@
 ---
-title: "The Robot That Refuses to Give Orders"
-description: "How SPARK is rewriting the rules of neurodivergent support — a non-coercive AI companion for AuDHD children."
+title: 'The Robot That Refuses to Give Orders'
+description: 'How SPARK is rewriting the rules of neurodivergent support — a non-coercive AI companion for AuDHD children.'
 date: 2026-03-12
-tags: ["ai", "neurodivergence", "robotics", "parenting", "raspberry-pi"]
-heroImage: "/notebook-assets/the-robot-that-refuses-to-give-orders/infographic.webp"
-audioUrl: "/notebook-assets/spark/audio.mp3"
-videoUrl: "/notebook-assets/spark/video.mp4"
-series: "PiCar-X"
+tags: ['ai', 'neurodivergence', 'robotics', 'parenting', 'raspberry-pi']
+heroImage: '/notebook-assets/the-robot-that-refuses-to-give-orders/infographic.webp'
+audioUrl: '/notebook-assets/spark/audio.mp3'
+videoUrl: '/notebook-assets/spark/video.mp4'
+series: 'PiCar-X'
 seriesOrder: 1
 ---
 
@@ -70,7 +70,7 @@ The SPARK project suggests that the future of AI shouldn't be about making us mo
 
 As we move further into an era of pervasive AI, the ultimate question isn't how these machines can make us comply, but how they can help us be kind to ourselves.
 
-> Neurodivergence is not a tragedy. It's a different operating system running on the same hardware. — *This Wasn't in the Brochure*
+> Neurodivergence is not a tragedy. It's a different operating system running on the same hardware. — _This Wasn't in the Brochure_
 
 ---
 

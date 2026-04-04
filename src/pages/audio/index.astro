@@ -4,7 +4,9 @@ import HeroCanvas from '../../components/HeroCanvas.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 
-const episodes = (await getCollection('audio')).filter((e) => !e.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const episodes = (await getCollection('audio'))
+  .filter((e) => !e.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
 ---
 
@@ -16,7 +18,9 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">
         The workshop extended — thinking aloud.<br />
-        <span class="text-text-muted">Conversations about failure modes, risk frameworks, and ideas too raw for text.</span>
+        <span class="text-text-muted"
+          >Conversations about failure modes, risk frameworks, and ideas too raw for text.</span
+        >
       </h1>
       <p class="mt-6">
         <a href="/audio/feed.xml" class="text-sm text-text-muted transition-colors hover:text-accent">
@@ -28,7 +32,6 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
   </section>
 
   <section class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-
     {
       allTags.length > 0 && (
         <nav class="mt-8 flex flex-wrap gap-2" id="tag-filters" aria-label="Filter by tag">
@@ -45,7 +48,7 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
               type="button"
               data-tag={tag}
               class:list={[
-                'tag-filter cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:bg-accent/15 hover:text-accent',
+                'tag-filter hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent',
                 i >= 10 && 'audio-tag-overflow hidden',
               ]}
               aria-pressed="false"
@@ -58,7 +61,7 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
               type="button"
               id="audio-tags-toggle"
               aria-expanded="false"
-              class="cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:bg-accent/15 hover:text-accent"
+              class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
             >
               +{allTags.length - 10} more
             </button>
@@ -122,110 +125,121 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
   </section>
 
   <script is:inline>
-  (function () {
-    var activeTag = '';
-    var tagOverflowExpanded = false;
+    (function () {
+      var activeTag = '';
+      var tagOverflowExpanded = false;
 
-    function getCards() { return Array.from(document.querySelectorAll('.audio-card')); }
+      function getCards() {
+        return Array.from(document.querySelectorAll('.audio-card'));
+      }
 
-    function setActiveButton(value) {
-      var tagFilters = document.getElementById('tag-filters');
-      if (!tagFilters) return;
-      tagFilters.querySelectorAll('.tag-filter').forEach(function (b) {
-        var match = (b.dataset.tag || '') === value;
-        b.classList.toggle('border-accent', match);
-        b.classList.toggle('bg-accent/10', match);
-        b.classList.toggle('text-accent', match);
-        b.classList.toggle('font-medium', match);
-        b.classList.toggle('border-border', !match);
-        b.classList.toggle('text-text-muted', !match);
-        b.setAttribute('aria-pressed', match ? 'true' : 'false');
-      });
-    }
+      function setActiveButton(value) {
+        var tagFilters = document.getElementById('tag-filters');
+        if (!tagFilters) return;
+        tagFilters.querySelectorAll('.tag-filter').forEach(function (b) {
+          var match = (b.dataset.tag || '') === value;
+          b.classList.toggle('border-accent', match);
+          b.classList.toggle('bg-accent/10', match);
+          b.classList.toggle('text-accent', match);
+          b.classList.toggle('font-medium', match);
+          b.classList.toggle('border-border', !match);
+          b.classList.toggle('text-text-muted', !match);
+          b.setAttribute('aria-pressed', match ? 'true' : 'false');
+        });
+      }
 
-    function applyFilters() {
-      var cards = getCards();
-      var noResults = document.getElementById('no-results');
-      var visible = 0;
-      cards.forEach(function (card) {
-        var tags = [];
-        try { tags = JSON.parse(card.dataset.tags || '[]'); } catch (e) {}
-        var match = !activeTag || tags.indexOf(activeTag) !== -1;
-        card.style.opacity = match ? '1' : '0';
-        setTimeout(function () { card.style.display = match ? '' : 'none'; }, match ? 0 : 200);
-        if (match) visible++;
-      });
-      if (noResults) noResults.classList.toggle('hidden', visible > 0);
-    }
+      function applyFilters() {
+        var cards = getCards();
+        var noResults = document.getElementById('no-results');
+        var visible = 0;
+        cards.forEach(function (card) {
+          var tags = [];
+          try {
+            tags = JSON.parse(card.dataset.tags || '[]');
+          } catch (e) {}
+          var match = !activeTag || tags.indexOf(activeTag) !== -1;
+          card.style.opacity = match ? '1' : '0';
+          setTimeout(
+            function () {
+              card.style.display = match ? '' : 'none';
+            },
+            match ? 0 : 200,
+          );
+          if (match) visible++;
+        });
+        if (noResults) noResults.classList.toggle('hidden', visible > 0);
+      }
 
-    function applySort() {
-      var list = document.getElementById('audio-list');
-      var sortSelect = document.getElementById('sort-select');
-      var cards = getCards();
-      if (!list || !sortSelect) return;
-      var sorted = cards.slice().sort(function (a, b) {
-        var sort = sortSelect.value;
-        if (sort === 'newest') return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
-        if (sort === 'oldest') return new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
-        return (a.dataset.title || '').localeCompare(b.dataset.title || '');
-      });
-      sorted.forEach(function (card) { list.appendChild(card); });
-    }
+      function applySort() {
+        var list = document.getElementById('audio-list');
+        var sortSelect = document.getElementById('sort-select');
+        var cards = getCards();
+        if (!list || !sortSelect) return;
+        var sorted = cards.slice().sort(function (a, b) {
+          var sort = sortSelect.value;
+          if (sort === 'newest') return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
+          if (sort === 'oldest') return new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
+          return (a.dataset.title || '').localeCompare(b.dataset.title || '');
+        });
+        sorted.forEach(function (card) {
+          list.appendChild(card);
+        });
+      }
 
-    function initAudioFilters() {
-      if (!document.getElementById('audio-list')) return;
-      activeTag = '';
-      setActiveButton('');
-    }
+      function initAudioFilters() {
+        if (!document.getElementById('audio-list')) return;
+        activeTag = '';
+        setActiveButton('');
+      }
 
-    if (!document.documentElement.dataset.audioFilterInit) {
-      document.documentElement.dataset.audioFilterInit = '1';
+      if (!document.documentElement.dataset.audioFilterInit) {
+        document.documentElement.dataset.audioFilterInit = '1';
 
-      document.addEventListener('click', function (e) {
-        var target = e.target;
-        if (!target || typeof target.closest !== 'function') return;
+        document.addEventListener('click', function (e) {
+          var target = e.target;
+          if (!target || typeof target.closest !== 'function') return;
 
-        var tagBtn = target.closest('#tag-filters .tag-filter');
-        if (tagBtn && document.getElementById('audio-list')) {
-          activeTag = tagBtn.dataset.tag || '';
-          setActiveButton(activeTag);
-          applyFilters();
-          return;
-        }
-
-        if (target.closest('#audio-tags-toggle')) {
-          tagOverflowExpanded = !tagOverflowExpanded;
-          document.querySelectorAll('.audio-tag-overflow').forEach(function (el) {
-            el.classList.toggle('hidden', !tagOverflowExpanded);
-          });
-          var toggle = document.getElementById('audio-tags-toggle');
-          if (toggle) {
-            toggle.textContent = tagOverflowExpanded ? 'Show less' : toggle.dataset.label || '';
-            toggle.setAttribute('aria-expanded', String(tagOverflowExpanded));
+          var tagBtn = target.closest('#tag-filters .tag-filter');
+          if (tagBtn && document.getElementById('audio-list')) {
+            activeTag = tagBtn.dataset.tag || '';
+            setActiveButton(activeTag);
+            applyFilters();
+            return;
           }
-          return;
-        }
-      });
 
-      document.addEventListener('change', function (e) {
-        if (e.target && e.target.id === 'sort-select' && document.getElementById('audio-list')) {
-          applySort();
-          applyFilters();
-        }
-      });
+          if (target.closest('#audio-tags-toggle')) {
+            tagOverflowExpanded = !tagOverflowExpanded;
+            document.querySelectorAll('.audio-tag-overflow').forEach(function (el) {
+              el.classList.toggle('hidden', !tagOverflowExpanded);
+            });
+            var toggle = document.getElementById('audio-tags-toggle');
+            if (toggle) {
+              toggle.textContent = tagOverflowExpanded ? 'Show less' : toggle.dataset.label || '';
+              toggle.setAttribute('aria-expanded', String(tagOverflowExpanded));
+            }
+            return;
+          }
+        });
 
-      document.addEventListener('astro:after-swap', function () {
-        tagOverflowExpanded = false;
-        var toggle = document.getElementById('audio-tags-toggle');
-        if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
-        initAudioFilters();
-      });
-    }
+        document.addEventListener('change', function (e) {
+          if (e.target && e.target.id === 'sort-select' && document.getElementById('audio-list')) {
+            applySort();
+            applyFilters();
+          }
+        });
 
-    var tagToggle = document.getElementById('audio-tags-toggle');
-    if (tagToggle && !tagToggle.dataset.label) tagToggle.dataset.label = tagToggle.textContent || '';
+        document.addEventListener('astro:after-swap', function () {
+          tagOverflowExpanded = false;
+          var toggle = document.getElementById('audio-tags-toggle');
+          if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
+          initAudioFilters();
+        });
+      }
 
-    initAudioFilters();
-  })();
+      var tagToggle = document.getElementById('audio-tags-toggle');
+      if (tagToggle && !tagToggle.dataset.label) tagToggle.dataset.label = tagToggle.textContent || '';
+
+      initAudioFilters();
+    })();
   </script>
 </BaseLayout>

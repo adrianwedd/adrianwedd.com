@@ -5,7 +5,9 @@ import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 
-const collections = (await getCollection('gallery')).filter((g) => !g.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const collections = (await getCollection('gallery'))
+  .filter((g) => !g.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const allTags = [...new Set(collections.flatMap((c) => c.data.tags))].sort();
 const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolean))].sort();
@@ -19,14 +21,15 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">
         Visual thinking.<br />
-        <span class="text-text-muted">Process documentation, experiments that didn't need words, and patterns noticed before they had names.</span>
+        <span class="text-text-muted"
+          >Process documentation, experiments that didn't need words, and patterns noticed before they had names.</span
+        >
       </h1>
     </div>
     <HeroCanvas animation="flow" />
   </section>
 
   <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-
     {
       (allTags.length > 0 || allMedia.length > 0) && (
         <nav class="mt-8 flex flex-wrap gap-2" id="tag-filters" aria-label="Filter gallery">
@@ -42,7 +45,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
             <button
               type="button"
               data-tag={`medium:${medium}`}
-              class="tag-filter cursor-pointer rounded-full bg-accent/10 px-3 py-1 text-xs italic text-accent transition-colors hover:bg-accent/20"
+              class="tag-filter bg-accent/10 hover:bg-accent/20 cursor-pointer rounded-full px-3 py-1 text-xs italic text-accent transition-colors"
               aria-pressed="false"
             >
               {medium}
@@ -53,7 +56,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
               type="button"
               data-tag={tag}
               class:list={[
-                'tag-filter cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:bg-accent/15 hover:text-accent',
+                'tag-filter hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent',
                 i >= 10 && 'gallery-tag-overflow hidden',
               ]}
               aria-pressed="false"
@@ -66,7 +69,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
               type="button"
               id="gallery-tags-toggle"
               aria-expanded="false"
-              class="cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:bg-accent/15 hover:text-accent"
+              class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
             >
               +{allTags.length - 10} more
             </button>
@@ -146,117 +149,128 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
   </section>
 
   <script is:inline>
-  (function () {
-    var activeTag = '';
-    var tagOverflowExpanded = false;
+    (function () {
+      var activeTag = '';
+      var tagOverflowExpanded = false;
 
-    function getCards() { return Array.from(document.querySelectorAll('.gallery-card')); }
+      function getCards() {
+        return Array.from(document.querySelectorAll('.gallery-card'));
+      }
 
-    function setActiveButton(value) {
-      var tagFilters = document.getElementById('tag-filters');
-      if (!tagFilters) return;
-      tagFilters.querySelectorAll('.tag-filter').forEach(function (b) {
-        var match = (b.dataset.tag || '') === value;
-        b.classList.toggle('border-accent', match);
-        b.classList.toggle('bg-accent/10', match);
-        b.classList.toggle('text-accent', match);
-        b.classList.toggle('font-medium', match);
-        b.classList.toggle('border-border', !match && !b.classList.contains('italic'));
-        b.classList.toggle('text-text-muted', !match && !b.classList.contains('italic'));
-        b.setAttribute('aria-pressed', match ? 'true' : 'false');
-      });
-    }
+      function setActiveButton(value) {
+        var tagFilters = document.getElementById('tag-filters');
+        if (!tagFilters) return;
+        tagFilters.querySelectorAll('.tag-filter').forEach(function (b) {
+          var match = (b.dataset.tag || '') === value;
+          b.classList.toggle('border-accent', match);
+          b.classList.toggle('bg-accent/10', match);
+          b.classList.toggle('text-accent', match);
+          b.classList.toggle('font-medium', match);
+          b.classList.toggle('border-border', !match && !b.classList.contains('italic'));
+          b.classList.toggle('text-text-muted', !match && !b.classList.contains('italic'));
+          b.setAttribute('aria-pressed', match ? 'true' : 'false');
+        });
+      }
 
-    function applyFilters() {
-      var cards = getCards();
-      var noResults = document.getElementById('no-results');
-      var visible = 0;
-      cards.forEach(function (card) {
-        var match = true;
-        if (activeTag) {
-          if (activeTag.indexOf('medium:') === 0) {
-            match = card.dataset.medium === activeTag.replace('medium:', '');
-          } else {
-            var tags = [];
-            try { tags = JSON.parse(card.dataset.tags || '[]'); } catch (e) {}
-            match = tags.indexOf(activeTag) !== -1;
+      function applyFilters() {
+        var cards = getCards();
+        var noResults = document.getElementById('no-results');
+        var visible = 0;
+        cards.forEach(function (card) {
+          var match = true;
+          if (activeTag) {
+            if (activeTag.indexOf('medium:') === 0) {
+              match = card.dataset.medium === activeTag.replace('medium:', '');
+            } else {
+              var tags = [];
+              try {
+                tags = JSON.parse(card.dataset.tags || '[]');
+              } catch (e) {}
+              match = tags.indexOf(activeTag) !== -1;
+            }
           }
-        }
-        card.style.opacity = match ? '1' : '0';
-        setTimeout(function () { card.style.display = match ? '' : 'none'; }, match ? 0 : 200);
-        if (match) visible++;
-      });
-      if (noResults) noResults.classList.toggle('hidden', visible > 0);
-    }
+          card.style.opacity = match ? '1' : '0';
+          setTimeout(
+            function () {
+              card.style.display = match ? '' : 'none';
+            },
+            match ? 0 : 200,
+          );
+          if (match) visible++;
+        });
+        if (noResults) noResults.classList.toggle('hidden', visible > 0);
+      }
 
-    function applySort() {
-      var grid = document.getElementById('gallery-grid');
-      var sortSelect = document.getElementById('sort-select');
-      var cards = getCards();
-      if (!grid || !sortSelect) return;
-      var sorted = cards.slice().sort(function (a, b) {
-        var sort = sortSelect.value;
-        if (sort === 'newest') return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
-        if (sort === 'oldest') return new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
-        return (a.dataset.title || '').localeCompare(b.dataset.title || '');
-      });
-      sorted.forEach(function (card) { grid.appendChild(card); });
-    }
+      function applySort() {
+        var grid = document.getElementById('gallery-grid');
+        var sortSelect = document.getElementById('sort-select');
+        var cards = getCards();
+        if (!grid || !sortSelect) return;
+        var sorted = cards.slice().sort(function (a, b) {
+          var sort = sortSelect.value;
+          if (sort === 'newest') return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
+          if (sort === 'oldest') return new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
+          return (a.dataset.title || '').localeCompare(b.dataset.title || '');
+        });
+        sorted.forEach(function (card) {
+          grid.appendChild(card);
+        });
+      }
 
-    function initGalleryFilters() {
-      if (!document.getElementById('gallery-grid')) return;
-      activeTag = '';
-      setActiveButton('');
-    }
+      function initGalleryFilters() {
+        if (!document.getElementById('gallery-grid')) return;
+        activeTag = '';
+        setActiveButton('');
+      }
 
-    if (!document.documentElement.dataset.galleryFilterInit) {
-      document.documentElement.dataset.galleryFilterInit = '1';
+      if (!document.documentElement.dataset.galleryFilterInit) {
+        document.documentElement.dataset.galleryFilterInit = '1';
 
-      document.addEventListener('click', function (e) {
-        var target = e.target;
-        if (!target || typeof target.closest !== 'function') return;
+        document.addEventListener('click', function (e) {
+          var target = e.target;
+          if (!target || typeof target.closest !== 'function') return;
 
-        var tagBtn = target.closest('#tag-filters .tag-filter');
-        if (tagBtn && document.getElementById('gallery-grid')) {
-          activeTag = tagBtn.dataset.tag || '';
-          setActiveButton(activeTag);
-          applyFilters();
-          return;
-        }
+          var tagBtn = target.closest('#tag-filters .tag-filter');
+          if (tagBtn && document.getElementById('gallery-grid')) {
+            activeTag = tagBtn.dataset.tag || '';
+            setActiveButton(activeTag);
+            applyFilters();
+            return;
+          }
 
-        if (target.closest('#gallery-tags-toggle')) {
-          tagOverflowExpanded = !tagOverflowExpanded;
-          document.querySelectorAll('.gallery-tag-overflow').forEach(function (el) {
-            el.classList.toggle('hidden', !tagOverflowExpanded);
-          });
+          if (target.closest('#gallery-tags-toggle')) {
+            tagOverflowExpanded = !tagOverflowExpanded;
+            document.querySelectorAll('.gallery-tag-overflow').forEach(function (el) {
+              el.classList.toggle('hidden', !tagOverflowExpanded);
+            });
+            var toggle = document.getElementById('gallery-tags-toggle');
+            if (toggle) {
+              toggle.textContent = tagOverflowExpanded ? 'Show less' : toggle.dataset.label || '';
+              toggle.setAttribute('aria-expanded', String(tagOverflowExpanded));
+            }
+            return;
+          }
+        });
+
+        document.addEventListener('change', function (e) {
+          if (e.target && e.target.id === 'sort-select' && document.getElementById('gallery-grid')) {
+            applySort();
+            applyFilters();
+          }
+        });
+
+        document.addEventListener('astro:after-swap', function () {
+          tagOverflowExpanded = false;
           var toggle = document.getElementById('gallery-tags-toggle');
-          if (toggle) {
-            toggle.textContent = tagOverflowExpanded ? 'Show less' : toggle.dataset.label || '';
-            toggle.setAttribute('aria-expanded', String(tagOverflowExpanded));
-          }
-          return;
-        }
-      });
+          if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
+          initGalleryFilters();
+        });
+      }
 
-      document.addEventListener('change', function (e) {
-        if (e.target && e.target.id === 'sort-select' && document.getElementById('gallery-grid')) {
-          applySort();
-          applyFilters();
-        }
-      });
+      var tagToggle = document.getElementById('gallery-tags-toggle');
+      if (tagToggle && !tagToggle.dataset.label) tagToggle.dataset.label = tagToggle.textContent || '';
 
-      document.addEventListener('astro:after-swap', function () {
-        tagOverflowExpanded = false;
-        var toggle = document.getElementById('gallery-tags-toggle');
-        if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
-        initGalleryFilters();
-      });
-    }
-
-    var tagToggle = document.getElementById('gallery-tags-toggle');
-    if (tagToggle && !tagToggle.dataset.label) tagToggle.dataset.label = tagToggle.textContent || '';
-
-    initGalleryFilters();
-  })();
+      initGalleryFilters();
+    })();
   </script>
 </BaseLayout>

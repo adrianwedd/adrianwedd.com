@@ -1,23 +1,23 @@
 ---
-title: "Giving a Robot Three Voices"
-description: "Building a three-persona TTS pipeline for a Pi robot — MLX voice cloning, a GLaDOS model, and engineering graceful fallback."
+title: 'Giving a Robot Three Voices'
+description: 'Building a three-persona TTS pipeline for a Pi robot — MLX voice cloning, a GLaDOS model, and engineering graceful fallback.'
 date: 2026-03-19
-tags: ["ai", "tts", "mlx", "raspberry-pi", "robotics", "apple-silicon", "voice-cloning", "spark"]
-heroImage: "/notebook-assets/giving-a-robot-three-voices/infographic.webp"
-audioUrl: "/notebook-assets/giving-a-robot-three-voices/audio.mp3"
-series: "PiCar-X"
+tags: ['ai', 'tts', 'mlx', 'raspberry-pi', 'robotics', 'apple-silicon', 'voice-cloning', 'spark']
+heroImage: '/notebook-assets/giving-a-robot-three-voices/infographic.webp'
+audioUrl: '/notebook-assets/giving-a-robot-three-voices/audio.mp3'
+series: 'PiCar-X'
 seriesOrder: 2
 faq:
-  - q: "Can Qwen3-TTS run on a Raspberry Pi?"
-    a: "No. Even the smallest 0.6B model needs ~2.5 GB for weights plus PyTorch runtime overhead, which is too much for a Pi 4 already running other services. There is no GGUF or ONNX conversion for the TTS variant, so there is no efficient CPU-only inference path on ARM."
-  - q: "How does MLX compare to PyTorch for TTS on Apple Silicon?"
+  - q: 'Can Qwen3-TTS run on a Raspberry Pi?'
+    a: 'No. Even the smallest 0.6B model needs ~2.5 GB for weights plus PyTorch runtime overhead, which is too much for a Pi 4 already running other services. There is no GGUF or ONNX conversion for the TTS variant, so there is no efficient CPU-only inference path on ARM.'
+  - q: 'How does MLX compare to PyTorch for TTS on Apple Silicon?'
     a: "MLX uses roughly 6 GB peak memory for the Qwen3-TTS 0.6B 8-bit model, compared to ~10 GB for PyTorch. MLX uses Apple's unified memory natively with zero-copy operations and lazy evaluation, while PyTorch allocates aggressively and fragments the heap."
-  - q: "How much reference audio does Qwen3-TTS need for voice cloning?"
-    a: "About 15 seconds with an accurate transcript. Transcript accuracy matters more than clip length — an inaccurate transcript causes the model to blur the boundary between reference and target speech."
-  - q: "Is MLX Metal thread-safe for concurrent inference?"
-    a: "No. Two concurrent GPU operations cause a Metal assertion failure. Wrap all synthesis calls in a threading.Lock and use a readiness gate to prevent overlap during model warmup."
-  - q: "Should I use 4-bit or 8-bit quantisation for Qwen3-TTS on MLX?"
-    a: "Use 8-bit. It is both faster (0.54x vs 0.71x RTF) and cleaner sounding, with only 100 MB more memory. The 4-bit dequantisation overhead on MLX Metal kernels outweighs memory bandwidth savings."
+  - q: 'How much reference audio does Qwen3-TTS need for voice cloning?'
+    a: 'About 15 seconds with an accurate transcript. Transcript accuracy matters more than clip length — an inaccurate transcript causes the model to blur the boundary between reference and target speech.'
+  - q: 'Is MLX Metal thread-safe for concurrent inference?'
+    a: 'No. Two concurrent GPU operations cause a Metal assertion failure. Wrap all synthesis calls in a threading.Lock and use a readiness gate to prevent overlap during model warmup.'
+  - q: 'Should I use 4-bit or 8-bit quantisation for Qwen3-TTS on MLX?'
+    a: 'Use 8-bit. It is both faster (0.54x vs 0.71x RTF) and cleaner sounding, with only 100 MB more memory. The 4-bit dequantisation overhead on MLX Metal kernels outweighs memory bandwidth savings.'
 ---
 
 ## The Problem: One Robot, Three Personalities
@@ -101,7 +101,7 @@ Short, exact transcript. The output started cleanly with the target text, but th
 
 ### 10 seconds
 
-Longer clip, longer transcript. The voice character was strong — it sounded like the source. But the generated speech *continued from the reference text*. Instead of "The universe is so vast," it started with "...it smells like fairy floss. The universe is so vast."
+Longer clip, longer transcript. The voice character was strong — it sounded like the source. But the generated speech _continued from the reference text_. Instead of "The universe is so vast," it started with "...it smells like fairy floss. The universe is so vast."
 
 This was puzzling. The model's internal architecture separates the reference and target text with chat template tokens (`<|im_end|>\n<|im_start|>assistant\n`). The continuation shouldn't happen. The culprit was transcript inaccuracy — we'd used Whisper `base.en` for transcription, which turned "hair" into "here." The mismatch confused the model's text-audio alignment.
 
@@ -113,10 +113,10 @@ Same clip length as 10s, but with an accurate transcript from Whisper `large-v3-
 
 ## Quantisation: 4-bit vs 8-bit
 
-| Quantisation | Peak Memory | Audio Quality | RTF |
-|-------------|------------|---------------|-----|
-| 4-bit | 5.9 GB | Noisy, grainy | 0.71x |
-| 8-bit | 6.0 GB | Clean | 0.54x |
+| Quantisation | Peak Memory | Audio Quality | RTF   |
+| ------------ | ----------- | ------------- | ----- |
+| 4-bit        | 5.9 GB      | Noisy, grainy | 0.71x |
+| 8-bit        | 6.0 GB      | Clean         | 0.54x |
 
 100 MB difference in memory. The 8-bit model is both faster and cleaner — 4-bit dequantisation overhead on MLX's Metal kernels outweighs the memory bandwidth savings. This isn't even a tradeoff — it's a free upgrade.
 
@@ -126,7 +126,7 @@ GREMLIN needed a voice too. GREMLIN's character is loosely inspired by GLaDOS fr
 
 The result was terrible. GLaDOS's voice has heavy post-processing — pitch shifting, vocoder effects, resonance filtering. The 0.6B voice cloning model treated these as noise artifacts rather than voice characteristics. The clone sounded like a woman with a cold, not a menacing AI.
 
-The fix was to stop trying to clone and use a purpose-built model instead. [R2D2FISH/glados-tts](https://github.com/R2D2FISH/glados-tts) is a Forward Tacotron + HiFiGAN model trained directly on Ellen McLain's Portal voice lines. It generates speech that sounds like GLaDOS because it *is* GLaDOS (or as close as you can get without Valve's lawyers).
+The fix was to stop trying to clone and use a purpose-built model instead. [R2D2FISH/glados-tts](https://github.com/R2D2FISH/glados-tts) is a Forward Tacotron + HiFiGAN model trained directly on Ellen McLain's Portal voice lines. It generates speech that sounds like GLaDOS because it _is_ GLaDOS (or as close as you can get without Valve's lawyers).
 
 The model is ~300 MB, runs on CPU, and generates 8.4 seconds of audio in 1.7 seconds. It runs on the Pi itself — no network dependency.
 
@@ -241,12 +241,12 @@ The multi-model approach costs more tokens but catches bugs that any single mode
 
 ## Performance Summary
 
-| Component | Hardware | Model | Latency | Memory |
-|-----------|----------|-------|---------|--------|
-| VIXEN (voice clone) | M1 8GB | Qwen3-TTS 0.6B 8-bit (MLX) | 0.54x RTF (model preloaded) | 6.0 GB peak |
-| GREMLIN (GLaDOS) | Pi 4 4GB | Forward Tacotron + HiFiGAN | ~1.7s for 8.4s audio | ~300 MB |
-| SPARK (espeak) | Pi 4 4GB | N/A | instant | negligible |
-| Fallback (espeak) | Pi 4 4GB | N/A | instant | negligible |
+| Component           | Hardware | Model                      | Latency                     | Memory      |
+| ------------------- | -------- | -------------------------- | --------------------------- | ----------- |
+| VIXEN (voice clone) | M1 8GB   | Qwen3-TTS 0.6B 8-bit (MLX) | 0.54x RTF (model preloaded) | 6.0 GB peak |
+| GREMLIN (GLaDOS)    | Pi 4 4GB | Forward Tacotron + HiFiGAN | ~1.7s for 8.4s audio        | ~300 MB     |
+| SPARK (espeak)      | Pi 4 4GB | N/A                        | instant                     | negligible  |
+| Fallback (espeak)   | Pi 4 4GB | N/A                        | instant                     | negligible  |
 
 ## What We'd Do Differently
 
@@ -265,6 +265,7 @@ The multi-model approach costs more tokens but catches bugs that any single mode
 SPARK now has three distinct voices. GREMLIN growls through a Portal-grade vocoder. VIXEN purrs through a voice cloned from a friend reading a children's book she wrote. And SPARK — SPARK still sounds like a microwave. But it's an honest microwave, and the upgrade path is clear: a bigger Mac, the 1.7B CustomVoice model, and an `instruct` parameter that actually works.
 
 The full source is available:
+
 - [SPARK robot](https://github.com/adrianwedd/spark) — the robot's code, tool-voice routing, GLaDOS server, and the MLX voice cloning server (in the `qwen3-tts-server/` directory)
 
 All three voices fall back to espeak. The robot never goes mute. That's the only non-negotiable in the whole system.

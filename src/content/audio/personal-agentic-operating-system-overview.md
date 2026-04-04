@@ -1,11 +1,11 @@
 ---
-title: "An Agentic System You Can Actually Reason About"
-description: "Audio overview of PAOS — a local-first LLM operating system with hybrid retrieval and a self-improving meta-agent."
+title: 'An Agentic System You Can Actually Reason About'
+description: 'Audio overview of PAOS — a local-first LLM operating system with hybrid retrieval and a self-improving meta-agent.'
 date: 2025-07-01
-tags: ["notebooklm", "ai", "infrastructure", "agents"]
-audioUrl: "/notebook-assets/personal-agentic-operating-system/audio.mp3"
-duration: "18:42"
-relatedProject: "personal-agentic-operating-system"
+tags: ['notebooklm', 'ai', 'infrastructure', 'agents']
+audioUrl: '/notebook-assets/personal-agentic-operating-system/audio.mp3'
+duration: '18:42'
+relatedProject: 'personal-agentic-operating-system'
 ---
 
 Most agentic systems assume the cloud. PAOS assumes your machine. Everything runs in Docker on your hardware — no external API calls required unless you choose them. The decision of where your data goes and which model processes it stays with you.

@@ -1,11 +1,11 @@
 ---
-title: "ADHDo: Neurodiversity-Affirming AI Assistant"
-description: "Audio overview exploring ADHD executive function support through AI — three-stage reasoning pipeline, crisis detection, and zero shame by design."
+title: 'ADHDo: Neurodiversity-Affirming AI Assistant'
+description: 'Audio overview exploring ADHD executive function support through AI — three-stage reasoning pipeline, crisis detection, and zero shame by design.'
 date: 2026-02-05
-tags: ["notebooklm", "adhd", "ai-safety", "neurodivergence"]
-audioUrl: "/notebook-assets/adhdo/audio.mp3"
-duration: "8:47"
-relatedProject: "adhdo"
+tags: ['notebooklm', 'adhd', 'ai-safety', 'neurodivergence']
+audioUrl: '/notebook-assets/adhdo/audio.mp3'
+duration: '8:47'
+relatedProject: 'adhdo'
 ---
 
 Most productivity tools assume executive function is a constant. For ADHD brains, it isn't. It's a variable that shifts across the day, the week, the season. ADHDo starts from that premise and builds outward.

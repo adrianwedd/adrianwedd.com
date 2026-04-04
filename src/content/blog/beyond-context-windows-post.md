@@ -1,27 +1,27 @@
 ---
-title: "Beyond Context Windows"
+title: 'Beyond Context Windows'
 description: "What if the LLM didn't read your document — what if it queried it? The Recursive Language Model pattern treats long texts as environment, not input."
 date: 2026-03-15
-tags: ["ai", "engineering", "mcp", "llm", "python"]
+tags: ['ai', 'engineering', 'mcp', 'llm', 'python']
 draft: false
-heroImage: "/notebook-assets/beyond-context-windows/infographic.webp"
-audioUrl: "/notebook-assets/beyond-context-windows/audio.mp3"
+heroImage: '/notebook-assets/beyond-context-windows/infographic.webp'
+audioUrl: '/notebook-assets/beyond-context-windows/audio.mp3'
 faq:
-  - q: "What is the Recursive Language Model pattern?"
-    a: "The Recursive Language Model pattern treats documents as environment that the model queries, rather than input to read directly. The LLM uses tools to search, retrieve, and interact with content iteratively."
-  - q: "How does RLM differ from RAG?"
-    a: "RAG retrieves pre-selected fragments to inject into prompts. RLM provides an interactive interface where the model decides what to read, when to search, and how to chunk. RLM also tracks full provenance of which source text generated which output."
-  - q: "What is provenance tracking in document queries?"
-    a: "Provenance tracking records not just what the model said, but exactly which part of the source document it came from — including character ranges and prompt IDs. This makes outputs auditable and defensible."
-  - q: "What are the benefits of querying documents instead of reading them?"
-    a: "The model can search for what it needs, read specific sections at full resolution, and revisit earlier passages — similar to how a researcher actually works through a paper, rather than reading the entire thing at once."
+  - q: 'What is the Recursive Language Model pattern?'
+    a: 'The Recursive Language Model pattern treats documents as environment that the model queries, rather than input to read directly. The LLM uses tools to search, retrieve, and interact with content iteratively.'
+  - q: 'How does RLM differ from RAG?'
+    a: 'RAG retrieves pre-selected fragments to inject into prompts. RLM provides an interactive interface where the model decides what to read, when to search, and how to chunk. RLM also tracks full provenance of which source text generated which output.'
+  - q: 'What is provenance tracking in document queries?'
+    a: 'Provenance tracking records not just what the model said, but exactly which part of the source document it came from — including character ranges and prompt IDs. This makes outputs auditable and defensible.'
+  - q: 'What are the benefits of querying documents instead of reading them?'
+    a: 'The model can search for what it needs, read specific sections at full resolution, and revisit earlier passages — similar to how a researcher actually works through a paper, rather than reading the entire thing at once.'
 ---
 
 Every LLM has a context window. Even the largest ones — a million tokens, two million — are finite. And documents aren't. A regulatory corpus, a research archive, a novel-length manuscript: these routinely exceed what any model can process in a single pass.
 
 The standard workarounds are familiar and unsatisfying. Chunk the document and process each piece independently — but lose cross-chunk coherence. Summarise first and query the summary — but lose detail. Use RAG to retrieve relevant fragments — but lose structure. Each approach trades away something you needed.
 
-The Recursive Language Model pattern, proposed by Zhang, Kraska, and Khattab in their 2025 paper, reframes the problem entirely. Instead of feeding the document *into* the model, you treat the document as part of the *environment* that the model can symbolically interact with. The LLM doesn't read the document. It queries it.
+The Recursive Language Model pattern, proposed by Zhang, Kraska, and Khattab in their 2025 paper, reframes the problem entirely. Instead of feeding the document _into_ the model, you treat the document as part of the _environment_ that the model can symbolically interact with. The LLM doesn't read the document. It queries it.
 
 I built [rlm-mcp](/projects/rlm-mcp/) to put that idea into production.
 
@@ -43,7 +43,7 @@ The difference between "stuff the context window" and "query the document" is st
 
 When you stuff the window, the model processes everything once, in order, with no ability to revisit or search. Attention degrades over long sequences. The model can't skip ahead or re-read. It's reading a novel by flashlight in a single pass.
 
-When you treat the document as environment, the model can search for what it needs, read specific sections at full resolution, and revisit earlier passages when later context changes the question. It can also explain *why* it read what it read — because every span access is logged, every artifact tracks its source.
+When you treat the document as environment, the model can search for what it needs, read specific sections at full resolution, and revisit earlier passages when later context changes the question. It can also explain _why_ it read what it read — because every span access is logged, every artifact tracks its source.
 
 This is provenance. Not "the model said X" but "the model said X based on characters 14,200–15,800 of document Y, using prompt Z." Auditable, reproducible, and — when it matters — defensible.
 
@@ -67,4 +67,4 @@ The test suite covers batch loading, concurrency, end-to-end integration, error 
 
 ---
 
-*[rlm-mcp](/projects/rlm-mcp/) is open source at [github.com/adrianwedd/rlm-mcp](https://github.com/adrianwedd/rlm-mcp). The pattern is based on Zhang, Kraska & Khattab (2025), "Recursive Language Models" (arXiv:2512.24601).*
+_[rlm-mcp](/projects/rlm-mcp/) is open source at [github.com/adrianwedd/rlm-mcp](https://github.com/adrianwedd/rlm-mcp). The pattern is based on Zhang, Kraska & Khattab (2025), "Recursive Language Models" (arXiv:2512.24601)._

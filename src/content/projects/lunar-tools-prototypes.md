@@ -1,13 +1,13 @@
 ---
-title: "Lunar Tools Prototypes"
-description: "Interactive audiovisual art installations—dream interpreters, fingerprint painters, cosmic murals, and fractal forests."
-tags: ["art", "ai", "installation", "python"]
-repo: "https://github.com/adrianwedd/lunar_tools_prototypes"
-status: "experiment"
+title: 'Lunar Tools Prototypes'
+description: 'Interactive audiovisual art installations—dream interpreters, fingerprint painters, cosmic murals, and fractal forests.'
+tags: ['art', 'ai', 'installation', 'python']
+repo: 'https://github.com/adrianwedd/lunar_tools_prototypes'
+status: 'experiment'
 featured: false
 date: 2025-06-15
-audioUrl: "/notebook-assets/lunar-tools-prototypes/audio.mp3"
-heroImage: "/notebook-assets/lunar-tools-prototypes/infographic.webp"
+audioUrl: '/notebook-assets/lunar-tools-prototypes/audio.mp3'
+heroImage: '/notebook-assets/lunar-tools-prototypes/infographic.webp'
 ---
 
 A visitor speaks into a microphone. Their voice becomes a brushstroke. An ambient sound becomes a fractal branch. A dream described aloud becomes an image that did not exist until they said it.

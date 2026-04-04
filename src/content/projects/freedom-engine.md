@@ -1,13 +1,13 @@
 ---
-title: "Freedom Engine"
+title: 'Freedom Engine'
 description: "The First Step Act exists. The information is public. The legal complexity makes it inaccessible. 264,000 people can't afford that gap."
-tags: ["ai", "justice", "python"]
-repo: "https://github.com/adrianwedd/freedom-engine"
-status: "active"
+tags: ['ai', 'justice', 'python']
+repo: 'https://github.com/adrianwedd/freedom-engine'
+status: 'active'
 featured: false
 date: 2025-04-01
-audioUrl: "/notebook-assets/freedom-engine/audio.mp3"
-heroImage: "/notebook-assets/freedom-engine/infographic.webp"
+audioUrl: '/notebook-assets/freedom-engine/audio.mp3'
+heroImage: '/notebook-assets/freedom-engine/infographic.webp'
 ---
 
 Over 264,000 people are held in the US federal prison system. Many are eligible for reduced sentences under the First Step Act. The provisions exist. The information is public. But the legal complexity makes it inaccessible to most inmates without outside help. The information gap is not theoretical—it costs people months or years of their lives.

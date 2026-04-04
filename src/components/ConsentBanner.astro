@@ -4,18 +4,31 @@
 // "Manage" expands granular options inline.
 ---
 
-<div id="consent-banner" class="fixed inset-x-0 bottom-0 z-[100] hidden" role="dialog" aria-label="Cookie consent" aria-live="polite">
+<div
+  id="consent-banner"
+  class="fixed inset-x-0 bottom-0 z-[100] hidden"
+  role="dialog"
+  aria-label="Cookie consent"
+  aria-live="polite"
+>
   <div class="bg-surface/95 border-t border-border shadow-card backdrop-blur-sm">
     <!-- Compact bar -->
     <div id="consent-compact" class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
       <p class="text-xs text-text-muted">
-        This site uses cookies for analytics (Google Analytics, LinkedIn Insight) and personalisation (visit count, stored locally).
-        No tracking before consent. <a href="/privacy/" class="underline transition-colors hover:text-accent"
-          >Full privacy details</a
+        This site uses cookies for analytics (Google Analytics, LinkedIn Insight) and personalisation (visit count,
+        stored locally). No tracking before consent. <a
+          href="/privacy/"
+          class="underline transition-colors hover:text-accent">Full privacy details</a
         >
       </p>
       <div class="flex shrink-0 items-center gap-2">
-        <button id="consent-manage" type="button" class="text-xs text-text-muted transition-colors hover:text-text" aria-expanded="false" aria-controls="consent-expanded">
+        <button
+          id="consent-manage"
+          type="button"
+          class="text-xs text-text-muted transition-colors hover:text-text"
+          aria-expanded="false"
+          aria-controls="consent-expanded"
+        >
           Manage
         </button>
         <button id="consent-reject" type="button" class="text-xs text-text-muted transition-colors hover:text-text">
@@ -75,7 +88,11 @@
 
     function setConsent(state) {
       localStorage.setItem(CONSENT_KEY, JSON.stringify(state));
-      document.cookie = 'consent=' + (state.analytics ? 'a' : '') + (state.personalisation ? 'p' : '') + '; path=/; max-age=31536000; SameSite=Lax';
+      document.cookie =
+        'consent=' +
+        (state.analytics ? 'a' : '') +
+        (state.personalisation ? 'p' : '') +
+        '; path=/; max-age=31536000; SameSite=Lax';
       window.dispatchEvent(new CustomEvent('consent-updated', { detail: state }));
     }
 
@@ -107,16 +124,17 @@
         var target = e.target.closest ? e.target.closest('[id]') : null;
         if (!target) return;
         var id = target.id;
-        if (id === 'consent-accept-all') { save(true, true); }
-        else if (id === 'consent-reject') { save(false, false); }
-        else if (id === 'consent-manage') {
+        if (id === 'consent-accept-all') {
+          save(true, true);
+        } else if (id === 'consent-reject') {
+          save(false, false);
+        } else if (id === 'consent-manage') {
           var expanded = document.getElementById('consent-expanded');
           if (expanded) {
             expanded.classList.toggle('hidden');
             target.setAttribute('aria-expanded', String(!expanded.classList.contains('hidden')));
           }
-        }
-        else if (id === 'consent-accept-selected') {
+        } else if (id === 'consent-accept-selected') {
           var analytics = document.getElementById('consent-analytics');
           var personalisation = document.getElementById('consent-personalisation');
           save(analytics ? analytics.checked : false, personalisation ? personalisation.checked : false);

@@ -35,12 +35,14 @@ export default function GitHubActivity() {
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (loading) {
     return (
-      <div class="space-y-3 animate-pulse" aria-label="Loading GitHub activity" role="status">
+      <div class="animate-pulse space-y-3" aria-label="Loading GitHub activity" role="status">
         <div class="flex gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} class="h-16 flex-1 rounded bg-surface-alt" />
@@ -54,34 +56,26 @@ export default function GitHubActivity() {
   }
 
   if (error === 'rate-limit') {
-    return (
-      <p class="text-sm text-text-muted italic">
-        GitHub activity updates hourly. Check back soon.
-      </p>
-    );
+    return <p class="text-sm italic text-text-muted">GitHub activity updates hourly. Check back soon.</p>;
   }
 
   if (error || activities.length === 0) {
-    return (
-      <p class="text-sm text-text-muted italic">
-        Unable to load GitHub activity right now.
-      </p>
-    );
+    return <p class="text-sm italic text-text-muted">Unable to load GitHub activity right now.</p>;
   }
 
   return (
     <div class="space-y-6" aria-live="polite">
       {/* Stats bar */}
       <div class="grid grid-cols-3 gap-3 text-center">
-        <div class="rounded bg-surface-alt px-3 py-3 border border-border">
+        <div class="rounded border border-border bg-surface-alt px-3 py-3">
           <div class="text-xl font-semibold text-accent">{commitCount}</div>
           <div class="text-xs text-text-muted">commits (30d)</div>
         </div>
-        <div class="rounded bg-surface-alt px-3 py-3 border border-border">
+        <div class="rounded border border-border bg-surface-alt px-3 py-3">
           <div class="text-xl font-semibold text-accent">{repos.length}</div>
           <div class="text-xs text-text-muted">active repos</div>
         </div>
-        <div class="rounded bg-surface-alt px-3 py-3 border border-border">
+        <div class="rounded border border-border bg-surface-alt px-3 py-3">
           <div class="text-xl font-semibold text-accent">{activities.length}</div>
           <div class="text-xs text-text-muted">recent events</div>
         </div>
@@ -89,10 +83,10 @@ export default function GitHubActivity() {
 
       {/* Activity stream */}
       <div>
-        <h3 class="text-sm font-medium text-text-muted mb-3">Activity</h3>
+        <h3 class="mb-3 text-sm font-medium text-text-muted">Activity</h3>
         <ul class="space-y-1">
           {activities.map((a) => (
-            <li key={a.id} class="flex items-start gap-2 py-1.5 text-sm border-b border-border last:border-0">
+            <li key={a.id} class="flex items-start gap-2 border-b border-border py-1.5 text-sm last:border-0">
               <span class="w-4 shrink-0 text-center text-text-muted" aria-hidden="true">
                 {eventIcon(a.type)}
               </span>
@@ -107,14 +101,19 @@ export default function GitHubActivity() {
                 </a>
                 <span class="text-text"> — </span>
                 {a.url ? (
-                  <a href={a.url} target="_blank" rel="noopener noreferrer" class="text-text hover:text-accent truncate">
+                  <a
+                    href={a.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="truncate text-text hover:text-accent"
+                  >
                     {a.description}
                   </a>
                 ) : (
                   <span class="text-text">{a.description}</span>
                 )}
               </span>
-              <span class="shrink-0 text-xs text-text-muted whitespace-nowrap">{a.time}</span>
+              <span class="shrink-0 whitespace-nowrap text-xs text-text-muted">{a.time}</span>
             </li>
           ))}
         </ul>
@@ -123,7 +122,7 @@ export default function GitHubActivity() {
       {/* Active repos */}
       {repos.length > 0 && (
         <div>
-          <h3 class="text-sm font-medium text-text-muted mb-3">Active repos (30d)</h3>
+          <h3 class="mb-3 text-sm font-medium text-text-muted">Active repos (30d)</h3>
           <div class="flex flex-wrap gap-2">
             {repos.map((r) => (
               <a
@@ -131,7 +130,7 @@ export default function GitHubActivity() {
                 href={`https://github.com/${USERNAME}/${r.name}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-1.5 rounded bg-surface-alt px-2.5 py-1 text-xs border border-border hover:border-accent transition-colors"
+                class="inline-flex items-center gap-1.5 rounded border border-border bg-surface-alt px-2.5 py-1 text-xs transition-colors hover:border-accent"
               >
                 <span class="font-mono text-accent">{r.name}</span>
                 <span class="text-text-muted">{r.commits} commits</span>

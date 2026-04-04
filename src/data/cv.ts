@@ -9,13 +9,7 @@ interface CvData {
 
 const DEFAULTS: CvData = {
   jobTitle: 'Systems Builder & AI Safety Researcher',
-  knowsAbout: [
-    'AI Safety',
-    'Systems Analysis',
-    'Cybersecurity',
-    'Multi-agent Systems',
-    'Infrastructure Management',
-  ],
+  knowsAbout: ['AI Safety', 'Systems Analysis', 'Cybersecurity', 'Multi-agent Systems', 'Infrastructure Management'],
   occupationName: 'Systems Builder & AI Safety Researcher',
 };
 

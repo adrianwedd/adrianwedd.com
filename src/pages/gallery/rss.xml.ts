@@ -23,9 +23,9 @@ function getMimeType(path: string): string {
 }
 
 export async function GET(context: APIContext) {
-  const collections = (await getCollection('gallery')).filter((g) => !g.data.draft).sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-  );
+  const collections = (await getCollection('gallery'))
+    .filter((g) => !g.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const site = context.site!.toString().replace(/\/$/, '');
 

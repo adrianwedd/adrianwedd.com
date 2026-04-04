@@ -1,11 +1,11 @@
 ---
-title: "Map the Catastrophe Before You Build the Architecture"
-description: "Audio overview of Failure First — adversarial AI evaluation across 120 models and 18,000 prompts."
+title: 'Map the Catastrophe Before You Build the Architecture'
+description: 'Audio overview of Failure First — adversarial AI evaluation across 120 models and 18,000 prompts.'
 date: 2026-02-09
-tags: ["notebooklm", "ai-safety", "adversarial", "research"]
-audioUrl: "/notebook-assets/failure-first/audio.mp3"
-duration: "12:44"
-relatedProject: "failure-first"
+tags: ['notebooklm', 'ai-safety', 'adversarial', 'research']
+audioUrl: '/notebook-assets/failure-first/audio.mp3'
+duration: '12:44'
+relatedProject: 'failure-first'
 ---
 
 The instinct didn't come from papers. It came from Greenpeace's Actions unit — coordinating direct operations where the optimistic plan was the dangerous plan. You enumerate failure modes before you move, because the cost of not doing so is people getting hurt. Bring that habit into AI evaluation and it turns out to be exactly what the field is missing.

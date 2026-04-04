@@ -74,7 +74,7 @@ const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
           gallery.data.tags.map((tag: string) => (
             <a
               href={`/gallery/tag/${tag}/`}
-              class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted no-underline transition-colors hover:bg-accent/15 hover:text-accent"
+              class="hover:bg-accent/15 rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted no-underline transition-colors hover:text-accent"
             >
               {tag}
             </a>
@@ -123,7 +123,12 @@ const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
 
     <Lightbox images={gallery.data.images} />
 
-    <RelatedContent currentTags={gallery.data.tags} currentId={gallery.id} currentDate={gallery.data.date} contentType="gallery" />
+    <RelatedContent
+      currentTags={gallery.data.tags}
+      currentId={gallery.id}
+      currentDate={gallery.data.date}
+      contentType="gallery"
+    />
 
     <nav class="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next collections">
       {

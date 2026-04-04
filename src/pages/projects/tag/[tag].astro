@@ -39,7 +39,7 @@ const statusColors: Record<string, string> = {
     <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
       <a
         href="/projects/"
-        class="rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:bg-accent/15 hover:text-accent"
+        class="hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent"
       >
         All
       </a>
@@ -51,7 +51,7 @@ const statusColors: Record<string, string> = {
               'rounded-full px-3 py-1 text-xs no-underline',
               t === tag
                 ? 'bg-accent/15 font-medium text-accent'
-                : 'bg-surface-raised text-text-muted transition-colors hover:bg-accent/15 hover:text-accent',
+                : 'hover:bg-accent/15 bg-surface-raised text-text-muted transition-colors hover:text-accent',
             ]}
           >
             {t}

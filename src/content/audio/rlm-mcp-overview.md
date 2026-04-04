@@ -1,11 +1,11 @@
 ---
-title: "Beyond Context Windows"
-description: "Audio overview of rlm-mcp — an MCP server for processing million-character documents with BM25 search and provenance."
+title: 'Beyond Context Windows'
+description: 'Audio overview of rlm-mcp — an MCP server for processing million-character documents with BM25 search and provenance.'
 date: 2025-11-01
-tags: ["notebooklm", "ai", "mcp", "tools"]
-audioUrl: "/notebook-assets/rlm-mcp/audio.mp3"
-duration: "18:31"
-relatedProject: "rlm-mcp"
+tags: ['notebooklm', 'ai', 'mcp', 'tools']
+audioUrl: '/notebook-assets/rlm-mcp/audio.mp3'
+duration: '18:31'
+relatedProject: 'rlm-mcp'
 ---
 
 Context windows have limits. Documents don't. The mismatch creates a practical problem: if your working document exceeds what the model can hold in a single pass, you're forced into chunking strategies that lose coherence, summarisation that loses detail, or simply giving up on using the document at all.

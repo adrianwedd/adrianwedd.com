@@ -1,16 +1,16 @@
 ---
-title: "Why Demonstrated Risk Is Ignored"
-description: "Large organisations rarely fail because risks are unknown. They fail because known risks are structurally difficult to act on."
+title: 'Why Demonstrated Risk Is Ignored'
+description: 'Large organisations rarely fail because risks are unknown. They fail because known risks are structurally difficult to act on.'
 date: 2026-03-02
-tags: ["research", "risk", "organisations", "policy", "ai-safety"]
+tags: ['research', 'risk', 'organisations', 'policy', 'ai-safety']
 draft: false
-heroImage: "/notebook-assets/why-demonstrated-risk-is-ignored/infographic.webp"
-audioUrl: "/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3"
+heroImage: '/notebook-assets/why-demonstrated-risk-is-ignored/infographic.webp'
+audioUrl: '/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3'
 faq:
-  - q: "Why do organisations ignore demonstrated risk?"
-    a: "Four structural reasons: responsibility without authority, misaligned incentives, organisational scar tissue from past failures, and evidence that threatens institutional identity."
-  - q: "How can organisations fix their risk response?"
-    a: "By explicitly managing the local costs of truth-telling — removing blame, funding rework, and creating safe channels for escalation."
+  - q: 'Why do organisations ignore demonstrated risk?'
+    a: 'Four structural reasons: responsibility without authority, misaligned incentives, organisational scar tissue from past failures, and evidence that threatens institutional identity.'
+  - q: 'How can organisations fix their risk response?'
+    a: 'By explicitly managing the local costs of truth-telling — removing blame, funding rework, and creating safe channels for escalation.'
 ---
 
 I spend most of my time trying to demonstrate that AI systems can be made to fail in dangerous ways. The technical work is hard but tractable. The part that keeps me up at night is what happens after you prove something is broken — because the answer, far more often than it should be, is nothing.
@@ -105,4 +105,4 @@ Every organisation says it wants to know what's broken. The test is whether it h
 
 ---
 
-*This essay is adapted from the [Why Demonstrated Risk Is Ignored](/projects/why-demonstrated-risk-is-ignored/) research project. The full paper, case studies, and structural analysis are available in the [research repository](https://github.com/adrianwedd/why-demonstrated-risk-is-ignored).*
+_This essay is adapted from the [Why Demonstrated Risk Is Ignored](/projects/why-demonstrated-risk-is-ignored/) research project. The full paper, case studies, and structural analysis are available in the [research repository](https://github.com/adrianwedd/why-demonstrated-risk-is-ignored)._

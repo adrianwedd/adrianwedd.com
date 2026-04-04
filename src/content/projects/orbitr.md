@@ -1,13 +1,13 @@
 ---
-title: "orbitr"
-description: "Rhythm as geometry. Four tracks orbit a shared centre, each at its own tempo. Polyrhythm made spatial — and MusicGen makes the sounds."
-tags: ["music", "ai", "creative", "typescript"]
-repo: "https://github.com/adrianwedd/orbitr"
-status: "experiment"
+title: 'orbitr'
+description: 'Rhythm as geometry. Four tracks orbit a shared centre, each at its own tempo. Polyrhythm made spatial — and MusicGen makes the sounds.'
+tags: ['music', 'ai', 'creative', 'typescript']
+repo: 'https://github.com/adrianwedd/orbitr'
+status: 'experiment'
 featured: false
 date: 2025-09-01
-heroImage: "/notebook-assets/orbitr/infographic.webp"
-audioUrl: "/notebook-assets/orbitr/audio.mp3"
+heroImage: '/notebook-assets/orbitr/infographic.webp'
+audioUrl: '/notebook-assets/orbitr/audio.mp3'
 ---
 
 Traditional sequencers are grids. Rows and columns. Time moves left to right. It works, but it enforces a particular relationship with rhythm—one that privileges linearity and makes polyrhythm feel like a special case rather than the natural state of things.

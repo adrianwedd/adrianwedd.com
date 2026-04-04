@@ -39,10 +39,14 @@ export default function Flashcards({ src }: Props) {
         class="hover:border-accent/50 flex min-h-[8rem] w-full cursor-pointer items-center justify-center rounded-lg border border-border p-6 transition-colors"
         aria-label={flipped ? 'Click to show question' : 'Click to reveal answer'}
       >
-        <p class="text-center text-sm text-text" aria-live="polite">{flipped ? card.back : card.front}</p>
+        <p class="text-center text-sm text-text" aria-live="polite">
+          {flipped ? card.back : card.front}
+        </p>
       </button>
 
-      <p class="mt-2 text-center text-xs text-text-muted" aria-live="polite">{flipped ? 'Answer' : 'Click to reveal'}</p>
+      <p class="mt-2 text-center text-xs text-text-muted" aria-live="polite">
+        {flipped ? 'Answer' : 'Click to reveal'}
+      </p>
 
       <div class="mt-4 flex justify-between">
         <button

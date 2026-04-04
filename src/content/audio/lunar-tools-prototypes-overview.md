@@ -1,11 +1,11 @@
 ---
-title: "When Voice Becomes Brushstroke"
-description: "Twenty-plus interactive art installations where visitors speak, sing, and dream into AI systems that respond in real time."
+title: 'When Voice Becomes Brushstroke'
+description: 'Twenty-plus interactive art installations where visitors speak, sing, and dream into AI systems that respond in real time.'
 date: 2025-06-15
-tags: ["notebooklm", "art", "ai", "installation"]
-audioUrl: "/notebook-assets/lunar-tools-prototypes/audio.mp3"
-duration: "18:43"
-relatedProject: "lunar-tools-prototypes"
+tags: ['notebooklm', 'art', 'ai', 'installation']
+audioUrl: '/notebook-assets/lunar-tools-prototypes/audio.mp3'
+duration: '18:43'
+relatedProject: 'lunar-tools-prototypes'
 ---
 
 A visitor speaks into a microphone. Their voice becomes a brushstroke. An ambient sound becomes a fractal branch. A dream described aloud becomes an image that did not exist until they said it. These are not separate pieces — they're a collection of over twenty interactive audiovisual installations, each exploring a different intersection of AI generation, real-time audio, and human input.

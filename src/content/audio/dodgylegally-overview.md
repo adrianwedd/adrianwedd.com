@@ -1,11 +1,11 @@
 ---
-title: "Manufacturing Happy Accidents"
+title: 'Manufacturing Happy Accidents'
 description: "A CLI that turns random words into sample packs via YouTube — because the best sounds come from places you weren't looking."
 date: 2026-02-01
-tags: ["notebooklm", "music", "cli", "creative"]
-audioUrl: "/notebook-assets/dodgylegally/audio.mp3"
-duration: "16:15"
-relatedProject: "dodgylegally"
+tags: ['notebooklm', 'music', 'cli', 'creative']
+audioUrl: '/notebook-assets/dodgylegally/audio.mp3'
+duration: '16:15'
+relatedProject: 'dodgylegally'
 ---
 
 The feeling you're chasing never arrives by browsing a sample library. It arrives by accident — by hearing a texture you didn't know existed, shaped by a word you chose for no reason. dodgylegally is built around that observation. Type a random word. Get a sample pack. The tool generates audio instruments from chaotic search phrases, pulling from YouTube, local files, and a five-thousand-word dictionary with weighted source mixing.

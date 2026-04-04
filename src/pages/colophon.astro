@@ -17,12 +17,17 @@ try {
   gitSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf-8' }).trim();
   gitShortSha = gitSha.slice(0, 7);
   gitBranch = execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { encoding: 'utf-8' }).trim();
-} catch { /* not in git */ }
+} catch {
+  /* not in git */
+}
 
 // Package versions
 let astroVersion = '5.x';
 const nodeVersion = process.version;
-interface PkgDep { name: string; version: string }
+interface PkgDep {
+  name: string;
+  version: string;
+}
 let deps: PkgDep[] = [];
 try {
   const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
@@ -31,7 +36,9 @@ try {
   deps = Object.entries(allDeps)
     .map(([name, version]) => ({ name, version: (version as string).replace(/^\^|~/, '') }))
     .sort((a, b) => a.name.localeCompare(b.name));
-} catch { /* fallback */ }
+} catch {
+  /* fallback */
+}
 
 // Count generated pages (from last build if available)
 let pageCount = 0;
@@ -45,7 +52,9 @@ try {
     return count;
   };
   pageCount = countFiles('dist');
-} catch { /* no dist yet */ }
+} catch {
+  /* no dist yet */
+}
 
 // Content counts
 const contentDir = 'src/content';
@@ -58,7 +67,9 @@ try {
   projectCount = fs.readdirSync(`${contentDir}/projects`).filter((f: string) => f.endsWith('.md')).length;
   galleryCount = fs.readdirSync(`${contentDir}/gallery`).filter((f: string) => f.endsWith('.md')).length;
   audioCount = fs.readdirSync(`${contentDir}/audio`).filter((f: string) => f.endsWith('.md')).length;
-} catch { /* fallback */ }
+} catch {
+  /* fallback */
+}
 ---
 
 <BaseLayout title="Colophon" description="How this site is built, what powers it, and who helped." noindex>
@@ -73,8 +84,8 @@ try {
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <header class="mb-12">
       <p class="mt-4 max-w-prose text-sm text-text-muted">
-        Built the way I build client work: the smallest thing that does the job correctly.
-        No framework theatre, no dependency sprawl, no features acquired before there's a reason for them.
+        Built the way I build client work: the smallest thing that does the job correctly. No framework theatre, no
+        dependency sprawl, no features acquired before there's a reason for them.
       </p>
     </header>
 
@@ -107,7 +118,8 @@ try {
             <dd class="text-text-muted">
               GA4 consent-gated, with build-time data fetch for <a
                 href="/analytics/"
-                class="text-accent hover:underline">public dashboard</a>
+                class="text-accent hover:underline">public dashboard</a
+              >
             </dd>
           </div>
           <div>
@@ -140,22 +152,24 @@ try {
             <dt class="font-medium text-accent">Last Built</dt>
             <dd class="text-text-muted">{buildDate} at {buildTime}</dd>
           </div>
-          {gitShortSha && (
-            <div>
-              <dt class="font-medium text-accent">Commit</dt>
-              <dd class="text-text-muted">
-                <a
-                  href={`https://github.com/adrianwedd/adrianwedd.com/commit/${gitSha}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-mono text-accent hover:underline"
-                >
-                  {gitShortSha}
-                </a>
-                {gitBranch && <span> on {gitBranch}</span>}
-              </dd>
-            </div>
-          )}
+          {
+            gitShortSha && (
+              <div>
+                <dt class="font-medium text-accent">Commit</dt>
+                <dd class="text-text-muted">
+                  <a
+                    href={`https://github.com/adrianwedd/adrianwedd.com/commit/${gitSha}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-mono text-accent hover:underline"
+                  >
+                    {gitShortSha}
+                  </a>
+                  {gitBranch && <span> on {gitBranch}</span>}
+                </dd>
+              </div>
+            )
+          }
           <div>
             <dt class="font-medium text-accent">Runtime</dt>
             <dd class="text-text-muted">Astro {astroVersion} / Node {nodeVersion}</dd>
@@ -166,12 +180,14 @@ try {
               {blogCount} posts, {projectCount} projects, {galleryCount} galleries, {audioCount} episodes
             </dd>
           </div>
-          {pageCount > 0 && (
-            <div>
-              <dt class="font-medium text-accent">Pages Generated</dt>
-              <dd class="text-text-muted">{pageCount} static HTML pages</dd>
-            </div>
-          )}
+          {
+            pageCount > 0 && (
+              <div>
+                <dt class="font-medium text-accent">Pages Generated</dt>
+                <dd class="text-text-muted">{pageCount} static HTML pages</dd>
+              </div>
+            )
+          }
           <div>
             <dt class="font-medium text-accent">Build Process</dt>
             <dd class="text-text-muted">Static site generation (SSG) with CI/CD via GitHub Actions</dd>
@@ -192,28 +208,33 @@ try {
         </dl>
       </section>
 
-      {deps.length > 0 && (
-        <section>
-          <h2 class="mb-4 text-xl font-semibold text-text">Dependencies</h2>
-          <p class="mb-3 text-sm text-text-muted">{deps.length} packages power this site.</p>
-          <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs sm:grid-cols-3">
-            {deps.map((d) => (
-              <div class="flex justify-between gap-2">
-                <span class="truncate text-text-muted">{d.name}</span>
-                <span class="shrink-0 font-mono text-accent">{d.version}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {
+        deps.length > 0 && (
+          <section>
+            <h2 class="mb-4 text-xl font-semibold text-text">Dependencies</h2>
+            <p class="mb-3 text-sm text-text-muted">{deps.length} packages power this site.</p>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs sm:grid-cols-3">
+              {deps.map((d) => (
+                <div class="flex justify-between gap-2">
+                  <span class="truncate text-text-muted">{d.name}</span>
+                  <span class="shrink-0 font-mono text-accent">{d.version}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       <section>
         <h2 class="mb-4 text-xl font-semibold text-text">Credits</h2>
         <div class="space-y-4 text-text-muted">
           <p>
             Built by <a href="https://adrianwedd.com" class="text-accent hover:underline">Adrian Wedd</a> with assistance
-            from <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline"
-              >Claude Code</a
+            from <a
+              href="https://claude.ai/code"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-accent hover:underline">Claude Code</a
             > (Opus 4.6).
           </p>
           <p>
@@ -249,11 +270,13 @@ try {
           <li>Analytics: ~30KB gzipped (consent-gated)</li>
           <li>
             Interactive islands: lazy hydration via <code class="rounded bg-surface-alt px-1 py-0.5 text-text-accent"
-              >client:idle</code>
+              >client:idle</code
+            >
           </li>
           <li>
             Images: lazy loading with native <code class="rounded bg-surface-alt px-1 py-0.5 text-text-accent"
-              >loading="lazy"</code>
+              >loading="lazy"</code
+            >
           </li>
         </ul>
       </section>

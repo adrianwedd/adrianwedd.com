@@ -1,11 +1,11 @@
 ---
-title: "Getting Google Nest Cameras Into Frigate NVR"
+title: 'Getting Google Nest Cameras Into Frigate NVR'
 description: "The full story of getting Nest cameras streaming into Frigate with Hailo-8L AI detection — including the bugs Google won't tell you about."
 date: 2026-03-16
-tags: ["engineering", "homelab", "raspberry-pi", "python", "home-assistant"]
+tags: ['engineering', 'homelab', 'raspberry-pi', 'python', 'home-assistant']
 draft: false
-heroImage: "/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/infographic.webp"
-audioUrl: "/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/audio.mp3"
+heroImage: '/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/infographic.webp'
+audioUrl: '/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/audio.mp3'
 ---
 
 I've tried this at least three times before. Each time I hit a wall, gave up, and went back to watching my Nest cameras through the Google Home app like a normal person. This time I finally cracked it — and the solution turned out to be genuinely weird in ways I want to document properly, because the information online is either outdated, incomplete, or glosses over the exact failure modes that will destroy your afternoon.
@@ -199,7 +199,7 @@ The Frigate config:
 go2rtc:
   streams:
     driveway_camera:
-      - "exec:/media/frigate/.scripts/stream-driveway_camera.sh"
+      - 'exec:/media/frigate/.scripts/stream-driveway_camera.sh'
 
 cameras:
   driveway_camera:
@@ -212,7 +212,7 @@ cameras:
             - detect
             - record
     detect:
-      enabled: true   # required explicitly in Frigate v0.17
+      enabled: true # required explicitly in Frigate v0.17
       width: 640
       height: 480
       fps: 2
@@ -224,7 +224,7 @@ Also required in docker-compose:
 
 ```yaml
 environment:
-  GO2RTC_ALLOW_ARBITRARY_EXEC: "true"
+  GO2RTC_ALLOW_ARBITRARY_EXEC: 'true'
 ```
 
 ## Keeping the token out of the script
@@ -321,4 +321,4 @@ For skimmers:
 
 ---
 
-*Pi 5 + Hailo-8L · Frigate v0.17 · aiortc 1.14.0 · go2rtc 1.9.10 · Home Assistant*
+_Pi 5 + Hailo-8L · Frigate v0.17 · aiortc 1.14.0 · go2rtc 1.9.10 · Home Assistant_

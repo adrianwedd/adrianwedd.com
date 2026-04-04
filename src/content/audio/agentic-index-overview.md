@@ -1,11 +1,11 @@
 ---
-title: "Cutting Through the Agent Hype"
-description: "An opinionated, scored catalogue of autonomous AI tooling — because GitHub stars measure hype, not quality."
+title: 'Cutting Through the Agent Hype'
+description: 'An opinionated, scored catalogue of autonomous AI tooling — because GitHub stars measure hype, not quality.'
 date: 2025-08-01
-tags: ["notebooklm", "ai", "agents", "curation"]
-audioUrl: "/notebook-assets/agentic-index/audio.mp3"
-duration: "17:17"
-relatedProject: "agentic-index"
+tags: ['notebooklm', 'ai', 'agents', 'curation']
+audioUrl: '/notebook-assets/agentic-index/audio.mp3'
+duration: '17:17'
+relatedProject: 'agentic-index'
 ---
 
 New AI agent frameworks appear weekly, each backed by a README full of superlatives and a demo that works exactly once. If you're choosing tooling for production work — multi-agent orchestration, RAG pipelines, dev tooling — the landscape is a fog of marketing copy and GitHub stars that tell you nothing about whether the thing actually holds up under load.

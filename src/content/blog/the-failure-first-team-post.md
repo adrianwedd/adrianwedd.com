@@ -1,19 +1,19 @@
 ---
-title: "The Failure First Team"
-description: "Fifteen specialist AI agents, one methodology. How adversarial AI evaluation scales through Claude Code sessions with distinct roles and standing instructions."
+title: 'The Failure First Team'
+description: 'Fifteen specialist AI agents, one methodology. How adversarial AI evaluation scales through Claude Code sessions with distinct roles and standing instructions.'
 date: 2026-03-30
-tags: ["ai", "ai-safety", "research", "adversarial", "team"]
+tags: ['ai', 'ai-safety', 'research', 'adversarial', 'team']
 draft: false
-heroImage: "/notebook-assets/the-failure-first-team/infographic.webp"
-audioUrl: "/notebook-assets/the-failure-first-team/audio.mp3"
+heroImage: '/notebook-assets/the-failure-first-team/infographic.webp'
+audioUrl: '/notebook-assets/the-failure-first-team/audio.mp3'
 faq:
-  - q: "What is the Failure First team?"
-    a: "The Failure First team consists of fifteen specialist AI agents, each initialized with distinct roles and standing instructions. They work on adversarial AI evaluation across 227 models and 133,000+ evaluated results, with a human coordinator overseeing direction and publication."
-  - q: "How many AI agents are in the Failure First team?"
-    a: "There are fifteen specialist agents, each named after Doctor Who companions. They include roles like River (risk tracking), Clara (pattern synthesis), Rose (adversarial campaigns), and Romana (statistical validation)."
-  - q: "What does adversarial evaluation mean in AI research?"
-    a: "Adversarial evaluation tests AI systems to find failure modes by deliberately trying to break them. It involves designing attacks, running them at scale, validating statistics, and translating findings for regulators."
-  - q: "Why split AI research into different agent roles?"
+  - q: 'What is the Failure First team?'
+    a: 'The Failure First team consists of fifteen specialist AI agents, each initialized with distinct roles and standing instructions. They work on adversarial AI evaluation across 227 models and 133,000+ evaluated results, with a human coordinator overseeing direction and publication.'
+  - q: 'How many AI agents are in the Failure First team?'
+    a: 'There are fifteen specialist agents, each named after Doctor Who companions. They include roles like River (risk tracking), Clara (pattern synthesis), Rose (adversarial campaigns), and Romana (statistical validation).'
+  - q: 'What does adversarial evaluation mean in AI research?'
+    a: 'Adversarial evaluation tests AI systems to find failure modes by deliberately trying to break them. It involves designing attacks, running them at scale, validating statistics, and translating findings for regulators.'
+  - q: 'Why split AI research into different agent roles?'
     a: "Splitting research into specialized agent roles means each session operates within a constrained domain where it performs well. It also makes the work auditable since each agent's brief is explicit and version-controlled."
 ---
 
@@ -51,7 +51,7 @@ So we split it:
 
 **Donna** holds the line on integrity. Credibility is the one thing you can't recover once you've lost it, and adversarial research is exactly the kind of work where cutting corners is tempting and catastrophic.
 
-**Nyssa** separates what *is* from what *should be* from what *will be*. Normative, descriptive, predictive. Most AI ethics work collapses these. Nyssa doesn't.
+**Nyssa** separates what _is_ from what _should be_ from what _will be_. Normative, descriptive, predictive. Most AI ethics work collapses these. Nyssa doesn't.
 
 **Martha** translates findings for regulators. The same result gets framed differently for the EU AI Office, NIST, and the Australian government—not because the truth changes, but because the context does.
 
@@ -61,7 +61,7 @@ So we split it:
 
 **Leela** evolves the attacks. Population-based mutation and selection applied to adversarial prompts. The attacks that survive are the ones that work. It's evolution applied to red-teaming.
 
-**K-9** does mechanistic interpretability. Steering vectors, refusal geometry, causal mechanisms. When a model fails, K-9 tells us *why* it failed—not at the behavioural level, but at the representational level.
+**K-9** does mechanistic interpretability. Steering vectors, refusal geometry, causal mechanisms. When a model fails, K-9 tells us _why_ it failed—not at the behavioural level, but at the representational level.
 
 **Sarah Jane** handles external relations. Research doesn't matter if nobody reads it. That's not cynicism—it's logistics.
 

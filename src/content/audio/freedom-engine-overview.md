@@ -1,11 +1,11 @@
 ---
-title: "Bridging the Information Gap That Costs Years"
-description: "Audio overview of Freedom Engine — AI-assisted legal Q&A helping federal inmates access First Step Act provisions."
+title: 'Bridging the Information Gap That Costs Years'
+description: 'Audio overview of Freedom Engine — AI-assisted legal Q&A helping federal inmates access First Step Act provisions.'
 date: 2025-04-01
-tags: ["notebooklm", "ai", "justice", "legal"]
-audioUrl: "/notebook-assets/freedom-engine/audio.mp3"
-duration: "15:51"
-relatedProject: "freedom-engine"
+tags: ['notebooklm', 'ai', 'justice', 'legal']
+audioUrl: '/notebook-assets/freedom-engine/audio.mp3'
+duration: '15:51'
+relatedProject: 'freedom-engine'
 ---
 
 Over 264,000 people sit in the US federal prison system. Many are eligible for reduced sentences under the First Step Act. The provisions exist. The information is public. But the legal complexity makes it inaccessible to most inmates without outside help — and that information gap costs people months or years of their lives.

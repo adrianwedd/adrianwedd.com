@@ -1,11 +1,11 @@
 ---
-title: "The Sun Is a Noisy Neighbour"
-description: "Audio overview of a real-time space weather dashboard — making the invisible electromagnetic weather above us finally visible."
+title: 'The Sun Is a Noisy Neighbour'
+description: 'Audio overview of a real-time space weather dashboard — making the invisible electromagnetic weather above us finally visible.'
 date: 2025-01-01
-tags: ["notebooklm", "data-viz", "science", "web"]
-audioUrl: "/notebook-assets/space-weather/audio.mp3"
-duration: "18:15"
-relatedProject: "space-weather"
+tags: ['notebooklm', 'data-viz', 'science', 'web']
+audioUrl: '/notebook-assets/space-weather/audio.mp3'
+duration: '18:15'
+relatedProject: 'space-weather'
 ---
 
 There is a weather system operating above us at all times that most people never think about. Solar wind, geomagnetic storms, coronal mass ejections — these are not abstract astrophysics. They are the reason your GPS drifted last Thursday, the reason a power grid in Quebec once went dark, the reason satellite operators lose sleep during solar maximum.

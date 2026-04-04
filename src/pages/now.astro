@@ -31,9 +31,9 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
 
     <div class="space-y-8 leading-relaxed text-text">
       <p class="text-text-muted">
-        The question I keep running into: organisations commission AI risk assessments and then do
-        nothing with the findings. Not because the findings are wrong — because they're too technical
-        to act on. That gap is what most of the work below is trying to close, in different registers.
+        The question I keep running into: organisations commission AI risk assessments and then do nothing with the
+        findings. Not because the findings are wrong — because they're too technical to act on. That gap is what most of
+        the work below is trying to close, in different registers.
       </p>
 
       <section>
@@ -53,10 +53,23 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
         <ul class="mt-2 space-y-2">
           <li>Client projects — AI integration, automation, and infrastructure for small businesses</li>
           <li>This site — weekly sprints, shipping in public, now with automated social publishing to Facebook</li>
-          <li><a href="/projects/spark/">SPARK</a> — a non-coercive AI companion for neurodivergent children, now with <a href="/blog/giving-a-robot-three-voices/">three distinct voices</a></li>
-          <li><a href="/projects/afterwords/">Afterwords</a> — local voice output for Claude Code with <a href="/blog/voice-cloning-qwen3-tts-mlx/">voice cloning on Apple Silicon</a></li>
-          <li><a href="/projects/personal-agentic-operating-system/">PAOS</a> — a local-first agentic OS that runs on your hardware</li>
-          <li>Homelab — Frigate NVR with Hailo-8L AI detection on a Pi 5, Home Assistant automations, self-hosted infrastructure</li>
+          <li>
+            <a href="/projects/spark/">SPARK</a> — a non-coercive AI companion for neurodivergent children, now with <a
+              href="/blog/giving-a-robot-three-voices/">three distinct voices</a
+            >
+          </li>
+          <li>
+            <a href="/projects/afterwords/">Afterwords</a> — local voice output for Claude Code with <a
+              href="/blog/voice-cloning-qwen3-tts-mlx/">voice cloning on Apple Silicon</a
+            >
+          </li>
+          <li>
+            <a href="/projects/personal-agentic-operating-system/">PAOS</a> — a local-first agentic OS that runs on your hardware
+          </li>
+          <li>
+            Homelab — Frigate NVR with Hailo-8L AI detection on a Pi 5, Home Assistant automations, self-hosted
+            infrastructure
+          </li>
         </ul>
       </section>
 
@@ -69,20 +82,22 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
           <a href="/blog/the-resonant-fringe/">Perth's electronic music underground</a>,
           <a href="/blog/getting-google-nest-cameras-into-frigate-nvr/">homelab engineering</a>,
           <a href="/blog/safety-first-therapeutic-ai/">therapeutic AI safety</a>, and
-          <a href="/blog/the-legal-ai-trust-deficit/">legal AI trust</a>.
-          Also running a <a href="/projects/notebooklm-automation/">NotebookLM pipeline</a> that generates audio overviews and
-          infographics for every post and project. See <a href="/new/">what's new</a> for everything in one feed.
+          <a href="/blog/the-legal-ai-trust-deficit/">legal AI trust</a>. Also running a <a
+            href="/projects/notebooklm-automation/">NotebookLM pipeline</a
+          > that generates audio overviews and infographics for every post and project. See <a href="/new/"
+            >what's new</a
+          > for everything in one feed.
         </p>
       </section>
 
       <section>
         <h2 class="text-text">Available for</h2>
         <p>
-          Client work, research collaboration, and technical advisory. I'm particularly useful
-          when the problem sits at the intersection of AI, infrastructure, and something that
-          matters — healthcare, legal access, community systems, governance. The problem is either
-          worth solving properly or it isn't. Open to <a href="/services/">consulting engagements</a> and
-          conversations that start with a real problem, not a brief.
+          Client work, research collaboration, and technical advisory. I'm particularly useful when the problem sits at
+          the intersection of AI, infrastructure, and something that matters — healthcare, legal access, community
+          systems, governance. The problem is either worth solving properly or it isn't. Open to <a href="/services/"
+            >consulting engagements</a
+          > and conversations that start with a real problem, not a brief.
         </p>
       </section>
 
@@ -111,12 +126,14 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
             <div class="text-xs text-text-muted">episodes</div>
           </div>
         </div>
-        <p class="mt-3 text-xs text-text-muted">{totalWords.toLocaleString()} words written across {blogPosts.length} posts.</p>
+        <p class="mt-3 text-xs text-text-muted">
+          {totalWords.toLocaleString()} words written across {blogPosts.length} posts.
+        </p>
       </section>
 
       <section>
         <h2 class="text-text">Recent Activity</h2>
-        <p class="text-sm text-text-muted mb-4">Live from GitHub.</p>
+        <p class="mb-4 text-sm text-text-muted">Live from GitHub.</p>
         <GitHubActivity client:idle />
       </section>
     </div>

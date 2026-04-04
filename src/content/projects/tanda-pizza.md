@@ -1,15 +1,15 @@
 ---
-title: "Tanda Pizza"
-description: "Multilingual website for an Italian pizzeria in Lovina, Bali. Five languages, WhatsApp reservations, zero infrastructure assumptions."
-tags: ["web", "static-site", "multilingual", "hospitality"]
-url: "https://tandapizza.com"
-repo: "https://github.com/adrianwedd/tanda-pizza"
-status: "active"
+title: 'Tanda Pizza'
+description: 'Multilingual website for an Italian pizzeria in Lovina, Bali. Five languages, WhatsApp reservations, zero infrastructure assumptions.'
+tags: ['web', 'static-site', 'multilingual', 'hospitality']
+url: 'https://tandapizza.com'
+repo: 'https://github.com/adrianwedd/tanda-pizza'
+status: 'active'
 featured: false
 date: 2026-02-03
-audioUrl: "/notebook-assets/tanda-pizza/audio.mp3"
-videoUrl: "/notebook-assets/tanda-pizza/video.mp4"
-heroImage: "/notebook-assets/tanda-pizza/infographic.webp"
+audioUrl: '/notebook-assets/tanda-pizza/audio.mp3'
+videoUrl: '/notebook-assets/tanda-pizza/video.mp4'
+heroImage: '/notebook-assets/tanda-pizza/infographic.webp'
 ---
 
 Tanda Pizza sits among the rice paddies in Lovina, Bali. Authentic Italian food in a place where the nearest reliable internet connection is a philosophical concept. The website needed to work the way the restaurant works: simply, in multiple languages, and without requiring infrastructure that doesn't exist.

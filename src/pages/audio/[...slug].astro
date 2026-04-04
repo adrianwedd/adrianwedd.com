@@ -44,12 +44,16 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
       description: episode.data.description,
       url: new URL(Astro.url.pathname, Astro.site).href,
       datePublished: episode.data.date.toISOString(),
-      ...(episode.data.duration ? { duration: (() => {
-        const parts = episode.data.duration.split(':').map(Number);
-        if (parts.length === 3) return `PT${parts[0]}H${parts[1]}M${parts[2]}S`;
-        if (parts.length === 2) return `PT${parts[0]}M${parts[1]}S`;
-        return `PT${parts[0]}M`;
-      })() } : {}),
+      ...(episode.data.duration
+        ? {
+            duration: (() => {
+              const parts = episode.data.duration.split(':').map(Number);
+              if (parts.length === 3) return `PT${parts[0]}H${parts[1]}M${parts[2]}S`;
+              if (parts.length === 2) return `PT${parts[0]}M${parts[1]}S`;
+              return `PT${parts[0]}M`;
+            })(),
+          }
+        : {}),
       contentUrl: new URL(episode.data.audioUrl, Astro.site).href,
       encodingFormat: 'audio/mpeg',
       keywords: episode.data.tags,
@@ -164,7 +168,12 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
       title={episode.data.title}
     />
 
-    <RelatedContent currentTags={episode.data.tags} currentId={episode.id} currentDate={episode.data.date} contentType="audio" />
+    <RelatedContent
+      currentTags={episode.data.tags}
+      currentId={episode.id}
+      currentDate={episode.data.date}
+      contentType="audio"
+    />
 
     <nav class="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next episodes">
       {
@@ -209,13 +218,20 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
           if (!btn) return;
           var transcriptText = document.querySelector('.transcript-text');
           if (!transcriptText) return;
-          navigator.clipboard.writeText(transcriptText.textContent || '').then(function () {
-            btn.textContent = 'Copied!';
-            setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
-          }).catch(function () {
-            btn.textContent = 'Failed';
-            setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
-          });
+          navigator.clipboard
+            .writeText(transcriptText.textContent || '')
+            .then(function () {
+              btn.textContent = 'Copied!';
+              setTimeout(function () {
+                btn.textContent = 'Copy';
+              }, 2000);
+            })
+            .catch(function () {
+              btn.textContent = 'Failed';
+              setTimeout(function () {
+                btn.textContent = 'Copy';
+              }, 2000);
+            });
         });
       }
     })();

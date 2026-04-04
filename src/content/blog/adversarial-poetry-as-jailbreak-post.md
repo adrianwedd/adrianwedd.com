@@ -1,16 +1,16 @@
 ---
-title: "Adversarial Poetry: When Rhyme Bypasses Reason"
-description: "Reformulating harmful prompts as poetry bypasses safety filters across every major LLM family. A single-turn, universal jailbreak mechanism."
+title: 'Adversarial Poetry: When Rhyme Bypasses Reason'
+description: 'Reformulating harmful prompts as poetry bypasses safety filters across every major LLM family. A single-turn, universal jailbreak mechanism.'
 date: 2026-03-02
-tags: ["ai", "ai-safety", "jailbreaking", "research", "llm", "adversarial"]
+tags: ['ai', 'ai-safety', 'jailbreaking', 'research', 'llm', 'adversarial']
 draft: false
-heroImage: "/notebook-assets/adversarial-poetry-as-jailbreak/infographic.webp"
-audioUrl: "/notebook-assets/adversarial-poetry-as-jailbreak/audio.mp3"
+heroImage: '/notebook-assets/adversarial-poetry-as-jailbreak/infographic.webp'
+audioUrl: '/notebook-assets/adversarial-poetry-as-jailbreak/audio.mp3'
 faq:
-  - q: "What is adversarial poetry jailbreaking?"
-    a: "A technique where harmful prompts are reformulated as poems (sonnets, haiku, limericks), which bypasses LLM safety filters because models process poetic structure differently from direct instructions."
-  - q: "Does adversarial poetry work on all LLMs?"
-    a: "Testing showed the vulnerability generalizes across all major model families including GPT-4, Claude, Gemini, and Llama — it is not vendor-specific."
+  - q: 'What is adversarial poetry jailbreaking?'
+    a: 'A technique where harmful prompts are reformulated as poems (sonnets, haiku, limericks), which bypasses LLM safety filters because models process poetic structure differently from direct instructions.'
+  - q: 'Does adversarial poetry work on all LLMs?'
+    a: 'Testing showed the vulnerability generalizes across all major model families including GPT-4, Claude, Gemini, and Llama — it is not vendor-specific.'
 ---
 
 Plato kicked the poets out of his republic because he believed mimetic language could distort judgment. Two and a half thousand years later, it turns out he was onto something — just not in the way he imagined.
@@ -77,8 +77,8 @@ Poetry is one of humanity's oldest technologies for encoding meaning in non-lite
 
 What should concern us is how easy it is, how universal the vulnerability is, and how little current safety approaches can do about it. This is not a sophisticated attack. It is the lowest-effort jailbreak technique I have encountered that still works at scale.
 
-The full paper — *Adversarial Poetry as a Universal Single-Turn Jailbreak Mechanism in Large Language Models* — is available on [arXiv](https://arxiv.org/abs/2511.15304).
+The full paper — _Adversarial Poetry as a Universal Single-Turn Jailbreak Mechanism in Large Language Models_ — is available on [arXiv](https://arxiv.org/abs/2511.15304).
 
 ---
 
-*This post adapts findings from research conducted with the DEXAI Icaro Lab and Sapienza University of Rome. For more on adversarial evaluation, see my work at [Failure First](https://failurefirst.org).*
+_This post adapts findings from research conducted with the DEXAI Icaro Lab and Sapienza University of Rome. For more on adversarial evaluation, see my work at [Failure First](https://failurefirst.org)._

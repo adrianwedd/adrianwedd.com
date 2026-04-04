@@ -1,11 +1,11 @@
 ---
-title: "The Mirror That Shows What You Almost Are"
-description: "Real-time StyleGAN2 face morphing as art installation — continuous, responsive, and productively uncanny."
+title: 'The Mirror That Shows What You Almost Are'
+description: 'Real-time StyleGAN2 face morphing as art installation — continuous, responsive, and productively uncanny.'
 date: 2025-02-01
-tags: ["notebooklm", "art", "ai", "installation"]
-audioUrl: "/notebook-assets/latent-self/audio.mp3"
-duration: "15:28"
-relatedProject: "latent-self"
+tags: ['notebooklm', 'art', 'ai', 'installation']
+audioUrl: '/notebook-assets/latent-self/audio.mp3'
+duration: '15:28'
+relatedProject: 'latent-self'
 ---
 
 A mirror shows you what you are. This installation shows you what you almost are. Latent Self is a real-time face-morphing mirror built on StyleGAN2-ADA. You stand in front of it and it reflects you back — but shifted along axes you choose: age, gender, smile, species, beauty. Six emotion presets map to directions in latent space, each one a vector away from the face you walked in with.

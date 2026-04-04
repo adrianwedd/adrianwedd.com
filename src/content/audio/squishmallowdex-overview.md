@@ -1,11 +1,11 @@
 ---
-title: "What Hyperfocus and a Good Excuse Can Produce in an Afternoon"
-description: "Audio overview of Squishmallowdex — a kid-friendly collection tracker for 3,000+ plush creatures. No ads, no tracking."
+title: 'What Hyperfocus and a Good Excuse Can Produce in an Afternoon'
+description: 'Audio overview of Squishmallowdex — a kid-friendly collection tracker for 3,000+ plush creatures. No ads, no tracking.'
 date: 2024-12-01
-tags: ["notebooklm", "web", "kids", "open-source"]
-audioUrl: "/notebook-assets/squishmallowdex/audio.mp3"
-duration: "17:56"
-relatedProject: "squishmallowdex"
+tags: ['notebooklm', 'web', 'kids', 'open-source']
+audioUrl: '/notebook-assets/squishmallowdex/audio.mp3'
+duration: '17:56'
+relatedProject: 'squishmallowdex'
 ---
 
 A friend mentioned her ten-year-old was researching Squishmallows. A few hours later, the first release was shipped. A few more hours made it actually robust. That's the story of Squishmallowdex — a collection tracker for over 3,000 plush creatures, built in an afternoon of hyperfocus and a good excuse.

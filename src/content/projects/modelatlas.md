@@ -1,13 +1,13 @@
 ---
-title: "ModelAtlas"
-description: "Forensic-grade intelligence framework for mapping, enriching, and trust-scoring the foundation model landscape."
-tags: ["ai", "research", "python"]
-repo: "https://github.com/adrianwedd/ModelAtlas"
-status: "active"
+title: 'ModelAtlas'
+description: 'Forensic-grade intelligence framework for mapping, enriching, and trust-scoring the foundation model landscape.'
+tags: ['ai', 'research', 'python']
+repo: 'https://github.com/adrianwedd/ModelAtlas'
+status: 'active'
 featured: false
 date: 2025-04-15
-audioUrl: "/notebook-assets/modelatlas/audio.mp3"
-heroImage: "/notebook-assets/modelatlas/infographic.webp"
+audioUrl: '/notebook-assets/modelatlas/audio.mp3'
+heroImage: '/notebook-assets/modelatlas/infographic.webp'
 ---
 
 There are thousands of foundation models now. New ones appear daily. Most metadata about them is incomplete, inconsistent, or wrong. Context lengths are missing. Base model lineage is ambiguous. Quantisation details are buried in config blobs that nobody parses. If you want to choose a model for a production system, you are assembling the picture yourself from fragments.

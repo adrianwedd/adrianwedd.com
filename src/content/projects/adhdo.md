@@ -1,14 +1,14 @@
 ---
-title: "ADHDo"
-description: "AI cognitive scaffold for ADHD executive function — adapts to the shape of your day with zero shame by design."
-tags: ["ai", "neurodivergence", "python", "agents"]
-repo: "https://github.com/adrianwedd/ADHDo"
-status: "active"
+title: 'ADHDo'
+description: 'AI cognitive scaffold for ADHD executive function — adapts to the shape of your day with zero shame by design.'
+tags: ['ai', 'neurodivergence', 'python', 'agents']
+repo: 'https://github.com/adrianwedd/ADHDo'
+status: 'active'
 featured: true
 date: 2026-02-05
-audioUrl: "/notebook-assets/adhdo/audio.mp3"
-videoUrl: "/notebook-assets/adhdo/video.mp4"
-heroImage: "/notebook-assets/adhdo/infographic.webp"
+audioUrl: '/notebook-assets/adhdo/audio.mp3'
+videoUrl: '/notebook-assets/adhdo/video.mp4'
+heroImage: '/notebook-assets/adhdo/infographic.webp'
 ---
 
 Most productivity tools are built for brains that can hold a queue. If you can't — if the queue collapses the moment something shiny crosses your peripheral vision — those tools don't fail gracefully. They fail judgmentally. Missed reminders become evidence. Incomplete lists become character flaws.

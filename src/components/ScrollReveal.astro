@@ -8,10 +8,7 @@ interface Props {
 const { class: className = '', as: Tag = 'div', stagger } = Astro.props as any;
 ---
 
-<Tag
-  class:list={['scroll-reveal', className]}
-  {...stagger ? { style: `transition-delay: ${stagger}ms` } : {}}
->
+<Tag class:list={['scroll-reveal', className]} {...stagger ? { style: `transition-delay: ${stagger}ms` } : {}}>
   <slot />
 </Tag>
 
@@ -30,9 +27,11 @@ const { class: className = '', as: Tag = 'div', stagger } = Astro.props as any;
             }
           });
         },
-        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
       );
-      document.querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function (el) { observer.observe(el); });
+      document.querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function (el) {
+        observer.observe(el);
+      });
     }
 
     initScrollReveal();

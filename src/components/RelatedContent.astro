@@ -44,36 +44,42 @@ const allItems: ContentItem[] = [
       href: `/blog/${slug(p.id)}/`,
       score: 0,
     })),
-  ...projects.filter((p) => !p.data.draft).map((p) => ({
-    id: `projects:${p.id}`,
-    type: 'projects' as const,
-    title: p.data.title,
-    description: p.data.description,
-    tags: p.data.tags,
-    date: p.data.date,
-    href: `/projects/${slug(p.id)}/`,
-    score: 0,
-  })),
-  ...galleries.filter((p) => !p.data.draft).map((p) => ({
-    id: `gallery:${p.id}`,
-    type: 'gallery' as const,
-    title: p.data.title,
-    description: p.data.description || '',
-    tags: p.data.tags,
-    date: p.data.date,
-    href: `/gallery/${slug(p.id)}/`,
-    score: 0,
-  })),
-  ...audios.filter((p) => !p.data.draft).map((p) => ({
-    id: `audio:${p.id}`,
-    type: 'audio' as const,
-    title: p.data.title,
-    description: p.data.description,
-    tags: p.data.tags,
-    date: p.data.date,
-    href: `/audio/${slug(p.id)}/`,
-    score: 0,
-  })),
+  ...projects
+    .filter((p) => !p.data.draft)
+    .map((p) => ({
+      id: `projects:${p.id}`,
+      type: 'projects' as const,
+      title: p.data.title,
+      description: p.data.description,
+      tags: p.data.tags,
+      date: p.data.date,
+      href: `/projects/${slug(p.id)}/`,
+      score: 0,
+    })),
+  ...galleries
+    .filter((p) => !p.data.draft)
+    .map((p) => ({
+      id: `gallery:${p.id}`,
+      type: 'gallery' as const,
+      title: p.data.title,
+      description: p.data.description || '',
+      tags: p.data.tags,
+      date: p.data.date,
+      href: `/gallery/${slug(p.id)}/`,
+      score: 0,
+    })),
+  ...audios
+    .filter((p) => !p.data.draft)
+    .map((p) => ({
+      id: `audio:${p.id}`,
+      type: 'audio' as const,
+      title: p.data.title,
+      description: p.data.description,
+      tags: p.data.tags,
+      date: p.data.date,
+      href: `/audio/${slug(p.id)}/`,
+      score: 0,
+    })),
 ];
 
 // Build tag frequency map for IDF-style weighting (rare tags score higher)

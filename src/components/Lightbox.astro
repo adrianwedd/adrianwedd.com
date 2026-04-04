@@ -51,7 +51,11 @@ const { images } = Astro.props;
     <figure class="flex max-h-full max-w-full flex-col items-center">
       <img id="lightbox-img" src="" alt="Gallery image" class="max-h-[80vh] max-w-full rounded-lg object-contain" />
       <figcaption id="lightbox-caption" class="mt-3 text-center text-sm text-text-muted"></figcaption>
-      <a id="lightbox-detail" href="#" class="mt-2 text-xs text-text-muted no-underline transition-colors hover:text-accent">View details &rarr;</a>
+      <a
+        id="lightbox-detail"
+        href="#"
+        class="mt-2 text-xs text-text-muted no-underline transition-colors hover:text-accent">View details &rarr;</a
+      >
     </figure>
   </div>
 </div>
@@ -66,12 +70,24 @@ const { images } = Astro.props;
     var currentIndex = 0;
     var triggerElement = null;
 
-    function getLightbox() { return document.getElementById('lightbox'); }
-    function getImg() { return document.getElementById('lightbox-img'); }
-    function getCaption() { return document.getElementById('lightbox-caption'); }
-    function getCloseBtn() { return document.getElementById('lightbox-close'); }
-    function getPrevBtn() { return document.getElementById('lightbox-prev'); }
-    function getNextBtn() { return document.getElementById('lightbox-next'); }
+    function getLightbox() {
+      return document.getElementById('lightbox');
+    }
+    function getImg() {
+      return document.getElementById('lightbox-img');
+    }
+    function getCaption() {
+      return document.getElementById('lightbox-caption');
+    }
+    function getCloseBtn() {
+      return document.getElementById('lightbox-close');
+    }
+    function getPrevBtn() {
+      return document.getElementById('lightbox-prev');
+    }
+    function getNextBtn() {
+      return document.getElementById('lightbox-next');
+    }
 
     function show(index, trigger) {
       currentIndex = index;
@@ -81,13 +97,20 @@ const { images } = Astro.props;
       var caption = getCaption();
       var lightbox = getLightbox();
       var closeBtn = getCloseBtn();
-      if (img) { img.src = image.src; img.alt = image.alt; }
-      if (caption) { caption.textContent = image.caption || ''; }
+      if (img) {
+        img.src = image.src;
+        img.alt = image.alt;
+      }
+      if (caption) {
+        caption.textContent = image.caption || '';
+      }
       var detailLink = document.getElementById('lightbox-detail');
       if (detailLink && window.__lightboxHrefs && window.__lightboxHrefs[index]) {
         detailLink.href = window.__lightboxHrefs[index];
       }
-      if (lightbox) { lightbox.classList.remove('hidden'); }
+      if (lightbox) {
+        lightbox.classList.remove('hidden');
+      }
       document.body.style.overflow = 'hidden';
       if (closeBtn) closeBtn.focus();
     }
@@ -100,8 +123,12 @@ const { images } = Astro.props;
       triggerElement = null;
     }
 
-    function prev() { show((currentIndex - 1 + window.__lightboxImages.length) % window.__lightboxImages.length); }
-    function next() { show((currentIndex + 1) % window.__lightboxImages.length); }
+    function prev() {
+      show((currentIndex - 1 + window.__lightboxImages.length) % window.__lightboxImages.length);
+    }
+    function next() {
+      show((currentIndex + 1) % window.__lightboxImages.length);
+    }
 
     // Build trigger hrefs from current DOM (refreshed on each VT swap)
     window.__lightboxHrefs = [];
@@ -124,28 +151,53 @@ const { images } = Astro.props;
         }
         var target = e.target.closest ? e.target.closest('[id]') : null;
         if (!target) return;
-        if (target.id === 'lightbox-close') { hide(); return; }
-        if (target.id === 'lightbox-prev') { prev(); return; }
-        if (target.id === 'lightbox-next') { next(); return; }
+        if (target.id === 'lightbox-close') {
+          hide();
+          return;
+        }
+        if (target.id === 'lightbox-prev') {
+          prev();
+          return;
+        }
+        if (target.id === 'lightbox-next') {
+          next();
+          return;
+        }
         // Backdrop click
         var lightbox = getLightbox();
-        if (lightbox && (e.target === lightbox || (e.target.parentElement === lightbox))) hide();
+        if (lightbox && (e.target === lightbox || e.target.parentElement === lightbox)) hide();
       });
 
       document.addEventListener('keydown', function (e) {
         var lightbox = getLightbox();
         if (!lightbox || lightbox.classList.contains('hidden')) return;
-        if (e.key === 'Escape') { hide(); return; }
-        if (e.key === 'ArrowLeft') { prev(); return; }
-        if (e.key === 'ArrowRight') { next(); return; }
+        if (e.key === 'Escape') {
+          hide();
+          return;
+        }
+        if (e.key === 'ArrowLeft') {
+          prev();
+          return;
+        }
+        if (e.key === 'ArrowRight') {
+          next();
+          return;
+        }
         if (e.key === 'Tab') {
-          var focusable = [getCloseBtn(), getPrevBtn(), getNextBtn(), document.getElementById('lightbox-detail')].filter(Boolean);
+          var focusable = [
+            getCloseBtn(),
+            getPrevBtn(),
+            getNextBtn(),
+            document.getElementById('lightbox-detail'),
+          ].filter(Boolean);
           var first = focusable[0];
           var last = focusable[focusable.length - 1];
           if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault(); last.focus();
+            e.preventDefault();
+            last.focus();
           } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault(); first.focus();
+            e.preventDefault();
+            first.focus();
           }
         }
       });

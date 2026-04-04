@@ -1,13 +1,13 @@
 ---
-title: "Cygnet"
+title: 'Cygnet'
 description: "When housing is broken at the system level, you don't fix it by building the same thing slightly cheaper. 28 agents, 170 acres, one eco village."
-tags: ["ai", "housing", "agents", "typescript"]
-repo: "https://github.com/adrianwedd/cygnet"
-status: "active"
+tags: ['ai', 'housing', 'agents', 'typescript']
+repo: 'https://github.com/adrianwedd/cygnet'
+status: 'active'
 featured: false
 date: 2025-04-01
-audioUrl: "/notebook-assets/cygnet/audio.mp3"
-heroImage: "/notebook-assets/cygnet/infographic.webp"
+audioUrl: '/notebook-assets/cygnet/audio.mp3'
+heroImage: '/notebook-assets/cygnet/infographic.webp'
 ---
 
 Housing in Australia is broken in ways that conventional construction cannot fix. The economics don't work. The timelines don't work. The waste is staggering. And the people who need homes most urgently are the ones least served by the industry's existing incentive structures.

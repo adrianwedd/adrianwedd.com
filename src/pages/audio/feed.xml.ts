@@ -23,12 +23,14 @@ async function getFileSize(audioUrl: string): Promise<number> {
 }
 
 export async function GET(context: APIContext) {
-  const episodes = (await getCollection('audio')).filter((e) => !e.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const episodes = (await getCollection('audio'))
+    .filter((e) => !e.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const site = context.site!.toString().replace(/\/$/, '');
 
-  const items = await Promise.all(episodes
-    .map(async (ep) => {
+  const items = await Promise.all(
+    episodes.map(async (ep) => {
       const audioUrl = ep.data.audioUrl.startsWith('http') ? ep.data.audioUrl : `${site}${ep.data.audioUrl}`;
       const fileSize = await getFileSize(ep.data.audioUrl);
 
@@ -43,7 +45,8 @@ export async function GET(context: APIContext) {
       ${ep.data.duration ? `<itunes:duration>${ep.data.duration}</itunes:duration>` : ''}
       <itunes:explicit>false</itunes:explicit>
     </item>`;
-    }));
+    }),
+  );
 
   const itemsXml = items.join('\n');
 

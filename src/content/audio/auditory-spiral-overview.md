@@ -1,11 +1,11 @@
 ---
-title: "Six Hours of Dark Ambient at the Edge of the World"
+title: 'Six Hours of Dark Ambient at the Edge of the World'
 description: "Audio overview of Auditory Spiral — overnight electronic music on RTRFM Perth, the cassette network, and a city's sonic lifeline."
 date: 1992-01-01
-tags: ["notebooklm", "music", "radio", "history"]
-audioUrl: "/notebook-assets/auditory-spiral/audio.mp3"
-duration: "18:13"
-relatedProject: "auditory-spiral"
+tags: ['notebooklm', 'music', 'radio', 'history']
+audioUrl: '/notebook-assets/auditory-spiral/audio.mp3'
+duration: '18:13'
+relatedProject: 'auditory-spiral'
 ---
 
 Before broadband, before Discogs, before streaming, vinyl had to be physically imported and the radio dial was the lifeline. In Perth — the most geographically isolated city in Australia — community radio was the primary conduit to the global electronic underground. Auditory Spiral was the Sunday night anchor of that lifeline.

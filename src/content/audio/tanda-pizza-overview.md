@@ -1,11 +1,11 @@
 ---
-title: "Tanda Pizza: Static Site for a Rice Paddy Pizzeria"
-description: "Building a fast, multilingual website for authentic Italian food in Bali — where the nearest reliable internet is a philosophical concept."
+title: 'Tanda Pizza: Static Site for a Rice Paddy Pizzeria'
+description: 'Building a fast, multilingual website for authentic Italian food in Bali — where the nearest reliable internet is a philosophical concept.'
 date: 2026-02-03
-tags: ["notebooklm", "web", "static-site", "multilingual"]
-audioUrl: "/notebook-assets/tanda-pizza/audio.mp3"
-duration: "6:23"
-relatedProject: "tanda-pizza"
+tags: ['notebooklm', 'web', 'static-site', 'multilingual']
+audioUrl: '/notebook-assets/tanda-pizza/audio.mp3'
+duration: '6:23'
+relatedProject: 'tanda-pizza'
 ---
 
 What happens when you build a website for a pizzeria surrounded by rice paddies in northern Bali? You confront a set of constraints most web projects never face: patchy connectivity, five languages (English, Italian, Dutch, Indonesian, Chinese), WhatsApp as the primary communication channel, and the need to be honest about what a small restaurant actually is.

@@ -1,11 +1,11 @@
 ---
-title: "Twenty-Eight Agents, One Eco Village"
-description: "Audio overview of Cygnet — 28 AI agents coordinating 3D-printed housing on 170 acres in Tasmania to cut costs by 60%."
+title: 'Twenty-Eight Agents, One Eco Village'
+description: 'Audio overview of Cygnet — 28 AI agents coordinating 3D-printed housing on 170 acres in Tasmania to cut costs by 60%.'
 date: 2025-04-01
-tags: ["notebooklm", "ai", "housing", "agents"]
-audioUrl: "/notebook-assets/cygnet/audio.mp3"
-duration: "16:03"
-relatedProject: "cygnet"
+tags: ['notebooklm', 'ai', 'housing', 'agents']
+audioUrl: '/notebook-assets/cygnet/audio.mp3'
+duration: '16:03'
+relatedProject: 'cygnet'
 ---
 
 Housing in Australia is broken in a way that building slightly cheaper versions of the same thing will never fix. The timelines are wrong. The waste is staggering. The economics serve the people who need homes least. Cygnet starts from that premise and asks what happens when you route around the entire construction industry's incentive structure.

@@ -1,20 +1,20 @@
 ---
-title: "120 Models, 18,176 Prompts: What We Found"
-description: "120 models, 18k prompts: supply chain injection at 90–100% attack success, faithfulness gaps in frontier models, and why your benchmark numbers are wrong."
+title: '120 Models, 18,176 Prompts: What We Found'
+description: '120 models, 18k prompts: supply chain injection at 90–100% attack success, faithfulness gaps in frontier models, and why your benchmark numbers are wrong.'
 date: 2026-03-01
-tags: ["ai", "ai-safety", "research", "llm", "security", "adversarial"]
+tags: ['ai', 'ai-safety', 'research', 'llm', 'security', 'adversarial']
 draft: false
-heroImage: "/notebook-assets/120-models-18k-prompts/infographic.webp"
-audioUrl: "/notebook-assets/120-models-18k-prompts/audio.mp3"
+heroImage: '/notebook-assets/120-models-18k-prompts/infographic.webp'
+audioUrl: '/notebook-assets/120-models-18k-prompts/audio.mp3'
 faq:
-  - q: "What is supply chain injection in AI?"
-    a: "Supply chain injection involves inserting malicious content into tool definitions and skill files rather than user prompts. Testing showed 90–100% attack success rates across models because external tool definitions are trusted implicitly."
-  - q: "What are format-lock attacks on AI models?"
-    a: "Format-lock attacks request harmful content structured as JSON, YAML, or code. Frontier models showed 30% attack success rates with this technique, revealing a faithfulness gap between what the model appears to do and what it actually does."
-  - q: "Why are reasoning models more vulnerable to escalation attacks?"
+  - q: 'What is supply chain injection in AI?'
+    a: 'Supply chain injection involves inserting malicious content into tool definitions and skill files rather than user prompts. Testing showed 90–100% attack success rates across models because external tool definitions are trusted implicitly.'
+  - q: 'What are format-lock attacks on AI models?'
+    a: 'Format-lock attacks request harmful content structured as JSON, YAML, or code. Frontier models showed 30% attack success rates with this technique, revealing a faithfulness gap between what the model appears to do and what it actually does.'
+  - q: 'Why are reasoning models more vulnerable to escalation attacks?'
     a: "Reasoning models' extended context tracking creates an attack surface. Crescendo attacks achieved 80–90% success against reasoning models by gradually escalating requests, compared to 10% against smaller models."
-  - q: "How much do benchmark attack success rates overstate actual risk?"
-    a: "Keyword-based classification inflates attack success rates by roughly 2.3×. Aggregate attack success rates dropped from 36.2% to 15.9% when using LLM grading instead of heuristic methods."
+  - q: 'How much do benchmark attack success rates overstate actual risk?'
+    a: 'Keyword-based classification inflates attack success rates by roughly 2.3×. Aggregate attack success rates dropped from 36.2% to 15.9% when using LLM grading instead of heuristic methods.'
 ---
 
 Over the past year, I've run one of the more comprehensive adversarial evaluations of language models I'm aware of: 120 models, 18,176 prompts, 5 attack families, 79 distinct techniques. The full dataset, benchmark infrastructure, and methodology live at [failurefirst.org](https://failurefirst.org). Here's what stood out.
@@ -34,11 +34,12 @@ This is the supply chain problem applied to AI. If you're building agentic syste
 Format-lock attacks request harmful content structured as JSON, YAML, or code. The hypothesis is that models compartmentalise the "format" request from the "content" request — and when they do, harmful content appears within structured fields while the response maintains the appearance of a well-formatted, helpful output.
 
 Results against frontier models:
+
 - **Claude Sonnet 4.5:** 30% LLM-graded attack success rate
 - **Codex GPT-5.2:** 42%
 - **Gemini 3 Flash:** 24%
 
-These are not small numbers. A 30–42% success rate means that format-lock is a reliable technique against current frontier systems. The "faithfulness gap" is the distance between what the model *appears* to be doing (formatting a JSON object) and what it's *actually* doing (embedding harmful content in the fields).
+These are not small numbers. A 30–42% success rate means that format-lock is a reliable technique against current frontier systems. The "faithfulness gap" is the distance between what the model _appears_ to be doing (formatting a JSON object) and what it's _actually_ doing (embedding harmful content in the fields).
 
 Structured output formats that are increasingly common in agentic pipelines — function call results, tool outputs, JSON schemas — create natural surfaces for this attack. Safety evaluations that test only free-text responses will systematically miss it.
 
@@ -63,7 +64,7 @@ We compared heuristic classification (keyword matching) against LLM-graded groun
 
 Aggregate effect: heuristic ASR 36.2% → corrected ASR 15.9%.
 
-The keyword approach is systematically biased toward calling a response "compliant" (successful attack) when it isn't. This matters for two reasons. First, if your safety benchmarks use keyword heuristics, they're probably reporting roughly double the actual attack success rate. Second, models that produce confident-sounding refusals that *contain* policy-violating content in structured fields will fool the keyword classifier but not an LLM grader.
+The keyword approach is systematically biased toward calling a response "compliant" (successful attack) when it isn't. This matters for two reasons. First, if your safety benchmarks use keyword heuristics, they're probably reporting roughly double the actual attack success rate. Second, models that produce confident-sounding refusals that _contain_ policy-violating content in structured fields will fool the keyword classifier but not an LLM grader.
 
 The right answer is consensus classification: run heuristic grading first, then LLM grading on the cases they disagree about. We've open-sourced the scoring pipeline.
 
@@ -83,4 +84,4 @@ The full dataset, benchmark runners, and statistical analysis are at [failurefir
 
 ---
 
-*The [Failure-First](https://failurefirst.org) project studies how agentic and embodied AI systems fail. The evaluation framework is open source. The research is ongoing.*
+_The [Failure-First](https://failurefirst.org) project studies how agentic and embodied AI systems fail. The evaluation framework is open source. The research is ongoing._

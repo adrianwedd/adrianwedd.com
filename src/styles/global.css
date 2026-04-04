@@ -117,8 +117,8 @@
   }
 
   /* External link indicator in prose content */
-  .prose a[href^="http"]::after,
-  .prose a[href^="//"]::after {
+  .prose a[href^='http']::after,
+  .prose a[href^='//']::after {
     content: ' \2197';
     font-size: 0.75em;
     opacity: 0.5;
@@ -208,7 +208,9 @@
   .scroll-reveal {
     opacity: 0;
     transform: translateY(1rem) scale(0.98);
-    transition: opacity 0.5s cubic-bezier(0.2, 0, 0, 1), transform 0.5s cubic-bezier(0.2, 0, 0, 1);
+    transition:
+      opacity 0.5s cubic-bezier(0.2, 0, 0, 1),
+      transform 0.5s cubic-bezier(0.2, 0, 0, 1);
   }
   .scroll-reveal.revealed {
     opacity: 1;
@@ -222,7 +224,12 @@
   /* Button micro-interactions */
   .btn-primary,
   .btn-secondary {
-    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      opacity 0.2s ease;
   }
   .btn-primary:hover,
   .btn-secondary:hover {
@@ -319,8 +326,8 @@
   }
 
   /* Show link URLs */
-  a[href^="http"]::after {
-    content: " (" attr(href) ")";
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
     font-size: 0.8em;
     color: #666;
     word-break: break-all;
@@ -344,12 +351,16 @@
     page-break-inside: avoid;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     page-break-after: avoid;
     color: black !important;
   }
 
-  pre, code {
+  pre,
+  code {
     border: 1px solid #ddd !important;
     background: #f5f5f5 !important;
     color: black !important;

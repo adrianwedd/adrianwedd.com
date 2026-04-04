@@ -16,16 +16,7 @@ interface Props {
   title?: string;
 }
 
-const {
-  videoUrl,
-  infographic,
-  mindmap,
-  quiz,
-  flashcards,
-  dataTable,
-  slides,
-  title = 'Notebook asset',
-} = Astro.props;
+const { videoUrl, infographic, mindmap, quiz, flashcards, dataTable, slides, title = 'Notebook asset' } = Astro.props;
 
 const hasAssets = videoUrl || infographic || mindmap || quiz || flashcards || dataTable || slides;
 ---
@@ -104,7 +95,14 @@ const hasAssets = videoUrl || infographic || mindmap || quiz || flashcards || da
             download
             class="hover:border-accent/50 inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm text-text-muted no-underline transition-colors hover:text-accent"
           >
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <svg
+              class="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"

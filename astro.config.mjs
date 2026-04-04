@@ -33,6 +33,9 @@ function buildContentDateMap() {
 
 const contentDates = buildContentDateMap();
 
+/**
+ * @param {string} pathname
+ */
 function getSitemapMeta(pathname) {
   if (pathname === '/') return { priority: 1.0, changefreq: 'daily' };
   if (['/blog/', '/projects/'].includes(pathname)) return { priority: 0.8, changefreq: 'weekly' };
@@ -55,9 +58,10 @@ export default defineConfig({
         const pathname = new URL(item.url).pathname;
         const date = contentDates.get(pathname);
         if (date) item.lastmod = date;
-        const { priority, changefreq } = getSitemapMeta(pathname);
-        item.priority = priority;
-        item.changefreq = changefreq;
+        const meta = getSitemapMeta(pathname);
+        item.priority = meta.priority;
+        // @ts-ignore - Astro's EnumChangefreq is a bit strict
+        item.changefreq = meta.changefreq;
         return item;
       },
     }),

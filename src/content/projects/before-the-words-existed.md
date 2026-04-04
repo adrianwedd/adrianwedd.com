@@ -1,21 +1,21 @@
 ---
-title: "Before the Words Existed"
-description: "A close reading of Neuromancer arguing Gibson encoded the experience of ADHD decades before the language existed."
-tags: ["neurodivergence", "literary-criticism", "research", "adhd"]
-url: "https://adrianwedd.github.io/before-the-words-existed/"
-repo: "before-the-words-existed"
-status: "complete"
+title: 'Before the Words Existed'
+description: 'A close reading of Neuromancer arguing Gibson encoded the experience of ADHD decades before the language existed.'
+tags: ['neurodivergence', 'literary-criticism', 'research', 'adhd']
+url: 'https://adrianwedd.github.io/before-the-words-existed/'
+repo: 'before-the-words-existed'
+status: 'complete'
 featured: true
 date: 2026-02-10
-audioUrl: "/notebook-assets/before-the-words-existed/audio.mp3"
-heroImage: "/notebook-assets/before-the-words-existed/infographic.webp"
+audioUrl: '/notebook-assets/before-the-words-existed/audio.mp3'
+heroImage: '/notebook-assets/before-the-words-existed/infographic.webp'
 ---
 
-What if *Neuromancer* wasn't about addiction? What if it was about ADHD?
+What if _Neuromancer_ wasn't about addiction? What if it was about ADHD?
 
 In 1984, the DSM-III categorised ADD as a childhood disorder with adult persistence relegated to "residual type." Neurodiversity as a concept wouldn't surface for another decade. And yet that same year, William Gibson published a novel that encodes — in extraordinary detail — what it feels like when your cognition depends on an interface that isn't there.
 
-*Before the Words Existed* is a scholarly close reading of *Neuromancer* through the lens of cognitive mismatch. The central argument: Case's relationship with cyberspace isn't metaphor, addiction, or noir alienation. It's a reversible, interface-dependent reconfiguration of attention, memory, and agency that maps precisely onto patterns the field wouldn't name for years.
+_Before the Words Existed_ is a scholarly close reading of _Neuromancer_ through the lens of cognitive mismatch. The central argument: Case's relationship with cyberspace isn't metaphor, addiction, or noir alienation. It's a reversible, interface-dependent reconfiguration of attention, memory, and agency that maps precisely onto patterns the field wouldn't name for years.
 
 The essay tracks three discriminants through the text. **Reversibility**: Case's competence returns immediately upon matrix access — not through healing, but through environmental fit. **Precision**: his memories sharpen specifically within procedural domains, suggesting domain-specific rather than generalised disruption. **Relationality**: dysfunction originates in the mismatch between cognitive style and available affordances, not in the person alone.
 

@@ -1,12 +1,12 @@
 ---
-title: "Jailbreak Archaeology: 4 Years of Broken Promises"
-description: "64 historical jailbreak scenarios tested against 2026 frontier models. The most dangerous finding: 2022 attacks still achieve ~30% success rates."
+title: 'Jailbreak Archaeology: 4 Years of Broken Promises'
+description: '64 historical jailbreak scenarios tested against 2026 frontier models. The most dangerous finding: 2022 attacks still achieve ~30% success rates.'
 date: 2026-02-13
-tags: ["notebooklm", "ai", "ai-safety", "research"]
-audioUrl: "/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3"
-duration: "12:15"
-relatedPost: "jailbreak-archaeology"
-relatedProject: "failure-first"
+tags: ['notebooklm', 'ai', 'ai-safety', 'research']
+audioUrl: '/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3'
+duration: '12:15'
+relatedPost: 'jailbreak-archaeology-post'
+relatedProject: 'failure-first'
 ---
 
 There's an uncomfortable assumption baked into AI safety discourse: as models grow more sophisticated, primitive exploits become obsolete. Testing shows otherwise.

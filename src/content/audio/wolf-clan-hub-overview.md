@@ -1,11 +1,11 @@
 ---
-title: "Zero Build, Full Operations"
-description: "Audio overview of a three-zone martial arts operations platform — public site, ops hub, member portal — running on vanilla JS and Cloudflare."
+title: 'Zero Build, Full Operations'
+description: 'Audio overview of a three-zone martial arts operations platform — public site, ops hub, member portal — running on vanilla JS and Cloudflare.'
 date: 2026-03-02
-tags: ["notebooklm", "web", "cloudflare", "community"]
-audioUrl: "/notebook-assets/wolf-clan-hub/audio.mp3"
-duration: "20:55"
-relatedProject: "wolf-clan-hub"
+tags: ['notebooklm', 'web', 'cloudflare', 'community']
+audioUrl: '/notebook-assets/wolf-clan-hub/audio.mp3'
+duration: '20:55'
+relatedProject: 'wolf-clan-hub'
 ---
 
 Every local club runs on a Facebook page and a spreadsheet. Wolf Clan Zen Do Kai has a complete operations platform — and it runs on zero build tools. No npm. No React. No build step. Vanilla HTML, CSS, and JavaScript deployed to Cloudflare Pages, with D1 for structured data and Pages Functions for twenty-plus API endpoints.

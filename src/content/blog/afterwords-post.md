@@ -1,22 +1,22 @@
 ---
-title: "Afterwords: Completing the Voice Loop in Claude Code"
-description: "Adding local TTS to Claude Code so it talks back — 17 cloned voices, zero cloud dependency, one stop hook."
+title: 'Afterwords: Completing the Voice Loop in Claude Code'
+description: 'Adding local TTS to Claude Code so it talks back — 17 cloned voices, zero cloud dependency, one stop hook.'
 date: 2026-03-22
-tags: ["ai", "tts", "mlx", "apple-silicon", "voice-cloning", "claude", "open-source"]
-series: "PiCar-X"
+tags: ['ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'claude', 'open-source']
+series: 'PiCar-X'
 seriesOrder: 4
-audioUrl: "/notebook-assets/afterwords-blog/audio.mp3"
-heroImage: "/notebook-assets/afterwords/infographic.webp"
-audioDuration: "18:19"
+audioUrl: '/notebook-assets/afterwords-blog/audio.mp3'
+heroImage: '/notebook-assets/afterwords/infographic.webp'
+audioDuration: '18:19'
 faq:
-  - q: "Does Afterwords send any data to the cloud?"
-    a: "No. The entire pipeline runs locally — MLX inference on Apple Silicon, FastAPI on localhost, audio playback on your speaker. Nothing leaves the machine."
-  - q: "How much RAM does it need?"
-    a: "About 6 GB peak for the Qwen3-TTS 0.6B model at 8-bit quantisation. An M1 MacBook Air with 8 GB of unified memory is sufficient."
-  - q: "Can different projects use different voices?"
-    a: "Yes. Drop a .afterwords file in any repo root containing a voice name. The hook reads it per synthesis — no server restart needed."
-  - q: "How long does it take to speak a response?"
-    a: "About 15 seconds of fixed overhead for speaker embedding extraction, plus roughly 0.5x real-time for the audio. A typical two-sentence response takes 18–22 seconds on an M1."
+  - q: 'Does Afterwords send any data to the cloud?'
+    a: 'No. The entire pipeline runs locally — MLX inference on Apple Silicon, FastAPI on localhost, audio playback on your speaker. Nothing leaves the machine.'
+  - q: 'How much RAM does it need?'
+    a: 'About 6 GB peak for the Qwen3-TTS 0.6B model at 8-bit quantisation. An M1 MacBook Air with 8 GB of unified memory is sufficient.'
+  - q: 'Can different projects use different voices?'
+    a: 'Yes. Drop a .afterwords file in any repo root containing a voice name. The hook reads it per synthesis — no server restart needed.'
+  - q: 'How long does it take to speak a response?'
+    a: 'About 15 seconds of fixed overhead for speaker embedding extraction, plus roughly 0.5x real-time for the audio. A typical two-sentence response takes 18–22 seconds on an M1.'
 ---
 
 Claude Code already listens. Hold Space, talk, it transcribes. That half of the loop has worked for months. But every response comes back as text — silent characters on a dark terminal. You speak to it. It types back.
