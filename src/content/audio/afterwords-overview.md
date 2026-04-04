@@ -1,11 +1,11 @@
 ---
-title: "Giving Claude Code a Voice"
-description: "Audio overview of Afterwords — local voice output for Claude Code with 17 cloned voices, per-project selection, and zero cloud dependency."
+title: 'Giving Claude Code a Voice'
+description: 'Audio overview of Afterwords — local voice output for Claude Code with 17 cloned voices, per-project selection, and zero cloud dependency.'
 date: 2026-03-22
-tags: ["notebooklm", "ai", "tts", "voice-cloning"]
-audioUrl: "/notebook-assets/afterwords/audio.mp3"
-duration: "21:43"
-relatedProject: "afterwords"
+tags: ['notebooklm', 'ai', 'tts', 'voice-cloning']
+audioUrl: '/notebook-assets/afterwords/audio.mp3'
+duration: '21:43'
+relatedProject: 'afterwords'
 ---
 
 Claude Code already listens — hold Space, talk, it transcribes. But every response comes back as text. Afterwords closes the loop. A stop hook intercepts every response, sends it to a local TTS server running Qwen3-TTS on MLX, and plays it through the speaker. Two-way voice conversation with your coding assistant, running entirely on your machine.

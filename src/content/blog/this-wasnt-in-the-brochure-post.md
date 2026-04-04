@@ -1,15 +1,15 @@
 ---
 title: "This Wasn't in the Brochure"
-description: "A field guide for co-parenting neurodivergent children — written from inside the storm, not the clinical sidelines."
+description: 'A field guide for co-parenting neurodivergent children — written from inside the storm, not the clinical sidelines.'
 date: 2026-02-15
-tags: ["writing", "neurodivergence", "parenting", "books", "co-parenting"]
-heroImage: "/notebook-assets/this-wasnt-in-the-brochure/infographic.webp"
-audioUrl: "/notebook-assets/this-wasnt-in-the-brochure/audio.mp3"
+tags: ['writing', 'neurodivergence', 'parenting', 'books', 'co-parenting']
+heroImage: '/notebook-assets/this-wasnt-in-the-brochure/infographic.webp'
+audioUrl: '/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
 ---
 
 You packed for a picnic. You ended up in the Drake Passage.
 
-*This Wasn't in the Brochure* is for the parent standing in the kitchen at 7:43 a.m., muscles trembling after holding a child through a meltdown, thinking: *Nobody told me it would be like this.* It is for the co-parent sitting in the car after the school meeting, too exhausted to speak. It is for the mother who read the ADHD checklist for her daughter and thought, *Wait — I do that too.* It is for the father whose ex thinks he's "making excuses" when he says their son can't help it.
+_This Wasn't in the Brochure_ is for the parent standing in the kitchen at 7:43 a.m., muscles trembling after holding a child through a meltdown, thinking: _Nobody told me it would be like this._ It is for the co-parent sitting in the car after the school meeting, too exhausted to speak. It is for the mother who read the ADHD checklist for her daughter and thought, _Wait — I do that too._ It is for the father whose ex thinks he's "making excuses" when he says their son can't help it.
 
 This book is a field guide for co-parenting children with ADHD, autism, PDA, and ODD — written not from the clinical sidelines, but from inside the storm. It bridges the gap between peer-reviewed neuroscience and the raw, sleep-deprived reality of raising a child whose brain doesn't follow the manual you were given. It is evidence-based and unapologetically human.
 
@@ -33,7 +33,7 @@ Each chapter includes a Field Guide translating neuroscience into plain language
 
 By the final chapter, the transformation is complete. You began as a bewildered tourist clutching a brochure for a trip that doesn't exist. You end as a cartographer — someone who has learned to draw their own maps, read their own weather, and sail with the wind rather than rage against it. Not because the sea got calmer, but because you became a different kind of sailor.
 
-*This Wasn't in the Brochure* is available in four regionally localised editions (US, Australian, British, and New Zealand), each adapted to local clinical terminology, educational systems, and legal frameworks — because a parent in Brisbane navigating an NDIS plan and a parent in Boston navigating an IEP deserve guidance that speaks their language.
+_This Wasn't in the Brochure_ is available in four regionally localised editions (US, Australian, British, and New Zealand), each adapted to local clinical terminology, educational systems, and legal frameworks — because a parent in Brisbane navigating an NDIS plan and a parent in Boston navigating an IEP deserve guidance that speaks their language.
 
 You are not a failed neurotypical parent. You are an exceptional navigator in extraordinary conditions.
 

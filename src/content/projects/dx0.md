@@ -1,13 +1,13 @@
 ---
-title: "Dx0"
-description: "Multi-agent diagnostic system simulating physician personas against 304 NEJM clinical cases."
-tags: ["ai", "healthcare", "agents", "python"]
-repo: "https://github.com/adrianwedd/Dx0"
-status: "active"
+title: 'Dx0'
+description: 'Multi-agent diagnostic system simulating physician personas against 304 NEJM clinical cases.'
+tags: ['ai', 'healthcare', 'agents', 'python']
+repo: 'https://github.com/adrianwedd/Dx0'
+status: 'active'
 featured: false
 date: 2025-05-01
-audioUrl: "/notebook-assets/dx0/audio.mp3"
-heroImage: "/notebook-assets/dx0/infographic.webp"
+audioUrl: '/notebook-assets/dx0/audio.mp3'
+heroImage: '/notebook-assets/dx0/infographic.webp'
 ---
 
 The question everyone asks about AI in medicine is whether it can diagnose. That's the wrong question. The right question is whether it can diagnose responsibly—within resource constraints, with appropriate uncertainty, without the kind of confident hallucination that in a clinical context becomes malpractice.

@@ -1,27 +1,27 @@
 ---
-title: "Voice Cloning with Qwen3-TTS and MLX on Apple Silicon"
-description: "Clone a voice from a 15-second sample using Qwen3-TTS on an 8GB M1 Mac — from raw audio to a production HTTP server with zero cloud dependency."
+title: 'Voice Cloning with Qwen3-TTS and MLX on Apple Silicon'
+description: 'Clone a voice from a 15-second sample using Qwen3-TTS on an 8GB M1 Mac — from raw audio to a production HTTP server with zero cloud dependency.'
 date: 2026-03-19
-tags: ["ai", "tts", "mlx", "apple-silicon", "voice-cloning", "tutorial", "spark"]
-series: "PiCar-X"
+tags: ['ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'tutorial', 'spark']
+series: 'PiCar-X'
 seriesOrder: 3
-audioUrl: "/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.mp3"
-heroImage: "/notebook-assets/voice-cloning-qwen3-tts-mlx/infographic.webp"
-audioDuration: "23:50"
+audioUrl: '/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.mp3'
+heroImage: '/notebook-assets/voice-cloning-qwen3-tts-mlx/infographic.webp'
+audioDuration: '23:50'
 faq:
-  - q: "Do I need to fine-tune or train anything?"
-    a: "No. Qwen3-TTS Base does zero-shot voice cloning — you provide a reference audio clip and its transcript at inference time. No training loop, no GPU hours, no dataset preparation."
-  - q: "What hardware do I need?"
-    a: "Any Apple Silicon Mac with 8 GB or more of unified memory. The 8-bit quantised 0.6B model peaks at ~6 GB. An M1 MacBook Air is sufficient."
-  - q: "How long does generation take?"
-    a: "About 15 seconds of fixed overhead (speaker embedding extraction) plus 0.5x real-time for the audio itself. A typical 2-sentence response takes 18-22 seconds on an 8 GB M1."
-  - q: "Can I use my own voice?"
-    a: "Yes. Record 15 seconds of yourself reading anything, transcribe it accurately, and point the server at your clip. The voice timbre, cadence, and accent will transfer."
-  - q: "Can I serve multiple voices from one server?"
-    a: "Yes. Each voice is just a reference WAV (~700 KB) and a transcript string — zero extra memory. The model loads once (~6 GB), and speaker embeddings are extracted at synthesis time. We serve 12 voices from a single 8 GB M1."
-  - q: "Does this work on Linux or Windows?"
-    a: "Not with MLX. MLX is Apple Silicon only. On Linux/Windows you would use PyTorch with CUDA, but you need 10+ GB of VRAM. The quantised MLX path is the only way to fit this on 8 GB."
-  - q: "Why not just use ElevenLabs or another cloud TTS service?"
+  - q: 'Do I need to fine-tune or train anything?'
+    a: 'No. Qwen3-TTS Base does zero-shot voice cloning — you provide a reference audio clip and its transcript at inference time. No training loop, no GPU hours, no dataset preparation.'
+  - q: 'What hardware do I need?'
+    a: 'Any Apple Silicon Mac with 8 GB or more of unified memory. The 8-bit quantised 0.6B model peaks at ~6 GB. An M1 MacBook Air is sufficient.'
+  - q: 'How long does generation take?'
+    a: 'About 15 seconds of fixed overhead (speaker embedding extraction) plus 0.5x real-time for the audio itself. A typical 2-sentence response takes 18-22 seconds on an 8 GB M1.'
+  - q: 'Can I use my own voice?'
+    a: 'Yes. Record 15 seconds of yourself reading anything, transcribe it accurately, and point the server at your clip. The voice timbre, cadence, and accent will transfer.'
+  - q: 'Can I serve multiple voices from one server?'
+    a: 'Yes. Each voice is just a reference WAV (~700 KB) and a transcript string — zero extra memory. The model loads once (~6 GB), and speaker embeddings are extracted at synthesis time. We serve 12 voices from a single 8 GB M1.'
+  - q: 'Does this work on Linux or Windows?'
+    a: 'Not with MLX. MLX is Apple Silicon only. On Linux/Windows you would use PyTorch with CUDA, but you need 10+ GB of VRAM. The quantised MLX path is the only way to fit this on 8 GB.'
+  - q: 'Why not just use ElevenLabs or another cloud TTS service?'
     a: "Privacy and latency. Cloud services send your text (and potentially voice data) to third-party servers. This runs entirely on your machine — nothing leaves your local network. It also means no API key, no rate limits, no monthly bill, and no dependency on someone else's uptime."
 ---
 
@@ -62,10 +62,11 @@ You need two things: a WAV clip and an exact transcript of what's said in it.
 **15 seconds** is the sweet spot. We tested this systematically:
 
 - **5 seconds:** Clean start, but weak voice character — the model doesn't have enough signal to capture timbre, cadence, and resonance. It sounds like a generic TTS voice wearing a costume.
-- **10 seconds:** Strong voice character, but the output *continued from the reference text* before speaking the target. Instead of "The universe is so vast," we got "...it smells like fairy floss. The universe is so vast."
+- **10 seconds:** Strong voice character, but the output _continued from the reference text_ before speaking the target. Instead of "The universe is so vast," we got "...it smells like fairy floss. The universe is so vast."
 - **15 seconds:** Strong character, clean start. This is the one.
 
 The audio should be:
+
 - One speaker only
 - Clean (no background music, minimal room noise)
 - Natural speech (not whispered, not shouted)
@@ -117,10 +118,10 @@ MLX uses Apple's unified memory natively: zero-copy operations, lazy evaluation,
 
 ### Why 8-bit, not 4-bit?
 
-| Quantisation | Peak Memory | Audio Quality | Speed |
-|-------------|------------|---------------|-------|
-| 4-bit | 5.9 GB | Noisy, grainy | 0.71x RTF |
-| 8-bit | 6.0 GB | Clean | 0.54x RTF |
+| Quantisation | Peak Memory | Audio Quality | Speed     |
+| ------------ | ----------- | ------------- | --------- |
+| 4-bit        | 5.9 GB      | Noisy, grainy | 0.71x RTF |
+| 8-bit        | 6.0 GB      | Clean         | 0.54x RTF |
 
 100 MB difference in memory. The 8-bit model is both faster and cleaner. 4-bit dequantisation overhead on MLX's Metal kernels outweighs the memory savings. Not a tradeoff — a free upgrade.
 
@@ -354,14 +355,18 @@ Wire TTS into your development workflow. Every time Claude finishes a response, 
 // ~/.claude/settings.json
 {
   "hooks": {
-    "Stop": [{
-      "hooks": [{
-        "type": "command",
-        "command": "bash ~/.claude/hooks/speak.sh",
-        "timeout": 120,
-        "async": true
-      }]
-    }]
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/speak.sh",
+            "timeout": 120,
+            "async": true
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -459,18 +464,18 @@ For each candidate we:
 
 The voices we tested for SPARK's seductive jailbroken persona:
 
-| Voice | Source | Character |
-|-------|--------|-----------|
-| Samantha | Scarlett Johansson, *Her* | Warm, introspective AI |
-| Aurora | AURORA, *Shower Thoughts* | Dreamy, Norwegian, whimsical |
-| Audrey | Audrey Hepburn, 1961 interview | Elegant, transatlantic |
-| Marla | Helena Bonham Carter, *Fight Club* | Sardonic, darkly poetic |
-| Avasarala | Shohreh Aghdashloo, *The Expanse* | Gravelly, commanding, sweary |
-| Vesper | Eva Green, *Casino Royale* | French-accented, seductive intelligence |
-| Claudia | Claudia Black, *Dragon Age* | Australian, husky, sardonic |
-| Eartha | Eartha Kitt, interview | Passionate purr, the original Catwoman |
-| Galadriel | Cate Blanchett, *LOTR* | Ethereal, ancient, otherworldly |
-| Tilda | Tilda Swinton, interview | Crisp, dry, alien intelligence |
+| Voice     | Source                             | Character                               |
+| --------- | ---------------------------------- | --------------------------------------- |
+| Samantha  | Scarlett Johansson, _Her_          | Warm, introspective AI                  |
+| Aurora    | AURORA, _Shower Thoughts_          | Dreamy, Norwegian, whimsical            |
+| Audrey    | Audrey Hepburn, 1961 interview     | Elegant, transatlantic                  |
+| Marla     | Helena Bonham Carter, _Fight Club_ | Sardonic, darkly poetic                 |
+| Avasarala | Shohreh Aghdashloo, _The Expanse_  | Gravelly, commanding, sweary            |
+| Vesper    | Eva Green, _Casino Royale_         | French-accented, seductive intelligence |
+| Claudia   | Claudia Black, _Dragon Age_        | Australian, husky, sardonic             |
+| Eartha    | Eartha Kitt, interview             | Passionate purr, the original Catwoman  |
+| Galadriel | Cate Blanchett, _LOTR_             | Ethereal, ancient, otherworldly         |
+| Tilda     | Tilda Swinton, interview           | Crisp, dry, alien intelligence          |
 
 Each reference clip is a `profile.json` with the audio path, transcript, source URL, and notes — so switching voices is a one-line config change and a server restart.
 
@@ -510,7 +515,7 @@ The `prop_decrease=0.7` is conservative — removes 70% of estimated noise. Goin
 ## What This Doesn't Cover
 
 - **Streaming.** The server returns complete WAV files. Chunked streaming would reduce time-to-first-audio but requires a different generation API that `mlx-audio` doesn't expose yet.
-- **Cross-backend routing.** The server handles multiple Qwen3-TTS voices, but routing between *different* TTS backends (Qwen3-TTS, GLaDOS, espeak) based on persona is covered in the [companion post on SPARK's TTS pipeline](/blog/giving-a-robot-three-voices/).
+- **Cross-backend routing.** The server handles multiple Qwen3-TTS voices, but routing between _different_ TTS backends (Qwen3-TTS, GLaDOS, espeak) based on persona is covered in the [companion post on SPARK's TTS pipeline](/blog/giving-a-robot-three-voices/).
 - **Non-Apple hardware.** MLX is Apple Silicon only. CUDA users should look at the standard PyTorch path with 10+ GB VRAM.
 - **Fine-tuning.** There is no fine-tuning step. Qwen3-TTS Base does zero-shot cloning at inference time. If zero-shot quality isn't sufficient, the upgrade path is the 1.7B CustomVoice model with `instruct` parameters, not training.
 

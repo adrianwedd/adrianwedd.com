@@ -1,11 +1,11 @@
 ---
-title: "Zero-Build Web Development"
-description: "What happens when you build a three-zone operations platform for a martial arts club with no framework, no build step, and no npm."
+title: 'Zero-Build Web Development'
+description: 'What happens when you build a three-zone operations platform for a martial arts club with no framework, no build step, and no npm.'
 date: 2026-03-14
-tags: ["engineering", "web", "security", "cloudflare"]
+tags: ['engineering', 'web', 'security', 'cloudflare']
 draft: false
-heroImage: "/notebook-assets/zero-build-web-development/infographic.webp"
-audioUrl: "/notebook-assets/zero-build-web-development/audio.mp3"
+heroImage: '/notebook-assets/zero-build-web-development/infographic.webp'
+audioUrl: '/notebook-assets/zero-build-web-development/audio.mp3'
 ---
 
 I built a complete operations platform for my Zen Do Kai club. Public marketing site, password-gated ops hub, JWT-authenticated member portal with attendance tracking, grading administration, lesson plans, and Stripe billing. Three zones, 20+ API endpoints, a D1 database, and security-hardened middleware.
@@ -39,7 +39,7 @@ This pattern is simple enough to audit by reading one file. There's no auth libr
 
 ## Security without a framework
 
-When there's no abstraction layer, you write security code yourself. That sounds worse until you realise you also *read* security code yourself.
+When there's no abstraction layer, you write security code yourself. That sounds worse until you realise you also _read_ security code yourself.
 
 **Timing-safe password comparison.** A naive string comparison leaks information about which characters matched based on how long it takes to return. The middleware uses `crypto.subtle.timingSafeEqual` on SHA-256 hashes — every comparison takes the same time regardless of input.
 
@@ -82,4 +82,4 @@ For Wolf Clan, these conditions held. The platform is in production, the club us
 
 ---
 
-*[Wolf Clan Zen Do Kai Hub](/projects/wolf-clan-hub/) is live at [wolfclanmartialarts.com](https://wolfclanmartialarts.com/).*
+_[Wolf Clan Zen Do Kai Hub](/projects/wolf-clan-hub/) is live at [wolfclanmartialarts.com](https://wolfclanmartialarts.com/)._

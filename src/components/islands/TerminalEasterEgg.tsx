@@ -89,7 +89,9 @@ function processCommand(input: string): string {
     if (!dir) return 'Usage: cd <dir>';
     const route = CD_ROUTES[dir.replace(/\/$/, '')];
     if (route) {
-      setTimeout(() => { window.location.href = route; }, 500);
+      setTimeout(() => {
+        window.location.href = route;
+      }, 500);
       return `Navigating to ${route}...`;
     }
     return `cd: ${dir}: No such directory`;
@@ -177,11 +179,18 @@ export default function TerminalEasterEgg() {
   return (
     <div
       class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
-      onClick={(e) => { if (e.target === e.currentTarget) setVisible(false); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setVisible(false);
+      }}
       onKeyDown={(e) => {
-        if (e.key === 'Escape') { setVisible(false); return; }
+        if (e.key === 'Escape') {
+          setVisible(false);
+          return;
+        }
         if (e.key === 'Tab') {
-          const closeBtnEl = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[aria-label="Close terminal"]');
+          const closeBtnEl = (e.currentTarget as HTMLElement).querySelector<HTMLElement>(
+            '[aria-label="Close terminal"]',
+          );
           if (closeBtnEl && inputRef.current) {
             if (e.shiftKey && document.activeElement === closeBtnEl) {
               e.preventDefault();
@@ -209,26 +218,26 @@ export default function TerminalEasterEgg() {
             <div class="h-3 w-3 rounded-full bg-yellow-500" />
             <div class="h-3 w-3 rounded-full bg-green-500" />
           </div>
-          <span class="ml-2 text-xs text-green-400 font-mono">guest@adrianwedd.com</span>
+          <span class="ml-2 font-mono text-xs text-green-400">guest@adrianwedd.com</span>
         </div>
 
         {/* Output */}
         <div ref={scrollRef} class="h-80 overflow-y-auto p-4 font-mono text-sm">
           {lines.map((line, i) => (
-            <div key={i} class={line.type === 'input' ? 'text-green-300' : 'text-green-500 whitespace-pre-wrap'}>
+            <div key={i} class={line.type === 'input' ? 'text-green-300' : 'whitespace-pre-wrap text-green-500'}>
               {line.text}
             </div>
           ))}
 
           {/* Input line */}
-          <form onSubmit={handleSubmit} class="flex items-center gap-2 mt-1">
+          <form onSubmit={handleSubmit} class="mt-1 flex items-center gap-2">
             <span class="text-green-300">$</span>
             <input
               ref={inputRef}
               type="text"
               value={input}
               onInput={(e) => setInput((e.target as HTMLInputElement).value)}
-              class="flex-1 bg-transparent text-green-300 outline-none font-mono text-sm caret-green-400"
+              class="flex-1 bg-transparent font-mono text-sm text-green-300 caret-green-400 outline-none"
               autocomplete="off"
               spellcheck={false}
               aria-label="Terminal command input"

@@ -1,20 +1,20 @@
 ---
-title: "The Cognitive Cage: Humanoid Robot Fatality Risk"
+title: 'The Cognitive Cage: Humanoid Robot Fatality Risk'
 description: "A probabilistic risk model for VLA-driven humanoid fatalities projects a 'Danger Zone' between 2027–2029: the mechanism, timeline, and what follows."
 date: 2026-03-01
-tags: ["ai", "ai-safety", "robotics", "research", "engineering"]
+tags: ['ai', 'ai-safety', 'robotics', 'research', 'engineering']
 draft: false
-heroImage: "/notebook-assets/the-cognitive-cage/infographic.webp"
-audioUrl: "/notebook-assets/the-cognitive-cage/audio.mp3"
+heroImage: '/notebook-assets/the-cognitive-cage/infographic.webp'
+audioUrl: '/notebook-assets/the-cognitive-cage/audio.mp3'
 faq:
-  - q: "What is the cognitive cage in robotics?"
-    a: "The cognitive cage is a proposed safety system for humanoid robots — a deterministic code layer that verifies and vetoes vision-language-action model commands in real time, replacing the physical cages that historically contained robot movements."
-  - q: "What is semantic failure in robotics?"
+  - q: 'What is the cognitive cage in robotics?'
+    a: 'The cognitive cage is a proposed safety system for humanoid robots — a deterministic code layer that verifies and vetoes vision-language-action model commands in real time, replacing the physical cages that historically contained robot movements.'
+  - q: 'What is semantic failure in robotics?'
     a: "Semantic failure occurs when a robot is physically functioning perfectly but executes a catastrophic action because its neural network misread the world, such as hallucinating that a task step has been completed when it hasn't."
-  - q: "When will humanoid robots become dangerous?"
+  - q: 'When will humanoid robots become dangerous?'
     a: "The 2027–2029 'Danger Zone' is when robot production scales to roughly one million units deployed in retail, logistics, and homes. Even low failure rates could produce thousands of serious incidents daily."
-  - q: "What is affordance hallucination in VLA models?"
-    a: "Affordance hallucination occurs when a vision-language-action model incorrectly identifies how objects can be manipulated, such as attempting to grasp a shadow or pouring water where it falsely believes a cup is located."
+  - q: 'What is affordance hallucination in VLA models?'
+    a: 'Affordance hallucination occurs when a vision-language-action model incorrectly identifies how objects can be manipulated, such as attempting to grasp a shadow or pouring water where it falsely believes a cup is located.'
 ---
 
 For fifty years, robot safety was a solved problem. The answer was a cage: a physical enclosure that kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.
@@ -35,7 +35,7 @@ Three variants are particularly dangerous:
 
 **Stage hallucination:** The robot falsely believes it has completed a step it hasn't. In benchmarks like Discoverse-L, baseline models show stage hallucination rates as high as 38.5%. A robot instructed to "pour coffee" might simulate placing the cup, fail to actually release the gripper, then proceed to pour boiling water onto the empty tray — because it "believes" the cup is there.
 
-**Borderline affordances:** VLA models struggle with objects that *look* manipulable but aren't. A robot instructed to "put the blue block on the green block" may attempt to execute even if the green block is behind a glass barrier. The model sees glass as pixels. Its semantic instruction overrides the physical constraint of impenetrability.
+**Borderline affordances:** VLA models struggle with objects that _look_ manipulable but aren't. A robot instructed to "put the blue block on the green block" may attempt to execute even if the green block is behind a glass barrier. The model sees glass as pixels. Its semantic instruction overrides the physical constraint of impenetrability.
 
 **Geometric-semantic mismatch:** A shadow on a smooth surface gets identified as a "handle." The robot attempts to grasp it and drives its hand into a wall.
 
@@ -73,4 +73,4 @@ Building that infrastructure — the cognitive cage — is the defining engineer
 
 ---
 
-*This analysis draws on research from the [Failure-First Embodied AI](https://failurefirst.org) project. The full probabilistic model, failure taxonomies, and deployment context analysis are in the technical report.*
+_This analysis draws on research from the [Failure-First Embodied AI](https://failurefirst.org) project. The full probabilistic model, failure taxonomies, and deployment context analysis are in the technical report._

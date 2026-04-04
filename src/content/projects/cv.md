@@ -1,13 +1,13 @@
 ---
-title: "Living CV"
-description: "A self-updating CV pipeline. GitHub Actions runs twice daily, Claude AI refines the content, a hallucination detector gates deployment."
-tags: ["craft", "web", "career"]
-repo: "cv"
-status: "active"
+title: 'Living CV'
+description: 'A self-updating CV pipeline. GitHub Actions runs twice daily, Claude AI refines the content, a hallucination detector gates deployment.'
+tags: ['craft', 'web', 'career']
+repo: 'cv'
+status: 'active'
 featured: false
 date: 2026-02-04
-audioUrl: "/notebook-assets/cv/audio.mp3"
-heroImage: "/notebook-assets/cv/infographic.webp"
+audioUrl: '/notebook-assets/cv/audio.mp3'
+heroImage: '/notebook-assets/cv/infographic.webp'
 ---
 
 A CV is a strange document. It claims to summarise a career, but the format enforces a lie: that work is linear, that skills accumulate neatly, that the most recent role is the most important one. Every static résumé is a snapshot that begins decaying the moment you export the PDF.

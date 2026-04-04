@@ -163,15 +163,24 @@ export function processEventsCompact(events: GitHubEvent[]): {
 
 export function eventIcon(type: string): string {
   switch (type) {
-    case 'PushEvent': return '⬆';
-    case 'PullRequestEvent': return '⤴';
-    case 'IssuesEvent': return '◉';
-    case 'CreateEvent': return '+';
-    case 'DeleteEvent': return '×';
-    case 'WatchEvent': return '★';
-    case 'ForkEvent': return '⑂';
-    case 'IssueCommentEvent': return '💬';
-    default: return '·';
+    case 'PushEvent':
+      return '⬆';
+    case 'PullRequestEvent':
+      return '⤴';
+    case 'IssuesEvent':
+      return '◉';
+    case 'CreateEvent':
+      return '+';
+    case 'DeleteEvent':
+      return '×';
+    case 'WatchEvent':
+      return '★';
+    case 'ForkEvent':
+      return '⑂';
+    case 'IssueCommentEvent':
+      return '💬';
+    default:
+      return '·';
   }
 }
 

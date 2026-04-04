@@ -34,16 +34,14 @@ const carouselItems = posts
         <span class="text-text-muted">Research notes, failure analysis, and ideas still taking shape.</span>
       </h1>
       <p class="mt-6 max-w-prose text-text-muted">
-        What actually breaks, and why. Who knew about it before it broke. What the gap between
-        demonstrated risk and organisational response looks like from the inside.
+        What actually breaks, and why. Who knew about it before it broke. What the gap between demonstrated risk and
+        organisational response looks like from the inside.
       </p>
     </div>
     <HeroCanvas animation="ink" />
   </section>
 
-  {carouselItems.length > 0 && (
-    <ContentCarousel items={carouselItems} id="blog-carousel" label="Featured blog posts" />
-  )}
+  {carouselItems.length > 0 && <ContentCarousel items={carouselItems} id="blog-carousel" label="Featured blog posts" />}
 
   <section class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
     {/* Tag filter */}
@@ -51,17 +49,14 @@ const carouselItems = posts
       allTags.length > 0 && (
         <nav class="mt-8" aria-label="Filter by tag">
           <div class="flex flex-wrap gap-2" id="blog-tags">
-            <a
-              href="/blog/"
-              class="bg-accent/15 rounded-full px-3 py-1 text-xs font-medium text-accent no-underline"
-            >
+            <a href="/blog/" class="bg-accent/15 rounded-full px-3 py-1 text-xs font-medium text-accent no-underline">
               All
             </a>
             {allTags.map((tag, i) => (
               <a
                 href={`/blog/tag/${tag}/`}
                 class:list={[
-                  'rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:bg-accent/15 hover:text-accent',
+                  'hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent',
                   i >= 10 && 'blog-tag-overflow hidden',
                 ]}
               >
@@ -73,14 +68,14 @@ const carouselItems = posts
                 type="button"
                 id="blog-tags-toggle"
                 aria-expanded="false"
-                class="cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:bg-accent/15 hover:text-accent"
+                class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
               >
                 +{allTags.length - 10} more
               </button>
             )}
             <a
               href="/blog/tags/"
-              class="rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:bg-accent/15 hover:text-accent"
+              class="hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent"
             >
               Browse all tags
             </a>
@@ -131,38 +126,38 @@ const carouselItems = posts
   </section>
 
   <script is:inline>
-  (function () {
-    var blogTagExpanded = false;
+    (function () {
+      var blogTagExpanded = false;
 
-    function initBlogToggle() {
-      var toggle = document.getElementById('blog-tags-toggle');
-      if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
-      blogTagExpanded = false;
-    }
+      function initBlogToggle() {
+        var toggle = document.getElementById('blog-tags-toggle');
+        if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
+        blogTagExpanded = false;
+      }
 
-    if (!document.documentElement.dataset.blogTagInit) {
-      document.documentElement.dataset.blogTagInit = '1';
+      if (!document.documentElement.dataset.blogTagInit) {
+        document.documentElement.dataset.blogTagInit = '1';
 
-      document.addEventListener('click', function (e) {
-        var target = e.target;
-        if (!target || typeof target.closest !== 'function') return;
-        if (target.closest('#blog-tags-toggle')) {
-          blogTagExpanded = !blogTagExpanded;
-          document.querySelectorAll('.blog-tag-overflow').forEach(function (el) {
-            el.classList.toggle('hidden', !blogTagExpanded);
-          });
-          var toggle = document.getElementById('blog-tags-toggle');
-          if (toggle) {
-            toggle.textContent = blogTagExpanded ? 'Show less' : toggle.dataset.label || '';
-            toggle.setAttribute('aria-expanded', String(blogTagExpanded));
+        document.addEventListener('click', function (e) {
+          var target = e.target;
+          if (!target || typeof target.closest !== 'function') return;
+          if (target.closest('#blog-tags-toggle')) {
+            blogTagExpanded = !blogTagExpanded;
+            document.querySelectorAll('.blog-tag-overflow').forEach(function (el) {
+              el.classList.toggle('hidden', !blogTagExpanded);
+            });
+            var toggle = document.getElementById('blog-tags-toggle');
+            if (toggle) {
+              toggle.textContent = blogTagExpanded ? 'Show less' : toggle.dataset.label || '';
+              toggle.setAttribute('aria-expanded', String(blogTagExpanded));
+            }
           }
-        }
-      });
+        });
 
-      document.addEventListener('astro:after-swap', initBlogToggle);
-    }
+        document.addEventListener('astro:after-swap', initBlogToggle);
+      }
 
-    initBlogToggle();
-  })();
+      initBlogToggle();
+    })();
   </script>
 </BaseLayout>

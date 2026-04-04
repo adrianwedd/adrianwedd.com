@@ -16,7 +16,11 @@ import {
 type TimeRange = '24h' | '7d' | '30d' | 'all';
 type ViewMode = 'grid' | 'list';
 
-function filterByTimeRange(activities: ProcessedActivity[], events: GitHubEvent[], range: TimeRange): ProcessedActivity[] {
+function filterByTimeRange(
+  activities: ProcessedActivity[],
+  events: GitHubEvent[],
+  range: TimeRange,
+): ProcessedActivity[] {
   if (range === 'all') return activities;
   const now = Date.now();
   const cutoffs: Record<TimeRange, number> = {
@@ -26,9 +30,7 @@ function filterByTimeRange(activities: ProcessedActivity[], events: GitHubEvent[
     all: Infinity,
   };
   const cutoff = now - cutoffs[range];
-  const validIds = new Set(
-    events.filter((e) => new Date(e.created_at).getTime() > cutoff).map((e) => e.id)
-  );
+  const validIds = new Set(events.filter((e) => new Date(e.created_at).getTime() > cutoff).map((e) => e.id));
   return activities.filter((a) => validIds.has(a.id));
 }
 
@@ -62,7 +64,7 @@ export default function ActivityDashboard() {
         const modal = closeButtonRef.current?.closest('[role="dialog"]');
         if (!modal) return;
         const focusable = Array.from(
-          modal.querySelectorAll<HTMLElement>('a[href], button, [tabindex]:not([tabindex="-1"])')
+          modal.querySelectorAll<HTMLElement>('a[href], button, [tabindex]:not([tabindex="-1"])'),
         ).filter((el) => !el.hasAttribute('disabled'));
         if (focusable.length === 0) return;
         const first = focusable[0];
@@ -100,7 +102,10 @@ export default function ActivityDashboard() {
 
     load();
     const interval = setInterval(load, 300_000);
-    return () => { cancelled = true; clearInterval(interval); };
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, []);
 
   const processed = useMemo(() => processEvents(events), [events]);
@@ -109,7 +114,7 @@ export default function ActivityDashboard() {
     const days = new Set(
       events
         .filter((e) => new Date(e.created_at).getTime() > Date.now() - 30 * 24 * 60 * 60 * 1000)
-        .map((e) => new Date(e.created_at).toDateString())
+        .map((e) => new Date(e.created_at).toDateString()),
     );
     return days.size;
   }, [events]);
@@ -142,12 +147,16 @@ export default function ActivityDashboard() {
 
   if (loading) {
     return (
-      <div class="space-y-6 animate-pulse" role="status" aria-label="Loading activity dashboard">
+      <div class="animate-pulse space-y-6" role="status" aria-label="Loading activity dashboard">
         <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => <div key={i} class="h-20 rounded-lg bg-surface-alt" />)}
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} class="h-20 rounded-lg bg-surface-alt" />
+          ))}
         </div>
         <div class="h-10 rounded bg-surface-alt" />
-        {[1, 2, 3, 4, 5].map((i) => <div key={i} class="h-12 rounded bg-surface-alt" />)}
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} class="h-12 rounded bg-surface-alt" />
+        ))}
       </div>
     );
   }
@@ -196,7 +205,9 @@ export default function ActivityDashboard() {
         >
           <option value="all">All types</option>
           {eventTypes.map((t) => (
-            <option key={t} value={t}>{t.replace('Event', '')}</option>
+            <option key={t} value={t}>
+              {t.replace('Event', '')}
+            </option>
           ))}
         </select>
 
@@ -220,7 +231,9 @@ export default function ActivityDashboard() {
         >
           <option value="all">All repos</option>
           {repoNames.map((r) => (
-            <option key={r} value={r}>{r}</option>
+            <option key={r} value={r}>
+              {r}
+            </option>
           ))}
         </select>
 
@@ -238,7 +251,7 @@ export default function ActivityDashboard() {
       <div>
         <h2 class="mb-4 text-sm font-medium uppercase tracking-wider text-text-muted">Activity</h2>
         {filteredActivities.length === 0 ? (
-          <p class="text-sm text-text-muted italic">No matching activity.</p>
+          <p class="text-sm italic text-text-muted">No matching activity.</p>
         ) : (
           <>
             <p role="status" aria-live="polite" class="sr-only">
@@ -252,14 +265,17 @@ export default function ActivityDashboard() {
                   </span>
                   <button
                     class="min-w-0 flex-1 text-left"
-                    onClick={(e: Event) => { triggerRef.current = e.currentTarget as HTMLElement; setSelectedActivity(a); }}
+                    onClick={(e: Event) => {
+                      triggerRef.current = e.currentTarget as HTMLElement;
+                      setSelectedActivity(a);
+                    }}
                     aria-label={`View details: ${a.description}`}
                   >
                     <span class="font-mono text-xs text-accent">{a.repo}</span>
                     <span class="text-text"> — </span>
                     <span class="text-sm text-text">{a.description}</span>
                   </button>
-                  <span class="shrink-0 text-xs text-text-muted whitespace-nowrap">{a.time}</span>
+                  <span class="shrink-0 whitespace-nowrap text-xs text-text-muted">{a.time}</span>
                 </li>
               ))}
             </ul>
@@ -298,9 +314,7 @@ export default function ActivityDashboard() {
                 <span class="font-mono text-sm text-accent">{r.name}</span>
                 {r.language && <span class="text-xs text-text-muted">{r.language}</span>}
               </div>
-              {r.description && (
-                <p class="mt-1 text-xs text-text-muted line-clamp-2">{r.description}</p>
-              )}
+              {r.description && <p class="mt-1 line-clamp-2 text-xs text-text-muted">{r.description}</p>}
               <div class="mt-2 flex items-center gap-3 text-xs text-text-muted">
                 {r.stargazers_count > 0 && <span>★ {r.stargazers_count}</span>}
                 <span>{relativeTime(r.pushed_at)}</span>
@@ -314,7 +328,12 @@ export default function ActivityDashboard() {
       {selectedActivity && (
         <div
           class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={(e: Event) => { if (e.target === e.currentTarget) { setSelectedActivity(null); (triggerRef.current as HTMLElement | null)?.focus(); } }}
+          onClick={(e: Event) => {
+            if (e.target === e.currentTarget) {
+              setSelectedActivity(null);
+              (triggerRef.current as HTMLElement | null)?.focus();
+            }
+          }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="activity-modal-title"
@@ -324,16 +343,61 @@ export default function ActivityDashboard() {
             onClick={(e: Event) => e.stopPropagation()}
           >
             <div class="mb-4 flex items-center justify-between">
-              <h3 id="activity-modal-title" class="text-sm font-medium text-text">Activity Detail</h3>
-              <button ref={closeButtonRef} onClick={() => { setSelectedActivity(null); (triggerRef.current as HTMLElement | null)?.focus(); }} class="text-text-muted hover:text-text" aria-label="Close">✕</button>
+              <h3 id="activity-modal-title" class="text-sm font-medium text-text">
+                Activity Detail
+              </h3>
+              <button
+                ref={closeButtonRef}
+                onClick={() => {
+                  setSelectedActivity(null);
+                  (triggerRef.current as HTMLElement | null)?.focus();
+                }}
+                class="text-text-muted hover:text-text"
+                aria-label="Close"
+              >
+                ✕
+              </button>
             </div>
             <dl class="space-y-2 text-sm">
-              <div><dt class="text-text-muted">Type</dt><dd class="text-text">{selectedActivity.type.replace('Event', '')}</dd></div>
-              <div><dt class="text-text-muted">Repository</dt><dd><a href={`https://github.com/${USERNAME}/${selectedActivity.repo}`} target="_blank" rel="noopener noreferrer" class="font-mono text-accent hover:underline">{selectedActivity.repo}</a></dd></div>
-              <div><dt class="text-text-muted">Description</dt><dd class="text-text">{selectedActivity.description}</dd></div>
-              <div><dt class="text-text-muted">Time</dt><dd class="text-text">{selectedActivity.time}</dd></div>
+              <div>
+                <dt class="text-text-muted">Type</dt>
+                <dd class="text-text">{selectedActivity.type.replace('Event', '')}</dd>
+              </div>
+              <div>
+                <dt class="text-text-muted">Repository</dt>
+                <dd>
+                  <a
+                    href={`https://github.com/${USERNAME}/${selectedActivity.repo}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-mono text-accent hover:underline"
+                  >
+                    {selectedActivity.repo}
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt class="text-text-muted">Description</dt>
+                <dd class="text-text">{selectedActivity.description}</dd>
+              </div>
+              <div>
+                <dt class="text-text-muted">Time</dt>
+                <dd class="text-text">{selectedActivity.time}</dd>
+              </div>
               {selectedActivity.url && (
-                <div><dt class="text-text-muted">Link</dt><dd><a href={selectedActivity.url} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">View on GitHub</a></dd></div>
+                <div>
+                  <dt class="text-text-muted">Link</dt>
+                  <dd>
+                    <a
+                      href={selectedActivity.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-accent hover:underline"
+                    >
+                      View on GitHub
+                    </a>
+                  </dd>
+                </div>
               )}
             </dl>
           </div>
@@ -343,7 +407,12 @@ export default function ActivityDashboard() {
       {/* Footer */}
       <p class="text-xs text-text-muted">
         Live from{' '}
-        <a href={`https://github.com/${USERNAME}`} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+        <a
+          href={`https://github.com/${USERNAME}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent hover:underline"
+        >
           GitHub
         </a>
         . Refreshes every 5 minutes. Rate limit: 60 requests/hour.

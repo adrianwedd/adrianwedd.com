@@ -1,13 +1,13 @@
 ---
-title: "Space Weather"
-description: "The electromagnetic weather that shapes every satellite, power grid, and GPS fix — made visible. The sun is a noisy neighbour."
-tags: ["web", "data-viz", "typescript", "science"]
-repo: "https://github.com/adrianwedd/space-weather"
-status: "active"
+title: 'Space Weather'
+description: 'The electromagnetic weather that shapes every satellite, power grid, and GPS fix — made visible. The sun is a noisy neighbour.'
+tags: ['web', 'data-viz', 'typescript', 'science']
+repo: 'https://github.com/adrianwedd/space-weather'
+status: 'active'
 featured: false
 date: 2025-01-01
-heroImage: "/notebook-assets/space-weather/infographic.webp"
-audioUrl: "/notebook-assets/space-weather/audio.mp3"
+heroImage: '/notebook-assets/space-weather/infographic.webp'
+audioUrl: '/notebook-assets/space-weather/audio.mp3'
 ---
 
 The sun is a noisy neighbour. Coronal mass ejections, solar wind variations, geomagnetic storms—these aren't abstract astrophysics. They affect radio propagation, satellite operations, power grids, and anyone who has ever wondered why their GPS was slightly wrong on a particular afternoon.

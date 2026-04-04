@@ -189,6 +189,10 @@ OG_MISSING=0
 OG_TOTAL=0
 for dir in blog projects; do
   while IFS= read -r page; do
+    # Skip redirect pages (those with http-equiv="refresh")
+    if grep -q 'http-equiv="refresh"' "$page"; then
+      continue
+    fi
     OG=$(grep 'og:image' "$page" | grep -o 'content="[^"]*"' | head -1 | sed 's/content="//;s/"$//' || true)
     OG_TOTAL=$((OG_TOTAL + 1))
     if [ -z "$OG" ]; then

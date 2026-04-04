@@ -1,11 +1,11 @@
 ---
-title: "Three Seconds of Silence Is an Eternity"
-description: "Audio overview of TEL3SIS — a voice-first agentic phone platform where sub-3s latency is a survival threshold, not a benchmark."
+title: 'Three Seconds of Silence Is an Eternity'
+description: 'Audio overview of TEL3SIS — a voice-first agentic phone platform where sub-3s latency is a survival threshold, not a benchmark.'
 date: 2025-10-01
-tags: ["notebooklm", "ai", "voice", "telephony"]
-audioUrl: "/notebook-assets/tel3sis/audio.mp3"
-duration: "19:37"
-relatedProject: "tel3sis"
+tags: ['notebooklm', 'ai', 'voice', 'telephony']
+audioUrl: '/notebook-assets/tel3sis/audio.mp3'
+duration: '19:37'
+relatedProject: 'tel3sis'
 ---
 
 The phone call is the oldest real-time interface we have. It is also the one AI handles worst. Chat is forgiving — latency is invisible, and a typing indicator buys you time. On a phone call, three seconds of silence is the gap where the caller decides the system is broken, or stupid, or both.

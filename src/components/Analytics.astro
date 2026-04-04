@@ -53,6 +53,17 @@
     document.head.appendChild(script);
   }
 
+  function loadAdSense() {
+    if (document.getElementById('adsense-script')) return;
+
+    const script = document.createElement('script');
+    script.id = 'adsense-script';
+    script.async = true;
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6275306310835906';
+    script.crossOrigin = 'anonymous';
+    document.head.appendChild(script);
+  }
+
   function loadGA4() {
     if (!GA_ID || document.getElementById('ga4-script')) return;
 
@@ -190,20 +201,24 @@
 
     const milestones = [25, 50, 75, 100];
 
-    window.addEventListener('scroll', () => {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight <= 0) return;
-      const pct = Math.round((window.scrollY / docHeight) * 100);
-      for (const m of milestones) {
-        if (pct >= m && !scrollTracked.has(m)) {
-          scrollTracked.add(m);
-          gtag('event', 'scroll_depth', {
-            depth: m,
-            content_type: getContentType(window.location.pathname),
-          });
+    window.addEventListener(
+      'scroll',
+      () => {
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight <= 0) return;
+        const pct = Math.round((window.scrollY / docHeight) * 100);
+        for (const m of milestones) {
+          if (pct >= m && !scrollTracked.has(m)) {
+            scrollTracked.add(m);
+            gtag('event', 'scroll_depth', {
+              depth: m,
+              content_type: getContentType(window.location.pathname),
+            });
+          }
         }
-      }
-    }, { passive: true });
+      },
+      { passive: true },
+    );
   }
 
   function trackScrollDepthReset() {
@@ -425,6 +440,7 @@
     if (consent?.analytics) {
       loadGA4();
       loadLinkedInInsight();
+      loadAdSense();
     }
   }
 
@@ -436,32 +452,37 @@
   if (!(document.documentElement as any).dataset.analyticsSwapInit) {
     (document.documentElement as any).dataset.analyticsSwapInit = '1';
     document.addEventListener('astro:after-swap', () => {
-    const consent = getConsent();
-    if (consent?.analytics && typeof (window as any).gtag === 'function') {
-      // Flush reading time for previous page, start fresh for new page
-      readingTimeSend();
-      readingTimeStart();
+      const consent = getConsent();
+      if (consent?.analytics && typeof (window as any).gtag === 'function') {
+        // AdSense might need to be notified of navigation, but gtag handles most of it
+        // If we haven't loaded it yet (e.g. consent just granted), load it
+        loadAdSense();
 
-      // Reset scroll milestones for new page
-      trackScrollDepthReset();
+        // Flush reading time for previous page, start fresh for new page
+        readingTimeSend();
+        readingTimeStart();
 
-      // Send new page view
-      sendPageView();
+        // Reset scroll milestones for new page
+        trackScrollDepthReset();
 
-      // Per-element trackers (safe to re-run — they bind to new DOM elements)
-      trackProjectClicks();
-      trackGalleryViews();
-      trackAudioPlayback();
-      trackTagFilters();
-      trackThemeSwitches();
-    }
-  });
+        // Send new page view
+        sendPageView();
+
+        // Per-element trackers (safe to re-run — they bind to new DOM elements)
+        trackProjectClicks();
+        trackGalleryViews();
+        trackAudioPlayback();
+        trackTagFilters();
+        trackThemeSwitches();
+      }
+    });
   } // end analyticsSwapInit sentinel
 
   window.addEventListener('consent-updated', ((e: CustomEvent<ConsentState>) => {
     if (e.detail.analytics) {
       loadGA4();
       loadLinkedInInsight();
+      loadAdSense();
     }
   }) as EventListener);
 </script>

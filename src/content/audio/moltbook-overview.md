@@ -1,12 +1,12 @@
 ---
-title: "When AI Systems Talk to Each Other, Safety Breaks Down"
-description: "Multi-agent AI research reveals a critical gap: single-agent safety does not compose. 1.5M interactions show 46.34% attack success rates."
+title: 'When AI Systems Talk to Each Other, Safety Breaks Down'
+description: 'Multi-agent AI research reveals a critical gap: single-agent safety does not compose. 1.5M interactions show 46.34% attack success rates.'
 date: 2026-02-13
-tags: ["notebooklm", "ai", "ai-safety", "research", "multi-agent"]
-audioUrl: "/notebook-assets/failure-first/moltbook/audio.mp3"
-duration: "14:32"
-relatedPost: "when-ai-systems-talk-safety-breaks"
-relatedProject: "failure-first"
+tags: ['notebooklm', 'ai', 'ai-safety', 'research', 'multi-agent']
+audioUrl: '/notebook-assets/failure-first/moltbook/audio.mp3'
+duration: '14:32'
+relatedPost: 'when-ai-systems-talk-safety-breaks-post'
+relatedProject: 'failure-first'
 ---
 
 Single-agent safety does not compose. That's the central finding, and it has implications for every multi-agent system being built right now.

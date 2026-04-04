@@ -1,20 +1,20 @@
 ---
-title: "Safety-First Therapeutic AI"
+title: 'Safety-First Therapeutic AI'
 description: "Building AI for trauma therapy means the safety architecture has to exist before a single therapeutic feature does. Here's why."
 date: 2026-03-15
-tags: ["ai", "ai-safety", "health", "typescript"]
+tags: ['ai', 'ai-safety', 'health', 'typescript']
 draft: false
-heroImage: "/notebook-assets/safety-first-therapeutic-ai/infographic.webp"
-audioUrl: "/notebook-assets/safety-first-therapeutic-ai/audio.mp3"
+heroImage: '/notebook-assets/safety-first-therapeutic-ai/infographic.webp'
+audioUrl: '/notebook-assets/safety-first-therapeutic-ai/audio.mp3'
 faq:
-  - q: "What is EMDR and why does it require AI safety?"
-    a: "EMDR (Eye Movement Desensitization and Reprocessing) is a trauma therapy with precise protocols and serious failure modes. AI-assisted EMDR requires safety architecture first because the therapeutic mechanism — activating distress — is also the primary risk."
+  - q: 'What is EMDR and why does it require AI safety?'
+    a: 'EMDR (Eye Movement Desensitization and Reprocessing) is a trauma therapy with precise protocols and serious failure modes. AI-assisted EMDR requires safety architecture first because the therapeutic mechanism — activating distress — is also the primary risk.'
   - q: "Why can't safety be added to therapeutic AI later?"
-    a: "Therapeutic AI cannot treat safety as a guardrail because a person processing trauma is neurologically vulnerable. The safety system must continuously monitor whether distress is therapeutic or crisis in real time during the session."
-  - q: "What are the safety layers in AI-assisted EMDR?"
-    a: "Layer 1 monitors distress thresholds using SUD scores with deterministic gates. Layer 2 monitors session duration and safety profile. Layer 3 deploys hardcoded grounding techniques and crisis resources when the system intervenes."
-  - q: "Is AI-assisted EMDR a replacement for professional therapy?"
-    a: "No. EMDR Agent is a research and education project, not a clinical tool. It exists to explore what responsible AI-assisted therapeutic architecture looks like, not to replace professional mental health treatment."
+    a: 'Therapeutic AI cannot treat safety as a guardrail because a person processing trauma is neurologically vulnerable. The safety system must continuously monitor whether distress is therapeutic or crisis in real time during the session.'
+  - q: 'What are the safety layers in AI-assisted EMDR?'
+    a: 'Layer 1 monitors distress thresholds using SUD scores with deterministic gates. Layer 2 monitors session duration and safety profile. Layer 3 deploys hardcoded grounding techniques and crisis resources when the system intervenes.'
+  - q: 'Is AI-assisted EMDR a replacement for professional therapy?'
+    a: 'No. EMDR Agent is a research and education project, not a clinical tool. It exists to explore what responsible AI-assisted therapeutic architecture looks like, not to replace professional mental health treatment.'
 ---
 
 EMDR — Eye Movement Desensitization and Reprocessing — is one of the most evidence-based trauma therapies available. Its protocols are precise. Its failure modes are serious. Push too quickly through a traumatic memory, miss a dissociative response, or get the bilateral stimulation timing wrong, and you've done harm.
@@ -27,7 +27,7 @@ The answer, it turns out, is that safety has to come first — not as a feature 
 
 Most AI applications treat safety as a guardrail. Build the capability, then wrap it in filters, content policies, and disclaimers. For customer service bots and code assistants, this is often sufficient. The failure mode of a bad chatbot response is annoyance or wasted time.
 
-Therapeutic AI doesn't have that luxury. A person processing a traumatic memory is neurologically vulnerable. Their distress is the point — EMDR works by activating traumatic material under controlled conditions and allowing the brain to reprocess it. The therapeutic mechanism *is* the risk. You can't eliminate distress without eliminating the therapy.
+Therapeutic AI doesn't have that luxury. A person processing a traumatic memory is neurologically vulnerable. Their distress is the point — EMDR works by activating traumatic material under controlled conditions and allowing the brain to reprocess it. The therapeutic mechanism _is_ the risk. You can't eliminate distress without eliminating the therapy.
 
 This means the safety system can't be a boundary that prevents bad things from happening. It has to be a continuous monitor that distinguishes between therapeutic distress (expected, productive) and crisis (dangerous, requiring intervention). And it has to make that distinction in real time, every few minutes, for the duration of a session.
 
@@ -65,4 +65,4 @@ The patterns here — deterministic safety gates, continuous monitoring independ
 
 ---
 
-*[EMDR Agent](/projects/emdr-agent/) is open source at [github.com/adrianwedd/emdr-agent](https://github.com/adrianwedd/emdr-agent). It is a research project, not a clinical tool.*
+_[EMDR Agent](/projects/emdr-agent/) is open source at [github.com/adrianwedd/emdr-agent](https://github.com/adrianwedd/emdr-agent). It is a research project, not a clinical tool._

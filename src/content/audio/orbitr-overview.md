@@ -1,11 +1,11 @@
 ---
-title: "Rhythm as Geometry, Sounds from Words"
-description: "Audio overview of orbitr — a circular sequencer where polyrhythm becomes spatial and MusicGen creates the sounds."
+title: 'Rhythm as Geometry, Sounds from Words'
+description: 'Audio overview of orbitr — a circular sequencer where polyrhythm becomes spatial and MusicGen creates the sounds.'
 date: 2025-09-01
-tags: ["notebooklm", "music", "ai", "creative"]
-audioUrl: "/notebook-assets/orbitr/audio.mp3"
-duration: "17:20"
-relatedProject: "orbitr"
+tags: ['notebooklm', 'music', 'ai', 'creative']
+audioUrl: '/notebook-assets/orbitr/audio.mp3'
+duration: '17:20'
+relatedProject: 'orbitr'
 ---
 
 Traditional sequencers are grids. Rows and columns. Time moves left to right. It works, but it enforces a particular relationship with rhythm — one that privileges linearity and makes polyrhythm feel like a special case rather than the natural state of things.

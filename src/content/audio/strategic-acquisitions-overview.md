@@ -1,11 +1,11 @@
 ---
-title: "Housing Deserves Better Tooling"
+title: 'Housing Deserves Better Tooling'
 description: "Audio overview of an AI-powered property analysis pipeline for public housing — spatial intelligence, ML valuations, and Tasmania's LIST."
 date: 2025-01-15
-tags: ["notebooklm", "ai", "housing", "python"]
-audioUrl: "/notebook-assets/strategic-acquisitions/audio.mp3"
-duration: "21:13"
-relatedProject: "strategic-acquisitions"
+tags: ['notebooklm', 'ai', 'housing', 'python']
+audioUrl: '/notebook-assets/strategic-acquisitions/audio.mp3'
+duration: '21:13'
+relatedProject: 'strategic-acquisitions'
 ---
 
 Housing shortages are not information problems, but they have information problems inside them. When a public housing organisation needs to acquire properties, the analysis that should take hours takes weeks — listing discovery, valuation modelling, planning zone verification, hazard assessment, infrastructure proximity. Each step involves a different data source and a different manual process.

@@ -1,11 +1,11 @@
 ---
 title: "A CV That Proves It Isn't Lying"
-description: "A self-updating CV pipeline where GitHub Actions runs twice daily, Claude refines content, and a hallucination detector gates deployment."
+description: 'A self-updating CV pipeline where GitHub Actions runs twice daily, Claude refines content, and a hallucination detector gates deployment.'
 date: 2026-02-04
-tags: ["notebooklm", "craft", "web", "career"]
-audioUrl: "/notebook-assets/cv/audio.mp3"
-duration: "15:06"
-relatedProject: "cv"
+tags: ['notebooklm', 'craft', 'web', 'career']
+audioUrl: '/notebook-assets/cv/audio.mp3'
+duration: '15:06'
+relatedProject: 'cv'
 ---
 
 Every static CV is a snapshot that begins decaying the moment you export the PDF. It claims to summarise a career, but the format enforces a lie: that work is linear, that skills accumulate neatly, that the most recent role is the most important one.

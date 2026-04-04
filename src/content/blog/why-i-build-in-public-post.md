@@ -1,10 +1,10 @@
 ---
-title: "Why I Build in Public"
-description: "On showing your work, shipping imperfect things, and why the commit log is more honest than the readme."
+title: 'Why I Build in Public'
+description: 'On showing your work, shipping imperfect things, and why the commit log is more honest than the readme.'
 date: 2026-02-15
-tags: ["engineering", "open-source", "philosophy"]
-heroImage: "/notebook-assets/why-i-build-in-public/infographic.webp"
-audioUrl: "/notebook-assets/why-i-build-in-public/audio.mp3"
+tags: ['engineering', 'open-source', 'philosophy']
+heroImage: '/notebook-assets/why-i-build-in-public/infographic.webp'
+audioUrl: '/notebook-assets/why-i-build-in-public/audio.mp3'
 ---
 
 Every project on this site has a source link. Most of them link to messy repositories with commit messages like "fix the thing" and half-finished branches named `experiment-3`. This is deliberate.

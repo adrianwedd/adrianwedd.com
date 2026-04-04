@@ -1,13 +1,13 @@
 ---
-title: "NotebookLM Automation"
+title: 'NotebookLM Automation'
 description: "Full programmatic control over Google NotebookLM via reverse-engineered RPC. Export, generate, automate — what Google didn't build."
-tags: ["ai", "automation", "python"]
-repo: "https://github.com/adrianwedd/notebooklm-automation"
-status: "complete"
+tags: ['ai', 'automation', 'python']
+repo: 'https://github.com/adrianwedd/notebooklm-automation'
+status: 'complete'
 featured: false
 date: 2025-12-01
-audioUrl: "/notebook-assets/notebooklm-automation/audio.mp3"
-heroImage: "/notebook-assets/notebooklm-automation/infographic.webp"
+audioUrl: '/notebook-assets/notebooklm-automation/audio.mp3'
+heroImage: '/notebook-assets/notebooklm-automation/infographic.webp'
 ---
 
 Google built NotebookLM as a walled garden. I built a door.

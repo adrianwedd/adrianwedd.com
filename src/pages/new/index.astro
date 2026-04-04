@@ -53,10 +53,15 @@ const episodes = (await getCollection('audio'))
     duration: e.data.duration,
   }));
 
-type Item = (typeof blogs)[number] | (typeof projectItems)[number] | (typeof galleries)[number] | (typeof episodes)[number];
+type Item =
+  | (typeof blogs)[number]
+  | (typeof projectItems)[number]
+  | (typeof galleries)[number]
+  | (typeof episodes)[number];
 
-const all: Item[] = [...blogs, ...projectItems, ...galleries, ...episodes]
-  .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+const all: Item[] = [...blogs, ...projectItems, ...galleries, ...episodes].sort(
+  (a, b) => b.date.valueOf() - a.date.valueOf(),
+);
 
 // Group by month
 const grouped = new Map<string, Item[]>();
@@ -106,50 +111,42 @@ function formatDate(d: Date) {
       <span>{all.length} total</span>
     </div>
 
-    {[...grouped.entries()].map(([month, items]) => (
-      <ScrollReveal>
-        <section class="new-month">
-          <h2 class="new-month-heading">{month}</h2>
-          <div class="new-list">
-            {items.map((item) => (
-              <a href={item.href} class="new-card">
-                <div class="new-card-header">
-                  <span class:list={['new-card-type', `new-card-type--${item.type}`]}>
-                    {typeLabel[item.type]}
-                  </span>
-                  <time class="new-card-date" datetime={item.date.toISOString()}>
-                    {formatDate(item.date)}
-                  </time>
-                  {'status' in item && item.status && (
-                    <span class="new-card-badge">{item.status}</span>
-                  )}
-                  {'duration' in item && item.duration && (
-                    <span class="new-card-badge">{item.duration}</span>
-                  )}
-                  {'imageCount' in item && (
-                    <span class="new-card-badge">{item.imageCount} images</span>
-                  )}
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                {item.tags && item.tags.length > 0 && (
-                  <div class="new-card-tags">
-                    {item.tags.slice(0, 5).map((tag: string) => (
-                      <span class="new-card-tag">{tag}</span>
-                    ))}
+    {
+      [...grouped.entries()].map(([month, items]) => (
+        <ScrollReveal>
+          <section class="new-month">
+            <h2 class="new-month-heading">{month}</h2>
+            <div class="new-list">
+              {items.map((item) => (
+                <a href={item.href} class="new-card">
+                  <div class="new-card-header">
+                    <span class:list={['new-card-type', `new-card-type--${item.type}`]}>{typeLabel[item.type]}</span>
+                    <time class="new-card-date" datetime={item.date.toISOString()}>
+                      {formatDate(item.date)}
+                    </time>
+                    {'status' in item && item.status && <span class="new-card-badge">{item.status}</span>}
+                    {'duration' in item && item.duration && <span class="new-card-badge">{item.duration}</span>}
+                    {'imageCount' in item && <span class="new-card-badge">{item.imageCount} images</span>}
                   </div>
-                )}
-              </a>
-            ))}
-          </div>
-        </section>
-      </ScrollReveal>
-    ))}
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  {item.tags && item.tags.length > 0 && (
+                    <div class="new-card-tags">
+                      {item.tags.slice(0, 5).map((tag: string) => (
+                        <span class="new-card-tag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        </ScrollReveal>
+      ))
+    }
 
     <div class="mt-10 border-t border-border pt-6">
-      <a href="/rss.xml" class="text-sm text-text-muted transition-colors hover:text-accent no-underline">
-        RSS Feed
-      </a>
+      <a href="/rss.xml" class="text-sm text-text-muted no-underline transition-colors hover:text-accent"> RSS Feed </a>
     </div>
   </section>
 </BaseLayout>
@@ -194,7 +191,9 @@ function formatDate(d: Date) {
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
     border: 1px solid transparent;
-    transition: border-color 0.2s, background-color 0.2s;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s;
   }
 
   .new-card:hover {

@@ -1,15 +1,15 @@
 ---
-title: "The Legal AI Trust Deficit"
+title: 'The Legal AI Trust Deficit'
 description: "75% of lawyers cite accuracy as their top AI concern. The legal profession's core values are in direct tension with current AI capabilities."
 date: 2026-03-02
-tags: ["ai", "legal", "research", "llm"]
+tags: ['ai', 'legal', 'research', 'llm']
 draft: false
-heroImage: "/notebook-assets/the-legal-ai-trust-deficit/infographic.webp"
-audioUrl: "/notebook-assets/the-legal-ai-trust-deficit/audio.mp3"
+heroImage: '/notebook-assets/the-legal-ai-trust-deficit/infographic.webp'
+audioUrl: '/notebook-assets/the-legal-ai-trust-deficit/audio.mp3'
 faq:
-  - q: "Why are lawyers slow to adopt AI?"
-    a: "The legal profession values accuracy, confidentiality, and accountability — all areas where current AI systems have demonstrated weaknesses. 75% of lawyers cite accuracy concerns as the top barrier."
-  - q: "What is the efficiency-trust deficit in legal AI?"
+  - q: 'Why are lawyers slow to adopt AI?'
+    a: 'The legal profession values accuracy, confidentiality, and accountability — all areas where current AI systems have demonstrated weaknesses. 75% of lawyers cite accuracy concerns as the top barrier.'
+  - q: 'What is the efficiency-trust deficit in legal AI?'
     a: "An overwhelming demand for automation and efficiency held in check by deep-seated skepticism about AI reliability, creating a market where most practitioners want AI but don't trust it enough to use it."
 ---
 
@@ -71,4 +71,4 @@ The firms and products that figure this out won't just capture a market. They'll
 
 ---
 
-*This analysis draws on market research conducted as part of the [VERITAS](https://github.com/adrianwedd/VERITAS) project exploring verifiable AI for legal applications. The full competitive landscape analysis and strategic framework are in the technical report.*
+_This analysis draws on market research conducted as part of the [VERITAS](https://github.com/adrianwedd/VERITAS) project exploring verifiable AI for legal applications. The full competitive landscape analysis and strategic framework are in the technical report._

@@ -11,7 +11,17 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title, description, image = '/og-default.png', imageWidth = 1200, imageHeight = 630, type = 'website', publishedDate, tags, noindex } = Astro.props;
+const {
+  title,
+  description,
+  image = '/og-default.png',
+  imageWidth = 1200,
+  imageHeight = 630,
+  type = 'website',
+  publishedDate,
+  tags,
+  noindex,
+} = Astro.props;
 
 const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const canonicalUrl = new URL(pathname, Astro.site);
@@ -23,7 +33,10 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content="Astro + curiosity" />
 <meta name="color-scheme" content="dark light" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com https://px.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com; media-src 'self' https://cdn.adrianwedd.com; frame-src https://www.openstreetmap.org; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';" />
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com https://px.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com; media-src 'self' https://cdn.adrianwedd.com; frame-src https://www.openstreetmap.org; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
+/>
 <meta name="author" content="Adrian Wedd" />
 <meta name="theme-color" content="#c48b6e" />
 {tags && <meta name="keywords" content={tags.join(', ')} />}
@@ -56,11 +69,8 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
 <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 
-<!-- AdSense verification — loads unconditionally for Google crawler verification.
-     TODO: consent-gate this (move to Analytics.astro) once verification is complete. -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6275306310835906" crossorigin="anonymous"></script>
-
 <!-- Open Graph -->
+
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:title" content={fullTitle} />
@@ -81,36 +91,35 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 {tags && tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
 <!-- JSON-LD: generic WebSite schema for non-article, non-homepage pages (homepage provides its own richer WebSite schema) -->
-{type !== 'article' && title !== 'Adrian Wedd' && (
-<script
-  type="application/ld+json"
-  set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Adrian Wedd',
-    description,
-    url: canonicalUrl.href,
-    image: ogImageUrl.href,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl.href },
-    ...(tags ? { keywords: tags.join(', ') } : {}),
-    author: {
-      '@type': 'Person',
-      name: 'Adrian Wedd',
-      url: 'https://adrianwedd.com',
-      sameAs: [
-        'https://github.com/adrianwedd',
-        'https://www.linkedin.com/in/adrianwedd/',
-      ],
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Adrian Wedd',
-      url: 'https://adrianwedd.com',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://adrianwedd.com/favicon.svg',
-      },
-    },
-  })}
-/>
-)}
+{
+  type !== 'article' && title !== 'Adrian Wedd' && (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Adrian Wedd',
+        description,
+        url: canonicalUrl.href,
+        image: ogImageUrl.href,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl.href },
+        ...(tags ? { keywords: tags.join(', ') } : {}),
+        author: {
+          '@type': 'Person',
+          name: 'Adrian Wedd',
+          url: 'https://adrianwedd.com',
+          sameAs: ['https://github.com/adrianwedd', 'https://www.linkedin.com/in/adrianwedd/'],
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Adrian Wedd',
+          url: 'https://adrianwedd.com',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://adrianwedd.com/favicon.svg',
+          },
+        },
+      })}
+    />
+  )
+}

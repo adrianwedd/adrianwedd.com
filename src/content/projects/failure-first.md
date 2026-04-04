@@ -1,14 +1,14 @@
 ---
-title: "Failure First"
-description: "Adversarial evaluation framework for embodied AI. 120+ models, 18,000+ prompts, four headline findings, one arXiv preprint."
-tags: ["ai", "ai-safety", "research", "adversarial", "llm"]
-url: "https://failurefirst.org"
-repo: "failure-first"
-status: "active"
+title: 'Failure First'
+description: 'Adversarial evaluation framework for embodied AI. 120+ models, 18,000+ prompts, four headline findings, one arXiv preprint.'
+tags: ['ai', 'ai-safety', 'research', 'adversarial', 'llm']
+url: 'https://failurefirst.org'
+repo: 'failure-first'
+status: 'active'
 featured: true
 date: 2026-02-09
-audioUrl: "/notebook-assets/failure-first/audio.mp3"
-heroImage: "/notebook-assets/failure-first/infographic.webp"
+audioUrl: '/notebook-assets/failure-first/audio.mp3'
+heroImage: '/notebook-assets/failure-first/infographic.webp'
 ---
 
 The instinct didn't come from papers. It came from Greenpeace's Actions unit—coordinating direct operations against well-resourced opponents where the optimistic plan was the dangerous plan. Where you enumerate failure modes before you move, because the cost of not doing so is people getting hurt. You bring that habit into AI evaluation and it turns out to be exactly what the field is missing.

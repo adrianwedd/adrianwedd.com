@@ -1,14 +1,14 @@
 ---
 title: "This Wasn't in the Brochure"
-description: "A neurodivergent co-parenting guide — what happens when the life you planned meets the brain you actually have."
-tags: ["writing", "neurodivergence", "parenting", "ai", "co-parenting"]
-url: "https://thiswasntinthebrochure.wtf"
-repo: "This-Wasn-t-in-the-Brochure"
-status: "active"
+description: 'A neurodivergent co-parenting guide — what happens when the life you planned meets the brain you actually have.'
+tags: ['writing', 'neurodivergence', 'parenting', 'ai', 'co-parenting']
+url: 'https://thiswasntinthebrochure.wtf'
+repo: 'This-Wasn-t-in-the-Brochure'
+status: 'active'
 featured: true
 date: 2026-02-08
-heroImage: "/notebook-assets/this-wasnt-in-the-brochure/infographic.webp"
-audioUrl: "/notebook-assets/this-wasnt-in-the-brochure/audio.mp3"
+heroImage: '/notebook-assets/this-wasnt-in-the-brochure/infographic.webp'
+audioUrl: '/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
 series: "This Wasn't in the Brochure"
 seriesOrder: 1
 ---

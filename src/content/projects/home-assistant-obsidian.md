@@ -1,13 +1,13 @@
 ---
-title: "Home Assistant Obsidian"
-description: "Obsidian inside Home Assistant — your knowledge base and your smart home on the same box, same backup, same UI."
-tags: ["homelab", "home-assistant", "docker", "python"]
-repo: "https://github.com/adrianwedd/home-assistant-obsidian"
-status: "active"
+title: 'Home Assistant Obsidian'
+description: 'Obsidian inside Home Assistant — your knowledge base and your smart home on the same box, same backup, same UI.'
+tags: ['homelab', 'home-assistant', 'docker', 'python']
+repo: 'https://github.com/adrianwedd/home-assistant-obsidian'
+status: 'active'
 featured: false
 date: 2024-06-01
-audioUrl: "/notebook-assets/home-assistant-obsidian/audio.mp3"
-heroImage: "/notebook-assets/home-assistant-obsidian/infographic.webp"
+audioUrl: '/notebook-assets/home-assistant-obsidian/audio.mp3'
+heroImage: '/notebook-assets/home-assistant-obsidian/infographic.webp'
 ---
 
 I keep two systems running at home that shape how I think: Obsidian for knowledge, Home Assistant for the physical environment. They existed on separate machines, with separate maintenance windows, separate failure modes. The obvious question was why.

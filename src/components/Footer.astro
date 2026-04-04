@@ -2,7 +2,7 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-auto border-t border-border bg-surface-alt/50">
+<footer class="bg-surface-alt/50 mt-auto border-t border-border">
   <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
     <div class="grid gap-8 text-sm text-text-muted sm:grid-cols-3">
       <nav aria-label="Site pages">
@@ -31,11 +31,36 @@ const year = new Date().getFullYear();
       <nav aria-label="External links">
         <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-text">Elsewhere</p>
         <div class="flex flex-wrap gap-x-4 gap-y-1">
-          <a href="https://github.com/adrianwedd" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-text">GitHub</a>
-          <a href="https://linkedin.com/in/adrianwedd" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-text">LinkedIn</a>
-          <a href="https://www.facebook.com/AdrianWeddDotCom" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-text">Facebook</a>
-          <a href="https://www.instagram.com/adrianwedd/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-text">Instagram</a>
-          <a href="https://x.com/adrianwedd" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-text">X</a>
+          <a
+            href="https://github.com/adrianwedd"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-text">GitHub</a
+          >
+          <a
+            href="https://linkedin.com/in/adrianwedd"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-text">LinkedIn</a
+          >
+          <a
+            href="https://www.facebook.com/AdrianWeddDotCom"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-text">Facebook</a
+          >
+          <a
+            href="https://www.instagram.com/adrianwedd/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-text">Instagram</a
+          >
+          <a
+            href="https://x.com/adrianwedd"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-text">X</a
+          >
           <a href="/rss.xml" class="transition-colors hover:text-text">RSS</a>
           <a href="/audio/feed.xml" class="transition-colors hover:text-text">Podcast</a>
         </div>
@@ -44,13 +69,9 @@ const year = new Date().getFullYear();
     <p class="mt-8 border-t border-border pt-6 text-xs text-text-muted">
       The methodology is public. The work is in progress. Do it properly or don't bother.
     </p>
-    <div class="mt-4 flex items-center justify-between text-xs text-text-muted font-mono tracking-wide">
+    <div class="mt-4 flex items-center justify-between font-mono text-xs tracking-wide text-text-muted">
       <p>&copy; {year} Adrian Wedd</p>
-      <button
-        type="button"
-        class="footer-back-to-top transition-colors hover:text-accent"
-        aria-label="Back to top"
-      >
+      <button type="button" class="footer-back-to-top transition-colors hover:text-accent" aria-label="Back to top">
         Back to top &uarr;
       </button>
     </div>

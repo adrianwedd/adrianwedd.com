@@ -1,11 +1,11 @@
 ---
-title: "Diagnosis as a Team Sport"
-description: "Multi-agent AI diagnostic system with five physician personas, 304 NEJM cases, and a budget that forces real trade-offs."
+title: 'Diagnosis as a Team Sport'
+description: 'Multi-agent AI diagnostic system with five physician personas, 304 NEJM cases, and a budget that forces real trade-offs.'
 date: 2025-05-01
-tags: ["notebooklm", "ai", "healthcare", "agents"]
-audioUrl: "/notebook-assets/dx0/audio.mp3"
-duration: "14:30"
-relatedProject: "dx0"
+tags: ['notebooklm', 'ai', 'healthcare', 'agents']
+audioUrl: '/notebook-assets/dx0/audio.mp3'
+duration: '14:30'
+relatedProject: 'dx0'
 ---
 
 The question everyone asks about AI in medicine is whether it can diagnose. That's the wrong question. The right question is whether it can diagnose responsibly — within resource constraints, with appropriate uncertainty, without the kind of confident hallucination that in a clinical context becomes malpractice.

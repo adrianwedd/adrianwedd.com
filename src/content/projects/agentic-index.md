@@ -1,13 +1,13 @@
 ---
-title: "Agentic Index"
-description: "The definitive developer-focused catalogue of autonomous AI tooling. Scored, curated, zero BS."
-tags: ["ai", "agents", "curation", "python"]
-repo: "https://github.com/adrianwedd/Agentic-Index"
-status: "active"
+title: 'Agentic Index'
+description: 'The definitive developer-focused catalogue of autonomous AI tooling. Scored, curated, zero BS.'
+tags: ['ai', 'agents', 'curation', 'python']
+repo: 'https://github.com/adrianwedd/Agentic-Index'
+status: 'active'
 featured: false
 date: 2025-08-01
-audioUrl: "/notebook-assets/agentic-index/audio.mp3"
-heroImage: "/notebook-assets/agentic-index/infographic.webp"
+audioUrl: '/notebook-assets/agentic-index/audio.mp3'
+heroImage: '/notebook-assets/agentic-index/infographic.webp'
 ---
 
 The AI agent ecosystem has a curation problem. New frameworks appear weekly, each claiming autonomy, each backed by a README full of superlatives and a demo that works exactly once. If you're trying to choose tooling for real work—multi-agent orchestration, RAG pipelines, dev tooling—the landscape is a fog of marketing copy and GitHub stars that measure hype, not quality.

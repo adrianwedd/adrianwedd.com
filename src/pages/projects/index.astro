@@ -8,11 +8,13 @@ import ContentCarousel from '../../components/ContentCarousel.astro';
 import fs from 'node:fs';
 
 const allProjects = await getCollection('projects');
-const projects = allProjects.filter((p) => !p.data.draft).sort((a, b) => {
-  if (a.data.featured && !b.data.featured) return -1;
-  if (!a.data.featured && b.data.featured) return 1;
-  return b.data.date.getTime() - a.data.date.getTime();
-});
+const projects = allProjects
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => {
+    if (a.data.featured && !b.data.featured) return -1;
+    if (!a.data.featured && b.data.featured) return 1;
+    return b.data.date.getTime() - a.data.date.getTime();
+  });
 
 const allTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
 const allStatuses = [...new Set(projects.map((p) => p.data.status))].sort();
@@ -73,24 +75,31 @@ const projectCarouselItems = projects
   }));
 ---
 
-<BaseLayout title="Projects" description="Thirty-odd things built in public — AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.">
+<BaseLayout
+  title="Projects"
+  description="Thirty-odd things built in public — AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do."
+>
   <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">
         Thirty-odd things built in public.<br />
-        <span class="text-text-muted">AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.</span>
+        <span class="text-text-muted"
+          >AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.</span
+        >
       </h1>
       <p class="mt-6 max-w-prose text-text-muted">
-        The range is deliberate. Most real problems don't stay inside one domain, and the capacity
-        to work across them came from not specialising artificially.
+        The range is deliberate. Most real problems don't stay inside one domain, and the capacity to work across them
+        came from not specialising artificially.
       </p>
     </div>
     <HeroCanvas animation="blueprint" />
   </section>
 
-  {projectCarouselItems.length > 0 && (
-    <ContentCarousel items={projectCarouselItems} id="projects-carousel" label="Project highlights" />
-  )}
+  {
+    projectCarouselItems.length > 0 && (
+      <ContentCarousel items={projectCarouselItems} id="projects-carousel" label="Project highlights" />
+    )
+  }
 
   <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
     {/* Status filter */}
@@ -108,7 +117,7 @@ const projectCarouselItems = projects
           <button
             type="button"
             data-status={status}
-            class="status-filter cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:bg-accent/15 hover:text-accent"
+            class="status-filter hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
             aria-pressed="false"
           >
             {statusLabels[status] || status}
@@ -145,7 +154,7 @@ const projectCarouselItems = projects
               type="button"
               data-tag={tag}
               class:list={[
-                'tag-filter cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:bg-accent/15 hover:text-accent',
+                'tag-filter hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent',
                 i >= 10 && 'project-tag-overflow hidden',
               ]}
               aria-pressed="false"
@@ -158,7 +167,7 @@ const projectCarouselItems = projects
               type="button"
               id="project-tags-toggle"
               aria-expanded="false"
-              class="cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:bg-accent/15 hover:text-accent"
+              class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
             >
               +{allTags.length - 10} more
             </button>
@@ -213,11 +222,12 @@ const projectCarouselItems = projects
                 <p class="mt-2 text-sm leading-relaxed text-text-muted">{project.data.description}</p>
                 <div class="mt-4 flex flex-wrap items-center gap-2">
                   {project.data.tags.slice(0, 4).map((tag: string) => (
-                    <span class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">
-                      {tag}
-                    </span>
+                    <span class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">{tag}</span>
                   ))}
-                  <time class="ml-auto whitespace-nowrap text-xs text-text-muted" datetime={project.data.date.toISOString()}>
+                  <time
+                    class="ml-auto whitespace-nowrap text-xs text-text-muted"
+                    datetime={project.data.date.toISOString()}
+                  >
                     {project.data.date.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' })}
                   </time>
                 </div>
@@ -231,198 +241,205 @@ const projectCarouselItems = projects
     <p id="no-results" class="mt-10 hidden text-center text-text-muted">No projects match these filters.</p>
 
     {/* Auto-discovered repos from GitHub */}
-    {discoveredRepos.length > 0 && (
-      <section class="mt-16 border-t border-border pt-10">
-        <h2 class="text-lg font-semibold text-text">More on GitHub</h2>
-        <p class="mt-1 text-sm text-text-muted">Other public repos, auto-discovered from GitHub.</p>
-        <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {discoveredRepos.map((repo) => (
+    {
+      discoveredRepos.length > 0 && (
+        <section class="mt-16 border-t border-border pt-10">
+          <h2 class="text-lg font-semibold text-text">More on GitHub</h2>
+          <p class="mt-1 text-sm text-text-muted">Other public repos, auto-discovered from GitHub.</p>
+          <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {discoveredRepos.map((repo) => (
+              <a
+                href={repo.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:border-accent/50 group block rounded-lg border border-border bg-surface-alt p-4 no-underline transition-all hover:shadow-card"
+              >
+                <div class="flex items-start justify-between gap-2">
+                  <h3 class="font-mono text-sm font-medium text-text transition-colors group-hover:text-accent">
+                    {repo.name}
+                  </h3>
+                  {repo.language && (
+                    <span class="shrink-0 rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">
+                      {repo.language}
+                    </span>
+                  )}
+                </div>
+                <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-text-muted">{repo.description}</p>
+                {repo.stars > 0 && <span class="mt-2 inline-block text-xs text-text-muted">★ {repo.stars}</span>}
+              </a>
+            ))}
+          </div>
+          <p class="mt-4 text-sm text-text-muted">
             <a
-              href={repo.url}
+              href="https://github.com/adrianwedd?tab=repositories"
               target="_blank"
               rel="noopener noreferrer"
-              class="hover:border-accent/50 group block rounded-lg border border-border bg-surface-alt p-4 no-underline transition-all hover:shadow-card"
+              class="text-accent hover:underline"
             >
-              <div class="flex items-start justify-between gap-2">
-                <h3 class="font-mono text-sm font-medium text-text transition-colors group-hover:text-accent">
-                  {repo.name}
-                </h3>
-                {repo.language && (
-                  <span class="shrink-0 rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">
-                    {repo.language}
-                  </span>
-                )}
-              </div>
-              <p class="mt-1 text-xs leading-relaxed text-text-muted line-clamp-2">
-                {repo.description}
-              </p>
-              {repo.stars > 0 && (
-                <span class="mt-2 inline-block text-xs text-text-muted">
-                  ★ {repo.stars}
-                </span>
-              )}
+              View all repositories →
             </a>
-          ))}
-        </div>
-        <p class="mt-4 text-sm text-text-muted">
-          <a
-            href="https://github.com/adrianwedd?tab=repositories"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-accent hover:underline"
-          >
-            View all repositories →
-          </a>
-        </p>
-      </section>
-    )}
+          </p>
+        </section>
+      )
+    }
   </section>
 
   <script is:inline>
-  (function () {
-    var activeStatus = '';
-    var activeTag = '';
-    var tagOverflowExpanded = false;
+    (function () {
+      var activeStatus = '';
+      var activeTag = '';
+      var tagOverflowExpanded = false;
 
-    function getCards() { return Array.from(document.querySelectorAll('.project-card')); }
+      function getCards() {
+        return Array.from(document.querySelectorAll('.project-card'));
+      }
 
-    function setActiveButton(containerId, cls, value, attr) {
-      var container = document.getElementById(containerId);
-      if (!container) return;
-      container.querySelectorAll('.' + cls).forEach(function (b) {
-        var match = (b.dataset[attr] || '') === value;
-        b.classList.toggle('border-accent', match);
-        b.classList.toggle('bg-accent/10', match);
-        b.classList.toggle('text-accent', match);
-        b.classList.toggle('font-medium', match);
-        b.classList.toggle('border-border', !match);
-        b.classList.toggle('text-text-muted', !match);
-        b.setAttribute('aria-pressed', match ? 'true' : 'false');
-      });
-    }
+      function setActiveButton(containerId, cls, value, attr) {
+        var container = document.getElementById(containerId);
+        if (!container) return;
+        container.querySelectorAll('.' + cls).forEach(function (b) {
+          var match = (b.dataset[attr] || '') === value;
+          b.classList.toggle('border-accent', match);
+          b.classList.toggle('bg-accent/10', match);
+          b.classList.toggle('text-accent', match);
+          b.classList.toggle('font-medium', match);
+          b.classList.toggle('border-border', !match);
+          b.classList.toggle('text-text-muted', !match);
+          b.setAttribute('aria-pressed', match ? 'true' : 'false');
+        });
+      }
 
-    function updateURL() {
-      var sortSelect = document.getElementById('sort-select');
-      var p = new URLSearchParams();
-      if (activeStatus) p.set('status', activeStatus);
-      if (activeTag) p.set('tag', activeTag);
-      if (sortSelect && sortSelect.value !== 'featured') p.set('sort', sortSelect.value);
-      var qs = p.toString();
-      history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
-    }
+      function updateURL() {
+        var sortSelect = document.getElementById('sort-select');
+        var p = new URLSearchParams();
+        if (activeStatus) p.set('status', activeStatus);
+        if (activeTag) p.set('tag', activeTag);
+        if (sortSelect && sortSelect.value !== 'featured') p.set('sort', sortSelect.value);
+        var qs = p.toString();
+        history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
+      }
 
-    function applyFilters() {
-      var cards = getCards();
-      var noResults = document.getElementById('no-results');
-      var visible = 0;
-      cards.forEach(function (card) {
-        var matchStatus = !activeStatus || card.dataset.status === activeStatus;
-        var tags = [];
-        try { tags = JSON.parse(card.dataset.tags || '[]'); } catch (e) {}
-        var matchTag = !activeTag || tags.indexOf(activeTag) !== -1;
-        var show = matchStatus && matchTag;
-        card.style.opacity = show ? '1' : '0';
-        setTimeout(function () { card.style.display = show ? '' : 'none'; }, show ? 0 : 200);
-        if (show) visible++;
-      });
-      if (noResults) noResults.classList.toggle('hidden', visible > 0);
-      updateURL();
-    }
+      function applyFilters() {
+        var cards = getCards();
+        var noResults = document.getElementById('no-results');
+        var visible = 0;
+        cards.forEach(function (card) {
+          var matchStatus = !activeStatus || card.dataset.status === activeStatus;
+          var tags = [];
+          try {
+            tags = JSON.parse(card.dataset.tags || '[]');
+          } catch (e) {}
+          var matchTag = !activeTag || tags.indexOf(activeTag) !== -1;
+          var show = matchStatus && matchTag;
+          card.style.opacity = show ? '1' : '0';
+          setTimeout(
+            function () {
+              card.style.display = show ? '' : 'none';
+            },
+            show ? 0 : 200,
+          );
+          if (show) visible++;
+        });
+        if (noResults) noResults.classList.toggle('hidden', visible > 0);
+        updateURL();
+      }
 
-    function applySort() {
-      var grid = document.getElementById('project-grid');
-      var sortSelect = document.getElementById('sort-select');
-      var cards = getCards();
-      if (!grid || !sortSelect) return;
-      var sorted = cards.slice().sort(function (a, b) {
-        var sort = sortSelect.value;
-        if (sort === 'featured') {
-          var af = a.dataset.featured ? 1 : 0;
-          var bf = b.dataset.featured ? 1 : 0;
-          if (af !== bf) return bf - af;
-          return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
-        }
-        if (sort === 'newest') return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
-        if (sort === 'oldest') return new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
-        return (a.dataset.title || '').localeCompare(b.dataset.title || '');
-      });
-      sorted.forEach(function (card) { grid.appendChild(card); });
-      updateURL();
-    }
-
-    function initProjectFilters() {
-      var sortSelect = document.getElementById('sort-select');
-      if (!document.getElementById('project-grid')) return;
-
-      // Read URL params
-      var params = new URLSearchParams(window.location.search);
-      activeStatus = params.get('status') || '';
-      activeTag = params.get('tag') || '';
-      if (params.get('sort') && sortSelect) sortSelect.value = params.get('sort');
-
-      setActiveButton('status-filters', 'status-filter', activeStatus, 'status');
-      setActiveButton('tag-filters', 'tag-filter', activeTag, 'tag');
-      applySort();
-      applyFilters();
-    }
-
-    if (!document.documentElement.dataset.projectFilterInit) {
-      document.documentElement.dataset.projectFilterInit = '1';
-
-      document.addEventListener('click', function (e) {
-        var target = e.target;
-        if (!target || typeof target.closest !== 'function') return;
-
-        var statusBtn = target.closest('#status-filters .status-filter');
-        if (statusBtn && document.getElementById('project-grid')) {
-          activeStatus = statusBtn.dataset.status || '';
-          setActiveButton('status-filters', 'status-filter', activeStatus, 'status');
-          applyFilters();
-          return;
-        }
-
-        var tagBtn = target.closest('#tag-filters .tag-filter');
-        if (tagBtn && document.getElementById('project-grid')) {
-          activeTag = tagBtn.dataset.tag || '';
-          setActiveButton('tag-filters', 'tag-filter', activeTag, 'tag');
-          applyFilters();
-          return;
-        }
-
-        if (target.closest('#project-tags-toggle')) {
-          tagOverflowExpanded = !tagOverflowExpanded;
-          document.querySelectorAll('.project-tag-overflow').forEach(function (el) {
-            el.classList.toggle('hidden', !tagOverflowExpanded);
-          });
-          var toggle = document.getElementById('project-tags-toggle');
-          if (toggle) {
-            toggle.textContent = tagOverflowExpanded ? 'Show less' : toggle.dataset.label || '';
-            toggle.setAttribute('aria-expanded', String(tagOverflowExpanded));
+      function applySort() {
+        var grid = document.getElementById('project-grid');
+        var sortSelect = document.getElementById('sort-select');
+        var cards = getCards();
+        if (!grid || !sortSelect) return;
+        var sorted = cards.slice().sort(function (a, b) {
+          var sort = sortSelect.value;
+          if (sort === 'featured') {
+            var af = a.dataset.featured ? 1 : 0;
+            var bf = b.dataset.featured ? 1 : 0;
+            if (af !== bf) return bf - af;
+            return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
           }
-          return;
-        }
-      });
+          if (sort === 'newest') return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
+          if (sort === 'oldest') return new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
+          return (a.dataset.title || '').localeCompare(b.dataset.title || '');
+        });
+        sorted.forEach(function (card) {
+          grid.appendChild(card);
+        });
+        updateURL();
+      }
 
-      document.addEventListener('change', function (e) {
-        if (e.target && e.target.id === 'sort-select' && document.getElementById('project-grid')) {
-          applySort();
-          applyFilters();
-        }
-      });
+      function initProjectFilters() {
+        var sortSelect = document.getElementById('sort-select');
+        if (!document.getElementById('project-grid')) return;
 
-      document.addEventListener('astro:after-swap', function () {
-        tagOverflowExpanded = false;
-        var toggle = document.getElementById('project-tags-toggle');
-        if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
-        initProjectFilters();
-      });
-    }
+        // Read URL params
+        var params = new URLSearchParams(window.location.search);
+        activeStatus = params.get('status') || '';
+        activeTag = params.get('tag') || '';
+        if (params.get('sort') && sortSelect) sortSelect.value = params.get('sort');
 
-    // Store label for toggle
-    var tagToggle = document.getElementById('project-tags-toggle');
-    if (tagToggle && !tagToggle.dataset.label) tagToggle.dataset.label = tagToggle.textContent || '';
+        setActiveButton('status-filters', 'status-filter', activeStatus, 'status');
+        setActiveButton('tag-filters', 'tag-filter', activeTag, 'tag');
+        applySort();
+        applyFilters();
+      }
 
-    initProjectFilters();
-  })();
+      if (!document.documentElement.dataset.projectFilterInit) {
+        document.documentElement.dataset.projectFilterInit = '1';
+
+        document.addEventListener('click', function (e) {
+          var target = e.target;
+          if (!target || typeof target.closest !== 'function') return;
+
+          var statusBtn = target.closest('#status-filters .status-filter');
+          if (statusBtn && document.getElementById('project-grid')) {
+            activeStatus = statusBtn.dataset.status || '';
+            setActiveButton('status-filters', 'status-filter', activeStatus, 'status');
+            applyFilters();
+            return;
+          }
+
+          var tagBtn = target.closest('#tag-filters .tag-filter');
+          if (tagBtn && document.getElementById('project-grid')) {
+            activeTag = tagBtn.dataset.tag || '';
+            setActiveButton('tag-filters', 'tag-filter', activeTag, 'tag');
+            applyFilters();
+            return;
+          }
+
+          if (target.closest('#project-tags-toggle')) {
+            tagOverflowExpanded = !tagOverflowExpanded;
+            document.querySelectorAll('.project-tag-overflow').forEach(function (el) {
+              el.classList.toggle('hidden', !tagOverflowExpanded);
+            });
+            var toggle = document.getElementById('project-tags-toggle');
+            if (toggle) {
+              toggle.textContent = tagOverflowExpanded ? 'Show less' : toggle.dataset.label || '';
+              toggle.setAttribute('aria-expanded', String(tagOverflowExpanded));
+            }
+            return;
+          }
+        });
+
+        document.addEventListener('change', function (e) {
+          if (e.target && e.target.id === 'sort-select' && document.getElementById('project-grid')) {
+            applySort();
+            applyFilters();
+          }
+        });
+
+        document.addEventListener('astro:after-swap', function () {
+          tagOverflowExpanded = false;
+          var toggle = document.getElementById('project-tags-toggle');
+          if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
+          initProjectFilters();
+        });
+      }
+
+      // Store label for toggle
+      var tagToggle = document.getElementById('project-tags-toggle');
+      if (tagToggle && !tagToggle.dataset.label) tagToggle.dataset.label = tagToggle.textContent || '';
+
+      initProjectFilters();
+    })();
   </script>
 </BaseLayout>

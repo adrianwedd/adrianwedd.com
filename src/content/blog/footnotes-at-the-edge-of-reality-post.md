@@ -1,12 +1,12 @@
 ---
-title: "Footnotes at the Edge of Reality"
-description: "General relativity and quantum mechanics are both correct and mutually untranslatable. Two grammars for the same reality, each precise, each incomplete."
+title: 'Footnotes at the Edge of Reality'
+description: 'General relativity and quantum mechanics are both correct and mutually untranslatable. Two grammars for the same reality, each precise, each incomplete.'
 date: 2026-02-12
-tags: ["poetry", "physics", "writing", "creative"]
+tags: ['poetry', 'physics', 'writing', 'creative']
 draft: false
-heroImage: "/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp"
-audioUrl: "/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3"
-audioDuration: "17:58"
+heroImage: '/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp'
+audioUrl: '/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3'
+audioDuration: '17:58'
 ---
 
 # Footnotes at the Edge of Reality

@@ -2,10 +2,10 @@
 title: "The ADHD Novel That Didn't Know It Was One"
 description: "A scholarly close reading arguing Gibson's Neuromancer encoded the ADHD experience a decade before the vocabulary existed."
 date: 2026-02-10
-tags: ["notebooklm", "neurodivergence", "literary-criticism", "adhd"]
-audioUrl: "/notebook-assets/before-the-words-existed/audio.mp3"
-duration: "16:50"
-relatedProject: "before-the-words-existed"
+tags: ['notebooklm', 'neurodivergence', 'literary-criticism', 'adhd']
+audioUrl: '/notebook-assets/before-the-words-existed/audio.mp3'
+duration: '16:50'
+relatedProject: 'before-the-words-existed'
 ---
 
 In 1984, the DSM-III categorised ADD as a childhood disorder. Neurodiversity as a concept wouldn't surface for another decade. And yet that same year, William Gibson published a novel that encodes — in extraordinary detail — what it feels like when your cognition depends on an interface that isn't there.

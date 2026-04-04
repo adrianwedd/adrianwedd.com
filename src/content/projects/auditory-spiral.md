@@ -1,15 +1,15 @@
 ---
-title: "Auditory Spiral"
-description: "Overnight electronic music programme on RTRFM 92.1 Perth, broadcasting midnight to 6 AM from the early 1990s into the 2000s."
-tags: ["history", "music", "perth", "radio"]
-status: "archived"
+title: 'Auditory Spiral'
+description: 'Overnight electronic music programme on RTRFM 92.1 Perth, broadcasting midnight to 6 AM from the early 1990s into the 2000s.'
+tags: ['history', 'music', 'perth', 'radio']
+status: 'archived'
 featured: false
 date: 1992-01-01
-heroImage: "/notebook-assets/auditory-spiral/infographic.webp"
-audioUrl: "/notebook-assets/auditory-spiral/audio.mp3"
+heroImage: '/notebook-assets/auditory-spiral/infographic.webp'
+audioUrl: '/notebook-assets/auditory-spiral/audio.mp3'
 ---
 
-*Auditory Spiral* was an overnight electronic music programme on [RTRFM 92.1](https://rtrfm.com.au), Perth's community radio station. Broadcasting Sunday nights into Monday mornings from midnight to 6 AM, the show was a six-hour immersion in minimal techno, dark ambient, industrial, and experimental electronic music during an era when those sounds were virtually inaccessible in Western Australia.
+_Auditory Spiral_ was an overnight electronic music programme on [RTRFM 92.1](https://rtrfm.com.au), Perth's community radio station. Broadcasting Sunday nights into Monday mornings from midnight to 6 AM, the show was a six-hour immersion in minimal techno, dark ambient, industrial, and experimental electronic music during an era when those sounds were virtually inaccessible in Western Australia.
 
 ## The show
 
@@ -27,7 +27,7 @@ The station had no permanent DJ equipment. Presenters carried their own turntabl
 
 ## The ecosystem
 
-*Auditory Spiral* was the Sunday/Monday anchor in a broader nocturnal programming matrix that included *Beats Per Minute* (Colin Bridges, Thursday overnights), *Looney Tunes* (Friday overnights), *Rhythm Trippin* (Saturday overnights), and *Difficult Listening* (variable schedule). Together, these shows sustained Perth's entire rave, club, and electronic music scene through the 1990s and 2000s.
+_Auditory Spiral_ was the Sunday/Monday anchor in a broader nocturnal programming matrix that included _Beats Per Minute_ (Colin Bridges, Thursday overnights), _Looney Tunes_ (Friday overnights), _Rhythm Trippin_ (Saturday overnights), and _Difficult Listening_ (variable schedule). Together, these shows sustained Perth's entire rave, club, and electronic music scene through the 1990s and 2000s.
 
 The show existed in symbiosis with a thriving culture of illicit warehouse raves and improvised venues — including a famously surreal, Star Wars-themed event held seven floors underground in a Wilson car park.
 
@@ -37,7 +37,7 @@ Because the tracks played were largely obscure white-label imports, exclusive du
 
 ## Context
 
-*Auditory Spiral* was made possible by the institutional legitimacy that programmes like [*Full Frequency*](https://xpressmag.com.au/rtrfm-goes-full-frequency/) — Australia's first all-dance-music radio programme, launched January 1992 — brought to electronic music within RTRFM. While *Full Frequency* translated the club experience for a daytime audience, *Auditory Spiral* remained the uncompromising nocturnal laboratory where the most challenging fringes of the genre were explored.
+_Auditory Spiral_ was made possible by the institutional legitimacy that programmes like [_Full Frequency_](https://xpressmag.com.au/rtrfm-goes-full-frequency/) — Australia's first all-dance-music radio programme, launched January 1992 — brought to electronic music within RTRFM. While _Full Frequency_ translated the club experience for a daytime audience, _Auditory Spiral_ remained the uncompromising nocturnal laboratory where the most challenging fringes of the genre were explored.
 
 ---
 

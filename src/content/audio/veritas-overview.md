@@ -1,11 +1,11 @@
 ---
-title: "The Efficiency-Trust Deficit in Legal AI"
+title: 'The Efficiency-Trust Deficit in Legal AI'
 description: "Audio deep dive into VERITAS — a legal AI platform where trust isn't a feature, it's the architecture. Built for Australian practice."
 date: 2025-03-01
-tags: ["notebooklm", "ai", "legal", "research"]
-audioUrl: "/notebook-assets/veritas/audio.mp3"
-duration: "18:42"
-relatedProject: "veritas"
+tags: ['notebooklm', 'ai', 'legal', 'research']
+audioUrl: '/notebook-assets/veritas/audio.mp3'
+duration: '18:42'
+relatedProject: 'veritas'
 ---
 
 Legal AI has an integrity problem. Most tools optimise for speed and treat accuracy as something you can negotiate. In a profession where a single hallucinated citation can end a career, that bargain is exactly backwards.

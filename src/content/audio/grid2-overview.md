@@ -1,11 +1,11 @@
 ---
-title: "AI for Understanding, Algorithms for Execution"
-description: "A deterministic website builder where LLMs interpret intent but beam search assembles pages. Same inputs, same output, every time."
+title: 'AI for Understanding, Algorithms for Execution'
+description: 'A deterministic website builder where LLMs interpret intent but beam search assembles pages. Same inputs, same output, every time.'
 date: 2025-05-01
-tags: ["notebooklm", "ai", "web", "typescript"]
-audioUrl: "/notebook-assets/grid2/audio.mp3"
-duration: "16:33"
-relatedProject: "grid2"
+tags: ['notebooklm', 'ai', 'web', 'typescript']
+audioUrl: '/notebook-assets/grid2/audio.mp3'
+duration: '16:33'
+relatedProject: 'grid2'
 ---
 
 Ask a language model to generate a web page and you get something that looks plausible until you inspect it — broken layouts, invented components, styles that conflict. The output is probabilistic. Probability is not what you want from a build system.

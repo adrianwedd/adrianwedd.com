@@ -25,16 +25,27 @@ const allPosts = await getCollection('blog');
 const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) => p.data.tags))].sort();
 ---
 
-<BaseLayout title={`Posts tagged "${tag}"`} description={`Blog posts tagged with ${tag} — research, engineering, and analysis.`} noindex>
+<BaseLayout
+  title={`Posts tagged "${tag}"`}
+  description={`Blog posts tagged with ${tag} — research, engineering, and analysis.`}
+  noindex
+>
   <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-    <Breadcrumb crumbs={[{label:'Home',href:'/'},{label:'Blog',href:'/blog/'},{label:'Tags',href:'/blog/tags/'},{label:tag}]} />
+    <Breadcrumb
+      crumbs={[
+        { label: 'Home', href: '/' },
+        { label: 'Blog', href: '/blog/' },
+        { label: 'Tags', href: '/blog/tags/' },
+        { label: tag },
+      ]}
+    />
     <h1 class="text-text">Tag: {tag}</h1>
     <p class="mt-2 text-text-muted">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
 
     <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
       <a
         href="/blog/"
-        class="rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:bg-accent/15 hover:text-accent"
+        class="hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent"
       >
         All
       </a>
@@ -46,7 +57,7 @@ const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) =>
               'rounded-full px-3 py-1 text-xs no-underline',
               t === tag
                 ? 'bg-accent/15 font-medium text-accent'
-                : 'bg-surface-raised text-text-muted transition-colors hover:bg-accent/15 hover:text-accent',
+                : 'hover:bg-accent/15 bg-surface-raised text-text-muted transition-colors hover:text-accent',
             ]}
           >
             {t}

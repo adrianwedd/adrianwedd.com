@@ -1,11 +1,11 @@
 ---
-title: "Looking Past the Evidence"
+title: 'Looking Past the Evidence'
 description: "Audio deep dive into why people acknowledge demonstrated risk and then proceed as if it doesn't exist. Structural, not stupid."
 date: 2026-02-07
-tags: ["notebooklm", "research", "risk", "ai-safety"]
-audioUrl: "/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3"
-duration: "22:17"
-relatedProject: "why-demonstrated-risk-is-ignored"
+tags: ['notebooklm', 'research', 'risk', 'ai-safety']
+audioUrl: '/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3'
+duration: '22:17'
+relatedProject: 'why-demonstrated-risk-is-ignored'
 ---
 
 You show someone evidence of harm. They acknowledge the evidence. Then they proceed as if the evidence does not exist. This is not stupidity or denial — it is something more structural, and more dangerous.

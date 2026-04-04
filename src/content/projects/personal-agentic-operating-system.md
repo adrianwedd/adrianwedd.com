@@ -1,13 +1,13 @@
 ---
-title: "Personal Agentic Operating System"
-description: "Most agentic systems assume the cloud. This one assumes your machine — local-first, fully observable, with a meta-agent that reads its own reflection logs."
-tags: ["ai", "infrastructure", "python"]
-repo: "https://github.com/adrianwedd/personal-agentic-operating-system"
-status: "active"
+title: 'Personal Agentic Operating System'
+description: 'Most agentic systems assume the cloud. This one assumes your machine — local-first, fully observable, with a meta-agent that reads its own reflection logs.'
+tags: ['ai', 'infrastructure', 'python']
+repo: 'https://github.com/adrianwedd/personal-agentic-operating-system'
+status: 'active'
 featured: false
 date: 2025-07-01
-audioUrl: "/notebook-assets/personal-agentic-operating-system/audio.mp3"
-heroImage: "/notebook-assets/personal-agentic-operating-system/infographic.webp"
+audioUrl: '/notebook-assets/personal-agentic-operating-system/audio.mp3'
+heroImage: '/notebook-assets/personal-agentic-operating-system/infographic.webp'
 ---
 
 Most agentic systems assume the cloud. I built this one to assume your machine.

@@ -1,13 +1,13 @@
 ---
-title: "EMDR Agent"
-description: "What safety architecture does AI-assisted trauma therapy require before it has any business existing? Built to find out."
-tags: ["ai", "ai-safety", "health", "typescript"]
-repo: "https://github.com/adrianwedd/emdr-agent"
-status: "experiment"
+title: 'EMDR Agent'
+description: 'What safety architecture does AI-assisted trauma therapy require before it has any business existing? Built to find out.'
+tags: ['ai', 'ai-safety', 'health', 'typescript']
+repo: 'https://github.com/adrianwedd/emdr-agent'
+status: 'experiment'
 featured: false
 date: 2025-06-01
-audioUrl: "/notebook-assets/emdr-agent/audio.mp3"
-heroImage: "/notebook-assets/emdr-agent/infographic.webp"
+audioUrl: '/notebook-assets/emdr-agent/audio.mp3'
+heroImage: '/notebook-assets/emdr-agent/infographic.webp'
 ---
 
 Therapy has a pacing problem. A human therapist reads the room—breath, posture, the micro-expressions that signal when to slow down or when to press forward. Software does not get that for free.

@@ -1,15 +1,15 @@
 ---
-title: "The AI Productivity J-Curve: Why Most Enterprise AI Fails"
-description: "90% of companies plan to increase AI investment. Only 1% consider themselves AI-mature. The J-Curve explains why."
+title: 'The AI Productivity J-Curve: Why Most Enterprise AI Fails'
+description: '90% of companies plan to increase AI investment. Only 1% consider themselves AI-mature. The J-Curve explains why.'
 date: 2026-03-02
-tags: ["ai", "economics", "enterprise", "research", "policy"]
+tags: ['ai', 'economics', 'enterprise', 'research', 'policy']
 draft: false
-heroImage: "/notebook-assets/the-ai-productivity-j-curve/infographic.webp"
-audioUrl: "/notebook-assets/the-ai-productivity-j-curve/audio.mp3"
+heroImage: '/notebook-assets/the-ai-productivity-j-curve/infographic.webp'
+audioUrl: '/notebook-assets/the-ai-productivity-j-curve/audio.mp3'
 faq:
-  - q: "What is the AI Productivity J-Curve?"
+  - q: 'What is the AI Productivity J-Curve?'
     a: "An economic framework showing that transformative technologies initially reduce measured productivity before generating gains — because the critical intangible investments (process redesign, data governance, workforce reskilling) aren't captured in traditional metrics."
-  - q: "What is pilot purgatory?"
+  - q: 'What is pilot purgatory?'
     a: "When AI pilots fail to scale beyond isolated projects because they're evaluated with ROI models misaligned with how general-purpose technologies create value."
 ---
 
@@ -29,7 +29,7 @@ The instinctive reaction is to blame the technology, or the teams deploying it, 
 
 Economists Erik Brynjolfsson, Daniel Rock, and Chad Syverson developed a framework that makes the paradox legible. They call it the Productivity J-Curve, and it applies to every general-purpose technology — steam, electricity, computing, and now AI.
 
-The core insight: when organizations adopt a transformative technology, measured productivity doesn't just stagnate. It initially *drops*. Then, after a period of painful investment, it rises — often dramatically. Plot it over time and you get a J-shaped curve.
+The core insight: when organizations adopt a transformative technology, measured productivity doesn't just stagnate. It initially _drops_. Then, after a period of painful investment, it rises — often dramatically. Plot it over time and you get a J-shaped curve.
 
 Why the dip? Because adopting a general-purpose technology requires two kinds of investment. The first is visible: hardware, software, licenses — the stuff that shows up on balance sheets. The second is invisible, and it's where most of the actual value creation happens:
 
@@ -38,7 +38,7 @@ Why the dip? Because adopting a general-purpose technology requires two kinds of
 - **Workforce reskilling.** People need to learn not just how to use new tools, but how to work differently.
 - **New business models.** The real gains come from doing things that were previously impossible, not from doing existing things slightly faster.
 
-During the early phase, organizations spend real, measurable resources — capital, time, attention — building these intangible assets. But because the assets themselves aren't captured in productivity metrics, the numbers look *worse*. You're investing heavily and your dashboard says you're going backward.
+During the early phase, organizations spend real, measurable resources — capital, time, attention — building these intangible assets. But because the assets themselves aren't captured in productivity metrics, the numbers look _worse_. You're investing heavily and your dashboard says you're going backward.
 
 The upswing only begins when the intangible capital reaches critical mass and starts generating measurable output. At that point, productivity appears to surge — sometimes deceptively fast — because the hidden investments are finally paying off.
 
@@ -86,4 +86,4 @@ The 1% of organizations that have reached AI maturity didn't get there by runnin
 
 ---
 
-*This post draws on research from the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic research project. The full analysis, including maturity frameworks and implementation blueprints, is in the technical report.*
+_This post draws on research from the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic research project. The full analysis, including maturity frameworks and implementation blueprints, is in the technical report._

@@ -1,16 +1,16 @@
 ---
-title: "Reconciling the Great Divergence"
+title: 'Reconciling the Great Divergence'
 description: "Goldman Sachs, PwC, McKinsey, and Acemoglu all model AI's economic impact and arrive at wildly different numbers. Why the divergence?"
 date: 2026-03-01
-tags: ["ai", "economics", "research", "policy"]
+tags: ['ai', 'economics', 'research', 'policy']
 draft: false
-heroImage: "/notebook-assets/reconciling-the-great-divergence/infographic.webp"
-audioUrl: "/notebook-assets/reconciling-the-great-divergence/audio.mp3"
+heroImage: '/notebook-assets/reconciling-the-great-divergence/infographic.webp'
+audioUrl: '/notebook-assets/reconciling-the-great-divergence/audio.mp3'
 ---
 
 Goldman Sachs says AI could add $7 trillion to global GDP. MIT economist Daron Acemoglu says the near-term impact is closer to 0.5%. PwC projects $15.7 trillion in additional economic value by 2030. McKinsey puts annual productivity gains at $2.6–4.4 trillion.
 
-These numbers are not slightly different estimates of the same thing. They reflect fundamentally different assumptions about what AI *is*, what it will be able to do, and when. Understanding the divergence matters more than knowing which number is right — because the divergence tells you exactly where the uncertainty lives.
+These numbers are not slightly different estimates of the same thing. They reflect fundamentally different assumptions about what AI _is_, what it will be able to do, and when. Understanding the divergence matters more than knowing which number is right — because the divergence tells you exactly where the uncertainty lives.
 
 ## Why the Numbers Are So Far Apart
 
@@ -18,7 +18,7 @@ The optimistic forecasts (Goldman, PwC, McKinsey) model AI as a **general-purpos
 
 Goldman's model is built on labor automation: AI can automate 25–46% of current work tasks (depending on occupation), which translates into productivity gains that flow through to output and real wages. PwC layers in a "GDP multiplier" that compounds AI-driven productivity with innovation spillovers and behavioral changes in consumption. McKinsey identifies specific domains — customer service, software development, knowledge work — and estimates how much productivity improvement is achievable in each.
 
-Acemoglu's model challenges the methodology. His objection isn't that AI is useless; it's that the optimistic forecasts assume a pace and scope of task automation that the evidence doesn't support. His analysis of which tasks are *actually* cost-effectively automatable with current AI concludes that roughly 5% of tasks currently performed by workers are plausible near-term targets. At realistic adoption rates, that translates to 0.5% total factor productivity growth over a decade — meaningful, but orders of magnitude smaller than the headline projections.
+Acemoglu's model challenges the methodology. His objection isn't that AI is useless; it's that the optimistic forecasts assume a pace and scope of task automation that the evidence doesn't support. His analysis of which tasks are _actually_ cost-effectively automatable with current AI concludes that roughly 5% of tasks currently performed by workers are plausible near-term targets. At realistic adoption rates, that translates to 0.5% total factor productivity growth over a decade — meaningful, but orders of magnitude smaller than the headline projections.
 
 The divergence comes down to three variables:
 
@@ -26,7 +26,7 @@ The divergence comes down to three variables:
 
 **Adoption rate.** Optimistic models assume rapid, economy-wide adoption. More conservative models apply significant friction discounts for regulation, organizational inertia, workforce resistance, and the plain difficulty of integrating new systems into existing processes.
 
-**The profitability filter.** This is the most underappreciated variable. AI deployment requires capital investment, ongoing compute costs, and organizational change. For any given task, automation is only economically rational if the cost of the AI system is less than the labor it replaces. Many tasks that are technically automatable aren't *profitably* automatable at current infrastructure costs.
+**The profitability filter.** This is the most underappreciated variable. AI deployment requires capital investment, ongoing compute costs, and organizational change. For any given task, automation is only economically rational if the cost of the AI system is less than the labor it replaces. Many tasks that are technically automatable aren't _profitably_ automatable at current infrastructure costs.
 
 ## What They Actually Agree On
 
@@ -52,4 +52,4 @@ The divergence in the forecasts is itself useful data. It tells you exactly whic
 
 ---
 
-*This analysis draws on research conducted as part of the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic research project. The full probabilistic framework, methodology comparison tables, and scenario models are in the technical report.*
+_This analysis draws on research conducted as part of the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic research project. The full probabilistic framework, methodology comparison tables, and scenario models are in the technical report._

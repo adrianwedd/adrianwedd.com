@@ -1,8 +1,8 @@
 ---
-title: "The Great Fracture: How AI Competition Is Splintering the Global Internet"
-description: "The US-China AI rivalry is splitting the global tech stack into competing blocs. What this means for developers, middle powers, and everyone in between."
+title: 'The Great Fracture: How AI Competition Is Splintering the Global Internet'
+description: 'The US-China AI rivalry is splitting the global tech stack into competing blocs. What this means for developers, middle powers, and everyone in between.'
 date: 2026-03-31
-tags: ["ai", "policy", "research", "geopolitics"]
+tags: ['ai', 'policy', 'research', 'geopolitics']
 draft: true
 ---
 
@@ -30,7 +30,7 @@ Starting in October 2022, the US implemented sweeping export controls designed t
 
 To enforce this, the US built the Chip 4 alliance: itself, Japan, Taiwan, and South Korea -- combining US design leadership, Japanese materials and equipment, and the manufacturing prowess of TSMC and Samsung. It's a purpose-built supply chain that deliberately excludes China.
 
-The irony is thick. In pursuing semiconductor independence *from* China, the US has created deeper dependencies *on* its allies. South Korea's chipmakers derive most of their revenue from China. Taiwan's TSMC is the single most critical (and vulnerable) chokepoint in the global tech supply chain. The "sovereignty paradox" -- where the pursuit of self-sufficiency forces you into tighter alliances -- is the defining dynamic of this era.
+The irony is thick. In pursuing semiconductor independence _from_ China, the US has created deeper dependencies _on_ its allies. South Korea's chipmakers derive most of their revenue from China. Taiwan's TSMC is the single most critical (and vulnerable) chokepoint in the global tech supply chain. The "sovereignty paradox" -- where the pursuit of self-sufficiency forces you into tighter alliances -- is the defining dynamic of this era.
 
 China's response has been predictable and effective: massive state investment in domestic semiconductor capability, with Huawei and SMIC as national champions. Huawei's successful development of a 7nm chip using SMIC's existing technology -- a feat accomplished under sanctions -- demonstrates that constraints breed innovation. The US chip controls may slow China's progress, but they've also guaranteed that China will eventually build a parallel supply chain. The fracture becomes permanent.
 
@@ -84,4 +84,4 @@ The fracture is already underway. The question isn't whether it will happen. It'
 
 ---
 
-*This analysis draws on research conducted as part of a strategic research project on AI geopolitics and industrial policy. The full assessment covers national AI doctrines, tech stack chokepoints, and the emerging bloc structure in greater detail.*
+_This analysis draws on research conducted as part of a strategic research project on AI geopolitics and industrial policy. The full assessment covers national AI doctrines, tech stack chokepoints, and the emerging bloc structure in greater detail._

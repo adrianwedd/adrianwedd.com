@@ -1,13 +1,13 @@
 ---
-title: "Strategic Acquisitions"
-description: "AI-powered real estate analysis for public housing—GPT-4 insights, ML valuations, and Tasmanian spatial intelligence."
-tags: ["ai", "housing", "python"]
-repo: "https://github.com/adrianwedd/strategic-acquisitions"
-status: "active"
+title: 'Strategic Acquisitions'
+description: 'AI-powered real estate analysis for public housing—GPT-4 insights, ML valuations, and Tasmanian spatial intelligence.'
+tags: ['ai', 'housing', 'python']
+repo: 'https://github.com/adrianwedd/strategic-acquisitions'
+status: 'active'
 featured: false
 date: 2025-01-15
-heroImage: "/notebook-assets/strategic-acquisitions/infographic.webp"
-audioUrl: "/notebook-assets/strategic-acquisitions/audio.mp3"
+heroImage: '/notebook-assets/strategic-acquisitions/infographic.webp'
+audioUrl: '/notebook-assets/strategic-acquisitions/audio.mp3'
 ---
 
 Housing shortages are not information problems, but they have information problems inside them. When a public housing organisation needs to acquire properties, the analysis that should take hours takes weeks. Listing discovery. Valuation modelling. Planning zone verification. Hazard assessment. Infrastructure proximity. Each step involves a different data source and a different manual process.

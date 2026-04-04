@@ -13,10 +13,7 @@ export async function getPlaceholder(src: string): Promise<string> {
   if (cache.has(src)) return cache.get(src)!;
 
   try {
-    const imagePath = resolve(
-      process.cwd(),
-      src.startsWith('/') ? `public${src}` : src,
-    );
+    const imagePath = resolve(process.cwd(), src.startsWith('/') ? `public${src}` : src);
 
     const buffer = readFileSync(imagePath);
     const placeholder = await sharp(buffer)
