@@ -5,7 +5,7 @@ date: 2026-04-04
 heroImage: "/notebook-assets/the-mitigation-gap/infographic.webp"
 tags: ['ai', 'ai-safety', 'research', 'biosecurity', 'policy']
 draft: false
-audioUrl: '/notebook-assets/the-mitigation-gap/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-mitigation-gap/audio.mp3'
 ---
 
 Biosecurity experts believe current safeguards reduce AI-enabled catastrophic biorisk by over 70%. They are wrong.
