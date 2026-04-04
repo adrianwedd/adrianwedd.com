@@ -46,6 +46,7 @@ jobs:
           SOCIAL_WORKER_URL: ${{ secrets.SOCIAL_WORKER_URL }}
           SOCIAL_PUBLISH_SECRET: ${{ secrets.SOCIAL_PUBLISH_SECRET }}
           DETECTED_FILES: ${{ steps.detect.outputs.files }}
+          ACTIVE_PLATFORMS: "facebook,bluesky"
         run: |
           echo "$DETECTED_FILES" | while IFS= read -r file; do
             [ -z "$file" ] && continue
@@ -59,9 +60,9 @@ jobs:
             [ "$DRAFT" = "true" ] && { echo "Skipping draft: $file"; continue; }
             [ -z "$TITLE" ] && { echo "Skipping (no title): $file"; continue; }
 
-            # Determine content type and slug
+            # Determine content type and slug (strip -post suffix for blog URLs)
             if echo "$file" | grep -q "^src/content/blog/"; then
-              SLUG=$(basename "$file" .md)
+              SLUG=$(basename "$file" .md | sed 's/-post$//')
               URL="https://adrianwedd.com/blog/${SLUG}/"
               MESSAGE=$(printf "%s\n\n%s\n\n%s" "$TITLE" "$DESC" "$URL")
             elif echo "$file" | grep -q "^src/content/projects/"; then
@@ -72,28 +73,26 @@ jobs:
               continue
             fi
 
-            IDEMPOTENCY_KEY="auto-${SLUG}-$(git rev-parse --short HEAD)"
+            echo "$ACTIVE_PLATFORMS" | tr ',' '\n' | while read -r PLATFORM; do
+              [ -z "$PLATFORM" ] && continue
+              IDEMPOTENCY_KEY="auto-${PLATFORM}-${SLUG}-$(git rev-parse --short HEAD)"
 
-            RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${SOCIAL_WORKER_URL}/api/publish" \
-              -H "Authorization: Bearer ${SOCIAL_PUBLISH_SECRET}" \
-              -H "Content-Type: application/json" \
-              --data "$(jq -n \
-                --arg platform "facebook" \
-                --arg type "link" \
-                --arg message "$MESSAGE" \
-                --arg link "$URL" \
-                --arg key "$IDEMPOTENCY_KEY" \
-                '{platform: $platform, type: $type, message: $message, link: $link, idempotencyKey: $key}')" \
-              --max-time 30)
-            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-            BODY=$(echo "$RESPONSE" | sed '$d')
-            echo "HTTP status: $HTTP_CODE"
-            echo "Response: $BODY"
-            if [ "$HTTP_CODE" != "200" ]; then
-              echo "::warning::Publish returned HTTP $HTTP_CODE for $SLUG"
-            else
-              echo "Published: $SLUG"
-            fi
+              RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${SOCIAL_WORKER_URL}/api/publish" \
+                -H "Authorization: Bearer ${SOCIAL_PUBLISH_SECRET}" \
+                -H "Content-Type: application/json" \
+                --data "$(jq -n \
+                  --arg platform "$PLATFORM" \
+                  --arg type "link" \
+                  --arg message "$MESSAGE" \
+                  --arg link "$URL" \
+                  --arg key "$IDEMPOTENCY_KEY" \
+                  '{platform: $platform, type: $type, message: $message, link: $link, idempotencyKey: $key}')" \
+                --max-time 30)
+              HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+              BODY=$(echo "$RESPONSE" | sed '$d')
+              echo "[$PLATFORM] HTTP $HTTP_CODE — $BODY"
+              [ "$HTTP_CODE" != "200" ] && echo "::warning::[$PLATFORM] Publish returned HTTP $HTTP_CODE for $SLUG"
+            done
           done
 
       - name: Sync queue if changed
