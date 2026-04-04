@@ -2,10 +2,10 @@ import type { Platform, SocialPlatform } from './types';
 import type { Env } from '../env';
 import { createFacebookPlatform } from './facebook';
 import { createInstagramPlatform } from './instagram';
+import { createBlueskyPlatform } from './bluesky';
 
 /**
  * Create the appropriate platform adapter for the given platform name.
- * Bluesky will be implemented in a future task.
  */
 export function createPlatform(platform: Platform, env: Env): SocialPlatform {
   switch (platform) {
@@ -24,11 +24,11 @@ export function createPlatform(platform: Platform, env: Env): SocialPlatform {
         env.GRAPH_API_VERSION,
       );
     case 'bluesky':
-      throw new Error('Bluesky platform adapter not yet implemented');
+      return createBlueskyPlatform(env.BLUESKY_HANDLE, env.BLUESKY_APP_PASSWORD);
     default:
       throw new Error(`Unknown platform: ${platform as string}`);
   }
 }
 
 /** Platforms that have a fully implemented adapter. */
-export const CONFIGURED_PLATFORMS: Platform[] = ['facebook', 'instagram'];
+export const CONFIGURED_PLATFORMS: Platform[] = ['facebook', 'instagram', 'bluesky'];
