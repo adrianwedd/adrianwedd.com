@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from '../index';
 import type { SocialPost, AuthStatus } from '../platforms/types';
 
-// ── Mock createFacebookPlatform ───────────────────────────────────────────────
+// ── Mock createPlatform factory ──────────────────────────────────────────────
 
 const mockPublishPost = vi.fn();
 const mockDebugAuth = vi.fn();
 
-vi.mock('../platforms/facebook', () => ({
-  createFacebookPlatform: () => ({
+vi.mock('../platforms/factory', () => ({
+  createPlatform: () => ({
     platform: 'facebook',
     publishPost: mockPublishPost,
     listRecentPosts: vi.fn().mockResolvedValue([]),
@@ -18,6 +18,7 @@ vi.mock('../platforms/facebook', () => ({
     getPageIdentity: vi.fn().mockReturnValue('page_123'),
     debugAuth: mockDebugAuth,
   }),
+  CONFIGURED_PLATFORMS: ['facebook'],
 }));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

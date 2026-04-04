@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import type { Env } from './env';
 import { verifyBearer } from './auth';
-import { createFacebookPlatform } from './platforms/facebook';
-import type { SocialPost, IdempotencyRecord } from './platforms/types';
+import { createPlatform, CONFIGURED_PLATFORMS } from './platforms/factory';
+import type { SocialPost, IdempotencyRecord, Platform } from './platforms/types';
 import { processComments } from './cron/comments';
 
 const app = new Hono<{ Bindings: Env }>();
@@ -32,7 +32,7 @@ app.post('/api/publish', async (c) => {
   if (!authOk) return unauthorized();
 
   const body = await c.req.json<{
-    platform: string;
+    platform?: string;
     type: string;
     message: string;
     link?: string;
@@ -40,6 +40,8 @@ app.post('/api/publish', async (c) => {
     backdatedTime?: string;
     idempotencyKey: string;
   }>();
+
+  const platform = (body.platform ?? 'facebook') as Platform;
 
   // Check durable idempotency record
   const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
@@ -51,11 +53,11 @@ app.post('/api/publish', async (c) => {
     return json({ alreadyFailed: true, error: existing.error });
   }
 
-  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
+  const adapter = createPlatform(platform, env);
 
   const post: SocialPost = {
     id: body.idempotencyKey,
-    platform: 'facebook',
+    platform,
     type: body.type as SocialPost['type'],
     message: body.message,
     link: body.link,
@@ -69,7 +71,7 @@ app.post('/api/publish', async (c) => {
     error: null,
   };
 
-  const result = await fb.publishPost(post);
+  const result = await adapter.publishPost(post);
 
   // Write durable idempotency record (30-day TTL)
   const record: IdempotencyRecord = {
@@ -100,13 +102,15 @@ app.post('/api/queue', async (c) => {
   if (!authOk) return unauthorized();
 
   const body = await c.req.json<{
-    platform: string;
+    platform?: string;
     type: string;
     message: string;
     scheduledAt: string;
     link?: string;
     imageUrl?: string;
   }>();
+
+  const platform = (body.platform ?? 'facebook') as Platform;
 
   const epoch = new Date(body.scheduledAt).getTime();
   if (!Number.isFinite(epoch) || epoch <= 0) {
@@ -117,7 +121,7 @@ app.post('/api/queue', async (c) => {
 
   const post: SocialPost = {
     id,
-    platform: 'facebook',
+    platform,
     type: body.type as SocialPost['type'],
     message: body.message,
     link: body.link,
@@ -148,6 +152,7 @@ app.post('/api/queue/sync', async (c) => {
     hash: string;
     posts: Array<{
       id: string;
+      platform?: string;
       type: string;
       message: string;
       link?: string;
@@ -200,7 +205,7 @@ app.post('/api/queue/sync', async (c) => {
       // Create new queued post
       const post: SocialPost = {
         id,
-        platform: 'facebook',
+        platform: (incoming.platform ?? 'facebook') as Platform,
         type: incoming.type as SocialPost['type'],
         message: incoming.message,
         link: incoming.link,
@@ -260,11 +265,10 @@ app.post('/api/cron/publish', async (c) => {
   if (cronLock) return json({ skipped: true, reason: 'locked' });
   await env.SOCIAL.put('cron-lock:publish', '1', { expirationTtl: 300 });
 
-  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
-
   try {
-    // Token health
-    const tokenHealth = await fb.debugAuth();
+    // Token health — check all configured platforms before processing posts
+    const fbAdapter = createPlatform('facebook', env);
+    const tokenHealth = await fbAdapter.debugAuth();
     if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
       console.error('Facebook data access has expired');
       return json({ error: 'Facebook data access expired' }, 503);
@@ -310,7 +314,8 @@ app.post('/api/cron/publish', async (c) => {
       await env.SOCIAL.put(`post:publishing:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify({ ...post, status: 'publishing' }));
       await env.SOCIAL.delete(key);
 
-      const result = await fb.publishPost(post);
+      const postAdapter = createPlatform(post.platform, env);
+      const result = await postAdapter.publishPost(post);
 
       if (result.success) {
         const publishedPost: SocialPost = {
@@ -377,17 +382,24 @@ app.post('/api/cron/comments', async (c) => {
   if (cronLock) return json({ skipped: true, reason: 'locked' });
   await env.SOCIAL.put('cron-lock:comments', '1', { expirationTtl: 300 });
 
-  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
-
   try {
-    const tokenHealth = await fb.debugAuth();
-    if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
-      return json({ error: 'Facebook data access expired' }, 503);
+    // Process comments for each configured platform
+    const platformResults: Record<string, unknown> = {};
+
+    for (const platformName of CONFIGURED_PLATFORMS) {
+      const adapter = createPlatform(platformName, env);
+      const tokenHealth = await adapter.debugAuth();
+      if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
+        return json({ error: `${platformName} data access expired` }, 503);
+      }
+
+      const result = await processComments(adapter, env.SOCIAL);
+      platformResults[platformName] = { ...result, tokenExpiresInDays: tokenHealth.daysUntilExpiry };
     }
 
-    const result = await processComments(fb, env.SOCIAL);
-
-    return json({ ...result, tokenExpiresInDays: tokenHealth.daysUntilExpiry });
+    // For backward compatibility, spread Facebook results at the top level
+    const fbResult = platformResults.facebook as Record<string, unknown> | undefined;
+    return json({ ...fbResult, platforms: platformResults });
   } finally {
     await env.SOCIAL.delete('cron-lock:comments');
   }
@@ -403,8 +415,17 @@ app.get('/api/health', async (c) => {
 
   if (!authOk) return json({ ok: true });
 
-  const fb = createFacebookPlatform(env.FACEBOOK_PAGE_ID, env.FACEBOOK_PAGE_TOKEN, env.FACEBOOK_APP_TOKEN, env.GRAPH_API_VERSION);
-  const authStatus = await fb.debugAuth();
+  // Check auth status for each configured platform
+  const platformsHealth: Record<string, unknown> = {};
+  for (const platformName of CONFIGURED_PLATFORMS) {
+    const adapter = createPlatform(platformName, env);
+    const authStatus = await adapter.debugAuth();
+    platformsHealth[platformName] = {
+      tokenValid: authStatus.valid,
+      dataAccessExpiresAt: authStatus.dataAccessExpiresAt,
+      daysUntilExpiry: authStatus.daysUntilExpiry,
+    };
+  }
 
   // Count posts by status
   let queued = 0;
@@ -442,13 +463,7 @@ app.get('/api/health', async (c) => {
   } while (flagCursor);
 
   return json({
-    platforms: {
-      facebook: {
-        tokenValid: authStatus.valid,
-        dataAccessExpiresAt: authStatus.dataAccessExpiresAt,
-        daysUntilExpiry: authStatus.daysUntilExpiry,
-      },
-    },
+    platforms: platformsHealth,
     queue: { facebook: { queued, published, failed, nextScheduled } },
     recentActivity: { flaggedComments },
   });
