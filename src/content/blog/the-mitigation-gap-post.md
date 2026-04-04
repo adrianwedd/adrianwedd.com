@@ -4,7 +4,6 @@ description: 'Biosecurity experts think AI safeguards reduce catastrophic bioris
 date: 2026-04-04
 tags: ['ai', 'ai-safety', 'research', 'biosecurity', 'policy']
 draft: false
-heroImage: '/notebook-assets/the-mitigation-gap/infographic.webp'
 audioUrl: '/notebook-assets/the-mitigation-gap/audio.mp3'
 ---
 

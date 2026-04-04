@@ -4,7 +4,6 @@ description: "Foundation models are commoditising. JPMorgan calls OpenAI's moat 
 date: 2026-04-04
 tags: ['ai', 'enterprise', 'research', 'engineering']
 draft: false
-heroImage: '/notebook-assets/project-chimera/infographic.webp'
 audioUrl: '/notebook-assets/project-chimera/audio.mp3'
 ---
 
