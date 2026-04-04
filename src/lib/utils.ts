@@ -3,7 +3,7 @@
  * Astro 5 uses filenames (including .md/.mdx) as collection entry IDs.
  */
 export function slug(id: string): string {
-  return id.replace(/-post\.mdx?$/, '').replace(/\.mdx?$/, '');
+  return id.replace(/-post(\.mdx?)?$/, '').replace(/\.mdx?$/, '');
 }
 
 /** Generate a URL-safe slug from image alt text. */

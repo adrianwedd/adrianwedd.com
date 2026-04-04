@@ -108,10 +108,10 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
               {episode.data.relatedPost && (
                 <>
                   Companion to article:{' '}
-                  <a href={`/blog/${episode.data.relatedPost}/`} class="font-medium text-accent hover:underline">
-                    {episode.data.relatedPost
+                  <a href={`/blog/${slug(episode.data.relatedPost)}/`} class="font-medium text-accent hover:underline">
+                    {slug(episode.data.relatedPost)
                       .split('-')
-                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
                       .join(' ')}
                   </a>
                 </>
