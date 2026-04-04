@@ -23,6 +23,13 @@ function json(body: Record<string, unknown>, status = 200): Response {
   });
 }
 
+const VALID_PLATFORMS = new Set<string>(['facebook', 'instagram', 'bluesky']);
+
+function validatePlatform(raw: string | undefined, fallback = 'facebook'): Platform | null {
+  const name = raw ?? fallback;
+  return VALID_PLATFORMS.has(name) ? name as Platform : null;
+}
+
 // ── POST /api/publish ─────────────────────────────────────────────────────────
 
 app.post('/api/publish', async (c) => {
@@ -41,7 +48,8 @@ app.post('/api/publish', async (c) => {
     idempotencyKey: string;
   }>();
 
-  const platform = (body.platform ?? 'facebook') as Platform;
+  const platform = validatePlatform(body.platform);
+  if (!platform) return json({ error: `Unsupported platform: ${body.platform}` }, 400);
 
   // Check durable idempotency record
   const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
@@ -110,7 +118,8 @@ app.post('/api/queue', async (c) => {
     imageUrl?: string;
   }>();
 
-  const platform = (body.platform ?? 'facebook') as Platform;
+  const platform = validatePlatform(body.platform);
+  if (!platform) return json({ error: `Unsupported platform: ${body.platform}` }, 400);
 
   const epoch = new Date(body.scheduledAt).getTime();
   if (!Number.isFinite(epoch) || epoch <= 0) {
@@ -162,6 +171,13 @@ app.post('/api/queue/sync', async (c) => {
     }>;
   }>();
 
+  // Validate platforms in incoming posts
+  for (const p of body.posts) {
+    if (p.platform && !validatePlatform(p.platform)) {
+      return json({ error: `Unsupported platform: ${p.platform}` }, 400);
+    }
+  }
+
   const existingHash = await env.SOCIAL.get('queue-hash');
   if (existingHash === body.hash) {
     return json({ unchanged: true, hash: body.hash });
@@ -205,7 +221,7 @@ app.post('/api/queue/sync', async (c) => {
       // Create new queued post
       const post: SocialPost = {
         id,
-        platform: (incoming.platform ?? 'facebook') as Platform,
+        platform: validatePlatform(incoming.platform) ?? ('facebook' as Platform),
         type: incoming.type as SocialPost['type'],
         message: incoming.message,
         link: incoming.link,
@@ -267,16 +283,20 @@ app.post('/api/cron/publish', async (c) => {
 
   try {
     // Token health — check all configured platforms before processing posts
-    const fbAdapter = createPlatform('facebook', env);
-    const tokenHealth = await fbAdapter.debugAuth();
-    if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
-      console.error('Facebook data access has expired');
-      return json({ error: 'Facebook data access expired' }, 503);
-    }
-    if (tokenHealth.daysUntilExpiry <= 7) {
-      console.error(`Facebook data access expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
-    } else if (tokenHealth.daysUntilExpiry <= 14) {
-      console.warn(`Facebook data access expires in ${tokenHealth.daysUntilExpiry} days`);
+    const tokenExpiryByPlatform: Record<string, number> = {};
+    for (const platformName of CONFIGURED_PLATFORMS) {
+      const adapter = createPlatform(platformName, env);
+      const tokenHealth = await adapter.debugAuth();
+      tokenExpiryByPlatform[platformName] = tokenHealth.daysUntilExpiry;
+      if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
+        console.error(`${platformName} data access has expired`);
+        return json({ error: `${platformName} data access expired` }, 503);
+      }
+      if (tokenHealth.daysUntilExpiry <= 7) {
+        console.error(`${platformName} data access expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
+      } else if (tokenHealth.daysUntilExpiry <= 14) {
+        console.warn(`${platformName} data access expires in ${tokenHealth.daysUntilExpiry} days`);
+      }
     }
 
     // Discover queued posts
@@ -341,7 +361,7 @@ app.post('/api/cron/publish', async (c) => {
         await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
         await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
         console.error(`Facebook token invalid — halting run`);
-        return json({ error: 'Token invalid', published, failed, tokenExpiresInDays: tokenHealth.daysUntilExpiry }, 503);
+        return json({ error: 'Token invalid', published, failed, tokenExpiresInDays: tokenExpiryByPlatform }, 503);
       } else if (result.isTransient) {
         // Revert to queued
         await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
@@ -365,7 +385,7 @@ app.post('/api/cron/publish', async (c) => {
     if (remaining > 10) console.error(`Post queue backlog: ${remaining}`);
     else if (remaining > 0) console.warn(`${remaining} posts still queued`);
 
-    return json({ published, failed, remaining, tokenExpiresInDays: tokenHealth.daysUntilExpiry });
+    return json({ published, failed, remaining, tokenExpiresInDays: tokenExpiryByPlatform });
   } finally {
     await env.SOCIAL.delete('cron-lock:publish');
   }
