@@ -2,6 +2,7 @@
 title: 'The Mitigation Gap'
 description: 'Biosecurity experts think AI safeguards reduce catastrophic biorisk by 70%. The technical evidence says those safeguards are brittle and bypassable.'
 date: 2026-04-04
+heroImage: "/notebook-assets/the-mitigation-gap/infographic.webp"
 tags: ['ai', 'ai-safety', 'research', 'biosecurity', 'policy']
 draft: false
 audioUrl: '/notebook-assets/the-mitigation-gap/audio.mp3'

@@ -2,6 +2,7 @@
 title: 'AI Nationalism and the Fracturing Digital Order'
 description: 'The US-China AI rivalry is splitting the global tech stack into competing blocs. A strategic assessment of what comes next.'
 date: 2026-04-04
+heroImage: "/notebook-assets/ai-nationalism/infographic.webp"
 tags: ['ai', 'policy', 'geopolitics', 'research']
 draft: false
 audioUrl: '/notebook-assets/ai-nationalism/audio.mp3'
