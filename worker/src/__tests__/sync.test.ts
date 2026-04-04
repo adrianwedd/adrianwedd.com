@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from '../index';
 
-// ── Mock Facebook platform so the router import doesn't need real tokens ──────
-vi.mock('../platforms/facebook', () => ({
-  createFacebookPlatform: vi.fn(() => ({
+// ── Mock platform factory so the router import doesn't need real tokens ───────
+vi.mock('../platforms/factory', () => ({
+  createPlatform: vi.fn(() => ({
+    platform: 'facebook',
     publishPost: vi.fn(),
     listRecentPosts: vi.fn().mockResolvedValue([]),
     getComments: vi.fn().mockResolvedValue([]),
@@ -12,6 +13,7 @@ vi.mock('../platforms/facebook', () => ({
     getPageIdentity: vi.fn().mockReturnValue('page_123'),
     debugAuth: vi.fn().mockResolvedValue({ valid: true, daysUntilExpiry: 60, dataAccessExpiresAt: '' }),
   })),
+  CONFIGURED_PLATFORMS: ['facebook'],
 }));
 
 // ── KV mock factory ────────────────────────────────────────────────────────────
