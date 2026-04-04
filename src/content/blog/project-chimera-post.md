@@ -2,6 +2,7 @@
 title: 'The Post-Model Era'
 description: "Foundation models are commoditising. JPMorgan calls OpenAI's moat 'increasingly fragile.' The real value is shifting to the messy plumbing underneath."
 date: 2026-04-04
+heroImage: "/notebook-assets/project-chimera/infographic.webp"
 tags: ['ai', 'enterprise', 'research', 'engineering']
 draft: false
 audioUrl: '/notebook-assets/project-chimera/audio.mp3'

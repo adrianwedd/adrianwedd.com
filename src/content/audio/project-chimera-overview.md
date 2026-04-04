@@ -4,7 +4,7 @@ description: 'Audio overview of the post-model era — why foundation models are
 date: 2026-04-04
 tags: ['notebooklm', 'ai', 'enterprise', 'engineering']
 audioUrl: '/notebook-assets/project-chimera/audio.mp3'
-duration: '0:00'
+duration: '21:47'
 relatedPost: 'project-chimera-post'
 ---
 

@@ -4,7 +4,7 @@ description: 'Audio overview of AI nationalism — how the US-China AI rivalry i
 date: 2026-04-04
 tags: ['notebooklm', 'ai', 'policy', 'geopolitics']
 audioUrl: '/notebook-assets/ai-nationalism/audio.mp3'
-duration: '0:00'
+duration: '23:16'
 relatedPost: 'ai-nationalism-post'
 ---
 
