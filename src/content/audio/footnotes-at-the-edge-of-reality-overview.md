@@ -5,6 +5,7 @@ date: 2026-02-06
 tags: ['notebooklm', 'poetry', 'physics', 'creative']
 audioUrl: '/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3'
 duration: '17:58'
+relatedPost: 'footnotes-at-the-edge-of-reality-post'
 relatedProject: 'footnotes-at-the-edge-of-reality'
 ---
 

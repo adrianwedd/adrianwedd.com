@@ -5,6 +5,7 @@ date: 2026-03-22
 tags: ['notebooklm', 'ai', 'tts', 'voice-cloning']
 audioUrl: '/notebook-assets/afterwords/audio.mp3'
 duration: '21:43'
+relatedPost: 'afterwords-post'
 relatedProject: 'afterwords'
 ---
 

@@ -5,6 +5,7 @@ date: 2026-03-12
 tags: ['notebooklm', 'ai', 'robotics', 'neurodivergence']
 audioUrl: '/notebook-assets/spark/audio.mp3'
 duration: '43:05'
+relatedPost: 'the-robot-that-refuses-to-give-orders-post'
 relatedProject: 'spark'
 ---
 
