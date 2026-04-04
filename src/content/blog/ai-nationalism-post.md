@@ -4,7 +4,6 @@ description: 'The US-China AI rivalry is splitting the global tech stack into co
 date: 2026-04-04
 tags: ['ai', 'policy', 'geopolitics', 'research']
 draft: false
-heroImage: '/notebook-assets/ai-nationalism/infographic.webp'
 audioUrl: '/notebook-assets/ai-nationalism/audio.mp3'
 ---
 
