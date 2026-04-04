@@ -2,16 +2,17 @@
 set -euo pipefail
 
 # generate-all-infographics.sh
-# Batch generate NotebookLM infographics for all projects.
+# Batch generate NotebookLM infographics for projects and blog posts.
 # Uses portrait orientation with a consistent style focus for visual cohesion.
 #
 # Usage:
-#   ./scripts/generate-all-infographics.sh [--yes] [--limit N] [--landscape]
+#   ./scripts/generate-all-infographics.sh [--yes] [--limit N] [--landscape] [--blog] [--projects] [--all]
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 NOTEBOOKLM_DIR="$REPO_ROOT/scripts/notebooklm"
 PROJECTS_DIR="$REPO_ROOT/src/content/projects"
+BLOG_DIR="$REPO_ROOT/src/content/blog"
 PUBLIC_ASSETS="$REPO_ROOT/public/notebook-assets"
 
 # Colors
@@ -24,7 +25,9 @@ NC='\033[0m'
 YES=false
 LIMIT=0
 ORIENTATION="portrait"
-FOCUS="Key features, architecture, and value proposition. Clean modern tech product overview with clear visual hierarchy."
+FOCUS="Dark background with warm copper and amber accent colours. Portrait layout with clear visual hierarchy. Modern tech aesthetic, light text on dark surfaces."
+SCAN_PROJECTS=false
+SCAN_BLOG=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -33,9 +36,18 @@ while [[ $# -gt 0 ]]; do
         --limit) LIMIT="$2"; shift 2 ;;
         --landscape) ORIENTATION="landscape"; shift ;;
         --focus) FOCUS="$2"; shift 2 ;;
+        --projects) SCAN_PROJECTS=true; shift ;;
+        --blog) SCAN_BLOG=true; shift ;;
+        --all) SCAN_PROJECTS=true; SCAN_BLOG=true; shift ;;
         *) echo "Unknown option: $1"; exit 1 ;;
     esac
 done
+
+# Default to --all if neither specified
+if [ "$SCAN_PROJECTS" = false ] && [ "$SCAN_BLOG" = false ]; then
+    SCAN_PROJECTS=true
+    SCAN_BLOG=true
+fi
 
 # Counters
 TOTAL=0
@@ -69,42 +81,70 @@ if ! nlm login --check &>/dev/null; then
     fi
 fi
 
+# Parallel arrays: name (used for asset dir), source file path, type label
+ITEMS_NAME=()
+ITEMS_FILE=()
+ITEMS_TYPE=()
+
 # Find projects without heroImage
-echo "Scanning projects..."
-PROJECTS_TO_PROCESS=()
+if [ "$SCAN_PROJECTS" = true ]; then
+    echo "Scanning projects..."
+    for project_file in "$PROJECTS_DIR"/*.md; do
+        project_name=$(basename "$project_file" .md)
+        if grep -q "^heroImage:" "$project_file"; then
+            ((SKIPPED++)) || true
+            continue
+        fi
+        ITEMS_NAME+=("$project_name")
+        ITEMS_FILE+=("$project_file")
+        ITEMS_TYPE+=("project")
+        ((TOTAL++)) || true
+    done
+fi
 
-for project_file in "$PROJECTS_DIR"/*.md; do
-    project_name=$(basename "$project_file" .md)
+# Find non-draft blog posts without heroImage
+if [ "$SCAN_BLOG" = true ]; then
+    echo "Scanning blog posts..."
+    for blog_file in "$BLOG_DIR"/*.md; do
+        # Skip drafts
+        if grep -q "^draft: true" "$blog_file"; then
+            ((SKIPPED++)) || true
+            continue
+        fi
+        if grep -q "^heroImage:" "$blog_file"; then
+            ((SKIPPED++)) || true
+            continue
+        fi
+        # Asset dir uses slug without -post suffix
+        blog_name=$(basename "$blog_file" .md | sed 's/-post$//')
+        ITEMS_NAME+=("$blog_name")
+        ITEMS_FILE+=("$blog_file")
+        ITEMS_TYPE+=("blog")
+        ((TOTAL++)) || true
+    done
+fi
 
-    # Skip if already has any heroImage
-    if grep -q "^heroImage:" "$project_file"; then
-        ((SKIPPED++)) || true
-        continue
-    fi
-
-    PROJECTS_TO_PROCESS+=("$project_name")
-    ((TOTAL++)) || true
-done
-
-echo "Found $TOTAL projects without hero images"
-echo "Skipped $SKIPPED projects with existing heroImage"
+echo "Found $TOTAL items without hero images"
+echo "Skipped $SKIPPED items with existing heroImage or draft status"
 echo
 
 if [ $TOTAL -eq 0 ]; then
-    echo "All projects already have hero images!"
+    echo "All items already have hero images!"
     exit 0
 fi
 
 # Apply limit
 if [ "$LIMIT" -gt 0 ] && [ "$LIMIT" -lt "$TOTAL" ]; then
-    echo -e "${YELLOW}Limiting to first $LIMIT projects (of $TOTAL)${NC}"
-    PROJECTS_TO_PROCESS=("${PROJECTS_TO_PROCESS[@]:0:$LIMIT}")
+    echo -e "${YELLOW}Limiting to first $LIMIT items (of $TOTAL)${NC}"
+    ITEMS_NAME=("${ITEMS_NAME[@]:0:$LIMIT}")
+    ITEMS_FILE=("${ITEMS_FILE[@]:0:$LIMIT}")
+    ITEMS_TYPE=("${ITEMS_TYPE[@]:0:$LIMIT}")
     TOTAL=$LIMIT
 fi
 
 echo "Will generate infographics for:"
-for project in "${PROJECTS_TO_PROCESS[@]}"; do
-    echo "  - $project"
+for i in "${!ITEMS_NAME[@]}"; do
+    echo "  - [${ITEMS_TYPE[$i]}] ${ITEMS_NAME[$i]}"
 done
 echo
 
@@ -135,17 +175,18 @@ for n in notebooks:
 " 2>/dev/null || echo ""
 }
 
-# Process each project
-for i in "${!PROJECTS_TO_PROCESS[@]}"; do
-    project="${PROJECTS_TO_PROCESS[$i]}"
+# Process each item
+for i in "${!ITEMS_NAME[@]}"; do
+    item_name="${ITEMS_NAME[$i]}"
+    item_file="${ITEMS_FILE[$i]}"
+    item_type="${ITEMS_TYPE[$i]}"
     idx=$((i + 1))
 
     echo
-    echo "[$idx/$TOTAL] Processing: $project"
+    echo "[$idx/$TOTAL] Processing [$item_type]: $item_name"
     echo "----------------------------------------"
 
-    project_file="$PROJECTS_DIR/$project.md"
-    title=$(grep "^title:" "$project_file" | head -1 | sed 's/^title: *"\{0,1\}\(.*\)"\{0,1\}$/\1/' | sed 's/"$//')
+    title=$(grep "^title:" "$item_file" | head -1 | sed "s/^title: *['\"]\\{0,1\\}\\(.*\\)['\"]\\{0,1\\}$/\\1/" | sed "s/['\"]$//")
 
     echo "  Title: $title"
 
@@ -162,7 +203,7 @@ for i in "${!PROJECTS_TO_PROCESS[@]}"; do
 {
   "title": "$title - Overview",
   "sources": [
-    "textfile:$project_file"
+    "textfile:$item_file"
   ],
   "studio": []
 }
@@ -177,7 +218,7 @@ EOFCONFIG
         notebook_id=$(find_notebook_id "$title")
 
         if [ -z "$notebook_id" ]; then
-            echo -e "  ${RED}Failed to create notebook for $project${NC}"
+            echo -e "  ${RED}Failed to create notebook for $item_name${NC}"
             ((FAILED++)) || true
             continue
         fi
@@ -237,8 +278,8 @@ if infographics:
     fi
 
     # Download
-    mkdir -p "$PUBLIC_ASSETS/$project"
-    png_path="$PUBLIC_ASSETS/$project/infographic.png"
+    mkdir -p "$PUBLIC_ASSETS/$item_name"
+    png_path="$PUBLIC_ASSETS/$item_name/infographic.png"
 
     nlm download infographic "$notebook_id" \
         --id "$artifact_id" \
@@ -258,7 +299,7 @@ if infographics:
     final_path="$png_path"
     hero_filename="infographic.png"
     if [ "$HAS_CWEBP" = true ]; then
-        webp_path="$PUBLIC_ASSETS/$project/infographic.webp"
+        webp_path="$PUBLIC_ASSETS/$item_name/infographic.webp"
         cwebp -q 80 -resize 1024 0 "$png_path" -o "$webp_path" 2>/dev/null
         if [ -f "$webp_path" ]; then
             webp_size=$(stat -f%z "$webp_path" 2>/dev/null || stat -c%s "$webp_path" 2>/dev/null)
@@ -270,15 +311,15 @@ if infographics:
         fi
     fi
 
-    # Update project frontmatter with heroImage (replace existing if present)
+    # Update frontmatter with heroImage (replace existing if present)
     cd "$REPO_ROOT"
-    if grep -q "^heroImage:" "$project_file"; then
-        sed -i '' "s|^heroImage:.*|heroImage: \"/notebook-assets/$project/$hero_filename\"|" "$project_file"
+    if grep -q "^heroImage:" "$item_file"; then
+        sed -i '' "s|^heroImage:.*|heroImage: \"/notebook-assets/$item_name/$hero_filename\"|" "$item_file"
         echo -e "  ${GREEN}Replaced heroImage in frontmatter${NC}"
     else
         sed -i '' "/^date:/a\\
-heroImage: \"/notebook-assets/$project/$hero_filename\"
-" "$project_file"
+heroImage: \"/notebook-assets/$item_name/$hero_filename\"
+" "$item_file"
         echo -e "  ${GREEN}Added heroImage to frontmatter${NC}"
     fi
 
@@ -301,7 +342,7 @@ echo
 
 if [ $SUCCESS -gt 0 ]; then
     echo -e "${GREEN}Infographics saved to: public/notebook-assets/*/infographic.{png,webp}${NC}"
-    echo -e "${GREEN}Project frontmatter updated with heroImage${NC}"
+    echo -e "${GREEN}Frontmatter updated with heroImage${NC}"
     echo
     echo "Next steps:"
     echo "1. Review generated infographics"
