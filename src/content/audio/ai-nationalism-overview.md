@@ -3,7 +3,7 @@ title: 'AI Nationalism and the Fracturing Digital Order'
 description: 'Audio overview of AI nationalism — how the US-China AI rivalry is splitting the global tech stack.'
 date: 2026-04-04
 tags: ['notebooklm', 'ai', 'policy', 'geopolitics']
-audioUrl: '/notebook-assets/ai-nationalism/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ai-nationalism/audio.mp3'
 duration: '23:16'
 relatedPost: 'ai-nationalism-post'
 ---
