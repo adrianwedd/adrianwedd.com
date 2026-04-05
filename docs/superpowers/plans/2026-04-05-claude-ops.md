@@ -1811,3 +1811,51 @@ git commit -m "feat: reusable Claude Code build action for client repos"
 **2. Placeholder scan:** `getInstallationToken` is a known placeholder — documented as requiring GitHub App credentials. Not a forgotten TODO.
 
 **3. Type consistency:** `ProjectConfig` used consistently across config.ts, triage.ts, index.ts. `TriageResult` used in triage.ts and index.ts. `ResponseContext` used in communicate.ts and index.ts. All match.
+
+---
+
+## Addendum: QA Findings on Plan (Codex + Gemini, 2026-04-05)
+
+### Critical Fixes (must apply during implementation)
+
+**P1: Dedup must happen AFTER handler succeeds, not before.**
+`isDuplicate()` currently marks a delivery as seen before the handler runs. If `getInstallationToken()` throws (or any handler fails), the delivery is permanently dropped — GitHub retries are treated as duplicates. Fix: move the KV `put` to AFTER successful handler completion. On failure, don't mark as seen so GitHub can retry.
+
+**P2: KV get-then-put race in dedup and locking.**
+Two concurrent Workers handling the same delivery can both `get()` → null → `put()`. Fix: accept this as a known limitation of KV (no atomic CAS). Mitigate with idempotent handlers — posting a duplicate comment is annoying but not catastrophic. The `[claude-ops]` marker prevents infinite loops regardless.
+
+**P3: HTML injection in email body.**
+`sendEmail()` interpolates body text directly into HTML. Fix: escape `<`, `>`, `&`, `"` in all user-derived content before interpolation. Add `escapeHtml()` utility.
+
+**P4: Human override is declared but never SET.**
+`handleComment()` checks `human_override` in D1 but never writes it. Fix: when `senderLogin` matches Adrian's GitHub username (from config), set `human_override = 1` in D1 for that issue. Add `ADMIN_GITHUB_LOGIN` to env or project config.
+
+**P5: `updated_at` never updated — cron will nag forever.**
+`INSERT OR REPLACE` sets `created_at` default but never updates `updated_at`. Fix: after every comment post, email send, or status change, run `UPDATE issues SET updated_at = datetime('now') WHERE repo = ? AND issue_number = ?`.
+
+**P6: Claude Code action checks `git diff` after Claude already committed.**
+If Claude commits (as instructed in the prompt), `git diff` is clean and `has_changes=false`. Fix: check `git log --oneline main..HEAD` instead of `git diff` — if there are commits on the branch beyond main, push and create PR.
+
+**P7: `/api/issue` endpoint is a stub (returns success without creating anything).**
+Fix: implement the full flow — generate installation token, create issue via GitHub API, return the issue number. This is the entry point for hub forms.
+
+### Important Fixes
+
+**P8: Add `escapeHtml()` utility to email.ts.** Sanitize all interpolated content.
+
+**P9: Add email `In-Reply-To` / `References` headers.** Without these, client email clients break threading. Use `issue-{number}@{repo}.claude-ops` as Message-ID pattern.
+
+**P10: Add KV sync script for project configs.** A deploy-time step that reads `projects/*.json` and writes them to KV. Add to `wrangler.toml` or a `scripts/sync-configs.sh`.
+
+**P11: Add artificial response delay (10-30s).** An instantaneous reply makes the automation obvious. Add a configurable delay before posting the first comment on a new issue.
+
+**P12: Implement `getInstallationToken()` with Web Crypto API.** Not a third-party library — use `crypto.subtle.sign('RSASSA-PKCS1-v1_5', ...)` to sign the JWT, exchange for installation token via GitHub API.
+
+### Test Gaps to Fill
+
+- Integration test for webhook → triage → comment → email flow (mock GitHub + MailChannels)
+- Test for concurrent delivery handling (both Workers see the same delivery)
+- Test for HTML escaping in email body
+- Test for human override set/check flow
+- Test for `updated_at` being maintained across status changes
+- Cron tests with fixed dates (SLA calculation, business hours)
