@@ -307,8 +307,124 @@ GET  /api/health              # Health check + SLA dashboard
 1. Client submits form → acknowledgement email within 5 minutes
 2. Simple content change → PR created within 15 minutes
 3. Clarifying questions are relevant and project-aware (informed by CLAUDE.md)
-4. Client never sees "AI", "Claude", or robotic language
+4. AI-assisted responses are warm and professional — branded as "Adrian's Studio"
 5. SLA breaches are caught before they happen, not after
 6. New client requests are captured and forwarded instantly
 7. Weekly digest gives Adrian full visibility across all projects
 8. Any project can connect by adding a config file — no per-repo code changes needed
+
+## Addendum: QA Findings Applied
+
+From Codex + Gemini + Claude agent spec review (2026-04-05):
+
+### Fix 1: Webhook Replay Protection (Critical)
+Every incoming webhook is deduplicated using the `X-GitHub-Delivery` header (a unique GUID per delivery). The Worker stores delivery IDs in KV with a 24-hour TTL. If a delivery ID already exists, the webhook is silently dropped. This prevents duplicate triage, duplicate emails, and duplicate Claude Code dispatches.
+
+### Fix 2: Prompt Injection Defense (Critical)
+Issue title and body are NEVER interpolated directly into Claude Code prompts. Instead:
+- The triage layer extracts a structured task description (e.g. "Update phone number on contact page to 0412 345 678")
+- The Claude Code prompt uses a system message that constrains the task to the `allowed_actions` list
+- Raw issue body is passed as a separate `user` message, not concatenated into instructions
+- The GitHub Action runs with minimal permissions (contents: write, pull-requests: write — no secrets access)
+- Branch protection rules on `main` prevent direct pushes even from the Action
+
+### Fix 3: Idempotency for AI Calls (Critical)
+Before calling Haiku or Sonnet, the Worker checks KV for `{delivery_id}:triage_started`. If found, skip. This is set before the first API call. On completion, `{delivery_id}:triage_complete` is set. On partial failure, the cron job detects `started` without `complete` and retries.
+
+### Fix 4: PII Out of Git (Critical)
+Client emails and personal details are NOT stored in `projects/*.json` in the repo. Instead:
+- Config files contain repo name, tone, SLA, allowed actions (non-sensitive)
+- Client PII (name, email) is stored in D1 (`clients` table) and referenced by client ID
+- D1 is encrypted at rest and access-controlled via Worker bindings
+- This also enables GDPR deletion: `DELETE FROM clients WHERE id = ?`
+
+### Fix 5: Infinite Loop Prevention (Critical)
+The Worker ignores comments from:
+- GitHub bots (sender type `Bot`)
+- Its own user (the GitHub App's identity)
+- Comments containing `[claude-ops]` marker (added to all Worker-posted comments)
+- Comments from email auto-replies (detect `X-Auto-Reply` header pattern in comment body, or known auto-reply phrases like "out of office", "automatic reply")
+
+If a loop is detected (>3 comments from the same issue in 5 minutes), the Worker stops responding and alerts Adrian.
+
+### Fix 6: Human Override / "Silence" Mode (Critical)
+When Adrian posts a comment on an issue manually:
+- The Worker detects the comment author matches `escalate_to` config
+- It sets a `human_override` flag on the issue in KV
+- All future AI responses are suppressed for that issue
+- Cron jobs skip `human_override` issues
+- To re-enable AI: Adrian adds label `claude-ops:resume`
+
+### Fix 7: Race Condition Mitigation (Important)
+The Worker uses KV-based locking per issue:
+- On webhook receipt: attempt to SET `lock:{repo}:{issue_number}` with 60-second TTL
+- If lock exists: queue the event for retry (KV queue or delayed re-delivery)
+- On triage completion: delete the lock
+- This prevents concurrent processing of `issues.opened` and `issue_comment.created` for the same issue
+
+### Fix 8: Email Authentication (Important)
+Pre-launch checklist includes:
+- Verify SPF record for `adrianwedd.com` includes MailChannels IP ranges
+- Configure DKIM signing via MailChannels dashboard
+- Set DMARC policy to `p=quarantine` (not `reject` initially, to catch misconfigurations)
+- Test email deliverability before going live with client-facing emails
+
+### Fix 9: API Failure Recovery (Important)
+All AI API calls use a 3-retry loop with exponential backoff (1s, 4s, 16s). On final failure:
+- Post a comment: "I'm having trouble processing this — Adrian has been notified."
+- Label the issue `needs-help`
+- Send immediate alert to `escalate_to` email
+- Log the failure to D1 audit table
+
+### Fix 10: Multi-Turn Conversation Context (Important)
+When processing `issue_comment.created`, the Worker fetches the full issue body + all previous comments (via GitHub API) and includes them in the Sonnet prompt as conversation history. This ensures the AI doesn't lose context across a multi-turn thread. History is truncated to the most recent 20 comments to stay within token limits.
+
+### Fix 11: GDPR Data Retention (Important)
+- D1 `clients` table has a `data_retention_days` column (default: 365)
+- Cron job prunes resolved issues older than retention period from D1
+- Client can request data export (all their issues as JSON) or deletion
+- On client offboarding: delete client row + all associated issue records from D1
+
+### Fix 12: GitHub App Instead of PAT (Important)
+Use a GitHub App (not a Personal Access Token) for repo access:
+- Install the App on specific repos only (minimal scope)
+- Permissions: Issues (read/write), Pull Requests (read/write), Contents (read/write)
+- Each installation is scoped to one repo — compromise of one doesn't affect others
+- App generates short-lived installation tokens (1 hour expiry)
+
+### Fix 13: Attachment Support (Important)
+When an issue body or comment contains image URLs (GitHub auto-uploads attachments as URLs):
+- Include the image URLs in the Sonnet prompt for visual context
+- For Claude Code dispatch: download attachments and include them in the working directory
+- If attachments are critical to understanding (e.g. screenshot of a bug): flag in triage as `has_attachments` and prioritize visual review
+
+### Fix 14: Business Hours SLA (Important)
+Project config gains an optional `business_hours` field:
+```json
+"business_hours": {
+  "timezone": "Australia/Melbourne",
+  "start": "09:00",
+  "end": "17:00",
+  "days": [1, 2, 3, 4, 5]
+}
+```
+SLA timers pause outside business hours. Cron job adjusts breach calculations accordingly. If not set, SLA is 24/7 (default for always-on clients).
+
+### Fix 15: Priority/Impact Dimension (Important)
+Haiku classification output gains an `impact` field:
+```json
+{
+  "category": "bug_report",
+  "complexity": "trivial",
+  "impact": "high",
+  "summary": "Price displays as $0 on pricing page"
+}
+```
+Impact is `low | medium | high | critical`. A trivial bug with critical impact (site-down, wrong pricing) gets escalated immediately regardless of complexity. Labels reflect both: `complexity:trivial` + `impact:critical`.
+
+### Deferred (Not Critical for v1)
+- AI transparency toggle per project config (clients who want to know it's AI-assisted)
+- Per-client cost tracking and caps
+- Monitoring dashboard for AI classification accuracy
+- Attachment analysis via multimodal Claude (images → understanding)
+- KV → D1 migration for issue state at scale (50+ projects)
