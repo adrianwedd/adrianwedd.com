@@ -158,7 +158,23 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           if (errorEl) errorEl.classList.add('hidden');
           if (chatEl) chatEl.classList.remove('hidden');
 
-          var messages = data.messages || data.conversation || [];
+          // Map backend response to frontend message format
+          var messages = [];
+          // First message: the original enquiry
+          if (data.body_text) {
+            messages.push({ role: 'client', message: data.body_text, name: data.client_name || 'You' });
+          }
+          // Comments
+          if (data.comments && data.comments.length) {
+            data.comments.forEach(function(c) {
+              messages.push({
+                role: c.author_type === 'team' ? 'team' : 'client',
+                message: c.body_text,
+                created_at: c.created_at,
+                name: c.author_type === 'team' ? 'Team' : (data.client_name || 'You'),
+              });
+            });
+          }
           renderMessages(messages);
 
           var replySection = document.getElementById('reply-section');
@@ -206,7 +222,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       fetch(ENQUIRY_API + '/' + enquiryToken + '/reply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: message, write_token: writeToken }),
+        body: JSON.stringify({ body: message, write_token: writeToken }),
       })
         .then(function (res) {
           if (!res.ok) {
