@@ -359,3 +359,28 @@ exports/project-name/
 - Content descriptions must be ≤ 160 chars (validated by `scripts/validate-content.js` and CI)
 - Lychee link checker excludes social media domains, private repos, and own domain (pre-deploy 404s) — see `.lychee.toml`
 - `src/data/base-cv.json` is gitignored — synced from `adrianwedd/cv` at build time; local dev works without it (falls back to defaults)
+
+## QA Tools
+
+### Codex CLI
+```bash
+codex exec --full-auto "prompt"     # non-interactive execution
+codex review                        # code review
+```
+Use for: security review, correctness checks, codebase-wide QA. Runs in sandbox.
+
+### Gemini CLI
+```bash
+gemini -p "prompt" --yolo            # non-interactive, auto-approve tools
+gemini "query"                       # interactive mode
+```
+Use for: accessibility review, design consistency, content QA. Has file access.
+
+### Three-Way QA Pattern
+Run Codex + Gemini + Claude agent in parallel for comprehensive review:
+```bash
+codex exec --full-auto "QA prompt" 2>&1 | tee /tmp/codex-qa.txt &
+gemini -p "QA prompt" --yolo 2>&1 | tee /tmp/gemini-qa.txt &
+wait
+```
+Each engine catches different things. Codex is strongest on security + correctness. Gemini is strongest on design + accessibility. Claude agent is strongest on architecture + spec compliance.
