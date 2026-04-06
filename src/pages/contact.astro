@@ -39,6 +39,91 @@ import HeroCanvas from '../components/HeroCanvas.astro';
       </p>
     </div>
 
+    {/* Enquiry form */}
+    <div class="mt-12">
+      <h2 class="text-xl font-semibold text-text">Start a project</h2>
+      <p class="mt-1 text-sm text-text-muted">Tell us what you need. We'll respond within minutes.</p>
+      <form id="enquiry-form" class="mt-6 space-y-4" novalidate>
+        <div>
+          <label for="enquiry-name" class="block text-xs text-text-muted">Name</label>
+          <input
+            id="enquiry-name"
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+            placeholder="Your name"
+          />
+        </div>
+        <div>
+          <label for="enquiry-email" class="block text-xs text-text-muted">Email</label>
+          <input
+            id="enquiry-email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+            placeholder="you@example.com"
+          />
+        </div>
+        <div>
+          <label for="enquiry-message" class="block text-xs text-text-muted">What do you need?</label>
+          <textarea
+            id="enquiry-message"
+            name="message"
+            rows="4"
+            required
+            maxlength="5000"
+            class="mt-1 w-full resize-none rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+            placeholder="Describe your project or problem."></textarea>
+        </div>
+        <div>
+          <label for="enquiry-budget" class="block text-xs text-text-muted">Budget range <span class="text-text-muted">(optional)</span></label>
+          <select
+            id="enquiry-budget"
+            name="budget"
+            class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none"
+          >
+            <option value="">Not sure</option>
+            <option value="Under $1k">Under $1k</option>
+            <option value="$1k–$5k">$1k–$5k</option>
+            <option value="$5k–$15k">$5k–$15k</option>
+            <option value="$15k+">$15k+</option>
+          </select>
+        </div>
+        <div>
+          <label for="enquiry-type" class="block text-xs text-text-muted">Project type <span class="text-text-muted">(optional)</span></label>
+          <select
+            id="enquiry-type"
+            name="project_type"
+            class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none"
+          >
+            <option value="">Select...</option>
+            <option value="New website">New website</option>
+            <option value="Redesign">Redesign</option>
+            <option value="CMS / content management">CMS / content management</option>
+            <option value="Automation / AI">Automation / AI</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA"></div>
+        <input type="hidden" id="enquiry-idempotency" name="idempotency_key" value="" />
+        <p id="enquiry-status" class="hidden text-sm"></p>
+        <button
+          type="submit"
+          id="enquiry-submit"
+          class="btn-primary rounded-lg bg-accent px-5 py-2 text-sm font-medium text-surface hover:opacity-90 disabled:opacity-50"
+        >
+          Send enquiry
+        </button>
+      </form>
+      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    </div>
+
+    <div class="section-divider my-12 max-w-full"></div>
+
     {/* Booking widget */}
     <div class="mt-12">
       <h2 class="text-xl font-semibold text-text">Book a call</h2>
@@ -580,6 +665,154 @@ import HeroCanvas from '../components/HeroCanvas.astro';
     }
 
     initBooking();
+  })();
+</script>
+
+<script is:inline>
+  (function () {
+    var ENQUIRY_API = 'https://ops.adrianwedd.com/api/enquiry';
+
+    function generateUUID() {
+      if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+      }
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (Math.random() * 16) | 0;
+        var v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
+
+    function initEnquiryForm() {
+      var form = document.getElementById('enquiry-form');
+      if (!form) return;
+      var idempotencyInput = document.getElementById('enquiry-idempotency');
+      if (idempotencyInput && !idempotencyInput.value) {
+        idempotencyInput.value = generateUUID();
+      }
+    }
+
+    if (!document.documentElement.dataset.enquiryDelegateInit) {
+      document.documentElement.dataset.enquiryDelegateInit = '1';
+
+      document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form || form.id !== 'enquiry-form') return;
+        e.preventDefault();
+
+        var statusEl = document.getElementById('enquiry-status');
+        var submitBtn = document.getElementById('enquiry-submit');
+        var nameEl = document.getElementById('enquiry-name');
+        var emailEl = document.getElementById('enquiry-email');
+        var messageEl = document.getElementById('enquiry-message');
+        var budgetEl = document.getElementById('enquiry-budget');
+        var typeEl = document.getElementById('enquiry-type');
+        var idempotencyEl = document.getElementById('enquiry-idempotency');
+
+        if (statusEl) {
+          statusEl.classList.add('hidden');
+          statusEl.className = 'hidden text-sm';
+        }
+
+        var name = (nameEl ? nameEl.value : '').trim();
+        var email = (emailEl ? emailEl.value : '').trim();
+        var message = (messageEl ? messageEl.value : '').trim();
+
+        if (!name || !email || !message) {
+          if (statusEl) {
+            statusEl.textContent = 'Please fill in all required fields.';
+            statusEl.className = 'text-sm text-red-400';
+          }
+          return;
+        }
+
+        // Get Turnstile token
+        var turnstileResponse = '';
+        if (typeof turnstile !== 'undefined') {
+          turnstileResponse = turnstile.getResponse();
+        }
+        if (!turnstileResponse) {
+          // Try reading from the hidden input Turnstile creates
+          var turnstileInput = form.querySelector('[name="cf-turnstile-response"]');
+          if (turnstileInput) turnstileResponse = turnstileInput.value;
+        }
+        if (!turnstileResponse) {
+          if (statusEl) {
+            statusEl.textContent = 'Please complete the verification challenge.';
+            statusEl.className = 'text-sm text-red-400';
+          }
+          return;
+        }
+
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sending\u2026';
+        }
+
+        var body = {
+          name: name,
+          email: email,
+          message: message,
+          turnstile_token: turnstileResponse,
+        };
+        if (budgetEl && budgetEl.value) body.budget = budgetEl.value;
+        if (typeEl && typeEl.value) body.project_type = typeEl.value;
+        if (idempotencyEl && idempotencyEl.value) body.idempotency_key = idempotencyEl.value;
+
+        fetch(ENQUIRY_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+          .then(function (res) {
+            if (!res.ok) {
+              return res.json().then(function (data) {
+                throw new Error(data.error || 'Request failed');
+              });
+            }
+            return res.json();
+          })
+          .then(function (data) {
+            // Store write_token for reply capability
+            if (data.write_token) {
+              try {
+                sessionStorage.setItem('enquiry_write_token_' + data.read_token, data.write_token);
+              } catch (e) { /* sessionStorage unavailable */ }
+            }
+            // Redirect to chat page
+            if (data.read_token) {
+              window.location.href = '/enquiry/?t=' + encodeURIComponent(data.read_token);
+            } else {
+              if (statusEl) {
+                statusEl.textContent = 'Enquiry sent successfully.';
+                statusEl.className = 'text-sm text-accent';
+              }
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send enquiry';
+              }
+            }
+          })
+          .catch(function (err) {
+            if (statusEl) {
+              statusEl.textContent = err.message || 'Something went wrong. Try emailing directly.';
+              statusEl.className = 'text-sm text-red-400';
+            }
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Send enquiry';
+            }
+            // Reset Turnstile for retry
+            if (typeof turnstile !== 'undefined') {
+              turnstile.reset();
+            }
+          });
+      });
+
+      document.addEventListener('astro:after-swap', initEnquiryForm);
+    }
+
+    initEnquiryForm();
   })();
 </script>
 

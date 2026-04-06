@@ -1,0 +1,288 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Your enquiry"
+  description="View and respond to your project enquiry."
+  noindex={true}
+>
+  <Fragment slot="head">
+    <meta name="referrer" content="no-referrer" />
+  </Fragment>
+
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <a href="/contact/" class="text-sm text-text-muted transition-colors hover:text-accent">&larr; Back to contact</a>
+
+    <h1 class="mt-6 text-2xl font-semibold text-text">Your enquiry</h1>
+
+    <div id="enquiry-error" class="mt-6 hidden rounded-lg border border-border bg-surface-alt p-6 text-center">
+      <p class="text-text-muted">This enquiry could not be found or has expired.</p>
+      <a href="/contact/" class="mt-4 inline-block text-sm text-accent hover:underline">Start a new enquiry</a>
+    </div>
+
+    <div id="enquiry-chat" class="mt-6 hidden">
+      <div
+        id="chat-messages"
+        role="log"
+        aria-live="polite"
+        class="space-y-4 rounded-lg border border-border bg-surface-alt p-4"
+        style="min-height: 200px; max-height: 60vh; overflow-y: auto;"
+      >
+        <div class="flex justify-center">
+          <span class="rounded-full bg-surface px-3 py-1 text-xs text-text-muted">Message received</span>
+        </div>
+      </div>
+
+      <div id="reply-section" class="mt-4 hidden">
+        <label for="reply-message" class="block text-xs text-text-muted">Reply</label>
+        <textarea
+          id="reply-message"
+          rows="3"
+          maxlength="5000"
+          class="mt-1 w-full resize-none rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+          placeholder="Type your reply..."></textarea>
+        <div class="mt-2 flex items-center gap-3">
+          <button
+            type="button"
+            id="reply-submit"
+            class="btn-primary rounded-lg bg-accent px-5 py-2 text-sm font-medium text-surface hover:opacity-90 disabled:opacity-50"
+          >
+            Send reply
+          </button>
+          <p id="reply-status" class="hidden text-sm"></p>
+        </div>
+      </div>
+
+      <div id="readonly-notice" class="mt-4 hidden rounded border border-border bg-surface-alt px-4 py-3">
+        <p class="text-xs text-text-muted">Read-only view. To reply, use the original link from your submission.</p>
+      </div>
+    </div>
+
+    <div id="enquiry-loading" class="mt-6 text-center">
+      <p class="text-sm text-text-muted">Loading...</p>
+    </div>
+
+    <div id="enquiry-no-token" class="mt-6 hidden text-center">
+      <p class="text-text-muted">No enquiry token provided.</p>
+      <a href="/contact/" class="mt-4 inline-block text-sm text-accent hover:underline">Start a new enquiry</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var ENQUIRY_API = 'https://ops.adrianwedd.com/api/enquiry';
+    var refreshTimer = null;
+
+    function getToken() {
+      var params = new URLSearchParams(window.location.search);
+      return params.get('t') || '';
+    }
+
+    function getWriteToken(enquiryToken) {
+      try {
+        return sessionStorage.getItem('enquiry_write_token_' + enquiryToken) || '';
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function renderMessages(messages) {
+      var container = document.getElementById('chat-messages');
+      if (!container) return;
+
+      var wasAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 50;
+
+      container.textContent = '';
+
+      // System bubble
+      var systemDiv = document.createElement('div');
+      systemDiv.className = 'flex justify-center';
+      var systemSpan = document.createElement('span');
+      systemSpan.className = 'rounded-full bg-surface px-3 py-1 text-xs text-text-muted';
+      systemSpan.textContent = 'Message received';
+      systemDiv.appendChild(systemSpan);
+      container.appendChild(systemDiv);
+
+      if (!messages || !messages.length) return;
+
+      messages.forEach(function (msg) {
+        var isTeam = msg.role === 'team' || msg.role === 'admin';
+        var wrapper = document.createElement('div');
+        wrapper.className = isTeam ? 'flex justify-end' : 'flex justify-start';
+
+        var bubble = document.createElement('div');
+        bubble.className = isTeam
+          ? 'max-w-[80%] rounded-lg bg-accent/15 border border-accent/30 px-4 py-2'
+          : 'max-w-[80%] rounded-lg bg-surface border border-border px-4 py-2';
+
+        var roleLabel = document.createElement('p');
+        roleLabel.className = 'text-xs font-medium ' + (isTeam ? 'text-accent' : 'text-text-muted');
+        roleLabel.textContent = isTeam ? 'Team' : (msg.name || 'You');
+        bubble.appendChild(roleLabel);
+
+        var content = document.createElement('p');
+        content.className = 'mt-1 text-sm text-text whitespace-pre-wrap';
+        content.textContent = msg.message || msg.content || '';
+        bubble.appendChild(content);
+
+        if (msg.created_at || msg.date) {
+          var timeEl = document.createElement('p');
+          timeEl.className = 'mt-1 text-xs text-text-muted';
+          var d = new Date(msg.created_at || msg.date);
+          timeEl.textContent = isNaN(d.getTime()) ? '' : d.toLocaleString();
+          bubble.appendChild(timeEl);
+        }
+
+        wrapper.appendChild(bubble);
+        container.appendChild(wrapper);
+      });
+
+      if (wasAtBottom) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
+
+    function loadConversation(enquiryToken) {
+      fetch(ENQUIRY_API + '/' + enquiryToken)
+        .then(function (res) {
+          if (!res.ok) throw new Error('not_found');
+          return res.json();
+        })
+        .then(function (data) {
+          var loadingEl = document.getElementById('enquiry-loading');
+          var chatEl = document.getElementById('enquiry-chat');
+          var errorEl = document.getElementById('enquiry-error');
+          if (loadingEl) loadingEl.classList.add('hidden');
+          if (errorEl) errorEl.classList.add('hidden');
+          if (chatEl) chatEl.classList.remove('hidden');
+
+          var messages = data.messages || data.conversation || [];
+          renderMessages(messages);
+
+          var replySection = document.getElementById('reply-section');
+          var readonlyNotice = document.getElementById('readonly-notice');
+          var writeToken = getWriteToken(enquiryToken);
+          if (writeToken) {
+            if (replySection) replySection.classList.remove('hidden');
+            if (readonlyNotice) readonlyNotice.classList.add('hidden');
+          } else {
+            if (replySection) replySection.classList.add('hidden');
+            if (readonlyNotice) readonlyNotice.classList.remove('hidden');
+          }
+        })
+        .catch(function () {
+          var loadingEl = document.getElementById('enquiry-loading');
+          var chatEl = document.getElementById('enquiry-chat');
+          var errorEl = document.getElementById('enquiry-error');
+          if (loadingEl) loadingEl.classList.add('hidden');
+          if (chatEl) chatEl.classList.add('hidden');
+          if (errorEl) errorEl.classList.remove('hidden');
+        });
+    }
+
+    function sendReply(enquiryToken) {
+      var textarea = document.getElementById('reply-message');
+      var submitBtn = document.getElementById('reply-submit');
+      var statusEl = document.getElementById('reply-status');
+      if (!textarea) return;
+
+      var message = textarea.value.trim();
+      if (!message) return;
+
+      var writeToken = getWriteToken(enquiryToken);
+      if (!writeToken) return;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending\u2026';
+      }
+      if (statusEl) {
+        statusEl.classList.add('hidden');
+        statusEl.className = 'hidden text-sm';
+      }
+
+      fetch(ENQUIRY_API + '/' + enquiryToken + '/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: message, write_token: writeToken }),
+      })
+        .then(function (res) {
+          if (!res.ok) {
+            return res.json().then(function (data) {
+              throw new Error(data.error || 'Failed to send');
+            });
+          }
+          return res.json();
+        })
+        .then(function () {
+          textarea.value = '';
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send reply';
+          }
+          loadConversation(enquiryToken);
+        })
+        .catch(function (err) {
+          if (statusEl) {
+            statusEl.textContent = err.message || 'Failed to send reply.';
+            statusEl.className = 'text-sm text-red-400';
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send reply';
+          }
+        });
+    }
+
+    function initEnquiryChat() {
+      var enquiryToken = getToken();
+      var loadingEl = document.getElementById('enquiry-loading');
+      var noTokenEl = document.getElementById('enquiry-no-token');
+
+      if (!enquiryToken) {
+        if (loadingEl) loadingEl.classList.add('hidden');
+        if (noTokenEl) noTokenEl.classList.remove('hidden');
+        return;
+      }
+
+      loadConversation(enquiryToken);
+
+      if (refreshTimer) clearInterval(refreshTimer);
+      refreshTimer = setInterval(function () {
+        loadConversation(enquiryToken);
+      }, 15000);
+    }
+
+    if (!document.documentElement.dataset.enquiryChatInit) {
+      document.documentElement.dataset.enquiryChatInit = '1';
+
+      document.addEventListener('click', function (e) {
+        if (!e.target || typeof e.target.closest !== 'function') return;
+        if (e.target.closest('#reply-submit')) {
+          var t = getToken();
+          if (t) sendReply(t);
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.target && e.target.id === 'reply-message' && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          var t = getToken();
+          if (t) sendReply(t);
+        }
+      });
+
+      document.addEventListener('astro:after-swap', function () {
+        if (refreshTimer) clearInterval(refreshTimer);
+        refreshTimer = null;
+        var chatEl = document.getElementById('enquiry-chat');
+        var noTokenEl = document.getElementById('enquiry-no-token');
+        if (chatEl || noTokenEl) initEnquiryChat();
+      });
+    }
+
+    initEnquiryChat();
+  })();
+</script>
