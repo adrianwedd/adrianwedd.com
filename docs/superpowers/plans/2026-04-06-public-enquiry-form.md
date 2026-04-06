@@ -1773,3 +1773,53 @@ Run Lighthouse on `/contact/` and `/enquiry/test/`:
 | 13 | Plain text rendering (no XSS) | Task 7 |
 | 14 | aria-live screen reader announcements | Task 7 |
 | 15 | Mobile keyboard handling | Task 7 |
+
+---
+
+## Addendum: QA Findings on Plan (Codex + Gemini, 2026-04-06)
+
+### Critical Fixes (must apply during implementation)
+
+**P1: Client replies use postComment() which adds [claude-ops] marker → webhook ignores them (Critical)**
+The reply endpoint must NOT use the existing `postComment()` from github.ts, which appends `<!-- [claude-ops] -->`. Create a new `postClientComment(token, repo, issueNumber, body)` function that posts without the marker. This ensures the webhook `handleComment` handler picks up client replies and triggers AI follow-up.
+
+**P2: CORS middleware path doesn't cover `/api/enquiry` exact (Critical)**
+The CORS preflight handler matches `/api/enquiry/*` but not `/api/enquiry` (no trailing path). Fix: add explicit CORS handling for the exact `/api/enquiry` path, or use a pattern that matches both.
+
+**P3: Security headers can't be HTTP headers on GitHub Pages (High)**
+adrianwedd.com is static on GitHub Pages — no server to set `Referrer-Policy`, `Cache-Control`, `X-Robots-Tag` as HTTP headers. Fix: use `<meta>` equivalents where possible (`<meta name="referrer" content="no-referrer">`, `<meta name="robots" content="noindex">`). For `Cache-Control: no-store`, this must come from the ops API responses (already a Worker), not the HTML page. Accept this limitation for the static site — the critical protection is on the API responses.
+
+### High Fixes
+
+**P4: Write-token recovery flow missing from plan**
+Spec requires email-based recovery when sessionStorage write_token is lost. Add: "Recover access" button → form asks for email → POST to `/api/enquiry/:token/recover` → if email matches KV record, generate new write_token, email it as a one-time link → link sets write_token in sessionStorage. Rate limit: 1 recovery per hour.
+
+**P5: Issue body leaks PII (email, budget) in first chat bubble**
+`buildIssueBody()` puts all form fields in the issue body, then the GET endpoint returns it as `body_text`. Fix: store the visitor's message text separately in the issue body (first line), put metadata (email, budget, project type) in a `<!-- metadata: {...} -->` HTML comment that the projection strips. The chat shows only the message text.
+
+**P6: Typing indicator not implemented**
+Add a "typing" animation that shows when the chat has 0 team responses and the enquiry was created < 2 minutes ago. CSS-only pulsing dots. Hides when first team response arrives.
+
+### Medium Fixes
+
+**P7: Idempotency check should run BEFORE rate limiting**
+Reorder: check idempotency key first (return cached tokens if seen), then check rate limit. This prevents harmless retries from consuming rate limit quota.
+
+**P8: JSON parse errors unhandled**
+Wrap `c.req.json()` calls in try/catch, return 400 on malformed JSON.
+
+**P9: sendEmail() result ignored**
+Check return value. On failure: still return success to client (enquiry was created), but log warning and set a flag for cron follow-up.
+
+**P10: Accessibility — visible reply label + focus management**
+Replace `sr-only` label with visible "Your reply" label above textarea. On auto-refresh with new messages: check if user was scrolled to bottom → if yes, scroll to new message and announce via aria-live. If no, show "New messages" indicator without stealing scroll.
+
+**P11: Test coverage too shallow**
+Add route-level tests for: CORS preflight, malformed JSON, idempotency ordering, rate limit interaction, email failure handling, marker-free client comments. At minimum 15 new tests for the enquiry endpoints.
+
+### Gemini Fixes
+
+**P12: Typing indicator** — same as P6.
+**P13: Focus management** — same as P10.
+**P14: Chat notice for closed issues** — check `data.status === 'closed'` and show "This enquiry has been resolved" message.
+**P15: Cross-repo deployment sequence** — deploy claude-ops first (API endpoints), then adrianwedd.com (frontend). Document this in the plan.
