@@ -33,28 +33,28 @@ jobs:
 
     steps:
       - name: Checkout adrianwedd.com
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           path: adrianwedd.com
 
       # NOTE: If these are private repos, replace secrets.GITHUB_TOKEN
       # with a PAT that has cross-repo access (e.g. secrets.PIPELINE_PAT)
       - name: Checkout failure-first-embodied-ai
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: adrianwedd/failure-first-embodied-ai
           path: failure-first-embodied-ai
           token: ${{ secrets.PIPELINE_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Checkout notebooklm
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: adrianwedd/notebooklm
           path: notebooklm
           token: ${{ secrets.PIPELINE_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.12"
 
