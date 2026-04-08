@@ -11,6 +11,9 @@ on:
         required: false
         default: 'publish'
 
+permissions:
+  contents: none
+
 jobs:
   publish:
     if: (github.event_name == 'workflow_dispatch' && github.event.inputs.endpoint == 'publish') || github.event.schedule == '15 * * * *'

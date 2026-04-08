@@ -77,7 +77,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     function getToken() {
       var params = new URLSearchParams(window.location.search);
-      return params.get('t') || '';
+      var t = params.get('t') || '';
+      // Validate token is a well-formed UUID before using it in URLs
+      if (t && !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(t)) return '';
+      return t;
     }
 
     function getWriteToken(enquiryToken) {

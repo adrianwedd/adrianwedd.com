@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import type { Env } from './env';
 import { verifyBearer } from './auth';
-import { createPlatform, CONFIGURED_PLATFORMS } from './platforms/factory';
+import { createPlatform, getConfiguredPlatforms } from './platforms/factory';
 import type { SocialPost, IdempotencyRecord, Platform } from './platforms/types';
 import { processComments } from './cron/comments';
 
@@ -284,7 +284,7 @@ app.post('/api/cron/publish', async (c) => {
   try {
     // Token health — check all configured platforms before processing posts
     const tokenExpiryByPlatform: Record<string, number> = {};
-    for (const platformName of CONFIGURED_PLATFORMS) {
+    for (const platformName of getConfiguredPlatforms(env)) {
       const adapter = createPlatform(platformName, env);
       const tokenHealth = await adapter.debugAuth();
       tokenExpiryByPlatform[platformName] = tokenHealth.daysUntilExpiry;
@@ -406,7 +406,7 @@ app.post('/api/cron/comments', async (c) => {
     // Process comments for each configured platform
     const platformResults: Record<string, unknown> = {};
 
-    for (const platformName of CONFIGURED_PLATFORMS) {
+    for (const platformName of getConfiguredPlatforms(env)) {
       const adapter = createPlatform(platformName, env);
       const tokenHealth = await adapter.debugAuth();
       if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
@@ -437,7 +437,7 @@ app.get('/api/health', async (c) => {
 
   // Check auth status for each configured platform
   const platformsHealth: Record<string, unknown> = {};
-  for (const platformName of CONFIGURED_PLATFORMS) {
+  for (const platformName of getConfiguredPlatforms(env)) {
     const adapter = createPlatform(platformName, env);
     const authStatus = await adapter.debugAuth();
     platformsHealth[platformName] = {

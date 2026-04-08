@@ -38,7 +38,7 @@ jobs:
         with:
           repository: adrianwedd/cv
           path: cv-repo
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PIPELINE_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Copy CV data
         run: |

@@ -83,13 +83,7 @@ const audio = defineCollection({
     heroImage: z.string().optional(),
     relatedProject: z.string().optional(),
     relatedPost: z.string().optional(),
-    videoUrl: z.string().optional(),
-    infographic: z.string().optional(),
-    mindmap: z.string().optional(),
-    quiz: z.string().optional(),
-    flashcards: z.string().optional(),
-    dataTable: z.string().optional(),
-    slides: z.string().optional(),
+    ...notebookAssets,
   }),
 });
 
