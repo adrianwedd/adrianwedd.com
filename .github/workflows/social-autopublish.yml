@@ -8,6 +8,9 @@ on:
       - 'src/content/projects/**'
       - 'social/facebook-posts.json'
 
+permissions:
+  contents: read
+
 jobs:
   autopublish:
     runs-on: ubuntu-latest

@@ -100,7 +100,8 @@ async function generateForDir(dir, outDir, label) {
   let skipped = 0;
 
   for (const file of files) {
-    const slug = file.replace(/\.md$/, '');
+    // Match slug() from src/lib/utils.ts — strip -post suffix before extension
+    const slug = file.replace(/-post(\.mdx?)?$/, '').replace(/\.mdx?$/, '');
     const outPath = path.join(outDir, `${slug}.png`);
 
     if (fs.existsSync(outPath)) {

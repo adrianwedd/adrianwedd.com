@@ -31,4 +31,13 @@ export function createPlatform(platform: Platform, env: Env): SocialPlatform {
 }
 
 /** Platforms that have a fully implemented adapter. */
-export const CONFIGURED_PLATFORMS: Platform[] = ['facebook', 'instagram', 'bluesky'];
+export function getConfiguredPlatforms(env: Env): Platform[] {
+  const platforms: Platform[] = ['facebook'];
+  if (env.INSTAGRAM_BUSINESS_ACCOUNT_ID && env.INSTAGRAM_ACCESS_TOKEN) {
+    platforms.push('instagram');
+  }
+  if (env.BLUESKY_APP_PASSWORD) {
+    platforms.push('bluesky');
+  }
+  return platforms;
+}
