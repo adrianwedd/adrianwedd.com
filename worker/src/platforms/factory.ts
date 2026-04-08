@@ -36,7 +36,7 @@ export function getConfiguredPlatforms(env: Env): Platform[] {
   if (env.INSTAGRAM_BUSINESS_ACCOUNT_ID && env.INSTAGRAM_ACCESS_TOKEN) {
     platforms.push('instagram');
   }
-  if (env.BLUESKY_APP_PASSWORD) {
+  if (env.BLUESKY_HANDLE && env.BLUESKY_APP_PASSWORD) {
     platforms.push('bluesky');
   }
   return platforms;
