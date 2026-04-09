@@ -77,13 +77,13 @@ const audio = defineCollection({
     date: z.coerce.date(),
     tags: z.array(z.string()).min(1),
     draft: z.boolean().default(false),
+    ...notebookAssets,
     audioUrl: z.string(),
     duration: z.string().optional(),
     transcript: z.string().optional(),
     heroImage: z.string().optional(),
     relatedProject: z.string().optional(),
     relatedPost: z.string().optional(),
-    ...notebookAssets,
   }),
 });
 
