@@ -300,6 +300,19 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         var noTokenEl = document.getElementById('enquiry-no-token');
         if (chatEl || noTokenEl) initEnquiryChat();
       });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+        } else {
+          var t = getToken();
+          if (t && (document.getElementById('enquiry-chat') || document.getElementById('enquiry-no-token'))) {
+            loadConversation(t);
+            if (refreshTimer) clearInterval(refreshTimer);
+            refreshTimer = setInterval(function () { loadConversation(t); }, 15000);
+          }
+        }
+      });
     }
 
     initEnquiryChat();

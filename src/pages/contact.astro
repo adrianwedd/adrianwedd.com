@@ -108,12 +108,13 @@ import HeroCanvas from '../components/HeroCanvas.astro';
             <option value="Other">Other</option>
           </select>
         </div>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAABtkfyqFbFmIaPO" data-theme="dark"></div>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAABtkfyqFbFmIaPO" data-theme="dark" data-callback="onTurnstileSuccess" data-error-callback="onTurnstileError"></div>
         <input type="hidden" id="enquiry-idempotency" name="idempotency_key" value="" />
         <p id="enquiry-status" class="hidden text-sm" role="alert"></p>
         <button
           type="submit"
           id="enquiry-submit"
+          disabled
           class="btn-primary rounded-lg bg-accent px-5 py-2 text-sm font-medium text-surface hover:opacity-90 disabled:opacity-50"
         >
           Send enquiry
@@ -695,6 +696,35 @@ import HeroCanvas from '../components/HeroCanvas.astro';
     if (!document.documentElement.dataset.enquiryDelegateInit) {
       document.documentElement.dataset.enquiryDelegateInit = '1';
 
+      var turnstileVerified = false;
+
+      window.onTurnstileSuccess = function() {
+        turnstileVerified = true;
+        updateEnquirySubmitBtn();
+      };
+
+      window.onTurnstileError = function() {
+        turnstileVerified = false;
+        updateEnquirySubmitBtn();
+      };
+
+      function updateEnquirySubmitBtn() {
+        var name = document.getElementById('enquiry-name');
+        var email = document.getElementById('enquiry-email');
+        var message = document.getElementById('enquiry-message');
+        var btn = document.getElementById('enquiry-submit');
+        if (!btn) return;
+        var nameVal = name ? name.value.trim() : '';
+        var emailVal = email ? email.value.trim() : '';
+        var messageVal = message ? message.value.trim() : '';
+        btn.disabled = !(nameVal && emailVal && messageVal && turnstileVerified);
+      }
+
+      ['enquiry-name', 'enquiry-email', 'enquiry-message'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateEnquirySubmitBtn);
+      });
+
       document.addEventListener('submit', function (e) {
         var form = e.target;
         if (!form || form.id !== 'enquiry-form') return;
@@ -730,11 +760,6 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         var turnstileResponse = '';
         if (typeof turnstile !== 'undefined') {
           turnstileResponse = turnstile.getResponse();
-        }
-        if (!turnstileResponse) {
-          // Try reading from the hidden input Turnstile creates
-          var turnstileInput = form.querySelector('[name="cf-turnstile-response"]');
-          if (turnstileInput) turnstileResponse = turnstileInput.value;
         }
         if (!turnstileResponse) {
           if (statusEl) {
@@ -806,10 +831,16 @@ import HeroCanvas from '../components/HeroCanvas.astro';
             if (typeof turnstile !== 'undefined') {
               turnstile.reset();
             }
+            turnstileVerified = false;
+            updateEnquirySubmitBtn();
           });
       });
 
-      document.addEventListener('astro:after-swap', initEnquiryForm);
+      document.addEventListener('astro:after-swap', function () {
+        initEnquiryForm();
+        turnstileVerified = false;
+        updateEnquirySubmitBtn();
+      });
     }
 
     initEnquiryForm();
