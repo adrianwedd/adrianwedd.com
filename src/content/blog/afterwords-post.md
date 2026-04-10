@@ -7,7 +7,6 @@ series: 'PiCar-X'
 seriesOrder: 4
 audioUrl: '/notebook-assets/afterwords-blog/audio.mp3'
 heroImage: '/notebook-assets/afterwords/infographic.webp'
-audioDuration: '18:19'
 faq:
   - q: 'Does Afterwords send any data to the cloud?'
     a: 'No. The entire pipeline runs locally — MLX inference on Apple Silicon, FastAPI on localhost, audio playback on your speaker. Nothing leaves the machine.'
