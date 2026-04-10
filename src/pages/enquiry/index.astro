@@ -2,11 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout
-  title="Your enquiry"
-  description="View and respond to your project enquiry."
-  noindex={true}
->
+<BaseLayout title="Your enquiry" description="View and respond to your project enquiry." noindex={true}>
   <Fragment slot="head">
     <meta name="referrer" content="no-referrer" />
   </Fragment>
@@ -122,7 +118,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
         var roleLabel = document.createElement('p');
         roleLabel.className = 'text-xs font-medium ' + (isTeam ? 'text-accent' : 'text-text-muted');
-        roleLabel.textContent = isTeam ? 'Team' : (msg.name || 'You');
+        roleLabel.textContent = isTeam ? 'Team' : msg.name || 'You';
         bubble.appendChild(roleLabel);
 
         var content = document.createElement('p');
@@ -169,12 +165,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           }
           // Comments
           if (data.comments && data.comments.length) {
-            data.comments.forEach(function(c) {
+            data.comments.forEach(function (c) {
               messages.push({
                 role: c.author_type === 'team' ? 'team' : 'client',
                 message: c.body_text,
                 created_at: c.created_at,
-                name: c.author_type === 'team' ? 'Team' : (data.client_name || 'You'),
+                name: c.author_type === 'team' ? 'Team' : data.client_name || 'You',
               });
             });
           }
@@ -299,6 +295,24 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         var chatEl = document.getElementById('enquiry-chat');
         var noTokenEl = document.getElementById('enquiry-no-token');
         if (chatEl || noTokenEl) initEnquiryChat();
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          if (refreshTimer) {
+            clearInterval(refreshTimer);
+            refreshTimer = null;
+          }
+        } else {
+          var t = getToken();
+          if (t && (document.getElementById('enquiry-chat') || document.getElementById('enquiry-no-token'))) {
+            loadConversation(t);
+            if (refreshTimer) clearInterval(refreshTimer);
+            refreshTimer = setInterval(function () {
+              loadConversation(t);
+            }, 15000);
+          }
+        }
       });
     }
 

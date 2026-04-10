@@ -2,7 +2,7 @@
 title: 'AI Nationalism and the Fracturing Digital Order'
 description: 'The US-China AI rivalry is splitting the global tech stack into competing blocs. A strategic assessment of what comes next.'
 date: 2026-04-04
-heroImage: "/notebook-assets/ai-nationalism/infographic.webp"
+heroImage: '/notebook-assets/ai-nationalism/infographic.webp'
 tags: ['ai', 'policy', 'geopolitics', 'research']
 draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ai-nationalism/audio.mp3'
@@ -56,4 +56,4 @@ The fiction of a single, unified global technology market is over. Strategy now 
 
 For those of us building in the AI space, the implications are concrete. The tools we use, the platforms we deploy on, and the standards we adopt are not neutral technical choices. They are geopolitical alignments, whether we acknowledge it or not. The fracture is here. The question is how we navigate it.
 
-*This post is adapted from research conducted as part of the [Orchestrix](/projects/orchestrix/) strategic AI analysis project.*
+_This post is adapted from research conducted as part of the [Orchestrix](/projects/orchestrix/) strategic AI analysis project._
