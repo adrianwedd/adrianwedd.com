@@ -80,7 +80,9 @@ import HeroCanvas from '../components/HeroCanvas.astro';
             placeholder="Describe your project or problem."></textarea>
         </div>
         <div>
-          <label for="enquiry-budget" class="block text-xs text-text-muted">Budget range <span class="text-text-muted">(optional)</span></label>
+          <label for="enquiry-budget" class="block text-xs text-text-muted"
+            >Budget range <span class="text-text-muted">(optional)</span></label
+          >
           <select
             id="enquiry-budget"
             name="budget"
@@ -94,7 +96,9 @@ import HeroCanvas from '../components/HeroCanvas.astro';
           </select>
         </div>
         <div>
-          <label for="enquiry-type" class="block text-xs text-text-muted">Project type <span class="text-text-muted">(optional)</span></label>
+          <label for="enquiry-type" class="block text-xs text-text-muted"
+            >Project type <span class="text-text-muted">(optional)</span></label
+          >
           <select
             id="enquiry-type"
             name="project_type"
@@ -108,7 +112,14 @@ import HeroCanvas from '../components/HeroCanvas.astro';
             <option value="Other">Other</option>
           </select>
         </div>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAABtkfyqFbFmIaPO" data-theme="dark" data-callback="onTurnstileSuccess" data-error-callback="onTurnstileError"></div>
+        <div
+          class="cf-turnstile"
+          data-sitekey="0x4AAAAAAABtkfyqFbFmIaPO"
+          data-theme="dark"
+          data-callback="onTurnstileSuccess"
+          data-error-callback="onTurnstileError"
+        >
+        </div>
         <input type="hidden" id="enquiry-idempotency" name="idempotency_key" value="" />
         <p id="enquiry-status" class="hidden text-sm" role="alert"></p>
         <button
@@ -698,12 +709,12 @@ import HeroCanvas from '../components/HeroCanvas.astro';
 
       var turnstileVerified = false;
 
-      window.onTurnstileSuccess = function() {
+      window.onTurnstileSuccess = function () {
         turnstileVerified = true;
         updateEnquirySubmitBtn();
       };
 
-      window.onTurnstileError = function() {
+      window.onTurnstileError = function () {
         turnstileVerified = false;
         updateEnquirySubmitBtn();
       };
@@ -720,7 +731,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         btn.disabled = !(nameVal && emailVal && messageVal && turnstileVerified);
       }
 
-      ['enquiry-name', 'enquiry-email', 'enquiry-message'].forEach(function(id) {
+      ['enquiry-name', 'enquiry-email', 'enquiry-message'].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) el.addEventListener('input', updateEnquirySubmitBtn);
       });
@@ -802,7 +813,9 @@ import HeroCanvas from '../components/HeroCanvas.astro';
             if (data.write_token) {
               try {
                 sessionStorage.setItem('enquiry_write_token_' + data.read_token, data.write_token);
-              } catch (e) { /* sessionStorage unavailable */ }
+              } catch (e) {
+                /* sessionStorage unavailable */
+              }
             }
             // Redirect to chat page
             if (data.read_token) {

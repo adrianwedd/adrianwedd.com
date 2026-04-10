@@ -2,7 +2,7 @@
 title: 'The Post-Model Era'
 description: "Foundation models are commoditising. JPMorgan calls OpenAI's moat 'increasingly fragile.' The real value is shifting to the messy plumbing underneath."
 date: 2026-04-04
-heroImage: "/notebook-assets/project-chimera/infographic.webp"
+heroImage: '/notebook-assets/project-chimera/infographic.webp'
 tags: ['ai', 'enterprise', 'research', 'engineering']
 draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-chimera/audio.mp3'
@@ -34,7 +34,7 @@ The actual barrier to deploying an autonomous agent that acts on sensitive enter
 
 Research at ACL 2025 showed how fine-tuning can erase safety guardrails and how agents can collaborate to execute multi-turn decomposition jailbreaks. ICLR 2025 papers explored "shallow safety alignment" where models appear safe but are easily compromised. These are not theoretical concerns. They are the reason enterprise procurement cycles for AI tooling are measured in quarters, not weeks.
 
-The winning platform provides an unassailable governance framework: transparent reasoning, auditable decision trails, built-in compliance checks, and robust human-in-the-loop controls. Solving governance *is* solving the last mile.
+The winning platform provides an unassailable governance framework: transparent reasoning, auditable decision trails, built-in compliance checks, and robust human-in-the-loop controls. Solving governance _is_ solving the last mile.
 
 ## The Agentic Shift
 
@@ -66,4 +66,4 @@ The $260 billion data management market is the early signal. The M&A activity is
 
 ---
 
-*This analysis draws on research conducted as part of the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic research project. The full strategic framework, market analysis, and research synthesis are in the technical report.*
+_This analysis draws on research conducted as part of the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic research project. The full strategic framework, market analysis, and research synthesis are in the technical report._
