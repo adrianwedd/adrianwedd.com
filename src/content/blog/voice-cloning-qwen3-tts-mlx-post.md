@@ -7,7 +7,6 @@ series: 'PiCar-X'
 seriesOrder: 3
 audioUrl: '/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.mp3'
 heroImage: '/notebook-assets/voice-cloning-qwen3-tts-mlx/infographic.webp'
-audioDuration: '23:50'
 faq:
   - q: 'Do I need to fine-tune or train anything?'
     a: 'No. Qwen3-TTS Base does zero-shot voice cloning — you provide a reference audio clip and its transcript at inference time. No training loop, no GPU hours, no dataset preparation.'
