@@ -853,6 +853,19 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         initEnquiryForm();
         turnstileVerified = false;
         updateEnquirySubmitBtn();
+        // Turnstile's implicit rendering only runs on initial script load.
+        // After a View Transition swap the new .cf-turnstile div exists but
+        // the widget isn't rendered into it. Explicitly render if present.
+        var container = document.querySelector('.cf-turnstile');
+        if (container && typeof turnstile !== 'undefined') {
+          while (container.firstChild) container.removeChild(container.firstChild);
+          turnstile.render(container, {
+            sitekey: '0x4AAAAAAABtkfyqFbFmIaPO',
+            theme: 'dark',
+            callback: function () { window.onTurnstileSuccess(); },
+            'error-callback': function () { window.onTurnstileError(); },
+          });
+        }
       });
     }
 
