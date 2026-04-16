@@ -10,8 +10,8 @@ date: 2026-03-12
 series: 'PiCar-X'
 seriesOrder: 1
 heroImage: '/notebook-assets/spark/infographic.webp'
-audioUrl: '/notebook-assets/spark/audio.mp3'
-videoUrl: '/notebook-assets/spark/video.mp4'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/video.mp4'
 ---
 
 SPARK (Support Partner for Awareness, Regulation & Kindness) is a Raspberry Pi 4-based robotics platform powered by Claude Haiku, designed as a non-coercive companion for children with AuDHD (ADHD + ASD comorbid) profiles.

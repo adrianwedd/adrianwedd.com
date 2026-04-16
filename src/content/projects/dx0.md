@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/Dx0'
 status: 'active'
 featured: false
 date: 2025-05-01
-audioUrl: '/notebook-assets/dx0/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dx0/audio.mp3'
 heroImage: '/notebook-assets/dx0/infographic.webp'
 ---
 

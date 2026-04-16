@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/home-assistant-obsidian'
 status: 'active'
 featured: false
 date: 2024-06-01
-audioUrl: '/notebook-assets/home-assistant-obsidian/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-obsidian/audio.mp3'
 heroImage: '/notebook-assets/home-assistant-obsidian/infographic.webp'
 ---
 

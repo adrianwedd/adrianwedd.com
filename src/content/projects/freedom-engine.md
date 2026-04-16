@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/freedom-engine'
 status: 'active'
 featured: false
 date: 2025-04-01
-audioUrl: '/notebook-assets/freedom-engine/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/audio.mp3'
 heroImage: '/notebook-assets/freedom-engine/infographic.webp'
 ---
 

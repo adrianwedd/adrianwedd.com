@@ -3,7 +3,7 @@ title: 'The Robot That Refuses to Give Orders'
 description: 'Audio deep dive into SPARK — a non-coercive AI robot companion for neurodivergent children. Declarative presence, not demands.'
 date: 2026-03-12
 tags: ['notebooklm', 'ai', 'robotics', 'neurodivergence']
-audioUrl: '/notebook-assets/spark/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/audio.mp3'
 duration: '43:05'
 relatedPost: 'the-robot-that-refuses-to-give-orders-post'
 relatedProject: 'spark'

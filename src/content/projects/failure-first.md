@@ -7,7 +7,7 @@ repo: 'failure-first'
 status: 'active'
 featured: true
 date: 2026-02-09
-audioUrl: '/notebook-assets/failure-first/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.mp3'
 heroImage: '/notebook-assets/failure-first/infographic.webp'
 ---
 

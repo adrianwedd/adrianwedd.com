@@ -4,7 +4,7 @@ description: "Auditory Spiral, RTRFM, and how Perth's electronic music undergrou
 date: 2026-03-18
 tags: ['history', 'music', 'perth', 'radio']
 heroImage: '/notebook-assets/the-resonant-fringe/infographic.webp'
-audioUrl: '/notebook-assets/the-resonant-fringe/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-resonant-fringe/audio.mp3'
 ---
 
 In the early 1990s, if you wanted to hear Detroit techno in Perth, you had two options: find someone who'd imported the vinyl, or stay up past midnight on a Sunday and tune your FM dial to 92.1.

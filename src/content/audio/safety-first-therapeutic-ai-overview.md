@@ -3,7 +3,7 @@ title: 'Safety-First Therapeutic AI'
 description: 'Audio overview of Safety-First Therapeutic AI.'
 date: 2026-03-15
 tags: ['notebooklm', 'ai', 'ai-safety', 'health', 'typescript']
-audioUrl: '/notebook-assets/safety-first-therapeutic-ai/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/safety-first-therapeutic-ai/audio.mp3'
 duration: '20:37'
 relatedPost: 'safety-first-therapeutic-ai-post'
 ---

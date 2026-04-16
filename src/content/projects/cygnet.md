@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/cygnet'
 status: 'active'
 featured: false
 date: 2025-04-01
-audioUrl: '/notebook-assets/cygnet/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/cygnet/audio.mp3'
 heroImage: '/notebook-assets/cygnet/infographic.webp'
 ---
 

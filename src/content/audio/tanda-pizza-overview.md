@@ -3,7 +3,7 @@ title: 'Tanda Pizza: Static Site for a Rice Paddy Pizzeria'
 description: 'Building a fast, multilingual website for authentic Italian food in Bali — where the nearest reliable internet is a philosophical concept.'
 date: 2026-02-03
 tags: ['notebooklm', 'web', 'static-site', 'multilingual']
-audioUrl: '/notebook-assets/tanda-pizza/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/tanda-pizza/audio.mp3'
 duration: '6:23'
 relatedProject: 'tanda-pizza'
 ---

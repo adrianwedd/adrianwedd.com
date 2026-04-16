@@ -3,7 +3,7 @@ title: 'ADHDo: Neurodiversity-Affirming AI Assistant'
 description: 'Audio overview exploring ADHD executive function support through AI — three-stage reasoning pipeline, crisis detection, and zero shame by design.'
 date: 2026-02-05
 tags: ['notebooklm', 'adhd', 'ai-safety', 'neurodivergence']
-audioUrl: '/notebook-assets/adhdo/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/adhdo/audio.mp3'
 duration: '8:47'
 relatedProject: 'adhdo'
 ---

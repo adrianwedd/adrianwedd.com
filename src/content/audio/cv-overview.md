@@ -3,7 +3,7 @@ title: "A CV That Proves It Isn't Lying"
 description: 'A self-updating CV pipeline where GitHub Actions runs twice daily, Claude refines content, and a hallucination detector gates deployment.'
 date: 2026-02-04
 tags: ['notebooklm', 'craft', 'web', 'career']
-audioUrl: '/notebook-assets/cv/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/cv/audio.mp3'
 duration: '15:06'
 relatedProject: 'cv'
 ---

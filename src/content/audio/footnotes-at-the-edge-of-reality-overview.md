@@ -3,7 +3,7 @@ title: 'Where Physics Breaks Down and Poetry Begins'
 description: 'Audio overview of Footnotes at the Edge of Reality — a long-form poem rendered as interactive web experience.'
 date: 2026-02-06
 tags: ['notebooklm', 'poetry', 'physics', 'creative']
-audioUrl: '/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3'
 duration: '17:58'
 relatedPost: 'footnotes-at-the-edge-of-reality-post'
 relatedProject: 'footnotes-at-the-edge-of-reality'

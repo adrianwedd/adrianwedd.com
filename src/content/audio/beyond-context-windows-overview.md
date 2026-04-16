@@ -3,7 +3,7 @@ title: 'Beyond Context Windows'
 description: 'Audio overview of Beyond Context Windows.'
 date: 2026-03-15
 tags: ['notebooklm', 'ai', 'engineering', 'mcp', 'llm', 'python']
-audioUrl: '/notebook-assets/beyond-context-windows/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/beyond-context-windows/audio.mp3'
 duration: '20:14'
 relatedPost: 'beyond-context-windows-post'
 ---

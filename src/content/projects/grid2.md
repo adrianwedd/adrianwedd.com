@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/grid2_repo'
 status: 'experiment'
 featured: false
 date: 2025-05-01
-audioUrl: '/notebook-assets/grid2/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/grid2/audio.mp3'
 heroImage: '/notebook-assets/grid2/infographic.webp'
 ---
 

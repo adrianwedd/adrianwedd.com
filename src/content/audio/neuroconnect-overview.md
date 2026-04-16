@@ -3,7 +3,7 @@ title: 'The Helpline That Knows the Difference'
 description: 'A 24/7 voice helpline built around neurodivergent communication — where crisis detection is deterministic and the LLM never decides if someone is safe.'
 date: 2025-05-01
 tags: ['notebooklm', 'ai', 'health', 'adhd']
-audioUrl: '/notebook-assets/neuroconnect/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/audio.mp3'
 duration: '16:43'
 relatedProject: 'neuroconnect'
 ---

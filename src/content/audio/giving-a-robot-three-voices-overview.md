@@ -3,7 +3,7 @@ title: 'Giving a Robot Three Voices'
 description: 'Audio overview of Giving a Robot Three Voices.'
 date: 2026-03-19
 tags: ['notebooklm', 'ai', 'tts', 'mlx', 'raspberry-pi', 'robotics', 'apple-silicon', 'voice-cloning', 'spark']
-audioUrl: '/notebook-assets/giving-a-robot-three-voices/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/giving-a-robot-three-voices/audio.mp3'
 duration: '20:44'
 relatedPost: 'giving-a-robot-three-voices-post'
 ---
