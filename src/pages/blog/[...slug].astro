@@ -47,11 +47,18 @@ const seriesPosts = post.data.series
   : [];
 
 // Projects in the same series
+const allProjects = await getCollection('projects');
 const seriesProjectsList = post.data.series
-  ? (await getCollection('projects'))
+  ? allProjects
       .filter((p) => !p.data.draft && p.data.series === post.data.series)
       .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
   : [];
+
+// Match to a project by slug (blog slug minus trailing "-post")
+const candidateProjectSlug = postSlug.replace(/-post$/, '');
+const matchedProject = allProjects.find(
+  (p) => !p.data.draft && slug(p.id) === candidateProjectSlug,
+);
 ---
 
 <BaseLayout
@@ -174,6 +181,40 @@ const seriesProjectsList = post.data.series
         }
         <span aria-hidden="true">&middot;</span>
         <span>{readingTime} min read</span>
+        {
+          matchedProject?.data.url && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <a
+                href={matchedProject.data.url}
+                class="text-xs text-text-muted transition-colors hover:text-accent"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Visit site &nearr;
+              </a>
+            </>
+          )
+        }
+        {
+          matchedProject?.data.repo && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <a
+                href={
+                  matchedProject.data.repo.startsWith('http')
+                    ? matchedProject.data.repo
+                    : `https://github.com/adrianwedd/${matchedProject.data.repo}`
+                }
+                class="text-xs text-text-muted transition-colors hover:text-accent"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Source &nearr;
+              </a>
+            </>
+          )
+        }
       </div>
       <h1 class="text-text">{post.data.title}</h1>
       <p class="mt-4 text-lg leading-relaxed text-text-muted">{post.data.description}</p>
