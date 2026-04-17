@@ -77,40 +77,10 @@ export default defineConfig({
     prefetchAll: false,
     defaultStrategy: 'hover',
   },
-  experimental: {
-    csp: {
-      algorithm: 'SHA-256',
-      scriptDirective: {
-        strictDynamic: true,
-        resources: [
-          "'self'",
-          "'wasm-unsafe-eval'",
-          'https://www.googletagmanager.com',
-          'https://www.google-analytics.com',
-          'https://snap.licdn.com',
-          'https://px.ads.linkedin.com',
-          'https://pagead2.googlesyndication.com',
-          'https://tpc.googlesyndication.com',
-          'https://googleads.g.doubleclick.net',
-          'https://adservice.google.com',
-          'https://challenges.cloudflare.com',
-        ],
-      },
-      styleDirective: {
-        resources: ["'self'", "'unsafe-inline'"],
-      },
-      directives: [
-        "default-src 'self'",
-        "img-src 'self' data: https://www.google-analytics.com https://px.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.linkedin.com",
-        "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://ep1.adtrafficquality.google https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com",
-        "media-src 'self' https://cdn.adrianwedd.com",
-        "frame-src https://www.openstreetmap.org https://challenges.cloudflare.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net",
-        "font-src 'self'",
-        "object-src 'none'",
-        "base-uri 'self'",
-        "form-action 'self'",
-        "frame-ancestors 'none'",
-      ],
-    },
-  },
+  // experimental.csp disabled — caused widespread breakage on static build:
+  // - strict-dynamic disabled host-based 'self' allowlist, blocking all
+  //   /_astro/*.js module scripts (Preact hydration, client router, analytics)
+  // - Some is:inline scripts weren't hashed correctly, triggering violations
+  // Reverted to hand-rolled meta CSP in SEOHead.astro until a safer
+  // implementation lands. See #222.
 });
