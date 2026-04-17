@@ -3,7 +3,7 @@ title: 'What Hyperfocus and a Good Excuse Can Produce in an Afternoon'
 description: 'Audio overview of Squishmallowdex — a kid-friendly collection tracker for 3,000+ plush creatures. No ads, no tracking.'
 date: 2024-12-01
 tags: ['notebooklm', 'web', 'kids', 'open-source']
-audioUrl: '/notebook-assets/squishmallowdex/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/audio.mp3'
 duration: '17:56'
 relatedProject: 'squishmallowdex'
 ---

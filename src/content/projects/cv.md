@@ -6,7 +6,7 @@ repo: 'cv'
 status: 'active'
 featured: false
 date: 2026-02-04
-audioUrl: '/notebook-assets/cv/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/cv/audio.mp3'
 heroImage: '/notebook-assets/cv/infographic.webp'
 ---
 

@@ -3,7 +3,7 @@ title: 'Why I Build in Public'
 description: 'Audio overview of Why I Build in Public.'
 date: 2026-02-15
 tags: ['notebooklm', 'engineering', 'open-source', 'philosophy']
-audioUrl: '/notebook-assets/why-i-build-in-public/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-i-build-in-public/audio.mp3'
 duration: '14:35'
 relatedPost: 'why-i-build-in-public-post'
 ---

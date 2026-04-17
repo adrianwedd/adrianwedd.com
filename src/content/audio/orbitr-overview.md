@@ -3,7 +3,7 @@ title: 'Rhythm as Geometry, Sounds from Words'
 description: 'Audio overview of orbitr — a circular sequencer where polyrhythm becomes spatial and MusicGen creates the sounds.'
 date: 2025-09-01
 tags: ['notebooklm', 'music', 'ai', 'creative']
-audioUrl: '/notebook-assets/orbitr/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/orbitr/audio.mp3'
 duration: '17:20'
 relatedProject: 'orbitr'
 ---

@@ -3,7 +3,7 @@ title: 'Looking Past the Evidence'
 description: "Audio deep dive into why people acknowledge demonstrated risk and then proceed as if it doesn't exist. Structural, not stupid."
 date: 2026-02-07
 tags: ['notebooklm', 'research', 'risk', 'ai-safety']
-audioUrl: '/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3'
 duration: '22:17'
 relatedPost: 'why-demonstrated-risk-is-ignored-post'
 relatedProject: 'why-demonstrated-risk-is-ignored'

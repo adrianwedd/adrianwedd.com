@@ -7,7 +7,7 @@ repo: 'before-the-words-existed'
 status: 'complete'
 featured: true
 date: 2026-02-10
-audioUrl: '/notebook-assets/before-the-words-existed/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/before-the-words-existed/audio.mp3'
 heroImage: '/notebook-assets/before-the-words-existed/infographic.webp'
 ---
 

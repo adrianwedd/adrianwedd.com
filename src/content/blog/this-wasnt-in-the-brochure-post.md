@@ -4,7 +4,7 @@ description: 'A field guide for co-parenting neurodivergent children — written
 date: 2026-02-15
 tags: ['writing', 'neurodivergence', 'parenting', 'books', 'co-parenting']
 heroImage: '/notebook-assets/this-wasnt-in-the-brochure/infographic.webp'
-audioUrl: '/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
 ---
 
 You packed for a picnic. You ended up in the Drake Passage.

@@ -3,7 +3,7 @@ title: 'Bridging the Information Gap That Costs Years'
 description: 'Audio overview of Freedom Engine — AI-assisted legal Q&A helping federal inmates access First Step Act provisions.'
 date: 2025-04-01
 tags: ['notebooklm', 'ai', 'justice', 'legal']
-audioUrl: '/notebook-assets/freedom-engine/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/audio.mp3'
 duration: '15:51'
 relatedProject: 'freedom-engine'
 ---

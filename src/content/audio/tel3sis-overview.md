@@ -3,7 +3,7 @@ title: 'Three Seconds of Silence Is an Eternity'
 description: 'Audio overview of TEL3SIS — a voice-first agentic phone platform where sub-3s latency is a survival threshold, not a benchmark.'
 date: 2025-10-01
 tags: ['notebooklm', 'ai', 'voice', 'telephony']
-audioUrl: '/notebook-assets/tel3sis/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/tel3sis/audio.mp3'
 duration: '19:37'
 relatedProject: 'tel3sis'
 ---

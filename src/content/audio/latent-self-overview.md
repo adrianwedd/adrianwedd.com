@@ -3,7 +3,7 @@ title: 'The Mirror That Shows What You Almost Are'
 description: 'Real-time StyleGAN2 face morphing as art installation — continuous, responsive, and productively uncanny.'
 date: 2025-02-01
 tags: ['notebooklm', 'art', 'ai', 'installation']
-audioUrl: '/notebook-assets/latent-self/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/latent-self/audio.mp3'
 duration: '15:28'
 relatedProject: 'latent-self'
 ---

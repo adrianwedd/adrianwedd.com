@@ -5,7 +5,7 @@ date: 2026-03-15
 tags: ['ai', 'engineering', 'mcp', 'llm', 'python']
 draft: false
 heroImage: '/notebook-assets/beyond-context-windows/infographic.webp'
-audioUrl: '/notebook-assets/beyond-context-windows/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/beyond-context-windows/audio.mp3'
 faq:
   - q: 'What is the Recursive Language Model pattern?'
     a: 'The Recursive Language Model pattern treats documents as environment that the model queries, rather than input to read directly. The LLM uses tools to search, retrieve, and interact with content iteratively.'

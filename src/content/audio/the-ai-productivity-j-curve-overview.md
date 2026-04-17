@@ -3,7 +3,7 @@ title: 'The AI Productivity J-Curve: Why Most Enterprise AI Fails'
 description: 'Audio overview of The AI Productivity J-Curve: Why Most Enterprise AI Fails.'
 date: 2026-03-02
 tags: ['notebooklm', 'ai', 'economics', 'enterprise', 'research', 'policy']
-audioUrl: '/notebook-assets/the-ai-productivity-j-curve/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ai-productivity-j-curve/audio.mp3'
 duration: '23:44'
 relatedPost: 'the-ai-productivity-j-curve-post'
 ---

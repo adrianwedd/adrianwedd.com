@@ -3,7 +3,7 @@ title: 'Voice Cloning with Qwen3-TTS and MLX on Apple Silicon'
 description: 'Audio overview of Voice Cloning with Qwen3-TTS and MLX on Apple Silicon.'
 date: 2026-03-19
 tags: ['notebooklm', 'ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'tutorial', 'spark']
-audioUrl: '/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.mp3'
 duration: '23:50'
 relatedPost: 'voice-cloning-qwen3-tts-mlx-post'
 ---

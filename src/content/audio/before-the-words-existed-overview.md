@@ -3,7 +3,7 @@ title: "The ADHD Novel That Didn't Know It Was One"
 description: "A scholarly close reading arguing Gibson's Neuromancer encoded the ADHD experience a decade before the vocabulary existed."
 date: 2026-02-10
 tags: ['notebooklm', 'neurodivergence', 'literary-criticism', 'adhd']
-audioUrl: '/notebook-assets/before-the-words-existed/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/before-the-words-existed/audio.mp3'
 duration: '16:50'
 relatedProject: 'before-the-words-existed'
 ---

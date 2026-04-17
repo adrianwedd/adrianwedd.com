@@ -5,7 +5,7 @@ date: 2026-03-30
 tags: ['ai', 'ai-safety', 'research', 'adversarial', 'team']
 draft: false
 heroImage: '/notebook-assets/the-failure-first-team/infographic.webp'
-audioUrl: '/notebook-assets/the-failure-first-team/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-failure-first-team/audio.mp3'
 faq:
   - q: 'What is the Failure First team?'
     a: 'The Failure First team consists of fifteen specialist AI agents, each initialized with distinct roles and standing instructions. They work on adversarial AI evaluation across 227 models and 133,000+ evaluated results, with a human coordinator overseeing direction and publication.'
