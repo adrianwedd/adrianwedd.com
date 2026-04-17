@@ -244,18 +244,14 @@ for i in "${!ITEMS_NAME[@]}"; do
         readme_tmp=""
         sources_json="\"textfile:$item_file\""
 
-        # Public site URL
         if [ "$item_type" = "project" ]; then
             sources_json+=", \"https://adrianwedd.com/projects/$item_name/\""
         elif [ "$item_type" = "blog" ]; then
             sources_json+=", \"https://adrianwedd.com/blog/$item_name/\""
         fi
 
-        # GitHub repo README (projects only, if repo: field is set)
         if [ "$item_type" = "project" ]; then
             repo_raw=$(grep "^repo:" "$item_file" 2>/dev/null | head -1 | sed -E "s/^repo:[[:space:]]*['\"]?//; s/['\"]?[[:space:]]*\$//" || true)
-            # Normalize: accept either bare repo name or full GitHub URL
-            # Extract the owner/repo part from a full URL, or use as-is if bare
             if [[ "$repo_raw" =~ ^https?://github\.com/([^/]+)/([^/]+)/?$ ]]; then
                 repo_owner="${BASH_REMATCH[1]}"
                 repo_name="${BASH_REMATCH[2]}"
@@ -271,13 +267,10 @@ for i in "${!ITEMS_NAME[@]}"; do
                 readme_tmp=$(mktemp "$EXPORT_DIR/README-$item_name-XXXXXX")
                 mv "$readme_tmp" "$readme_tmp.txt"
                 readme_tmp="$readme_tmp.txt"
-                readme_main="https://raw.githubusercontent.com/$repo_owner/$repo_name/main/README.md"
-                readme_master="https://raw.githubusercontent.com/$repo_owner/$repo_name/master/README.md"
-                # -L follows redirects (GitHub uses 307 for case-normalization)
-                if curl -sfL "$readme_main" -o "$readme_tmp" 2>/dev/null && [ -s "$readme_tmp" ]; then
+                if curl -sL "https://raw.githubusercontent.com/$repo_owner/$repo_name/main/README.md" -o "$readme_tmp" -f 2>/dev/null && [ -s "$readme_tmp" ]; then
                     echo "  Fetched README from $repo_owner/$repo_name (main)"
                     sources_json+=", \"textfile:$readme_tmp\""
-                elif curl -sfL "$readme_master" -o "$readme_tmp" 2>/dev/null && [ -s "$readme_tmp" ]; then
+                elif curl -sL "https://raw.githubusercontent.com/$repo_owner/$repo_name/master/README.md" -o "$readme_tmp" -f 2>/dev/null && [ -s "$readme_tmp" ]; then
                     echo "  Fetched README from $repo_owner/$repo_name (master)"
                     sources_json+=", \"textfile:$readme_tmp\""
                 else
@@ -318,49 +311,58 @@ EOFCONFIG
     fi
 
     echo "  Notebook: $notebook_id"
-    echo "  Generating cinematic video..."
 
-    nlm video create "$notebook_id" \
-        --focus "$FOCUS" \
-        -y 2>&1 | while IFS= read -r line; do echo "    $line"; done
-
-    # Poll for completion (max 15 minutes — videos are slow)
-    video_url=""
-    poll_interval=15
-    for attempt in $(seq 1 60); do
-        sleep $poll_interval
-        if [ $attempt -eq 20 ]; then poll_interval=20; fi
-
-        status_json=$(nlm studio status "$notebook_id" 2>/dev/null || echo "[]")
-        result=$(echo "$status_json" | python3 -c "
+    # Check for existing video to avoid duplicate generation
+    existing_status=$(nlm studio status "$notebook_id" 2>/dev/null | python3 -c "
 import json, sys
 arts = json.load(sys.stdin)
-videos = [a for a in arts if a['type'] == 'video']
+videos = [a for a in arts if a.get('type') == 'video']
 if videos:
-    latest = videos[-1]
-    if latest.get('status') == 'completed' and latest.get('url'):
-        print(latest['url'])
-    elif latest.get('status') == 'failed':
-        print('FAILED')
+    print(videos[-1].get('status', ''))
 " 2>/dev/null || echo "")
 
-        if [ "$result" = "FAILED" ]; then
+    if [ "$existing_status" = "completed" ]; then
+        echo "  Video already completed — skipping generation, will download"
+    elif [ "$existing_status" = "in_progress" ]; then
+        echo "  Video already in progress — skipping generation, will wait"
+    else
+        echo "  Generating cinematic video..."
+        nlm video create "$notebook_id" \
+            --focus "$FOCUS" \
+            -y 2>&1 | while IFS= read -r line; do echo "    $line"; done
+    fi
+
+    # Poll until status=completed (max ~20 min)
+    video_status=""
+    poll_interval=20
+    for attempt in $(seq 1 60); do
+        sleep $poll_interval
+
+        status_json=$(nlm studio status "$notebook_id" 2>/dev/null || echo "[]")
+        video_status=$(echo "$status_json" | python3 -c "
+import json, sys
+arts = json.load(sys.stdin)
+videos = [a for a in arts if a.get('type') == 'video']
+if videos:
+    print(videos[-1].get('status', ''))
+" 2>/dev/null || echo "")
+
+        if [ "$video_status" = "completed" ]; then
+            echo -e "  ${GREEN}Video ready${NC}"
+            break
+        fi
+        if [ "$video_status" = "failed" ]; then
             echo -e "  ${RED}Video generation failed${NC}"
             echo "FAILED|$item_name|generation failed" >> "$RESULTS_LOG"
             ((FAILED++)) || true
             break
         fi
 
-        if [ -n "$result" ]; then
-            video_url="$result"
-            break
-        fi
-
-        echo "    Waiting... (${attempt})"
+        echo "    Waiting... ($attempt, status=${video_status:-pending})"
     done
 
-    if [ -z "$video_url" ]; then
-        if [ "$result" != "FAILED" ]; then
+    if [ "$video_status" != "completed" ]; then
+        if [ "$video_status" != "failed" ]; then
             echo -e "  ${RED}Timed out waiting for video${NC}"
             echo "FAILED|$item_name|timeout" >> "$RESULTS_LOG"
             ((FAILED++)) || true
@@ -368,17 +370,22 @@ if videos:
         continue
     fi
 
-    echo -e "  ${GREEN}Video ready${NC}"
-
-    # Download
+    # Download via nlm CLI (handles URL resolution internally)
     item_export="$EXPORT_DIR/$item_name"
     mkdir -p "$item_export"
     output_file="$item_export/video.mp4"
 
-    echo "  Downloading..."
-    if curl -sL "$video_url" -o "$output_file"; then
-        size=$(du -h "$output_file" | cut -f1)
-        echo "  Downloaded: $output_file ($size)"
+    echo "  Downloading via nlm..."
+    if nlm download video "$notebook_id" -o "$output_file" --no-progress 2>&1 | tail -3; then
+        if [ -s "$output_file" ]; then
+            size=$(du -h "$output_file" | cut -f1)
+            echo "  Downloaded: $output_file ($size)"
+        else
+            echo -e "  ${RED}Download produced empty file${NC}"
+            echo "FAILED|$item_name|empty download" >> "$RESULTS_LOG"
+            ((FAILED++)) || true
+            continue
+        fi
     else
         echo -e "  ${RED}Download failed${NC}"
         echo "FAILED|$item_name|download failed" >> "$RESULTS_LOG"
