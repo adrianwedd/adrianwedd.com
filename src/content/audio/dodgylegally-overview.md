@@ -3,7 +3,7 @@ title: 'Manufacturing Happy Accidents'
 description: "A CLI that turns random words into sample packs via YouTube — because the best sounds come from places you weren't looking."
 date: 2026-02-01
 tags: ['notebooklm', 'music', 'cli', 'creative']
-audioUrl: '/notebook-assets/dodgylegally/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dodgylegally/audio.mp3'
 duration: '16:15'
 relatedProject: 'dodgylegally'
 ---

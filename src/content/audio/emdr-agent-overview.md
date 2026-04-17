@@ -3,7 +3,7 @@ title: 'What Safety Architecture Does AI Therapy Require?'
 description: 'Audio overview of EMDR Agent — exploring what responsible AI-assisted trauma therapy demands before it can exist.'
 date: 2025-06-01
 tags: ['notebooklm', 'ai-safety', 'health', 'ai']
-audioUrl: '/notebook-assets/emdr-agent/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/emdr-agent/audio.mp3'
 duration: '15:08'
 relatedProject: 'emdr-agent'
 ---

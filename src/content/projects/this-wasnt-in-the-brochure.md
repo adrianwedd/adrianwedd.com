@@ -8,7 +8,7 @@ status: 'active'
 featured: true
 date: 2026-02-08
 heroImage: '/notebook-assets/this-wasnt-in-the-brochure/infographic.webp'
-audioUrl: '/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
 series: "This Wasn't in the Brochure"
 seriesOrder: 1
 ---

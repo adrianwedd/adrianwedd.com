@@ -3,7 +3,7 @@ title: 'The NotebookLM Pipeline'
 description: 'Audio overview of The NotebookLM Pipeline.'
 date: 2026-02-15
 tags: ['notebooklm', 'engineering', 'automation', 'ai', 'python']
-audioUrl: '/notebook-assets/the-notebooklm-pipeline/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-notebooklm-pipeline/audio.mp3'
 duration: '25:08'
 relatedPost: 'the-notebooklm-pipeline-post'
 ---

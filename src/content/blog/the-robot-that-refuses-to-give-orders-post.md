@@ -4,8 +4,8 @@ description: 'How SPARK is rewriting the rules of neurodivergent support — a n
 date: 2026-03-12
 tags: ['ai', 'neurodivergence', 'robotics', 'parenting', 'raspberry-pi']
 heroImage: '/notebook-assets/the-robot-that-refuses-to-give-orders/infographic.webp'
-audioUrl: '/notebook-assets/spark/audio.mp3'
-videoUrl: '/notebook-assets/spark/video.mp4'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/video.mp4'
 series: 'PiCar-X'
 seriesOrder: 1
 ---

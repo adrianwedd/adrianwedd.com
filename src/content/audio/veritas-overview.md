@@ -3,7 +3,7 @@ title: 'The Efficiency-Trust Deficit in Legal AI'
 description: "Audio deep dive into VERITAS — a legal AI platform where trust isn't a feature, it's the architecture. Built for Australian practice."
 date: 2025-03-01
 tags: ['notebooklm', 'ai', 'legal', 'research']
-audioUrl: '/notebook-assets/veritas/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/veritas/audio.mp3'
 duration: '18:42'
 relatedProject: 'veritas'
 ---

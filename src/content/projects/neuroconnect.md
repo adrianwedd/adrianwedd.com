@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/neuroconnect'
 status: 'active'
 featured: false
 date: 2025-05-01
-audioUrl: '/notebook-assets/neuroconnect/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/audio.mp3'
 heroImage: '/notebook-assets/neuroconnect/infographic.webp'
 ---
 

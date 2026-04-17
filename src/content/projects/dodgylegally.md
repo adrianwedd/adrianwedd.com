@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/dodgylegally'
 status: 'active'
 featured: true
 date: 2026-02-01
-audioUrl: '/notebook-assets/dodgylegally/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dodgylegally/audio.mp3'
 heroImage: '/notebook-assets/dodgylegally/infographic.webp'
 ---
 

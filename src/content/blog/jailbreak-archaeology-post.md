@@ -5,8 +5,8 @@ date: 2026-02-13
 tags: ['ai', 'ai-safety', 'research', 'jailbreaking', 'llm']
 draft: false
 heroImage: '/notebook-assets/jailbreak-archaeology/infographic.webp'
-audioUrl: '/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3'
-videoUrl: '/notebook-assets/failure-first/jailbreak-archaeology/video.mp4'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/jailbreak-archaeology/video.mp4'
 slides: '/notebook-assets/failure-first/jailbreak-archaeology/slides.pdf'
 faq:
   - q: 'What is jailbreak archaeology?'

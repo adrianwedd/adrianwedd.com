@@ -5,7 +5,7 @@ date: 2026-03-22
 tags: ['ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'claude', 'open-source']
 series: 'PiCar-X'
 seriesOrder: 4
-audioUrl: '/notebook-assets/afterwords-blog/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterwords-blog/audio.mp3'
 heroImage: '/notebook-assets/afterwords/infographic.webp'
 faq:
   - q: 'Does Afterwords send any data to the cloud?'

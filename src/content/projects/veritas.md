@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/VERITAS'
 status: 'active'
 featured: false
 date: 2025-03-01
-audioUrl: '/notebook-assets/veritas/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/veritas/audio.mp3'
 heroImage: '/notebook-assets/veritas/infographic.webp'
 ---
 

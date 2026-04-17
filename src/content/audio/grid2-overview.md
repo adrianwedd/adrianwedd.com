@@ -3,7 +3,7 @@ title: 'AI for Understanding, Algorithms for Execution'
 description: 'A deterministic website builder where LLMs interpret intent but beam search assembles pages. Same inputs, same output, every time.'
 date: 2025-05-01
 tags: ['notebooklm', 'ai', 'web', 'typescript']
-audioUrl: '/notebook-assets/grid2/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/grid2/audio.mp3'
 duration: '16:33'
 relatedProject: 'grid2'
 ---

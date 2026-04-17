@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/latent-self'
 status: 'complete'
 featured: false
 date: 2025-02-01
-audioUrl: '/notebook-assets/latent-self/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/latent-self/audio.mp3'
 heroImage: '/notebook-assets/latent-self/infographic.webp'
 ---
 
