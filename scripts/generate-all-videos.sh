@@ -33,6 +33,8 @@ FOCUS="$DEFAULT_FOCUS"
 SCAN_PROJECTS=false
 SCAN_BLOG=false
 DRY_RUN=false
+REGENERATE=false
+SKIP_SLUGS=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -43,9 +45,18 @@ while [[ $# -gt 0 ]]; do
         --blog) SCAN_BLOG=true; shift ;;
         --all) SCAN_PROJECTS=true; SCAN_BLOG=true; shift ;;
         --dry-run) DRY_RUN=true; shift ;;
+        --regenerate) REGENERATE=true; shift ;;
+        --skip) SKIP_SLUGS="$SKIP_SLUGS $2"; shift 2 ;;
         *) echo "Unknown option: $1"; exit 1 ;;
     esac
 done
+
+slug_skipped() {
+    for s in $SKIP_SLUGS; do
+        [ "$1" = "$s" ] && return 0
+    done
+    return 1
+}
 
 if [ "$SCAN_PROJECTS" = false ] && [ "$SCAN_BLOG" = false ]; then
     SCAN_PROJECTS=true
@@ -85,6 +96,8 @@ ITEMS_NAME=()
 ITEMS_FILE=()
 ITEMS_TYPE=()
 
+has_video() { grep -q "^videoUrl:" "$1"; }
+
 if [ "$SCAN_PROJECTS" = true ]; then
     echo "Scanning projects..."
     for f in "$PROJECTS_DIR"/*.md; do
@@ -93,9 +106,16 @@ if [ "$SCAN_PROJECTS" = true ]; then
             ((SKIPPED++)) || true
             continue
         fi
-        if grep -q "^videoUrl:" "$f"; then
+        if slug_skipped "$name"; then
             ((SKIPPED++)) || true
             continue
+        fi
+        # In normal mode: skip items that already have a video.
+        # In regenerate mode: only process items that DO have a video (we're replacing them).
+        if [ "$REGENERATE" = true ]; then
+            has_video "$f" || { ((SKIPPED++)) || true; continue; }
+        else
+            if has_video "$f"; then ((SKIPPED++)) || true; continue; fi
         fi
         ITEMS_NAME+=("$name")
         ITEMS_FILE+=("$f")
@@ -111,9 +131,10 @@ if [ "$SCAN_BLOG" = true ]; then
             ((SKIPPED++)) || true
             continue
         fi
-        if grep -q "^videoUrl:" "$f"; then
-            ((SKIPPED++)) || true
-            continue
+        if [ "$REGENERATE" = true ]; then
+            has_video "$f" || { ((SKIPPED++)) || true; continue; }
+        else
+            if has_video "$f"; then ((SKIPPED++)) || true; continue; fi
         fi
         blog_name=$(basename "$f" .md | sed 's/-post$//')
         ITEMS_NAME+=("$blog_name")
@@ -313,13 +334,23 @@ EOFCONFIG
     echo "  Notebook: $notebook_id"
 
     # Check for existing video to avoid duplicate generation
-    existing_status=$(nlm studio status "$notebook_id" 2>/dev/null | python3 -c "
+    existing_info=$(nlm studio status "$notebook_id" 2>/dev/null | python3 -c "
 import json, sys
 arts = json.load(sys.stdin)
 videos = [a for a in arts if a.get('type') == 'video']
 if videos:
-    print(videos[-1].get('status', ''))
+    v = videos[-1]
+    print(f\"{v.get('id', '')}|{v.get('status', '')}\")
 " 2>/dev/null || echo "")
+    existing_id="${existing_info%%|*}"
+    existing_status="${existing_info##*|}"
+
+    # Only delete completed/failed videos — leave in_progress alone.
+    if [ "$REGENERATE" = true ] && [ -n "$existing_id" ] && [ "$existing_status" != "in_progress" ]; then
+        echo "  Regenerate mode — deleting existing video ($existing_status)..."
+        nlm studio delete "$notebook_id" "$existing_id" -y 2>&1 | tail -1 || true
+        existing_status=""
+    fi
 
     if [ "$existing_status" = "completed" ]; then
         echo "  Video already completed — skipping generation, will download"
@@ -328,6 +359,7 @@ if videos:
     else
         echo "  Generating cinematic video..."
         nlm video create "$notebook_id" \
+            --format cinematic \
             --focus "$FOCUS" \
             -y 2>&1 | while IFS= read -r line; do echo "    $line"; done
     fi
