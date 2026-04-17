@@ -10,8 +10,8 @@ set -euo pipefail
 #
 # Pipeline: generate video → download MP4 → upload to R2 → update frontmatter with CDN URL
 #
-# Daily quota: ~50 video generations. Projects (32 missing) fit in day 1,
-# blog posts (25 missing) in day 2.
+# Daily quota: ~20 video generations. 57 missing = 3-day run.
+# Day 1: 20 projects. Day 2: 12 projects + 8 blog. Day 3: 17 blog.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -147,7 +147,7 @@ done
 echo
 
 echo -e "${YELLOW}Estimated time: $(($TOTAL * 8)) minutes (avg 5-10 min per video)${NC}"
-echo -e "${YELLOW}NotebookLM daily quota: ~50 video generations${NC}"
+echo -e "${YELLOW}NotebookLM daily quota: ~20 video generations${NC}"
 echo
 
 if [ "$YES" = false ]; then
@@ -157,7 +157,49 @@ if [ "$YES" = false ]; then
 fi
 
 if [ "$DRY_RUN" = true ]; then
-    echo -e "${CYAN}DRY RUN — no generation will occur${NC}"
+    echo -e "${CYAN}DRY RUN — showing sources that would be attached to each notebook${NC}"
+    echo
+    for i in "${!ITEMS_NAME[@]}"; do
+        item_name="${ITEMS_NAME[$i]}"
+        item_file="${ITEMS_FILE[$i]}"
+        item_type="${ITEMS_TYPE[$i]}"
+
+        echo "[$((i+1))/$TOTAL] $item_type: $item_name"
+        echo "  • textfile:$item_file"
+
+        if [ "$item_type" = "project" ]; then
+            echo "  • https://adrianwedd.com/projects/$item_name/"
+        else
+            echo "  • https://adrianwedd.com/blog/$item_name/"
+        fi
+
+        if [ "$item_type" = "project" ]; then
+            repo_raw=$(grep "^repo:" "$item_file" 2>/dev/null | head -1 | sed -E "s/^repo:[[:space:]]*['\"]?//; s/['\"]?[[:space:]]*\$//" || true)
+            if [[ "$repo_raw" =~ ^https?://github\.com/([^/]+)/([^/]+)/?$ ]]; then
+                repo_owner="${BASH_REMATCH[1]}"
+                repo_name="${BASH_REMATCH[2]}"
+            elif [ -n "$repo_raw" ]; then
+                repo_owner="adrianwedd"
+                repo_name="$repo_raw"
+            else
+                repo_owner=""; repo_name=""
+            fi
+            if [ -n "$repo_name" ]; then
+                code=$(curl -sL "https://raw.githubusercontent.com/$repo_owner/$repo_name/main/README.md" -o /dev/null -w "%{http_code}" 2>/dev/null || echo "000")
+                if [ "$code" != "200" ]; then
+                    code=$(curl -sL "https://raw.githubusercontent.com/$repo_owner/$repo_name/master/README.md" -o /dev/null -w "%{http_code}" 2>/dev/null || echo "000")
+                fi
+                if [ "$code" = "200" ]; then
+                    echo "  • textfile: README from $repo_owner/$repo_name"
+                else
+                    echo "  • (README unavailable for $repo_owner/$repo_name — HTTP $code)"
+                fi
+            else
+                echo "  • (no repo field — skipping README)"
+            fi
+        fi
+        echo
+    done
     exit 0
 fi
 
@@ -197,21 +239,71 @@ for i in "${!ITEMS_NAME[@]}"; do
 
     if [ -z "$notebook_id" ]; then
         echo "  Creating notebook..."
+
+        # Build sources: markdown + public site URL + (for projects) GitHub repo README
+        readme_tmp=""
+        sources_json="\"textfile:$item_file\""
+
+        # Public site URL
+        if [ "$item_type" = "project" ]; then
+            sources_json+=", \"https://adrianwedd.com/projects/$item_name/\""
+        elif [ "$item_type" = "blog" ]; then
+            sources_json+=", \"https://adrianwedd.com/blog/$item_name/\""
+        fi
+
+        # GitHub repo README (projects only, if repo: field is set)
+        if [ "$item_type" = "project" ]; then
+            repo_raw=$(grep "^repo:" "$item_file" 2>/dev/null | head -1 | sed -E "s/^repo:[[:space:]]*['\"]?//; s/['\"]?[[:space:]]*\$//" || true)
+            # Normalize: accept either bare repo name or full GitHub URL
+            # Extract the owner/repo part from a full URL, or use as-is if bare
+            if [[ "$repo_raw" =~ ^https?://github\.com/([^/]+)/([^/]+)/?$ ]]; then
+                repo_owner="${BASH_REMATCH[1]}"
+                repo_name="${BASH_REMATCH[2]}"
+            elif [ -n "$repo_raw" ]; then
+                repo_owner="adrianwedd"
+                repo_name="$repo_raw"
+            else
+                repo_owner=""
+                repo_name=""
+            fi
+
+            if [ -n "$repo_name" ]; then
+                readme_tmp=$(mktemp "$EXPORT_DIR/README-$item_name-XXXXXX")
+                mv "$readme_tmp" "$readme_tmp.txt"
+                readme_tmp="$readme_tmp.txt"
+                readme_main="https://raw.githubusercontent.com/$repo_owner/$repo_name/main/README.md"
+                readme_master="https://raw.githubusercontent.com/$repo_owner/$repo_name/master/README.md"
+                # -L follows redirects (GitHub uses 307 for case-normalization)
+                if curl -sfL "$readme_main" -o "$readme_tmp" 2>/dev/null && [ -s "$readme_tmp" ]; then
+                    echo "  Fetched README from $repo_owner/$repo_name (main)"
+                    sources_json+=", \"textfile:$readme_tmp\""
+                elif curl -sfL "$readme_master" -o "$readme_tmp" 2>/dev/null && [ -s "$readme_tmp" ]; then
+                    echo "  Fetched README from $repo_owner/$repo_name (master)"
+                    sources_json+=", \"textfile:$readme_tmp\""
+                else
+                    echo "  README fetch failed for $repo_owner/$repo_name (private or not found)"
+                    rm -f "$readme_tmp"
+                    readme_tmp=""
+                fi
+            fi
+        fi
+
+        echo "  Sources: $(echo "[$sources_json]" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))") total"
+
         cd "$NOTEBOOKLM_DIR"
 
         config_file=$(mktemp)
         cat > "$config_file" <<EOFCONFIG
 {
   "title": "$title - Overview",
-  "sources": [
-    "textfile:$item_file"
-  ],
+  "sources": [$sources_json],
   "studio": []
 }
 EOFCONFIG
 
         ./scripts/automate-notebook.sh --config "$config_file" --export /dev/null 2>&1 | tail -3 || true
         rm -f "$config_file"
+        [ -n "$readme_tmp" ] && rm -f "$readme_tmp"
         cd "$REPO_ROOT"
 
         NOTEBOOKS_JSON=$(nlm notebook list 2>/dev/null || echo "[]")
