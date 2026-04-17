@@ -8,6 +8,7 @@ status: 'active'
 featured: true
 date: 2026-02-09
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/video.mp4'
 heroImage: '/notebook-assets/failure-first/infographic.webp'
 ---
 

@@ -7,6 +7,7 @@ status: 'experiment'
 featured: false
 date: 2025-06-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/emdr-agent/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/emdr-agent/video.mp4'
 heroImage: '/notebook-assets/emdr-agent/infographic.webp'
 ---
 

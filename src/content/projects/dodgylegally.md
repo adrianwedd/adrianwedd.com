@@ -7,6 +7,7 @@ status: 'active'
 featured: true
 date: 2026-02-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dodgylegally/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/dodgylegally/video.mp4'
 heroImage: '/notebook-assets/dodgylegally/infographic.webp'
 ---
 

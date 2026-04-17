@@ -7,6 +7,7 @@ featured: false
 date: 1992-01-01
 heroImage: '/notebook-assets/auditory-spiral/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/auditory-spiral/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/auditory-spiral/video.mp4'
 ---
 
 _Auditory Spiral_ was an overnight electronic music programme on [RTRFM 92.1](https://rtrfm.com.au), Perth's community radio station. Broadcasting Sunday nights into Monday mornings from midnight to 6 AM, the show was a six-hour immersion in minimal techno, dark ambient, industrial, and experimental electronic music during an era when those sounds were virtually inaccessible in Western Australia.

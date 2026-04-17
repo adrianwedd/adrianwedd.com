@@ -7,6 +7,7 @@ status: 'active'
 featured: false
 date: 2025-05-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/video.mp4'
 heroImage: '/notebook-assets/neuroconnect/infographic.webp'
 ---
 

@@ -7,6 +7,7 @@ status: 'active'
 featured: false
 date: 2025-08-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/agentic-index/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/agentic-index/video.mp4'
 heroImage: '/notebook-assets/agentic-index/infographic.webp'
 ---
 
