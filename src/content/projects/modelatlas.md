@@ -7,6 +7,7 @@ status: 'active'
 featured: false
 date: 2025-04-15
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/modelatlas/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/modelatlas/video.mp4'
 heroImage: '/notebook-assets/modelatlas/infographic.webp'
 ---
 

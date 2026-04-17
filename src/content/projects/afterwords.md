@@ -9,6 +9,7 @@ date: 2026-03-22
 series: 'PiCar-X'
 seriesOrder: 2
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterwords/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterwords/video.mp4'
 heroImage: '/notebook-assets/afterwords/infographic.webp'
 ---
 

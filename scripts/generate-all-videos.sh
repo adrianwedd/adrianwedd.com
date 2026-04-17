@@ -10,8 +10,8 @@ set -euo pipefail
 #
 # Pipeline: generate video → download MP4 → upload to R2 → update frontmatter with CDN URL
 #
-# Daily quota: ~50 video generations. Projects (32 missing) fit in day 1,
-# blog posts (25 missing) in day 2.
+# Daily quota: ~20 video generations. 57 missing = 3-day run.
+# Day 1: 20 projects. Day 2: 12 projects + 8 blog. Day 3: 17 blog.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -147,7 +147,7 @@ done
 echo
 
 echo -e "${YELLOW}Estimated time: $(($TOTAL * 8)) minutes (avg 5-10 min per video)${NC}"
-echo -e "${YELLOW}NotebookLM daily quota: ~50 video generations${NC}"
+echo -e "${YELLOW}NotebookLM daily quota: ~20 video generations${NC}"
 echo
 
 if [ "$YES" = false ]; then
@@ -157,7 +157,49 @@ if [ "$YES" = false ]; then
 fi
 
 if [ "$DRY_RUN" = true ]; then
-    echo -e "${CYAN}DRY RUN — no generation will occur${NC}"
+    echo -e "${CYAN}DRY RUN — showing sources that would be attached to each notebook${NC}"
+    echo
+    for i in "${!ITEMS_NAME[@]}"; do
+        item_name="${ITEMS_NAME[$i]}"
+        item_file="${ITEMS_FILE[$i]}"
+        item_type="${ITEMS_TYPE[$i]}"
+
+        echo "[$((i+1))/$TOTAL] $item_type: $item_name"
+        echo "  • textfile:$item_file"
+
+        if [ "$item_type" = "project" ]; then
+            echo "  • https://adrianwedd.com/projects/$item_name/"
+        else
+            echo "  • https://adrianwedd.com/blog/$item_name/"
+        fi
+
+        if [ "$item_type" = "project" ]; then
+            repo_raw=$(grep "^repo:" "$item_file" 2>/dev/null | head -1 | sed -E "s/^repo:[[:space:]]*['\"]?//; s/['\"]?[[:space:]]*\$//" || true)
+            if [[ "$repo_raw" =~ ^https?://github\.com/([^/]+)/([^/]+)/?$ ]]; then
+                repo_owner="${BASH_REMATCH[1]}"
+                repo_name="${BASH_REMATCH[2]}"
+            elif [ -n "$repo_raw" ]; then
+                repo_owner="adrianwedd"
+                repo_name="$repo_raw"
+            else
+                repo_owner=""; repo_name=""
+            fi
+            if [ -n "$repo_name" ]; then
+                code=$(curl -sL "https://raw.githubusercontent.com/$repo_owner/$repo_name/main/README.md" -o /dev/null -w "%{http_code}" 2>/dev/null || echo "000")
+                if [ "$code" != "200" ]; then
+                    code=$(curl -sL "https://raw.githubusercontent.com/$repo_owner/$repo_name/master/README.md" -o /dev/null -w "%{http_code}" 2>/dev/null || echo "000")
+                fi
+                if [ "$code" = "200" ]; then
+                    echo "  • textfile: README from $repo_owner/$repo_name"
+                else
+                    echo "  • (README unavailable for $repo_owner/$repo_name — HTTP $code)"
+                fi
+            else
+                echo "  • (no repo field — skipping README)"
+            fi
+        fi
+        echo
+    done
     exit 0
 fi
 
@@ -197,21 +239,64 @@ for i in "${!ITEMS_NAME[@]}"; do
 
     if [ -z "$notebook_id" ]; then
         echo "  Creating notebook..."
+
+        # Build sources: markdown + public site URL + (for projects) GitHub repo README
+        readme_tmp=""
+        sources_json="\"textfile:$item_file\""
+
+        if [ "$item_type" = "project" ]; then
+            sources_json+=", \"https://adrianwedd.com/projects/$item_name/\""
+        elif [ "$item_type" = "blog" ]; then
+            sources_json+=", \"https://adrianwedd.com/blog/$item_name/\""
+        fi
+
+        if [ "$item_type" = "project" ]; then
+            repo_raw=$(grep "^repo:" "$item_file" 2>/dev/null | head -1 | sed -E "s/^repo:[[:space:]]*['\"]?//; s/['\"]?[[:space:]]*\$//" || true)
+            if [[ "$repo_raw" =~ ^https?://github\.com/([^/]+)/([^/]+)/?$ ]]; then
+                repo_owner="${BASH_REMATCH[1]}"
+                repo_name="${BASH_REMATCH[2]}"
+            elif [ -n "$repo_raw" ]; then
+                repo_owner="adrianwedd"
+                repo_name="$repo_raw"
+            else
+                repo_owner=""
+                repo_name=""
+            fi
+
+            if [ -n "$repo_name" ]; then
+                readme_tmp=$(mktemp "$EXPORT_DIR/README-$item_name-XXXXXX")
+                mv "$readme_tmp" "$readme_tmp.txt"
+                readme_tmp="$readme_tmp.txt"
+                if curl -sL "https://raw.githubusercontent.com/$repo_owner/$repo_name/main/README.md" -o "$readme_tmp" -f 2>/dev/null && [ -s "$readme_tmp" ]; then
+                    echo "  Fetched README from $repo_owner/$repo_name (main)"
+                    sources_json+=", \"textfile:$readme_tmp\""
+                elif curl -sL "https://raw.githubusercontent.com/$repo_owner/$repo_name/master/README.md" -o "$readme_tmp" -f 2>/dev/null && [ -s "$readme_tmp" ]; then
+                    echo "  Fetched README from $repo_owner/$repo_name (master)"
+                    sources_json+=", \"textfile:$readme_tmp\""
+                else
+                    echo "  README fetch failed for $repo_owner/$repo_name (private or not found)"
+                    rm -f "$readme_tmp"
+                    readme_tmp=""
+                fi
+            fi
+        fi
+
+        echo "  Sources: $(echo "[$sources_json]" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))") total"
+
         cd "$NOTEBOOKLM_DIR"
 
         config_file=$(mktemp)
         cat > "$config_file" <<EOFCONFIG
 {
   "title": "$title - Overview",
-  "sources": [
-    "textfile:$item_file"
-  ],
+  "sources": [$sources_json],
   "studio": []
 }
 EOFCONFIG
 
         ./scripts/automate-notebook.sh --config "$config_file" --export /dev/null 2>&1 | tail -3 || true
         rm -f "$config_file"
+        [ -n "$readme_tmp" ] && rm -f "$readme_tmp"
         cd "$REPO_ROOT"
 
         NOTEBOOKS_JSON=$(nlm notebook list 2>/dev/null || echo "[]")
@@ -226,49 +311,58 @@ EOFCONFIG
     fi
 
     echo "  Notebook: $notebook_id"
-    echo "  Generating cinematic video..."
 
-    nlm video create "$notebook_id" \
-        --focus "$FOCUS" \
-        -y 2>&1 | while IFS= read -r line; do echo "    $line"; done
-
-    # Poll for completion (max 15 minutes — videos are slow)
-    video_url=""
-    poll_interval=15
-    for attempt in $(seq 1 60); do
-        sleep $poll_interval
-        if [ $attempt -eq 20 ]; then poll_interval=20; fi
-
-        status_json=$(nlm studio status "$notebook_id" 2>/dev/null || echo "[]")
-        result=$(echo "$status_json" | python3 -c "
+    # Check for existing video to avoid duplicate generation
+    existing_status=$(nlm studio status "$notebook_id" 2>/dev/null | python3 -c "
 import json, sys
 arts = json.load(sys.stdin)
-videos = [a for a in arts if a['type'] == 'video']
+videos = [a for a in arts if a.get('type') == 'video']
 if videos:
-    latest = videos[-1]
-    if latest.get('status') == 'completed' and latest.get('url'):
-        print(latest['url'])
-    elif latest.get('status') == 'failed':
-        print('FAILED')
+    print(videos[-1].get('status', ''))
 " 2>/dev/null || echo "")
 
-        if [ "$result" = "FAILED" ]; then
+    if [ "$existing_status" = "completed" ]; then
+        echo "  Video already completed — skipping generation, will download"
+    elif [ "$existing_status" = "in_progress" ]; then
+        echo "  Video already in progress — skipping generation, will wait"
+    else
+        echo "  Generating cinematic video..."
+        nlm video create "$notebook_id" \
+            --focus "$FOCUS" \
+            -y 2>&1 | while IFS= read -r line; do echo "    $line"; done
+    fi
+
+    # Poll until status=completed (max ~30 min — some videos run long)
+    video_status=""
+    poll_interval=20
+    for attempt in $(seq 1 90); do
+        sleep $poll_interval
+
+        status_json=$(nlm studio status "$notebook_id" 2>/dev/null || echo "[]")
+        video_status=$(echo "$status_json" | python3 -c "
+import json, sys
+arts = json.load(sys.stdin)
+videos = [a for a in arts if a.get('type') == 'video']
+if videos:
+    print(videos[-1].get('status', ''))
+" 2>/dev/null || echo "")
+
+        if [ "$video_status" = "completed" ]; then
+            echo -e "  ${GREEN}Video ready${NC}"
+            break
+        fi
+        if [ "$video_status" = "failed" ]; then
             echo -e "  ${RED}Video generation failed${NC}"
             echo "FAILED|$item_name|generation failed" >> "$RESULTS_LOG"
             ((FAILED++)) || true
             break
         fi
 
-        if [ -n "$result" ]; then
-            video_url="$result"
-            break
-        fi
-
-        echo "    Waiting... (${attempt})"
+        echo "    Waiting... ($attempt, status=${video_status:-pending})"
     done
 
-    if [ -z "$video_url" ]; then
-        if [ "$result" != "FAILED" ]; then
+    if [ "$video_status" != "completed" ]; then
+        if [ "$video_status" != "failed" ]; then
             echo -e "  ${RED}Timed out waiting for video${NC}"
             echo "FAILED|$item_name|timeout" >> "$RESULTS_LOG"
             ((FAILED++)) || true
@@ -276,17 +370,22 @@ if videos:
         continue
     fi
 
-    echo -e "  ${GREEN}Video ready${NC}"
-
-    # Download
+    # Download via nlm CLI (handles URL resolution internally)
     item_export="$EXPORT_DIR/$item_name"
     mkdir -p "$item_export"
     output_file="$item_export/video.mp4"
 
-    echo "  Downloading..."
-    if curl -sL "$video_url" -o "$output_file"; then
-        size=$(du -h "$output_file" | cut -f1)
-        echo "  Downloaded: $output_file ($size)"
+    echo "  Downloading via nlm..."
+    if nlm download video "$notebook_id" -o "$output_file" --no-progress 2>&1 | tail -3; then
+        if [ -s "$output_file" ]; then
+            size=$(du -h "$output_file" | cut -f1)
+            echo "  Downloaded: $output_file ($size)"
+        else
+            echo -e "  ${RED}Download produced empty file${NC}"
+            echo "FAILED|$item_name|empty download" >> "$RESULTS_LOG"
+            ((FAILED++)) || true
+            continue
+        fi
     else
         echo -e "  ${RED}Download failed${NC}"
         echo "FAILED|$item_name|download failed" >> "$RESULTS_LOG"

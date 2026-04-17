@@ -7,6 +7,7 @@ status: 'experiment'
 featured: false
 date: 2025-06-15
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/lunar-tools-prototypes/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lunar-tools-prototypes/video.mp4'
 heroImage: '/notebook-assets/lunar-tools-prototypes/infographic.webp'
 ---
 

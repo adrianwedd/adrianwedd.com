@@ -7,6 +7,7 @@ status: 'active'
 featured: false
 date: 2025-04-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/video.mp4'
 heroImage: '/notebook-assets/freedom-engine/infographic.webp'
 ---
 

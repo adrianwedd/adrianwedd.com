@@ -7,6 +7,7 @@ status: 'experiment'
 featured: false
 date: 2025-05-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/grid2/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/grid2/video.mp4'
 heroImage: '/notebook-assets/grid2/infographic.webp'
 ---
 
