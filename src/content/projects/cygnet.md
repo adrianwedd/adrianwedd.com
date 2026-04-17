@@ -7,6 +7,7 @@ status: 'active'
 featured: false
 date: 2025-04-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/cygnet/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/cygnet/video.mp4'
 heroImage: '/notebook-assets/cygnet/infographic.webp'
 ---
 

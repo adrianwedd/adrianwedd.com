@@ -7,6 +7,7 @@ status: 'complete'
 featured: false
 date: 2025-02-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/latent-self/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/latent-self/video.mp4'
 heroImage: '/notebook-assets/latent-self/infographic.webp'
 ---
 

@@ -332,10 +332,10 @@ if videos:
             -y 2>&1 | while IFS= read -r line; do echo "    $line"; done
     fi
 
-    # Poll until status=completed (max ~20 min)
+    # Poll until status=completed (max ~30 min — some videos run long)
     video_status=""
     poll_interval=20
-    for attempt in $(seq 1 60); do
+    for attempt in $(seq 1 90); do
         sleep $poll_interval
 
         status_json=$(nlm studio status "$notebook_id" 2>/dev/null || echo "[]")

@@ -8,6 +8,7 @@ status: 'complete'
 featured: true
 date: 2026-02-10
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/before-the-words-existed/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/before-the-words-existed/video.mp4'
 heroImage: '/notebook-assets/before-the-words-existed/infographic.webp'
 ---
 
