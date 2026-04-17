@@ -262,6 +262,20 @@ NotebookLM Studio overview generated from project materials...
 [View the full project →](/projects/project-name/)
 ```
 
+### Branded Visual Style
+
+All visual assets (infographics, videos, slides) must use the branded dark botanical aesthetic. The canonical `--focus` prompt is defined in `scripts/regenerate-branded-infographics.sh` and should be used for all NotebookLM visual generation:
+
+```
+Dark botanical aesthetic. Deep plum-tinted backgrounds (#1a181c to #2e2a34).
+Warm cream text (#e2ddd8) with dusty copper accents (#c48b6e). Moody earth tones,
+no bright or neon colours. Elegant editorial layout with strong typographic hierarchy.
+Professional data visualisation with muted, saturated colour palette. WCAG AA contrast
+ratios. Minimal, sophisticated, Australian dark-mode design.
+```
+
+Scripts that use this: `regenerate-branded-infographics.sh`, `generate-all-infographics.sh`, `regenerate-one-infographic.sh`. Always pass `--focus` with this prompt when generating visual assets.
+
 ### Asset Types
 
 **Fast** (~30-60 seconds):
