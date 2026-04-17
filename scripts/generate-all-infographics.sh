@@ -25,7 +25,7 @@ NC='\033[0m'
 YES=false
 LIMIT=0
 ORIENTATION="portrait"
-FOCUS="Dark background with warm copper and amber accent colours. Portrait layout with clear visual hierarchy. Modern tech aesthetic, light text on dark surfaces."
+FOCUS="Dark botanical aesthetic. Deep plum-tinted backgrounds (#1a181c to #2e2a34). Warm cream text (#e2ddd8) with dusty copper accents (#c48b6e). Moody earth tones, no bright or neon colours. Elegant editorial layout with strong typographic hierarchy. Professional data visualisation with muted, saturated colour palette. WCAG AA contrast ratios. Minimal, sophisticated, Australian dark-mode design."
 SCAN_PROJECTS=false
 SCAN_BLOG=false
 
