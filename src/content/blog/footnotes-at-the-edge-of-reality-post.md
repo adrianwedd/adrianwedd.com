@@ -6,6 +6,7 @@ tags: ['poetry', 'physics', 'writing', 'creative']
 draft: false
 heroImage: '/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/video.mp4'
 ---
 
 # Footnotes at the Edge of Reality

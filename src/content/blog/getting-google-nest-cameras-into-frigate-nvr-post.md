@@ -6,6 +6,7 @@ tags: ['engineering', 'homelab', 'raspberry-pi', 'python', 'home-assistant']
 draft: false
 heroImage: '/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/video.mp4'
 ---
 
 I've tried this at least three times before. Each time I hit a wall, gave up, and went back to watching my Nest cameras through the Google Home app like a normal person. This time I finally cracked it — and the solution turned out to be genuinely weird in ways I want to document properly, because the information online is either outdated, incomplete, or glosses over the exact failure modes that will destroy your afternoon.
