@@ -8,6 +8,7 @@ featured: false
 date: 2025-01-01
 heroImage: '/notebook-assets/space-weather/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/space-weather/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/space-weather/video.mp4'
 ---
 
 The sun is a noisy neighbour. Coronal mass ejections, solar wind variations, geomagnetic storms—these aren't abstract astrophysics. They affect radio propagation, satellite operations, power grids, and anyone who has ever wondered why their GPS was slightly wrong on a particular afternoon.

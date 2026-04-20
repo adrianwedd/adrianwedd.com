@@ -7,6 +7,7 @@ status: 'active'
 featured: false
 date: 2025-07-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/personal-agentic-operating-system/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/personal-agentic-operating-system/video.mp4'
 heroImage: '/notebook-assets/personal-agentic-operating-system/infographic.webp'
 ---
 
