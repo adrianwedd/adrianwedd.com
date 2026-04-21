@@ -6,6 +6,7 @@ tags: ['ai', 'ai-safety', 'research', 'llm', 'security', 'adversarial']
 draft: false
 heroImage: '/notebook-assets/120-models-18k-prompts/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/120-models-18k-prompts/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/120-models-18k-prompts/video.mp4'
 faq:
   - q: 'What is supply chain injection in AI?'
     a: 'Supply chain injection involves inserting malicious content into tool definitions and skill files rather than user prompts. Testing showed 90–100% attack success rates across models because external tool definitions are trusted implicitly.'

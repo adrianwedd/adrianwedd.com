@@ -5,6 +5,7 @@ date: 2026-02-15
 tags: ['engineering', 'open-source', 'philosophy']
 heroImage: '/notebook-assets/why-i-build-in-public/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-i-build-in-public/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-i-build-in-public/video.mp4'
 ---
 
 Every project on this site has a source link. Most of them link to messy repositories with commit messages like "fix the thing" and half-finished branches named `experiment-3`. This is deliberate.
