@@ -6,6 +6,7 @@ tags: ['ai', 'ai-safety', 'robotics', 'research', 'engineering']
 draft: false
 heroImage: '/notebook-assets/the-cognitive-cage/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-cognitive-cage/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-cognitive-cage/video.mp4'
 faq:
   - q: 'What is the cognitive cage in robotics?'
     a: 'The cognitive cage is a proposed safety system for humanoid robots — a deterministic code layer that verifies and vetoes vision-language-action model commands in real time, replacing the physical cages that historically contained robot movements.'

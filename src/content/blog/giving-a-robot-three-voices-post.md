@@ -5,6 +5,7 @@ date: 2026-03-19
 tags: ['ai', 'tts', 'mlx', 'raspberry-pi', 'robotics', 'apple-silicon', 'voice-cloning', 'spark']
 heroImage: '/notebook-assets/giving-a-robot-three-voices/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/giving-a-robot-three-voices/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/giving-a-robot-three-voices/video.mp4'
 series: 'PiCar-X'
 seriesOrder: 2
 faq:

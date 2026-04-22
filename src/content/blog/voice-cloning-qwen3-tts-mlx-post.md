@@ -6,6 +6,7 @@ tags: ['ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'tutorial', 'spark'
 series: 'PiCar-X'
 seriesOrder: 3
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/voice-cloning-qwen3-tts-mlx/video.mp4'
 heroImage: '/notebook-assets/voice-cloning-qwen3-tts-mlx/infographic.webp'
 faq:
   - q: 'Do I need to fine-tune or train anything?'
