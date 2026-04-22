@@ -5,6 +5,7 @@ date: 2026-02-12
 tags: ['meta', 'craft', 'open-source']
 heroImage: '/notebook-assets/hello-world/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/hello-world/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/hello-world/video.mp4'
 ---
 
 Most personal sites are museums. Carefully selected exhibits, arranged chronologically, with the messy work hidden in a drawer somewhere. This is not that.

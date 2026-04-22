@@ -6,6 +6,7 @@ tags: ['ai', 'ai-safety', 'health', 'typescript']
 draft: false
 heroImage: '/notebook-assets/safety-first-therapeutic-ai/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/safety-first-therapeutic-ai/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/safety-first-therapeutic-ai/video.mp4'
 faq:
   - q: 'What is EMDR and why does it require AI safety?'
     a: 'EMDR (Eye Movement Desensitization and Reprocessing) is a trauma therapy with precise protocols and serious failure modes. AI-assisted EMDR requires safety architecture first because the therapeutic mechanism — activating distress — is also the primary risk.'

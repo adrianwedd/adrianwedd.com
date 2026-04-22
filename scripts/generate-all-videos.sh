@@ -232,12 +232,12 @@ find_notebook_id() {
     echo "$NOTEBOOKS_JSON" | python3 -c "
 import json, sys
 notebooks = json.load(sys.stdin)
-fragment = '$title_fragment'.lower()
+fragment = sys.argv[1].lower()
 for n in notebooks:
     if fragment in n['title'].lower():
         print(n['id'])
         sys.exit(0)
-" 2>/dev/null || echo ""
+" "$title_fragment" 2>/dev/null || echo ""
 }
 
 RESULTS_LOG="$EXPORT_DIR/batch-results.log"

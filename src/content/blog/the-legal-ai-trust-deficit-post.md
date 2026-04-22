@@ -6,6 +6,7 @@ tags: ['ai', 'legal', 'research', 'llm']
 draft: false
 heroImage: '/notebook-assets/the-legal-ai-trust-deficit/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-legal-ai-trust-deficit/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-legal-ai-trust-deficit/video.mp4'
 faq:
   - q: 'Why are lawyers slow to adopt AI?'
     a: 'The legal profession values accuracy, confidentiality, and accountability — all areas where current AI systems have demonstrated weaknesses. 75% of lawyers cite accuracy concerns as the top barrier.'

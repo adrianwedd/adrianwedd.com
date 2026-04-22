@@ -5,6 +5,7 @@ date: 2026-02-15
 tags: ['engineering', 'web', 'astro', 'open-source']
 heroImage: '/notebook-assets/building-a-personal-site-in-2026/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/building-a-personal-site-in-2026/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/building-a-personal-site-in-2026/video.mp4'
 faq:
   - q: 'What framework is best for a personal site in 2026?'
     a: 'Astro generates static HTML pages with zero JavaScript by default, making it architecturally right for document-based personal sites. It ships JS only through Preact islands that hydrate on idle.'
