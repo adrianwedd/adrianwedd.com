@@ -9,6 +9,7 @@ featured: true
 date: 2026-02-08
 heroImage: '/notebook-assets/this-wasnt-in-the-brochure/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/video.mp4'
 series: "This Wasn't in the Brochure"
 seriesOrder: 1
 ---
