@@ -21,17 +21,38 @@ ACCOUNT_ID="eb44f406e11df8adec20cc1e7b66f151"
 MAX_RETRIES=3
 FAILED_LOG="/tmp/r2-upload-failed.txt"
 
-# Load R2 token
-if [ -z "${CF_R2_API_TOKEN:-}" ]; then
-  if [ -f .env ]; then
-    CF_R2_API_TOKEN=$(grep CF_R2_API_TOKEN .env | head -1 | cut -d= -f2)
-  fi
+# Load R2 token from .env if not already in environment. Parsed with a
+# purpose-built awk extractor so .env files with non-shell syntax (or lines
+# that happen to look like commands) don't get interpreted by `source`.
+env_get() {
+  local key="$1" file="$2"
+  [ -f "$file" ] || return 1
+  awk -F= -v k="$key" '
+    $0 ~ "^[[:space:]]*"k"=" {
+      sub("^[[:space:]]*"k"=", "")
+      sub("[[:space:]]*#.*$", "")
+      # Strip matched surrounding single or double quotes
+      if (match($0, /^".*"$/) || match($0, /^'\''.*'\''$/)) {
+        $0 = substr($0, 2, length($0)-2)
+      }
+      print; exit
+    }' "$file"
+}
+
+if [ -z "${CF_R2_API_TOKEN:-}" ] && [ -f .env ]; then
+  CF_R2_API_TOKEN=$(env_get CF_R2_API_TOKEN .env)
 fi
 
 if [ -z "${CF_R2_API_TOKEN:-}" ]; then
   echo "ERROR: CF_R2_API_TOKEN not set"
   exit 1
 fi
+
+# Write auth header to a temp file so the token never lands in argv (ps aux leak).
+AUTH_HEADER_FILE=$(mktemp)
+chmod 600 "$AUTH_HEADER_FILE"
+trap 'rm -f "$AUTH_HEADER_FILE" "${EXISTING_KEYS:-}"' EXIT
+printf 'Authorization: Bearer %s\n' "$CF_R2_API_TOKEN" > "$AUTH_HEADER_FILE"
 
 UPLOADED=0
 FAILED=0
@@ -51,7 +72,7 @@ upload_file() {
     http_code=$(curl -s -o /dev/null -w "%{http_code}" \
       -X PUT \
       "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/r2/buckets/${BUCKET}/objects/${key}" \
-      -H "Authorization: Bearer ${CF_R2_API_TOKEN}" \
+      -H "@${AUTH_HEADER_FILE}" \
       -H "Content-Type: application/octet-stream" \
       --data-binary "@${file}" \
       --max-time 600)
@@ -86,7 +107,7 @@ else
   # Get list of already-uploaded keys
   EXISTING_KEYS="/tmp/r2-existing-keys.txt"
   curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/r2/buckets/${BUCKET}/objects" \
-    -H "Authorization: Bearer ${CF_R2_API_TOKEN}" | python3 -c "
+    -H "@${AUTH_HEADER_FILE}" | python3 -c "
 import sys, json
 d = json.load(sys.stdin)
 for o in d.get('result', []):
