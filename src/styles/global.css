@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 /*
  * Design tokens — dark-first, botanical, WCAG AA compliant.
@@ -10,6 +9,40 @@
  * Mood: dried flowers, autumn, moody earth tones.
  * All text/background combos verified >= 4.5:1 contrast ratio.
  */
+
+/* Tailwind 4 utility token mappings — names match v3 tailwind.config.mjs.
+   The vars on the right resolve to the runtime palette below. */
+@theme {
+  --color-surface: var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-accent: var(--color-text-accent);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-muted: var(--color-accent-muted);
+  --color-border: var(--color-border);
+  --color-status-active: var(--color-status-active);
+  --color-status-active-border: var(--color-status-active-border);
+  --color-status-experiment: var(--color-status-experiment);
+  --color-status-experiment-border: var(--color-status-experiment-border);
+
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: Georgia, Cambria, 'Times New Roman', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-base: 1rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+
+  --shadow-subtle: 0 1px 2px 0 var(--color-shadow);
+  --shadow-card: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -2px var(--color-shadow);
+  --shadow-raised: 0 10px 15px -3px var(--color-shadow), 0 4px 6px -4px var(--color-shadow);
+}
 
 :root {
   /* Dark theme (default) — plum-undertone surfaces */
