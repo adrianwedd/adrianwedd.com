@@ -72,6 +72,34 @@ CDN_BASE="https://cdn.adrianwedd.com/notebook-assets"
 EXPORT_DIR="$REPO_ROOT/exports/videos"
 mkdir -p "$EXPORT_DIR"
 
+# Load CF_R2_API_TOKEN and stage it in a temp header file so the secret never
+# lands in argv (ps aux can see -H "Authorization: Bearer …" strings).
+# Use an awk extractor so malformed .env lines don't get eval'd by `source`.
+env_get() {
+    local key="$1" file="$2"
+    [ -f "$file" ] || return 1
+    awk -F= -v k="$key" '
+      $0 ~ "^[[:space:]]*"k"=" {
+        sub("^[[:space:]]*"k"=", "")
+        sub("[[:space:]]*#.*$", "")
+        if (match($0, /^".*"$/) || match($0, /^'\''.*'\''$/)) {
+          $0 = substr($0, 2, length($0)-2)
+        }
+        print; exit
+      }' "$file"
+}
+
+if [ -z "${CF_R2_API_TOKEN:-}" ] && [ -f "$REPO_ROOT/.env" ]; then
+    CF_R2_API_TOKEN=$(env_get CF_R2_API_TOKEN "$REPO_ROOT/.env")
+fi
+R2_AUTH_HEADER=""
+if [ -n "${CF_R2_API_TOKEN:-}" ]; then
+    R2_AUTH_HEADER=$(mktemp)
+    chmod 600 "$R2_AUTH_HEADER"
+    trap 'rm -f "$R2_AUTH_HEADER"' EXIT
+    printf 'Authorization: Bearer %s\n' "$CF_R2_API_TOKEN" > "$R2_AUTH_HEADER"
+fi
+
 echo "=== NotebookLM Video Batch Generation ==="
 echo "  Focus: ${FOCUS:0:60}..."
 echo "  Export: $EXPORT_DIR"
@@ -428,10 +456,16 @@ if videos:
     # Upload to R2
     echo "  Uploading to R2..."
     r2_key="notebook-assets/$item_name/video.mp4"
+    if [ -z "$R2_AUTH_HEADER" ]; then
+        echo -e "  ${RED}R2 upload skipped — CF_R2_API_TOKEN not set${NC}"
+        echo "FAILED|$item_name|no CF_R2_API_TOKEN" >> "$RESULTS_LOG"
+        ((FAILED++)) || true
+        continue
+    fi
     upload_code=$(curl -s -o /dev/null -w "%{http_code}" \
         -X PUT \
         "https://api.cloudflare.com/client/v4/accounts/eb44f406e11df8adec20cc1e7b66f151/r2/buckets/adrianwedd-com-media/objects/${r2_key}" \
-        -H "Authorization: Bearer ${CF_R2_API_TOKEN:-$(grep CF_R2_API_TOKEN "$REPO_ROOT/.env" 2>/dev/null | head -1 | cut -d= -f2)}" \
+        -H "@${R2_AUTH_HEADER}" \
         -H "Content-Type: video/mp4" \
         --data-binary "@${output_file}" \
         --max-time 600)
