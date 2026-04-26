@@ -71,6 +71,7 @@ const matchedProject = allProjects.find(
   preloadImage={typeof post.data.heroImage === 'string' ? post.data.heroImage : undefined}
 >
   <script
+    is:inline
     type="application/ld+json"
     set:html={JSON.stringify({
       '@context': 'https://schema.org',
@@ -100,6 +101,7 @@ const matchedProject = allProjects.find(
   {
     post.data.videoUrl && (
       <script
+        is:inline
         type="application/ld+json"
         set:html={JSON.stringify({
           '@context': 'https://schema.org',
@@ -118,6 +120,7 @@ const matchedProject = allProjects.find(
   {
     post.data.faq && post.data.faq.length > 0 && (
       <script
+        is:inline
         type="application/ld+json"
         set:html={JSON.stringify({
           '@context': 'https://schema.org',
