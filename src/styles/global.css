@@ -10,23 +10,25 @@
  * All text/background combos verified >= 4.5:1 contrast ratio.
  */
 
-/* Tailwind 4 utility token mappings — names match v3 tailwind.config.mjs.
-   The vars on the right resolve to the runtime palette below. */
+/* Tailwind 4 theme tokens — drive utility generation (bg-surface, text-accent,
+   shadow-card, font-sans, etc.) AND emit defaults at :root scope.
+   Dark is the default; .light overrides below. --color-shadow lives outside
+   @theme because it's a building block for shadow-* tokens, not a utility. */
 @theme {
-  --color-surface: var(--color-surface);
-  --color-surface-alt: var(--color-surface-alt);
-  --color-surface-raised: var(--color-surface-raised);
-  --color-text: var(--color-text);
-  --color-text-muted: var(--color-text-muted);
-  --color-text-accent: var(--color-text-accent);
-  --color-accent: var(--color-accent);
-  --color-accent-hover: var(--color-accent-hover);
-  --color-accent-muted: var(--color-accent-muted);
-  --color-border: var(--color-border);
-  --color-status-active: var(--color-status-active);
-  --color-status-active-border: var(--color-status-active-border);
-  --color-status-experiment: var(--color-status-experiment);
-  --color-status-experiment-border: var(--color-status-experiment-border);
+  --color-surface: #1a181c;
+  --color-surface-alt: #24212a;
+  --color-surface-raised: #2e2a34;
+  --color-text: #e2ddd8;
+  --color-text-muted: #968e96;
+  --color-text-accent: #c48b6e;
+  --color-accent: #c48b6e;
+  --color-accent-hover: #d49e82;
+  --color-accent-muted: #9a6d52;
+  --color-border: #3d3844;
+  --color-status-active: #4ade80;
+  --color-status-active-border: #166534;
+  --color-status-experiment: #c084fc;
+  --color-status-experiment-border: #6b21a8;
 
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: Georgia, Cambria, 'Times New Roman', serif;
@@ -45,27 +47,15 @@
 }
 
 :root {
-  /* Dark theme (default) — plum-undertone surfaces */
-  --color-surface: #1a181c;
-  --color-surface-alt: #24212a;
-  --color-surface-raised: #2e2a34;
-  --color-text: #e2ddd8;
-  --color-text-muted: #968e96;
-  --color-text-accent: #c48b6e;
-  --color-accent: #c48b6e;
-  --color-accent-hover: #d49e82;
-  --color-accent-muted: #9a6d52;
-  --color-border: #3d3844;
+  /* Non-utility var (used by shadow-*) and color-scheme. Kept outside @theme
+     so Tailwind doesn't generate bg-shadow / text-shadow utilities. */
   --color-shadow: rgb(0 0 0 / 0.3);
-  --color-status-active: #4ade80;
-  --color-status-active-border: #166534;
-  --color-status-experiment: #c084fc;
-  --color-status-experiment-border: #6b21a8;
-
   color-scheme: dark;
 }
 
 .light {
+  /* Light-mode token overrides. Unlayered — wins over @theme's :root defaults
+     regardless of source order. */
   --color-surface: #f7f4f1;
   --color-surface-alt: #ece7e2;
   --color-surface-raised: #ffffff;
