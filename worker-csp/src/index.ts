@@ -56,7 +56,14 @@ export default {
       .on('style', new NonceInjector(nonce))
       // Remove the build-time meta CSP — the response header replaces it.
       .on('meta[http-equiv="Content-Security-Policy"]', new ElementRemover())
-      .transform(new Response(upstream.body, { ...upstream, headers }));
+      // Be explicit: spreading a Response copies own enumerable props only,
+      // which loses status/statusText (those are prototype getters). Without
+      // this, a 404/301 from origin would silently become 200 OK.
+      .transform(new Response(upstream.body, {
+        status: upstream.status,
+        statusText: upstream.statusText,
+        headers,
+      }));
 
     return rewritten;
   },

@@ -110,4 +110,32 @@ describe('worker fetch handler', () => {
     const text = await res.text();
     expect(text).toMatch(/<script nonce="external">/);
   });
+
+  it('preserves upstream status and statusText (not silently 200)', async () => {
+    // Regression: spreading a Response copies own enumerable props only,
+    // which loses status/statusText. 404 must remain 404.
+    fetchMock
+      .get('https://adrianwedd.com')
+      .intercept({ path: '/missing' })
+      .reply(404, htmlBody('<h1>not found</h1>'), {
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      });
+
+    const res = await SELF.fetch('https://adrianwedd.com/missing');
+    expect(res.status).toBe(404);
+    expect(res.headers.get('content-security-policy')).toBeTruthy();
+  });
+
+  it('preserves upstream redirects without rewriting body', async () => {
+    fetchMock.get('https://adrianwedd.com').intercept({ path: '/legacy' }).reply(301, '', {
+      headers: {
+        'content-type': 'text/html; charset=utf-8',
+        location: '/new-location/',
+      },
+    });
+
+    const res = await SELF.fetch('https://adrianwedd.com/legacy', { redirect: 'manual' });
+    expect(res.status).toBe(301);
+    expect(res.headers.get('location')).toBe('/new-location/');
+  });
 });
