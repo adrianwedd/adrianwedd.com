@@ -1,6 +1,10 @@
 /**
- * Strip file extension from content collection IDs.
- * Astro 5 uses filenames (including .md/.mdx) as collection entry IDs.
+ * Convert a collection entry ID to a URL slug.
+ *
+ * Astro 6's glob loader strips file extensions from IDs (e.g. `foo-post`),
+ * but Astro 5 included them (`foo-post.md`). The trailing `.mdx?` strip is
+ * defensive in case an old ID ever leaks through. The `-post` strip enforces
+ * the blog/projects naming convention where `foo-post.md` → `/blog/foo/`.
  */
 export function slug(id: string): string {
   return id.replace(/-post(\.mdx?)?$/, '').replace(/\.mdx?$/, '');
