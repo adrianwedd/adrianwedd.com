@@ -22,6 +22,7 @@ const recentPosts = (await getCollection('blog'))
   description="Systems builder. AI safety, systems architecture, adversarial thinking. AuDHD. Formerly Greenpeace Actions unit. Based in Cygnet, Tasmania."
 >
   <script
+    is:inline
     type="application/ld+json"
     set:html={JSON.stringify({
       '@context': 'https://schema.org',

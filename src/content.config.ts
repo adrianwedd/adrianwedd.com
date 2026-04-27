@@ -1,4 +1,6 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const notebookAssets = {
   audioUrl: z.string().optional(),
@@ -12,7 +14,7 @@ const notebookAssets = {
 };
 
 const blog = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -29,7 +31,7 @@ const blog = defineCollection({
 });
 
 const projects = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -49,7 +51,7 @@ const projects = defineCollection({
 });
 
 const gallery = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/gallery' }),
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
@@ -70,7 +72,7 @@ const gallery = defineCollection({
 });
 
 const audio = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/audio' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
