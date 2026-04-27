@@ -1,0 +1,141 @@
+import { fetchMock, SELF } from 'cloudflare:test';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { buildCsp } from '../src/csp.js';
+import { generateNonce } from '../src/nonce.js';
+
+beforeAll(() => {
+  fetchMock.activate();
+  fetchMock.disableNetConnect();
+});
+
+afterEach(() => fetchMock.assertNoPendingInterceptors());
+
+const htmlBody = (body: string) =>
+  `<!doctype html><html><head>${body}</head><body></body></html>`;
+
+describe('generateNonce', () => {
+  it('produces a base64 string with 22 chars (16 bytes, no padding)', () => {
+    const nonce = generateNonce();
+    expect(nonce).toMatch(/^[A-Za-z0-9+/]{22}$/);
+  });
+
+  it('produces unique values across calls', () => {
+    const set = new Set(Array.from({ length: 50 }, generateNonce));
+    expect(set.size).toBe(50);
+  });
+});
+
+describe('buildCsp', () => {
+  it('embeds the nonce in script-src', () => {
+    const csp = buildCsp({ nonce: 'TESTNONCE', strictDynamic: false });
+    expect(csp).toMatch(/script-src [^;]*'nonce-TESTNONCE'/);
+  });
+
+  it("does not include 'unsafe-inline' in script-src", () => {
+    const csp = buildCsp({ nonce: 'x', strictDynamic: false });
+    const scriptSrc = csp.split(';').find((d) => d.trim().startsWith('script-src'))!;
+    expect(scriptSrc).not.toMatch(/'unsafe-inline'/);
+  });
+
+  it("adds 'strict-dynamic' only when opted in", () => {
+    expect(buildCsp({ nonce: 'x', strictDynamic: false })).not.toMatch(/strict-dynamic/);
+    expect(buildCsp({ nonce: 'x', strictDynamic: true })).toMatch(/'strict-dynamic'/);
+  });
+
+  it("includes frame-ancestors 'none' (only enforceable via header)", () => {
+    expect(buildCsp({ nonce: 'x', strictDynamic: false })).toMatch(/frame-ancestors 'none'/);
+  });
+
+  it('still includes cdn.adrianwedd.com in img-src and media-src', () => {
+    const csp = buildCsp({ nonce: 'x', strictDynamic: false });
+    expect(csp).toMatch(/img-src [^;]*https:\/\/cdn\.adrianwedd\.com/);
+    expect(csp).toMatch(/media-src [^;]*https:\/\/cdn\.adrianwedd\.com/);
+  });
+});
+
+describe('worker fetch handler', () => {
+  it('passes through non-HTML responses untouched', async () => {
+    fetchMock
+      .get('https://adrianwedd.com')
+      .intercept({ path: '/_astro/page.js' })
+      .reply(200, 'console.log(1)', { headers: { 'content-type': 'application/javascript' } });
+
+    const res = await SELF.fetch('https://adrianwedd.com/_astro/page.js');
+    expect(res.headers.get('content-security-policy')).toBeNull();
+    expect(await res.text()).toBe('console.log(1)');
+  });
+
+  it('adds nonce + CSP header to HTML and strips meta CSP', async () => {
+    const body =
+      '<meta http-equiv="Content-Security-Policy" content="default-src none">' +
+      '<script>console.log(1)</script>' +
+      '<style>body{color:red}</style>';
+    fetchMock.get('https://adrianwedd.com').intercept({ path: '/' }).reply(200, htmlBody(body), {
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
+
+    const res = await SELF.fetch('https://adrianwedd.com/');
+    const text = await res.text();
+    const csp = res.headers.get('content-security-policy');
+
+    expect(csp).toBeTruthy();
+    expect(csp).toMatch(/'nonce-/);
+    expect(csp).toMatch(/frame-ancestors 'none'/);
+
+    expect(res.headers.get('x-frame-options')).toBe('DENY');
+    expect(res.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(res.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+
+    // Meta CSP stripped
+    expect(text).not.toMatch(/<meta http-equiv="Content-Security-Policy"/);
+    // Nonce attached to inline script + style
+    expect(text).toMatch(/<script[^>]*nonce="[A-Za-z0-9+/]{22}"[^>]*>console\.log\(1\)<\/script>/);
+    expect(text).toMatch(/<style[^>]*nonce="[A-Za-z0-9+/]{22}"[^>]*>body{color:red}<\/style>/);
+
+    // Same nonce used everywhere on this response.
+    const scriptNonce = text.match(/<script[^>]*nonce="([^"]+)"/)?.[1];
+    const styleNonce = text.match(/<style[^>]*nonce="([^"]+)"/)?.[1];
+    const headerNonce = csp!.match(/'nonce-([^']+)'/)?.[1];
+    expect(scriptNonce).toBe(styleNonce);
+    expect(scriptNonce).toBe(headerNonce);
+  });
+
+  it('does not override an existing nonce attribute', async () => {
+    const body = '<script nonce="external">x</script>';
+    fetchMock.get('https://adrianwedd.com').intercept({ path: '/preserved' }).reply(200, htmlBody(body), {
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
+
+    const res = await SELF.fetch('https://adrianwedd.com/preserved');
+    const text = await res.text();
+    expect(text).toMatch(/<script nonce="external">/);
+  });
+
+  it('preserves upstream status and statusText (not silently 200)', async () => {
+    // Regression: spreading a Response copies own enumerable props only,
+    // which loses status/statusText. 404 must remain 404.
+    fetchMock
+      .get('https://adrianwedd.com')
+      .intercept({ path: '/missing' })
+      .reply(404, htmlBody('<h1>not found</h1>'), {
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      });
+
+    const res = await SELF.fetch('https://adrianwedd.com/missing');
+    expect(res.status).toBe(404);
+    expect(res.headers.get('content-security-policy')).toBeTruthy();
+  });
+
+  it('preserves upstream redirects without rewriting body', async () => {
+    fetchMock.get('https://adrianwedd.com').intercept({ path: '/legacy' }).reply(301, '', {
+      headers: {
+        'content-type': 'text/html; charset=utf-8',
+        location: '/new-location/',
+      },
+    });
+
+    const res = await SELF.fetch('https://adrianwedd.com/legacy', { redirect: 'manual' });
+    expect(res.status).toBe(301);
+    expect(res.headers.get('location')).toBe('/new-location/');
+  });
+});
