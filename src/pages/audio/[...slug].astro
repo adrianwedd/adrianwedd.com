@@ -36,6 +36,7 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
   tags={episode.data.tags}
 >
   <script
+    is:inline
     type="application/ld+json"
     set:html={JSON.stringify({
       '@context': 'https://schema.org',

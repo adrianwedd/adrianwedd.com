@@ -36,6 +36,7 @@ const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
   tags={gallery.data.tags}
 >
   <script
+    is:inline
     type="application/ld+json"
     set:html={JSON.stringify({
       '@context': 'https://schema.org',

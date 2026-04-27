@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import preact from '@astrojs/preact';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -66,8 +66,10 @@ export default defineConfig({
       },
     }),
     preact(),
-    tailwind(),
   ],
+  vite: {
+    plugins: [tailwindcss()],
+  },
   redirects: {
     '/projects/ticketsmith/': '/projects/',
     // Legacy WordPress URLs still indexed by Google

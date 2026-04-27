@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 /*
  * Design tokens — dark-first, botanical, WCAG AA compliant.
@@ -11,8 +10,11 @@
  * All text/background combos verified >= 4.5:1 contrast ratio.
  */
 
-:root {
-  /* Dark theme (default) — plum-undertone surfaces */
+/* Tailwind 4 theme tokens — drive utility generation (bg-surface, text-accent,
+   shadow-card, font-sans, etc.) AND emit defaults at :root scope.
+   Dark is the default; .light overrides below. --color-shadow lives outside
+   @theme because it's a building block for shadow-* tokens, not a utility. */
+@theme {
   --color-surface: #1a181c;
   --color-surface-alt: #24212a;
   --color-surface-raised: #2e2a34;
@@ -23,16 +25,37 @@
   --color-accent-hover: #d49e82;
   --color-accent-muted: #9a6d52;
   --color-border: #3d3844;
-  --color-shadow: rgb(0 0 0 / 0.3);
   --color-status-active: #4ade80;
   --color-status-active-border: #166534;
   --color-status-experiment: #c084fc;
   --color-status-experiment-border: #6b21a8;
 
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: Georgia, Cambria, 'Times New Roman', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-base: 1rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+
+  --shadow-subtle: 0 1px 2px 0 var(--color-shadow);
+  --shadow-card: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -2px var(--color-shadow);
+  --shadow-raised: 0 10px 15px -3px var(--color-shadow), 0 4px 6px -4px var(--color-shadow);
+}
+
+:root {
+  /* Non-utility var (used by shadow-*) and color-scheme. Kept outside @theme
+     so Tailwind doesn't generate bg-shadow / text-shadow utilities. */
+  --color-shadow: rgb(0 0 0 / 0.3);
   color-scheme: dark;
 }
 
 .light {
+  /* Light-mode token overrides. Unlayered — wins over @theme's :root defaults
+     regardless of source order. */
   --color-surface: #f7f4f1;
   --color-surface-alt: #ece7e2;
   --color-surface-raised: #ffffff;
