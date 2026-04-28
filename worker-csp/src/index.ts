@@ -48,6 +48,12 @@ export default {
     // Don't ship the meta CSP downstream — header is stronger and the meta
     // would force the browser to intersect both policies.
     headers.delete('Content-Security-Policy-Report-Only');
+    // Body is mutated by HTMLRewriter (nonce injection + meta-CSP strip), so
+    // upstream entity validators no longer match. Cloudflare strips Content-
+    // Length transparently, but ETag/Last-Modified can produce stale 304s.
+    headers.delete('ETag');
+    headers.delete('Last-Modified');
+    headers.delete('Content-Length');
 
     const rewritten = new HTMLRewriter()
       // Add nonce to every <script> tag.
@@ -72,8 +78,9 @@ export default {
 class NonceInjector {
   constructor(private readonly nonce: string) {}
   element(el: Element): void {
-    // Don't override an existing nonce (e.g. from a sibling worker).
-    if (el.getAttribute('nonce')) return;
+    // Always replace any existing nonce. The CSP header only contains the
+    // nonce we generated this request — preserving a foreign nonce would
+    // silently CSP-block the script under enforcement.
     el.setAttribute('nonce', this.nonce);
   }
 }

@@ -35,3 +35,9 @@ This is the failure mode that broke #241. Don't flip it until every external scr
 ## Why a separate worker (not folded into `worker/`)
 
 The existing `worker/` runs `social.adrianwedd.com` (Facebook automation). This one binds to `adrianwedd.com/*` and does HTML rewriting. Different hostnames, different routes, different blast radius — cleaner to keep them isolated.
+
+## Open work before deploy
+
+- **Self-recursion**: `fetch(request)` in `src/index.ts` re-enters the worker if both apex and `www.` routes are bound. Before binding, either rewrite the URL to a dedicated origin host (e.g. `adrianwedd.github.io`) or set a sentinel header + early-return. (#253 / Claude QA 2026-04-28.)
+- **Real-build integration test**: The vitest unit suite uses synthetic HTML fixtures. Real-build coverage (feeding actual `dist/*.html` through the worker) was attempted as a vitest-pool-workers test but `?raw` imports of files outside the package boundary aren't supported by miniflare's module loader. Lift this as a soak-time bash script: `wrangler dev` + `python -m http.server` against `dist/`, curl representative URLs, assert nonce + CSP header. (Codex QA 2026-04-28.)
+- **`style-src-attr` / `style-src-elem` split**: Currently `style-src 'self' 'unsafe-inline'` covers both inline `<style>` elements (which the worker nonces) and `style="…"` attributes (which it can't). Split lets us require nonce on elements and keep `'unsafe-inline'` only for attrs. Astro emits dynamic `style="animation-delay:…"` attrs so attr `'unsafe-inline'` must remain.
