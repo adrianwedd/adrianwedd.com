@@ -24,6 +24,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Astro type check
+        run: npx astro check
       - name: Validate content
         run: node scripts/validate-content.js
       - name: Audit dependencies
@@ -104,8 +106,24 @@ jobs:
         with:
           path: dist
 
+  worker-csp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker-csp/package-lock.json
+      - name: Install worker CSP dependencies
+        run: cd worker-csp && npm ci
+      - name: Run worker CSP tests
+        run: cd worker-csp && npm test
+      - name: Type check worker CSP
+        run: cd worker-csp && npx tsc --noEmit
+
   deploy:
-    needs: build
+    needs: [build, worker-csp]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
