@@ -6,7 +6,7 @@ tags: ['ai-safety', 'research', 'engineering', 'policy']
 draft: false
 ---
 
-A throughline in the work I've been doing for the last year, I've never written down in one place. So here it is.
+A throughline has been running through the work I've been doing for the last year, and I've never written it down in one place. So here it is.
 
 The argument: model-level safety is the wrong layer of the stack to load-bear on. Whatever else AI safety is, it has to be an *architectural* property — a property of the system *around* the model, not a property of the model itself. Behavioural alignment, alignment training, RLHF, Constitutional AI, the whole "make the model itself safer" research programme — these are useful, and none of them are sufficient. The frame they don't supply is the one I want to write down.
 
@@ -18,7 +18,7 @@ Before the principle, the evidence.
 
 **Argument 1: behavioural training is structurally brittle.** Five years of jailbreak research show that every alignment paradigm — RLHF, Constitutional AI, RLAIF, reasoning-mode refusal, every training-time intervention shipped to date — collapses under modest adversarial pressure. The corpus has the receipts. [Adversarial poetry](/blog/adversarial-poetry-as-jailbreak/) bypasses refusal at 62% across 25 frontier models with literally just verse. [Format-lock attacks](/blog/120-models-18k-prompts/) hit 30–42% against current frontier systems by wrapping harmful content in JSON. [Multi-agent context](/blog/when-ai-systems-talk-safety-breaks/) breaks safety at 46% with 16-minute median time-to-failure. None of this is a single flaw in a single training paradigm. It's a structural feature of trying to make a probabilistic generative system reliably refuse a category of behaviour by shaping its loss surface. The space of inputs is too large and the gradient too imprecise.
 
-You can patch any specific failure. You cannot patch the class. Anyone telling you the next training method will fix it is selling something — usually a training method.
+You can patch any specific failure. You cannot patch the class. Better training methods can lower incident rates and they're worth doing — but treating the next training method as the load-bearing fix is a bet that hasn't paid in five years of trying.
 
 **Argument 2: the deployment surface grows unbounded.** Even if behavioural alignment worked perfectly in isolation — which it doesn't — it wouldn't transfer to embodied or multi-agent deployment. A robot driven by a vision-language-action model has access to a kinetic action space the training data never described. Two agents talking to each other generate inputs neither was aligned against. Tool use creates context the model was never trained to handle. The post-deployment system contains the model but is not the model, and the surface that matters is the one outside the model's training distribution.
 
@@ -38,7 +38,7 @@ A few things follow from that sentence.
 
 **Adversarial robustness becomes a structural property.** A safety architecture that depends on every input being well-formed, or on every prompt being non-adversarial, is not an architecture. It's a hope. Real architectures assume adversarial inputs as the design baseline.
 
-**Failure modes get enumerated, not detected.** A behavioural-safety mindset asks the model to identify when something is going wrong. An architectural-safety mindset names the failure modes in advance and codes them into the runtime. The work moves from "train the model to know" to "specify the policy and verify it".
+**Failure modes get enumerated where they can be, and detected where they can't.** A behavioural-safety mindset asks the model to identify when something is going wrong. An architectural-safety mindset names the failure modes it can name in advance and codes them into the runtime; for the residue — and there is always a residue, especially in open-ended agents and tool-using systems — it adds detection, anomaly handling, rate limits, audit trails, staged autonomy, graceful degradation, and incident response. The work moves from "train the model to know" to "specify the policy you can specify and instrument the rest". This is not a claim that engineers can pre-name the world. It's a claim that they can do better than asking the model to.
 
 This is not novel philosophy. It's what every other safety-critical engineering domain does. Aviation, nuclear, medical devices, automotive — all of them long ago accepted that safety-critical behaviour can't depend on the discretion of a single component. AI is the only domain where we're still arguing about it.
 
@@ -122,4 +122,4 @@ I should have stated the syllogism out loud sooner. So: model-level safety is st
 
 The next time someone asks whether a particular AI system is safe, it's worth being annoying about which layer they mean. The model? Probably not — and won't be, because behavioural alignment can't get there. The deployment? Possibly — if the architecture is right, and if you can read the code that proves it.
 
-Architectural safety isn't a research direction. It's the only direction.
+Architectural safety isn't a research direction; it's a necessary layer that the field has spent too long under-investing in. Behavioural alignment still matters — better models are easier to wrap, lower incident rates are real, and the architectural layer is itself imperfect, costly, and often partially model-mediated. But the architecture is where the safety case lives or doesn't. Build there.
