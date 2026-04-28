@@ -15,3 +15,12 @@ This site is a workshop. It's where I build things, think out loud, and occasion
 I've been making software for a long time. Some of it good, some of it instructive. The best work I've done has always happened at the intersection of technical craft and genuine curiosity—where you build something not because the market wants it, but because you need to understand how it works. That's what this space is for.
 
 The door is open. More to come.
+
+If you're new here, four posts that fairly represent the place:
+
+- **[120 Models, 18,176 Prompts](/blog/120-models-18k-prompts/)** for the AI-safety research thread — what the corpus has actually measured, and where the benchmarks are lying.
+- **[The Cognitive Cage](/blog/the-cognitive-cage/)** for the architectural-safety argument — why behavioural model alignment can't be the whole story for embodied AI.
+- **[The Organismic Prophecy](/blog/the-organismic-prophecy/)** for the philosophical thread — why the vocabulary we use for AI cognition is metabolically uncashed.
+- **[This Wasn't in the Brochure](/blog/this-wasnt-in-the-brochure/)** for the personal thread — neurodivergent operating systems, design as prosthesis, and what it taught me about building anything.
+
+The connective tissue is "designs for failure modes." That's most of what the rest of the site is doing.

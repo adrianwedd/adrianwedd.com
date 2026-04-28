@@ -83,4 +83,4 @@ For Wolf Clan, these conditions held. The platform is in production, the club us
 
 ---
 
-_[Wolf Clan Zen Do Kai Hub](/projects/wolf-clan-hub/) is live at [wolfclanmartialarts.com](https://wolfclanmartialarts.com/)._
+_[Wolf Clan Zen Do Kai Hub](/projects/wolf-clan-hub/) is live at [wolfclanmartialarts.com](https://wolfclanmartialarts.com/). For the framework-using counterpoint — when a static-site generator is the right call — see [Building a Personal Site in 2026](/blog/building-a-personal-site-in-2026/)._
