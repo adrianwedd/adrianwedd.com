@@ -5,10 +5,11 @@
  * meta) but replaces 'unsafe-inline' on script-src with a per-request nonce,
  * adds frame-ancestors, and uses a real header instead of a meta tag.
  *
- * style-src keeps 'unsafe-inline' for now. Astro emits style=".." attributes
- * dynamically, which require style-src-attr 'unsafe-inline' under CSP3. We
- * can split style-src-elem (nonce-only) and style-src-attr ('unsafe-inline')
- * in a follow-up; for the first pass, keep both relaxed.
+ * style-src is split CSP3-style: style-src-elem requires the nonce on
+ * <style> blocks (the worker injects it), while style-src-attr keeps
+ * 'unsafe-inline' because Astro emits dynamic style=".." attributes that
+ * the worker can't nonce. Legacy style-src is the union, kept for browsers
+ * that don't yet honour the -elem/-attr split.
  */
 export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): string {
   const { nonce, strictDynamic } = opts;
@@ -37,6 +38,8 @@ export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): strin
   const directives = [
     "default-src 'self'",
     `script-src ${scriptSrc.join(' ')}`,
+    `style-src-elem 'self' 'nonce-${nonce}'`,
+    "style-src-attr 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https://cdn.adrianwedd.com https://www.google-analytics.com https://*.google-analytics.com https://px.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.linkedin.com",
     "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://adservice.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com",
