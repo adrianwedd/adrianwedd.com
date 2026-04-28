@@ -36,8 +36,16 @@ This is the failure mode that broke #241. Don't flip it until every external scr
 
 The existing `worker/` runs `social.adrianwedd.com` (Facebook automation). This one binds to `adrianwedd.com/*` and does HTML rewriting. Different hostnames, different routes, different blast radius — cleaner to keep them isolated.
 
+## Local integration test
+
+`npm run build` from the repo root, then `cd worker-csp && ./scripts/integration-test.sh`. Boots `python -m http.server` against `../dist/` and `wrangler dev` with `ORIGIN_HOST` pointed at it, then curls representative URLs and asserts that HTML responses carry a `Content-Security-Policy` header whose nonce matches the nonce attached to `<script>` tags in the body, and that the build-time meta CSP is stripped.
+
+## Past blockers (resolved before bind)
+
+- **Self-recursion** — `ORIGIN_HOST` env var decouples the upstream host from the worker's route hostname. Production points at `adrianwedd.github.io`; integration test points at `localhost`.
+- **Real-build integration coverage** — `scripts/integration-test.sh` replaces the vitest-pool-workers approach that miniflare couldn't host (cross-package `?raw` imports).
+- **`style-src` split** — `style-src-elem` requires the nonce; `style-src-attr` keeps `'unsafe-inline'` for Astro's dynamic `style="…"` attrs; legacy `style-src` remains as a fallback for browsers that don't honour the split.
+
 ## Open work before deploy
 
-- **Self-recursion**: `fetch(request)` in `src/index.ts` re-enters the worker if both apex and `www.` routes are bound. Before binding, either rewrite the URL to a dedicated origin host (e.g. `adrianwedd.github.io`) or set a sentinel header + early-return. (#253 / Claude QA 2026-04-28.)
-- **Real-build integration test**: The vitest unit suite uses synthetic HTML fixtures. Real-build coverage (feeding actual `dist/*.html` through the worker) was attempted as a vitest-pool-workers test but `?raw` imports of files outside the package boundary aren't supported by miniflare's module loader. Lift this as a soak-time bash script: `wrangler dev` + `python -m http.server` against `dist/`, curl representative URLs, assert nonce + CSP header. (Codex QA 2026-04-28.)
-- **`style-src-attr` / `style-src-elem` split**: Currently `style-src 'self' 'unsafe-inline'` covers both inline `<style>` elements (which the worker nonces) and `style="…"` attributes (which it can't). Split lets us require nonce on elements and keep `'unsafe-inline'` only for attrs. Astro emits dynamic `style="animation-delay:…"` attrs so attr `'unsafe-inline'` must remain.
+- **Soak the production binding** — bind `worker-csp` to a staging hostname (or use a header bypass), verify Preact hydration, theme toggle, hero canvas, ConsentBanner, GA4, and LinkedIn Insight all run with no CSP violations. Once stable, uncomment the apex/www routes in `wrangler.toml`.
