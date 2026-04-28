@@ -8,7 +8,7 @@ draft: true
 
 SolarWinds (2020): a compromised build server injected malicious code into an Orion update. 18,000 organisations installed it, including US government agencies. Nobody checked. The update arrived through a trusted channel, so it was trusted.
 
-Log4j (2021): a logging library 93% of cloud apps depended on had a remote code execution vulnerability. Nobody knew they depended on it because the dependency was transitive and implicit.
+Log4j (2021): a logging library so deeply embedded in the Java ecosystem that the US Department of Homeland Security CISA director called it "the most serious vulnerability I have seen in my career." Most enterprises that ran any Java service had Log4j somewhere in their dependency tree, often transitively, often without knowing. The dependency was real. The visibility wasn't.
 
 xz-utils (2024): a contributor spent two years building trust in an open-source compression tool before slipping a backdoor into the build system. The trust was real. The exploit used it.
 

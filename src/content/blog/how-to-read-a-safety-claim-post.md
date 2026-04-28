@@ -6,7 +6,7 @@ tags: ['ai-safety', 'policy', 'literacy', 'research']
 draft: true
 ---
 
-You are a lawyer, a regulator, a journalist, or a hospital administrator. You are increasingly required to make decisions about AI systems—whether to buy them, how to regulate them, or how much to trust them with your organization’s reputation.
+You are a lawyer, a regulator, a journalist, or a hospital administrator. You are increasingly required to make decisions about AI systems — whether to buy them, how to regulate them, or how much to trust them with your organisation's reputation.
 
 Every vendor pitch, regulatory filing, and "safety report" you receive is packed with claims of rigorous testing and robust guardrails. They tell you their model is "99% safe" or that they have "eliminated hallucinations" or that their system is "aligned with human values."
 
