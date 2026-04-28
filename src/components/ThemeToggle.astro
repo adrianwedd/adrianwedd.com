@@ -8,6 +8,7 @@
   type="button"
   class="theme-toggle rounded-lg p-2 text-text-muted transition-colors hover:bg-surface-alt hover:text-text"
   aria-label="Toggle dark/light theme"
+  aria-pressed="false"
 >
   <svg
     class="theme-icon-moon h-5 w-5"
@@ -54,6 +55,16 @@
       document.querySelectorAll('.theme-icon-sun').forEach(function (el) {
         el.classList.toggle('hidden', theme === 'dark');
       });
+      // aria-pressed reflects "light theme on?" so screen readers announce
+      // the toggle state correctly. Updated on every code path that changes
+      // the theme — click, keyboard 't', system preference change, VT swap.
+      document.querySelectorAll('.theme-toggle').forEach(function (el) {
+        el.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+      });
+      // Polite live-region announcement so keyboard / screen-reader users
+      // get explicit feedback that the change happened.
+      var live = document.getElementById('theme-toggle-status');
+      if (live) live.textContent = theme === 'light' ? 'Light theme' : 'Dark theme';
     }
 
     applyTheme(getTheme());
