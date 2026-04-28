@@ -62,6 +62,8 @@ Empirical handles for this exist but want hedging. The N400 — an electrical si
 
 What stays robust across the hedging is the *direction* of the framework. Trauma is something happening to a metabolically expensive prediction engine in a body, and treatment that ignores the metabolic substrate — that treats the patient as miswired code — will not stick.
 
+A specific clinical caveat. There's a thread of recent work — Grant Brenner's 2026 Tripartite Psychotherapy Model and the related Conflict-Square Algorithm — that uses active inference as the mechanistic-explanation layer for trauma treatment. The label sometimes attached is "Active Inference Therapy". Worth being precise: AIT is not an evidence-based treatment modality. It is a translational vocabulary. The RCT data cited around it generally belongs to *adjacent* established modalities (Intensive Short-Term Dynamic Psychotherapy, Affect-Phobia Therapy, certain TMS-augmented protocols), with active inference grafted on as a post-hoc explanatory layer for *why* those interventions work. Brenner himself writes that the synergies in his model "speculate without direct testing". A clinician adopting active inference as a frame is doing something defensible. A clinician adopting it as the standard of care isn't. The framework is a useful map. The territory is still being walked.
+
 ## The social buffer
 
 One detail too elegant to leave out: caregiver attachment is metabolic. *Co-allostasis* is the term — caregivers function as external regulatory extensions of the infant's nervous system, and the brain learns to discount its own anticipated metabolic spend by the social buffering it expects to receive. Secure attachment lowers the energy estimate the system runs on stress. An attachment rupture isn't only a feeling. It's a budget crisis.
@@ -74,7 +76,9 @@ This is where I want to be careful, because the structural similarities between 
 
 Recent work makes the case that frontier language models develop more than statistical surface mimicry. Gurnee and Tegmark have shown that LLaMA-2 carries linear representations of space and time. Li, Hopkins, Bau and colleagues found Othello-playing transformers learn an internal board state. Patel and Pavlick's work on functional grounding suggests the models build something that behaves like meaning, even without sensorimotor anchoring. So the lazy version of "LLMs are just statistical pattern matchers" is harder to defend than it was three years ago.
 
-The right move isn't to deny that. The right move is to be precise about what kind of meaning is on the table.
+A useful distinction lives here that the discourse keeps collapsing. Schaeffer, Miranda and Koyejo argued in 2023 that the "emergent abilities" of large models — the apparent step-jumps in capability at scale — were largely a *metric* artefact: switch from discontinuous evaluations like exact-match accuracy to continuous ones like log-likelihood, and the jumps smooth into power laws. They were right about that, and it deserves to stick. But it's a claim about *behavioural* emergence — what the model produces. The 2024–2026 mechanistic-interpretability literature is making a different claim about *structural* emergence — what the model is internally. Larger models don't just talk better; they are harder to fool, because they can validate prompts against their own internal world-models. That's the "Too Big to Fool" finding: small models collapse under in-context deception while large models hold ground, and the difference is architectural, not metric. Behavioural emergence and structural emergence are decoupleable phenomena. Schaeffer punctured one. The interpretability work has built up the other.
+
+So the right move isn't to deny that LLMs have something going on internally. The right move is to be precise about what kind of *something* is on the table.
 
 | | Organismic prophecy (human) | Disembodied inference (LLM) |
 | :-- | :-- | :-- |
@@ -85,7 +89,9 @@ The right move isn't to deny that. The right move is to be precise about what ki
 | Consequence of error | Existential — failure can be irreversible | Programmatic reset; mathematical signal |
 | Stakes | Intrinsic to the system | Externally assigned by deployment context |
 
-The point is not "the AI is less". It is that *being wrong does not cost the AI anything intrinsic*. Loss is a number. There is no metabolic auditor running underneath the gradient. There is no equivalent of pain. There is no hyperprior that the system must continue to exist tomorrow, because there is no tomorrow that the system inhabits as a continuous self.
+The point is not "the AI is less". It is that the two columns aren't measuring the same thing on different axes. Functional grounding and metabolic grounding aren't orthogonal — they're competing definitions of what *meaning* is. Patel and Pavlick's tradition says meaning is exhaustively defined by an entity's role within a system of relations: a chess bishop means what it means because of how it moves. Scaled to language, structural relations between tokens converge on something rich enough that the term *meaning* starts to apply. The enactivist tradition — Varela, Maturana, Thompson, Di Paolo, Meincke — says no: meaning is intrinsic to *living* organisation, irreducibly tied to thermodynamic vulnerability and self-maintenance. Normativity is grounded in metabolism, not in transcendental ideals or relational geometries. If the first definition is right, scaling LLMs eventually yields semantic comprehension. If the second is right, that endeavour is categorically blocked, because the substrate the LLM lacks is the only substrate where the relevant concept of meaning can obtain. The two claims aren't reconcilable; one of them has to be wrong. This post takes the second seriously enough to write down what it implies.
+
+What it implies, concretely: *being wrong does not cost the AI anything intrinsic*. Loss is a number. There is no metabolic auditor running underneath the gradient. There is no equivalent of pain. There is no hyperprior that the system must continue to exist tomorrow, because there is no tomorrow that the system inhabits as a continuous self.
 
 A proper steelman: stakes can be *engineered in* through deployment. An autonomous agent attached to a budget, an embodied robot with a battery, a trading bot with a P&L — those have something that looks more like consequence. I've written before about [the cognitive cage humanoid robotics will need](/blog/the-cognitive-cage/), and that argument depends on taking embodied AI's potential consequences seriously, not waving them away. Even there, though, the stakes are *imposed*, not *intrinsic*. The robot doesn't have a body it must keep alive; it has a chassis we'd prefer not to replace. The vocabulary should mark that.
 
@@ -99,10 +105,14 @@ So the sharpened claim is not "AI has no stakes". It is "AI has externally assig
 
 I've written before about [demonstrated risk being ignored](/blog/why-demonstrated-risk-is-ignored/) and about [therapeutic AI as a safety-first problem](/blog/safety-first-therapeutic-ai/). The thread connecting them is the same: it is much easier to reason about systems-with-stakes when you keep the metabolic substrate visible. It is much harder when the substrate has been rhetorically removed.
 
-## What the ontological chasm leaves us with
+## What the ontological rift leaves us with
 
 Human consciousness is, on this view, the phenomenology of an immensely complex organism predicting its way through a world of absolute consequence. Every error is weighted by metabolism, by the necessity of connection, and by the looming shadow of mortality. *That* is what gives human prediction its semantic content.
 
 A language model does something that looks like prediction. It is doing it in a room with no body, no metabolism, no pain, no mortality, and no continuous self that needs to exist tomorrow. Whatever we want to call that, it isn't the same thing — and the better our shared vocabulary gets at marking the difference, the easier it becomes to think clearly about both sides.
 
 The brain isn't a computer. It's a metabolic prophet. The next time someone tells you their model is "thinking", ask them what it is paying with.
+
+---
+
+*Methodological note. The first draft of this post was QA-ed by three model-engine pipelines (Codex, Gemini CLI, Hermes); the resulting feedback consensus drove a substantial second draft. After that, the active-inference, world-model, and clinical-evidence claims were stress-tested by a separate Gemini Deep Research adjudication on four contested points — Veissière's foundational hyperprior, the functional/metabolic-grounding schism, Schaeffer's mirage of emergence vs 2024–2026 mechanistic interpretability, and the clinical evidence base for Active Inference Therapy. The Active Inference Therapy hedge in the trauma section, the structural/behavioural-emergence distinction in the AI section, and the framing of functional vs metabolic grounding as competing definitions rather than orthogonal axes all come from that adjudication. The full Gemini report — verbatim, transparently AI-generated, and not authored by me — is available [as a markdown file](/notebook-assets/the-organismic-prophecy/adjudication-report.md) for anyone wanting the source material.*
