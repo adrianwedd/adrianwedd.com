@@ -1,7 +1,7 @@
 ---
 title: 'The Organismic Prophecy'
 description: "Human prediction is metabolic. AI prediction is not. The gap between the two has consequences for both clinical practice and AI safety vocabulary."
-date: 2026-04-28
+date: 2026-04-27
 tags: ['ai-safety', 'neuroscience', 'philosophy', 'research']
 draft: false
 heroImage: '/notebook-assets/the-organismic-prophecy/infographic.webp'
