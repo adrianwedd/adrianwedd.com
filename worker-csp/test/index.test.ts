@@ -51,6 +51,16 @@ describe('buildCsp', () => {
     expect(csp).toMatch(/img-src [^;]*https:\/\/cdn\.adrianwedd\.com/);
     expect(csp).toMatch(/media-src [^;]*https:\/\/cdn\.adrianwedd\.com/);
   });
+
+  it('keeps adservice.google.com in both script-src and connect-src', () => {
+    // adservice issues XHR/beacon calls in addition to loading scripts; if
+    // one side is missing the request fails silently in production.
+    const csp = buildCsp({ nonce: 'x', strictDynamic: false });
+    const scriptSrc = csp.split(';').find((d) => d.trim().startsWith('script-src'))!;
+    const connectSrc = csp.split(';').find((d) => d.trim().startsWith('connect-src'))!;
+    expect(scriptSrc).toMatch(/https:\/\/adservice\.google\.com/);
+    expect(connectSrc).toMatch(/https:\/\/adservice\.google\.com/);
+  });
 });
 
 describe('worker fetch handler', () => {
@@ -100,15 +110,45 @@ describe('worker fetch handler', () => {
     expect(scriptNonce).toBe(headerNonce);
   });
 
-  it('does not override an existing nonce attribute', async () => {
+  it("replaces any existing nonce so all scripts share this request's nonce", async () => {
+    // The CSP header only includes the nonce we generated; preserving a
+    // foreign nonce would silently CSP-block that script under enforcement.
     const body = '<script nonce="external">x</script>';
-    fetchMock.get('https://adrianwedd.com').intercept({ path: '/preserved' }).reply(200, htmlBody(body), {
-      headers: { 'content-type': 'text/html; charset=utf-8' },
-    });
+    fetchMock
+      .get('https://adrianwedd.com')
+      .intercept({ path: '/replace' })
+      .reply(200, htmlBody(body), {
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      });
 
-    const res = await SELF.fetch('https://adrianwedd.com/preserved');
+    const res = await SELF.fetch('https://adrianwedd.com/replace');
     const text = await res.text();
-    expect(text).toMatch(/<script nonce="external">/);
+    expect(text).not.toMatch(/nonce="external"/);
+    const headerNonce = res.headers.get('content-security-policy')!.match(/'nonce-([^']+)'/)![1];
+    expect(text).toContain(`<script nonce="${headerNonce}">`);
+  });
+
+  it('strips stale entity validators on rewritten HTML', async () => {
+    // Body is mutated by HTMLRewriter (nonce + meta-CSP strip), so origin's
+    // ETag/Last-Modified/Content-Length no longer match. Leaving them risks
+    // truncated responses and incorrect 304 cache hits.
+    fetchMock
+      .get('https://adrianwedd.com')
+      .intercept({ path: '/cached' })
+      .reply(200, htmlBody('<script>x</script>'), {
+        headers: {
+          'content-type': 'text/html; charset=utf-8',
+          etag: 'W/"abc123"',
+          'last-modified': 'Wed, 21 Oct 2026 07:28:00 GMT',
+          'content-length': '999',
+        },
+      });
+
+    const res = await SELF.fetch('https://adrianwedd.com/cached');
+    expect(res.headers.get('etag')).toBeNull();
+    expect(res.headers.get('last-modified')).toBeNull();
+    expect(res.headers.get('content-length')).toBeNull();
+    expect(res.headers.get('content-security-policy')).toBeTruthy();
   });
 
   it('preserves upstream status and statusText (not silently 200)', async () => {

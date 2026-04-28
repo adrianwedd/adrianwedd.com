@@ -39,7 +39,7 @@ export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): strin
     `script-src ${scriptSrc.join(' ')}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https://cdn.adrianwedd.com https://www.google-analytics.com https://*.google-analytics.com https://px.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.linkedin.com",
-    "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com",
+    "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://adservice.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com",
     "media-src 'self' https://cdn.adrianwedd.com",
     'frame-src https://www.openstreetmap.org https://challenges.cloudflare.com https://www.google.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net',
     "font-src 'self'",
