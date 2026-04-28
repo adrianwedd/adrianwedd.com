@@ -4,6 +4,9 @@ description: "AI safety has to be a property of the system around the model, not
 date: 2026-04-28
 tags: ['ai-safety', 'research', 'engineering', 'policy']
 draft: false
+heroImage: '/notebook-assets/architectural-safety/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/audio.mp3'
+audioDuration: '22:59'
 ---
 
 A throughline has been running through the work I've been doing for the last year, and I've never written it down in one place. So here it is.
