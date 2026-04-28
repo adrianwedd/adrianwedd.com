@@ -1,6 +1,6 @@
 ---
 title: 'The NotebookLM Pipeline'
-description: "How I automated audio overviews, quizzes, mind maps, and infographics for 32 projects using NotebookLM's API and some shell scripts."
+description: "How I automated audio overviews, quizzes, mind maps, and infographics for 32 projects via an unofficial NotebookLM CLI and a stack of shell scripts."
 date: 2026-02-15
 tags: ['engineering', 'automation', 'ai', 'python']
 heroImage: '/notebook-assets/the-notebooklm-pipeline/infographic.webp'
@@ -27,7 +27,9 @@ Doing this by hand for 32 projects would take weeks. So I automated it.
 
 The pipeline runs on [NotebookLM](https://notebooklm.google.com/), Google's research tool. NotebookLM can ingest source material and generate various "studio" artifacts — audio overviews (two AI hosts discussing your material), video summaries, quizzes, flashcards, mind maps, infographics, and written reports.
 
-The automation layer is a set of shell scripts that drive NotebookLM via its CLI:
+NotebookLM has no official public API or CLI — Google ships it as a consumer web app. The automation here drives it through [`notebooklm-mcp-cli`](https://github.com/adrianwedd/notebooklm-mcp-cli), an unofficial CLI built on cookie-authenticated, reverse-engineered RPCs. It works well, and it can break the moment Google ships a frontend change. Read the rest of this post knowing the substrate is fragile.
+
+The automation layer is a set of shell scripts wrapping that CLI:
 
 1. **`automate-notebook.sh`** — Creates a notebook, adds sources, generates artifacts, exports results
 2. **`generate-parallel.sh`** — Runs multiple artifact generations concurrently (3x faster)

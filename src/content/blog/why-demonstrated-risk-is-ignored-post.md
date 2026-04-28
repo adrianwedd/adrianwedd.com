@@ -1,6 +1,6 @@
 ---
 title: 'Why Demonstrated Risk Is Ignored'
-description: 'Large organisations rarely fail because risks are unknown. They fail because known risks are structurally difficult to act on.'
+description: 'Why do large organisations fail when the warning signs are loud and unambiguous? Four mechanisms of structural scar tissue that make truth-telling expensive.'
 date: 2026-03-02
 tags: ['research', 'risk', 'organisations', 'policy', 'ai-safety']
 draft: false

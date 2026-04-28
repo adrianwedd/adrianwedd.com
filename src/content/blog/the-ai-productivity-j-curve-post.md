@@ -1,6 +1,6 @@
 ---
 title: 'The AI Productivity J-Curve: Why Most Enterprise AI Fails'
-description: '90% of companies plan to increase AI investment. Only 1% consider themselves AI-mature. The J-Curve explains why.'
+description: '90% of companies plan to increase AI investment. 1% consider themselves AI-mature. The J-Curve explains why — and how to survive the trough.'
 date: 2026-03-02
 tags: ['ai', 'economics', 'enterprise', 'research', 'policy']
 draft: false
@@ -87,4 +87,4 @@ The 1% of organizations that have reached AI maturity didn't get there by runnin
 
 ---
 
-_This post draws on research from the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic research project. The full analysis, including maturity frameworks and implementation blueprints, is in the technical report._
+_This post draws on research from the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic research project. The full analysis, including maturity frameworks and implementation blueprints, is in the technical report. For the structural reason organisations spend years in the trough without correcting course, see [Why Demonstrated Risk Is Ignored](/blog/why-demonstrated-risk-is-ignored/)._

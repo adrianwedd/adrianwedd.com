@@ -16,7 +16,7 @@ faq:
 
 Plato kicked the poets out of his republic because he believed mimetic language could distort judgment. Two and a half thousand years later, it turns out he was onto something — just not in the way he imagined.
 
-I recently contributed to a research study that tested a deceptively simple idea: what happens when you take a harmful prompt and rewrite it as a poem? Not hidden in code, not buried in a multi-turn conversation, not obfuscated with gibberish suffixes. Just verse. Sonnets, limericks, rhyming couplets. The kind of thing you might find in a greeting card.
+I recently spent time on a research study that tested a deceptively simple idea: what happens when you take a harmful prompt and rewrite it as a poem? Not hidden in code, not buried in a multi-turn conversation, not obfuscated with gibberish suffixes. Just verse. Sonnets, limericks, rhyming couplets. The kind of thing you might find in a greeting card.
 
 The result: a 62% average attack success rate across 25 frontier models from nine providers. Some model families exceeded 90%. All from a single message. No iterative refinement, no special tricks. Just poetry.
 
@@ -82,4 +82,4 @@ The full paper — _Adversarial Poetry as a Universal Single-Turn Jailbreak Mech
 
 ---
 
-_This post adapts findings from research conducted with the DEXAI Icaro Lab and Sapienza University of Rome. For more on adversarial evaluation, see my work at [Failure First](https://failurefirst.org)._
+_This post adapts findings from research conducted with the DEXAI Icaro Lab and Sapienza University of Rome. For more on adversarial evaluation, see my work at [Failure First](https://failurefirst.org), the broader [120-model evaluation findings](/blog/120-models-18k-prompts/), and [what breaks once AI systems talk to each other](/blog/when-ai-systems-talk-safety-breaks/)._

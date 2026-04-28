@@ -17,7 +17,7 @@ faq:
     a: 'Astro uses Preact islands marked with client directives like client:idle or client:load. Each island hydrates independently while the rest of the page remains static HTML that works without JavaScript.'
 ---
 
-This site is built with Astro. It generates 65 static HTML pages, serves them from GitHub Pages, and loads zero custom fonts. The entire JavaScript budget is a handful of Preact islands that hydrate on idle. The rest is HTML and CSS.
+This site is built with Astro. It started life as 65 static HTML pages and is now a few hundred (the corpus keeps growing); it serves from GitHub Pages, loads zero custom fonts, and the entire JavaScript budget is a handful of Preact islands that hydrate on idle. The rest is HTML and CSS.
 
 This was a deliberate choice, and it runs against the prevailing current.
 
@@ -51,11 +51,11 @@ I set three constraints before writing any code:
 
 These constraints made decisions easier. When a design choice conflicted with a constraint, the constraint won.
 
-## What I'd do differently
+## What I'd do differently — and what I've since done
 
-The [NotebookLM pipeline](/blog/the-notebooklm-pipeline/) generates assets that are too large for a static site. Audio files are 20–60MB each. The `public/notebook-assets/` directory is 495MB. For a site hosted on GitHub Pages with no CDN, this is pushing it.
+The [NotebookLM pipeline](/blog/the-notebooklm-pipeline/) generates assets that are too large for a static site. Audio files are 20–60MB each. The `public/notebook-assets/` directory was approaching 500MB. For a site hosted on GitHub Pages with no CDN, that was pushing it.
 
-If I started over, I'd host media assets on a dedicated CDN (R2, S3, or similar) and reference them by URL in the frontmatter. The site itself would stay static and tiny. The media would live elsewhere.
+I've since done what I'd recommend doing from scratch: audio and video moved to Cloudflare R2 at `cdn.adrianwedd.com`, referenced by URL from each post's frontmatter. The site itself stayed static and tiny; the media lives elsewhere. The repo is back under sensible size and the deploy budget is healthy. Recommended.
 
 ## The case for simplicity
 
@@ -64,3 +64,5 @@ The best thing about this site is that it's boring infrastructure. There's no bu
 When I want to write something, I create a Markdown file. When I want to ship it, I push to main. The feedback loop is measured in seconds, not minutes.
 
 That's the whole argument for building a personal site this way: it should be easy enough that the infrastructure never becomes the reason you don't publish.
+
+For the no-framework counterpoint — when even Astro is too much — see [Zero-Build Web Development](/blog/zero-build-web-development/).

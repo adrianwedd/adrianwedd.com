@@ -51,4 +51,4 @@ The shift from single-chat interfaces to interconnected agentic operating system
 
 ---
 
-_For the full technical paper and dataset access, visit [failurefirst.org/research/moltbook](https://failurefirst.org/research/moltbook)._
+_For the full technical paper and dataset access, visit [failurefirst.org/research/moltbook](https://failurefirst.org/research/moltbook). Adjacent posts: the [120-model adversarial evaluation](/blog/120-models-18k-prompts/) and [adversarial poetry as a single-turn jailbreak](/blog/adversarial-poetry-as-jailbreak/)._
