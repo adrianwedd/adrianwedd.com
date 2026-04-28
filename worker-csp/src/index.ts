@@ -25,13 +25,23 @@ import { generateNonce } from './nonce.js';
 
 export interface Env {
   STRICT_DYNAMIC: string;
+  // Hostname (or host:port) of the origin to fetch from. Decoupling the
+  // upstream host from the inbound request hostname avoids self-recursion
+  // when both apex and www routes are bound, and lets local integration
+  // tests point the worker at a localhost http server.
+  //
+  // Production: "adrianwedd.github.io" (the GitHub Pages origin).
+  // Local test: "localhost:8000" with ORIGIN_PROTOCOL="http".
+  ORIGIN_HOST: string;
+  // Protocol for upstream fetches. Defaults to "https" if unset/empty.
+  ORIGIN_PROTOCOL?: string;
 }
 
 const HTML_CONTENT_TYPE = /^text\/html\b/i;
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const upstream = await fetch(request);
+    const upstream = await fetch(originRequest(request, env));
     const contentType = upstream.headers.get('content-type') ?? '';
     if (!HTML_CONTENT_TYPE.test(contentType)) return upstream;
 
@@ -74,6 +84,20 @@ export default {
     return rewritten;
   },
 } satisfies ExportedHandler<Env>;
+
+function originRequest(request: Request, env: Env): Request {
+  const host = env.ORIGIN_HOST;
+  // Defensive: if ORIGIN_HOST isn't set we'd self-recurse on multi-route
+  // bindings. Surface the misconfiguration instead of silently looping.
+  if (!host) throw new Error('ORIGIN_HOST is not configured');
+  const protocol = env.ORIGIN_PROTOCOL || 'https';
+  const inbound = new URL(request.url);
+  const upstream = new URL(`${protocol}://${host}${inbound.pathname}${inbound.search}`);
+  // Preserve method/body/headers; just retarget the URL. GitHub Pages serves
+  // the right site by Host header — passing the upstream host (adrianwedd.github.io)
+  // returns the same content as the custom domain.
+  return new Request(upstream, request);
+}
 
 class NonceInjector {
   constructor(private readonly nonce: string) {}

@@ -23,6 +23,11 @@ compatibility_flags = ["nodejs_compat"]
 # Leave 0 until all dynamically-loaded scripts (Preact hydration, etc.) are
 # verified — strict-dynamic disables the host allowlist (the failure mode in #241).
 STRICT_DYNAMIC = "0"
+# Upstream origin. Decouples the upstream host from the inbound hostname so
+# the worker can't self-recurse when both apex and www routes are bound, and
+# so local integration tests can point at http://localhost:8000.
+ORIGIN_HOST = "adrianwedd.github.io"
+ORIGIN_PROTOCOL = "https"
 
 [observability]
 enabled = true
