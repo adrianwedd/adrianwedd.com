@@ -4,6 +4,9 @@ description: "Building a robot that refuses to give orders surfaced the same des
 date: 2026-04-26
 tags: ['ai-safety', 'neurodivergence', 'engineering', 'philosophy', 'research']
 draft: false
+heroImage: '/notebook-assets/non-coercive-design/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/non-coercive-design/audio.mp3'
+audioDuration: '23:33'
 ---
 
 The shoes are by the door.
