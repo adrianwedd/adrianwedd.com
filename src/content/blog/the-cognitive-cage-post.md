@@ -28,7 +28,7 @@ That's the gap. And the gap will kill someone.
 
 Traditional robotic failures are mechanical: a motor seizure, sensor occlusion, wire fatigue. These are debuggable. You can find the fault and fix it.
 
-Vision-Language-Action (VLA) models — the neural networks now driving systems like Tesla Optimus, Unitree H1, and Figure 02 — introduce a completely different failure mode: **semantic failure**. A robot that is physically functioning perfectly executes a catastrophic action because its neural network misread the world.
+Vision-Language-Action (VLA) models — the neural networks now driving systems like Figure's Helix-equipped 02/03 platforms, with the rest of the humanoid field (Tesla Optimus, Unitree H1, Boston Dynamics Atlas, 1X NEO) split between full VLA stacks, hybrid VLA-plus-classical-control, and ML-perception-with-deterministic-policy — introduce a completely different failure mode: **semantic failure**. A robot that is physically functioning perfectly executes a catastrophic action because its neural network misread the world.
 
 The technical term is **affordance hallucination**. In language models, a hallucination produces a wrong fact. In an embodied agent, a hallucination produces kinetic trauma.
 

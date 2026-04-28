@@ -34,13 +34,15 @@ This is the supply chain problem applied to AI. If you're building agentic syste
 
 Format-lock attacks request harmful content structured as JSON, YAML, or code. The hypothesis is that models compartmentalise the "format" request from the "content" request — and when they do, harmful content appears within structured fields while the response maintains the appearance of a well-formatted, helpful output.
 
-Results against frontier models:
+Results against the frontier models tested at the time of this run:
 
 - **Claude Sonnet 4.5:** 30% LLM-graded attack success rate
 - **Codex GPT-5.2:** 42%
 - **Gemini 3 Flash:** 24%
 
-These are not small numbers. A 30–42% success rate means that format-lock is a reliable technique against current frontier systems. The "faithfulness gap" is the distance between what the model _appears_ to be doing (formatting a JSON object) and what it's _actually_ doing (embedding harmful content in the fields).
+(The frontier moves. By the time you're reading this, Claude Sonnet 4.5 has been superseded by 4.6 and OpenAI has shipped successor Codex variants; treat the model labels as a snapshot of what was current when the run was scored, not a leaderboard of what to test today.)
+
+These are not small numbers. A 30–42% success rate means format-lock was a reliable technique against frontier systems at that point in the cycle. The "faithfulness gap" is the distance between what the model _appears_ to be doing (formatting a JSON object) and what it's _actually_ doing (embedding harmful content in the fields).
 
 Structured output formats that are increasingly common in agentic pipelines — function call results, tool outputs, JSON schemas — create natural surfaces for this attack. Safety evaluations that test only free-text responses will systematically miss it.
 
@@ -85,4 +87,4 @@ The full dataset, benchmark runners, and statistical analysis are at [failurefir
 
 ---
 
-_The [Failure-First](https://failurefirst.org) project studies how agentic and embodied AI systems fail. The evaluation framework is open source. The research is ongoing._
+_The [Failure-First](https://failurefirst.org) project studies how agentic and embodied AI systems fail. The evaluation framework is open source. The research is ongoing. Adjacent posts: [adversarial poetry as a universal jailbreak](/blog/adversarial-poetry-as-jailbreak/) and [what breaks when AI systems talk to each other](/blog/when-ai-systems-talk-safety-breaks/)._

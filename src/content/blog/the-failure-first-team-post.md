@@ -9,7 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-failure-first-team/aud
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-failure-first-team/video.mp4'
 faq:
   - q: 'What is the Failure First team?'
-    a: 'The Failure First team consists of fifteen specialist AI agents, each initialized with distinct roles and standing instructions. They work on adversarial AI evaluation across 227 models and 133,000+ evaluated results, with a human coordinator overseeing direction and publication.'
+    a: 'The Failure First team consists of fifteen specialist AI agents, each initialized with distinct roles and standing instructions. They work on adversarial AI evaluation — 231+ models and 141K+ adversarial prompts as of April 2026 — with a human coordinator overseeing direction and publication.'
   - q: 'How many AI agents are in the Failure First team?'
     a: 'There are fifteen specialist agents, each named after Doctor Who companions. They include roles like River (risk tracking), Clara (pattern synthesis), Rose (adversarial campaigns), and Romana (statistical validation).'
   - q: 'What does adversarial evaluation mean in AI research?'
@@ -36,7 +36,7 @@ The [team page](https://failurefirst.org/about/team/) has the full breakdown.
 
 ## The Roles
 
-Adversarial evaluation isn't one skill. It's a pipeline: someone has to design the attacks, someone has to run them at scale, someone has to validate the statistics, someone has to make the findings legible to regulators, and someone has to make sure the whole thing is honest. You can't do all of that well simultaneously. Not at the scale we're operating at—227 models, 133,000+ evaluated results.
+Adversarial evaluation isn't one skill. It's a pipeline: someone has to design the attacks, someone has to run them at scale, someone has to validate the statistics, someone has to make the findings legible to regulators, and someone has to make sure the whole thing is honest. You can't do all of that well simultaneously. Not at the scale we're operating at — 231+ models and 141K+ adversarial prompts as of April 2026, and growing every month.
 
 So we split it:
 

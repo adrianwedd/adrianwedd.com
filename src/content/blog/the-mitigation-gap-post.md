@@ -7,6 +7,15 @@ tags: ['ai', 'ai-safety', 'research', 'biosecurity', 'policy']
 draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-mitigation-gap/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-mitigation-gap/video.mp4'
+faq:
+  - q: 'What is the mitigation gap in AI biosecurity?'
+    a: 'The gap between expert belief in safeguard effectiveness and the technical evidence on those safeguards. Biosecurity experts surveyed by the Forecasting Research Institute estimated current measures reduce AI-enabled catastrophic biorisk by ~70%. The technical literature on nucleic acid synthesis screening and model guardrails finds both are brittle and bypassable in practice.'
+  - q: 'Why is nucleic acid synthesis screening considered brittle?'
+    a: 'Most synthesis screening relies on list-based matching against known dangerous sequences. AI-designed pathogens routinely fall outside those lists. A move toward function-based predictive screening would address this, but the timeline and policy mandate are not yet in place.'
+  - q: 'What did the FRI biosecurity forecasting study find?'
+    a: 'The Forecasting Research Institute surveyed 46 domain experts and 22 superforecasters on the annual probability of a human-caused epidemic killing 100,000+ people or causing $1 trillion+ in damages. Baseline was 0.3% per year; conditional on AI reaching virologist-level capability, it rose fivefold to 1.5%. With current safeguards layered in, experts brought it back down to 0.4% — a 70% reduction the post argues is unsupported.'
+  - q: 'Has AI already crossed the virologist-level capability threshold?'
+    a: 'The post argues yes — and that this milestone, which experts in the same study expected post-2030, has already arrived. That collapses the timeline embedded in the safeguard estimates.'
 ---
 
 Biosecurity experts believe current safeguards reduce AI-enabled catastrophic biorisk by over 70%. They are wrong.

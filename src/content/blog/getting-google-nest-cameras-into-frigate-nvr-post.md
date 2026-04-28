@@ -44,7 +44,7 @@ ls -lh /tmp/frame.png   # Real frame: 100KB+. Placeholder: 2.6KB.
 md5sum /tmp/frame.png   # 86a16300a89c834fc52187380d80c6da = placeholder
 ```
 
-The workaround is to open the camera in your browser, which triggers a WebRTC session and makes camera_proxy return real frames — but only while the tab is open. Google enforces a 60-second maximum session lifetime. This isn't a solution.
+The workaround is to open the camera in your browser, which triggers a WebRTC session and makes camera_proxy return real frames — but only while the tab is open. Sessions expire after roughly a minute in this setup (Google's SDM docs document a 5-minute live-stream limit; Home Assistant, the access-token TTL, or upstream throttling enforces something shorter in practice). Either way: not a solution.
 
 ## The right approach: programmatic WebRTC
 
@@ -244,7 +244,7 @@ HA_TOKEN = os.environ["HA_TOKEN"]  # KeyError if missing = deliberate
 
 ## Running it as a service
 
-The capture script runs continuously, renegotiating WebRTC sessions every 55 seconds (just before Google's 60-second expiry). It's managed by systemd:
+The capture script runs continuously, renegotiating WebRTC sessions every 55 seconds (sessions in this setup expire around the minute mark; renegotiating just before that keeps the stream healthy). It's managed by systemd:
 
 ```ini
 # /etc/systemd/system/nest-webrtc-capture.service
@@ -318,7 +318,7 @@ For skimmers:
 7. go2rtc `exec:` needs MPEG-TS output, not RTSP — pipes are unidirectional.
 8. Frigate v0.17 requires `detect: enabled: true` explicitly in each camera block.
 9. Hailo version must match exactly between container `hailortcli` and host firmware.
-10. Google sessions expire at 60 seconds. Plan to renegotiate.
+10. SDM sessions expire well before Google's documented 5-minute limit in this stack — plan to renegotiate around the 55-second mark.
 
 ---
 
