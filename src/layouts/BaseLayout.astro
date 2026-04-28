@@ -254,8 +254,14 @@ const props = Astro.props;
 
             if (key === 't' && !pending) {
               e.preventDefault();
-              document.documentElement.classList.toggle('light');
-              localStorage.setItem('theme', document.documentElement.classList.contains('light') ? 'light' : 'dark');
+              var themeToggle = document.querySelector('.theme-toggle');
+              if (themeToggle) {
+                themeToggle.click();
+              } else {
+                document.documentElement.classList.toggle('light');
+                localStorage.setItem('theme', document.documentElement.classList.contains('light') ? 'light' : 'dark');
+                document.dispatchEvent(new CustomEvent('theme-changed'));
+              }
               return;
             }
 
