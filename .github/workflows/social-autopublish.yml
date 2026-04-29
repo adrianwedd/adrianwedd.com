@@ -80,16 +80,21 @@ jobs:
               [ -z "$PLATFORM" ] && continue
               IDEMPOTENCY_KEY="auto-${PLATFORM}-${SLUG}-$(git rev-parse --short HEAD)"
 
+              # type=text not type=link: Facebook Pages can't create custom
+              # link previews via Graph API (since 2017). When we set the
+              # link parameter on a Page feed post, FB silently consumes it
+              # AND strips the URL from the message body — leaving posts
+              # with no clickable URL anywhere. Sending as text keeps the URL
+              # in the message body; FB autolinks it client-side.
               RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${SOCIAL_WORKER_URL}/api/publish" \
                 -H "Authorization: Bearer ${SOCIAL_PUBLISH_SECRET}" \
                 -H "Content-Type: application/json" \
                 --data "$(jq -n \
                   --arg platform "$PLATFORM" \
-                  --arg type "link" \
+                  --arg type "text" \
                   --arg message "$MESSAGE" \
-                  --arg link "$URL" \
                   --arg key "$IDEMPOTENCY_KEY" \
-                  '{platform: $platform, type: $type, message: $message, link: $link, idempotencyKey: $key}')" \
+                  '{platform: $platform, type: $type, message: $message, idempotencyKey: $key}')" \
                 --max-time 30)
               HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
               BODY=$(echo "$RESPONSE" | sed '$d')
