@@ -6,6 +6,7 @@ tags: ['ai-safety', 'multi-agent', 'security', 'research', 'architecture']
 draft: false
 heroImage: '/notebook-assets/multi-agent-supply-chain/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/multi-agent-supply-chain/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/multi-agent-supply-chain/video.mp4'
 audioDuration: '23:17'
 ---
 

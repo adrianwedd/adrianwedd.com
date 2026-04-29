@@ -6,6 +6,7 @@ tags: ['ai-safety', 'philosophy', 'neuroscience', 'research']
 draft: false
 heroImage: '/notebook-assets/the-organismic-line/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-line/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-line/video.mp4'
 audioDuration: '21:21'
 ---
 
