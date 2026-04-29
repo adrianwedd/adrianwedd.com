@@ -35,9 +35,20 @@ const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 const words = post.body ? post.body.split(/\s+/).length : 0;
 const readingTime = Math.max(1, Math.ceil(words / 200));
 
-// OG image: use heroImage if set, otherwise generated OG image
+// OG image: prefer the post's hero infographic, but swap .webp -> .jpg
+// because FB / X / LinkedIn / iMessage do not reliably render WebP og:image
+// scrapes. The .jpg twin is generated alongside the .webp at build/asset
+// time. Fall back to the auto-generated text-card OG PNG when no heroImage.
 const postSlug = slug(post.id);
-const ogImage = post.data.heroImage || `/og/blog/${postSlug}.png`;
+const ogImage = post.data.heroImage
+  ? post.data.heroImage.replace(/\.webp$/, '.jpg')
+  : `/og/blog/${postSlug}.png`;
+// Infographic hero images are portrait 1536x2752; the auto-generated text
+// cards are 1200x630 landscape. Pass the right dimensions.
+const ogImageIsInfographic =
+  typeof post.data.heroImage === 'string' && post.data.heroImage.includes('infographic');
+const ogImageWidth = ogImageIsInfographic ? 1536 : 1200;
+const ogImageHeight = ogImageIsInfographic ? 2752 : 630;
 
 // Series support
 const seriesPosts = post.data.series
@@ -65,6 +76,8 @@ const matchedProject = allProjects.find(
   title={post.data.title}
   description={post.data.description}
   image={ogImage}
+  imageWidth={ogImageWidth}
+  imageHeight={ogImageHeight}
   type="article"
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
