@@ -6,6 +6,7 @@ tags: ['ai-safety', 'research', 'engineering', 'policy']
 draft: false
 heroImage: '/notebook-assets/architectural-safety/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/video.mp4'
 audioDuration: '22:59'
 ---
 
