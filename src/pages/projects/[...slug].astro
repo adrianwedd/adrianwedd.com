@@ -24,8 +24,15 @@ const { project } = Astro.props;
 const { Content } = await render(project);
 
 const projectSlug = slug(project.id);
-const ogImage = project.data.heroImage || `/og/projects/${projectSlug}.png`;
+// OG image: prefer the project's hero infographic, swap .webp -> .jpg
+// (FB / X / LinkedIn / iMessage don't reliably render WebP og:image).
+// The .jpg twin is generated alongside the .webp.
+const ogImage = project.data.heroImage
+  ? project.data.heroImage.replace(/\.webp$/, '.jpg')
+  : `/og/projects/${projectSlug}.png`;
 const isPortraitHero = typeof project.data.heroImage === 'string' && project.data.heroImage.includes('infographic');
+const ogImageWidth = isPortraitHero ? 1536 : 1200;
+const ogImageHeight = isPortraitHero ? 2752 : 630;
 const allAudio = await getCollection('audio');
 const relatedEpisodes = allAudio.filter((ep) => !ep.data.draft && ep.data.relatedProject === projectSlug);
 
@@ -64,8 +71,8 @@ const allBlogPosts = project.data.series
   title={project.data.title}
   description={project.data.description}
   image={ogImage}
-  imageWidth={isPortraitHero ? 768 : 1200}
-  imageHeight={isPortraitHero ? 1376 : 630}
+  imageWidth={ogImageWidth}
+  imageHeight={ogImageHeight}
   type="website"
   tags={project.data.tags}
   preloadImage={typeof project.data.heroImage === 'string' ? project.data.heroImage : undefined}
