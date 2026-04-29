@@ -3,7 +3,10 @@ title: 'The Economics of Inadequate Safety'
 description: 'AI safety fails when it is funded like a pilot. Until safety has a real price, the J-curve trough is also a safety trough.'
 date: 2026-05-01
 tags: ['ai-safety', 'economics', 'policy', 'research']
-draft: true
+draft: false
+heroImage: '/notebook-assets/economics-of-inadequate-safety/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/economics-of-inadequate-safety/audio.mp3'
+audioDuration: '24:51'
 ---
 
 Most organisations are still in the trough of the AI productivity J-curve. They are buying models, running pilots, and discovering that the productivity dividend has not arrived on schedule.
