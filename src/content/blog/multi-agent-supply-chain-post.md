@@ -3,7 +3,10 @@ title: 'Multi-Agent Safety Is the New Supply Chain Security'
 description: 'Multi-agent AI systems reproduce software supply-chain failure at the cognitive layer. The security playbook transfers.'
 date: 2026-04-29
 tags: ['ai-safety', 'multi-agent', 'security', 'research', 'architecture']
-draft: true
+draft: false
+heroImage: '/notebook-assets/multi-agent-supply-chain/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/multi-agent-supply-chain/audio.mp3'
+audioDuration: '23:17'
 ---
 
 SolarWinds (2020): a compromised build server injected malicious code into an Orion update. 18,000 organisations installed it, including US government agencies. Nobody checked. The update arrived through a trusted channel, so it was trusted.

@@ -3,7 +3,10 @@ title: 'How to Read a Safety Claim'
 description: 'A literacy guide for non-technical decision-makers on spotting AI safety theatre, understanding ASR inflation, and the five-question architectural test.'
 date: 2026-04-30
 tags: ['ai-safety', 'policy', 'literacy', 'research']
-draft: true
+draft: false
+heroImage: '/notebook-assets/how-to-read-a-safety-claim/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/how-to-read-a-safety-claim/audio.mp3'
+audioDuration: '21:45'
 ---
 
 You are a lawyer, a regulator, a journalist, or a hospital administrator. You are increasingly required to make decisions about AI systems — whether to buy them, how to regulate them, or how much to trust them with your organisation's reputation.

@@ -3,7 +3,10 @@ title: 'The Organismic Line: Where Predictive Processing Stops Being a Metaphor'
 description: 'Predictive processing travels into AI. Active inference does not, unless the system can pay for being wrong.'
 date: 2026-05-02
 tags: ['ai-safety', 'philosophy', 'neuroscience', 'research']
-draft: true
+draft: false
+heroImage: '/notebook-assets/the-organismic-line/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-line/audio.mp3'
+audioDuration: '21:21'
 ---
 
 The [previous post](/blog/the-organismic-prophecy/) argued that human prediction is metabolically grounded and AI prediction is not, and that using the same vocabulary for both obscures the difference. It named the distinction. It did not name the people blurring it. This post does.
