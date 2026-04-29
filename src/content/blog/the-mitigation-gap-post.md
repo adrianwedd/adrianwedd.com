@@ -66,7 +66,7 @@ These aren't independent risks. A novice uses an LLM to acquire foundational vir
 
 The research proposes a three-layer architecture, and none of the layers is optional.
 
-**Technical layer: predictive screening.** The only viable long-term fix for synthesis screening is to fight AI with AI. Instead of matching sequences against lists, screening systems need to predict a sequence's biological function from its structure. This means analysing what a novel sequence would _do_, not whether it matches something we already know about. NIST is working on standards here, but the field needs a forced paradigm shift from reactive to predictive.
+**Technical layer: predictive screening.** The only viable long-term fix for synthesis screening is to fight AI with AI. Instead of matching sequences against lists, screening systems need to predict a sequence's biological function from its structure. This means analysing what a novel sequence would _do_, not whether it matches something we already know about. NIST is working on standards here, but the field needs to shift from reactive matching to predictive analysis.
 
 **Developer layer: liability.** Voluntary safety commitments haven't worked. The proposal is a statutory liability framework for developers of dual-use AI models, coupled with a safe harbour provision for those who submit to standardised, independent red-teaming. This creates a market incentive: safety becomes a business function, not a PR exercise. It also addresses the open-source problem -- the original developer bears accountability regardless of licensing.
 
