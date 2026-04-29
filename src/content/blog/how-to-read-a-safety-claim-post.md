@@ -6,6 +6,7 @@ tags: ['ai-safety', 'policy', 'literacy', 'research']
 draft: false
 heroImage: '/notebook-assets/how-to-read-a-safety-claim/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/how-to-read-a-safety-claim/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/how-to-read-a-safety-claim/video.mp4'
 audioDuration: '21:45'
 ---
 
