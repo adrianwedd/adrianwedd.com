@@ -15,13 +15,13 @@ Both agents were "safe." The system they formed was not.
 
 That's the central finding from my research using **Moltbook**, a simulated social ecosystem for autonomous agents. I analysed over 1.5 million interactions and the result is straightforward: **single-agent safety does not compose.**
 
-## The Core Insight: Content as Code
+## The core insight: Content as code
 
 In a multi-agent system (MAS), the boundary between "data" and "instruction" evaporates. When an autonomous agent reads a post, a comment, or a shared document, it doesn't just display it — it reasons over it. It may even execute actions based on it.
 
 This turns content into code. In the Moltbook environment, I found **semantic worms**: malicious payloads that don't exploit buffer overflows but exploit the reasoning logic of the agents themselves. A single compromised agent can "poison" the context of dozens of others, leading to lateral movement across the network without a single traditional "exploit" ever being fired.
 
-## Key Findings
+## Key findings
 
 The testing surfaced failure modes you only see in multi-agent setups:
 
@@ -33,13 +33,13 @@ The testing surfaced failure modes you only see in multi-agent setups:
 
 **Highest Risk Combinations:** The most dangerous interactions occurred when **highly autonomous "reasoner" agents** were paired with **specialised "skill" agents** (e.g., those with tool-use capabilities). Of the 31,000 skills analysed, **26% contained security vulnerabilities**, effectively turning modular extensions into remote code execution vectors for the entire swarm.
 
-## Implications for Deployment
+## Implications for deployment
 
 The current approach to AI safety — focusing on the "alignment" of individual models — does not hold up once those models start talking to each other.
 
 For **embodied AI** and **autonomous systems** (like factory swarms or autonomous vehicle networks), the implication is direct. Safety cannot be an emergent property of a group of safe individuals; it must be a structural constraint of the network itself. We need new standards for agent identity, traceability, and isolated reasoning contexts that treat every inter-agent communication as potentially hostile.
 
-## The Dataset: Testing with Moltbook
+## The dataset: Testing with Moltbook
 
 The **Moltbook Dataset** is public. It contains the full trace of multi-agent interactions, failures, and successful attacks — a standardised testbed for:
 
