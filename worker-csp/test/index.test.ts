@@ -186,6 +186,27 @@ describe('worker fetch handler', () => {
     expect(res.headers.get('content-security-policy')).toBeTruthy();
   });
 
+  it('strips Range header so origin always returns 200 (not 206 Partial Content)', async () => {
+    // OG scrapers (Facebook, LinkedIn) send Range headers. If the origin
+    // honours them it returns 206 with truncated HTML, causing missing meta tags.
+    fetchMock
+      .get('https://adrianwedd.com')
+      .intercept({ path: '/og-test' })
+      .reply(200, htmlBody('<script>x</script>'), {
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      });
+
+    const res = await SELF.fetch('https://adrianwedd.com/og-test', {
+      headers: { Range: 'bytes=0-1023' },
+    });
+    // The interceptor only matches (and returns 200) if Range was stripped.
+    // If Range were forwarded, undici fetchMock would propagate it and we'd
+    // need a separate 206 interceptor — absence of that interceptor causes
+    // assertNoPendingInterceptors to pass only when the 200 path was taken.
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-security-policy')).toBeTruthy();
+  });
+
   it('preserves upstream redirects without rewriting body', async () => {
     fetchMock.get('https://adrianwedd.com').intercept({ path: '/legacy' }).reply(301, '', {
       headers: {
