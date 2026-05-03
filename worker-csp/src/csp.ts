@@ -18,6 +18,11 @@ export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): strin
     "'self'",
     `'nonce-${nonce}'`,
     "'wasm-unsafe-eval'", // Pagefind WASM
+    // Cloudflare Turnstile creates srcdoc iframes in the page context; those
+    // documents inherit our script-src CSP but lack the per-request nonce.
+    // 'strict-dynamic' doesn't cover inline scripts in srcdoc parsing contexts,
+    // so we hash the one stable inline script that Turnstile embeds.
+    "'sha256-eJGI0Ik4oYe/PKLDOt4wcN76wYs8h+Ew05pMzdY6xG8='",
     // Host allowlist: honoured by browsers that don't support strict-dynamic.
     'https://www.googletagmanager.com',
     'https://www.google.com',
@@ -43,7 +48,8 @@ export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): strin
     "style-src-attr 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",
     // GA4 audience pixels use country-specific google TLDs (e.g. google.com.au).
-    "img-src 'self' data: https://cdn.adrianwedd.com https://www.google-analytics.com https://*.google-analytics.com https://px.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.linkedin.com https://www.google.com.au",
+    // ep1/ep2.adtrafficquality.google serve the sodar tracking pixel as an image.
+    "img-src 'self' data: https://cdn.adrianwedd.com https://www.google-analytics.com https://*.google-analytics.com https://px.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.linkedin.com https://www.google.com.au https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google",
     "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://adservice.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com",
     "media-src 'self' https://cdn.adrianwedd.com",
     'frame-src https://www.openstreetmap.org https://challenges.cloudflare.com https://www.google.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google',

@@ -52,6 +52,15 @@ describe('buildCsp', () => {
     expect(csp).toMatch(/media-src [^;]*https:\/\/cdn\.adrianwedd\.com/);
   });
 
+  it('includes Turnstile srcdoc script hash and adtrafficquality sodar origins', () => {
+    const csp = buildCsp({ nonce: 'x', strictDynamic: false });
+    // Turnstile srcdoc hash allows Cloudflare's inline script in the inherited CSP
+    expect(csp).toMatch(/'sha256-eJGI0Ik4oYe\/PKLDOt4wcN76wYs8h\+Ew05pMzdY6xG8='/);
+    // Google Ads sodar pixel loads as image from ep1/ep2
+    expect(csp).toMatch(/img-src [^;]*https:\/\/ep1\.adtrafficquality\.google/);
+    expect(csp).toMatch(/img-src [^;]*https:\/\/ep2\.adtrafficquality\.google/);
+  });
+
   it('uses unsafe-inline for style-src-elem (no nonce — CSP3 nonce suppresses unsafe-inline)', () => {
     // Astro ClientRouter injects <style> elements dynamically on each VT navigation.
     // Per CSP3, adding a nonce-source to style-src-elem silently suppresses
