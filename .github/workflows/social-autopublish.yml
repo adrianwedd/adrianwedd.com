@@ -99,7 +99,7 @@ jobs:
               HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
               BODY=$(echo "$RESPONSE" | sed '$d')
               echo "[$PLATFORM] HTTP $HTTP_CODE — $BODY"
-              [ "$HTTP_CODE" != "200" ] && echo "::warning::[$PLATFORM] Publish returned HTTP $HTTP_CODE for $SLUG"
+              if [ "$HTTP_CODE" != "200" ]; then echo "::warning::[$PLATFORM] Publish returned HTTP $HTTP_CODE for $SLUG"; fi
             done
           done
 
