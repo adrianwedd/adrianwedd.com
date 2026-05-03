@@ -30,18 +30,27 @@ export interface Env {
   // when both apex and www routes are bound, and lets local integration
   // tests point the worker at a localhost http server.
   //
-  // Production: "adrianwedd.github.io" (the GitHub Pages origin).
+  // Production: "adrianwedd.com" — same zone, but resolveOverride bypasses
+  // CF routing so the request goes directly to GitHub Pages IPs and doesn't
+  // re-invoke this Worker.
   // Local test: "localhost:8000" with ORIGIN_PROTOCOL="http".
   ORIGIN_HOST: string;
   // Protocol for upstream fetches. Defaults to "https" if unset/empty.
   ORIGIN_PROTOCOL?: string;
+  // Optional IP to resolve the origin to, bypassing Cloudflare routing.
+  // Production: "185.199.108.153" (GitHub Pages primary IP). Without this,
+  // fetching adrianwedd.com from within the Worker would re-invoke the Worker.
+  // Local test: unset (localhost doesn't need resolveOverride).
+  ORIGIN_RESOLVE_IP?: string;
 }
 
 const HTML_CONTENT_TYPE = /^text\/html\b/i;
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const upstream = await fetch(originRequest(request, env));
+    const fetchInit: RequestInit & { cf?: { resolveOverride?: string } } = {};
+    if (env.ORIGIN_RESOLVE_IP) fetchInit.cf = { resolveOverride: env.ORIGIN_RESOLVE_IP };
+    const upstream = await fetch(originRequest(request, env), fetchInit);
     const contentType = upstream.headers.get('content-type') ?? '';
     if (!HTML_CONTENT_TYPE.test(contentType)) return upstream;
 

@@ -9,14 +9,9 @@ main = "src/index.ts"
 compatibility_date = "2026-04-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Wire to the apex when ready. Leaving commented so deploys don't accidentally
-# capture the production hostname before the policy is reviewed end-to-end.
-# [[routes]]
-# pattern = "adrianwedd.com/*"
-# zone_name = "adrianwedd.com"
-# [[routes]]
-# pattern = "www.adrianwedd.com/*"
-# zone_name = "adrianwedd.com"
+[[routes]]
+pattern = "adrianwedd.com/*"
+zone_name = "adrianwedd.com"
 
 [vars]
 # When STRICT_DYNAMIC=1, script-src uses 'strict-dynamic' alongside the nonce.
@@ -26,8 +21,12 @@ STRICT_DYNAMIC = "0"
 # Upstream origin. Decouples the upstream host from the inbound hostname so
 # the worker can't self-recurse when both apex and www routes are bound, and
 # so local integration tests can point at http://localhost:8000.
-ORIGIN_HOST = "adrianwedd.github.io"
+ORIGIN_HOST = "adrianwedd.com"
 ORIGIN_PROTOCOL = "https"
+# resolveOverride sends the fetch directly to GitHub Pages IPs, bypassing
+# Cloudflare routing (and our own Worker route) to prevent self-recursion.
+# GitHub Pages primary IP — stable, published in GitHub docs.
+ORIGIN_RESOLVE_IP = "185.199.108.153"
 
 [observability]
 enabled = true

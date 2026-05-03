@@ -78,7 +78,7 @@ describe('buildCsp', () => {
 describe('worker fetch handler', () => {
   it('passes through non-HTML responses untouched', async () => {
     fetchMock
-      .get('https://adrianwedd.github.io')
+      .get('https://adrianwedd.com')
       .intercept({ path: '/_astro/page.js' })
       .reply(200, 'console.log(1)', { headers: { 'content-type': 'application/javascript' } });
 
@@ -92,7 +92,7 @@ describe('worker fetch handler', () => {
       '<meta http-equiv="Content-Security-Policy" content="default-src none">' +
       '<script>console.log(1)</script>' +
       '<style>body{color:red}</style>';
-    fetchMock.get('https://adrianwedd.github.io').intercept({ path: '/' }).reply(200, htmlBody(body), {
+    fetchMock.get('https://adrianwedd.com').intercept({ path: '/' }).reply(200, htmlBody(body), {
       headers: { 'content-type': 'text/html; charset=utf-8' },
     });
 
@@ -127,7 +127,7 @@ describe('worker fetch handler', () => {
     // foreign nonce would silently CSP-block that script under enforcement.
     const body = '<script nonce="external">x</script>';
     fetchMock
-      .get('https://adrianwedd.github.io')
+      .get('https://adrianwedd.com')
       .intercept({ path: '/replace' })
       .reply(200, htmlBody(body), {
         headers: { 'content-type': 'text/html; charset=utf-8' },
@@ -145,7 +145,7 @@ describe('worker fetch handler', () => {
     // ETag/Last-Modified/Content-Length no longer match. Leaving them risks
     // truncated responses and incorrect 304 cache hits.
     fetchMock
-      .get('https://adrianwedd.github.io')
+      .get('https://adrianwedd.com')
       .intercept({ path: '/cached' })
       .reply(200, htmlBody('<script>x</script>'), {
         headers: {
@@ -167,7 +167,7 @@ describe('worker fetch handler', () => {
     // Regression: spreading a Response copies own enumerable props only,
     // which loses status/statusText. 404 must remain 404.
     fetchMock
-      .get('https://adrianwedd.github.io')
+      .get('https://adrianwedd.com')
       .intercept({ path: '/missing' })
       .reply(404, htmlBody('<h1>not found</h1>'), {
         headers: { 'content-type': 'text/html; charset=utf-8' },
@@ -179,7 +179,7 @@ describe('worker fetch handler', () => {
   });
 
   it('preserves upstream redirects without rewriting body', async () => {
-    fetchMock.get('https://adrianwedd.github.io').intercept({ path: '/legacy' }).reply(301, '', {
+    fetchMock.get('https://adrianwedd.com').intercept({ path: '/legacy' }).reply(301, '', {
       headers: {
         'content-type': 'text/html; charset=utf-8',
         location: '/new-location/',
@@ -191,11 +191,12 @@ describe('worker fetch handler', () => {
     expect(res.headers.get('location')).toBe('/new-location/');
   });
 
-  it('fetches from ORIGIN_HOST, not the inbound hostname (no self-recursion)', async () => {
-    // The interceptor only matches the configured origin; if the worker still
-    // fetched the inbound host, fetchMock would error on the unmatched call.
+  it('uses ORIGIN_HOST for the upstream fetch regardless of inbound hostname', async () => {
+    // ORIGIN_HOST="adrianwedd.com". Even if the inbound arrives on www, the
+    // worker rewrites to the configured origin. The interceptor is on
+    // adrianwedd.com; an unmatched call to www would cause fetchMock to error.
     fetchMock
-      .get('https://adrianwedd.github.io')
+      .get('https://adrianwedd.com')
       .intercept({ path: '/about/' })
       .reply(200, htmlBody('<script>x</script>'), {
         headers: { 'content-type': 'text/html; charset=utf-8' },
