@@ -99,7 +99,8 @@ export async function GET(context: APIContext) {
       <itunes:email>adrianwedd@gmail.com</itunes:email>
     </itunes:owner>
     <itunes:type>episodic</itunes:type>
-    <itunes:category text="Technology">
+    <itunes:category text="Technology" />
+    <itunes:category text="News">
       <itunes:category text="Tech News" />
     </itunes:category>
     <itunes:category text="Science">
