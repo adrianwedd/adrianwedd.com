@@ -45,6 +45,8 @@ export async function GET(context: APIContext) {
       <title>${escapeXml(ep.data.title)}</title>
       <description>${escapeXml(ep.data.description)}</description>
       <itunes:summary>${escapeXml(ep.data.description)}</itunes:summary>
+      <content:encoded><![CDATA[${ep.data.description}]]></content:encoded>
+      <itunes:author>Adrian Wedd</itunes:author>
       <link>${episodeUrl}</link>
       <guid isPermaLink="true">${episodeUrl}</guid>
       <pubDate>${ep.data.date.toUTCString()}</pubDate>

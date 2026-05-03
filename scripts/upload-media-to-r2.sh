@@ -60,12 +60,28 @@ SKIPPED=0
 
 : > "$FAILED_LOG"
 
+mime_type() {
+  case "${1##*.}" in
+    mp3) echo "audio/mpeg" ;;
+    mp4) echo "video/mp4" ;;
+    webm) echo "video/webm" ;;
+    webp) echo "image/webp" ;;
+    jpg|jpeg) echo "image/jpeg" ;;
+    png) echo "image/png" ;;
+    pdf) echo "application/pdf" ;;
+    json) echo "application/json" ;;
+    *) echo "application/octet-stream" ;;
+  esac
+}
+
 upload_file() {
   local file="$1"
   local key="$2"
   local attempt=1
   local size
   size=$(du -h "$file" | cut -f1)
+  local content_type
+  content_type=$(mime_type "$file")
 
   while [ $attempt -le $MAX_RETRIES ]; do
     local http_code
@@ -73,7 +89,7 @@ upload_file() {
       -X PUT \
       "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/r2/buckets/${BUCKET}/objects/${key}" \
       -H "@${AUTH_HEADER_FILE}" \
-      -H "Content-Type: application/octet-stream" \
+      -H "Content-Type: ${content_type}" \
       --data-binary "@${file}" \
       --max-time 600)
 
