@@ -23,15 +23,23 @@ async function getFileSize(audioUrl: string): Promise<number> {
 }
 
 export async function GET(context: APIContext) {
-  const episodes = (await getCollection('audio'))
-    .filter((e) => !e.data.draft)
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const [episodes, blogs, projects] = await Promise.all([
+    getCollection('audio').then((all) =>
+      all.filter((e) => !e.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    ),
+    getCollection('blog'),
+    getCollection('projects'),
+  ]);
 
   const site = context.site!.toString().replace(/\/$/, '');
 
   // Apple Podcasts requires a square image, minimum 1400×1400 px (recommended 3000×3000),
   // JPEG or PNG, RGB, ≤500KB. Place the file at public/podcast-cover.jpg.
   const podcastCover = `${site}/podcast-cover.jpg`;
+
+  // Index related content by id (without .md extension) for fast lookup
+  const blogById = new Map(blogs.map((b) => [slug(b.id), b]));
+  const projectById = new Map(projects.map((p) => [slug(p.id), p]));
 
   const items = await Promise.all(
     episodes.map(async (ep) => {
@@ -40,6 +48,16 @@ export async function GET(context: APIContext) {
       const epSlug = slug(ep.id);
       const episodeUrl = `${site}/audio/${epSlug}/`;
 
+      // Resolve episode artwork from the related post/project's heroImage
+      const relatedPost = ep.data.relatedPost ? blogById.get(ep.data.relatedPost.replace(/-post$/, '')) : undefined;
+      const relatedProject = ep.data.relatedProject ? projectById.get(ep.data.relatedProject) : undefined;
+      const heroImage = relatedPost?.data.heroImage ?? relatedProject?.data.heroImage;
+      const episodeImage = heroImage
+        ? heroImage.startsWith('http')
+          ? heroImage
+          : `${site}${heroImage}`
+        : podcastCover;
+
       return `
     <item>
       <title>${escapeXml(ep.data.title)}</title>
@@ -47,6 +65,7 @@ export async function GET(context: APIContext) {
       <itunes:summary>${escapeXml(ep.data.description)}</itunes:summary>
       <content:encoded><![CDATA[${ep.data.description}]]></content:encoded>
       <itunes:author>Adrian Wedd</itunes:author>
+      <itunes:image href="${escapeXml(episodeImage)}" />
       <link>${episodeUrl}</link>
       <guid isPermaLink="true">${episodeUrl}</guid>
       <pubDate>${ep.data.date.toUTCString()}</pubDate>
