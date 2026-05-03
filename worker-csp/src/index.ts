@@ -37,11 +37,12 @@ export interface Env {
   ORIGIN_HOST: string;
   // Protocol for upstream fetches. Defaults to "https" if unset/empty.
   ORIGIN_PROTOCOL?: string;
-  // Optional IP to resolve the origin to, bypassing Cloudflare routing.
-  // Production: "185.199.108.153" (GitHub Pages primary IP). Without this,
-  // fetching adrianwedd.com from within the Worker would re-invoke the Worker.
-  // Local test: unset (localhost doesn't need resolveOverride).
-  ORIGIN_RESOLVE_IP?: string;
+  // Optional hostname for DNS override via resolveOverride. Points to a
+  // DNS-only (grey-cloud) CNAME within the zone that resolves to the real
+  // origin, bypassing Cloudflare routing so the subrequest doesn't re-enter
+  // this Worker. Production: "pages-origin.adrianwedd.com" (CNAME to
+  // adrianwedd.github.io). Local test: unset.
+  ORIGIN_RESOLVE_HOSTNAME?: string;
 }
 
 const HTML_CONTENT_TYPE = /^text\/html\b/i;
@@ -49,7 +50,7 @@ const HTML_CONTENT_TYPE = /^text\/html\b/i;
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const fetchInit: RequestInit & { cf?: { resolveOverride?: string } } = {};
-    if (env.ORIGIN_RESOLVE_IP) fetchInit.cf = { resolveOverride: env.ORIGIN_RESOLVE_IP };
+    if (env.ORIGIN_RESOLVE_HOSTNAME) fetchInit.cf = { resolveOverride: env.ORIGIN_RESOLVE_HOSTNAME };
     const upstream = await fetch(originRequest(request, env), fetchInit);
     const contentType = upstream.headers.get('content-type') ?? '';
     if (!HTML_CONTENT_TYPE.test(contentType)) return upstream;

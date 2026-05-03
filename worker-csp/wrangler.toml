@@ -23,10 +23,10 @@ STRICT_DYNAMIC = "0"
 # so local integration tests can point at http://localhost:8000.
 ORIGIN_HOST = "adrianwedd.com"
 ORIGIN_PROTOCOL = "https"
-# resolveOverride sends the fetch directly to GitHub Pages IPs, bypassing
-# Cloudflare routing (and our own Worker route) to prevent self-recursion.
-# GitHub Pages primary IP — stable, published in GitHub docs.
-ORIGIN_RESOLVE_IP = "185.199.108.153"
+# resolveOverride DNS-only CNAME — bypasses Cloudflare routing so the
+# subrequest goes straight to GitHub Pages without re-entering this worker.
+# Grey-cloud record: pages-origin.adrianwedd.com CNAME adrianwedd.github.io
+ORIGIN_RESOLVE_HOSTNAME = "pages-origin.adrianwedd.com"
 
 [observability]
 enabled = true
