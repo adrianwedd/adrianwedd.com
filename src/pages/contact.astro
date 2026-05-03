@@ -713,6 +713,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
       document.documentElement.dataset.enquiryDelegateInit = '1';
 
       var turnstileVerified = false;
+      window.__turnstileWidgetId = null;
 
       window.onTurnstileSuccess = function () {
         turnstileVerified = true;
@@ -863,8 +864,12 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         // the widget isn't rendered into it. Explicitly render if present.
         var container = document.querySelector('.cf-turnstile');
         if (container && typeof turnstile !== 'undefined') {
+          if (window.__turnstileWidgetId) {
+            try { turnstile.remove(window.__turnstileWidgetId); } catch (e) {}
+            window.__turnstileWidgetId = null;
+          }
           while (container.firstChild) container.removeChild(container.firstChild);
-          turnstile.render(container, {
+          window.__turnstileWidgetId = turnstile.render(container, {
             sitekey: '0x4AAAAAAABtkfyqFbFmIaPO',
             theme: 'dark',
             callback: function () { window.onTurnstileSuccess(); },
