@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Personal website for Adrian Wedd. Astro 5 on GitHub Pages. Dark-first design with botanical earth-tone palette (dusty copper accent).
+Personal website for Adrian Wedd. Astro 6 on GitHub Pages. Dark-first design with botanical earth-tone palette (dusty copper accent).
 
 ## Commands
 
@@ -20,12 +20,12 @@ npm run fetch-analytics  # manual GA4 data fetch
 
 Content validation: `node scripts/validate-content.js` (checks required fields, description ≤160 chars, heroImage paths).
 
-No test suite is configured for the Astro site. The `worker/` directory has its own test suite (`cd worker && npm test`).
+No test suite is configured for the Astro site. `worker/` and `worker-csp/` each have their own test suite (`cd worker && npm test`, `cd worker-csp && npm test`).
 
 ## Stack
 
-- **Framework:** Astro 5 with TypeScript strict
-- **Styling:** Tailwind CSS 3 with CSS custom properties for theming
+- **Framework:** Astro 6 with TypeScript strict
+- **Styling:** Tailwind CSS 4 with CSS custom properties for theming
 - **Islands:** Preact for interactive components (13 islands in `src/components/islands/`)
 - **Content:** Astro Content Collections (blog, projects, gallery, audio) in `src/content/`
 - **Search:** Pagefind (client-side WASM, indexed at build time)
@@ -34,11 +34,12 @@ No test suite is configured for the Astro site. The `worker/` directory has its 
 - **Analytics:** GA4 + LinkedIn Insight Tag, both consent-gated via `ConsentBanner.astro` + `Analytics.astro`
 - **Media CDN:** Cloudflare R2 at `cdn.adrianwedd.com` — audio + video served from R2, infographics remain in git
 - **Social:** Cloudflare Worker at `social.adrianwedd.com` for Facebook automation (see Worker section)
+- **CSP Worker:** Cloudflare Worker in `worker-csp/` — injects per-request nonces into HTML at the edge, sets strict `Content-Security-Policy` response header (strict-dynamic, form-action, frame-ancestors). Route: `adrianwedd.com/*`.
 
 ## Architecture
 
 ### Theming (spans 3 files)
-CSS custom properties define all colors in `src/styles/global.css` (`:root` = dark, `.light` = light). Tailwind maps these via `tailwind.config.mjs` (e.g. `bg-surface`, `text-accent`). Theme flash is prevented by an inline script in `BaseLayout.astro` that reads `localStorage('theme')` before paint. ThemeToggle toggles `.light` on `<html>`.
+CSS custom properties define all colors in `src/styles/global.css` (`:root` = dark, `.light` = light). Tailwind 4 maps these via the `@theme` block in `global.css` (e.g. `bg-surface`, `text-accent`) — there is no `tailwind.config.mjs`. Theme flash is prevented by an inline script in `BaseLayout.astro` that reads `localStorage('theme')` before paint. ThemeToggle toggles `.light` on `<html>`.
 
 **Never use Tailwind's `dark:` prefix** — theming is driven by CSS custom properties, not Tailwind dark mode classes.
 
@@ -111,7 +112,7 @@ Located in `worker/`. Hono framework, TypeScript, KV namespace for state.
 
 ## Key patterns
 
-- **Slug utility:** Astro 5 collection IDs include `.md` extension. Always use `slug()` from `src/lib/utils.ts` when generating hrefs from collection IDs.
+- **Slug utility:** Astro 6 collection IDs include `.md` extension. Always use `slug()` from `src/lib/utils.ts` when generating hrefs from collection IDs.
 - **Image slug:** Use `imageSlug()` from `src/lib/utils.ts` for gallery image URLs derived from alt text.
 - **No custom fonts:** System font stack only — zero font downloads.
 - **Consent-first:** No tracking before user consent. ConsentBanner dispatches `consent-updated` CustomEvent. Use `dns-prefetch` (not `preconnect`) for GA4 origins — preconnect opens TCP/TLS before consent.
@@ -368,7 +369,7 @@ exports/project-name/
 
 - Content collection IDs include file extension (`.md`/`.mdx`) — always strip with `slug()`
 - Light mode accent color is `#8a5e42` (umber) for WCAG AA on warm cream backgrounds
-- Tailwind color utilities (`bg-surface`, `text-muted`, `text-accent`) resolve through CSS custom properties, not static values — inspect `tailwind.config.mjs` and `global.css` together
+- Tailwind color utilities (`bg-surface`, `text-muted`, `text-accent`) resolve through CSS custom properties — inspect the `@theme` block in `src/styles/global.css`
 - **NotebookLM audio/video generation takes 2-10 minutes per asset** — batch generation of 30 projects = ~1-5 hours total
 - Content descriptions must be ≤ 160 chars (validated by `scripts/validate-content.js` and CI)
 - Lychee link checker excludes social media domains, private repos, and own domain (pre-deploy 404s) — see `.lychee.toml`
