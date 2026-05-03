@@ -67,4 +67,4 @@ The question I keep returning to: what changes in practice when we can predict t
 
 ---
 
-*The paper is [arXiv:2604.21691](https://arxiv.org/abs/2604.21691). The companion site referenced by the authors has introductory materials and an open questions list.*
+*The paper is [arXiv:2604.21691](https://arxiv.org/abs/2604.21691). The authors have also launched a companion hub at [learningmechanics.pub](https://learningmechanics.pub), with introductory materials and a curated open questions list.*
