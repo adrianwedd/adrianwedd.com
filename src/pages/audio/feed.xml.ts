@@ -29,20 +29,28 @@ export async function GET(context: APIContext) {
 
   const site = context.site!.toString().replace(/\/$/, '');
 
+  // Apple Podcasts requires a square image, minimum 1400×1400 px (recommended 3000×3000),
+  // JPEG or PNG, RGB, ≤500KB. Place the file at public/podcast-cover.jpg.
+  const podcastCover = `${site}/podcast-cover.jpg`;
+
   const items = await Promise.all(
     episodes.map(async (ep) => {
       const audioUrl = ep.data.audioUrl.startsWith('http') ? ep.data.audioUrl : `${site}${ep.data.audioUrl}`;
       const fileSize = await getFileSize(ep.data.audioUrl);
+      const epSlug = slug(ep.id);
+      const episodeUrl = `${site}/audio/${epSlug}/`;
 
       return `
     <item>
       <title>${escapeXml(ep.data.title)}</title>
       <description>${escapeXml(ep.data.description)}</description>
-      <link>${site}/audio/${slug(ep.id)}/</link>
-      <guid isPermaLink="true">${site}/audio/${slug(ep.id)}/</guid>
+      <itunes:summary>${escapeXml(ep.data.description)}</itunes:summary>
+      <link>${episodeUrl}</link>
+      <guid isPermaLink="true">${episodeUrl}</guid>
       <pubDate>${ep.data.date.toUTCString()}</pubDate>
       <enclosure url="${escapeXml(audioUrl)}" type="audio/mpeg" length="${fileSize}" />
       ${ep.data.duration ? `<itunes:duration>${ep.data.duration}</itunes:duration>` : ''}
+      <itunes:episodeType>full</itunes:episodeType>
       <itunes:explicit>false</itunes:explicit>
     </item>`;
     }),
@@ -53,17 +61,32 @@ export async function GET(context: APIContext) {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
   xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
-  xmlns:atom="http://www.w3.org/2005/Atom">
+  xmlns:podcast="https://podcastindex.org/namespace/1.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Adrian Wedd</title>
-    <description>Podcast episodes, audio essays, and conversations from a creative technologist's workshop.</description>
+    <description>Audio overviews, deep dives, and long-form conversations on AI, safety, design, and the edges of practice.</description>
+    <itunes:summary>Audio overviews, deep dives, and long-form conversations on AI, safety, design, and the edges of practice.</itunes:summary>
     <link>${site}/audio/</link>
     <atom:link href="${site}/audio/feed.xml" rel="self" type="application/rss+xml" />
-    <language>en-au</language>
+    <language>en-AU</language>
+    <copyright>© ${new Date().getFullYear()} Adrian Wedd</copyright>
     <itunes:author>Adrian Wedd</itunes:author>
-    <itunes:category text="Technology" />
+    <itunes:owner>
+      <itunes:name>Adrian Wedd</itunes:name>
+      <itunes:email>adrianwedd@gmail.com</itunes:email>
+    </itunes:owner>
+    <itunes:type>episodic</itunes:type>
+    <itunes:category text="Technology">
+      <itunes:category text="Tech News" />
+    </itunes:category>
+    <itunes:category text="Science">
+      <itunes:category text="Social Sciences" />
+    </itunes:category>
     <itunes:explicit>false</itunes:explicit>
-    <itunes:image href="${site}/og-default.png" />
+    <itunes:image href="${podcastCover}" />
+    <podcast:locked>no</podcast:locked>
     ${itemsXml}
   </channel>
 </rss>`;
