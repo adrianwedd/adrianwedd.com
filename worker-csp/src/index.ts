@@ -105,7 +105,12 @@ function originRequest(request: Request, env: Env): Request {
   // Preserve method/body/headers; just retarget the URL. GitHub Pages serves
   // the right site by Host header — passing the upstream host (adrianwedd.github.io)
   // returns the same content as the custom domain.
-  return new Request(upstream, request);
+  const upstreamRequest = new Request(upstream, request);
+  // Strip Range header: if the origin honours a range request it returns 206
+  // Partial Content, which means HTMLRewriter gets truncated HTML and OG
+  // scrapers (Facebook, LinkedIn) see an incomplete page with missing meta tags.
+  upstreamRequest.headers.delete('Range');
+  return upstreamRequest;
 }
 
 class NonceInjector {
