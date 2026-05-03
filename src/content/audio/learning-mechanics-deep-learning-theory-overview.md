@@ -5,7 +5,7 @@ date: 2026-05-03
 tags: ['AI', 'deep learning', 'theory', 'research']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/learning-mechanics-deep-learning-theory/audio.mp3'
 duration: '19:20'
-relatedPost: 'learning-mechanics-deep-learning-theory'
+relatedPost: 'learning-mechanics-deep-learning-theory-post'
 ---
 
 NotebookLM Studio audio overview generated from arXiv:2604.21691 — *There Will Be a Scientific Theory of Deep Learning* by Simon, Kunin, et al.
