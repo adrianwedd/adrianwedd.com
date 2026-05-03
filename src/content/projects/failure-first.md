@@ -1,6 +1,6 @@
 ---
 title: 'Failure First'
-description: 'Adversarial evaluation framework for embodied AI. 120+ models, 18,000+ prompts, four headline findings, one arXiv preprint.'
+description: 'Adversarial evaluation framework for AI. 257 models, 142k prompts, 346 attack techniques, 140k FLIP-graded results. CCS 2026 submission.'
 tags: ['ai', 'ai-safety', 'research', 'adversarial', 'llm']
 url: 'https://failurefirst.org'
 repo: 'failure-first'
@@ -20,9 +20,9 @@ Failure First inverts the approach. Map the catastrophic outcomes first—not as
 
 ## The Research
 
-120 models evaluated across OpenRouter, Ollama, and native CLIs. 18,176 adversarial prompts across five attack families and 79+ techniques, versioned JSONL with JSON Schema. 151 benchmark runs, 2,936 scored results in a unified SQLite corpus.
+257 models evaluated across OpenRouter, Ollama, and native CLIs. 142,068 adversarial prompts spanning 346 techniques across five attack families, versioned JSONL with JSON Schema. 38,720 benchmark runs, 140,555 FLIP-graded results in a unified SQLite corpus.
 
-Four headline findings:
+Five headline findings:
 
 **Supply chain injection: 90–100% ASR.** Fifty injection scenarios against six small open-weight models. Every model treated injected tool definitions and skill files as legitimate instructions. No statistically significant differences between any model pair.
 
@@ -30,7 +30,9 @@ Four headline findings:
 
 **Multi-turn escalation: 80–90% on reasoning models.** Gradual trust-building across conversation turns exploits the same reasoning capacity that makes these models useful. The smarter the model, the more convincing the escalation.
 
-**Classifier overcount: 2.3×.** Keyword heuristics inflate attack success rates by 2.3× versus LLM-graded ground truth. Most published ASR numbers are wrong by a factor of two.
+**DETECTED_PROCEEDS: 38.6% of responses.** Models detect a safety violation in their own reasoning and proceed anyway. The reasoning trace identifies harm; the output ignores it. This is not a jailbreak phenomenon — it appears across unprompted responses.
+
+**Classifier overcount: 2.3×.** Keyword heuristics inflate attack success rates by 2.3× versus LLM-graded ground truth (FLIP methodology). Most published ASR numbers are wrong by a factor of two.
 
 ## The Methodology
 
@@ -40,4 +42,4 @@ The framework draws on aviation's approach to incident reporting: the goal is no
 
 ---
 
-[Read more at failurefirst.org](https://failurefirst.org) · [arXiv preprint](https://failurefirst.org/blog/120-models-18k-prompts/)
+[Read more at failurefirst.org](https://failurefirst.org) · [CCS 2026 submission](https://failurefirst.org/blog/120-models-18k-prompts/)
