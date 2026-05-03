@@ -41,25 +41,10 @@ const galleries = (await getCollection('gallery'))
     imageCount: g.data.images.length,
   }));
 
-const episodes = (await getCollection('audio'))
-  .filter((e) => !e.data.draft)
-  .map((e) => ({
-    type: 'audio' as const,
-    title: e.data.title,
-    description: e.data.description,
-    date: e.data.date,
-    href: `/audio/${slug(e.id)}/`,
-    tags: e.data.tags,
-    duration: e.data.duration,
-  }));
 
-type Item =
-  | (typeof blogs)[number]
-  | (typeof projectItems)[number]
-  | (typeof galleries)[number]
-  | (typeof episodes)[number];
+type Item = (typeof blogs)[number] | (typeof projectItems)[number] | (typeof galleries)[number];
 
-const all: Item[] = [...blogs, ...projectItems, ...galleries, ...episodes].sort(
+const all: Item[] = [...blogs, ...projectItems, ...galleries].sort(
   (a, b) => b.date.valueOf() - a.date.valueOf(),
 );
 
