@@ -10,7 +10,9 @@ Personal website for Adrian Wedd. Astro 6 (static) on GitHub Pages. Dark-first d
 - **Content:** Astro Content Collections (blog, projects, gallery, audio).
 - **Hosting:** GitHub Pages (fully static).
 - **Media:** Cloudflare R2 for audio/video (`cdn.adrianwedd.com`). Infographics in git (`public/notebook-assets/`).
-- **Automation:** Extensive scripts for social media (Facebook) and NotebookLM (AI asset generation).
+- **CSP Worker:** Cloudflare Worker in `worker-csp/` — per-request nonce injection, strict CSP header, Permissions-Policy. Route: `adrianwedd.com/*`.
+- **Social Worker:** Cloudflare Worker in `worker/` — Facebook automation (publish, queue, comment monitor).
+- **Booking API:** Cloudflare Worker in `~/repos/book-api/` — Google Calendar slots + booking at `api.book.adrianwedd.com`.
 
 ## Building and Running
 
@@ -30,7 +32,7 @@ npm run fetch-analytics # Fetch GA4 data (build-time)
 - **Never use Tailwind's `dark:` prefix.**
 - Theming is driven by CSS custom properties in `src/styles/global.css`.
 - `:root` is the dark theme (default). `.light` class on `<html>` is the light theme.
-- Tailwind maps these via `tailwind.config.mjs` (e.g., `bg-surface`, `text-accent`).
+- Tailwind 4 maps these via the `@theme` block in `src/styles/global.css` (e.g., `bg-surface`, `text-accent`). There is no `tailwind.config.mjs`.
 
 ### View Transitions & Scripts
 - All interactive scripts must use `is:inline` (not module `<script>`) to re-execute on View Transition swap.
@@ -40,7 +42,7 @@ npm run fetch-analytics # Fetch GA4 data (build-time)
 - Register `astro:after-swap` listeners inside sentinel guards to re-initialize widgets.
 
 ### Content Collections (`src/content/`)
-- **IDs include extensions:** Astro 5/6 collection IDs may include `.md` or `.mdx`.
+- **IDs include extensions:** Astro 6 collection IDs include `.md` or `.mdx`.
 - **Slug Utility:** Always use `slug()` from `src/lib/utils.ts` to generate URLs from collection IDs (strips extensions and `-post` suffix).
 - **Permanent URLs:** Never rename a published content file as it changes the URL.
 - **Image handling:** Use `<Picture>` from `astro:assets` for all local images. Raw `<img>` for local paths is forbidden by CI.
@@ -62,7 +64,8 @@ npm run fetch-analytics # Fetch GA4 data (build-time)
 - `src/content/`: Markdown/MDX content collections.
 - `scripts/`: Automation scripts (social media, content validation, asset generation).
 - `scripts/notebooklm/`: NotebookLM automation tools.
-- `worker/`: Cloudflare Worker for Facebook automation.
+- `worker/`: Cloudflare Worker for Facebook automation (social.adrianwedd.com).
+- `worker-csp/`: Cloudflare Worker for CSP nonce injection (adrianwedd.com/*).
 - `docs/`: Technical specs, roadmap, and compliance reports.
 
 ## Automation Workflows

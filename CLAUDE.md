@@ -20,7 +20,7 @@ npm run fetch-analytics  # manual GA4 data fetch
 
 Content validation: `node scripts/validate-content.js` (checks required fields, description ≤160 chars, heroImage paths).
 
-No test suite is configured for the Astro site. The `worker/` directory has its own test suite (`cd worker && npm test`).
+No test suite is configured for the Astro site. `worker/` and `worker-csp/` each have their own test suite (`cd worker && npm test`, `cd worker-csp && npm test`).
 
 ## Stack
 
@@ -39,7 +39,7 @@ No test suite is configured for the Astro site. The `worker/` directory has its 
 ## Architecture
 
 ### Theming (spans 3 files)
-CSS custom properties define all colors in `src/styles/global.css` (`:root` = dark, `.light` = light). Tailwind maps these via `tailwind.config.mjs` (e.g. `bg-surface`, `text-accent`). Theme flash is prevented by an inline script in `BaseLayout.astro` that reads `localStorage('theme')` before paint. ThemeToggle toggles `.light` on `<html>`.
+CSS custom properties define all colors in `src/styles/global.css` (`:root` = dark, `.light` = light). Tailwind 4 maps these via the `@theme` block in `global.css` (e.g. `bg-surface`, `text-accent`) — there is no `tailwind.config.mjs`. Theme flash is prevented by an inline script in `BaseLayout.astro` that reads `localStorage('theme')` before paint. ThemeToggle toggles `.light` on `<html>`.
 
 **Never use Tailwind's `dark:` prefix** — theming is driven by CSS custom properties, not Tailwind dark mode classes.
 
@@ -369,7 +369,7 @@ exports/project-name/
 
 - Content collection IDs include file extension (`.md`/`.mdx`) — always strip with `slug()`
 - Light mode accent color is `#8a5e42` (umber) for WCAG AA on warm cream backgrounds
-- Tailwind color utilities (`bg-surface`, `text-muted`, `text-accent`) resolve through CSS custom properties, not static values — inspect `tailwind.config.mjs` and `global.css` together
+- Tailwind color utilities (`bg-surface`, `text-muted`, `text-accent`) resolve through CSS custom properties — inspect the `@theme` block in `src/styles/global.css`
 - **NotebookLM audio/video generation takes 2-10 minutes per asset** — batch generation of 30 projects = ~1-5 hours total
 - Content descriptions must be ≤ 160 chars (validated by `scripts/validate-content.js` and CI)
 - Lychee link checker excludes social media domains, private repos, and own domain (pre-deploy 404s) — see `.lychee.toml`
