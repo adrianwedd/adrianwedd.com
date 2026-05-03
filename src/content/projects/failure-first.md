@@ -1,6 +1,6 @@
 ---
 title: 'Failure First'
-description: 'Adversarial evaluation framework for AI. 257 models, 142k prompts, 346 attack techniques, 140k FLIP-graded results. CCS 2026 submission.'
+description: 'Adversarial evaluation framework for AI. 257 models, 142k prompts, 346 attack techniques, 140k FLIP-graded results.'
 tags: ['ai', 'ai-safety', 'research', 'adversarial', 'llm']
 url: 'https://failurefirst.org'
 repo: 'failure-first'
@@ -42,4 +42,4 @@ The framework draws on aviation's approach to incident reporting: the goal is no
 
 ---
 
-[Read more at failurefirst.org](https://failurefirst.org) · [CCS 2026 submission](https://failurefirst.org/blog/120-models-18k-prompts/)
+[Read more at failurefirst.org](https://failurefirst.org)
