@@ -187,8 +187,12 @@ describe('worker fetch handler', () => {
   });
 
   it('strips Range header so origin always returns 200 (not 206 Partial Content)', async () => {
-    // OG scrapers (Facebook, LinkedIn) send Range headers. If the origin
-    // honours them it returns 206 with truncated HTML, causing missing meta tags.
+    // OG scrapers (Facebook, LinkedIn) send Range headers. GitHub Pages honours
+    // them and returns 206 with truncated HTML, causing missing og:* meta tags.
+    // The worker strips Range before the upstream fetch so origin returns full 200.
+    // The mock always returns 200; if Range were forwarded the origin would return
+    // 206 and the worker would pass it through — so asserting 200 here verifies
+    // the round-trip behaviour even if it can't inspect the outgoing request headers.
     fetchMock
       .get('https://adrianwedd.com')
       .intercept({ path: '/og-test' })
@@ -199,10 +203,6 @@ describe('worker fetch handler', () => {
     const res = await SELF.fetch('https://adrianwedd.com/og-test', {
       headers: { Range: 'bytes=0-1023' },
     });
-    // The interceptor only matches (and returns 200) if Range was stripped.
-    // If Range were forwarded, undici fetchMock would propagate it and we'd
-    // need a separate 206 interceptor — absence of that interceptor causes
-    // assertNoPendingInterceptors to pass only when the 200 path was taken.
     expect(res.status).toBe(200);
     expect(res.headers.get('content-security-policy')).toBeTruthy();
   });
