@@ -30,18 +30,28 @@ export interface Env {
   // when both apex and www routes are bound, and lets local integration
   // tests point the worker at a localhost http server.
   //
-  // Production: "adrianwedd.github.io" (the GitHub Pages origin).
+  // Production: "adrianwedd.com" — same zone, but resolveOverride bypasses
+  // CF routing so the request goes directly to GitHub Pages IPs and doesn't
+  // re-invoke this Worker.
   // Local test: "localhost:8000" with ORIGIN_PROTOCOL="http".
   ORIGIN_HOST: string;
   // Protocol for upstream fetches. Defaults to "https" if unset/empty.
   ORIGIN_PROTOCOL?: string;
+  // Optional hostname for DNS override via resolveOverride. Points to a
+  // DNS-only (grey-cloud) CNAME within the zone that resolves to the real
+  // origin, bypassing Cloudflare routing so the subrequest doesn't re-enter
+  // this Worker. Production: "pages-origin.adrianwedd.com" (CNAME to
+  // adrianwedd.github.io). Local test: unset.
+  ORIGIN_RESOLVE_HOSTNAME?: string;
 }
 
 const HTML_CONTENT_TYPE = /^text\/html\b/i;
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const upstream = await fetch(originRequest(request, env));
+    const fetchInit: RequestInit & { cf?: { resolveOverride?: string } } = {};
+    if (env.ORIGIN_RESOLVE_HOSTNAME) fetchInit.cf = { resolveOverride: env.ORIGIN_RESOLVE_HOSTNAME };
+    const upstream = await fetch(originRequest(request, env), fetchInit);
     const contentType = upstream.headers.get('content-type') ?? '';
     if (!HTML_CONTENT_TYPE.test(contentType)) return upstream;
 
