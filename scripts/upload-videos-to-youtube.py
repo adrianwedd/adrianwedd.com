@@ -7,7 +7,6 @@ Usage:
 """
 
 import argparse
-import json
 import re
 import sys
 import tempfile
@@ -19,10 +18,10 @@ import yaml
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
 TOKEN_PATH = Path.home() / '.config/adrianwedd/youtube-token.json'
-CLIENT_PATH = Path.home() / '.config/adrianwedd/youtube-oauth-client.json'
 CONTENT_DIRS = [
     Path('src/content/blog'),
     Path('src/content/projects'),
@@ -56,11 +55,11 @@ def set_frontmatter_field(path: Path, key: str, value: str):
     if not m:
         return
     fm_text = m.group(2)
-    # Update existing key or append
-    if re.search(rf'^{key}:', fm_text, re.MULTILINE):
-        fm_text = re.sub(rf"^{key}:.*$", f"{key}: '{value}'", fm_text, flags=re.MULTILINE)
+    new_line = f"{key}: '{value}'"
+    if re.search(rf'^{re.escape(key)}:', fm_text, re.MULTILINE):
+        fm_text = re.sub(rf'^{re.escape(key)}:.*$', new_line, fm_text, flags=re.MULTILINE)
     else:
-        fm_text += f"\n{key}: '{value}'"
+        fm_text += f"\n{new_line}"
     path.write_text(m.group(1) + fm_text + m.group(3) + text[m.end():])
 
 
@@ -90,7 +89,11 @@ def collect_videos(slug_filter=None) -> list[dict]:
     return videos
 
 
-def upload_video(yt, video: dict, dry_run: bool) -> str | None:
+class QuotaExceeded(Exception):
+    pass
+
+
+def upload_video(yt, video: dict) -> str | None:
     site_url = (
         f"https://adrianwedd.com/{'blog' if video['content_type'] == 'blog' else 'projects'}/{video['slug']}/"
     )
@@ -99,21 +102,17 @@ def upload_video(yt, video: dict, dry_run: bool) -> str | None:
     print(f"\n→ {video['title']}")
     print(f"  R2: {video['video_url']}")
 
-    if dry_run:
-        print("  [dry-run] skipping upload")
-        return None
-
-    with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as tmp:
-        tmp_path = Path(tmp.name)
-
-    # Use local copy if available, otherwise download from R2
+    tmp_path = None
     r2_key = re.search(r'cdn\.adrianwedd\.com/(.+)', video['video_url'])
     local_path = Path('public') / r2_key.group(1) if r2_key else None
+
     if local_path and local_path.exists():
-        tmp_path = local_path
+        upload_path = local_path
         size_mb = local_path.stat().st_size / 1_000_000
         print(f"  Local copy: {size_mb:.0f}MB")
     else:
+        with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as tmp:
+            tmp_path = Path(tmp.name)
         print(f"  Downloading...", end='', flush=True)
         req = urllib.request.Request(
             video['video_url'],
@@ -124,6 +123,7 @@ def upload_video(yt, video: dict, dry_run: bool) -> str | None:
                 f.write(resp.read())
             size_mb = tmp_path.stat().st_size / 1_000_000
             print(f" {size_mb:.0f}MB")
+            upload_path = tmp_path
         except Exception as e:
             print(f" FAILED: {e}")
             tmp_path.unlink(missing_ok=True)
@@ -142,19 +142,18 @@ def upload_video(yt, video: dict, dry_run: bool) -> str | None:
                 'selfDeclaredMadeForKids': False,
             },
         }
-        media = MediaFileUpload(str(tmp_path), mimetype='video/mp4', resumable=True)
-        req = yt.videos().insert(part='snippet,status', body=body, media_body=media)
+        media = MediaFileUpload(str(upload_path), mimetype='video/mp4', resumable=True)
+        request = yt.videos().insert(part='snippet,status', body=body, media_body=media)
 
         response = None
         while response is None:
-            status, response = req.next_chunk()
+            status, response = request.next_chunk()
             if status:
                 print(f" {int(status.progress() * 100)}%", end='', flush=True)
 
         video_id = response['id']
         print(f" done → https://www.youtube.com/watch?v={video_id}")
 
-        # Add to adrianwedd.com playlist
         try:
             yt.playlistItems().insert(
                 part='snippet',
@@ -168,11 +167,14 @@ def upload_video(yt, video: dict, dry_run: bool) -> str | None:
             print(f"  Playlist add failed: {e}")
 
         return video_id
-    except Exception as e:
+    except HttpError as e:
+        if e.status_code in (403, 429) and 'quota' in str(e).lower():
+            print(f" FAILED: quota exceeded")
+            raise QuotaExceeded() from e
         print(f" FAILED: {e}")
         return None
     finally:
-        if tmp_path != local_path:
+        if tmp_path:
             tmp_path.unlink(missing_ok=True)
 
 
@@ -204,7 +206,11 @@ def main():
         if args.limit and count >= args.limit:
             print(f"\nReached limit of {args.limit}. Run again to continue.")
             break
-        video_id = upload_video(yt, video, dry_run=False)
+        try:
+            video_id = upload_video(yt, video)
+        except QuotaExceeded:
+            print(f"\nQuota exceeded after {count} upload(s). Run again after midnight PT.")
+            break
         if video_id:
             yt_url = f'https://www.youtube.com/watch?v={video_id}'
             set_frontmatter_field(video['file'], 'youtubeUrl', yt_url)
