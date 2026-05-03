@@ -579,7 +579,12 @@ import HeroCanvas from '../components/HeroCanvas.astro';
       var bookingForm = el('booking-form');
       if (!bookingForm || bookingForm.dataset.bookingInit) return;
       bookingForm.dataset.bookingInit = '1';
-      weekOffset = 0;
+
+      var today = new Date();
+      // If today is Sunday, default to next week as the current week is almost over
+      // and most users are looking for upcoming business days.
+      weekOffset = today.getDay() === 0 ? 1 : 0;
+
       selectedSlot = null;
       renderWeek();
     }
