@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Personal website for Adrian Wedd. Astro 5 on GitHub Pages. Dark-first design with botanical earth-tone palette (dusty copper accent).
+Personal website for Adrian Wedd. Astro 6 on GitHub Pages. Dark-first design with botanical earth-tone palette (dusty copper accent).
 
 ## Commands
 
@@ -24,8 +24,8 @@ No test suite is configured for the Astro site. The `worker/` directory has its 
 
 ## Stack
 
-- **Framework:** Astro 5 with TypeScript strict
-- **Styling:** Tailwind CSS 3 with CSS custom properties for theming
+- **Framework:** Astro 6 with TypeScript strict
+- **Styling:** Tailwind CSS 4 with CSS custom properties for theming
 - **Islands:** Preact for interactive components (13 islands in `src/components/islands/`)
 - **Content:** Astro Content Collections (blog, projects, gallery, audio) in `src/content/`
 - **Search:** Pagefind (client-side WASM, indexed at build time)
@@ -34,6 +34,7 @@ No test suite is configured for the Astro site. The `worker/` directory has its 
 - **Analytics:** GA4 + LinkedIn Insight Tag, both consent-gated via `ConsentBanner.astro` + `Analytics.astro`
 - **Media CDN:** Cloudflare R2 at `cdn.adrianwedd.com` — audio + video served from R2, infographics remain in git
 - **Social:** Cloudflare Worker at `social.adrianwedd.com` for Facebook automation (see Worker section)
+- **CSP Worker:** Cloudflare Worker in `worker-csp/` — injects per-request nonces into HTML at the edge, sets strict `Content-Security-Policy` response header (strict-dynamic, form-action, frame-ancestors). Route: `adrianwedd.com/*`.
 
 ## Architecture
 
@@ -111,7 +112,7 @@ Located in `worker/`. Hono framework, TypeScript, KV namespace for state.
 
 ## Key patterns
 
-- **Slug utility:** Astro 5 collection IDs include `.md` extension. Always use `slug()` from `src/lib/utils.ts` when generating hrefs from collection IDs.
+- **Slug utility:** Astro 6 collection IDs include `.md` extension. Always use `slug()` from `src/lib/utils.ts` when generating hrefs from collection IDs.
 - **Image slug:** Use `imageSlug()` from `src/lib/utils.ts` for gallery image URLs derived from alt text.
 - **No custom fonts:** System font stack only — zero font downloads.
 - **Consent-first:** No tracking before user consent. ConsentBanner dispatches `consent-updated` CustomEvent. Use `dns-prefetch` (not `preconnect`) for GA4 origins — preconnect opens TCP/TLS before consent.
