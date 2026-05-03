@@ -5,6 +5,7 @@ import { z } from 'astro/zod';
 const notebookAssets = {
   audioUrl: z.string().optional(),
   videoUrl: z.string().optional(),
+  youtubeUrl: z.string().optional(),
   infographic: z.string().optional(),
   mindmap: z.string().optional(),
   quiz: z.string().optional(),

@@ -17,6 +17,7 @@ faq:
     a: 'Yes. Drop a .afterwords file in any repo root containing a voice name. The hook reads it per synthesis — no server restart needed.'
   - q: 'How long does it take to speak a response?'
     a: 'About 15 seconds of fixed overhead for speaker embedding extraction, plus roughly 0.5x real-time for the audio. A typical two-sentence response takes 18–22 seconds on an M1.'
+youtubeUrl: 'https://www.youtube.com/watch?v=ajdnUfqC7E4'
 ---
 
 Claude Code already listens. Hold Space, talk, it transcribes. That half of the loop has worked for months. But every response comes back as text — silent characters on a dark terminal. You speak to it. It types back.
