@@ -52,10 +52,12 @@ export async function GET(context: APIContext) {
       const relatedPost = ep.data.relatedPost ? blogById.get(ep.data.relatedPost.replace(/-post$/, '')) : undefined;
       const relatedProject = ep.data.relatedProject ? projectById.get(ep.data.relatedProject) : undefined;
       const heroImage = relatedPost?.data.heroImage ?? relatedProject?.data.heroImage;
-      const episodeImage = heroImage
-        ? heroImage.startsWith('http')
-          ? heroImage
-          : `${site}${heroImage}`
+      // Apple Podcasts requires JPEG or PNG — swap .webp for .jpg
+      const heroImageJpeg = heroImage?.replace(/\.webp$/, '.jpg');
+      const episodeImage = heroImageJpeg
+        ? heroImageJpeg.startsWith('http')
+          ? heroImageJpeg
+          : `${site}${heroImageJpeg}`
         : podcastCover;
 
       return `
