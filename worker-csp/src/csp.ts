@@ -28,7 +28,7 @@ export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): strin
     'https://www.google.com',
     'https://www.google-analytics.com',
     'https://snap.licdn.com',
-    'https://px.ads.linkedin.com',
+    'https://*.ads.linkedin.com',
     'https://pagead2.googlesyndication.com',
     'https://tpc.googlesyndication.com',
     'https://googleads.g.doubleclick.net',
@@ -49,8 +49,8 @@ export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): strin
     "style-src 'self' 'unsafe-inline'",
     // GA4 audience pixels use country-specific google TLDs (e.g. google.com.au).
     // ep1/ep2.adtrafficquality.google serve the sodar tracking pixel as an image.
-    "img-src 'self' data: https://cdn.adrianwedd.com https://www.google-analytics.com https://*.google-analytics.com https://px.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.linkedin.com https://www.google.com.au https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google",
-    "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://adservice.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://px.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com",
+    "img-src 'self' data: https://cdn.adrianwedd.com https://www.google-analytics.com https://*.google-analytics.com https://*.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://www.linkedin.com https://www.google.com.au https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google",
+    "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://adservice.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://*.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com",
     "media-src 'self' https://cdn.adrianwedd.com",
     'frame-src https://www.openstreetmap.org https://challenges.cloudflare.com https://www.google.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google',
     "font-src 'self'",
