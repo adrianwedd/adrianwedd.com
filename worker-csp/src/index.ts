@@ -5,7 +5,7 @@
  *  1. Fetch the underlying response (GitHub Pages origin via Cloudflare).
  *  2. Generate a 128-bit cryptographically random nonce, base64-encoded.
  *  3. HTMLRewriter:
- *     - Add `nonce="<value>"` to every <script> and <style> tag.
+ *     - Add `nonce="<value>"` to every <script> tag.
  *     - Strip the existing `<meta http-equiv="Content-Security-Policy">` tag —
  *       the real header is stronger and the meta would otherwise stack with it.
  *  4. Set a real `Content-Security-Policy` response header (no `'unsafe-inline'`).
@@ -78,8 +78,6 @@ export default {
     const rewritten = new HTMLRewriter()
       // Add nonce to every <script> tag.
       .on('script', new NonceInjector(nonce))
-      // Add nonce to every <style> tag.
-      .on('style', new NonceInjector(nonce))
       // Remove the build-time meta CSP — the response header replaces it.
       .on('meta[http-equiv="Content-Security-Policy"]', new ElementRemover())
       // Be explicit: spreading a Response copies own enumerable props only,
