@@ -52,15 +52,15 @@ describe('buildCsp', () => {
     expect(csp).toMatch(/media-src [^;]*https:\/\/cdn\.adrianwedd\.com/);
   });
 
-  it('splits style-src-elem (nonce) from style-src-attr (unsafe-inline)', () => {
-    // <style> tags get the nonce from the worker, but Astro emits dynamic
-    // style="…" attrs that can't be nonced — keep 'unsafe-inline' for attrs
-    // only, while elements require the nonce.
+  it('uses unsafe-inline for style-src-elem (no nonce — CSP3 nonce suppresses unsafe-inline)', () => {
+    // Astro ClientRouter injects <style> elements dynamically on each VT navigation.
+    // Per CSP3, adding a nonce-source to style-src-elem silently suppresses
+    // 'unsafe-inline', so we can't mix them. Use unsafe-inline only (no nonce).
     const csp = buildCsp({ nonce: 'STYLENONCE', strictDynamic: false });
     const elem = csp.split(';').find((d) => d.trim().startsWith('style-src-elem'))!;
     const attr = csp.split(';').find((d) => d.trim().startsWith('style-src-attr'))!;
-    expect(elem).toMatch(/'nonce-STYLENONCE'/);
-    expect(elem).not.toMatch(/'unsafe-inline'/);
+    expect(elem).toMatch(/'unsafe-inline'/);
+    expect(elem).not.toMatch(/'nonce-STYLENONCE'/);
     expect(attr).toMatch(/'unsafe-inline'/);
   });
 
@@ -110,15 +110,13 @@ describe('worker fetch handler', () => {
 
     // Meta CSP stripped
     expect(text).not.toMatch(/<meta http-equiv="Content-Security-Policy"/);
-    // Nonce attached to inline script + style
+    // Nonce attached to inline scripts (style elements intentionally NOT nonced)
     expect(text).toMatch(/<script[^>]*nonce="[A-Za-z0-9+/]{22}"[^>]*>console\.log\(1\)<\/script>/);
-    expect(text).toMatch(/<style[^>]*nonce="[A-Za-z0-9+/]{22}"[^>]*>body{color:red}<\/style>/);
+    expect(text).toMatch(/<style>body{color:red}<\/style>/);
 
-    // Same nonce used everywhere on this response.
+    // Script nonce matches what's in the CSP header.
     const scriptNonce = text.match(/<script[^>]*nonce="([^"]+)"/)?.[1];
-    const styleNonce = text.match(/<style[^>]*nonce="([^"]+)"/)?.[1];
     const headerNonce = csp!.match(/'nonce-([^']+)'/)?.[1];
-    expect(scriptNonce).toBe(styleNonce);
     expect(scriptNonce).toBe(headerNonce);
   });
 
