@@ -65,6 +65,7 @@ export default {
     headers.set('X-Frame-Options', 'DENY');
     headers.set('X-Content-Type-Options', 'nosniff');
     headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), xr-spatial-tracking=()');
     // Don't ship the meta CSP downstream — header is stronger and the meta
     // would force the browser to intersect both policies.
     headers.delete('Content-Security-Policy-Report-Only');

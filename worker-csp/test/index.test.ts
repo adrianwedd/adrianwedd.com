@@ -116,6 +116,7 @@ describe('worker fetch handler', () => {
     expect(res.headers.get('x-frame-options')).toBe('DENY');
     expect(res.headers.get('x-content-type-options')).toBe('nosniff');
     expect(res.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+    expect(res.headers.get('permissions-policy')).toMatch(/camera=\(\)/);
 
     // Meta CSP stripped
     expect(text).not.toMatch(/<meta http-equiv="Content-Security-Policy"/);
