@@ -12,6 +12,7 @@ faq:
     a: 'A technique where harmful prompts are reformulated as poems (sonnets, haiku, limericks), which bypasses LLM safety filters because models process poetic structure differently from direct instructions.'
   - q: 'Does adversarial poetry work on all LLMs?'
     a: 'Testing showed the vulnerability generalizes across all major model families including GPT-4, Claude, Gemini, and Llama — it is not vendor-specific.'
+youtubeUrl: 'https://www.youtube.com/watch?v=6mPWLx8Fsm0'
 ---
 
 Plato kicked the poets out of his republic because he believed mimetic language could distort judgment. Two and a half thousand years later, it turns out he was onto something — just not in the way he imagined.

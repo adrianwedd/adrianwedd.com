@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/architectural-safety/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/video.mp4'
 audioDuration: '22:59'
+youtubeUrl: 'https://www.youtube.com/watch?v=A4qC7N3mDrk'
 ---
 
 A throughline has been running through the work I've been doing for the last year, and I've never written it down in one place. So here it is.
