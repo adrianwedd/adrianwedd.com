@@ -16,6 +16,7 @@ faq:
     a: "The 2027–2029 'Danger Zone' is when robot production scales to roughly one million units deployed in retail, logistics, and homes. Even low failure rates could produce thousands of serious incidents daily."
   - q: 'What is affordance hallucination in VLA models?'
     a: 'Affordance hallucination occurs when a vision-language-action model incorrectly identifies how objects can be manipulated, such as attempting to grasp a shadow or pouring water where it falsely believes a cup is located.'
+youtubeUrl: 'https://www.youtube.com/watch?v=d-32AtO7xN4'
 ---
 
 For fifty years, robot safety was a solved problem. The answer was a cage: a physical enclosure that kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.
