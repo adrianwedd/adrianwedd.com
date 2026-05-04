@@ -6,7 +6,7 @@ url: 'https://squishmallowdex.com'
 repo: 'https://github.com/adrianwedd/squishmallowdex'
 status: 'complete'
 featured: true
-heroImage: '/images/projects/squishmallowdex-hero.png'
+heroImage: '/notebook-assets/squishmallowdex/infographic.webp'
 date: 2024-12-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/video.mp4'
@@ -19,3 +19,5 @@ It's designed to be educational—running terminal commands, showing kid-friendl
 Another few hours of work made it actually robust. Offline PWA. Search, filter, favorites, collection tracking. Over 3,000 plush creatures catalogued.
 
 Take a closer look if you're building for kids, or just want to see what hyperfocus and a good excuse can produce in an afternoon.
+
+![Squishmallowdex — search, filter, and track your collection](/images/projects/squishmallowdex-hero.png)
