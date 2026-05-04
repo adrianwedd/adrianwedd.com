@@ -12,6 +12,7 @@ faq:
     a: "An economic framework showing that transformative technologies initially reduce measured productivity before generating gains — because the critical intangible investments (process redesign, data governance, workforce reskilling) aren't captured in traditional metrics."
   - q: 'What is pilot purgatory?'
     a: "When AI pilots fail to scale beyond isolated projects because they're evaluated with ROI models misaligned with how general-purpose technologies create value."
+youtubeUrl: 'https://www.youtube.com/watch?v=IKsovSI5n7U'
 ---
 
 AI investment is climbing in almost every direction at once. Hyperscale capex is on track to hit $405 billion this year, and most large companies have an AI strategy slide deck.

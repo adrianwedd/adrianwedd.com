@@ -16,6 +16,7 @@ faq:
     a: 'The Forecasting Research Institute surveyed 46 domain experts and 22 superforecasters on the annual probability of a human-caused epidemic killing 100,000+ people or causing $1 trillion+ in damages. Baseline was 0.3% per year; conditional on AI reaching virologist-level capability, it rose fivefold to 1.5%. With current safeguards layered in, experts brought it back down to 0.4% — a 70% reduction the post argues is unsupported.'
   - q: 'Has AI already crossed the virologist-level capability threshold?'
     a: 'The post argues yes — and that this milestone, which experts in the same study expected post-2030, has already arrived. That collapses the timeline embedded in the safeguard estimates.'
+youtubeUrl: 'https://www.youtube.com/watch?v=tw5yxXycQdw'
 ---
 
 Biosecurity experts believe current safeguards reduce AI-enabled catastrophic biorisk by over 70%. They are wrong.

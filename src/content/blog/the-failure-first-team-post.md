@@ -16,6 +16,7 @@ faq:
     a: 'Adversarial evaluation tests AI systems to find failure modes by deliberately trying to break them. It involves designing attacks, running them at scale, validating statistics, and translating findings for regulators.'
   - q: 'Why split AI research into different agent roles?'
     a: "Splitting research into specialized agent roles means each session operates within a constrained domain where it performs well. It also makes the work auditable since each agent's brief is explicit and version-controlled."
+youtubeUrl: 'https://www.youtube.com/watch?v=J1X_DqtKVkM'
 ---
 
 Research doesn't scale by working harder. It scales by splitting the problem into roles that each see what the others miss.
