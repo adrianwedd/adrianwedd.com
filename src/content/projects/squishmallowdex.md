@@ -20,4 +20,4 @@ Another few hours of work made it actually robust. Offline PWA. Search, filter, 
 
 Take a closer look if you're building for kids, or just want to see what hyperfocus and a good excuse can produce in an afternoon.
 
-![Squishmallowdex — search, filter, and track your collection](/images/projects/squishmallowdex-hero.png)
+![Squishmallowdex — search, filter, and track your collection](/images/projects/squishmallowdex-hero.webp)
