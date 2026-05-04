@@ -9,6 +9,7 @@ date: 2026-02-02
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterglow-engine/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterglow-engine/video.mp4'
 heroImage: '/notebook-assets/afterglow-engine/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=eWwhcDrMcso'
 ---
 
 The premise is simple and slightly unsettling: your best sounds already exist. They're buried in your finished work—in the reverb tails of tracks you forgot, the sub-harmonics of a pad you used once, the room tone of a recording you made in a different house, in a different year, in a different life.

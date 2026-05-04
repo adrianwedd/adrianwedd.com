@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/non-coercive-design/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/non-coercive-design/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/non-coercive-design/video.mp4'
 audioDuration: '23:33'
+youtubeUrl: 'https://www.youtube.com/watch?v=1l5vQ79JMdE'
 ---
 
 The shoes are by the door.

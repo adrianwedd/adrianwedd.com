@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/the-organismic-prophecy/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-prophecy/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-prophecy/video.mp4'
 audioDuration: '20:01'
+youtubeUrl: 'https://www.youtube.com/watch?v=Q531i2kWiJ4'
 ---
 
 The mid-twentieth-century picture of the brain as a passive computer — sense organs feed inputs, processors turn knobs, behaviour falls out the bottom — is dead in clinical neuroscience. What replaced it is stranger and more useful. The brain is a prediction engine that runs ahead of the world and uses sensory data only to correct itself. It does not perceive; it *guesses* the world into place.
