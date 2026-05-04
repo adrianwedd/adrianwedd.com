@@ -24,7 +24,7 @@
     "preact": "^10.29.1",
     "satori": "^0.26.0",
     "tailwindcss": "^4.2.4",
-    "typescript": "^5.9.3"
+    "typescript": ">=5.0.0 <6.0.0"
   },
   "overrides": {
     "fast-xml-parser": "^5.5.6"
