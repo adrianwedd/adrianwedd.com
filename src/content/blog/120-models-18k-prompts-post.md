@@ -16,6 +16,7 @@ faq:
     a: "Reasoning models' extended context tracking creates an attack surface. Crescendo attacks achieved 80–90% success against reasoning models by gradually escalating requests, compared to 10% against smaller models."
   - q: 'How much do benchmark attack success rates overstate actual risk?'
     a: 'Keyword-based classification inflates attack success rates by roughly 2.3×. Aggregate attack success rates dropped from 36.2% to 15.9% when using LLM grading instead of heuristic methods.'
+youtubeUrl: 'https://www.youtube.com/watch?v=sYU4OsxdPkw'
 ---
 
 Over the past year, I've run one of the more comprehensive adversarial evaluations of language models I'm aware of: 120 models, 18,176 prompts, 5 attack families, 79 distinct techniques. The full dataset, benchmark infrastructure, and methodology live at [failurefirst.org](https://failurefirst.org). Here's what stood out.

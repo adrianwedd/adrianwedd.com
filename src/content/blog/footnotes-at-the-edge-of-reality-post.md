@@ -7,6 +7,7 @@ draft: false
 heroImage: '/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=dVD75vZg7fw'
 ---
 
 # Footnotes at the Edge of Reality
