@@ -8,7 +8,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-robot-that-refuses-to-
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-robot-that-refuses-to-give-orders/video.mp4'
 series: 'PiCar-X'
 seriesOrder: 1
-youtubeUrl: 'https://www.youtube.com/watch?v=SOUJUti2oDw'
+youtubeUrl: 'https://www.youtube.com/watch?v=nzZ83pc_E9Y'
 ---
 
 ## The missing manual for the human mind
