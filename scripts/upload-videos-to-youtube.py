@@ -27,7 +27,7 @@ CONTENT_DIRS = [
     Path('src/content/projects'),
 ]
 CHANNEL_ID = 'UC709-RgQ-IMi-GffU9guqUQ'  # @adrianwedd
-PLAYLIST_ID = 'PLHCs2hYaGLAnNeAMu6hCnMj_vTFoW4LwC'  # adrianwedd.com
+PLAYLIST_ID = 'PLHCs2hYaGLAk4qe5za7rAh2j4YHRKdJXo'  # adrianwedd.com
 
 
 def get_credentials():
