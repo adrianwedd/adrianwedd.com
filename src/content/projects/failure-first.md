@@ -10,6 +10,7 @@ date: 2026-02-09
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/video.mp4'
 heroImage: '/notebook-assets/failure-first/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=9x-C9-wMKQo'
 ---
 
 The instinct didn't come from papers. It came from Greenpeace's Actions unit—coordinating direct operations against well-resourced opponents where the optimistic plan was the dangerous plan. Where you enumerate failure modes before you move, because the cost of not doing so is people getting hurt. You bring that habit into AI evaluation and it turns out to be exactly what the field is missing.
