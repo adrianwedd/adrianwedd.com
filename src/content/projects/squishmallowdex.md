@@ -10,6 +10,7 @@ heroImage: '/notebook-assets/squishmallowdex/infographic.webp'
 date: 2024-12-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=VpWYlNx2tfY'
 ---
 
 A friend mentioned her 10-year-old was researching Squishmallows. I asked if I could help. A few hours later I looked up from my screen, realized I was starving, and discovered I'd built and shipped the first release.

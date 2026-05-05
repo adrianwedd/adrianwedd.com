@@ -12,6 +12,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/video.mp4'
 series: "This Wasn't in the Brochure"
 seriesOrder: 1
+youtubeUrl: 'https://www.youtube.com/watch?v=uHWSOTDXNbA'
 ---
 
 A book and companion site for co-parents navigating ADHD, autism, PDA, and ODD — built on a simple premise: the brochure they gave you was for a different trip.

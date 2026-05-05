@@ -9,6 +9,7 @@ date: 2025-03-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/veritas/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/veritas/video.mp4'
 heroImage: '/notebook-assets/veritas/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=rv-cCMNBu2w'
 ---
 
 Legal AI has an integrity problem. Most tools optimise for speed and treat accuracy as negotiable. In a profession where a hallucinated citation can end a career, that trade-off is backwards.
