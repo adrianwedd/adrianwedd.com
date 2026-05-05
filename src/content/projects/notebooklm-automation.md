@@ -9,6 +9,7 @@ date: 2025-12-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/notebooklm-automation/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/notebooklm-automation/video.mp4'
 heroImage: '/notebook-assets/notebooklm-automation/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=LSQ2kIBrXf8'
 ---
 
 Google built NotebookLM as a walled garden. I built a door.
