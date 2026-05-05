@@ -9,6 +9,7 @@ date: 2025-04-15
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/modelatlas/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/modelatlas/video.mp4'
 heroImage: '/notebook-assets/modelatlas/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=Y9o5Iy_daps'
 ---
 
 There are thousands of foundation models now. New ones appear daily. Most metadata about them is incomplete, inconsistent, or wrong. Context lengths are missing. Base model lineage is ambiguous. Quantisation details are buried in config blobs that nobody parses. If you want to choose a model for a production system, you are assembling the picture yourself from fragments.
