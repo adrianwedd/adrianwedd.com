@@ -10,6 +10,7 @@ date: 2026-02-10
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/before-the-words-existed/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/before-the-words-existed/video.mp4'
 heroImage: '/notebook-assets/before-the-words-existed/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=ZZDPvTlA4Xw'
 ---
 
 What if _Neuromancer_ wasn't about addiction? What if it was about ADHD?

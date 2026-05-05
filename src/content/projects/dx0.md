@@ -9,6 +9,7 @@ date: 2025-05-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dx0/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/dx0/video.mp4'
 heroImage: '/notebook-assets/dx0/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=h9H9TnoI8hk'
 ---
 
 The question everyone asks about AI in medicine is whether it can diagnose. That's the wrong question. The right question is whether it can diagnose responsibly—within resource constraints, with appropriate uncertainty, without the kind of confident hallucination that in a clinical context becomes malpractice.
