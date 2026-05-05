@@ -8,7 +8,6 @@ status: 'active'
 featured: false
 date: 2026-02-03
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/tanda-pizza/audio.mp3'
-videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/tanda-pizza/video.mp4'
 heroImage: '/notebook-assets/tanda-pizza/infographic.webp'
 ---
 
