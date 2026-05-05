@@ -9,6 +9,7 @@ date: 2026-02-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dodgylegally/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/dodgylegally/video.mp4'
 heroImage: '/notebook-assets/dodgylegally/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=xF-BklkSqoI'
 ---
 
 The best samples come from places you weren't looking. That's the premise—and the entire workflow. Type a random word. Get a sample pack. dodgylegally generates audio instruments from chaotic search phrases, pulling from YouTube, local files, and a five-thousand-word dictionary with weighted source mixing.

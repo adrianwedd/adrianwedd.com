@@ -9,6 +9,7 @@ date: 2026-02-04
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/cv/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/cv/video.mp4'
 heroImage: '/notebook-assets/cv/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=1Zg7I5Awymc'
 ---
 
 A CV is a strange document. It claims to summarise a career, but the format enforces a lie: that work is linear, that skills accumulate neatly, that the most recent role is the most important one. Every static résumé is a snapshot that begins decaying the moment you export the PDF.

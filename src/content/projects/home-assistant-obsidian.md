@@ -9,6 +9,7 @@ date: 2024-06-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-obsidian/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-obsidian/video.mp4'
 heroImage: '/notebook-assets/home-assistant-obsidian/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=Z9GNQlp9g0A'
 ---
 
 I keep two systems running at home that shape how I think: Obsidian for knowledge, Home Assistant for the physical environment. They existed on separate machines, with separate maintenance windows, separate failure modes. The obvious question was why.

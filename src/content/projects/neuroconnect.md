@@ -9,6 +9,7 @@ date: 2025-05-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/video.mp4'
 heroImage: '/notebook-assets/neuroconnect/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=HZnnK4bLub4'
 ---
 
 A person with ADHD calls a helpline. They trail off mid-sentence. There is a pause—maybe they lost the word, maybe they lost the thread, maybe they are in crisis. The system has to know the difference. It has to know in under a second.

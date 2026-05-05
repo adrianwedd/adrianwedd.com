@@ -9,6 +9,7 @@ date: 2025-06-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/emdr-agent/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/emdr-agent/video.mp4'
 heroImage: '/notebook-assets/emdr-agent/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=owXdPDifuQE'
 ---
 
 Therapy has a pacing problem. A human therapist reads the room—breath, posture, the micro-expressions that signal when to slow down or when to press forward. Software does not get that for free.
