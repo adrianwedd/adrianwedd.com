@@ -31,7 +31,7 @@ Each agent reads `AGENT_STATE.md` at session start, executes against their brief
 
 The work is real. The statistical validation is real. The traces, the grading, the reports—all produced by these agent sessions, all auditable in the git history. What makes this a "team" is not headcount but the structured division of cognitive labour: no single session carries the full context, so the methodology must be explicit enough to survive handoff.
 
-I'm the only human. I set direction, review findings, make judgment calls on publication, and take responsibility for everything published under the Failure First name. Agent role definitions are in `.claude/agents/` in the [private repository](https://github.com/adrianwedd/failure-first).
+I'm the only human. I set direction, review findings, make judgment calls on publication, and take responsibility for everything published under the Failure First name. Agent role definitions are in `.claude/agents/` in the [private repository](https://github.com/failurefirst/failure-first).
 
 The [team page](https://failurefirst.org/about/team/) has the full breakdown.
 
