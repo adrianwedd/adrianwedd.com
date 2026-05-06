@@ -112,23 +112,30 @@ const matchedProject = allProjects.find(
     })}
   />
   {
-    post.data.videoUrl && (
-      <script
-        is:inline
-        type="application/ld+json"
-        set:html={JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'VideoObject',
-          name: post.data.title,
-          description: post.data.description,
-          contentUrl: new URL(post.data.videoUrl, Astro.site).href,
-          uploadDate: post.data.date.toISOString(),
-          thumbnailUrl: post.data.heroImage
-            ? new URL(post.data.heroImage, Astro.site).href
-            : new URL('/og-default.png', Astro.site).href,
-        })}
-      />
-    )
+    (post.data.videoUrl || post.data.youtubeUrl) && (() => {
+      const ytId = post.data.youtubeUrl?.match(/[?&]v=([^&]+)/)?.[1];
+      return (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'VideoObject',
+            name: post.data.title,
+            description: post.data.description,
+            ...(post.data.videoUrl && { contentUrl: new URL(post.data.videoUrl, Astro.site).href }),
+            ...(ytId && {
+              embedUrl: `https://www.youtube.com/embed/${ytId}`,
+              url: post.data.youtubeUrl,
+            }),
+            uploadDate: post.data.date.toISOString(),
+            thumbnailUrl: post.data.heroImage
+              ? new URL(post.data.heroImage, Astro.site).href
+              : new URL('/og-default.png', Astro.site).href,
+          })}
+        />
+      );
+    })()
   }
   {
     post.data.faq && post.data.faq.length > 0 && (
