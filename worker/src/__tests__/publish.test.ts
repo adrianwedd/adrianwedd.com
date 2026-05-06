@@ -18,6 +18,7 @@ vi.mock('../platforms/factory', () => ({
     getPageIdentity: vi.fn().mockReturnValue('page_123'),
     debugAuth: mockDebugAuth,
   }),
+  getConfiguredPlatforms: () => ['facebook'],
   CONFIGURED_PLATFORMS: ['facebook'],
 }));
 
