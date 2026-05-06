@@ -62,7 +62,7 @@ For **researchers**, we need to move past RLHF. The field is currently trying to
 
 ## The Dataset
 
-The dataset is public. The full 64 jailbreak scenarios, along with testing methodology and raw output logs, are available in the [Failure First repository](https://github.com/adrianwedd/failure-first).
+The dataset is public. The full 64 jailbreak scenarios, along with testing methodology and raw output logs, are available in the [Failure First repository](https://github.com/failurefirst/failure-first).
 
 The defenders need to stop ignoring the lessons of AI's own short history. Historical attacks still work. That should change the conversation.
 
