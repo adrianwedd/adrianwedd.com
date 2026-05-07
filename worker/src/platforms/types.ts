@@ -1,6 +1,6 @@
 export type PostType = 'text' | 'photo' | 'link';
 export type PostStatus = 'queued' | 'publishing' | 'published' | 'failed';
-export type Platform = 'facebook' | 'instagram' | 'bluesky';
+export type Platform = 'facebook' | 'instagram' | 'bluesky' | 'twitter';
 
 export interface SocialPost {
   id: string;
@@ -8,6 +8,8 @@ export interface SocialPost {
   type: PostType;
   message: string;
   imageUrl?: string;
+  videoUrl?: string;
+  youtubeUrl?: string;
   link?: string;
   backdatedTime?: string;     // ISO 8601 — sets post date in the past (Facebook backdated_time)
   scheduledAt: string;

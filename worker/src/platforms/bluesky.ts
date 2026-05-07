@@ -12,6 +12,7 @@ const MAX_GRAPHEMES = 300;
 interface BskySession {
   did: string;
   accessJwt: string;
+  pdsEndpoint: string;
 }
 
 interface BskyError {
@@ -60,6 +61,51 @@ function truncateGraphemes(text: string, max: number): string {
   return graphemes.slice(0, max).join('');
 }
 
+
+async function uploadVideo(session: BskySession, videoUrl: string): Promise<unknown | null> {
+  try {
+    // Skip if video is too large for CF Worker outgoing request (~20MB practical limit)
+    const headRes = await fetch(videoUrl, { method: 'HEAD' });
+    const contentLength = parseInt(headRes.headers.get('content-length') ?? '0', 10);
+    if (contentLength > 20 * 1024 * 1024) return null;
+
+    const saParams = new URLSearchParams({ aud: 'did:web:video.bsky.app', lxm: 'app.bsky.video.uploadVideo' });
+    const serviceAuthRes = await fetch(`${session.pdsEndpoint}/com.atproto.server.getServiceAuth?${saParams}`, {
+      headers: { 'Authorization': `Bearer ${session.accessJwt}` },
+    });
+    if (!serviceAuthRes.ok) return null;
+    const { token } = await serviceAuthRes.json() as { token: string };
+
+    const videoRes = await fetch(videoUrl);
+    if (!videoRes.ok) return null;
+    const videoBytes = await videoRes.arrayBuffer();
+
+    const uploadRes = await fetch(`https://video.bsky.app/xrpc/app.bsky.video.uploadVideo?did=${session.did}`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'video/mp4' },
+      body: videoBytes,
+    });
+    if (!uploadRes.ok) return null;
+    const { jobId } = await uploadRes.json() as { jobId: string };
+
+    const deadline = Date.now() + 25_000;
+    while (Date.now() < deadline) {
+      await new Promise(r => setTimeout(r, 2500));
+      const statusRes = await fetch(
+        `https://video.bsky.app/xrpc/app.bsky.video.getJobStatus?jobId=${encodeURIComponent(jobId)}`,
+        { headers: { 'Authorization': `Bearer ${token}` } },
+      );
+      if (!statusRes.ok) continue;
+      const { jobStatus } = await statusRes.json() as { jobStatus: { state: string; blob?: unknown } };
+      if (jobStatus.state === 'JOB_STATE_COMPLETED' && jobStatus.blob) return jobStatus.blob;
+      if (jobStatus.state === 'JOB_STATE_FAILED') return null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export function createBlueskyPlatform(
   handle: string,
   appPassword: string,
@@ -79,8 +125,26 @@ export function createBlueskyPlatform(
       throw err;
     }
 
-    const data = await res.json() as { did: string; accessJwt: string };
-    return { did: data.did, accessJwt: data.accessJwt };
+    const data = await res.json() as {
+      did: string;
+      accessJwt: string;
+      didDoc?: { service?: Array<{ id: string; serviceEndpoint: string }> };
+    };
+    // Extract PDS endpoint from didDoc if present, otherwise resolve via PLC directory
+    let pdsEndpoint = BSKY_BASE;
+    const pdsService = data.didDoc?.service?.find(s => s.id === '#atproto_pds');
+    if (pdsService?.serviceEndpoint) {
+      pdsEndpoint = `${pdsService.serviceEndpoint}/xrpc`;
+    } else {
+      // Fallback: resolve DID document from PLC directory
+      const didRes = await fetch(`https://plc.directory/${data.did}`).catch(() => null);
+      if (didRes?.ok) {
+        const didDoc = await didRes.json() as { service?: Array<{ id: string; serviceEndpoint: string }> };
+        const svc = didDoc.service?.find(s => s.id === '#atproto_pds');
+        if (svc?.serviceEndpoint) pdsEndpoint = `${svc.serviceEndpoint}/xrpc`;
+      }
+    }
+    return { did: data.did, accessJwt: data.accessJwt, pdsEndpoint };
   }
 
   async function publishPost(post: SocialPost): Promise<PublishResult> {
@@ -112,15 +176,65 @@ export function createBlueskyPlatform(
         record.facets = facets;
       }
 
-      // For link posts, add external embed (link card)
-      if (post.type === 'link' && post.link) {
+      // Native video upload (small files only — falls through to YouTube card on failure)
+      if (post.videoUrl) {
+        const blob = await uploadVideo(session, post.videoUrl);
+        if (blob) {
+          record.embed = { $type: 'app.bsky.embed.video', video: blob, alt: '' };
+        }
+      }
+
+      if (!record.embed && post.youtubeUrl) {
+        const videoId = post.youtubeUrl.match(/[?&]v=([^&]+)/)?.[1];
+        if (videoId) {
+          const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+          const thumbRes = await fetch(thumbUrl);
+          let thumbBlob: unknown = undefined;
+          if (thumbRes.ok) {
+            const thumbBytes = await thumbRes.arrayBuffer();
+            const blobRes = await fetch(`${BSKY_BASE}/com.atproto.repo.uploadBlob`, {
+              method: 'POST',
+              headers: { 'Authorization': `Bearer ${session.accessJwt}`, 'Content-Type': 'image/jpeg' },
+              body: thumbBytes,
+            });
+            if (blobRes.ok) {
+              thumbBlob = (await blobRes.json() as { blob: unknown }).blob;
+            }
+          }
+          record.embed = {
+            $type: 'app.bsky.embed.external',
+            external: {
+              uri: post.youtubeUrl,
+              title: '',
+              description: '',
+              ...(thumbBlob ? { thumb: thumbBlob } : {}),
+            },
+          };
+        }
+      }
+
+      if (!record.embed && post.imageUrl) {
+        // Fall back to static image embed
+        const imgRes = await fetch(post.imageUrl);
+        if (imgRes.ok) {
+          const imgBytes = await imgRes.arrayBuffer();
+          const mimeType = imgRes.headers.get('content-type') ?? 'image/jpeg';
+          const blobRes = await fetch(`${BSKY_BASE}/com.atproto.repo.uploadBlob`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${session.accessJwt}`, 'Content-Type': mimeType },
+            body: imgBytes,
+          });
+          if (blobRes.ok) {
+            const blobData = await blobRes.json() as { blob: unknown };
+            record.embed = { $type: 'app.bsky.embed.images', images: [{ image: blobData.blob, alt: '' }] };
+          }
+        }
+      }
+
+      if (!record.embed && post.type === 'link' && post.link) {
         record.embed = {
           $type: 'app.bsky.embed.external',
-          external: {
-            uri: post.link,
-            title: '',
-            description: '',
-          },
+          external: { uri: post.link, title: '', description: '' },
         };
       }
 
