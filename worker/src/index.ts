@@ -23,7 +23,7 @@ function json(body: Record<string, unknown>, status = 200): Response {
   });
 }
 
-const VALID_PLATFORMS = new Set<string>(['facebook', 'instagram', 'bluesky']);
+const VALID_PLATFORMS = new Set<string>(['facebook', 'instagram', 'bluesky', 'twitter']);
 
 function validatePlatform(raw: string | undefined, fallback = 'facebook'): Platform | null {
   const name = raw ?? fallback;
@@ -44,6 +44,8 @@ app.post('/api/publish', async (c) => {
     message: string;
     link?: string;
     imageUrl?: string;
+    videoUrl?: string;
+    youtubeUrl?: string;
     backdatedTime?: string;
     idempotencyKey: string;
   }>();
@@ -70,6 +72,8 @@ app.post('/api/publish', async (c) => {
     message: body.message,
     link: body.link,
     imageUrl: body.imageUrl,
+    videoUrl: body.videoUrl,
+    youtubeUrl: body.youtubeUrl,
     backdatedTime: body.backdatedTime,
     scheduledAt: new Date().toISOString(),
     scheduledAtEpoch: Date.now(),
@@ -116,6 +120,8 @@ app.post('/api/queue', async (c) => {
     scheduledAt: string;
     link?: string;
     imageUrl?: string;
+    videoUrl?: string;
+    youtubeUrl?: string;
   }>();
 
   const platform = validatePlatform(body.platform);
@@ -135,6 +141,8 @@ app.post('/api/queue', async (c) => {
     message: body.message,
     link: body.link,
     imageUrl: body.imageUrl,
+    videoUrl: body.videoUrl,
+    youtubeUrl: body.youtubeUrl,
     scheduledAt: body.scheduledAt,
     scheduledAtEpoch: epoch,
     status: 'queued',
@@ -166,6 +174,8 @@ app.post('/api/queue/sync', async (c) => {
       message: string;
       link?: string;
       imageUrl?: string;
+      videoUrl?: string;
+    youtubeUrl?: string;
       scheduledAt: string;
       scheduledAtEpoch: number;
     }>;
@@ -226,6 +236,8 @@ app.post('/api/queue/sync', async (c) => {
         message: incoming.message,
         link: incoming.link,
         imageUrl: incoming.imageUrl,
+        videoUrl: incoming.videoUrl,
+        youtubeUrl: incoming.youtubeUrl,
         scheduledAt: incoming.scheduledAt,
         scheduledAtEpoch: incoming.scheduledAtEpoch,
         status: 'queued',
@@ -243,6 +255,8 @@ app.post('/api/queue/sync', async (c) => {
         type: incoming.type as SocialPost['type'],
         link: incoming.link,
         imageUrl: incoming.imageUrl,
+        videoUrl: incoming.videoUrl,
+        youtubeUrl: incoming.youtubeUrl,
         scheduledAt: incoming.scheduledAt,
         scheduledAtEpoch: incoming.scheduledAtEpoch,
       };
@@ -282,20 +296,20 @@ app.post('/api/cron/publish', async (c) => {
   await env.SOCIAL.put('cron-lock:publish', '1', { expirationTtl: 300 });
 
   try {
-    // Token health — check all configured platforms before processing posts
+    // Token health — check all configured platforms; skip unhealthy ones rather than halting all
     const tokenExpiryByPlatform: Record<string, number> = {};
+    const blockedPlatforms = new Set<Platform>();
     for (const platformName of getConfiguredPlatforms(env)) {
       const adapter = createPlatform(platformName, env);
       const tokenHealth = await adapter.debugAuth();
       tokenExpiryByPlatform[platformName] = tokenHealth.daysUntilExpiry;
       if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
-        console.error(`${platformName} data access has expired`);
-        return json({ error: `${platformName} data access expired` }, 503);
-      }
-      if (tokenHealth.daysUntilExpiry <= 7) {
-        console.error(`${platformName} data access expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
+        console.error(`${platformName} auth invalid — skipping posts for this platform`);
+        blockedPlatforms.add(platformName);
+      } else if (tokenHealth.daysUntilExpiry <= 7) {
+        console.error(`${platformName} token expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
       } else if (tokenHealth.daysUntilExpiry <= 14) {
-        console.warn(`${platformName} data access expires in ${tokenHealth.daysUntilExpiry} days`);
+        console.warn(`${platformName} token expires in ${tokenHealth.daysUntilExpiry} days`);
       }
     }
 
@@ -323,6 +337,12 @@ app.post('/api/cron/publish', async (c) => {
     let failed = 0;
 
     for (const { key, post } of duePosts.slice(0, 5)) {
+      // Skip posts for platforms with invalid auth
+      if (blockedPlatforms.has(post.platform)) {
+        console.warn(`Skipping post ${post.id} — ${post.platform} auth is invalid`);
+        continue;
+      }
+
       // Check idempotency
       const existing = await env.SOCIAL.get(`idempotent:${post.id}`);
       if (existing) {

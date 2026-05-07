@@ -11,7 +11,11 @@ beforeEach(() => {
 
 const SESSION_RESPONSE = {
   ok: true,
-  json: async () => ({ did: 'did:plc:abc123', accessJwt: 'jwt-token-123' }),
+  json: async () => ({
+    did: 'did:plc:abc123',
+    accessJwt: 'jwt-token-123',
+    didDoc: { service: [{ id: '#atproto_pds', serviceEndpoint: 'https://bsky.social' }] },
+  }),
 };
 
 const basePost: SocialPost = {

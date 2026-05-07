@@ -3,6 +3,7 @@ import type { Env } from '../env';
 import { createFacebookPlatform } from './facebook';
 import { createInstagramPlatform } from './instagram';
 import { createBlueskyPlatform } from './bluesky';
+import { createTwitterPlatform } from './twitter';
 
 /**
  * Create the appropriate platform adapter for the given platform name.
@@ -25,6 +26,13 @@ export function createPlatform(platform: Platform, env: Env): SocialPlatform {
       );
     case 'bluesky':
       return createBlueskyPlatform(env.BLUESKY_HANDLE, env.BLUESKY_APP_PASSWORD);
+    case 'twitter':
+      return createTwitterPlatform({
+        apiKey: env.X_API_KEY,
+        apiKeySecret: env.X_API_KEY_SECRET,
+        accessToken: env.X_ACCESS_TOKEN,
+        accessTokenSecret: env.X_ACCESS_TOKEN_SECRET,
+      });
     default:
       throw new Error(`Unknown platform: ${platform as string}`);
   }
@@ -41,6 +49,9 @@ export function getConfiguredPlatforms(env: Env): Platform[] {
   }
   if (env.BLUESKY_HANDLE && env.BLUESKY_APP_PASSWORD) {
     platforms.push('bluesky');
+  }
+  if (env.X_API_KEY && env.X_API_KEY_SECRET && env.X_ACCESS_TOKEN && env.X_ACCESS_TOKEN_SECRET) {
+    platforms.push('twitter');
   }
   return platforms;
 }
