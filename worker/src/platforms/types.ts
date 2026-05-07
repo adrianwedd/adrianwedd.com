@@ -1,6 +1,6 @@
 export type PostType = 'text' | 'photo' | 'link';
 export type PostStatus = 'queued' | 'publishing' | 'published' | 'failed';
-export type Platform = 'facebook' | 'instagram' | 'bluesky';
+export type Platform = 'facebook' | 'instagram' | 'bluesky' | 'twitter';
 
 export interface SocialPost {
   id: string;

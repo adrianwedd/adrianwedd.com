@@ -49,7 +49,7 @@ jobs:
           SOCIAL_WORKER_URL: ${{ secrets.SOCIAL_WORKER_URL }}
           SOCIAL_PUBLISH_SECRET: ${{ secrets.SOCIAL_PUBLISH_SECRET }}
           DETECTED_FILES: ${{ steps.detect.outputs.files }}
-          ACTIVE_PLATFORMS: "facebook,bluesky"
+          ACTIVE_PLATFORMS: "facebook,bluesky,twitter"
         run: |
           echo "$DETECTED_FILES" | while IFS= read -r file; do
             [ -z "$file" ] && continue

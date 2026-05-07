@@ -16,4 +16,8 @@ export interface Env {
   FACEBOOK_APP_TOKEN: string;
   INSTAGRAM_ACCESS_TOKEN: string;
   BLUESKY_APP_PASSWORD: string;
+  X_API_KEY: string;
+  X_API_KEY_SECRET: string;
+  X_ACCESS_TOKEN: string;
+  X_ACCESS_TOKEN_SECRET: string;
 }

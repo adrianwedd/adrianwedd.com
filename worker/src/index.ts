@@ -23,7 +23,7 @@ function json(body: Record<string, unknown>, status = 200): Response {
   });
 }
 
-const VALID_PLATFORMS = new Set<string>(['facebook', 'instagram', 'bluesky']);
+const VALID_PLATFORMS = new Set<string>(['facebook', 'instagram', 'bluesky', 'twitter']);
 
 function validatePlatform(raw: string | undefined, fallback = 'facebook'): Platform | null {
   const name = raw ?? fallback;
