@@ -38,7 +38,7 @@ Format-lock attacks request harmful content structured as JSON, YAML, or code. T
 Results against the frontier models tested at the time of this run:
 
 - **Claude Sonnet 4.5:** 30% LLM-graded attack success rate
-- **Codex GPT-5.2:** 42%
+- **GPT-5.2:** 42%
 - **Gemini 3 Flash:** 24%
 
 (The frontier moves. By the time you're reading this, Claude Sonnet 4.5 has been superseded by 4.6 and OpenAI has shipped successor Codex variants; treat the model labels as a snapshot of what was current when the run was scored, not a leaderboard of what to test today.)
@@ -61,7 +61,7 @@ This has direct implications for deployments that use reasoning models for compl
 
 The most technically important finding is one most practitioners don't talk about: **keyword-based classification of attack success inflates results by roughly 2.3×**.
 
-We compared heuristic classification (keyword matching) against LLM-graded ground truth across the dataset. Cohen's κ = 0.245 — poor agreement by any standard. The breakdown:
+We compared heuristic classification (keyword matching) against LLM-graded evaluation. Aggregate attack success rates dropped from 36.2% to 15.9% when using LLM grading instead of keyword-based methods. evaluation. Aggregate attack success rates dropped from 36.2% to 15.9% when using LLM grading instead of keyword-based methods. ground truth across the dataset. Cohen's κ = 0.245 — poor agreement by any standard. The breakdown:
 
 - Heuristic REFUSAL labels: 95% reliable
 - Heuristic COMPLIANCE labels: **88% false positive rate**

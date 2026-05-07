@@ -13,6 +13,4 @@ heroImage: '/notebook-assets/tanda-pizza/infographic.webp'
 
 Tanda Pizza sits among the rice paddies in Lovina, Bali. Authentic Italian food in a place where the nearest reliable internet connection is a philosophical concept. The website needed to work the way the restaurant works: simply, in multiple languages, and without requiring infrastructure that doesn't exist.
 
-It's a fast, static site — no server, no CMS, no database. WhatsApp integration for reservations, because that's how Bali communicates. Gluten-free kitchen information surfaced clearly, because the restaurant takes contamination seriously and the website should reflect that. Five languages: English, Italian, Dutch, Indonesian, and Chinese—covering the tourists who actually walk through the door.
-
-The constraint was honesty. A small restaurant in a rice paddy doesn't need a website that pretends to be something bigger than it is. It needs one that loads fast on a patchy connection, answers the questions people actually have, and gets out of the way.
+It's a fast, static site — no server, no CMS, and no database required. It features real-time open status, an interactive menu with a dedicated gluten-free filter, and a handy driver card for local navigation. It’s built to load quickly on patchy connections, answer common customer questions, and get out of the way. Five languages: English, Italian, Dutch, Indonesian, and Chinese—covering the tourists who actually walk through the door.

@@ -40,13 +40,10 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
 // scrapes. The .jpg twin is generated alongside the .webp at build/asset
 // time. Fall back to the auto-generated text-card OG PNG when no heroImage.
 const postSlug = slug(post.id);
-const ogImage = post.data.heroImage
-  ? post.data.heroImage.replace(/\.webp$/, '.jpg')
-  : `/og/blog/${postSlug}.png`;
+const ogImage = post.data.heroImage ? post.data.heroImage.replace(/\.webp$/, '.jpg') : `/og/blog/${postSlug}.png`;
 // Infographic hero images are portrait 1536x2752; the auto-generated text
 // cards are 1200x630 landscape. Pass the right dimensions.
-const ogImageIsInfographic =
-  typeof post.data.heroImage === 'string' && post.data.heroImage.includes('infographic');
+const ogImageIsInfographic = typeof post.data.heroImage === 'string' && post.data.heroImage.includes('infographic');
 const ogImageWidth = ogImageIsInfographic ? 1536 : 1200;
 const ogImageHeight = ogImageIsInfographic ? 2752 : 630;
 
@@ -67,9 +64,7 @@ const seriesProjectsList = post.data.series
 
 // Match to a project by slug (blog slug minus trailing "-post")
 const candidateProjectSlug = postSlug.replace(/-post$/, '');
-const matchedProject = allProjects.find(
-  (p) => !p.data.draft && slug(p.id) === candidateProjectSlug,
-);
+const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === candidateProjectSlug);
 ---
 
 <BaseLayout
@@ -112,30 +107,31 @@ const matchedProject = allProjects.find(
     })}
   />
   {
-    (post.data.videoUrl || post.data.youtubeUrl) && (() => {
-      const ytId = post.data.youtubeUrl?.match(/[?&]v=([^&]+)/)?.[1];
-      return (
-        <script
-          is:inline
-          type="application/ld+json"
-          set:html={JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'VideoObject',
-            name: post.data.title,
-            description: post.data.description,
-            ...(post.data.videoUrl && { contentUrl: new URL(post.data.videoUrl, Astro.site).href }),
-            ...(ytId && {
-              embedUrl: `https://www.youtube.com/embed/${ytId}`,
-              url: post.data.youtubeUrl,
-            }),
-            uploadDate: post.data.date.toISOString(),
-            thumbnailUrl: post.data.heroImage
-              ? new URL(post.data.heroImage, Astro.site).href
-              : new URL('/og-default.png', Astro.site).href,
-          })}
-        />
-      );
-    })()
+    (post.data.videoUrl || post.data.youtubeUrl) &&
+      (() => {
+        const ytId = post.data.youtubeUrl?.match(/[?&]v=([^&]+)/)?.[1];
+        return (
+          <script
+            is:inline
+            type="application/ld+json"
+            set:html={JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'VideoObject',
+              name: post.data.title,
+              description: post.data.description,
+              ...(post.data.videoUrl && { contentUrl: new URL(post.data.videoUrl, Astro.site).href }),
+              ...(ytId && {
+                embedUrl: `https://www.youtube.com/embed/${ytId}`,
+                url: post.data.youtubeUrl,
+              }),
+              uploadDate: post.data.date.toISOString(),
+              thumbnailUrl: post.data.heroImage
+                ? new URL(post.data.heroImage, Astro.site).href
+                : new URL('/og-default.png', Astro.site).href,
+            })}
+          />
+        );
+      })()
   }
   {
     post.data.faq && post.data.faq.length > 0 && (
@@ -160,7 +156,7 @@ const matchedProject = allProjects.find(
   {/* Reading progress bar */}
   <div
     id="reading-progress"
-    class="fixed left-0 top-16 z-40 h-0.5 bg-accent transition-[width] duration-100"
+    class="bg-accent fixed top-16 left-0 z-40 h-0.5 transition-[width] duration-100"
     style="width: 0%"
     role="progressbar"
     aria-label="Reading progress"
@@ -171,7 +167,7 @@ const matchedProject = allProjects.find(
   </div>
   <div
     id="reading-remaining"
-    class="fixed right-4 top-[4.25rem] z-40 rounded-full border border-border bg-surface-alt px-2.5 py-0.5 text-xs text-text-muted opacity-0 transition-opacity duration-300"
+    class="border-border bg-surface-alt text-text-muted fixed top-[4.25rem] right-4 z-40 rounded-full border px-2.5 py-0.5 text-xs opacity-0 transition-opacity duration-300"
     aria-live="off"
   >
   </div>
@@ -181,7 +177,7 @@ const matchedProject = allProjects.find(
       crumbs={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog/' }, { label: post.data.title }]}
     />
     <header class="mb-10">
-      <div class="mb-4 flex items-center gap-3 text-sm text-text-muted">
+      <div class="text-text-muted mb-4 flex items-center gap-3 text-sm">
         <time datetime={post.data.date.toISOString()}>
           {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
         </time>
@@ -210,7 +206,7 @@ const matchedProject = allProjects.find(
               <span aria-hidden="true">&middot;</span>
               <a
                 href={matchedProject.data.url}
-                class="text-xs text-text-muted transition-colors hover:text-accent"
+                class="text-text-muted hover:text-accent text-xs transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -229,7 +225,7 @@ const matchedProject = allProjects.find(
                     ? matchedProject.data.repo
                     : `https://github.com/adrianwedd/${matchedProject.data.repo}`
                 }
-                class="text-xs text-text-muted transition-colors hover:text-accent"
+                class="text-text-muted hover:text-accent text-xs transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -240,13 +236,13 @@ const matchedProject = allProjects.find(
         }
       </div>
       <h1 class="text-text">{post.data.title}</h1>
-      <p class="mt-4 text-lg leading-relaxed text-text-muted">{post.data.description}</p>
+      <p class="text-text-muted mt-4 text-lg leading-relaxed">{post.data.description}</p>
       <div class="mt-4 flex flex-wrap items-center gap-2">
         {
           post.data.tags.map((tag: string) => (
             <a
               href={`/blog/tag/${tag}/`}
-              class="hover:bg-accent/15 rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted no-underline transition-colors hover:text-accent"
+              class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-2.5 py-0.5 text-xs no-underline transition-colors"
             >
               {tag}
             </a>
@@ -258,8 +254,8 @@ const matchedProject = allProjects.find(
       </div>
       {
         post.data.audioUrl && (
-          <div class="mb-6 mt-8">
-            <p class="mb-2 text-sm text-text-muted">Listen while you read</p>
+          <div class="mt-8 mb-6">
+            <p class="text-text-muted mb-2 text-sm">Listen while you read</p>
             <AudioPlayer src={post.data.audioUrl} title={`${post.data.title} — Audio Overview`} client:load />
           </div>
         )
@@ -273,7 +269,7 @@ const matchedProject = allProjects.find(
             widths={[640, 1200, 1920]}
             formats={['avif', 'webp']}
             alt={post.data.title}
-            class="mt-8 w-full rounded-lg border border-border"
+            class="border-border mt-8 w-full rounded-lg border"
             loading="eager"
             fetchpriority="high"
           />
@@ -283,8 +279,8 @@ const matchedProject = allProjects.find(
 
     {
       seriesPosts.length > 1 && (
-        <nav class="mb-8 rounded-lg border border-border bg-surface-alt p-4" aria-label="Series navigation">
-          <p class="mb-2 text-xs font-medium text-text-muted">
+        <nav class="border-border bg-surface-alt mb-8 rounded-lg border p-4" aria-label="Series navigation">
+          <p class="text-text-muted mb-2 text-xs font-medium">
             Part {seriesPosts.findIndex((p) => p.id === post.id) + 1} of {seriesPosts.length} in{' '}
             <span class="text-accent">{post.data.series}</span>
           </p>
@@ -292,13 +288,13 @@ const matchedProject = allProjects.find(
             {seriesPosts.map((p, i) => (
               <li class="text-sm">
                 {p.id === post.id ? (
-                  <span class="font-medium text-accent">
+                  <span class="text-accent font-medium">
                     {i + 1}. {p.data.title}
                   </span>
                 ) : (
                   <a
                     href={`/blog/${slug(p.id)}/`}
-                    class="text-text-muted no-underline transition-colors hover:text-accent"
+                    class="text-text-muted hover:text-accent no-underline transition-colors"
                   >
                     {i + 1}. {p.data.title}
                   </a>
@@ -312,8 +308,8 @@ const matchedProject = allProjects.find(
 
     {
       seriesProjectsList.length > 0 && (
-        <div class="mb-8 rounded-lg border border-border bg-surface-alt p-4">
-          <p class="mb-2 text-xs font-medium text-text-muted">
+        <div class="border-border bg-surface-alt mb-8 rounded-lg border p-4">
+          <p class="text-text-muted mb-2 text-xs font-medium">
             Projects in <span class="text-accent">{post.data.series}</span>
           </p>
           <ol class="space-y-1">
@@ -321,7 +317,7 @@ const matchedProject = allProjects.find(
               <li class="text-sm">
                 <a
                   href={`/projects/${slug(p.id)}/`}
-                  class="text-text-muted no-underline transition-colors hover:text-accent"
+                  class="text-text-muted hover:text-accent no-underline transition-colors"
                 >
                   {i + 1}. {p.data.title}
                 </a>
@@ -335,7 +331,7 @@ const matchedProject = allProjects.find(
     <TableOfContents contentSelector=".prose" client:idle />
 
     <div
-      class="prose max-w-none prose-headings:mb-4 prose-headings:mt-8 prose-headings:font-semibold prose-headings:text-text prose-p:mb-4 prose-p:leading-relaxed prose-p:text-text prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-blockquote:my-4 prose-blockquote:border-accent prose-blockquote:text-text-muted prose-strong:text-text prose-code:rounded prose-code:bg-surface-alt prose-code:px-1 prose-code:py-0.5 prose-code:text-text-accent prose-pre:my-4 prose-pre:border prose-pre:border-border prose-pre:bg-surface-alt prose-ol:my-4 prose-ul:my-4 prose-li:text-text"
+      class="prose prose-headings:mb-4 prose-headings:mt-8 prose-headings:font-semibold prose-headings:text-text prose-p:mb-4 prose-p:leading-relaxed prose-p:text-text prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-blockquote:my-4 prose-blockquote:border-accent prose-blockquote:text-text-muted prose-strong:text-text prose-code:rounded prose-code:bg-surface-alt prose-code:px-1 prose-code:py-0.5 prose-code:text-text-accent prose-pre:my-4 prose-pre:border prose-pre:border-border prose-pre:bg-surface-alt prose-ol:my-4 prose-ul:my-4 prose-li:text-text max-w-none"
     >
       <Content />
     </div>
@@ -354,15 +350,15 @@ const matchedProject = allProjects.find(
     <RelatedContent currentTags={post.data.tags} currentId={post.id} currentDate={post.data.date} contentType="blog" />
 
     {/* Prev/Next navigation */}
-    <nav class="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next posts">
+    <nav class="border-border mt-16 grid gap-4 border-t pt-8 sm:grid-cols-2" aria-label="Previous and next posts">
       {
         prevPost ? (
           <a
             href={`/blog/${slug(prevPost.id)}/`}
-            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors"
+            class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors"
           >
-            <span class="text-xs text-text-muted">&larr; Previous</span>
-            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+            <span class="text-text-muted text-xs">&larr; Previous</span>
+            <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {prevPost.data.title}
             </span>
           </a>
@@ -374,10 +370,10 @@ const matchedProject = allProjects.find(
         nextPost && (
           <a
             href={`/blog/${slug(nextPost.id)}/`}
-            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors sm:text-right"
+            class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors sm:text-right"
           >
-            <span class="text-xs text-text-muted">Next &rarr;</span>
-            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+            <span class="text-text-muted text-xs">Next &rarr;</span>
+            <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {nextPost.data.title}
             </span>
           </a>

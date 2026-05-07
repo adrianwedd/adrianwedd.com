@@ -32,7 +32,7 @@ const { items, id, label } = Astro.props;
   items.length > 0 && (
     <section class="mx-auto max-w-4xl px-4 pb-12 sm:px-6 lg:px-8" aria-label={label}>
       <div
-        class="content-carousel relative overflow-hidden rounded-xl border border-border bg-surface-alt shadow-subtle"
+        class="content-carousel border-border bg-surface-alt shadow-subtle relative overflow-hidden rounded-xl border"
         data-carousel={id}
       >
         <div class="cc-track flex transition-transform duration-500 ease-in-out">
@@ -51,18 +51,18 @@ const { items, id, label } = Astro.props;
                   />
                 </div>
                 <div class="flex flex-col justify-center p-5 sm:w-1/2 sm:p-6">
-                  <h3 class="text-lg font-semibold text-text transition-colors group-hover:text-accent sm:text-xl">
+                  <h3 class="text-text group-hover:text-accent text-lg font-semibold transition-colors sm:text-xl">
                     {item.title}
                   </h3>
-                  <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-text-muted">{item.description}</p>
+                  <p class="text-text-muted mt-2 line-clamp-3 text-sm leading-relaxed">{item.description}</p>
                   {item.tags && item.tags.length > 0 && (
                     <div class="mt-3 flex flex-wrap gap-1">
                       {item.tags.slice(0, 3).map((tag: string) => (
-                        <span class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">{tag}</span>
+                        <span class="bg-surface-raised text-text-muted rounded-full px-2.5 py-0.5 text-xs">{tag}</span>
                       ))}
                     </div>
                   )}
-                  <span class="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent">
+                  <span class="text-accent mt-3 inline-flex items-center gap-1 text-sm font-medium">
                     Read
                     <svg
                       class="h-4 w-4"
@@ -93,7 +93,7 @@ const { items, id, label } = Astro.props;
                   type="button"
                   class:list={[
                     'cc-dot rounded-full transition-all',
-                    i === 0 ? 'h-2 w-5 bg-accent' : 'hover:bg-accent/50 h-2 w-2 bg-border',
+                    i === 0 ? 'bg-accent h-2 w-5' : 'hover:bg-accent/50 bg-border h-2 w-2',
                   ]}
                   data-slide={i}
                   aria-label={`Slide ${i + 1}: ${items[i].title}`}
@@ -104,7 +104,7 @@ const { items, id, label } = Astro.props;
 
             <button
               type="button"
-              class="cc-prev bg-surface/80 absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-border p-1.5 text-text-muted backdrop-blur-sm transition-colors hover:border-accent hover:text-accent"
+              class="cc-prev bg-surface/80 border-border text-text-muted hover:border-accent hover:text-accent absolute top-1/2 left-2 -translate-y-1/2 rounded-full border p-1.5 backdrop-blur-sm transition-colors"
               aria-label="Previous slide"
             >
               <svg
@@ -120,7 +120,7 @@ const { items, id, label } = Astro.props;
             </button>
             <button
               type="button"
-              class="cc-next bg-surface/80 absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-border p-1.5 text-text-muted backdrop-blur-sm transition-colors hover:border-accent hover:text-accent"
+              class="cc-next bg-surface/80 border-border text-text-muted hover:border-accent hover:text-accent absolute top-1/2 right-2 -translate-y-1/2 rounded-full border p-1.5 backdrop-blur-sm transition-colors"
               aria-label="Next slide"
             >
               <svg

@@ -45,9 +45,7 @@ The voice pipeline needed to:
 
 ## Attempt 1: Qwen3-TTS on the Pi
 
-Alibaba's [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS) dropped in January 2026. Open-source, Apache 2.0, 10 languages, voice cloning from a 3-second clip. The 0.6B model looked promising.
-
-It looked promising until we checked the requirements. Even the smallest model needs ~2.5 GB just for weights, plus PyTorch runtime overhead. On a Pi 4 already running seven daemons, this is a non-starter. No GGUF or ONNX conversion exists for the TTS variant, so there's no path to efficient CPU-only inference on ARM.
+Alibaba's [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS) dropped in January 2026. Open-source, Apache 2.0, 10 languages, voice cloning from a 3-second clip. The 0.6B model looked promising, at least until we looked at the system requirements. Even the smallest model needs ~2.5 GB just for weights, plus PyTorch runtime overhead. On a Pi 4 already running seven daemons, this is a non-starter. No GGUF or ONNX conversion exists for the TTS variant, so there's no path to efficient CPU-only inference on ARM.
 
 **Verdict:** Won't run on the Pi. Next.
 
@@ -93,7 +91,7 @@ The difference is dramatic. PyTorch treats unified memory like it's VRAM — all
 
 ## Voice Cloning: The 15-Second Sweet Spot
 
-Qwen3-TTS's Base model does zero-shot voice cloning. You give it a reference audio clip, a transcript of what's said in the clip, and the text you want spoken. It generates new speech in the reference voice's timbre.
+Qwen3-TTS's Base model excels at zero-shot voice cloning. You simply provide a reference audio clip, a highly accurate transcript of that clip, and your target text. It then synthesizes the target text in the persona's voice, maintaining the emotional cadence of the reference.peech in the reference voice's timbre.
 
 We had a 2-minute 42-second recording of a friend reading a children's book she wrote. The question was: how much of it does the model need?
 

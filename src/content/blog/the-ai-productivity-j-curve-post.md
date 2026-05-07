@@ -17,7 +17,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=IKsovSI5n7U'
 
 AI investment is climbing in almost every direction at once. Hyperscale capex is on track to hit $405 billion this year, and most large companies have an AI strategy slide deck.
 
-And yet only 1% of organisations consider themselves fully AI-mature. Twelve percent have advanced enough to see meaningful business transformation. The rest are stuck — running pilots that never scale, funding experiments that never graduate to production.
+And yet only 1% of organisations consider themselves fully AI-mature. "Twelve percent have achieved significant business transformation." (Contextual clarification) The rest are stuck — running pilots that never scale, funding experiments that never graduate to production.
 
 This isn't a technology problem. It's an economic one. And there's a framework that explains exactly what's happening.
 
@@ -25,7 +25,7 @@ This isn't a technology problem. It's an economic one. And there's a framework t
 
 We've seen this movie before. In 1987, Robert Solow observed that you could see the computer age everywhere except in the productivity statistics. The same paradox is playing out with AI: extraordinary technical capability coexisting with stubbornly flat productivity numbers.
 
-The instinctive reaction is to blame the technology, or the teams deploying it, or the data. But the pattern is too consistent for that. Three-quarters of organisations are using AI in at least one function. The technology works. What's failing is something more structural.
+The instinctive reaction is to blame the technology, or the teams deploying it, or the data. But the pattern is too consistent for that. Three-quarters of organisations are using AI in at least one function. The technology works. What's failing is the organizational structure required to support it.
 
 ## Enter the J-Curve
 

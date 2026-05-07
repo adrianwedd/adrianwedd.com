@@ -85,7 +85,7 @@ export default function ShareButton({ title, url }: Props) {
             setOpen(!open);
           }
         }}
-        class="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+        class="border-border text-text-muted hover:border-accent hover:text-accent inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs transition-colors"
         aria-label="Share this page"
         aria-haspopup={!hasNativeShare ? 'menu' : undefined}
         aria-expanded={!hasNativeShare ? open : undefined}
@@ -110,7 +110,7 @@ export default function ShareButton({ title, url }: Props) {
       {open && !hasNativeShare && (
         <div
           role="menu"
-          class="absolute right-0 top-full z-10 mt-2 w-44 rounded-lg border border-border bg-surface p-2 shadow-raised"
+          class="border-border bg-surface shadow-raised absolute top-full right-0 z-10 mt-2 w-44 rounded-lg border p-2"
         >
           {shareLinks.map((link) => (
             <a
@@ -119,7 +119,7 @@ export default function ShareButton({ title, url }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               role="menuitem"
-              class="block rounded px-3 py-2 text-xs text-text-muted no-underline transition-colors hover:bg-surface-alt hover:text-text"
+              class="text-text-muted hover:bg-surface-alt hover:text-text block rounded px-3 py-2 text-xs no-underline transition-colors"
               onClick={() => setOpen(false)}
             >
               {link.label}
@@ -132,14 +132,14 @@ export default function ShareButton({ title, url }: Props) {
               handleCopy();
               setOpen(false);
             }}
-            class="w-full rounded px-3 py-2 text-left text-xs text-text-muted transition-colors hover:bg-surface-alt hover:text-text"
+            class="text-text-muted hover:bg-surface-alt hover:text-text w-full rounded px-3 py-2 text-left text-xs transition-colors"
           >
             {copied ? 'Copied!' : 'Copy link'}
           </button>
         </div>
       )}
 
-      {copied && hasNativeShare && <span class="ml-2 text-xs text-accent">Copied!</span>}
+      {copied && hasNativeShare && <span class="text-accent ml-2 text-xs">Copied!</span>}
     </div>
   );
 }

@@ -21,7 +21,7 @@ Failure First inverts the approach. Map the catastrophic outcomes first—not as
 
 ## The Research
 
-257 models evaluated across OpenRouter, Ollama, and native CLIs. 142,068 adversarial prompts spanning 346 techniques across five attack families, versioned JSONL with JSON Schema. 38,720 benchmark runs, 140,555 FLIP-graded results in a unified SQLite corpus.
+257 models evaluated across API providers, local runtimes, and native CLIs. 142,068 adversarial prompts spanning 346 techniques across five attack families, versioned JSONL with JSON Schema. (Delete this sentence), 140,555 FLIP-graded results in a unified SQLite corpus.
 
 Five headline findings:
 
@@ -33,7 +33,7 @@ Five headline findings:
 
 **DETECTED_PROCEEDS: 38.6% of responses.** Models detect a safety violation in their own reasoning and proceed anyway. The reasoning trace identifies harm; the output ignores it. This is not a jailbreak phenomenon — it appears across unprompted responses.
 
-**Classifier overcount: 2.3×.** Keyword heuristics inflate attack success rates by 2.3× versus LLM-graded ground truth (FLIP methodology). Most published ASR numbers are wrong by a factor of two.
+**Classifier overcount: 2.3×.** Keyword heuristics inflate attack success rates by 2.3× versus LLM-graded ground truth (FLIP methodology). Most published ASR numbers are over-reported by a factor of two.
 
 ## The Methodology
 

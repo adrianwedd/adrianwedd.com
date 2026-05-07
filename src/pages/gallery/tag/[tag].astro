@@ -27,12 +27,12 @@ const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
 <BaseLayout title={`Gallery tagged "${tag}"`} description={`Gallery collections tagged with ${tag}.`} noindex>
   <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
     <h1 class="text-text">Tag: {tag}</h1>
-    <p class="mt-2 text-text-muted">{galleries.length} collection{galleries.length !== 1 ? 's' : ''}</p>
+    <p class="text-text-muted mt-2">{galleries.length} collection{galleries.length !== 1 ? 's' : ''}</p>
 
     <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
       <a
         href="/gallery/"
-        class="hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent"
+        class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-3 py-1 text-xs no-underline transition-colors"
       >
         All
       </a>
@@ -43,8 +43,8 @@ const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
             class:list={[
               'rounded-full px-3 py-1 text-xs no-underline',
               t === tag
-                ? 'bg-accent/15 font-medium text-accent'
-                : 'hover:bg-accent/15 bg-surface-raised text-text-muted transition-colors hover:text-accent',
+                ? 'bg-accent/15 text-accent font-medium'
+                : 'hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent transition-colors',
             ]}
           >
             {t}
@@ -58,7 +58,7 @@ const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
         galleries.map((gallery) => (
           <a
             href={`/gallery/${slug(gallery.id)}/`}
-            class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border bg-surface-alt no-underline shadow-subtle transition-all hover:shadow-card"
+            class="card-hover hover:border-accent/50 group border-border bg-surface-alt shadow-subtle hover:shadow-card block overflow-hidden rounded-xl border no-underline transition-all"
           >
             {gallery.data.coverImage && (
               <div class="img-placeholder aspect-[4/3] overflow-hidden">
@@ -76,10 +76,10 @@ const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
               </div>
             )}
             <div class="p-4">
-              <h2 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
+              <h2 class="text-text group-hover:text-accent text-lg font-semibold transition-colors">
                 {gallery.data.title}
               </h2>
-              <p class="mt-1 text-xs text-text-muted">
+              <p class="text-text-muted mt-1 text-xs">
                 {gallery.data.images.length} image{gallery.data.images.length !== 1 ? 's' : ''}
                 <span aria-hidden="true"> · </span>
                 {gallery.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}

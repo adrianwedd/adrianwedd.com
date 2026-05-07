@@ -96,7 +96,7 @@ const collectionSlug = slug(gallery.id);
 
     {/* Image */}
     <figure class="mb-8">
-      <div class="overflow-hidden rounded-lg border border-border bg-surface-alt">
+      <div class="border-border bg-surface-alt overflow-hidden rounded-lg border">
         <Picture
           src={image.src}
           width={1200}
@@ -109,11 +109,11 @@ const collectionSlug = slug(gallery.id);
           fetchpriority="high"
         />
       </div>
-      {image.caption && <figcaption class="mt-3 text-sm text-text-muted">{image.caption}</figcaption>}
+      {image.caption && <figcaption class="text-text-muted mt-3 text-sm">{image.caption}</figcaption>}
     </figure>
 
     {/* Metadata */}
-    <div class="mb-8 flex flex-wrap items-center gap-3 text-sm text-text-muted">
+    <div class="text-text-muted mb-8 flex flex-wrap items-center gap-3 text-sm">
       <span>{imageIndex + 1} of {total}</span>
       <span aria-hidden="true">&middot;</span>
       <span
@@ -139,7 +139,7 @@ const collectionSlug = slug(gallery.id);
         gallery.data.tags.map((tag: string) => (
           <a
             href={`/gallery/tag/${tag}/`}
-            class="hover:bg-accent/15 rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted no-underline transition-colors hover:text-accent"
+            class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-2.5 py-0.5 text-xs no-underline transition-colors"
           >
             {tag}
           </a>
@@ -148,15 +148,15 @@ const collectionSlug = slug(gallery.id);
     </div>
 
     {/* Prev/Next navigation */}
-    <nav class="grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next images">
+    <nav class="border-border grid gap-4 border-t pt-8 sm:grid-cols-2" aria-label="Previous and next images">
       {
         prevSlug ? (
           <a
             href={`/gallery/${collectionSlug}/${prevSlug}/`}
-            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors"
+            class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors"
           >
-            <span class="text-xs text-text-muted">&larr; Previous</span>
-            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+            <span class="text-text-muted text-xs">&larr; Previous</span>
+            <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {gallery.data.images[imageIndex - 1].alt}
             </span>
           </a>
@@ -168,10 +168,10 @@ const collectionSlug = slug(gallery.id);
         nextSlug && (
           <a
             href={`/gallery/${collectionSlug}/${nextSlug}/`}
-            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors sm:text-right"
+            class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors sm:text-right"
           >
-            <span class="text-xs text-text-muted">Next &rarr;</span>
-            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+            <span class="text-text-muted text-xs">Next &rarr;</span>
+            <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {gallery.data.images[imageIndex + 1].alt}
             </span>
           </a>

@@ -1,6 +1,6 @@
 ---
 title: 'Afterwords: Completing the Voice Loop in Claude Code'
-description: 'Adding local TTS to Claude Code so it talks back — 17 cloned voices, zero cloud dependency, one stop hook.'
+description: 'Adding local TTS to Claude Code so it talks back — over 100 cloned voices, zero cloud dependency, one stop hook.'
 date: 2026-03-22
 tags: ['ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'claude', 'open-source']
 series: 'PiCar-X'
@@ -53,17 +53,11 @@ The **stop hook** fires after every Claude Code response. It strips markdown for
 
 The **background worker** processes the queue serially with mkdir-based locking — no audio overlap, no race conditions. Responses are archived as compressed MP3s in `~/.claude/tts-archive/`.
 
-## 17 Voices, Zero Extra Memory
+## 110+ Voices, Zero Extra Memory
 
-The voice library ships with 17 cloned voices, all extracted from public audio using the [clone-voice.sh](/blog/voice-cloning-qwen3-tts-mlx/#step-1-prepare-your-reference-audio) pipeline:
+The voice library ships with over 110 cloned voices, all extracted from public audio using the [clone-voice.sh](/blog/voice-cloning-qwen3-tts-mlx/#step-1-prepare-your-reference-audio) pipeline.
 
-**Female:** Galadriel (Cate Blanchett), Samantha (Scarlett Johansson), Avasarala (Shohreh Aghdashloo), Vesper (Eva Green), Marla (Helena Bonham Carter), Claudia (Claudia Black), Aurora (AURORA), Audrey (Audrey Hepburn), Eartha (Eartha Kitt), Tilda (Tilda Swinton)
-
-**Male:** Snape (Alan Rickman), Loki (Tom Hiddleston), Spock (Leonard Nimoy), Bardem (Javier Bardem), Depp (Johnny Depp)
-
-**Character:** Vixen (children's poem reader), Obi (7-year-old Australian)
-
-Every voice is a single WAV file (~700 KB) and a transcript. The model extracts speaker embeddings at inference time — no fine-tuning, no per-voice model copies. We serve all 17 from a single 8 GB M1 with no measurable difference in memory usage between one voice and seventeen.
+Every voice is a single WAV file (~700 KB) and a transcript. The model extracts speaker embeddings at inference time — no fine-tuning, no per-voice model copies.
 
 ## Per-Project Voice Selection
 
@@ -93,7 +87,7 @@ The installer checks hardware compatibility, sets up the Python environment, dow
 
 ## What It's Not
 
-Afterwords is not a voice assistant. It doesn't listen for wake words, doesn't maintain conversation state, doesn't do anything clever with audio input. Claude Code handles all the intelligence. Afterwords is plumbing — it takes text that was going to your eyes and routes it to your ears instead.
+Afterwords is not a voice assistant. It doesn't listen for wake words, doesn't maintain conversation state — it is a local bridge between Claude Code's text output and your speakers. It hooks into Claude Code, ensuring your code base stays entirely local. Traditionally, high-quality voice synthesis required cloud-based infrastructure and an internet connection, which introduced latency and privacy concerns. This dynamic changes with Apple Silicon. Afterwords leverages this by running the Qwen3-TTS engine on Apple's MLX framework, utilizing the unified memory architecture of the M1 chip, at the exact moment Claude Code finishes a thought.
 
 It's also not fast. Twenty seconds per response is fine for code review explanations and error analysis. It's not fine for rapid-fire debugging. The hook is smart enough to skip very short responses and truncate very long ones, but the latency is inherent to running a 600M parameter model on consumer hardware.
 

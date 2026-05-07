@@ -8,6 +8,6 @@ duration: '19:08'
 relatedPost: 'the-cognitive-cage-post'
 ---
 
-For fifty years, robot safety was a solved problem. The answer was a cage: a physical enclosure that kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.
+For decades, industrial robot safety was effectively managed through physical isolation. A cage—or a safety barrier—kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.
 
 [Read the full post →](/blog/the-cognitive-cage/)

@@ -56,7 +56,7 @@ const recentPosts = (await getCollection('blog'))
   </section>
 
   <article class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8" aria-labelledby="about-heading">
-    <div class="space-y-6 leading-relaxed text-text">
+    <div class="text-text space-y-6 leading-relaxed">
       <p>
         I'm Adrian Wedd. I live in Cygnet, Tasmania. I build systems, break them deliberately, and use what I learn to
         make the next ones harder to break.
@@ -68,7 +68,7 @@ const recentPosts = (await getCollection('blog'))
         identical.
       </p>
 
-      <h2 class="mt-12 text-text">Where the adversarial thinking comes from</h2>
+      <h2 class="text-text mt-12">Where the adversarial thinking comes from</h2>
 
       <p>
         I spent years coordinating direct actions for Greenpeace. Not communications, not fundraising — the Actions
@@ -85,7 +85,7 @@ const recentPosts = (await getCollection('blog'))
         access to frontier AI systems and a lot of compute.
       </p>
 
-      <h2 class="mt-12 text-text">AuDHD — feature, not bug</h2>
+      <h2 class="text-text mt-12">AuDHD — feature, not bug</h2>
 
       <p>
         I'm Autistic and ADHD. I'm not disclosing this as context for the hard parts. I'm naming it because it directly
@@ -111,7 +111,7 @@ const recentPosts = (await getCollection('blog'))
         hear.
       </p>
 
-      <h2 class="mt-12 text-text">What I actually care about</h2>
+      <h2 class="text-text mt-12">What I actually care about</h2>
 
       <p>
         I started at Greenpeace because I believed in the work, not because it was a career move. I built Freedom Engine
@@ -138,7 +138,7 @@ const recentPosts = (await getCollection('blog'))
         before the incentives catch up. That's why I do the red-teaming work. That's why the methodology is public.
       </p>
 
-      <h2 class="mt-12 text-text">How I got here</h2>
+      <h2 class="text-text mt-12">How I got here</h2>
 
       <p>
         Greenpeace and the Wilderness Society taught me to plan against adversarial opponents and to treat operational
@@ -149,7 +149,7 @@ const recentPosts = (await getCollection('blog'))
         that are harder to audit and fail in ways that are harder to see.
       </p>
 
-      <h2 class="mt-12 text-text">What I'm working on</h2>
+      <h2 class="text-text mt-12">What I'm working on</h2>
 
       <p>
         AI systems that fail gracefully and auditably. Multi-agent architectures with real safety constraints. The gap
@@ -162,7 +162,7 @@ const recentPosts = (await getCollection('blog'))
         the hyperfocus.
       </p>
 
-      <h2 class="mt-12 text-text">Elsewhere</h2>
+      <h2 class="text-text mt-12">Elsewhere</h2>
 
       <ul class="space-y-2">
         <li>
@@ -185,7 +185,7 @@ const recentPosts = (await getCollection('blog'))
         </li>
       </ul>
 
-      <h2 id="privacy" class="mt-12 text-text">Privacy</h2>
+      <h2 id="privacy" class="text-text mt-12">Privacy</h2>
 
       <p>
         This site respects your choices. No tracking happens without consent. Analytics (if enabled) uses Google
@@ -201,13 +201,13 @@ const recentPosts = (await getCollection('blog'))
     {/* Connected work */}
     {
       featuredProjects.length > 0 && (
-        <aside class="mt-16 border-t border-border pt-8">
-          <h2 class="mb-4 text-lg font-semibold text-text">Featured Work</h2>
+        <aside class="border-border mt-16 border-t pt-8">
+          <h2 class="text-text mb-4 text-lg font-semibold">Featured Work</h2>
           <div class="space-y-3">
             {featuredProjects.map((project) => (
               <a href={`/projects/${slug(project.id)}/`} class="group flex items-center gap-3 no-underline">
-                <span class="text-sm text-text transition-colors group-hover:text-accent">{project.data.title}</span>
-                <span class="text-xs text-text-muted">{project.data.description}</span>
+                <span class="text-text group-hover:text-accent text-sm transition-colors">{project.data.title}</span>
+                <span class="text-text-muted text-xs">{project.data.description}</span>
               </a>
             ))}
           </div>
@@ -217,13 +217,13 @@ const recentPosts = (await getCollection('blog'))
 
     {
       recentPosts.length > 0 && (
-        <aside class="mt-8 border-t border-border pt-8">
-          <h2 class="mb-4 text-lg font-semibold text-text">Recent Writing</h2>
+        <aside class="border-border mt-8 border-t pt-8">
+          <h2 class="text-text mb-4 text-lg font-semibold">Recent Writing</h2>
           <div class="space-y-3">
             {recentPosts.map((post) => (
               <a href={`/blog/${slug(post.id)}/`} class="group flex items-center gap-3 no-underline">
-                <span class="text-sm text-text transition-colors group-hover:text-accent">{post.data.title}</span>
-                <time class="text-xs text-text-muted" datetime={post.data.date.toISOString()}>
+                <span class="text-text group-hover:text-accent text-sm transition-colors">{post.data.title}</span>
+                <time class="text-text-muted text-xs" datetime={post.data.date.toISOString()}>
                   {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
                 </time>
               </a>

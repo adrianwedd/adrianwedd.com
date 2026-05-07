@@ -12,10 +12,10 @@ heroImage: '/notebook-assets/dodgylegally/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=xF-BklkSqoI'
 ---
 
-The best samples come from places you weren't looking. That's the premise—and the entire workflow. Type a random word. Get a sample pack. dodgylegally generates audio instruments from chaotic search phrases, pulling from YouTube, local files, and a five-thousand-word dictionary with weighted source mixing.
+The best samples come from places you weren't looking. That's the premise—and the entire workflow. Type a number. The tool picks two random words from a 5,000-word dictionary, creates an absurd phrase, and generates a sample pack from the results. dodgylegally generates audio samples from chaotic search phrases, pulling from YouTube or your own local audio files, with weighted source mixing based on a five-thousand-word dictionary.
 
 I built this because I wanted to break the loop of scrolling through sample libraries looking for something that "felt right." The feeling never arrives by browsing. It arrives by accident—by hearing a texture you didn't know existed, shaped by a word you chose for no reason. The tool's job is to manufacture those accidents reliably.
 
-One-shot and loop processing with cross-fading. BPM-aware looping and beat alignment. Pitch shifting, time stretching, stem export. Every sound carries a JSON sidecar tracking its provenance—where it came from, what transformations were applied, what the original search term was. Because creative chaos is better when it's reproducible chaos.
+One-shot and loop processing with cross-fading. Pitch shifting, time stretching, stem export. Every sound carries a JSON sidecar tracking its provenance—where it came from, what transformations were applied, what the original search term was. Because creative chaos is better when it's reproducible chaos.
 
-The name is the philosophy: sampling from the wild, with just enough attribution to sleep at night.
+The name is the philosophy: sampling from the wild, while tracking the provenance of every clip.

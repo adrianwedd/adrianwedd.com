@@ -62,11 +62,11 @@ export default function Transparency() {
   if (!consent) return null;
 
   return (
-    <div class="mt-8 rounded-xl border border-border bg-surface-alt p-6">
+    <div class="border-border bg-surface-alt mt-8 rounded-xl border p-6">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        class="flex w-full items-center gap-2 text-left text-sm font-medium text-text transition-colors hover:text-accent"
+        class="text-text hover:text-accent flex w-full items-center gap-2 text-left text-sm font-medium transition-colors"
         aria-expanded={open}
       >
         <span class="transition-transform" style={{ transform: open ? 'rotate(90deg)' : 'none' }}>
@@ -78,8 +78,8 @@ export default function Transparency() {
       {open && (
         <div class="mt-4 space-y-4 text-sm">
           <div>
-            <h4 class="mb-1 font-medium text-text">Consent</h4>
-            <ul class="space-y-1 text-text-muted">
+            <h4 class="text-text mb-1 font-medium">Consent</h4>
+            <ul class="text-text-muted space-y-1">
               <li>Analytics: {consent.analytics ? 'Allowed' : 'Denied'}</li>
               <li>Personalisation: {consent.personalisation ? 'Allowed' : 'Denied'}</li>
               <li>
@@ -95,8 +95,8 @@ export default function Transparency() {
 
           {memory && (
             <div>
-              <h4 class="mb-1 font-medium text-text">What I remember</h4>
-              <ul class="space-y-1 text-text-muted">
+              <h4 class="text-text mb-1 font-medium">What I remember</h4>
+              <ul class="text-text-muted space-y-1">
                 <li>Visits: {memory.visits}</li>
                 {memory.referrer && <li>First arrived from: {memory.referrer}</li>}
                 <li>Pages viewed: {memory.viewedContent.length}</li>
@@ -104,18 +104,18 @@ export default function Transparency() {
               <button
                 type="button"
                 onClick={resetMemory}
-                class="mt-2 text-xs text-text-muted transition-colors hover:text-accent"
+                class="text-text-muted hover:text-accent mt-2 text-xs transition-colors"
               >
                 Clear browsing memory
               </button>
             </div>
           )}
 
-          <div class="border-t border-border pt-2">
+          <div class="border-border border-t pt-2">
             <button
               type="button"
               onClick={resetAll}
-              class="text-xs text-text-muted transition-colors hover:text-accent"
+              class="text-text-muted hover:text-accent text-xs transition-colors"
             >
               Reset all preferences and reload
             </button>

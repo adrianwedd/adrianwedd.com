@@ -3,14 +3,14 @@ title: 'Zero-Build Web Development'
 description: 'What happens when you build a three-zone operations platform for a martial arts club with no framework, no build step, and no npm.'
 date: 2026-03-14
 tags: ['engineering', 'web', 'security', 'cloudflare']
-draft: false 
+draft: false
 heroImage: '/notebook-assets/zero-build-web-development/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=j2b3-7Y3rWU'
 ---
 
-I built a complete operations platform for my Zen Do Kai club. Public marketing site, password-gated ops hub, JWT-authenticated member portal with attendance tracking, grading administration, lesson plans, and Stripe billing. Three zones, 20+ API endpoints, a D1 database, and security-hardened middleware.
+I built a complete operations platform for my Wolf Clan martial arts club. Public marketing site, password-gated ops hub, JWT-authenticated member portal with attendance tracking, grading administration, lesson plans, and Stripe billing. Three zones, 20+ API endpoints, a D1 database, and security-hardened middleware.
 
 No React. No npm. No build step. Vanilla HTML, CSS, and JavaScript.
 
@@ -22,7 +22,7 @@ The club needed a website. I could have reached for Astro (which I use for [this
 
 The reasoning was practical, not ideological. Cloudflare Pages serves static files and runs edge functions. If I write HTML files and JavaScript functions, deployment is pushing to GitHub. No build cache to debug. No dependency tree to audit. No framework release cycle to track. The mental model is: files go up, site comes down.
 
-Two weeks later, the site is nine CSS files, all driven by design tokens. The middleware is 480 lines. The member portal has 79 lesson plans, engagement analytics, and family billing. And the deployment story is still "push to GitHub."
+Two weeks later, the site is nine CSS files, all driven by design tokens. The core routing logic is 480 lines. The member portal has 79 lesson plans, engagement analytics, and family billing. And the deployment story is still "push to GitHub."
 
 ## Three zones, one middleware
 
@@ -73,7 +73,7 @@ These are real costs. They just happen to be smaller, for this project, than the
 
 ## When to skip the build step
 
-Not always. Probably not most of the time. But the conditions where it works are clear:
+Not always. Probably not most of the time. But for a project like this, it feels like the right move.he time. But for a project like this, it feels like the right move.he time. But the conditions where it works are clear:
 
 - **Small team** (one or two developers who can hold the whole system in their heads)
 - **Edge-first hosting** that runs your functions without a build pipeline

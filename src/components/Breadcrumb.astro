@@ -23,7 +23,7 @@ const jsonLd = {
 ---
 
 <nav aria-label="Breadcrumb" class="mb-4">
-  <ol class="flex flex-wrap items-center gap-1 text-xs text-text-muted">
+  <ol class="text-text-muted flex flex-wrap items-center gap-1 text-xs">
     {
       crumbs.map((crumb, i) => (
         <li class="flex items-center gap-1">
@@ -33,7 +33,7 @@ const jsonLd = {
             </span>
           )}
           {crumb.href ? (
-            <a href={crumb.href} class="transition-colors hover:text-accent">
+            <a href={crumb.href} class="hover:text-accent transition-colors">
               {crumb.label}
             </a>
           ) : (

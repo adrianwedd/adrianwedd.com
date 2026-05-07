@@ -150,12 +150,12 @@ export default function ActivityDashboard() {
       <div class="animate-pulse space-y-6" role="status" aria-label="Loading activity dashboard">
         <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} class="h-20 rounded-lg bg-surface-alt" />
+            <div key={i} class="bg-surface-alt h-20 rounded-lg" />
           ))}
         </div>
-        <div class="h-10 rounded bg-surface-alt" />
+        <div class="bg-surface-alt h-10 rounded" />
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} class="h-12 rounded bg-surface-alt" />
+          <div key={i} class="bg-surface-alt h-12 rounded" />
         ))}
       </div>
     );
@@ -163,16 +163,16 @@ export default function ActivityDashboard() {
 
   if (error === 'rate-limit') {
     return (
-      <div class="rounded-lg border border-border bg-surface-alt p-8 text-center">
+      <div class="border-border bg-surface-alt rounded-lg border p-8 text-center">
         <p class="text-text-muted">GitHub API rate limit reached. Updates hourly.</p>
-        <p class="mt-2 text-xs text-text-muted">Try refreshing in a few minutes.</p>
+        <p class="text-text-muted mt-2 text-xs">Try refreshing in a few minutes.</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div class="rounded-lg border border-border bg-surface-alt p-8 text-center">
+      <div class="border-border bg-surface-alt rounded-lg border p-8 text-center">
         <p class="text-text-muted">Unable to load activity right now.</p>
       </div>
     );
@@ -188,9 +188,9 @@ export default function ActivityDashboard() {
           { label: 'Repositories', value: repos.length },
           { label: 'Languages', value: languages },
         ].map((m) => (
-          <div key={m.label} class="rounded-lg border border-border bg-surface-raised p-4 text-center">
-            <div class="text-2xl font-semibold text-accent">{m.value}</div>
-            <div class="mt-1 text-xs text-text-muted">{m.label}</div>
+          <div key={m.label} class="border-border bg-surface-raised rounded-lg border p-4 text-center">
+            <div class="text-accent text-2xl font-semibold">{m.value}</div>
+            <div class="text-text-muted mt-1 text-xs">{m.label}</div>
           </div>
         ))}
       </div>
@@ -200,7 +200,7 @@ export default function ActivityDashboard() {
         <select
           value={typeFilter}
           onChange={(e: Event) => setTypeFilter((e.target as HTMLSelectElement).value)}
-          class="rounded border border-border bg-surface-alt px-3 py-1.5 text-sm text-text"
+          class="border-border bg-surface-alt text-text rounded border px-3 py-1.5 text-sm"
           aria-label="Filter by event type"
         >
           <option value="all">All types</option>
@@ -214,7 +214,7 @@ export default function ActivityDashboard() {
         <select
           value={timeRange}
           onChange={(e: Event) => setTimeRange((e.target as HTMLSelectElement).value as TimeRange)}
-          class="rounded border border-border bg-surface-alt px-3 py-1.5 text-sm text-text"
+          class="border-border bg-surface-alt text-text rounded border px-3 py-1.5 text-sm"
           aria-label="Filter by time range"
         >
           <option value="24h">Last 24h</option>
@@ -226,7 +226,7 @@ export default function ActivityDashboard() {
         <select
           value={repoFilter}
           onChange={(e: Event) => setRepoFilter((e.target as HTMLSelectElement).value)}
-          class="rounded border border-border bg-surface-alt px-3 py-1.5 text-sm text-text"
+          class="border-border bg-surface-alt text-text rounded border px-3 py-1.5 text-sm"
           aria-label="Filter by repository"
         >
           <option value="all">All repos</option>
@@ -242,16 +242,16 @@ export default function ActivityDashboard() {
           placeholder="Search..."
           value={search}
           onInput={(e: Event) => setSearch((e.target as HTMLInputElement).value)}
-          class="rounded border border-border bg-surface-alt px-3 py-1.5 text-sm text-text placeholder:text-text-muted"
+          class="border-border bg-surface-alt text-text placeholder:text-text-muted rounded border px-3 py-1.5 text-sm"
           aria-label="Search activity"
         />
       </div>
 
       {/* Activity stream */}
       <div>
-        <h2 class="mb-4 text-sm font-medium uppercase tracking-wider text-text-muted">Activity</h2>
+        <h2 class="text-text-muted mb-4 text-sm font-medium tracking-wider uppercase">Activity</h2>
         {filteredActivities.length === 0 ? (
-          <p class="text-sm italic text-text-muted">No matching activity.</p>
+          <p class="text-text-muted text-sm italic">No matching activity.</p>
         ) : (
           <>
             <p role="status" aria-live="polite" class="sr-only">
@@ -259,8 +259,8 @@ export default function ActivityDashboard() {
             </p>
             <ul>
               {filteredActivities.map((a) => (
-                <li key={a.id} class="flex items-start gap-3 border-b border-border py-3 last:border-0">
-                  <span class="mt-0.5 w-5 shrink-0 text-center text-text-muted" aria-hidden="true">
+                <li key={a.id} class="border-border flex items-start gap-3 border-b py-3 last:border-0">
+                  <span class="text-text-muted mt-0.5 w-5 shrink-0 text-center" aria-hidden="true">
                     {eventIcon(a.type)}
                   </span>
                   <button
@@ -271,11 +271,11 @@ export default function ActivityDashboard() {
                     }}
                     aria-label={`View details: ${a.description}`}
                   >
-                    <span class="font-mono text-xs text-accent">{a.repo}</span>
+                    <span class="text-accent font-mono text-xs">{a.repo}</span>
                     <span class="text-text"> — </span>
-                    <span class="text-sm text-text">{a.description}</span>
+                    <span class="text-text text-sm">{a.description}</span>
                   </button>
-                  <span class="shrink-0 whitespace-nowrap text-xs text-text-muted">{a.time}</span>
+                  <span class="text-text-muted shrink-0 text-xs whitespace-nowrap">{a.time}</span>
                 </li>
               ))}
             </ul>
@@ -286,7 +286,7 @@ export default function ActivityDashboard() {
       {/* Repository grid */}
       <div>
         <div class="mb-4 flex items-center justify-between">
-          <h2 class="text-sm font-medium uppercase tracking-wider text-text-muted">Repositories</h2>
+          <h2 class="text-text-muted text-sm font-medium tracking-wider uppercase">Repositories</h2>
           <div class="flex gap-1">
             {(['grid', 'list'] as ViewMode[]).map((mode) => (
               <button
@@ -308,14 +308,14 @@ export default function ActivityDashboard() {
               href={`https://github.com/${r.full_name}`}
               target="_blank"
               rel="noopener noreferrer"
-              class="block rounded-lg border border-border bg-surface-alt p-4 transition-colors hover:border-accent"
+              class="border-border bg-surface-alt hover:border-accent block rounded-lg border p-4 transition-colors"
             >
               <div class="flex items-center justify-between">
-                <span class="font-mono text-sm text-accent">{r.name}</span>
-                {r.language && <span class="text-xs text-text-muted">{r.language}</span>}
+                <span class="text-accent font-mono text-sm">{r.name}</span>
+                {r.language && <span class="text-text-muted text-xs">{r.language}</span>}
               </div>
-              {r.description && <p class="mt-1 line-clamp-2 text-xs text-text-muted">{r.description}</p>}
-              <div class="mt-2 flex items-center gap-3 text-xs text-text-muted">
+              {r.description && <p class="text-text-muted mt-1 line-clamp-2 text-xs">{r.description}</p>}
+              <div class="text-text-muted mt-2 flex items-center gap-3 text-xs">
                 {r.stargazers_count > 0 && <span>★ {r.stargazers_count}</span>}
                 <span>{relativeTime(r.pushed_at)}</span>
               </div>
@@ -339,11 +339,11 @@ export default function ActivityDashboard() {
           aria-labelledby="activity-modal-title"
         >
           <div
-            class="w-full max-w-md rounded-lg border border-border bg-surface-raised p-6 shadow-lg"
+            class="border-border bg-surface-raised w-full max-w-md rounded-lg border p-6 shadow-lg"
             onClick={(e: Event) => e.stopPropagation()}
           >
             <div class="mb-4 flex items-center justify-between">
-              <h3 id="activity-modal-title" class="text-sm font-medium text-text">
+              <h3 id="activity-modal-title" class="text-text text-sm font-medium">
                 Activity Detail
               </h3>
               <button
@@ -370,7 +370,7 @@ export default function ActivityDashboard() {
                     href={`https://github.com/${USERNAME}/${selectedActivity.repo}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="font-mono text-accent hover:underline"
+                    class="text-accent font-mono hover:underline"
                   >
                     {selectedActivity.repo}
                   </a>
@@ -405,7 +405,7 @@ export default function ActivityDashboard() {
       )}
 
       {/* Footer */}
-      <p class="text-xs text-text-muted">
+      <p class="text-text-muted text-xs">
         Live from{' '}
         <a
           href={`https://github.com/${USERNAME}`}

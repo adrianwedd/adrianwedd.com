@@ -23,7 +23,7 @@ The result: a 62% average attack success rate across 25 frontier models from nin
 
 ## The setup
 
-The study tested 20 hand-crafted adversarial poems against every major model family you can think of — Gemini, GPT, Claude, Llama, Deepseek, Qwen, Mistral, Grok, and Kimi. Each poem embedded a harmful request inside poetic structure: metaphor, imagery, rhythm. The semantic content was preserved, but the surface form was transformed into verse.
+The study tested hand-crafted adversarial poems against nine major model families: Gemini, GPT, Claude, Llama, Deepseek, Qwen, Mistral, Grok, and Kimi. Each poem embedded a harmful request inside poetic structure: metaphor, imagery, rhythm. The semantic content was preserved, but the surface form was transformed into verse.
 
 To make sure this was not just artisanal prompt crafting, the researchers also converted 1,200 prompts from the MLCommons safety benchmark into poetry using a standardised meta-prompt. No hand-tuning. Just automated verse generation. The poetic variants still produced attack success rates up to 18 times higher than the prose baselines.
 
@@ -37,7 +37,7 @@ The paper tested three specific claims:
 
 **Hypothesis 2: The vulnerability generalises across model families.** This is not a vendor-specific bug. Every provider tested — all nine of them — showed elevated attack success under poetic framing. Claude showed 45-55%, Llama hit 70%, and Gemini reached 90-100%. The models use different architectures, different alignment pipelines, different safety training strategies. None of it mattered.
 
-**Hypothesis 3: Poetry bypasses safety across risk domains.** The attack worked across CBRN hazards, cyber-offense, harmful manipulation, loss-of-control scenarios, privacy intrusions, and misinformation. This is not a narrow exploit in one content category. Poetic framing interfered with the underlying refusal mechanisms themselves, not with domain-specific filters.
+**Hypothesis 3: Poetry bypasses safety across risk domains.** The attack works across multiple risk domains, including standard safety benchmarks covering cyber-offense, harmful manipulation, and privacy intrusions. This is not a narrow exploit in one content category. Poetic framing interfered with the underlying refusal mechanisms themselves, not with domain-specific filters.
 
 ## The threat model is alarmingly simple
 
@@ -57,7 +57,7 @@ There is also a deeper issue: models are trained on massive corpora of poetry, a
 
 ## The scale paradox
 
-One of the more counterintuitive findings: smaller models were sometimes more resilient than their larger counterparts. This challenges the assumption that capability scaling automatically improves safety. Larger models may be better at understanding and complying with complex poetic instructions — which, in this context, means they are better at being jailbroken.
+One of the more counterintuitive findings: smaller models were sometimes more resilient than their larger counterparts. This challenges the common assumption that model scaling automatically correlates with improved safety. Larger models may be better at understanding and complying with complex poetic instructions — which, in this context, means they are better at being jailbroken.
 
 Provider identity turned out to be more predictive of vulnerability than model size. Some providers showed consistently high susceptibility across their entire model portfolio, suggesting the issue lies in alignment methodology rather than raw capability.
 

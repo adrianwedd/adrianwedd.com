@@ -17,19 +17,19 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
   <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">Now</h1>
-      <p class="mt-2 text-text-muted">What I'm focused on right now. Updated April 2026.</p>
+      <p class="text-text-muted mt-2">What I'm focused on right now. Updated April 2026.</p>
     </div>
     <HeroCanvas animation="orbit" />
   </section>
 
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <header class="mb-12">
-      <p class="mt-2 text-sm text-text-muted">
+      <p class="text-text-muted mt-2 text-sm">
         This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener noreferrer">/now page</a>.
       </p>
     </header>
 
-    <div class="space-y-8 leading-relaxed text-text">
+    <div class="text-text space-y-8 leading-relaxed">
       <p class="text-text-muted">
         The question I keep running into: organisations commission AI risk assessments and then do nothing with the
         findings. Not because the findings are wrong — because they're too technical to act on. That gap is what most of
@@ -109,39 +109,39 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
       <section>
         <h2 class="text-text">This Site</h2>
         <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div class="rounded-lg border border-border bg-surface-alt px-4 py-3 text-center">
-            <div class="text-xl font-semibold text-accent">{blogPosts.length}</div>
-            <div class="text-xs text-text-muted">posts</div>
+          <div class="border-border bg-surface-alt rounded-lg border px-4 py-3 text-center">
+            <div class="text-accent text-xl font-semibold">{blogPosts.length}</div>
+            <div class="text-text-muted text-xs">posts</div>
           </div>
-          <div class="rounded-lg border border-border bg-surface-alt px-4 py-3 text-center">
-            <div class="text-xl font-semibold text-accent">{projects.length}</div>
-            <div class="text-xs text-text-muted">projects</div>
+          <div class="border-border bg-surface-alt rounded-lg border px-4 py-3 text-center">
+            <div class="text-accent text-xl font-semibold">{projects.length}</div>
+            <div class="text-text-muted text-xs">projects</div>
           </div>
-          <div class="rounded-lg border border-border bg-surface-alt px-4 py-3 text-center">
-            <div class="text-xl font-semibold text-accent">{totalImages}</div>
-            <div class="text-xs text-text-muted">images</div>
+          <div class="border-border bg-surface-alt rounded-lg border px-4 py-3 text-center">
+            <div class="text-accent text-xl font-semibold">{totalImages}</div>
+            <div class="text-text-muted text-xs">images</div>
           </div>
-          <div class="rounded-lg border border-border bg-surface-alt px-4 py-3 text-center">
-            <div class="text-xl font-semibold text-accent">{episodes.length}</div>
-            <div class="text-xs text-text-muted">episodes</div>
+          <div class="border-border bg-surface-alt rounded-lg border px-4 py-3 text-center">
+            <div class="text-accent text-xl font-semibold">{episodes.length}</div>
+            <div class="text-text-muted text-xs">episodes</div>
           </div>
         </div>
-        <p class="mt-3 text-xs text-text-muted">
+        <p class="text-text-muted mt-3 text-xs">
           {totalWords.toLocaleString()} words written across {blogPosts.length} posts.
         </p>
       </section>
 
       <section>
         <h2 class="text-text">Recent Activity</h2>
-        <p class="mb-4 text-sm text-text-muted">Live from GitHub.</p>
+        <p class="text-text-muted mb-4 text-sm">Live from GitHub.</p>
         <GitHubActivity client:idle />
       </section>
     </div>
 
-    <nav class="mt-16 border-t border-border pt-8" aria-label="Related pages">
+    <nav class="border-border mt-16 border-t pt-8" aria-label="Related pages">
       <div class="flex gap-6">
-        <a href="/about/" class="text-sm text-text-muted transition-colors hover:text-accent">&larr; About</a>
-        <a href="/projects/" class="text-sm text-text-muted transition-colors hover:text-accent">Projects &rarr;</a>
+        <a href="/about/" class="text-text-muted hover:text-accent text-sm transition-colors">&larr; About</a>
+        <a href="/projects/" class="text-text-muted hover:text-accent text-sm transition-colors">Projects &rarr;</a>
       </div>
     </nav>
   </article>

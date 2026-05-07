@@ -23,7 +23,7 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
         >
       </h1>
       <p class="mt-6">
-        <a href="/audio/feed.xml" class="text-sm text-text-muted transition-colors hover:text-accent">
+        <a href="/audio/feed.xml" class="text-text-muted hover:text-accent text-sm transition-colors">
           Podcast RSS &nearr;
         </a>
       </p>
@@ -38,7 +38,7 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
           <button
             type="button"
             data-tag=""
-            class="tag-filter bg-accent/15 cursor-pointer rounded-full px-3 py-1 text-xs font-medium text-accent transition-colors"
+            class="tag-filter bg-accent/15 text-accent cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors"
             aria-pressed="true"
           >
             All
@@ -48,7 +48,7 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
               type="button"
               data-tag={tag}
               class:list={[
-                'tag-filter hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent',
+                'tag-filter hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent cursor-pointer rounded-full px-3 py-1 text-xs transition-colors',
                 i >= 10 && 'audio-tag-overflow hidden',
               ]}
               aria-pressed="false"
@@ -61,7 +61,7 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
               type="button"
               id="audio-tags-toggle"
               aria-expanded="false"
-              class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
+              class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent cursor-pointer rounded-full px-3 py-1 text-xs transition-colors"
             >
               +{allTags.length - 10} more
             </button>
@@ -72,10 +72,10 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
 
     {/* Sort control */}
     <div class="mt-4 flex items-center gap-2">
-      <label for="sort-select" class="text-xs text-text-muted">Sort:</label>
+      <label for="sort-select" class="text-text-muted text-xs">Sort:</label>
       <select
         id="sort-select"
-        class="rounded border border-border bg-surface-alt px-2 py-1 text-xs text-text-muted focus:border-accent focus:outline-none"
+        class="border-border bg-surface-alt text-text-muted focus:border-accent rounded border px-2 py-1 text-xs focus:outline-none"
       >
         <option value="newest">Newest first</option>
         <option value="oldest">Oldest first</option>
@@ -94,24 +94,24 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
           >
             <a
               href={`/audio/${slug(episode.id)}/`}
-              class="card-hover hover:border-accent/50 group block rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
+              class="card-hover hover:border-accent/50 group border-border bg-surface-alt shadow-subtle hover:shadow-card block rounded-xl border p-6 no-underline transition-all"
             >
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <h2 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
+                  <h2 class="text-text group-hover:text-accent text-lg font-semibold transition-colors">
                     {episode.data.title}
                   </h2>
-                  <p class="mt-1 text-sm leading-relaxed text-text-muted">{episode.data.description}</p>
-                  <div class="mt-2 flex items-center gap-3 text-xs text-text-muted">
+                  <p class="text-text-muted mt-1 text-sm leading-relaxed">{episode.data.description}</p>
+                  <div class="text-text-muted mt-2 flex items-center gap-3 text-xs">
                     {episode.data.duration && <span>{episode.data.duration}</span>}
                     <div class="flex gap-2">
                       {episode.data.tags.map((tag: string) => (
-                        <span class="rounded-full bg-surface-raised px-2.5 py-0.5">{tag}</span>
+                        <span class="bg-surface-raised rounded-full px-2.5 py-0.5">{tag}</span>
                       ))}
                     </div>
                   </div>
                 </div>
-                <time class="whitespace-nowrap text-xs text-text-muted" datetime={episode.data.date.toISOString()}>
+                <time class="text-text-muted text-xs whitespace-nowrap" datetime={episode.data.date.toISOString()}>
                   {episode.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </time>
               </div>
@@ -121,7 +121,7 @@ const allTags = [...new Set(episodes.flatMap((e) => e.data.tags))].sort();
       }
     </div>
 
-    <p id="no-results" class="mt-10 hidden text-center text-text-muted">No episodes match this filter.</p>
+    <p id="no-results" class="text-text-muted mt-10 hidden text-center">No episodes match this filter.</p>
   </section>
 
   <script is:inline>

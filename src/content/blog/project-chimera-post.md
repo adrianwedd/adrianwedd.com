@@ -44,7 +44,7 @@ The logical successor to passive, predictive models is the autonomous agent — 
 
 The research conferences tell the same story. NeurIPS 2024 pivoted toward "AI with real-world relevance." ACL 2025 focused on autonomous agents for multi-step business processes. ICLR 2025 contributed benchmarks for agent harms and policy gradients for complex decision-making. The academic and commercial vectors are aligned.
 
-This creates a new software category. Microsoft's recent mandate making AI proficiency part of employee performance reviews signals that AI is no longer a specialised tool for data scientists — it is a universal utility. That universal deployment creates immediate demand for what you might call Agentic Resource Planning: how does a CIO track AI usage and ROI across the organisation? How does a compliance officer ensure thousands of employees use AI responsibly? How does a manager evaluate the productivity of a digital workforce?
+This creates a new software category. Microsoft's recent mandate making AI proficiency part of employee performance reviews signals that AI is no longer a specialised tool for data scientists — it is a universal utility. That universal deployment creates immediate demand for what you might call Agentic Resource Planning: how does a CIO track AI usage and ROI across the organisation? How does a compliance officer ensure thousands of employees use AI responsibly? How does a manager evaluate the effectiveness of autonomous agents in their workflows?
 
 ## The Stack That Matters
 

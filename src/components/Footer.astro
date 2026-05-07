@@ -2,88 +2,88 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="bg-surface-alt/50 mt-auto border-t border-border">
+<footer class="bg-surface-alt/50 border-border mt-auto border-t">
   <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-    <div class="grid gap-8 text-sm text-text-muted sm:grid-cols-3">
+    <div class="text-text-muted grid gap-8 text-sm sm:grid-cols-3">
       <nav aria-label="Site pages">
-        <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-text">Site</p>
+        <p class="text-text mb-3 text-xs font-semibold tracking-wider uppercase">Site</p>
         <div class="flex flex-wrap gap-x-4 gap-y-1">
-          <a href="/projects/" class="transition-colors hover:text-text">Projects</a>
-          <a href="/blog/" class="transition-colors hover:text-text">Blog</a>
-          <a href="/gallery/" class="transition-colors hover:text-text">Gallery</a>
-          <a href="/audio/" class="transition-colors hover:text-text">Audio</a>
-          <a href="/new/" class="transition-colors hover:text-text">What's New</a>
-          <a href="/activity/" class="transition-colors hover:text-text">Activity</a>
-          <a href="/services/" class="transition-colors hover:text-text">Services</a>
-          <a href="/search/" class="transition-colors hover:text-text">Search</a>
+          <a href="/projects/" class="hover:text-text transition-colors">Projects</a>
+          <a href="/blog/" class="hover:text-text transition-colors">Blog</a>
+          <a href="/gallery/" class="hover:text-text transition-colors">Gallery</a>
+          <a href="/audio/" class="hover:text-text transition-colors">Audio</a>
+          <a href="/new/" class="hover:text-text transition-colors">What's New</a>
+          <a href="/activity/" class="hover:text-text transition-colors">Activity</a>
+          <a href="/services/" class="hover:text-text transition-colors">Services</a>
+          <a href="/search/" class="hover:text-text transition-colors">Search</a>
         </div>
       </nav>
       <nav aria-label="About and meta">
-        <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-text">Meta</p>
+        <p class="text-text mb-3 text-xs font-semibold tracking-wider uppercase">Meta</p>
         <div class="flex flex-wrap gap-x-4 gap-y-1">
-          <a href="/about/" class="transition-colors hover:text-text">About</a>
-          <a href="/now/" class="transition-colors hover:text-text">Now</a>
-          <a href="/contact/" class="transition-colors hover:text-text">Contact</a>
-          <a href="/colophon/" class="transition-colors hover:text-text">Colophon</a>
-          <a href="/analytics/" class="transition-colors hover:text-text">Analytics</a>
+          <a href="/about/" class="hover:text-text transition-colors">About</a>
+          <a href="/now/" class="hover:text-text transition-colors">Now</a>
+          <a href="/contact/" class="hover:text-text transition-colors">Contact</a>
+          <a href="/colophon/" class="hover:text-text transition-colors">Colophon</a>
+          <a href="/analytics/" class="hover:text-text transition-colors">Analytics</a>
         </div>
       </nav>
       <nav aria-label="External links">
-        <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-text">Elsewhere</p>
+        <p class="text-text mb-3 text-xs font-semibold tracking-wider uppercase">Elsewhere</p>
         <div class="flex flex-wrap gap-x-4 gap-y-1">
           <a
             href="https://github.com/adrianwedd"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-text">GitHub</a
+            class="hover:text-text transition-colors">GitHub</a
           >
           <a
             href="https://linkedin.com/in/adrianwedd"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-text">LinkedIn</a
+            class="hover:text-text transition-colors">LinkedIn</a
           >
           <a
             href="https://www.facebook.com/AdrianWeddDotCom"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-text">Facebook</a
+            class="hover:text-text transition-colors">Facebook</a
           >
           <a
             href="https://www.instagram.com/adrianwedd/"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-text">Instagram</a
+            class="hover:text-text transition-colors">Instagram</a
           >
           <a
             href="https://x.com/adrianwedd"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-text">X</a
+            class="hover:text-text transition-colors">X</a
           >
           <a
             href="https://www.youtube.com/@adrianwedd"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-text">YouTube</a
+            class="hover:text-text transition-colors">YouTube</a
           >
           <a
             href="https://podcasts.apple.com/au/podcast/adrian-wedd/id1896173572"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-text">Apple Podcasts</a
+            class="hover:text-text transition-colors">Apple Podcasts</a
           >
-          <a href="/rss.xml" class="transition-colors hover:text-text">RSS</a>
-          <a href="/audio/feed.xml" class="transition-colors hover:text-text">Podcast</a>
+          <a href="/rss.xml" class="hover:text-text transition-colors">RSS</a>
+          <a href="/audio/feed.xml" class="hover:text-text transition-colors">Podcast</a>
         </div>
       </nav>
     </div>
-    <p class="mt-8 border-t border-border pt-6 text-xs text-text-muted">
+    <p class="border-border text-text-muted mt-8 border-t pt-6 text-xs">
       The methodology is public. The work is in progress. Do it properly or don't bother.
     </p>
-    <div class="mt-4 flex items-center justify-between font-mono text-xs tracking-wide text-text-muted">
+    <div class="text-text-muted mt-4 flex items-center justify-between font-mono text-xs tracking-wide">
       <p>&copy; {year} Adrian Wedd</p>
-      <button type="button" class="footer-back-to-top transition-colors hover:text-accent" aria-label="Back to top">
+      <button type="button" class="footer-back-to-top hover:text-accent transition-colors" aria-label="Back to top">
         Back to top &uarr;
       </button>
     </div>

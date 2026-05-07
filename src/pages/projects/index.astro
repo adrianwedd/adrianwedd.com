@@ -87,7 +87,7 @@ const projectCarouselItems = projects
           >AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do.</span
         >
       </h1>
-      <p class="mt-6 max-w-prose text-text-muted">
+      <p class="text-text-muted mt-6 max-w-prose">
         The range is deliberate. Most real problems don't stay inside one domain, and the capacity to work across them
         came from not specialising artificially.
       </p>
@@ -107,7 +107,7 @@ const projectCarouselItems = projects
       <button
         type="button"
         data-status=""
-        class="status-filter bg-accent/15 cursor-pointer rounded-full px-3 py-1 text-xs font-medium text-accent transition-colors"
+        class="status-filter bg-accent/15 text-accent cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors"
         aria-pressed="true"
       >
         All
@@ -117,7 +117,7 @@ const projectCarouselItems = projects
           <button
             type="button"
             data-status={status}
-            class="status-filter hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
+            class="status-filter hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent cursor-pointer rounded-full px-3 py-1 text-xs transition-colors"
             aria-pressed="false"
           >
             {statusLabels[status] || status}
@@ -128,8 +128,8 @@ const projectCarouselItems = projects
 
     {/* Status legend */}
     <details class="mt-2">
-      <summary class="cursor-pointer text-xs text-text-muted hover:text-accent">What do these mean?</summary>
-      <div class="mt-2 grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-text-muted sm:grid-cols-4">
+      <summary class="text-text-muted hover:text-accent cursor-pointer text-xs">What do these mean?</summary>
+      <div class="text-text-muted mt-2 grid grid-cols-2 gap-x-6 gap-y-1 text-xs sm:grid-cols-4">
         <p><span class="text-status-active">Active</span> — in development</p>
         <p><span class="text-accent">Complete</span> — finished, stable</p>
         <p><span class="text-text-muted">Archived</span> — no longer maintained</p>
@@ -144,7 +144,7 @@ const projectCarouselItems = projects
           <button
             type="button"
             data-tag=""
-            class="tag-filter bg-accent/15 cursor-pointer rounded-full px-3 py-1 text-xs font-medium text-accent transition-colors"
+            class="tag-filter bg-accent/15 text-accent cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors"
             aria-pressed="true"
           >
             All tags
@@ -154,7 +154,7 @@ const projectCarouselItems = projects
               type="button"
               data-tag={tag}
               class:list={[
-                'tag-filter hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent',
+                'tag-filter hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent cursor-pointer rounded-full px-3 py-1 text-xs transition-colors',
                 i >= 10 && 'project-tag-overflow hidden',
               ]}
               aria-pressed="false"
@@ -167,7 +167,7 @@ const projectCarouselItems = projects
               type="button"
               id="project-tags-toggle"
               aria-expanded="false"
-              class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
+              class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent cursor-pointer rounded-full px-3 py-1 text-xs transition-colors"
             >
               +{allTags.length - 10} more
             </button>
@@ -178,10 +178,10 @@ const projectCarouselItems = projects
 
     {/* Sort control */}
     <div class="mt-4 flex items-center gap-2">
-      <label for="sort-select" class="text-xs text-text-muted">Sort:</label>
+      <label for="sort-select" class="text-text-muted text-xs">Sort:</label>
       <select
         id="sort-select"
-        class="rounded border border-border bg-surface-alt px-2 py-1 text-xs text-text-muted focus:border-accent focus:outline-none"
+        class="border-border bg-surface-alt text-text-muted focus:border-accent rounded border px-2 py-1 text-xs focus:outline-none"
       >
         <option value="featured">Featured first</option>
         <option value="newest">Newest first</option>
@@ -204,28 +204,28 @@ const projectCarouselItems = projects
             <ScrollReveal>
               <a
                 href={`/projects/${slug(project.id)}/`}
-                class="card-hover hover:border-accent/50 group block h-full rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
+                class="card-hover hover:border-accent/50 group border-border bg-surface-alt shadow-subtle hover:shadow-card block h-full rounded-xl border p-6 no-underline transition-all"
               >
                 <div class="flex items-start justify-between gap-3">
-                  <h2 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
+                  <h2 class="text-text group-hover:text-accent text-lg font-semibold transition-colors">
                     {project.data.title}
                   </h2>
                   <span
                     class:list={[
-                      'whitespace-nowrap rounded-full border px-2 py-0.5 text-xs',
+                      'rounded-full border px-2 py-0.5 text-xs whitespace-nowrap',
                       statusColors[project.data.status] || 'border-border text-text-muted',
                     ]}
                   >
                     {statusLabels[project.data.status] || project.data.status}
                   </span>
                 </div>
-                <p class="mt-2 text-sm leading-relaxed text-text-muted">{project.data.description}</p>
+                <p class="text-text-muted mt-2 text-sm leading-relaxed">{project.data.description}</p>
                 <div class="mt-4 flex flex-wrap items-center gap-2">
                   {project.data.tags.slice(0, 4).map((tag: string) => (
-                    <span class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">{tag}</span>
+                    <span class="bg-surface-raised text-text-muted rounded-full px-2.5 py-0.5 text-xs">{tag}</span>
                   ))}
                   <time
-                    class="ml-auto whitespace-nowrap text-xs text-text-muted"
+                    class="text-text-muted ml-auto text-xs whitespace-nowrap"
                     datetime={project.data.date.toISOString()}
                   >
                     {project.data.date.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' })}
@@ -238,38 +238,38 @@ const projectCarouselItems = projects
       }
     </div>
 
-    <p id="no-results" class="mt-10 hidden text-center text-text-muted">No projects match these filters.</p>
+    <p id="no-results" class="text-text-muted mt-10 hidden text-center">No projects match these filters.</p>
 
     {/* Auto-discovered repos from GitHub */}
     {
       discoveredRepos.length > 0 && (
-        <section class="mt-16 border-t border-border pt-10">
-          <h2 class="text-lg font-semibold text-text">More on GitHub</h2>
-          <p class="mt-1 text-sm text-text-muted">Other public repos, auto-discovered from GitHub.</p>
+        <section class="border-border mt-16 border-t pt-10">
+          <h2 class="text-text text-lg font-semibold">More on GitHub</h2>
+          <p class="text-text-muted mt-1 text-sm">Other public repos, auto-discovered from GitHub.</p>
           <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {discoveredRepos.map((repo) => (
               <a
                 href={repo.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="hover:border-accent/50 group block rounded-lg border border-border bg-surface-alt p-4 no-underline transition-all hover:shadow-card"
+                class="hover:border-accent/50 group border-border bg-surface-alt hover:shadow-card block rounded-lg border p-4 no-underline transition-all"
               >
                 <div class="flex items-start justify-between gap-2">
-                  <h3 class="font-mono text-sm font-medium text-text transition-colors group-hover:text-accent">
+                  <h3 class="text-text group-hover:text-accent font-mono text-sm font-medium transition-colors">
                     {repo.name}
                   </h3>
                   {repo.language && (
-                    <span class="shrink-0 rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">
+                    <span class="bg-surface-raised text-text-muted shrink-0 rounded-full px-2.5 py-0.5 text-xs">
                       {repo.language}
                     </span>
                   )}
                 </div>
-                <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-text-muted">{repo.description}</p>
-                {repo.stars > 0 && <span class="mt-2 inline-block text-xs text-text-muted">★ {repo.stars}</span>}
+                <p class="text-text-muted mt-1 line-clamp-2 text-xs leading-relaxed">{repo.description}</p>
+                {repo.stars > 0 && <span class="text-text-muted mt-2 inline-block text-xs">★ {repo.stars}</span>}
               </a>
             ))}
           </div>
-          <p class="mt-4 text-sm text-text-muted">
+          <p class="text-text-muted mt-4 text-sm">
             <a
               href="https://github.com/adrianwedd?tab=repositories"
               target="_blank"

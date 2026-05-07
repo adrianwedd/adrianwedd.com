@@ -18,13 +18,13 @@ function Node({ node, depth = 0 }: { node: MindMapNode; depth?: number }) {
       <button
         type="button"
         onClick={() => hasChildren && setOpen(!open)}
-        class={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-sm transition-colors hover:bg-surface-alt ${
+        class={`hover:bg-surface-alt flex w-full items-center gap-2 rounded px-2 py-1 text-left text-sm transition-colors ${
           hasChildren ? 'cursor-pointer' : 'cursor-default'
         }`}
         aria-expanded={hasChildren ? open : undefined}
       >
         {hasChildren && (
-          <span class={`text-xs text-text-muted transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden="true">
+          <span class={`text-text-muted text-xs transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden="true">
             &#9654;
           </span>
         )}
@@ -32,7 +32,7 @@ function Node({ node, depth = 0 }: { node: MindMapNode; depth?: number }) {
         <span class="text-text">{node.label}</span>
       </button>
       {hasChildren && open && (
-        <ul class="ml-4 border-l border-border pl-2">
+        <ul class="border-border ml-4 border-l pl-2">
           {node.children!.map((child, i) => (
             <Node key={i} node={child} depth={depth + 1} />
           ))}
@@ -53,11 +53,11 @@ export default function MindMap({ src }: Props) {
       .catch(() => setError('Failed to load mind map.'));
   }, [src]);
 
-  if (error) return <p class="text-sm text-text-muted">{error}</p>;
-  if (!data) return <p class="text-sm text-text-muted">Loading...</p>;
+  if (error) return <p class="text-text-muted text-sm">{error}</p>;
+  if (!data) return <p class="text-text-muted text-sm">Loading...</p>;
 
   return (
-    <div class="max-h-[32rem] overflow-auto rounded-xl border border-border bg-surface-alt p-4">
+    <div class="border-border bg-surface-alt max-h-[32rem] overflow-auto rounded-xl border p-4">
       <ul>
         <Node node={data} />
       </ul>

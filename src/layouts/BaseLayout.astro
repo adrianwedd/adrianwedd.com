@@ -71,7 +71,7 @@ const props = Astro.props;
   <body class="flex min-h-screen flex-col">
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[100] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-surface"
+      class="focus:bg-accent focus:text-surface sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:px-4 focus:py-2 focus:text-sm focus:font-medium"
     >
       Skip to main content
     </a>
@@ -85,7 +85,7 @@ const props = Astro.props;
     <button
       id="back-to-top"
       type="button"
-      class="fixed bottom-6 right-6 z-40 hidden h-10 w-10 items-center justify-center rounded-full border border-border bg-surface-alt text-text-muted shadow-subtle transition-all hover:border-accent hover:text-accent"
+      class="border-border bg-surface-alt text-text-muted shadow-subtle hover:border-accent hover:text-accent fixed right-6 bottom-6 z-40 hidden h-10 w-10 items-center justify-center rounded-full border transition-all"
       aria-label="Back to top"
     >
       <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -105,12 +105,12 @@ const props = Astro.props;
       aria-modal="true"
       aria-labelledby="kb-dialog-title"
     >
-      <div class="mx-4 max-w-sm rounded-xl border border-border bg-surface p-6 shadow-raised" id="kb-dialog">
+      <div class="border-border bg-surface shadow-raised mx-4 max-w-sm rounded-xl border p-6" id="kb-dialog">
         <div class="mb-4 flex items-center justify-between">
-          <h2 id="kb-dialog-title" class="text-lg font-semibold text-text">Keyboard shortcuts</h2>
+          <h2 id="kb-dialog-title" class="text-text text-lg font-semibold">Keyboard shortcuts</h2>
           <button
             id="kb-close"
-            class="rounded-lg p-1 text-text-muted transition-colors hover:bg-surface-alt hover:text-text"
+            class="text-text-muted hover:bg-surface-alt hover:text-text rounded-lg p-1 transition-colors"
             aria-label="Close"
           >
             <svg
@@ -126,39 +126,39 @@ const props = Astro.props;
           </button>
         </div>
         <div class="space-y-3 text-sm">
-          <p class="text-xs font-medium uppercase tracking-wider text-text-muted">Navigation</p>
+          <p class="text-text-muted text-xs font-medium tracking-wider uppercase">Navigation</p>
           <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g h</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">g h</kbd><span
               class="text-text">Home</span
             >
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g b</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">g b</kbd><span
               class="text-text">Blog</span
             >
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g p</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">g p</kbd><span
               class="text-text">Projects</span
             >
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g g</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">g g</kbd><span
               class="text-text">Gallery</span
             >
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g n</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">g n</kbd><span
               class="text-text">Now</span
             >
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g a</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">g a</kbd><span
               class="text-text">About</span
             >
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">g v</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">g v</kbd><span
               class="text-text">Activity</span
             >
           </div>
-          <p class="mt-1 text-xs font-medium uppercase tracking-wider text-text-muted">Actions</p>
+          <p class="text-text-muted mt-1 text-xs font-medium tracking-wider uppercase">Actions</p>
           <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">/</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">/</kbd><span
               class="text-text">Search</span
             >
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">t</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">t</kbd><span
               class="text-text">Toggle theme</span
             >
-            <kbd class="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-accent">?</kbd><span
+            <kbd class="bg-surface-alt text-accent rounded px-1.5 py-0.5 font-mono text-xs">?</kbd><span
               class="text-text">This help</span
             >
           </div>

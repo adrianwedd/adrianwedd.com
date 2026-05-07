@@ -1,6 +1,6 @@
 ---
 title: 'An Agentic System You Can Actually Reason About'
-description: 'Audio overview of PAOS — a local-first LLM operating system with hybrid retrieval and a self-improving meta-agent.'
+description: 'Audio overview of The Personal Agentic Operating System (PAOS) — a local-first LLM operating system with hybrid retrieval and a self-improving meta-agent.'
 date: 2025-07-01
 tags: ['notebooklm', 'ai', 'infrastructure', 'agents']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/personal-agentic-operating-system/audio.mp3'
@@ -8,7 +8,7 @@ duration: '18:42'
 relatedProject: 'personal-agentic-operating-system'
 ---
 
-Most agentic systems assume the cloud. PAOS assumes your machine. Everything runs in Docker on your hardware — no external API calls required unless you choose them. The decision of where your data goes and which model processes it stays with you.
+Most agentic systems assume the cloud. The Personal Agentic Operating System (PAOS) assumes your machine. Everything runs in Docker on your hardware — no external API calls are required unless explicitly configured. The decision of where your data goes and which model processes it stays with you.
 
 This episode explores the architecture of a local-first operating system for LLM agents. The core is a LangGraph workflow: plan, prioritise, retrieve, execute, checkpoint. Hybrid retrieval combines Neo4j entity lookups with Qdrant vector search, because neither graph traversal nor embedding similarity alone captures how humans organise knowledge. A human-in-the-loop checkpoint sits before any consequential action, because autonomy without oversight is just automation you cannot debug.
 

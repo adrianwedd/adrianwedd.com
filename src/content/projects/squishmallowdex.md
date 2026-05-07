@@ -13,11 +13,11 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=VpWYlNx2tfY'
 ---
 
-A friend mentioned her 10-year-old was researching Squishmallows. I asked if I could help. A few hours later I looked up from my screen, realized I was starving, and discovered I'd built and shipped the first release.
+A friend mentioned her 10-year-old was researching Squishmallows. I decided to help. I built and shipped a tool to track the collection, turning raw data into a magical, searchable guide.
 
-It's designed to be educational—running terminal commands, showing kid-friendly logs, teaching how data gets scraped and structured. It's also an offline-capable resource with no ads, no tracking, no parent-hostile dark patterns. Just a fast, local database of every Squishmallow that exists.
+It's designed to be educational, showing kids how data gets structured and giving them a way to run local setup scripts. It is an offline-capable resource with no ads, no tracking, and no dark patterns. It provides a fast, local database of over 3,000 plush creatures.
 
-Another few hours of work made it actually robust. Offline PWA. Search, filter, favorites, collection tracking. Over 3,000 plush creatures catalogued.
+It is a robust tool with search, filter, favorites, and collection tracking. Over 3,000 plush creatures are catalogued.
 
 Take a closer look if you're building for kids, or just want to see what hyperfocus and a good excuse can produce in an afternoon.
 

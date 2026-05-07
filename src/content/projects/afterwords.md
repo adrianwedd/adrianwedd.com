@@ -1,6 +1,6 @@
 ---
 title: 'Afterwords'
-description: 'Local voice output for Claude Code — 17 cloned voices, per-project selection, zero cloud dependency.'
+description: 'Local voice output for Claude Code — over 100 cloned voices, per-project selection, zero cloud dependency.'
 tags: ['ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'claude', 'open-source']
 url: 'https://adrianwedd.github.io/afterwords/'
 repo: 'afterwords'
@@ -26,11 +26,9 @@ Three components, all local:
 
 3. **Background worker** — Processes the queue serially with mkdir-based locking. No audio overlap. Responses archived as MP3 in `~/.claude/tts-archive/`.
 
-## 17 Voices, Zero Extra Memory
+## 110+ Voices, Zero Extra Memory
 
-Each voice is a 700 KB WAV reference clip and a transcript string. The model extracts speaker embeddings at inference time — no fine-tuning, no per-voice model copies. All 17 voices serve from a single 8 GB M1 with no measurable difference in memory usage.
-
-Included voices span Galadriel (Cate Blanchett), Snape (Alan Rickman), Avasarala (Shohreh Aghdashloo), Spock (Leonard Nimoy), and 13 others — plus a custom voice cloning pipeline for adding your own from a 15-second YouTube clip.
+The voice library ships with over 110 cloned voices, all extracted from public audio using the [clone-voice.sh](/blog/voice-cloning-qwen3-tts-mlx/#step-1-prepare-your-reference-audio) pipeline. Each voice is a 700 KB WAV reference clip and a transcript string. The model extracts speaker embeddings at inference time — no fine-tuning, no per-voice model copies.
 
 ## Per-Project Voice Selection
 

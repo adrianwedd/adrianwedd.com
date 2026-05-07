@@ -37,9 +37,9 @@ _Full Frequency_ gave electronic music institutional legitimacy within the stati
 
 _Auditory Spiral_ aired Sunday nights into Monday mornings, midnight to 6 AM. Six hours of uninterrupted electronic music in the deepest, most isolating hours of the week.
 
-Commercial broadcasters call the overnight slot "dead air." For us, it was the opposite — a zone of absolute creative freedom where the constraints of daytime formatting simply didn't apply. No need for broad demographic appeal. No pressure to keep things accessible. Just six hours to let a twelve-minute instrumental track slowly unfold without interruption.
+Commercial broadcasters call the overnight slot "dead air." For us, it was the opposite — a zone of absolute creative freedom where the constraints of daytime formatting simply didn't apply. No need for broad demographic appeal. No pressure to keep things accessible. Just six hours to let a 12-minute instrumental track slowly unfold without interruption.
 
-The show belonged to Shamus and Nicolai. DJ Shamus (Shane) was the architect — he built the signature aesthetic that listeners consistently described as "deep and dark." Shamus took the Monday 12–6 AM shifts and constructed hypnotic, continuous journeys through minimal techno, dark ambient, early Detroit techno, and European acid. He had an extraordinary ear for pacing a six-hour broadcast, knowing exactly when to drop the floor out and when to let a groove build for twenty minutes without touching the mixer.
+The show belonged to Shamus and Nicolai. Architected by DJ Shamus and Nicolai, the show built a signature aesthetic that listeners consistently described as "deep and dark." Shamus took the Monday 12–6 AM shifts and constructed hypnotic, continuous journeys through minimal techno, dark ambient, early Detroit techno, and European acid. He had an extraordinary ear for pacing a six-hour broadcast, knowing exactly when to drop the floor out and when to let a groove build for twenty minutes without touching the mixer.
 
 Nicolai brought a different sensibility — broader, more willing to follow a tangent into unfamiliar territory. Between the two of them, they defined what the show was. Roger helped maintain the demanding overnight schedule, and together they created something that was genuinely unlike anything else on the dial.
 

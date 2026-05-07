@@ -8,7 +8,7 @@ duration: '21:13'
 relatedProject: 'strategic-acquisitions'
 ---
 
-Housing shortages are not information problems, but they have information problems inside them. When a public housing organisation needs to acquire properties, the analysis that should take hours takes weeks — listing discovery, valuation modelling, planning zone verification, hazard assessment, infrastructure proximity. Each step involves a different data source and a different manual process.
+Housing shortages are not information problems, but they have information problems inside them. When a public housing organisation needs to acquire properties, the analysis that should take hours takes weeks — listing discovery, valuation modelling, planning zone verification, hazard assessment, infrastructure proximity. Each step historically involved disparate data sources and manual processing.
 
 This episode walks through Strategic Acquisitions, an automated pipeline that connects all of those sources into a single analytical flow. GPT-4 generates insights. ML-based property valuations train on engineered features — land per bedroom, bed-bath ratios, latitude-longitude interactions — using cross-validated gradient boosting. The spatial intelligence layer integrates with Tasmania's Land Information System to pull government-grade data on planning zones, bushfire risk, flood hazards, heritage constraints, and proximity to schools, transport, and healthcare.
 

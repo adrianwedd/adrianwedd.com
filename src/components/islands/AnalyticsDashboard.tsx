@@ -59,14 +59,14 @@ export default function AnalyticsDashboard() {
   }, []);
 
   if (loading) {
-    return <div class="py-12 text-center text-text-muted">Loading analytics data...</div>;
+    return <div class="text-text-muted py-12 text-center">Loading analytics data...</div>;
   }
 
   if (error) {
     return (
-      <div class="rounded border border-border bg-surface-alt p-6 text-center">
-        <p class="mb-2 text-text-muted">Failed to load analytics data</p>
-        <p class="text-sm text-text-muted">{error}</p>
+      <div class="border-border bg-surface-alt rounded border p-6 text-center">
+        <p class="text-text-muted mb-2">Failed to load analytics data</p>
+        <p class="text-text-muted text-sm">{error}</p>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function AnalyticsDashboard() {
   return (
     <div class="space-y-8">
       {/* Period indicator */}
-      <div class="text-sm text-text-muted">
+      <div class="text-text-muted text-sm">
         Data from {new Date(data.period.start).toLocaleDateString()} to {new Date(data.period.end).toLocaleDateString()}
       </div>
 
@@ -94,9 +94,9 @@ export default function AnalyticsDashboard() {
       {/* Top content */}
       <section>
         <h2 class="mb-4 text-2xl font-bold">Top Content</h2>
-        <div class="overflow-hidden rounded border border-border">
+        <div class="border-border overflow-hidden rounded border">
           <table class="w-full">
-            <thead class="border-b border-border bg-surface-alt">
+            <thead class="border-border bg-surface-alt border-b">
               <tr>
                 <th class="px-4 py-3 text-left text-sm font-medium">Page</th>
                 <th class="px-4 py-3 text-right text-sm font-medium">Views</th>
@@ -105,13 +105,13 @@ export default function AnalyticsDashboard() {
             </thead>
             <tbody>
               {data.topContent.map((item, i) => (
-                <tr key={i} class="border-b border-border last:border-0">
+                <tr key={i} class="border-border border-b last:border-0">
                   <td class="px-4 py-3">
                     <div class="font-medium">{item.title}</div>
-                    <div class="text-sm text-text-muted">{item.path}</div>
+                    <div class="text-text-muted text-sm">{item.path}</div>
                   </td>
                   <td class="px-4 py-3 text-right">{item.views.toLocaleString()}</td>
-                  <td class="px-4 py-3 text-right text-text-muted">{formatDuration(item.avgTimeOnPage)}</td>
+                  <td class="text-text-muted px-4 py-3 text-right">{formatDuration(item.avgTimeOnPage)}</td>
                 </tr>
               ))}
             </tbody>
@@ -124,14 +124,14 @@ export default function AnalyticsDashboard() {
         <h2 class="mb-4 text-2xl font-bold">Top Projects</h2>
         <div class="grid gap-3">
           {data.topProjects.map((project, i) => (
-            <div key={i} class="flex items-center justify-between rounded border border-border p-4">
+            <div key={i} class="border-border flex items-center justify-between rounded border p-4">
               <div>
                 <div class="font-medium">{project.name}</div>
-                <div class="text-sm text-text-muted">
+                <div class="text-text-muted text-sm">
                   {project.views.toLocaleString()} views · {project.clicks.toLocaleString()} clicks
                 </div>
               </div>
-              <div class="text-2xl font-bold text-accent">{((project.clicks / project.views) * 100).toFixed(1)}%</div>
+              <div class="text-accent text-2xl font-bold">{((project.clicks / project.views) * 100).toFixed(1)}%</div>
             </div>
           ))}
         </div>
@@ -144,13 +144,13 @@ export default function AnalyticsDashboard() {
           <h2 class="mb-4 text-2xl font-bold">Geography</h2>
           <div class="space-y-3">
             {data.geography.map((geo, i) => (
-              <div key={i} class="rounded border border-border p-3">
+              <div key={i} class="border-border rounded border p-3">
                 <div class="mb-2 flex items-center justify-between">
                   <span class="font-medium">{geo.country}</span>
                   <span class="text-text-muted">{geo.users.toLocaleString()} users</span>
                 </div>
-                <div class="h-2 overflow-hidden rounded bg-surface-alt">
-                  <div class="h-full bg-accent" style={{ width: `${geo.percentage}%` }} />
+                <div class="bg-surface-alt h-2 overflow-hidden rounded">
+                  <div class="bg-accent h-full" style={{ width: `${geo.percentage}%` }} />
                 </div>
               </div>
             ))}
@@ -173,10 +173,10 @@ export default function AnalyticsDashboard() {
         <h2 class="mb-4 text-2xl font-bold">Top Referrers</h2>
         <div class="grid gap-2">
           {data.referrers.map((ref, i) => (
-            <div key={i} class="flex items-center justify-between rounded border border-border p-3">
+            <div key={i} class="border-border flex items-center justify-between rounded border p-3">
               <div>
                 <span class="font-medium">{ref.source}</span>
-                <span class="ml-2 text-sm text-text-muted">({ref.type})</span>
+                <span class="text-text-muted ml-2 text-sm">({ref.type})</span>
               </div>
               <span class="text-text-muted">{ref.users.toLocaleString()} users</span>
             </div>
@@ -200,22 +200,22 @@ export default function AnalyticsDashboard() {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div class="rounded border border-border bg-surface-alt p-4">
-      <div class="mb-1 text-sm text-text-muted">{label}</div>
-      <div class="text-3xl font-bold text-accent">{value}</div>
+    <div class="border-border bg-surface-alt rounded border p-4">
+      <div class="text-text-muted mb-1 text-sm">{label}</div>
+      <div class="text-accent text-3xl font-bold">{value}</div>
     </div>
   );
 }
 
 function DeviceBar({ label, value }: { label: string; value: number }) {
   return (
-    <div class="rounded border border-border p-3">
+    <div class="border-border rounded border p-3">
       <div class="mb-2 flex items-center justify-between">
         <span class="font-medium">{label}</span>
         <span class="text-text-muted">{value.toFixed(1)}%</span>
       </div>
-      <div class="h-2 overflow-hidden rounded bg-surface-alt">
-        <div class="h-full bg-accent" style={{ width: `${value}%` }} />
+      <div class="bg-surface-alt h-2 overflow-hidden rounded">
+        <div class="bg-accent h-full" style={{ width: `${value}%` }} />
       </div>
     </div>
   );

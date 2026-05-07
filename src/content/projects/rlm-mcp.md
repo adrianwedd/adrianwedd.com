@@ -5,7 +5,7 @@ tags: ['ai', 'mcp', 'python', 'tools']
 repo: 'https://github.com/adrianwedd/rlm-mcp'
 status: 'active'
 featured: false
-date: 2025-11-01
+date: 2026-05-07
 heroImage: '/notebook-assets/rlm-mcp/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/rlm-mcp/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/rlm-mcp/video.mp4'
@@ -14,10 +14,10 @@ youtubeUrl: 'https://www.youtube.com/watch?v=uD_7QXkYc9U'
 
 Context windows have limits. Documents don't. The mismatch creates a practical problem: if your working document exceeds what the model can hold in a single pass, you're forced into chunking strategies that lose coherence, or summarisation that loses detail, or simply giving up on using the document at all.
 
-rlm-mcp implements the Recursive Language Model pattern as an MCP server—session-based document management with BM25 search, persistent indexes that survive server restarts, and complete artefact provenance tracking so you know which part of which document produced which output.
+rlm-mcp implements the Recursive Language Model pattern (Zhang et al., 2025) as an MCP server—session-based document management with BM25 search, persistent indexes that survive server restarts, and complete artefact provenance tracking so you know which part of which document produced which output.
 
-I built this for the workflow where context windows aren't enough: long-form research, multi-chapter manuscripts, regulatory documents that run to hundreds of pages. Sub-second searches, under 100ms index loads, concurrent session safety with per-session locks. The architecture assumes a team environment where multiple people need simultaneous access to the same corpus without stepping on each other's state.
+I built this for the workflow where context windows aren't enough: long-form research, multi-chapter manuscripts, and regulatory documents. It supports batch loading with memory-bounded semaphores and concurrent session safety for team environments. Sub-second searches, under 100ms index loads, concurrent session safety with per-session locks. The architecture assumes a team environment where multiple people need simultaneous access to the same corpus without stepping on each other's state.
 
 Comprehensive test suite. All passing. Because when the tool's job is to extend the reach of a language model, it needs to be the most reliable thing in the chain.
 
-[Read the deep dive →](/blog/beyond-context-windows/)
+[Read the deep dive →](/blog/beyond-context-windows/) (See the README for the v0.2.x migration guide)

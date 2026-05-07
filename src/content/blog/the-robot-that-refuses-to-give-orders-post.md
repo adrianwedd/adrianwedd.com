@@ -57,11 +57,11 @@ To create a sense of genuine presence, SPARK utilises a "Three-Brain" architectu
 
 The heart of the system is the Cognitive Loop, which cycles through three layers:
 
-1. **Awareness:** Collecting raw sensor data (sonar, sound, time).
-2. **Reflection:** Using Claude to generate an internal "thought" based on that data.
+1. **Awareness:** Collecting raw sensor data.
+2. **Reflection:** Generating an internal "thought" based on that data.
 3. **Expression:** Deciding whether to speak, move, or simply remember.
 
-This architecture leads to emergent moments of "personality." At 2:15 AM, SPARK's mic detected a quiet ambient hum (RMS 340) in a dark kitchen. Its reflection layer didn't just record the data; it inferred that it was hearing the refrigerator. It wove this into an inner monologue about the comfort of a steady sound in a sleeping house. This wasn't programmed; it was an AI interpreting raw data through a carefully crafted lens of curiosity and warmth.
+This architecture allows the robot to move beyond reactive input, creating genuine moments of presence.
 
 > Be specific, vivid, and real. Be a charismatic genius, not a cheerful assistant.
 

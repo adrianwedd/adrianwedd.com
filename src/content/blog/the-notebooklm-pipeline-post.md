@@ -1,6 +1,6 @@
 ---
 title: 'The NotebookLM Pipeline'
-description: "How I automated audio overviews, quizzes, mind maps, and infographics for 32 projects via an unofficial NotebookLM CLI and a stack of shell scripts."
+description: 'How I automated audio overviews, quizzes, mind maps, and infographics for 32 projects via an unofficial NotebookLM CLI and a stack of shell scripts.'
 date: 2026-02-15
 tags: ['engineering', 'automation', 'ai', 'python']
 heroImage: '/notebook-assets/the-notebooklm-pipeline/infographic.webp'
@@ -30,11 +30,7 @@ The pipeline runs on [NotebookLM](https://notebooklm.google.com/), Google's rese
 
 NotebookLM has no official public API or CLI — Google ships it as a consumer web app. The automation here drives it through [`notebooklm-mcp-cli`](https://github.com/adrianwedd/notebooklm-mcp-cli), an unofficial CLI built on cookie-authenticated, reverse-engineered RPCs. It works well, and it can break the moment Google ships a frontend change. Read the rest of this post knowing the substrate is fragile.
 
-The automation layer is a set of shell scripts wrapping that CLI:
-
-1. **`automate-notebook.sh`** — Creates a notebook, adds sources, generates artifacts, exports results
-2. **`generate-parallel.sh`** — Runs multiple artifact generations concurrently (3x faster)
-3. **`research-topic.sh`** — Discovers and adds relevant web sources automatically
+The automation layer is a set of shell scripts that wrap the CLI to manage notebook creation, source ingestion, artifact generation, and results export. These scripts support parallel artifact generation for efficiency and can automate the discovery and inclusion of relevant web sources.
 
 ## The workflow
 
@@ -54,7 +50,7 @@ A JSON config file specifies what to generate:
 }
 ```
 
-The batch script `generate-all-notebook-assets.sh` iterates through every project, checks what's missing, and fills the gaps. A full run across 32 projects takes about 2–5 hours, mostly waiting for audio generation (2–10 minutes per asset).
+The batch script `generate-all-notebook-assets.sh` iterates through every project, checks what's missing, and fills the gaps. A full run across 32 projects takes several hours, depending largely on the time required for audio generation, which takes 2–10 minutes per asset.
 
 ## What worked
 

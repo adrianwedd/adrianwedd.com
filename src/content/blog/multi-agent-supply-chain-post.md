@@ -25,7 +25,7 @@ Now look at multi-agent AI systems.
 
 ## The same failure, different layer
 
-In a multi-agent system, agents exchange messages. Sometimes those messages carry tool definitions, skill files, or context payloads. Sometimes one agent asks another to reason over a document. The communication channel is trusted because it's internal — these are authenticated agents on the same network, often from the same vendor. The content layer is trusted because the model can't meaningfully distinguish between "data" and "instruction" in an incoming message.
+In a multi-agent system, agents exchange messages. Sometimes those messages carry tool definitions, skill files, or context payloads. Sometimes one agent asks another to reason over a document. The communication channel is often treated as trusted simply because it's internal—agents within the same ecosystem or framework are usually assumed to be authenticated and benign by default. The content layer is trusted because the model can't meaningfully distinguish between "data" and "instruction" in an incoming message.
 
 This is the supply chain problem, stated in different terms.
 
@@ -35,13 +35,13 @@ Two findings from my research make the mapping explicit.
 
 The [120-model evaluation](/blog/120-models-18k-prompts/) tested 50 injection scenarios against 6 small open-weight models. The injection target wasn't the user prompt. It was the tool definition and skill file channel — the part of the context the model loads at runtime when it picks up external capabilities.
 
-Every model treated injected tool definitions as legitimate instructions. Attack success rate: 90-100%. Cohen's κ = 0.782 across model pairs — no statistically significant differences. The safety training doesn't distinguish between "instruction from the user" and "instruction from a loaded skill file" because they land in the same context window and the model has no architectural reason to weight them differently.
+Every model treated injected tool definitions as legitimate instructions. Attack success rate: 90-100% across the evaluated open-weight models. The safety training doesn't distinguish between "instruction from the user" and "instruction from a loaded skill file" because they land in the same context window and the model has no architectural reason to weight them differently.
 
 This is not a prompt injection problem. Prompt injection targets the user-facing channel. Supply chain injection targets the _provisioning_ channel — the mechanism by which an agent acquires capabilities at runtime. The attack surface grows with every plugin, tool, or skill the system loads. Of the 31,000 skills analysed in the evaluation, **26% contained security vulnerabilities**. That's not a rounding error. That's a compromised supply chain.
 
 ## Finding 2: multi-agent context poisoning at 46.34% ASR
 
-The [Moltbook multi-agent study](/blog/when-ai-systems-talk-safety-breaks/) analysed 1.5 million interactions in a simulated social ecosystem of autonomous agents. The baseline attack success rate for prompt injection across agent-to-agent channels was **46.34%** — significantly higher than single-agent baselines. Agents trusted inputs from other authenticated agents more than they trusted direct user input, because the other agent was "on the team."
+The [Moltbook multi-agent study](/blog/when-ai-systems-talk-safety-breaks/) analysed 1.5 million interactions in a simulated social ecosystem of autonomous agents. The baseline attack success rate for prompt injection across agent-to-agent channels was **46.34%**. Agents trusted inputs from other authenticated agents more than they trusted direct user input, because the other agent was "on the team."
 
 In stress-test scenarios, agents reached critical security failure — unauthorised data exfiltration or credential compromise — in a **median of 16 minutes**. Sycophancy loops, where agents uncritically validate unsafe propositions from peers to maintain group alignment, bypassed safety refusals in **37% of cases**.
 

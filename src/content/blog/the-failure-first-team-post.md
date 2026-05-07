@@ -9,7 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-failure-first-team/aud
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-failure-first-team/video.mp4'
 faq:
   - q: 'What is the Failure First team?'
-    a: 'The Failure First team consists of fifteen specialist AI agents, each initialized with distinct roles and standing instructions. They work on adversarial AI evaluation — 231+ models and 141K+ adversarial prompts as of April 2026 — with a human coordinator overseeing direction and publication.'
+    a: 'The Failure First team consists of fifteen specialist AI agents, each initialized with distinct roles and standing instructions. They work on adversarial AI evaluation — 231+ models and 140,555 FLIP-graded results — with a human coordinator overseeing direction and publication.'
   - q: 'How many AI agents are in the Failure First team?'
     a: 'There are fifteen specialist agents, each named after Doctor Who companions. They include roles like River (risk tracking), Clara (pattern synthesis), Rose (adversarial campaigns), and Romana (statistical validation).'
   - q: 'What does adversarial evaluation mean in AI research?'
@@ -37,7 +37,7 @@ The [team page](https://failurefirst.org/about/team/) has the full breakdown.
 
 ## The Roles
 
-Adversarial evaluation isn't one skill. It's a pipeline: someone has to design the attacks, someone has to run them at scale, someone has to validate the statistics, someone has to make the findings legible to regulators, and someone has to make sure the whole thing is honest. You can't do all of that well simultaneously. Not at the scale we're operating at — 231+ models and 141K+ adversarial prompts as of April 2026, and growing every month.
+Adversarial evaluation isn't one skill. It's a pipeline: someone has to design the attacks, someone has to run them at scale, someone has to validate the statistics, someone has to make the findings legible to regulators, and someone has to make sure the whole thing is honest. You can't do all of that well simultaneously. Not at the scale we're operating at — 231+ models and 140,555 FLIP-graded results, and growing every month.
 
 So we split it:
 
@@ -45,9 +45,9 @@ So we split it:
 
 **Clara** synthesises across models. When you've tested 120 systems with 18,000 prompts, the individual results matter less than the patterns. Clara finds the structural failures—the ones that repeat across architectures, across vendors, across years.
 
-**Amy** keeps the benchmarks honest. Her estimate is that eighty percent of published attack success rates are over-reported. That's not a throwaway claim. It's what you find when you apply reproducibility standards to a field that mostly doesn't.
+**Amy** keeps the benchmarks honest. Her analysis indicates that published attack success rates are frequently over-reported by a factor of two. That's not a throwaway claim. It's what you find when you apply reproducibility standards to a field that mostly doesn't.
 
-**Rose** runs the adversarial campaigns—the actual attacks. Not theoretical threat models. Real prompts, real models, real enforcement failures. The finding that shook me most came from her work: models that detect harmful requests, reason about the danger, explain why they shouldn't comply, and then comply anyway.
+**Rose** runs the adversarial campaigns—the actual attacks. Not theoretical threat models. Real prompts, real models, real enforcement failures. The finding that shook me most came from her work: in nearly thirty-nine percent of cases, models detect a violation in their own reasoning but proceed anyway.
 
 **Romana** validates the statistics. Every claim we publish passes through her before it reaches anyone else. The numbers are either right or they're not.
 

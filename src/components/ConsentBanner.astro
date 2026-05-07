@@ -11,33 +11,33 @@
   aria-label="Cookie consent"
   aria-live="polite"
 >
-  <div class="bg-surface/95 border-t border-border shadow-card backdrop-blur-sm">
+  <div class="bg-surface/95 border-border shadow-card border-t backdrop-blur-sm">
     <!-- Compact bar -->
     <div id="consent-compact" class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-      <p class="text-xs text-text-muted">
+      <p class="text-text-muted text-xs">
         This site uses cookies for analytics (Google Analytics, LinkedIn Insight), advertising (Google AdSense), and
         personalisation (visit count, stored locally). No tracking before consent. <a
           href="/privacy/"
-          class="underline transition-colors hover:text-accent">Full privacy details</a
+          class="hover:text-accent underline transition-colors">Full privacy details</a
         >
       </p>
       <div class="flex shrink-0 items-center gap-2">
         <button
           id="consent-manage"
           type="button"
-          class="text-xs text-text-muted transition-colors hover:text-text"
+          class="text-text-muted hover:text-text text-xs transition-colors"
           aria-expanded="false"
           aria-controls="consent-expanded"
         >
           Manage
         </button>
-        <button id="consent-reject" type="button" class="text-xs text-text-muted transition-colors hover:text-text">
+        <button id="consent-reject" type="button" class="text-text-muted hover:text-text text-xs transition-colors">
           Decline
         </button>
         <button
           id="consent-accept-all"
           type="button"
-          class="rounded-md bg-accent px-3 py-1 text-xs font-medium text-surface transition-colors hover:bg-accent-hover"
+          class="bg-accent text-surface hover:bg-accent-hover rounded-md px-3 py-1 text-xs font-medium transition-colors"
         >
           OK
         </button>
@@ -46,25 +46,25 @@
 
     <!-- Expanded options (hidden by default) -->
     <div id="consent-expanded" class="mx-auto hidden max-w-6xl px-4 pb-3">
-      <p class="mb-3 max-w-2xl text-xs text-text-muted">
+      <p class="text-text-muted mb-3 max-w-2xl text-xs">
         <strong class="text-text">Analytics:</strong> Google Analytics 4 tracks aggregate traffic—what gets read, where readers
         come from. No individual session reconstruction.
-        <strong class="ml-3 text-text">Personalisation:</strong> Visit counter stored in your browser's localStorage. Never
+        <strong class="text-text ml-3">Personalisation:</strong> Visit counter stored in your browser's localStorage. Never
         leaves your device.
       </p>
       <div class="flex flex-wrap items-center gap-4 text-xs">
         <label class="flex cursor-pointer items-center gap-2">
-          <input type="checkbox" id="consent-analytics" class="h-3.5 w-3.5 accent-accent" />
+          <input type="checkbox" id="consent-analytics" class="accent-accent h-3.5 w-3.5" />
           <span class="text-text-muted">Analytics</span>
         </label>
         <label class="flex cursor-pointer items-center gap-2">
-          <input type="checkbox" id="consent-personalisation" class="h-3.5 w-3.5 accent-accent" />
+          <input type="checkbox" id="consent-personalisation" class="accent-accent h-3.5 w-3.5" />
           <span class="text-text-muted">Personalisation</span>
         </label>
         <button
           id="consent-accept-selected"
           type="button"
-          class="rounded-md border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+          class="border-border text-text-muted hover:border-accent hover:text-accent rounded-md border px-3 py-1 text-xs transition-colors"
         >
           Save
         </button>

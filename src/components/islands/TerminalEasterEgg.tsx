@@ -206,7 +206,7 @@ export default function TerminalEasterEgg() {
       aria-modal="true"
       aria-label="Terminal"
     >
-      <div class="w-full max-w-2xl overflow-hidden rounded-lg border border-green-800 bg-black shadow-raised">
+      <div class="shadow-raised w-full max-w-2xl overflow-hidden rounded-lg border border-green-800 bg-black">
         {/* Title bar */}
         <div class="flex items-center gap-2 border-b border-green-900 bg-green-950 px-4 py-2">
           <div class="flex gap-1.5">

@@ -51,7 +51,7 @@ This creates a painful irony: the practitioners who would benefit most from AI-d
 
 Australia's legal AI landscape mirrors the global pattern with some local texture. The broader legal services market sits at roughly AUD 33–34 billion, and a growing cohort of Australian legal tech startups — several incubated through accelerators like the Lander & Rogers LawTech Hub — are tackling specific niches. You can find tools for automated due diligence searches across government registers, no-code platforms for building legal workflow agents, and affordable research assistants targeting Australian, UK, and New Zealand case law.
 
-But the same bifurcation exists here. The global platforms (Thomson Reuters' CoCounsel, LexisNexis' Protege) are building expensive ecosystem plays designed for enterprise customers. The local startups are solving narrow problems well but aren't addressing the fundamental trust architecture that the broader market demands. The solo practitioner in suburban Sydney or regional Queensland faces the same gap as their counterpart in Kansas City — acute need, inadequate options.
+But the same bifurcation exists here. The global platforms (Thomson Reuters' CoCounsel, LexisNexis' Protege) are building expensive ecosystem plays designed for enterprise customers. The local startups are solving narrow problems well but aren't addressing the fundamental trust architecture that the broader market demands. The solo practitioner in suburban Sydney or regional Queensland faces the same gap as their counterparts internationally.
 
 ## The Agentic Amplification Problem
 

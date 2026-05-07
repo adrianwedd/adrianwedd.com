@@ -49,7 +49,7 @@ For specialised biological models, the picture is worse. When the Evo BDT develo
 
 ## The pacing problem makes it urgent
 
-Here's the detail that should keep biosecurity officials awake. The FRI study asked experts when AI would match top human virologists on a complex troubleshooting test. Median prediction: after 2030. The subsequent baselining study found current LLMs had _already crossed that threshold_.
+Here's the detail that should keep biosecurity officials awake. The FRI study asked experts when AI would match top human virologists on a complex troubleshooting test. Median prediction: after 2030. The subsequent baselining study found current LLMs had already crossed that threshold, effectively closing the six-year gap between expert prediction and present-day reality.
 
 That's not a minor forecasting miss. It's a six-year categorical failure of expert intuition about AI timelines. If the people closest to the field are this wrong about when capabilities arrive, we cannot build governance frameworks that depend on accurate predictions about the future. Policy has to assume surprise.
 

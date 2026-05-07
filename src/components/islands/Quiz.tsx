@@ -26,13 +26,13 @@ export default function Quiz({ src }: Props) {
       .catch(() => setError('Failed to load quiz.'));
   }, [src]);
 
-  if (error) return <p class="text-sm text-text-muted">{error}</p>;
-  if (!questions.length) return <p class="text-sm text-text-muted">Loading...</p>;
+  if (error) return <p class="text-text-muted text-sm">{error}</p>;
+  if (!questions.length) return <p class="text-text-muted text-sm">Loading...</p>;
 
   if (finished) {
     return (
-      <div class="rounded-xl border border-border bg-surface-alt p-6 text-center">
-        <p class="text-lg font-semibold text-text">
+      <div class="border-border bg-surface-alt rounded-xl border p-6 text-center">
+        <p class="text-text text-lg font-semibold">
           {score} / {questions.length} correct
         </p>
         <button
@@ -43,7 +43,7 @@ export default function Quiz({ src }: Props) {
             setScore(0);
             setFinished(false);
           }}
-          class="hover:border-accent/50 mt-4 rounded-lg border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:text-accent"
+          class="hover:border-accent/50 border-border text-text-muted hover:text-accent mt-4 rounded-lg border px-4 py-2 text-sm transition-colors"
         >
           Try again
         </button>
@@ -55,11 +55,11 @@ export default function Quiz({ src }: Props) {
   const revealed = selected !== null;
 
   return (
-    <div class="rounded-xl border border-border bg-surface-alt p-6">
-      <p class="mb-3 text-xs text-text-muted">
+    <div class="border-border bg-surface-alt rounded-xl border p-6">
+      <p class="text-text-muted mb-3 text-xs">
         Question {current + 1} of {questions.length}
       </p>
-      <p class="mb-4 text-sm font-medium text-text">{q.question}</p>
+      <p class="text-text mb-4 text-sm font-medium">{q.question}</p>
       <div class="space-y-2">
         {q.options.map((opt, i) => {
           let style = 'border-border text-text-muted';
@@ -77,7 +77,7 @@ export default function Quiz({ src }: Props) {
                 if (i === q.answer) setScore((s) => s + 1);
               }}
               class={`w-full rounded-lg border px-4 py-2 text-left text-sm transition-colors ${style} ${
-                !revealed ? 'hover:border-accent/50 cursor-pointer hover:text-text' : ''
+                !revealed ? 'hover:border-accent/50 hover:text-text cursor-pointer' : ''
               }`}
             >
               {opt}
@@ -90,7 +90,7 @@ export default function Quiz({ src }: Props) {
           {selected === q.answer ? 'Correct!' : `Incorrect — the answer is: ${q.options[q.answer]}`}
         </p>
       )}
-      {revealed && q.explanation && <p class="mt-2 text-xs text-text-muted">{q.explanation}</p>}
+      {revealed && q.explanation && <p class="text-text-muted mt-2 text-xs">{q.explanation}</p>}
       {revealed && (
         <button
           type="button"
@@ -102,7 +102,7 @@ export default function Quiz({ src }: Props) {
               setSelected(null);
             }
           }}
-          class="mt-4 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-accent-hover"
+          class="bg-accent text-surface hover:bg-accent-hover mt-4 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
         >
           {current + 1 >= questions.length ? 'See results' : 'Next'}
         </button>

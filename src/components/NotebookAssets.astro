@@ -23,16 +23,16 @@ const hasAssets = videoUrl || infographic || mindmap || quiz || flashcards || da
 
 {
   hasAssets && (
-    <section class="mt-12 space-y-8 border-t border-border pt-8" aria-label="Notebook assets">
-      <h2 class="text-lg font-semibold text-text">Explore</h2>
+    <section class="border-border mt-12 space-y-8 border-t pt-8" aria-label="Notebook assets">
+      <h2 class="text-text text-lg font-semibold">Explore</h2>
 
       {videoUrl && (
         <div>
-          <h3 class="mb-3 text-sm font-medium text-text-muted">Video summary</h3>
+          <h3 class="text-text-muted mb-3 text-sm font-medium">Video summary</h3>
           <video
             controls
             preload="metadata"
-            class="w-full rounded-lg border border-border bg-surface-alt"
+            class="border-border bg-surface-alt w-full rounded-lg border"
             aria-label={`Video overview of ${title}`}
           >
             <source src={videoUrl} type="video/mp4" />
@@ -42,7 +42,7 @@ const hasAssets = videoUrl || infographic || mindmap || quiz || flashcards || da
 
       {infographic && (
         <div>
-          <h3 class="mb-3 text-sm font-medium text-text-muted">Infographic</h3>
+          <h3 class="text-text-muted mb-3 text-sm font-medium">Infographic</h3>
           <a href={infographic} target="_blank" rel="noopener noreferrer" class="block">
             <Picture
               src={infographic}
@@ -51,7 +51,7 @@ const hasAssets = videoUrl || infographic || mindmap || quiz || flashcards || da
               widths={[384, 768, 1152]}
               formats={['avif', 'webp']}
               alt={`Infographic for ${title}`}
-              class="hover:border-accent/50 w-full cursor-zoom-in rounded-lg border border-border transition-colors"
+              class="hover:border-accent/50 border-border w-full cursor-zoom-in rounded-lg border transition-colors"
               loading="lazy"
               decoding="async"
             />
@@ -61,39 +61,39 @@ const hasAssets = videoUrl || infographic || mindmap || quiz || flashcards || da
 
       {mindmap && (
         <div>
-          <h3 class="mb-3 text-sm font-medium text-text-muted">Mind map</h3>
+          <h3 class="text-text-muted mb-3 text-sm font-medium">Mind map</h3>
           <MindMap src={mindmap} client:idle />
         </div>
       )}
 
       {quiz && (
         <div>
-          <h3 class="mb-3 text-sm font-medium text-text-muted">Quiz</h3>
+          <h3 class="text-text-muted mb-3 text-sm font-medium">Quiz</h3>
           <Quiz src={quiz} client:idle />
         </div>
       )}
 
       {flashcards && (
         <div>
-          <h3 class="mb-3 text-sm font-medium text-text-muted">Flashcards</h3>
+          <h3 class="text-text-muted mb-3 text-sm font-medium">Flashcards</h3>
           <Flashcards src={flashcards} client:idle />
         </div>
       )}
 
       {dataTable && (
         <div>
-          <h3 class="mb-3 text-sm font-medium text-text-muted">Data</h3>
+          <h3 class="text-text-muted mb-3 text-sm font-medium">Data</h3>
           <DataTable src={dataTable} client:idle />
         </div>
       )}
 
       {slides && (
         <div>
-          <h3 class="mb-3 text-sm font-medium text-text-muted">Slides</h3>
+          <h3 class="text-text-muted mb-3 text-sm font-medium">Slides</h3>
           <a
             href={slides}
             download
-            class="hover:border-accent/50 inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm text-text-muted no-underline transition-colors hover:text-accent"
+            class="hover:border-accent/50 border-border text-text-muted hover:text-accent inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm no-underline transition-colors"
           >
             <svg
               class="h-4 w-4"

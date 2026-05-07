@@ -92,16 +92,13 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
     platform: 'twitter',
 
     async publishPost(post: SocialPost): Promise<PublishResult> {
-      let mediaId: string | null = null;
-      if (post.imageUrl) {
-        mediaId = await uploadMedia(post.imageUrl, creds);
-      }
+      // Don't attach images directly — let Twitter generate a link card from the
+      // URL in the tweet text. Attached images open a lightbox; cards link to the site.
 
       // Truncate to 280 graphemes (Twitter limit)
       const text = [...post.message].slice(0, 280).join('');
 
       const body: Record<string, unknown> = { text };
-      if (mediaId) body.media = { media_ids: [mediaId] };
 
       // JSON body excluded from OAuth signature base
       const auth = await oauthHeader('POST', TWEET_URL, {}, creds);

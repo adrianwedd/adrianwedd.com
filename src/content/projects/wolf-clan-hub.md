@@ -20,7 +20,7 @@ The system serves three audiences through a single codebase with path-based auth
 
 - **Public site** — marketing pages, blog, class schedules, enrollment pathway. Schema.org structured data, dark/light theming, responsive glassmorphism nav. 24 blog posts across four series, including a Warriors Library with NotebookLM audio overviews of classical martial arts texts.
 - **Ops hub** (`/hub/`) — password-gated with timing-safe SHA-256 verification. Live GitHub Issues kanban board, markdown document viewer serving 40+ operational docs (syllabus, compliance, policies, research papers), all behind an allowlist that prevents directory traversal.
-- **Member portal** (`/member/`) — JWT-authenticated via magic-link email login. Member profiles, attendance tracking, training logs, belt progression, grading eligibility calculator. 79 structured lesson plans. Instructor-only views for roster management, attendance analytics, and grading administration.
+- **Member portal** (`/member/`) — JWT-authenticated via magic-link email login. Member profiles, attendance tracking, training logs, belt progression, and a grading eligibility calculator that measures proficiency against the curriculum. 79 structured lesson plans. Instructor-only views for roster management, attendance analytics, and grading administration, allowing staff to validate student progress and formalize rank progression.
 
 ## Why vanilla
 

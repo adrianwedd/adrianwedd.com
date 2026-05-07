@@ -23,7 +23,7 @@ Every LLM has a context window. Even the largest ones — a million tokens, two 
 
 The standard workarounds are familiar and unsatisfying. Chunk the document and process each piece independently — but lose cross-chunk coherence. Summarise first and query the summary — but lose detail. Use RAG to retrieve relevant fragments — but lose structure. Each approach trades away something you needed.
 
-The Recursive Language Model pattern, proposed by Zhang, Kraska, and Khattab in their 2025 paper, reframes the problem entirely. Instead of feeding the document _into_ the model, you treat the document as part of the _environment_ that the model can symbolically interact with. The LLM doesn't read the document. It queries it.
+The Recursive Language Model (RLM) pattern, as detailed in recent research, reframes the problem entirely. Instead of feeding the document _into_ the model, you treat the document as part of the _environment_ that the model can symbolically interact with. The LLM doesn't read the document. It queries it.
 
 I built [rlm-mcp](/projects/rlm-mcp/) to put that idea into production.
 

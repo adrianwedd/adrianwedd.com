@@ -19,7 +19,7 @@ faq:
 youtubeUrl: 'https://www.youtube.com/watch?v=d-32AtO7xN4'
 ---
 
-For fifty years, robot safety was a solved problem. The answer was a cage: a physical enclosure that kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.
+For decades, industrial robot safety was effectively managed through physical isolation. A cage—or a safety barrier—kept humans and machines in mutually exclusive volumes of space. If the cage door opened, the interlock tripped. Safety was a function of separation.
 
 Humanoid robots dismantle this entirely. The cage is gone — that's the point. Robots built to work alongside people in homes, hospitals, and factories cannot be caged. But the thing that replaced the physical cage — the "cognitive cage" that contains a probabilistic neural network — doesn't exist yet. Not in any mathematically rigorous sense.
 
@@ -31,7 +31,7 @@ Traditional robotic failures are mechanical: a motor seizure, sensor occlusion, 
 
 Vision-Language-Action (VLA) models — the neural networks now driving systems like Figure's Helix-equipped 02/03 platforms, with the rest of the humanoid field (Tesla Optimus, Unitree H1, Boston Dynamics Atlas, 1X NEO) split between full VLA stacks, hybrid VLA-plus-classical-control, and ML-perception-with-deterministic-policy — introduce a completely different failure mode: **semantic failure**. A robot that is physically functioning perfectly executes a catastrophic action because its neural network misread the world.
 
-The technical term is **affordance hallucination**. In language models, a hallucination produces a wrong fact. In an embodied agent, a hallucination produces kinetic trauma.
+The technical term is **affordance hallucination**. While language model hallucinations produce false facts, embodied agent hallucinations can result in physical kinetic trauma.
 
 Three variants are particularly dangerous:
 
@@ -53,11 +53,11 @@ The risk isn't uniform. It follows the deployment curve.
 
 Critically, this phase introduces **vulnerable subjects** — children, elderly people — who cannot follow safety protocols and whose behaviour is unpredictable. A factory robot operating in a living room with a payload designed for industrial lifting is not a different machine. It is the same machine in the wrong environment.
 
-**2030–2035 (Post-Correction):** Following the first major incident, regulation forces a hardware/software overhaul. The industry bifurcates into certified and uncertified fleets. Safety verification matures — but only because the cost of not doing it became undeniable.
+**2030–2035 (Post-Correction):** Following the first major, publicly visible incident, regulation will likely force a necessary hardware and software overhaul. The industry bifurcates into certified and uncertified fleets. Safety verification matures — but only because the cost of not doing it became undeniable.
 
 ## What Happens After
 
-History is instructive. The Therac-25 radiation accidents followed a pattern: initial denial by the manufacturer ("our software is perfect"), forensic proof of software-driven causation, regulatory overhaul. The first humanoid fatality will follow the same arc — with one important difference.
+History is instructive. The Therac-25 medical linear accelerator serves as a grim template: a system whose software-driven failures, once ignored, eventually necessitated a complete re-evaluation of safety certification. Radiation accidents followed a pattern: initial denial by the manufacturer ("our software is perfect"), forensic proof of software-driven causation, regulatory overhaul. The first humanoid fatality will follow the same arc — with one important difference.
 
 Cars kill 40,000 Americans per year and we've normalised it. Robots don't kill anyone — yet. The tolerance for robotic error will be orders of magnitude lower than for autonomous vehicles. A single death could ground the entire industry.
 

@@ -42,9 +42,9 @@ This has fuelled "data sovereignty" movements worldwide. Data localisation laws 
 
 ## The open-source dilemma
 
-The most interesting internal tension in the US strategy is the debate over open-source AI. Meta argues that releasing models like Llama entrenches the American ecosystem as the global standard. The national security community counters that open-sourcing state-of-the-art model weights hands competitors billions of dollars in free R&D, neutralising the semiconductor export controls.
+The most interesting internal tension in the US strategy is the debate over open-source AI. Meta argues that releasing models like Llama entrenches the American ecosystem as the global standard. The national security community counters that open-sourcing state-of-the-art model weights hands competitors billions of dollars in free R&D, potentially neutralising the effectiveness of hardware-based export controls.
 
-This is not a minor policy disagreement. It is a clash between two core pillars of the American strategy: champion a globalised innovation ecosystem, or pursue technological containment. You cannot do both simultaneously. The resolution will determine whether the AI landscape becomes more multipolar or more tightly controlled.
+This is not a minor policy disagreement. It is a fundamental clash between the commitment to open-market dominance and the drive for absolute technological security. The resolution will determine whether the AI landscape becomes more multipolar or more tightly controlled.
 
 ## The Global South is the decisive arena
 

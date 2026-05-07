@@ -8,6 +8,6 @@ duration: '19:20'
 relatedPost: 'learning-mechanics-deep-learning-theory-post'
 ---
 
-NotebookLM Studio audio overview generated from arXiv:2604.21691 — *There Will Be a Scientific Theory of Deep Learning* by Simon, Kunin, et al.
+NotebookLM Studio audio overview generated from arXiv:2604.21691 — _There Will Be a Scientific Theory of Deep Learning_ by Simon, Kunin, et al.
 
 [Read the full post →](/blog/learning-mechanics-deep-learning-theory/)
