@@ -60,25 +60,6 @@ const MEDIA_UPLOAD_URL = 'https://upload.twitter.com/1.1/media/upload.json';
 const TWEET_URL = 'https://api.twitter.com/2/tweets';
 const VERIFY_URL = 'https://api.twitter.com/2/users/me';
 
-function youtubeVideoId(url: string): string | null {
-  try {
-    const u = new URL(url);
-    if (u.hostname === 'youtu.be') return u.pathname.slice(1);
-    return u.searchParams.get('v');
-  } catch {
-    return null;
-  }
-}
-
-async function resolveImageUrl(post: SocialPost): Promise<string | null> {
-  if (post.imageUrl) return post.imageUrl;
-  if (post.youtubeUrl) {
-    const id = youtubeVideoId(post.youtubeUrl);
-    if (id) return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-  }
-  return null;
-}
-
 async function uploadMedia(imageUrl: string, creds: OAuth1Creds): Promise<string | null> {
   try {
     const imgRes = await fetch(imageUrl);
@@ -112,9 +93,8 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
 
     async publishPost(post: SocialPost): Promise<PublishResult> {
       let mediaId: string | null = null;
-      const imgUrl = await resolveImageUrl(post);
-      if (imgUrl) {
-        mediaId = await uploadMedia(imgUrl, creds);
+      if (post.imageUrl) {
+        mediaId = await uploadMedia(post.imageUrl, creds);
       }
 
       // Truncate to 280 graphemes (Twitter limit)
