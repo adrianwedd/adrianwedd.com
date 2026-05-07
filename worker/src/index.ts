@@ -44,6 +44,8 @@ app.post('/api/publish', async (c) => {
     message: string;
     link?: string;
     imageUrl?: string;
+    videoUrl?: string;
+    youtubeUrl?: string;
     backdatedTime?: string;
     idempotencyKey: string;
   }>();
@@ -70,6 +72,8 @@ app.post('/api/publish', async (c) => {
     message: body.message,
     link: body.link,
     imageUrl: body.imageUrl,
+    videoUrl: body.videoUrl,
+    youtubeUrl: body.youtubeUrl,
     backdatedTime: body.backdatedTime,
     scheduledAt: new Date().toISOString(),
     scheduledAtEpoch: Date.now(),
@@ -116,6 +120,8 @@ app.post('/api/queue', async (c) => {
     scheduledAt: string;
     link?: string;
     imageUrl?: string;
+    videoUrl?: string;
+    youtubeUrl?: string;
   }>();
 
   const platform = validatePlatform(body.platform);
@@ -135,6 +141,8 @@ app.post('/api/queue', async (c) => {
     message: body.message,
     link: body.link,
     imageUrl: body.imageUrl,
+    videoUrl: body.videoUrl,
+    youtubeUrl: body.youtubeUrl,
     scheduledAt: body.scheduledAt,
     scheduledAtEpoch: epoch,
     status: 'queued',
@@ -166,6 +174,8 @@ app.post('/api/queue/sync', async (c) => {
       message: string;
       link?: string;
       imageUrl?: string;
+      videoUrl?: string;
+    youtubeUrl?: string;
       scheduledAt: string;
       scheduledAtEpoch: number;
     }>;
@@ -226,6 +236,8 @@ app.post('/api/queue/sync', async (c) => {
         message: incoming.message,
         link: incoming.link,
         imageUrl: incoming.imageUrl,
+        videoUrl: incoming.videoUrl,
+        youtubeUrl: incoming.youtubeUrl,
         scheduledAt: incoming.scheduledAt,
         scheduledAtEpoch: incoming.scheduledAtEpoch,
         status: 'queued',
@@ -243,6 +255,8 @@ app.post('/api/queue/sync', async (c) => {
         type: incoming.type as SocialPost['type'],
         link: incoming.link,
         imageUrl: incoming.imageUrl,
+        videoUrl: incoming.videoUrl,
+        youtubeUrl: incoming.youtubeUrl,
         scheduledAt: incoming.scheduledAt,
         scheduledAtEpoch: incoming.scheduledAtEpoch,
       };

@@ -59,6 +59,9 @@ jobs:
             TITLE=$(echo "$FRONTMATTER" | jq -r '.title // empty')
             DESC=$(echo "$FRONTMATTER" | jq -r '.description // empty')
             DRAFT=$(echo "$FRONTMATTER" | jq -r '.draft // false')
+            HERO=$(echo "$FRONTMATTER" | jq -r '.heroImage // empty')
+            VIDEO=$(echo "$FRONTMATTER" | jq -r '.videoUrl // .notebookAssets.videoUrl // empty')
+            YOUTUBE=$(echo "$FRONTMATTER" | jq -r '.youtubeUrl // empty')
 
             [ "$DRAFT" = "true" ] && { echo "Skipping draft: $file"; continue; }
             [ -z "$TITLE" ] && { echo "Skipping (no title): $file"; continue; }
@@ -75,6 +78,17 @@ jobs:
             else
               continue
             fi
+
+            # Resolve heroImage to absolute URL (CDN or site-relative)
+            IMAGE_URL=""
+            if [ -n "$HERO" ]; then
+              case "$HERO" in
+                https://*) IMAGE_URL="$HERO" ;;
+                /*) IMAGE_URL="https://adrianwedd.com${HERO}" ;;
+              esac
+            fi
+            VIDEO_URL="$VIDEO"
+            YOUTUBE_URL="$YOUTUBE"
 
             echo "$ACTIVE_PLATFORMS" | tr ',' '\n' | while read -r PLATFORM; do
               [ -z "$PLATFORM" ] && continue
@@ -94,7 +108,10 @@ jobs:
                   --arg type "text" \
                   --arg message "$MESSAGE" \
                   --arg key "$IDEMPOTENCY_KEY" \
-                  '{platform: $platform, type: $type, message: $message, idempotencyKey: $key}')" \
+                  --arg imageUrl "$IMAGE_URL" \
+                  --arg videoUrl "$VIDEO_URL" \
+                  --arg youtubeUrl "$YOUTUBE_URL" \
+                  '{platform: $platform, type: $type, message: $message, idempotencyKey: $key} | if $videoUrl != "" then . + {videoUrl: $videoUrl} elif $youtubeUrl != "" then . + {youtubeUrl: $youtubeUrl} elif $imageUrl != "" then . + {imageUrl: $imageUrl} else . end')" \
                 --max-time 30)
               HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
               BODY=$(echo "$RESPONSE" | sed '$d')
