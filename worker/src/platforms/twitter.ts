@@ -138,16 +138,19 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
     },
 
     async debugAuth(): Promise<AuthStatus> {
+      // No query params — query params must be included in the OAuth signature base
+      // string for GET requests, and we don't include them here to keep it simple.
       const auth = await oauthHeader('GET', VERIFY_URL, {}, creds);
       try {
-        const res = await fetch(`${VERIFY_URL}?user.fields=username`, {
-          headers: { Authorization: auth },
-        });
+        const res = await fetch(VERIFY_URL, { headers: { Authorization: auth } });
         if (!res.ok) {
+          const body = await res.text().catch(() => '');
+          console.error(`Twitter debugAuth HTTP ${res.status}: ${body.slice(0, 200)}`);
           return { valid: false, platform: 'twitter', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0 };
         }
         return { valid: true, platform: 'twitter', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 999 };
-      } catch {
+      } catch (err) {
+        console.error(`Twitter debugAuth error: ${String(err)}`);
         return { valid: false, platform: 'twitter', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0 };
       }
     },

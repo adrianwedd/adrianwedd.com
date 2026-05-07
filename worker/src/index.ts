@@ -296,20 +296,20 @@ app.post('/api/cron/publish', async (c) => {
   await env.SOCIAL.put('cron-lock:publish', '1', { expirationTtl: 300 });
 
   try {
-    // Token health — check all configured platforms before processing posts
+    // Token health — check all configured platforms; skip unhealthy ones rather than halting all
     const tokenExpiryByPlatform: Record<string, number> = {};
+    const blockedPlatforms = new Set<Platform>();
     for (const platformName of getConfiguredPlatforms(env)) {
       const adapter = createPlatform(platformName, env);
       const tokenHealth = await adapter.debugAuth();
       tokenExpiryByPlatform[platformName] = tokenHealth.daysUntilExpiry;
       if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
-        console.error(`${platformName} data access has expired`);
-        return json({ error: `${platformName} data access expired` }, 503);
-      }
-      if (tokenHealth.daysUntilExpiry <= 7) {
-        console.error(`${platformName} data access expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
+        console.error(`${platformName} auth invalid — skipping posts for this platform`);
+        blockedPlatforms.add(platformName);
+      } else if (tokenHealth.daysUntilExpiry <= 7) {
+        console.error(`${platformName} token expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
       } else if (tokenHealth.daysUntilExpiry <= 14) {
-        console.warn(`${platformName} data access expires in ${tokenHealth.daysUntilExpiry} days`);
+        console.warn(`${platformName} token expires in ${tokenHealth.daysUntilExpiry} days`);
       }
     }
 
@@ -337,6 +337,12 @@ app.post('/api/cron/publish', async (c) => {
     let failed = 0;
 
     for (const { key, post } of duePosts.slice(0, 5)) {
+      // Skip posts for platforms with invalid auth
+      if (blockedPlatforms.has(post.platform)) {
+        console.warn(`Skipping post ${post.id} — ${post.platform} auth is invalid`);
+        continue;
+      }
+
       // Check idempotency
       const existing = await env.SOCIAL.get(`idempotent:${post.id}`);
       if (existing) {
