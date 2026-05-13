@@ -41,6 +41,8 @@ Options:
   --output <dir>       Output base directory (default: ./exports)
   --continue-on-error  Continue exporting if individual notebooks fail
   --no-retry           Disable retry/backoff for nlm operations
+  --update             Re-visit already-exported notebooks and download any new assets
+                       (append-only: existing files are preserved, not refreshed)
   -h, --help           Show this help message
 
 Examples:
@@ -54,6 +56,7 @@ EOF
 OUTPUT_BASE="./exports"
 CONTINUE_ON_ERROR=false
 NO_RETRY=false
+UPDATE_MODE=false
 EXTRA_EXPORT_ARGS=()
 
 while [[ $# -gt 0 ]]; do
@@ -85,6 +88,10 @@ while [[ $# -gt 0 ]]; do
       NO_RETRY=true
       shift
       ;;
+    --update)
+      UPDATE_MODE=true
+      shift
+      ;;
     -*)
       echo "Unknown option: $1" >&2
       exit 1
@@ -107,6 +114,10 @@ fi
 if [[ "$NO_RETRY" == true ]]; then
   export NLM_NO_RETRY=true
   EXTRA_EXPORT_ARGS+=(--no-retry)
+fi
+
+if [[ "$UPDATE_MODE" == true ]]; then
+  EXTRA_EXPORT_ARGS+=(--update)
 fi
 
 if [[ "$QUIET" == true ]]; then
@@ -158,8 +169,8 @@ while IFS='|' read -r notebook_id notebook_title; do
   fi
 
   export_dir="$OUTPUT_BASE/$slugified"
-  if [ -d "$export_dir" ] && [ -f "$export_dir/metadata.json" ]; then
-    log_info "  [↷] Already exported, skipping"
+  if [[ "$UPDATE_MODE" == false ]] && [ -d "$export_dir" ] && [ -f "$export_dir/metadata.json" ]; then
+    log_info "  [↷] Already exported, skipping (use --update to re-check for new assets)"
     skipped=$(<"$TEMP_DIR/skipped")
     echo "$((skipped + 1))" > "$TEMP_DIR/skipped"
     log_info ""
@@ -167,7 +178,7 @@ while IFS='|' read -r notebook_id notebook_title; do
   fi
 
   # Run export
-  if "$EXPORT_SCRIPT" --id "$notebook_id" --output "$OUTPUT_BASE" "${EXTRA_EXPORT_ARGS[@]}" 2>&1 | sed 's/^/  /' >&2; then
+  if "$EXPORT_SCRIPT" --id "$notebook_id" --output "$OUTPUT_BASE" "${EXTRA_EXPORT_ARGS[@]+"${EXTRA_EXPORT_ARGS[@]}"}" 2>&1 | sed 's/^/  /' >&2; then
     success=$(<"$TEMP_DIR/success")
     echo "$((success + 1))" > "$TEMP_DIR/success"
     log_info "  [✓] Export complete"
