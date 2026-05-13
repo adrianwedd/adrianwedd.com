@@ -75,6 +75,7 @@ Options:
   --name <string>    Explicit notebook name query (disables UUID parsing of positional arg)
   --dry-run          Print planned export actions and exit without downloading
   --no-retry         Disable retry/backoff for nlm operations
+  --update           Accepted for compatibility; existing files are preserved (append-only, not a refresh)
   -h, --help         Show this help message
 
 Examples:
@@ -142,6 +143,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-retry)
       NO_RETRY=true
+      shift
+      ;;
+    --update)
+      # Per-artifact skip is always active; --update is accepted for batch caller compatibility
       shift
       ;;
     -*)
@@ -340,18 +345,27 @@ echo "$SOURCES_SORTED" | python3 -c '
 import sys, json
 sources = json.load(sys.stdin)
 for s in sources:
-    print(s["id"] + "|" + s["title"] + "|" + s["type"])
-' 2>/dev/null | while IFS='|' read -r src_id src_title _src_type; do
+    # Tab delimiter — safe for titles containing pipe characters
+    print(s["id"] + "\t" + s["title"] + "\t" + s["type"])
+' 2>/dev/null | while IFS=$'\t' read -r src_id src_title _src_type; do
   safe_name=$(echo "$src_title" | sed 's/[^a-zA-Z0-9._-]/_/g' | head -c 100)
   content_file="$OUTPUT_DIR/sources/${safe_name}--${src_id}.md"
-  if retry_cmd "nlm content source" nlm content source "$src_id" -o "$content_file"; then
-    if [ -s "$content_file" ]; then
+  # Clean up stale .part files from interrupted runs
+  rm -f "${content_file}.part"
+  if [ -f "$content_file" ] && [ -s "$content_file" ]; then
+    log_info "  [↷] Already downloaded: sources/${safe_name}--${src_id}.md"
+    continue
+  fi
+  log_info "  [↓] Downloading: sources/${safe_name}--${src_id}.md"
+  if retry_cmd "nlm content source" nlm content source "$src_id" -o "${content_file}.part"; then
+    if [ -s "${content_file}.part" ]; then
+      mv -f "${content_file}.part" "$content_file"
       log_info "  [+] sources/${safe_name}--${src_id}.md"
     else
-      rm -f "$content_file"
+      rm -f "${content_file}.part"
     fi
   else
-    rm -f "$content_file"
+    rm -f "${content_file}.part"
   fi
 done
 
@@ -412,11 +426,17 @@ for n in notes:
             name = f"{base}--{i}"
             i += 1
     seen.add(name)
-    print(f"{name}|||{content}")
-' 2>/dev/null | while IFS='|||' read -r note_name note_content; do
+    # Tab delimiter — bash IFS splits on single chars, not multi-char strings
+    print(f"{name}\t{content}")
+' 2>/dev/null | while IFS=$'\t' read -r note_name note_content; do
     if [ -n "$note_name" ]; then
-      echo "$note_content" > "$OUTPUT_DIR/notes/${note_name}.md"
-      log_info "  [+] notes/${note_name}.md"
+      note_file="$OUTPUT_DIR/notes/${note_name}.md"
+      if [ -f "$note_file" ] && [ -s "$note_file" ]; then
+        log_info "  [↷] Already saved: notes/${note_name}.md"
+      else
+        printf '%s\n' "$note_content" > "$note_file"
+        log_info "  [+] notes/${note_name}.md"
+      fi
     fi
   done
 else
@@ -454,16 +474,35 @@ log_info "  [+] studio/manifest.json ($ARTIFACT_COUNT artifacts)"
 
 download_artifact() {
   local atype="$1" aid="$2" outpath="$3"
-  if retry_cmd_capture_fail_verbose "nlm download $atype" nlm download "$atype" "$NOTEBOOK_ID" --id "$aid" -o "$outpath" --no-progress; then
-    if [ -f "$outpath" ] && [ -s "$outpath" ]; then
+  # --no-progress is only supported by audio, video, infographic, slide-deck
+  local extra_args=()
+  case "$atype" in audio|video|infographic|slide-deck) extra_args=(--no-progress) ;; esac
+  # Atomic write: download to .part then mv into place
+  local part_file="${outpath}.part"
+  rm -f "$part_file"
+  if retry_cmd_capture_fail_verbose "nlm download $atype" nlm download "$atype" "$NOTEBOOK_ID" --id "$aid" -o "$part_file" "${extra_args[@]+"${extra_args[@]}"}"; then
+    if [ -f "$part_file" ] && [ -s "$part_file" ]; then
+      mv -f "$part_file" "$outpath"
       local size_bytes
       size_bytes=$(wc -c <"$outpath" | tr -d ' ')
       log_info "  [+] $outpath (${size_bytes} bytes)"
       return 0
     fi
   fi
-  rm -f "$outpath"
+  rm -f "$part_file" "$outpath"
   return 1
+}
+
+download_artifact_if_missing() {
+  local atype="$1" aid="$2" outpath="$3"
+  # Clean up stale .part files from interrupted runs
+  rm -f "${outpath}.part"
+  if [ -f "$outpath" ] && [ -s "$outpath" ]; then
+    log_info "  [↷] Already downloaded: $(basename "$outpath")"
+    return 0
+  fi
+  log_info "  [↓] Downloading: $(basename "$outpath")"
+  download_artifact "$atype" "$aid" "$outpath"
 }
 
 echo "$ARTIFACTS_SORTED" | python3 -c '
@@ -475,31 +514,31 @@ for a in sorted(artifacts, key=lambda a: (a.get("type",""), a.get("id",""))):
 ' 2>/dev/null | while IFS='|' read -r art_id art_type; do
   case "$art_type" in
     audio)
-      download_artifact audio "$art_id" "$OUTPUT_DIR/studio/audio/${art_id}.mp3" || true
+      download_artifact_if_missing audio "$art_id" "$OUTPUT_DIR/studio/audio/${art_id}.mp3" || true
       ;;
     video)
-      download_artifact video "$art_id" "$OUTPUT_DIR/studio/video/${art_id}.mp4" || true
+      download_artifact_if_missing video "$art_id" "$OUTPUT_DIR/studio/video/${art_id}.mp4" || true
       ;;
     report)
-      download_artifact report "$art_id" "$OUTPUT_DIR/studio/documents/${art_id}.md" || true
+      download_artifact_if_missing report "$art_id" "$OUTPUT_DIR/studio/documents/${art_id}.md" || true
       ;;
     slide_deck)
-      download_artifact slide-deck "$art_id" "$OUTPUT_DIR/studio/documents/${art_id}.pdf" || true
+      download_artifact_if_missing slide-deck "$art_id" "$OUTPUT_DIR/studio/documents/${art_id}.pdf" || true
       ;;
     infographic)
-      download_artifact infographic "$art_id" "$OUTPUT_DIR/studio/visual/${art_id}.png" || true
+      download_artifact_if_missing infographic "$art_id" "$OUTPUT_DIR/studio/visual/${art_id}.png" || true
       ;;
     mind_map)
-      download_artifact mind-map "$art_id" "$OUTPUT_DIR/studio/visual/${art_id}.json" || true
+      download_artifact_if_missing mind-map "$art_id" "$OUTPUT_DIR/studio/visual/${art_id}.json" || true
       ;;
     quiz)
-      download_artifact quiz "$art_id" "$OUTPUT_DIR/studio/interactive/${art_id}-quiz.json" || true
+      download_artifact_if_missing quiz "$art_id" "$OUTPUT_DIR/studio/interactive/${art_id}-quiz.json" || true
       ;;
     flashcards)
-      download_artifact flashcards "$art_id" "$OUTPUT_DIR/studio/interactive/${art_id}-flashcards.json" || true
+      download_artifact_if_missing flashcards "$art_id" "$OUTPUT_DIR/studio/interactive/${art_id}-flashcards.json" || true
       ;;
     data_table)
-      download_artifact data-table "$art_id" "$OUTPUT_DIR/studio/interactive/${art_id}-data-table.csv" || true
+      download_artifact_if_missing data-table "$art_id" "$OUTPUT_DIR/studio/interactive/${art_id}-data-table.csv" || true
       ;;
     *)
       log_warn "  [?] Unknown artifact type: $art_type ($art_id)"

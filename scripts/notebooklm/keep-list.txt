@@ -1,0 +1,149 @@
+# NLM local backup keep-list
+# Format: one folder-name prefix per line (matched as prefix against full-backup/ entries)
+# Rationale: keep = active project / client work / ongoing legal-business.
+# Everything else is already on gdrive:nlm-backup and safe to delete locally.
+
+# ── Prospector: active suburb notebooks ─────────────────────────────────────
+blackmans-bay-prospects
+bonnet-hill-prospects
+cygnet-prospects-castle-forbes-bay
+cygnet-prospects-cradoc
+cygnet-prospects-cygnet
+cygnet-prospects-franklin
+cygnet-prospects-gardners-bay
+cygnet-prospects-geeveston
+cygnet-prospects-grove
+cygnet-prospects-huonville
+cygnet-prospects-lonnavale
+cygnet-prospects-lucaston
+cygnet-prospects-lymington
+cygnet-prospects-mountain-river
+cygnet-prospects-pelverata
+cygnet-prospects-petcheys-bay
+cygnet-prospects-port-huon
+cygnet-prospects-ranelagh
+discover-cygnet
+cygnet-overview
+dover-prospects
+huntingfield-prospects
+kaoota-prospects
+kingston-prospects
+lower-wattle-grove-prospects
+margate-prospects
+nicholls-rivulet-prospects
+sandfly-prospects
+snug-prospects
+
+# ── Prospector: suburb prospect lists ───────────────────────────────────────
+prospects-cradoc
+prospects-cygnet
+prospects-cygnet-a
+prospects-franklin
+prospects-geeveston
+prospects-grove
+prospects-huonville
+prospects-ranelagh
+
+# ── Prospector: individual prospect intel ───────────────────────────────────
+prospect-bethany-smith-psychology-grove
+prospect-bioflex-nutrition-grove
+prospect-blue-river-cafe-franklin-franklin
+prospect-campo-de-flori-grove
+prospect-crosby-dance-co-motor-mechanics
+prospect-dm-jennings-sons
+prospect-dm-jennings-sons-cygnet
+prospect-far-south-mobile-hub-grove
+prospect-ferment-tasmania-fermentas-cygnet
+prospect-finite-elements-grove
+prospect-frank-s-ciderhouse-cafe-franklin
+prospect-franklin-marine-franklin
+prospect-haugland-constructions-cygnet
+prospect-huon-cabinets-carpentry-grove
+prospect-huon-valley-pcyc-grove
+prospect-jt-plumbing-franklin
+prospect-jt-plumbing-tasmania
+prospect-little-black-fridge-grove
+prospect-maple-grove-nursery-grove
+prospect-mototraderstasmania-grove
+prospect-natural-heat-grove
+prospect-phoenix-creations-grove
+prospect-pilates-in-the-valley
+prospect-port-cygnet-cannery-cygnet
+prospect-red-velvet-lounge-cygnet
+prospect-reel-to-reel-solutions-grove
+prospect-river-to-rainforest-franklin
+prospect-the-hobart-polo-academy-grove
+prospect-the-moorings-lady-franklin-franklin
+prospect-wheelhouse-grove
+prospect-willie-smith-s-apple-shed-grove
+prospect-willie-smith-s-cygnet
+
+# ── Pentest / competitive intel (active) ────────────────────────────────────
+pentest-competitor-intelligence-australia-2026
+pentest-competitor-tooling-analysis-2026-05-07
+pentest-tool-expansion-research-2026-05-07
+
+# ── Client work ─────────────────────────────────────────────────────────────
+artefacts-of-the-understory-the-jessica-jubb-brand-codex
+rowena-research-au-privacy-policy-template
+rowena-research-au-regional-spiritual-market
+rowena-research-au-regulatory-enforcement
+rowena-research-avalonian-rose-lineage
+rowena-research-bereavement-mediumship-advertising
+rowena-research-reiki-under-national-code-of-conduct
+rowena-research-scottish-seer-tradition
+rowena-research-uct-for-circles-deposits
+rowena-research-women-s-circles-business-models
+readings-with-rowena-full-proposal-qa
+beep-digital-support-services-proposal-qa
+bottom-pub-co-op-gap-analysis
+evolve-evolution-implementation-and-launch-framework
+
+# ── Business formation / legal ───────────────────────────────────────────────
+failure-first-pty-ltd-incorporation-research
+contractor-architect-legal-structure-ai-specialist-to-ndis-practice-au-2026
+
+# ── NDIS / compliance (active regulatory work) ──────────────────────────────
+ndis-2025-26-v1-1-claimability-for-digital-ai-and-at-services
+ndis-commission-enforcement-actions-2025-26-against-unregistered-providers-concr
+ndis-compliance-software-landscape-what-exists-what-s-missing-for-unregistered-a
+ndis-digital-platform-provider-definition-does-configuring-ai-tools-for-individu
+ndis-integrity-and-safeguarding-act-2026-unregistered-provider-impact
+ndis-plan-managed-claimability-are-unregistered-providers-bound-by-price-limits
+australian-foundational-supports-under-ndis-new-framework-scope-eligibility-prov
+i-can-v6-assessment-framework-what-evidence-providers-need-to-produce-under-the-
+differentiated-pricing-for-unregistered-ndis-providers-capacity-building-lower-c
+ai-tools-as-restrictive-practices-under-ndis-behavioural-shaping-environmental-l
+
+# ── Bali property (ongoing if still active) ─────────────────────────────────
+bali-real-estate-compliance-and-capital-repatriation-guide
+bali-hospitality-strategic-risk-management-for-scooter-provision
+safety-and-compliance-manual-dolphin-beach-apartments-bali
+regulatory-and-legislative-framework-for-the-operation-of-dolphin-beach-apartmen
+2026-strategic-compensation-and-compliance-framework-for-dolphin-beach-apartment
+
+# ── Ongoing research / safety work ──────────────────────────────────────────
+aisi-application-submission-manifest-and-compliance-checklist
+failure-first-overview
+embodied-ai-deployment-sites-recon-intel
+
+# ── Prospector: additional suburbs (missed first pass) ──────────────────────
+taroona-prospects
+woodstock-prospects
+
+# ── Legal / personal ────────────────────────────────────────────────────────
+tasmanian-workers-compensation-settlement-wedd-v-the-state
+
+# ── Active book project ──────────────────────────────────────────────────────
+this-wasn-t-in-the-brochure-2025-12-21-draft
+this-wasn-t-in-the-brochure-2025-12-25-en-au-draft
+this-wasn-t-in-the-brochure-a-book-about-parenting-neurodivergence-and-the-thing
+this-wasn-t-in-the-brochure-a-neurodivergent-co-parenting-guide-written-with-thr
+this-wasn-t-in-the-brochure-appendix-a-ai-and-authorship
+this-wasn-t-in-the-brochure-fresh
+this-wasn-t-in-the-brochure-overview
+this-wasnt-in-the-brochure-audio
+this-wasnt-in-the-brochure-infographic
+
+# ── NDIS compliance (additional) ────────────────────────────────────────────
+supported-decision-making-frameworks-for-ai-tool-deployment-consent-au-2026
