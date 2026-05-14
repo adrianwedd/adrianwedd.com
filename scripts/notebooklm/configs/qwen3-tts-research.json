@@ -1,0 +1,14 @@
+{
+  "title": "Qwen3-TTS: Best Practices for Voice Synthesis & Audio Generation",
+  "sources": [
+    "https://github.com/QwenLM/Qwen3-TTS",
+    "https://huggingface.co/Qwen/Qwen3-TTS",
+    "https://github.com/adrianwedd/voice-cloning-qwen3-tts-mlx"
+  ],
+  "studio": [
+    {"type": "report"},
+    {"type": "audio"},
+    {"type": "quiz"},
+    {"type": "flashcards"}
+  ]
+}
