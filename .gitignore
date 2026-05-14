@@ -40,6 +40,8 @@ public/api/analytics.json
 
 # NotebookLM exports (large, regenerable)
 scripts/notebooklm/exports/
+# NotebookLM internal configs and operational data (local paths, not for public)
+scripts/notebooklm/internal/
 public/notebook-assets/*/audio-original.mp3
 
 # CV data synced at build time
