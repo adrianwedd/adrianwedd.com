@@ -358,7 +358,7 @@ for s in sources:
   fi
   log_info "  [↓] Downloading: sources/${safe_name}--${src_id}.md"
   if retry_cmd "nlm content source" nlm content source "$src_id" -o "${content_file}.part"; then
-    if [ -s "${content_file}.part" ]; then
+    if [ -f "${content_file}.part" ] && [ -s "${content_file}.part" ]; then
       mv -f "${content_file}.part" "$content_file"
       log_info "  [+] sources/${safe_name}--${src_id}.md"
     else
@@ -438,7 +438,7 @@ for n in notes:
             if not content.endswith("\n"):
                 f.write("\n")
         print(f"WRITE:{name}.md")
-' 2>/dev/null | while IFS=':' read -r action filename; do
+' | while IFS=':' read -r action filename; do
     case "$action" in
       SKIP) log_info "  [↷] Already saved: notes/${filename}" ;;
       WRITE) log_info "  [+] notes/${filename}" ;;
