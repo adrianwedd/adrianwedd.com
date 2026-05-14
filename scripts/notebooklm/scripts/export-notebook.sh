@@ -346,7 +346,7 @@ import sys, json
 sources = json.load(sys.stdin)
 for s in sources:
     # Tab delimiter — safe for titles containing pipe characters
-    print(s["id"] + "\t" + s["title"] + "\t" + s["type"])
+    print(s.get("id", "") + "\t" + s.get("title", "untitled") + "\t" + s.get("type", ""))
 ' 2>/dev/null | while IFS=$'\t' read -r src_id src_title _src_type; do
   safe_name=$(echo "$src_title" | sed 's/[^a-zA-Z0-9._-]/_/g' | head -c 100)
   content_file="$OUTPUT_DIR/sources/${safe_name}--${src_id}.md"
@@ -406,9 +406,12 @@ print()
   echo "$NOTES_SORTED" > "$OUTPUT_DIR/notes/index.json"
   NOTE_COUNT=$(echo "$NOTES_OUTPUT" | python3 "$SCRIPT_DIR/../lib/json_tools.py" len)
   log_info "  [+] notes/index.json ($NOTE_COUNT notes)"
-  echo "$NOTES_SORTED" | python3 -c '
-import sys, json
+  # Write note files directly from Python to handle multi-line content correctly.
+  # Bash read cannot safely pass multi-line strings across a pipe.
+  echo "$NOTES_SORTED" | NLM_NOTES_DIR="$OUTPUT_DIR/notes" python3 -c '
+import sys, json, os
 notes = json.load(sys.stdin)
+notes_dir = os.environ["NLM_NOTES_DIR"]
 seen = set()
 for n in notes:
     title = n.get("title", "untitled")
@@ -426,18 +429,20 @@ for n in notes:
             name = f"{base}--{i}"
             i += 1
     seen.add(name)
-    # Tab delimiter — bash IFS splits on single chars, not multi-char strings
-    print(f"{name}\t{content}")
-' 2>/dev/null | while IFS=$'\t' read -r note_name note_content; do
-    if [ -n "$note_name" ]; then
-      note_file="$OUTPUT_DIR/notes/${note_name}.md"
-      if [ -f "$note_file" ] && [ -s "$note_file" ]; then
-        log_info "  [↷] Already saved: notes/${note_name}.md"
-      else
-        printf '%s\n' "$note_content" > "$note_file"
-        log_info "  [+] notes/${note_name}.md"
-      fi
-    fi
+    note_path = os.path.join(notes_dir, f"{name}.md")
+    if os.path.isfile(note_path) and os.path.getsize(note_path) > 0:
+        print(f"SKIP:{name}.md")
+    else:
+        with open(note_path, "w") as f:
+            f.write(content)
+            if not content.endswith("\n"):
+                f.write("\n")
+        print(f"WRITE:{name}.md")
+' 2>/dev/null | while IFS=':' read -r action filename; do
+    case "$action" in
+      SKIP) log_info "  [↷] Already saved: notes/${filename}" ;;
+      WRITE) log_info "  [+] notes/${filename}" ;;
+    esac
   done
 else
   log_info "  [.] No notes found"
