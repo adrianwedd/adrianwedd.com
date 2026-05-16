@@ -11,7 +11,7 @@ Personal website for Adrian Wedd. Astro 6 (static) on GitHub Pages. Dark-first d
 - **Hosting:** GitHub Pages (fully static).
 - **Media:** Cloudflare R2 for audio/video (`cdn.adrianwedd.com`). Infographics in git (`public/notebook-assets/`).
 - **CSP Worker:** Cloudflare Worker in `worker-csp/` — per-request nonce injection, strict CSP header, Permissions-Policy. Route: `adrianwedd.com/*`.
-- **Social Worker:** Cloudflare Worker in `worker/` — Facebook automation (publish, queue, comment monitor).
+- **Social Worker:** Cloudflare Worker in `worker/` — multi-platform social posting (Facebook, Instagram, Bluesky, X), publish/queue/comment monitor. Uses `CronLock` Durable Object for atomic cron locking with fencing tokens.
 - **Booking API:** Cloudflare Worker in `~/repos/book-api/` — Google Calendar slots + booking at `api.book.adrianwedd.com`.
 
 ## Building and Running
