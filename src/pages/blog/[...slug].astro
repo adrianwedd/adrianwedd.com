@@ -9,6 +9,7 @@ import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
+import { getImageDimensions } from '../../lib/image-dimensions';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -43,12 +44,12 @@ const postSlug = slug(post.id);
 const ogImage = post.data.heroImage
   ? post.data.heroImage.replace(/\.webp$/, '.jpg')
   : `/og/blog/${postSlug}.png`;
-// Infographic hero images are portrait 1536x2752; the auto-generated text
-// cards are 1200x630 landscape. Pass the right dimensions.
-const ogImageIsInfographic =
-  typeof post.data.heroImage === 'string' && post.data.heroImage.includes('infographic');
-const ogImageWidth = ogImageIsInfographic ? 1536 : 1200;
-const ogImageHeight = ogImageIsInfographic ? 2752 : 630;
+// Read the actual image dimensions at build time (covers infographics, text
+// cards, and any future OG image shape without filename-based heuristics).
+// Falls back to standard 1200x630 if the file is missing or unreadable.
+const ogDimensions = getImageDimensions(ogImage);
+const ogImageWidth = ogDimensions?.width ?? 1200;
+const ogImageHeight = ogDimensions?.height ?? 630;
 
 // Series support
 const seriesPosts = post.data.series

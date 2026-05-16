@@ -8,6 +8,7 @@ import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
 import { slug } from '../../lib/utils';
+import { getImageDimensions } from '../../lib/image-dimensions';
 import { Picture } from 'astro:assets';
 
 export async function getStaticPaths() {
@@ -30,9 +31,11 @@ const projectSlug = slug(project.id);
 const ogImage = project.data.heroImage
   ? project.data.heroImage.replace(/\.webp$/, '.jpg')
   : `/og/projects/${projectSlug}.png`;
-const isPortraitHero = typeof project.data.heroImage === 'string' && project.data.heroImage.includes('infographic');
-const ogImageWidth = isPortraitHero ? 1536 : 1200;
-const ogImageHeight = isPortraitHero ? 2752 : 630;
+// Read actual image dimensions at build time — covers infographics, text
+// cards, and any future OG image shape without filename-based heuristics.
+const ogDimensions = getImageDimensions(ogImage);
+const ogImageWidth = ogDimensions?.width ?? 1200;
+const ogImageHeight = ogDimensions?.height ?? 630;
 const allAudio = await getCollection('audio');
 const relatedEpisodes = allAudio.filter((ep) => !ep.data.draft && ep.data.relatedProject === projectSlug);
 

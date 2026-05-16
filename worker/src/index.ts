@@ -4,6 +4,9 @@ import { verifyBearer } from './auth';
 import { createPlatform, getConfiguredPlatforms } from './platforms/factory';
 import type { SocialPost, IdempotencyRecord, Platform } from './platforms/types';
 import { processComments } from './cron/comments';
+import { CronLock } from './cron-lock';
+
+export { CronLock };
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -48,19 +51,26 @@ app.post('/api/publish', async (c) => {
     youtubeUrl?: string;
     backdatedTime?: string;
     idempotencyKey: string;
+    forceRetry?: boolean;
   }>();
 
   const platform = validatePlatform(body.platform);
   if (!platform) return json({ error: `Unsupported platform: ${body.platform}` }, 400);
 
-  // Check durable idempotency record
+  // Check durable idempotency record. `published` records always block a retry
+  // (prevents double-posting); `failed` records can be bypassed with forceRetry.
   const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
   if (existingRaw) {
     const existing: IdempotencyRecord = JSON.parse(existingRaw);
     if (existing.status === 'published') {
       return json({ alreadyPublished: true, platformPostId: existing.platformPostId });
     }
-    return json({ alreadyFailed: true, error: existing.error });
+    if (!body.forceRetry) {
+      return json({ alreadyFailed: true, error: existing.error });
+    }
+    // forceRetry: clear the failed record so the publish below can proceed and
+    // write a fresh idempotency entry on completion.
+    await env.SOCIAL.delete(`idempotent:${body.idempotencyKey}`);
   }
 
   const adapter = createPlatform(platform, env);
@@ -290,10 +300,13 @@ app.post('/api/cron/publish', async (c) => {
   const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET);
   if (!authOk) return unauthorized();
 
-  // Cron lock
-  const cronLock = await env.SOCIAL.get('cron-lock:publish');
-  if (cronLock) return json({ skipped: true, reason: 'locked' });
-  await env.SOCIAL.put('cron-lock:publish', '1', { expirationTtl: 300 });
+  // Cron lock — atomic via Durable Object (prevents KV TOCTOU race)
+  const lockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName('publish')) as DurableObjectStub & {
+    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean }>;
+    release(name: string): Promise<void>;
+  };
+  const { acquired } = await lockStub.tryAcquire('publish', 300_000);
+  if (!acquired) return json({ skipped: true, reason: 'locked' });
 
   try {
     // Token health — check all configured platforms; skip unhealthy ones rather than halting all
@@ -409,7 +422,7 @@ app.post('/api/cron/publish', async (c) => {
 
     return json({ published, failed, remaining, tokenExpiresInDays: tokenExpiryByPlatform });
   } finally {
-    await env.SOCIAL.delete('cron-lock:publish');
+    await lockStub.release('publish');
   }
 });
 
@@ -420,9 +433,12 @@ app.post('/api/cron/comments', async (c) => {
   const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET);
   if (!authOk) return unauthorized();
 
-  const cronLock = await env.SOCIAL.get('cron-lock:comments');
-  if (cronLock) return json({ skipped: true, reason: 'locked' });
-  await env.SOCIAL.put('cron-lock:comments', '1', { expirationTtl: 300 });
+  const commentsLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName('comments')) as DurableObjectStub & {
+    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean }>;
+    release(name: string): Promise<void>;
+  };
+  const { acquired: commentsAcquired } = await commentsLockStub.tryAcquire('comments', 300_000);
+  if (!commentsAcquired) return json({ skipped: true, reason: 'locked' });
 
   try {
     // Process comments for each configured platform
@@ -446,7 +462,7 @@ app.post('/api/cron/comments', async (c) => {
     const fbResult = platformResults.facebook as Record<string, unknown> | undefined;
     return json({ ...fbResult, platforms: platformResults });
   } finally {
-    await env.SOCIAL.delete('cron-lock:comments');
+    await commentsLockStub.release('comments');
   }
 });
 
