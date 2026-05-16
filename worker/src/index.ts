@@ -75,62 +75,63 @@ app.post('/api/publish', async (c) => {
   }
 
   try {
-  // Check durable idempotency record. `published` records always block a retry
-  // (prevents double-posting); `failed` records can be bypassed with forceRetry.
-  const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
-  if (existingRaw) {
-    const existing: IdempotencyRecord = JSON.parse(existingRaw);
-    if (existing.status === 'published') {
-      return json({ alreadyPublished: true, platformPostId: existing.platformPostId });
+    // Check durable idempotency record. `published` records always block a
+    // retry (prevents double-posting); `failed` records can be bypassed with
+    // forceRetry.
+    const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
+    if (existingRaw) {
+      const existing: IdempotencyRecord = JSON.parse(existingRaw);
+      if (existing.status === 'published') {
+        return json({ alreadyPublished: true, platformPostId: existing.platformPostId });
+      }
+      if (!body.forceRetry) {
+        return json({ alreadyFailed: true, error: existing.error });
+      }
+      // forceRetry: clear the failed record so the publish below can proceed
+      // and write a fresh idempotency entry on completion.
+      await env.SOCIAL.delete(`idempotent:${body.idempotencyKey}`);
     }
-    if (!body.forceRetry) {
-      return json({ alreadyFailed: true, error: existing.error });
+
+    const adapter = createPlatform(platform, env);
+
+    const post: SocialPost = {
+      id: body.idempotencyKey,
+      platform,
+      type: body.type as SocialPost['type'],
+      message: body.message,
+      link: body.link,
+      imageUrl: body.imageUrl,
+      videoUrl: body.videoUrl,
+      youtubeUrl: body.youtubeUrl,
+      backdatedTime: body.backdatedTime,
+      scheduledAt: new Date().toISOString(),
+      scheduledAtEpoch: Date.now(),
+      status: 'queued',
+      publishedId: null,
+      publishedAt: null,
+      error: null,
+    };
+
+    const result = await adapter.publishPost(post);
+
+    // Write durable idempotency record (30-day TTL)
+    const record: IdempotencyRecord = {
+      key: body.idempotencyKey,
+      status: result.success ? 'published' : 'failed',
+      platformPostId: result.platformPostId ?? null,
+      completedAt: new Date().toISOString(),
+      error: result.error ?? null,
+    };
+    await env.SOCIAL.put(`idempotent:${body.idempotencyKey}`, JSON.stringify(record), {
+      expirationTtl: 30 * 24 * 60 * 60,
+    });
+
+    if (result.success) {
+      return json({ published: true, platformPostId: result.platformPostId });
     }
-    // forceRetry: clear the failed record so the publish below can proceed and
-    // write a fresh idempotency entry on completion.
-    await env.SOCIAL.delete(`idempotent:${body.idempotencyKey}`);
-  }
 
-  const adapter = createPlatform(platform, env);
-
-  const post: SocialPost = {
-    id: body.idempotencyKey,
-    platform,
-    type: body.type as SocialPost['type'],
-    message: body.message,
-    link: body.link,
-    imageUrl: body.imageUrl,
-    videoUrl: body.videoUrl,
-    youtubeUrl: body.youtubeUrl,
-    backdatedTime: body.backdatedTime,
-    scheduledAt: new Date().toISOString(),
-    scheduledAtEpoch: Date.now(),
-    status: 'queued',
-    publishedId: null,
-    publishedAt: null,
-    error: null,
-  };
-
-  const result = await adapter.publishPost(post);
-
-  // Write durable idempotency record (30-day TTL)
-  const record: IdempotencyRecord = {
-    key: body.idempotencyKey,
-    status: result.success ? 'published' : 'failed',
-    platformPostId: result.platformPostId ?? null,
-    completedAt: new Date().toISOString(),
-    error: result.error ?? null,
-  };
-  await env.SOCIAL.put(`idempotent:${body.idempotencyKey}`, JSON.stringify(record), {
-    expirationTtl: 30 * 24 * 60 * 60,
-  });
-
-  if (result.success) {
-    return json({ published: true, platformPostId: result.platformPostId });
-  }
-
-  const status = result.isAuthError ? 503 : result.isTransient ? 502 : 422;
-  return json({ published: false, error: result.error, isTransient: result.isTransient }, status);
+    const status = result.isAuthError ? 503 : result.isTransient ? 502 : 422;
+    return json({ published: false, error: result.error, isTransient: result.isTransient }, status);
   } finally {
     await publishLockStub.release(publishLockName, publishToken);
   }

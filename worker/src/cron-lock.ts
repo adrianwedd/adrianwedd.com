@@ -1,3 +1,5 @@
+import { DurableObject } from 'cloudflare:workers';
+
 /**
  * Atomic named locks via a single-instance Durable Object.
  *
@@ -9,39 +11,36 @@
  * Each successful acquire returns a fencing token. `release()` is a no-op
  * unless the caller's token matches the stored token, so a slow run that
  * exceeds its TTL cannot release the lock that the next acquirer holds.
+ *
+ * Must extend DurableObject from `cloudflare:workers` so its methods are
+ * callable via RPC on the stub returned by `env.CRON_LOCK.get(...)`.
  */
 interface LockState {
   expiresAt: number;
   token: string;
 }
 
-export class CronLock {
-  private state: DurableObjectState;
-
-  constructor(state: DurableObjectState, _env: unknown) {
-    this.state = state;
-  }
-
+export class CronLock extends DurableObject {
   async tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }> {
-    return this.state.blockConcurrencyWhile(async () => {
+    return this.ctx.blockConcurrencyWhile(async () => {
       const key = `lock:${name}`;
       const now = Date.now();
-      const existing = await this.state.storage.get<unknown>(key);
+      const existing = await this.ctx.storage.get<unknown>(key);
       if (isLockState(existing) && existing.expiresAt > now) {
         return { acquired: false, token: null };
       }
       const token = crypto.randomUUID();
-      await this.state.storage.put(key, { expiresAt: now + ttlMs, token });
+      await this.ctx.storage.put(key, { expiresAt: now + ttlMs, token });
       return { acquired: true, token };
     });
   }
 
   async release(name: string, token: string): Promise<void> {
-    return this.state.blockConcurrencyWhile(async () => {
+    return this.ctx.blockConcurrencyWhile(async () => {
       const key = `lock:${name}`;
-      const existing = await this.state.storage.get<unknown>(key);
+      const existing = await this.ctx.storage.get<unknown>(key);
       if (isLockState(existing) && existing.token === token) {
-        await this.state.storage.delete(key);
+        await this.ctx.storage.delete(key);
       }
       // Mismatched / malformed entry = our run exceeded its TTL and someone
       // else (or no one) now holds the lock. Silently no-op so we don't
