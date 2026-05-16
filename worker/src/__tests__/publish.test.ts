@@ -3,24 +3,59 @@ import app from '../index';
 import type { SocialPost, AuthStatus } from '../platforms/types';
 
 // ── Mock createPlatform factory ──────────────────────────────────────────────
+//
+// Registry pattern: each platform gets its own publishPost/debugAuth pair, so
+// tests can independently script per-platform behaviour (e.g. facebook healthy,
+// bluesky expired). `mockPublishPost` and `mockDebugAuth` remain bound to the
+// default platform ('facebook') for backward compatibility with existing tests.
 
-const mockPublishPost = vi.fn();
-const mockDebugAuth = vi.fn();
+interface PlatformMocks {
+  publishPost: ReturnType<typeof vi.fn>;
+  debugAuth: ReturnType<typeof vi.fn>;
+  getPageIdentity: ReturnType<typeof vi.fn>;
+}
+
+const platformRegistry = new Map<string, PlatformMocks>();
+let configuredPlatformsList: string[] = ['facebook'];
+
+function getPlatformMocks(platform: string): PlatformMocks {
+  let mocks = platformRegistry.get(platform);
+  if (!mocks) {
+    mocks = {
+      publishPost: vi.fn(),
+      debugAuth: vi.fn(),
+      getPageIdentity: vi.fn().mockReturnValue(`${platform}_identity`),
+    };
+    platformRegistry.set(platform, mocks);
+  }
+  return mocks;
+}
+
+// Default platform mocks (preserves existing test ergonomics)
+const mockPublishPost = getPlatformMocks('facebook').publishPost;
+const mockDebugAuth = getPlatformMocks('facebook').debugAuth;
 
 vi.mock('../platforms/factory', () => ({
-  createPlatform: () => ({
-    platform: 'facebook',
-    publishPost: mockPublishPost,
-    listRecentPosts: vi.fn().mockResolvedValue([]),
-    getComments: vi.fn().mockResolvedValue([]),
-    getCommentReplies: vi.fn().mockResolvedValue([]),
-    replyToComment: vi.fn(),
-    getPageIdentity: vi.fn().mockReturnValue('page_123'),
-    debugAuth: mockDebugAuth,
-  }),
-  getConfiguredPlatforms: () => ['facebook'],
-  CONFIGURED_PLATFORMS: ['facebook'],
+  createPlatform: (platform: string) => {
+    const m = getPlatformMocks(platform);
+    return {
+      platform,
+      publishPost: m.publishPost,
+      listRecentPosts: vi.fn().mockResolvedValue([]),
+      getComments: vi.fn().mockResolvedValue([]),
+      getCommentReplies: vi.fn().mockResolvedValue([]),
+      replyToComment: vi.fn(),
+      getPageIdentity: m.getPageIdentity,
+      debugAuth: m.debugAuth,
+    };
+  },
+  getConfiguredPlatforms: () => configuredPlatformsList,
+  get CONFIGURED_PLATFORMS() { return configuredPlatformsList; },
 }));
+
+function setConfiguredPlatforms(platforms: string[]) {
+  configuredPlatformsList = platforms;
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -57,9 +92,41 @@ function makePost(id: string, epochOffset = 0): SocialPost {
   };
 }
 
-function makeEnv(kv: ReturnType<typeof mockKV>) {
+function mockCronLock(initialHeldNames: string[] = []) {
+  // Each entry stores { expiresAt, token } — mirrors the real DO's state.
+  const held = new Map<string, { expiresAt: number; token: string }>();
+  const now = Date.now();
+  for (const name of initialHeldNames) {
+    held.set(name, { expiresAt: now + 300_000, token: `pre-held-${name}` });
+  }
+  let tokenCounter = 0;
+  const tryAcquire = vi.fn(async (name: string, ttlMs: number) => {
+    const existing = held.get(name);
+    if (existing && existing.expiresAt > Date.now()) {
+      return { acquired: false, token: null };
+    }
+    const token = `tok-${++tokenCounter}`;
+    held.set(name, { expiresAt: Date.now() + ttlMs, token });
+    return { acquired: true, token };
+  });
+  const release = vi.fn(async (name: string, token: string) => {
+    const existing = held.get(name);
+    if (existing && existing.token === token) held.delete(name);
+  });
+  const stub = { tryAcquire, release };
+  return {
+    held,
+    tryAcquire,
+    release,
+    get: vi.fn(() => stub),
+    idFromName: vi.fn((n: string) => n),
+  };
+}
+
+function makeEnv(kv: ReturnType<typeof mockKV>, cronLock: ReturnType<typeof mockCronLock> = mockCronLock()) {
   return {
     SOCIAL: kv as unknown as KVNamespace,
+    CRON_LOCK: cronLock as unknown as DurableObjectNamespace,
     FACEBOOK_PAGE_ID: 'page_123',
     FACEBOOK_PAGE_TOKEN: 'fake-page-token',
     FACEBOOK_APP_TOKEN: 'fake-app-token',
@@ -91,8 +158,11 @@ const healthyToken: AuthStatus = {
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 beforeEach(() => {
-  mockPublishPost.mockReset();
-  mockDebugAuth.mockReset();
+  for (const mocks of platformRegistry.values()) {
+    mocks.publishPost.mockReset();
+    mocks.debugAuth.mockReset();
+  }
+  setConfiguredPlatforms(['facebook']);
 });
 
 describe('POST /api/cron/publish', () => {
@@ -109,15 +179,18 @@ describe('POST /api/cron/publish', () => {
 
   it('skips when cron lock exists', async () => {
     const kv = mockKV();
-    kv.store.set('cron-lock:publish', '1');
+    const cronLock = mockCronLock(['publish']);
 
-    const res = await app.fetch(cronRequest(), makeEnv(kv));
+    const res = await app.fetch(cronRequest(), makeEnv(kv, cronLock));
     expect(res.status).toBe(200);
     const body = await res.json() as Record<string, unknown>;
     expect(body.skipped).toBe(true);
     expect(body.reason).toBe('locked');
+    expect(cronLock.tryAcquire).toHaveBeenCalledWith('publish', 300_000);
     // Should not have called debugAuth (bailed out before fb usage)
     expect(mockDebugAuth).not.toHaveBeenCalled();
+    // Release must NOT be called when acquire failed (we never held it)
+    expect(cronLock.release).not.toHaveBeenCalled();
   });
 
   it('skips posts for a platform whose token is invalid (valid: false)', async () => {
@@ -136,8 +209,6 @@ describe('POST /api/cron/publish', () => {
     expect((body.tokenExpiresInDays as Record<string, number>).facebook).toBe(0);
     // Platform with invalid auth must not be invoked
     expect(mockPublishPost).not.toHaveBeenCalled();
-    // Lock must be released
-    expect(kv.delete).toHaveBeenCalledWith('cron-lock:publish');
   });
 
   it('skips posts for a platform whose token expires today (daysUntilExpiry <= 0)', async () => {
@@ -243,7 +314,8 @@ describe('POST /api/cron/publish', () => {
     kv.store.set(queueKey, JSON.stringify(post));
     kv.list.mockResolvedValueOnce({ keys: [{ name: queueKey }], list_complete: true });
 
-    const res = await app.fetch(cronRequest(), makeEnv(kv));
+    const cronLock = mockCronLock();
+    const res = await app.fetch(cronRequest(), makeEnv(kv, cronLock));
     expect(res.status).toBe(503);
     const body = await res.json() as Record<string, unknown>;
     expect(body.error).toContain('Token invalid');
@@ -257,8 +329,8 @@ describe('POST /api/cron/publish', () => {
     // publishing key should be deleted
     expect(kv.store.has(`post:publishing:${post.scheduledAtEpoch}:${post.id}`)).toBe(false);
 
-    // Cron lock released in finally
-    expect(kv.delete).toHaveBeenCalledWith('cron-lock:publish');
+    // Cron lock released in finally (with the fencing token the run acquired)
+    expect(cronLock.release).toHaveBeenCalledWith('publish', expect.any(String));
   });
 
   it('breaks loop on transient error, reverts post to queued, does not process remaining', async () => {
@@ -329,24 +401,204 @@ describe('POST /api/cron/publish', () => {
 
   it('releases cron lock in finally block even on unexpected error', async () => {
     const kv = mockKV();
+    const cronLock = mockCronLock();
     // debugAuth throws unexpectedly
     mockDebugAuth.mockRejectedValueOnce(new Error('Unexpected KV failure'));
 
     // We need list to not interfere, but debugAuth throws before list is called
     // so list mock doesn't matter
 
-    let errorThrown = false;
     try {
-      await app.fetch(cronRequest(), makeEnv(kv));
-    } catch {
-      errorThrown = true;
-    }
+      await app.fetch(cronRequest(), makeEnv(kv, cronLock));
+    } catch { /* swallow — finally is what we're testing */ }
 
-    // Whether the error propagates or is caught, the cron lock delete should be called
-    // (The Hono framework may catch and return 500, or propagate — either way finally runs)
-    expect(kv.delete).toHaveBeenCalledWith('cron-lock:publish');
-    // The lock itself should be cleared from the store
-    expect(kv.store.has('cron-lock:publish')).toBe(false);
+    // Lock must be released regardless of how the error surfaced
+    expect(cronLock.release).toHaveBeenCalledWith('publish', expect.any(String));
+    expect(cronLock.held.has('publish')).toBe(false);
   });
 
+  it('release with a mismatched fencing token does NOT clear another holder\'s lock', async () => {
+    // Simulates: run A acquires, exceeds TTL, lock entry expires, run B acquires
+    // a fresh lock with a new token, then run A finally fires release.
+    const cronLock = mockCronLock();
+    const a = await cronLock.tryAcquire('publish', 1);     // acquire then "expire"
+    expect(a.acquired).toBe(true);
+    cronLock.held.get('publish')!.expiresAt = Date.now() - 1; // force-expire
+    const b = await cronLock.tryAcquire('publish', 300_000);
+    expect(b.acquired).toBe(true);
+    expect(b.token).not.toBe(a.token);
+
+    // Run A's stale release: must be a no-op
+    await cronLock.release('publish', a.token!);
+    expect(cronLock.held.has('publish')).toBe(true);
+    expect(cronLock.held.get('publish')!.token).toBe(b.token);
+
+    // Run B's release should actually clear
+    await cronLock.release('publish', b.token!);
+    expect(cronLock.held.has('publish')).toBe(false);
+  });
+
+  it('skips posts only for the platform with expired auth, publishes the healthy platform', async () => {
+    const kv = mockKV();
+    setConfiguredPlatforms(['facebook', 'bluesky']);
+
+    const fbMocks = getPlatformMocks('facebook');
+    const bskyMocks = getPlatformMocks('bluesky');
+
+    fbMocks.debugAuth.mockResolvedValueOnce(healthyToken);
+    bskyMocks.debugAuth.mockResolvedValueOnce({
+      valid: false, platform: 'bluesky', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0,
+    });
+    fbMocks.publishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'fb_ok', isTransient: false, isAuthError: false,
+    });
+
+    const fbPost: SocialPost = { ...makePost('fb-1'), platform: 'facebook' };
+    const bskyPost: SocialPost = { ...makePost('bsky-1'), platform: 'bluesky' };
+    const fbKey = `post:queued:${fbPost.scheduledAtEpoch}:${fbPost.id}`;
+    const bskyKey = `post:queued:${bskyPost.scheduledAtEpoch}:${bskyPost.id}`;
+    kv.store.set(fbKey, JSON.stringify(fbPost));
+    kv.store.set(bskyKey, JSON.stringify(bskyPost));
+    kv.list.mockResolvedValueOnce({
+      keys: [{ name: fbKey }, { name: bskyKey }],
+      list_complete: true,
+    });
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv));
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.published).toBe(1);
+
+    // Healthy platform was invoked; expired platform was not
+    expect(fbMocks.publishPost).toHaveBeenCalledOnce();
+    expect(bskyMocks.publishPost).not.toHaveBeenCalled();
+
+    // Bluesky post remains queued for next run (not consumed)
+    expect(kv.store.has(bskyKey)).toBe(true);
+  });
+
+});
+
+describe('POST /api/publish forceRetry', () => {
+  function publishRequest(body: Record<string, unknown>) {
+    return new Request('http://localhost/api/publish', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer test-publish-secret',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  }
+
+  it('returns alreadyFailed when failed idempotency record exists and forceRetry is absent', async () => {
+    const kv = mockKV();
+    kv.store.set('idempotent:key-1', JSON.stringify({
+      key: 'key-1', status: 'failed', platformPostId: null,
+      completedAt: new Date().toISOString(), error: 'Original failure',
+    }));
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'key-1' }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.alreadyFailed).toBe(true);
+    expect(body.error).toBe('Original failure');
+    expect(mockPublishPost).not.toHaveBeenCalled();
+  });
+
+  it('bypasses failed idempotency record when forceRetry: true', async () => {
+    const kv = mockKV();
+    kv.store.set('idempotent:key-2', JSON.stringify({
+      key: 'key-2', status: 'failed', platformPostId: null,
+      completedAt: new Date().toISOString(), error: 'Original failure',
+    }));
+    mockPublishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'fb_retry_ok', isTransient: false, isAuthError: false,
+    });
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'key-2', forceRetry: true }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.published).toBe(true);
+    expect(body.platformPostId).toBe('fb_retry_ok');
+    expect(mockPublishPost).toHaveBeenCalledOnce();
+
+    // Idempotency record replaced with new published entry
+    const newRecord = JSON.parse(kv.store.get('idempotent:key-2')!);
+    expect(newRecord.status).toBe('published');
+    expect(newRecord.platformPostId).toBe('fb_retry_ok');
+  });
+
+  it('publishes via the platform named in the request body, not the default', async () => {
+    const kv = mockKV();
+    setConfiguredPlatforms(['facebook', 'bluesky']);
+    const blueskyMocks = getPlatformMocks('bluesky');
+    blueskyMocks.publishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'bsky_post_1', isTransient: false, isAuthError: false,
+    });
+
+    const res = await app.fetch(
+      publishRequest({ platform: 'bluesky', type: 'text', message: 'hi', idempotencyKey: 'multi-1' }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.platformPostId).toBe('bsky_post_1');
+    // Bluesky was called, facebook was not
+    expect(blueskyMocks.publishPost).toHaveBeenCalledOnce();
+    expect(mockPublishPost).not.toHaveBeenCalled();
+  });
+
+  it('forceRetry does NOT bypass a published idempotency record', async () => {
+    const kv = mockKV();
+    kv.store.set('idempotent:key-3', JSON.stringify({
+      key: 'key-3', status: 'published', platformPostId: 'fb_already',
+      completedAt: new Date().toISOString(), error: null,
+    }));
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'key-3', forceRetry: true }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.alreadyPublished).toBe(true);
+    expect(body.platformPostId).toBe('fb_already');
+    expect(mockPublishPost).not.toHaveBeenCalled();
+  });
+
+  it('returns 409 when a concurrent publish holds the per-key lock', async () => {
+    const kv = mockKV();
+    // Simulate concurrent publish: pre-populate the held set with this key's lock name.
+    const cronLock = mockCronLock(['publish:concurrent-key']);
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'concurrent-key' }),
+      makeEnv(kv, cronLock),
+    );
+    expect(res.status).toBe(409);
+    expect(mockPublishPost).not.toHaveBeenCalled();
+  });
+
+  it('releases the per-key lock after a successful publish', async () => {
+    const kv = mockKV();
+    const cronLock = mockCronLock();
+    mockPublishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'fb_ok', isTransient: false, isAuthError: false,
+    });
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'release-test' }),
+      makeEnv(kv, cronLock),
+    );
+    expect(res.status).toBe(200);
+    expect(cronLock.release).toHaveBeenCalledWith('publish:release-test', expect.any(String));
+    expect(cronLock.held.has('publish:release-test')).toBe(false);
+  });
 });

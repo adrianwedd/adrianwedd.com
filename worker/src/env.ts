@@ -2,6 +2,9 @@ export interface Env {
   // KV
   SOCIAL: KVNamespace;
 
+  // Durable Objects
+  CRON_LOCK: DurableObjectNamespace;
+
   // Vars
   FACEBOOK_PAGE_ID: string;
   GRAPH_API_VERSION: string;

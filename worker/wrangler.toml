@@ -7,6 +7,14 @@ compatibility_flags = ["nodejs_compat"]
 binding = "SOCIAL"
 id = "b85557255f9c475abd4af15d4a9dd458"
 
+[[durable_objects.bindings]]
+name = "CRON_LOCK"
+class_name = "CronLock"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["CronLock"]
+
 [vars]
 FACEBOOK_PAGE_ID = "35753603727"
 GRAPH_API_VERSION = "v21.0"

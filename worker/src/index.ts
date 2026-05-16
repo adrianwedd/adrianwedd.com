@@ -4,6 +4,9 @@ import { verifyBearer } from './auth';
 import { createPlatform, getConfiguredPlatforms } from './platforms/factory';
 import type { SocialPost, IdempotencyRecord, Platform } from './platforms/types';
 import { processComments } from './cron/comments';
+import { CronLock } from './cron-lock';
+
+export { CronLock };
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -48,61 +51,90 @@ app.post('/api/publish', async (c) => {
     youtubeUrl?: string;
     backdatedTime?: string;
     idempotencyKey: string;
+    forceRetry?: boolean;
   }>();
 
   const platform = validatePlatform(body.platform);
   if (!platform) return json({ error: `Unsupported platform: ${body.platform}` }, 400);
 
-  // Check durable idempotency record
-  const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
-  if (existingRaw) {
-    const existing: IdempotencyRecord = JSON.parse(existingRaw);
-    if (existing.status === 'published') {
-      return json({ alreadyPublished: true, platformPostId: existing.platformPostId });
+  // Serialise the read-decide-publish sequence per idempotency key via the
+  // CronLock DO. Without this, two concurrent forceRetry calls for the same
+  // key can both observe the failed record, both delete it, and both publish.
+  //
+  // TTL: 60s. Cloudflare Workers cap subrequests at 30s and the whole request
+  // at the per-plan CPU/wall budget — a hung publishPost will be killed long
+  // before the lock expires. No renewal needed.
+  const publishLockName = `publish:${body.idempotencyKey}`;
+  const publishLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName(publishLockName)) as DurableObjectStub & {
+    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
+    release(name: string, token: string): Promise<void>;
+  };
+  const { acquired: publishAcquired, token: publishToken } = await publishLockStub.tryAcquire(publishLockName, 60_000);
+  if (!publishAcquired || !publishToken) {
+    return json({ error: 'A publish is already in progress for this idempotencyKey' }, 409);
+  }
+
+  try {
+    // Check durable idempotency record. `published` records always block a
+    // retry (prevents double-posting); `failed` records can be bypassed with
+    // forceRetry.
+    const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
+    if (existingRaw) {
+      const existing: IdempotencyRecord = JSON.parse(existingRaw);
+      if (existing.status === 'published') {
+        return json({ alreadyPublished: true, platformPostId: existing.platformPostId });
+      }
+      if (!body.forceRetry) {
+        return json({ alreadyFailed: true, error: existing.error });
+      }
+      // forceRetry: clear the failed record so the publish below can proceed
+      // and write a fresh idempotency entry on completion.
+      await env.SOCIAL.delete(`idempotent:${body.idempotencyKey}`);
     }
-    return json({ alreadyFailed: true, error: existing.error });
+
+    const adapter = createPlatform(platform, env);
+
+    const post: SocialPost = {
+      id: body.idempotencyKey,
+      platform,
+      type: body.type as SocialPost['type'],
+      message: body.message,
+      link: body.link,
+      imageUrl: body.imageUrl,
+      videoUrl: body.videoUrl,
+      youtubeUrl: body.youtubeUrl,
+      backdatedTime: body.backdatedTime,
+      scheduledAt: new Date().toISOString(),
+      scheduledAtEpoch: Date.now(),
+      status: 'queued',
+      publishedId: null,
+      publishedAt: null,
+      error: null,
+    };
+
+    const result = await adapter.publishPost(post);
+
+    // Write durable idempotency record (30-day TTL)
+    const record: IdempotencyRecord = {
+      key: body.idempotencyKey,
+      status: result.success ? 'published' : 'failed',
+      platformPostId: result.platformPostId ?? null,
+      completedAt: new Date().toISOString(),
+      error: result.error ?? null,
+    };
+    await env.SOCIAL.put(`idempotent:${body.idempotencyKey}`, JSON.stringify(record), {
+      expirationTtl: 30 * 24 * 60 * 60,
+    });
+
+    if (result.success) {
+      return json({ published: true, platformPostId: result.platformPostId });
+    }
+
+    const status = result.isAuthError ? 503 : result.isTransient ? 502 : 422;
+    return json({ published: false, error: result.error, isTransient: result.isTransient }, status);
+  } finally {
+    await publishLockStub.release(publishLockName, publishToken);
   }
-
-  const adapter = createPlatform(platform, env);
-
-  const post: SocialPost = {
-    id: body.idempotencyKey,
-    platform,
-    type: body.type as SocialPost['type'],
-    message: body.message,
-    link: body.link,
-    imageUrl: body.imageUrl,
-    videoUrl: body.videoUrl,
-    youtubeUrl: body.youtubeUrl,
-    backdatedTime: body.backdatedTime,
-    scheduledAt: new Date().toISOString(),
-    scheduledAtEpoch: Date.now(),
-    status: 'queued',
-    publishedId: null,
-    publishedAt: null,
-    error: null,
-  };
-
-  const result = await adapter.publishPost(post);
-
-  // Write durable idempotency record (30-day TTL)
-  const record: IdempotencyRecord = {
-    key: body.idempotencyKey,
-    status: result.success ? 'published' : 'failed',
-    platformPostId: result.platformPostId ?? null,
-    completedAt: new Date().toISOString(),
-    error: result.error ?? null,
-  };
-  await env.SOCIAL.put(`idempotent:${body.idempotencyKey}`, JSON.stringify(record), {
-    expirationTtl: 30 * 24 * 60 * 60,
-  });
-
-  if (result.success) {
-    return json({ published: true, platformPostId: result.platformPostId });
-  }
-
-  const status = result.isAuthError ? 503 : result.isTransient ? 502 : 422;
-  return json({ published: false, error: result.error, isTransient: result.isTransient }, status);
 });
 
 // ── POST /api/queue ───────────────────────────────────────────────────────────
@@ -290,10 +322,13 @@ app.post('/api/cron/publish', async (c) => {
   const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET);
   if (!authOk) return unauthorized();
 
-  // Cron lock
-  const cronLock = await env.SOCIAL.get('cron-lock:publish');
-  if (cronLock) return json({ skipped: true, reason: 'locked' });
-  await env.SOCIAL.put('cron-lock:publish', '1', { expirationTtl: 300 });
+  // Cron lock — atomic via Durable Object (prevents KV TOCTOU race)
+  const lockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName('publish')) as DurableObjectStub & {
+    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
+    release(name: string, token: string): Promise<void>;
+  };
+  const { acquired, token: lockToken } = await lockStub.tryAcquire('publish', 300_000);
+  if (!acquired || !lockToken) return json({ skipped: true, reason: 'locked' });
 
   try {
     // Token health — check all configured platforms; skip unhealthy ones rather than halting all
@@ -409,7 +444,7 @@ app.post('/api/cron/publish', async (c) => {
 
     return json({ published, failed, remaining, tokenExpiresInDays: tokenExpiryByPlatform });
   } finally {
-    await env.SOCIAL.delete('cron-lock:publish');
+    await lockStub.release('publish', lockToken);
   }
 });
 
@@ -420,9 +455,12 @@ app.post('/api/cron/comments', async (c) => {
   const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET);
   if (!authOk) return unauthorized();
 
-  const cronLock = await env.SOCIAL.get('cron-lock:comments');
-  if (cronLock) return json({ skipped: true, reason: 'locked' });
-  await env.SOCIAL.put('cron-lock:comments', '1', { expirationTtl: 300 });
+  const commentsLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName('comments')) as DurableObjectStub & {
+    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
+    release(name: string, token: string): Promise<void>;
+  };
+  const { acquired: commentsAcquired, token: commentsToken } = await commentsLockStub.tryAcquire('comments', 300_000);
+  if (!commentsAcquired || !commentsToken) return json({ skipped: true, reason: 'locked' });
 
   try {
     // Process comments for each configured platform
@@ -446,7 +484,7 @@ app.post('/api/cron/comments', async (c) => {
     const fbResult = platformResults.facebook as Record<string, unknown> | undefined;
     return json({ ...fbResult, platforms: platformResults });
   } finally {
-    await env.SOCIAL.delete('cron-lock:comments');
+    await commentsLockStub.release('comments', commentsToken);
   }
 });
 
