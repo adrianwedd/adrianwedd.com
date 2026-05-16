@@ -1,4 +1,5 @@
 import type { SocialPost, SocialPlatform, PublishResult, AuthStatus, Comment } from './types';
+import { isAllowedMediaUrl } from './safe-fetch';
 
 // ── OAuth 1.0a ─────────────────────────────────────────────────────────────
 
@@ -61,6 +62,7 @@ const TWEET_URL = 'https://api.twitter.com/2/tweets';
 const VERIFY_URL = 'https://api.twitter.com/2/users/me';
 
 async function uploadMedia(imageUrl: string, creds: OAuth1Creds): Promise<string | null> {
+  if (!isAllowedMediaUrl(imageUrl)) return null;
   try {
     const imgRes = await fetch(imageUrl);
     if (!imgRes.ok) return null;
@@ -97,8 +99,14 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
         mediaId = await uploadMedia(post.imageUrl, creds);
       }
 
+      // Append the post's destination link if it's not already present in the message.
+      // Twitter shortens URLs to 23 chars via t.co — keep the link out of the truncation budget.
+      let message = post.message;
+      if (post.link && !message.includes(post.link)) {
+        message = `${message} ${post.link}`.trim();
+      }
       // Truncate to 280 graphemes (Twitter limit)
-      const text = [...post.message].slice(0, 280).join('');
+      const text = [...message].slice(0, 280).join('');
 
       const body: Record<string, unknown> = { text };
       if (mediaId) body.media = { media_ids: [mediaId] };
@@ -114,8 +122,11 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
         });
 
         if (res.status === 401 || res.status === 403) {
-          const text = await res.text();
-          return { success: false, error: `HTTP ${res.status}: ${text.slice(0, 200)}`, isTransient: false, isAuthError: true };
+          // Drain body to keep the socket clean but don't include it in the error —
+          // OAuth response bodies can leak signature data into KV idempotency records.
+          await res.text().catch(() => '');
+          console.error(`Twitter publish auth failure: HTTP ${res.status}`);
+          return { success: false, error: `HTTP ${res.status}`, isTransient: false, isAuthError: true };
         }
         if (res.status === 429 || res.status >= 500) {
           return { success: false, error: `HTTP ${res.status}`, isTransient: true, isAuthError: false };
@@ -144,8 +155,9 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
       try {
         const res = await fetch(VERIFY_URL, { headers: { Authorization: auth } });
         if (!res.ok) {
-          const body = await res.text().catch(() => '');
-          console.error(`Twitter debugAuth HTTP ${res.status}: ${body.slice(0, 200)}`);
+          // Drain body but don't log it — OAuth response bodies can leak signature data.
+          await res.text().catch(() => '');
+          console.error(`Twitter debugAuth HTTP ${res.status}`);
           return { valid: false, platform: 'twitter', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0 };
         }
         return { valid: true, platform: 'twitter', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 999 };
