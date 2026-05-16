@@ -127,15 +127,17 @@ Turnstile widget re-renders on View Transition navigation via explicit `turnstil
 
 ## Social Media Worker
 
-Cloudflare Worker (`worker/`) at `social.adrianwedd.com` manages the Facebook page.
+Cloudflare Worker (`worker/`) at `social.adrianwedd.com` manages cross-platform social posting.
 
 **Features:**
 
-- Auto-publish new blog posts and projects to Facebook on push to `main`
+- Auto-publish new blog posts and projects on push to `main`
+- Multi-platform: Facebook, Instagram, Bluesky, X/Twitter
 - Scheduled and ad-hoc post queue (JSON seed in `social/`, KV for state)
 - Comment monitoring with crisis detection, classification, and auto-reply
 - Backdated posting to match original publication dates
-- Idempotency via commit-SHA-based keys
+- Idempotency via commit-SHA-based keys (force-retry via `forceRetry: true` for failed records)
+- Atomic cron locking via Durable Object (`CronLock`) with fencing tokens — prevents concurrent cron tick races
 
 **CLI:**
 
@@ -150,13 +152,13 @@ scripts/fb-post.sh --sync                               # sync queue JSON to KV
 
 **Worker endpoints:**
 
-- `POST /api/publish` — immediate publish
+- `POST /api/publish` — immediate publish on the platform named in the request body (`platform` ∈ `facebook|instagram|bluesky|twitter`). `forceRetry: true` retries a `failed` idempotency entry. Returns `409` if another publish for the same `idempotencyKey` is already in flight.
 - `POST /api/queue` + `POST /api/queue/sync` — scheduled queue
-- `POST /api/cron/publish` — hourly publish from queue
-- `POST /api/cron/comments` — comment monitor (2-hourly)
+- `POST /api/cron/publish` — hourly publish from queue (DO-locked)
+- `POST /api/cron/comments` — comment monitor, 2-hourly (DO-locked)
 - `GET /api/health` — token health and queue status
 
-Worker tests: `cd worker && npm test`
+Worker tests: `cd worker && npm test`. Local validation: `cd worker && npx wrangler deploy --dry-run`.
 
 ## NotebookLM Automation
 

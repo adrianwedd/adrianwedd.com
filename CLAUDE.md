@@ -78,6 +78,9 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 - **services.astro:** ProfessionalService schema
 - **Breadcrumb.astro:** BreadcrumbList on all detail pages
 
+### OG image dimensions
+`og:image:width` / `og:image:height` are read from the actual file at build time via `src/lib/image-dimensions.ts` — a 256 KB header parser for PNG/JPEG/WebP/GIF. Avoids the old filename-heuristic (`heroImage.includes('infographic')`) which mis-sized any hero whose path didn't match the convention. Build-time only (uses `node:fs`); never import into a Worker.
+
 ## CI/CD Pipeline
 
 ### Deploy (`deploy.yml`) — triggers on push to main
@@ -97,18 +100,27 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 
 ## Worker (Cloudflare)
 
-Located in `worker/`. Hono framework, TypeScript, KV namespace for state.
+Located in `worker/`. Hono framework, TypeScript. State lives in KV (`SOCIAL`) plus a single Durable Object class (`CronLock`) used for atomic locking.
 
 **Endpoints:**
-- `POST /api/publish` — immediate Facebook publish (posts, photos, links)
+- `POST /api/publish` — immediate multi-platform publish (`platform` ∈ `facebook|instagram|bluesky|twitter`). Optional `forceRetry: true` bypasses a `failed` idempotency record but never a `published` one. Returns `409` if another publish for the same `idempotencyKey` holds the per-key lock.
 - `POST /api/queue` + `POST /api/queue/sync` — scheduled post queue (JSON seed in `social/facebook-posts.json`, KV is authoritative)
 - `POST /api/cron/publish` — hourly publish from queue
 - `POST /api/cron/comments` — comment monitor with classification (crisis detection, auto-reply)
 - `GET /api/health` — token health + queue status
 
-**Auth:** Timing-safe bearer token (`PUBLISH_SECRET` / `CLI_SECRET`). Idempotency via KV with 30-day TTL.
+**Auth:** Timing-safe bearer token (`PUBLISH_SECRET` / `CLI_SECRET`). Idempotency via KV with 30-day TTL (failed records bypassable via `forceRetry`).
 
-**Deploy:** `cd worker && npx wrangler deploy`. CLI posting: `scripts/fb-post.sh`.
+**Cron locking:** `CronLock` Durable Object provides atomic named locks via `blockConcurrencyWhile` + fencing tokens. Used in three places:
+- `cron-lock:publish` (300s TTL) — serialises `/api/cron/publish`
+- `cron-lock:comments` (300s TTL) — serialises `/api/cron/comments`
+- `publish:<idempotencyKey>` (60s TTL) — serialises the read-decide-publish window in `/api/publish` so concurrent `forceRetry` calls can't double-post
+
+KV-based locks have a TOCTOU window between `get` and `put`; the DO closes that. `release()` requires the fencing token returned by `tryAcquire`, so a run that exceeds its TTL can't release the successor's lock.
+
+**Tests:** Vitest with a per-platform mock registry (`getPlatformMocks(name)`) — each platform has independent `publishPost`/`debugAuth` mocks so multi-platform scenarios (e.g. one healthy + one expired) can be tested in a single run. `cloudflare:workers` is aliased to `worker/test-shims/cloudflare-workers.ts` for vitest.
+
+**Deploy:** `cd worker && npx wrangler deploy`. CLI posting: `scripts/fb-post.sh`. Validate locally with `npx wrangler deploy --dry-run` before pushing.
 
 ## Key patterns
 
