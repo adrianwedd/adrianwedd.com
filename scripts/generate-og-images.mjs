@@ -113,6 +113,10 @@ async function generateForDir(dir, outDir, label) {
     const { data } = matter(raw);
 
     if (data.draft) continue;
+    // Skip when a heroImage is set — the page template uses heroImage (with
+    // .webp -> .jpg swap) as og:image, so the auto-generated text-card PNG
+    // would be dead weight.
+    if (data.heroImage) continue;
 
     const svg = buildSvg(data.title || slug, data.description || '', data.tags || []);
 
