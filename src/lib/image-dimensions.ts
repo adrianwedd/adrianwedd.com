@@ -121,23 +121,34 @@ function parseDimensions(buf: Buffer): ImageDimensions | null {
     return null;
   }
 
-  // JPEG: scan markers, skipping APP/COM segments by declared length. Stop at
-  // SOS (0xFFDA) — past that point is entropy-coded data where 0xFF doesn't
-  // mark segment boundaries.
+  // JPEG: scan markers, skipping segments by declared length. Stop at SOS
+  // (0xFFDA) — past that point is entropy-coded data. Handles 0xFF fill bytes
+  // (valid padding per ITU-T T.81 §B.1.1.2) and standalone markers that
+  // carry no length field (RSTn 0xD0-0xD7, TEM 0x01, SOI 0xD8, EOI 0xD9).
   if (buf.length >= 4 && buf[0] === 0xff && buf[1] === 0xd8) {
     let i = 2;
-    while (i + 9 < buf.length) {
+    while (i < buf.length) {
       if (buf[i] !== 0xff) return null;
-      const marker = buf[i + 1];
+      // Skip 0xFF fill bytes to find the actual marker type byte.
+      let j = i + 1;
+      while (j < buf.length && buf[j] === 0xff) j++;
+      if (j >= buf.length) return null;
+      const marker = buf[j];
       if (marker === 0xda) return null; // SOS: no SOF found before scan data
       // SOFn markers: 0xC0–0xCF except 0xC4 (DHT), 0xC8 (JPG), 0xCC (DAC).
       if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
-        const height = buf.readUInt16BE(i + 5);
-        const width = buf.readUInt16BE(i + 7);
-        return { width, height };
+        if (j + 7 >= buf.length) return null;
+        return { width: buf.readUInt16BE(j + 6), height: buf.readUInt16BE(j + 4) };
       }
-      const segmentLength = buf.readUInt16BE(i + 2);
-      i += 2 + segmentLength;
+      // Standalone markers (no length field): TEM (0x01), RSTn (0xD0-0xD7),
+      // SOI (0xD8), EOI (0xD9).
+      if (marker === 0x01 || (marker >= 0xd0 && marker <= 0xd9)) {
+        i = j + 1;
+        continue;
+      }
+      if (j + 2 >= buf.length) return null;
+      const segmentLength = buf.readUInt16BE(j + 1);
+      i = j + 1 + segmentLength;
     }
   }
 
