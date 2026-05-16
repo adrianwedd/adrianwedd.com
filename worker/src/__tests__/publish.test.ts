@@ -93,16 +93,26 @@ function makePost(id: string, epochOffset = 0): SocialPost {
 }
 
 function mockCronLock(initialHeldNames: string[] = []) {
-  const held = new Map<string, number>();
+  // Each entry stores { expiresAt, token } — mirrors the real DO's state.
+  const held = new Map<string, { expiresAt: number; token: string }>();
   const now = Date.now();
-  for (const name of initialHeldNames) held.set(name, now + 300_000);
+  for (const name of initialHeldNames) {
+    held.set(name, { expiresAt: now + 300_000, token: `pre-held-${name}` });
+  }
+  let tokenCounter = 0;
   const tryAcquire = vi.fn(async (name: string, ttlMs: number) => {
-    const expires = held.get(name);
-    if (expires && expires > Date.now()) return { acquired: false };
-    held.set(name, Date.now() + ttlMs);
-    return { acquired: true };
+    const existing = held.get(name);
+    if (existing && existing.expiresAt > Date.now()) {
+      return { acquired: false, token: null };
+    }
+    const token = `tok-${++tokenCounter}`;
+    held.set(name, { expiresAt: Date.now() + ttlMs, token });
+    return { acquired: true, token };
   });
-  const release = vi.fn(async (name: string) => { held.delete(name); });
+  const release = vi.fn(async (name: string, token: string) => {
+    const existing = held.get(name);
+    if (existing && existing.token === token) held.delete(name);
+  });
   const stub = { tryAcquire, release };
   return {
     held,
@@ -319,8 +329,8 @@ describe('POST /api/cron/publish', () => {
     // publishing key should be deleted
     expect(kv.store.has(`post:publishing:${post.scheduledAtEpoch}:${post.id}`)).toBe(false);
 
-    // Cron lock released in finally
-    expect(cronLock.release).toHaveBeenCalledWith('publish');
+    // Cron lock released in finally (with the fencing token the run acquired)
+    expect(cronLock.release).toHaveBeenCalledWith('publish', expect.any(String));
   });
 
   it('breaks loop on transient error, reverts post to queued, does not process remaining', async () => {
@@ -403,7 +413,28 @@ describe('POST /api/cron/publish', () => {
     } catch { /* swallow — finally is what we're testing */ }
 
     // Lock must be released regardless of how the error surfaced
-    expect(cronLock.release).toHaveBeenCalledWith('publish');
+    expect(cronLock.release).toHaveBeenCalledWith('publish', expect.any(String));
+    expect(cronLock.held.has('publish')).toBe(false);
+  });
+
+  it('release with a mismatched fencing token does NOT clear another holder\'s lock', async () => {
+    // Simulates: run A acquires, exceeds TTL, lock entry expires, run B acquires
+    // a fresh lock with a new token, then run A finally fires release.
+    const cronLock = mockCronLock();
+    const a = await cronLock.tryAcquire('publish', 1);     // acquire then "expire"
+    expect(a.acquired).toBe(true);
+    cronLock.held.get('publish')!.expiresAt = Date.now() - 1; // force-expire
+    const b = await cronLock.tryAcquire('publish', 300_000);
+    expect(b.acquired).toBe(true);
+    expect(b.token).not.toBe(a.token);
+
+    // Run A's stale release: must be a no-op
+    await cronLock.release('publish', a.token!);
+    expect(cronLock.held.has('publish')).toBe(true);
+    expect(cronLock.held.get('publish')!.token).toBe(b.token);
+
+    // Run B's release should actually clear
+    await cronLock.release('publish', b.token!);
     expect(cronLock.held.has('publish')).toBe(false);
   });
 
@@ -540,5 +571,34 @@ describe('POST /api/publish forceRetry', () => {
     expect(body.alreadyPublished).toBe(true);
     expect(body.platformPostId).toBe('fb_already');
     expect(mockPublishPost).not.toHaveBeenCalled();
+  });
+
+  it('returns 409 when a concurrent publish holds the per-key lock', async () => {
+    const kv = mockKV();
+    // Simulate concurrent publish: pre-populate the held set with this key's lock name.
+    const cronLock = mockCronLock(['publish:concurrent-key']);
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'concurrent-key' }),
+      makeEnv(kv, cronLock),
+    );
+    expect(res.status).toBe(409);
+    expect(mockPublishPost).not.toHaveBeenCalled();
+  });
+
+  it('releases the per-key lock after a successful publish', async () => {
+    const kv = mockKV();
+    const cronLock = mockCronLock();
+    mockPublishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'fb_ok', isTransient: false, isAuthError: false,
+    });
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'release-test' }),
+      makeEnv(kv, cronLock),
+    );
+    expect(res.status).toBe(200);
+    expect(cronLock.release).toHaveBeenCalledWith('publish:release-test', expect.any(String));
+    expect(cronLock.held.has('publish:release-test')).toBe(false);
   });
 });

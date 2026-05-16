@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from 'node:fs';
+import { openSync, readSync, closeSync, existsSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 export interface ImageDimensions {
@@ -11,14 +11,18 @@ const cache = new Map<string, ImageDimensions | null>();
 // Astro runs SSG with the project root as cwd, so this resolves to public/.
 const PUBLIC_DIR = resolve(process.cwd(), 'public');
 
+// 256 KB header window covers JPEGs with multi-segment EXIF + ICC profiles
+// (real-world cameras rarely exceed ~64 KB, but ICC profiles can push past it).
+const HEADER_BYTES = 256 * 1024;
+
 /**
  * Read pixel dimensions of an image referenced by a site-rooted path (e.g.
  * `/notebook-assets/foo/infographic.jpg`). Returns null if the file is
  * missing or the format isn't recognised. Build-time only — runs at SSG
  * time when Astro renders the page.
  *
- * Supports JPEG, PNG, WebP, and GIF — the formats this site actually ships
- * for OG images. Reads only the header bytes, not the full file.
+ * Supports JPEG, PNG, WebP (VP8/VP8L/VP8X), and GIF. Reads only the first
+ * 256 KB of the file, never the whole image.
  */
 export function getImageDimensions(publicPath: string): ImageDimensions | null {
   if (cache.has(publicPath)) return cache.get(publicPath) ?? null;
@@ -31,28 +35,39 @@ export function getImageDimensions(publicPath: string): ImageDimensions | null {
     return null;
   }
 
+  let fd: number | null = null;
   try {
-    // 64 KB is plenty for SOF markers in even very large JPEGs.
-    const buf = readFileSync(fsPath, { flag: 'r' }).subarray(0, 65536);
+    const size = statSync(fsPath).size;
+    const want = Math.min(size, HEADER_BYTES);
+    const buf = Buffer.alloc(want);
+    fd = openSync(fsPath, 'r');
+    readSync(fd, buf, 0, want, 0);
     const dims = parseDimensions(buf);
     cache.set(publicPath, dims);
     return dims;
   } catch {
     cache.set(publicPath, null);
     return null;
+  } finally {
+    if (fd !== null) {
+      try { closeSync(fd); } catch { /* ignore close errors */ }
+    }
   }
 }
 
 function parseDimensions(buf: Buffer): ImageDimensions | null {
-  // PNG: 8-byte signature, then IHDR at offset 16 (width) and 20 (height), big-endian uint32.
+  // PNG: signature, then 4-byte length, then "IHDR", then width/height (BE uint32).
   if (
     buf.length >= 24 &&
-    buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47
+    buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47 &&
+    // Validate that bytes 12–15 are actually "IHDR" — otherwise the file has
+    // a valid PNG signature but a corrupt chunk layout.
+    buf[12] === 0x49 && buf[13] === 0x48 && buf[14] === 0x44 && buf[15] === 0x52
   ) {
     return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
   }
 
-  // GIF: "GIF87a" or "GIF89a", then width/height little-endian uint16 at offsets 6/8.
+  // GIF87a / GIF89a: width/height little-endian uint16 at offsets 6/8.
   if (
     buf.length >= 10 &&
     buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46
@@ -60,43 +75,60 @@ function parseDimensions(buf: Buffer): ImageDimensions | null {
     return { width: buf.readUInt16LE(6), height: buf.readUInt16LE(8) };
   }
 
-  // WebP: "RIFF" .... "WEBP" header at offset 8.
+  // WebP: "RIFF" .... "WEBP" then variable chunks. Scan for the dimension-
+  // bearing chunk (VP8, VP8L, VP8X) rather than assuming a fixed offset,
+  // because extended files can have ALPHA/ANIM chunks before VP8/VP8L.
   if (
     buf.length >= 30 &&
     buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 &&
     buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50
   ) {
-    const chunk = buf.toString('ascii', 12, 16);
-    if (chunk === 'VP8 ') {
-      // Lossy: width/height are 14-bit values at offset 26/28 (little-endian), minus reserved bits.
-      const w = buf.readUInt16LE(26) & 0x3fff;
-      const h = buf.readUInt16LE(28) & 0x3fff;
-      return { width: w, height: h };
+    let off = 12;
+    while (off + 8 <= buf.length) {
+      const fourcc = buf.toString('ascii', off, off + 4);
+      const chunkSize = buf.readUInt32LE(off + 4);
+      const dataStart = off + 8;
+      if (fourcc === 'VP8 ' && dataStart + 10 <= buf.length) {
+        // Lossy: width/height (LE uint16, 14-bit) at offset dataStart+6/8.
+        return {
+          width: buf.readUInt16LE(dataStart + 6) & 0x3fff,
+          height: buf.readUInt16LE(dataStart + 8) & 0x3fff,
+        };
+      }
+      if (fourcc === 'VP8L' && dataStart + 5 <= buf.length) {
+        // Signature byte 0x2F validates we're really at a VP8L chunk.
+        if (buf[dataStart] !== 0x2f) return null;
+        const b0 = buf[dataStart + 1];
+        const b1 = buf[dataStart + 2];
+        const b2 = buf[dataStart + 3];
+        const b3 = buf[dataStart + 4];
+        const w = 1 + (((b1 & 0x3f) << 8) | b0);
+        const h = 1 + (((b3 & 0x0f) << 10) | (b2 << 2) | ((b1 & 0xc0) >> 6));
+        return { width: w, height: h };
+      }
+      if (fourcc === 'VP8X' && dataStart + 10 <= buf.length) {
+        // Extended: 24-bit (width-1, height-1) starting at dataStart+4 / +7.
+        const w = 1 + (buf[dataStart + 4] | (buf[dataStart + 5] << 8) | (buf[dataStart + 6] << 16));
+        const h = 1 + (buf[dataStart + 7] | (buf[dataStart + 8] << 8) | (buf[dataStart + 9] << 16));
+        return { width: w, height: h };
+      }
+      // RIFF chunks are word-aligned: bump odd sizes up by 1.
+      off = dataStart + chunkSize + (chunkSize & 1);
     }
-    if (chunk === 'VP8L') {
-      // Lossless: dimensions packed into bytes 21–24.
-      const b0 = buf[21], b1 = buf[22], b2 = buf[23], b3 = buf[24];
-      const w = 1 + (((b1 & 0x3f) << 8) | b0);
-      const h = 1 + (((b3 & 0x0f) << 10) | (b2 << 2) | ((b1 & 0xc0) >> 6));
-      return { width: w, height: h };
-    }
-    if (chunk === 'VP8X') {
-      // Extended: 24-bit width-1, height-1 at offsets 24 and 27.
-      const w = 1 + (buf[24] | (buf[25] << 8) | (buf[26] << 16));
-      const h = 1 + (buf[27] | (buf[28] << 8) | (buf[29] << 16));
-      return { width: w, height: h };
-    }
+    return null;
   }
 
-  // JPEG: scan for SOFn markers (0xFFC0–0xFFC3, 0xFFC5–0xFFC7, 0xFFC9–0xFFCB, 0xFFCD–0xFFCF).
-  // Skip APP/COM segments by their declared length.
+  // JPEG: scan markers, skipping APP/COM segments by declared length. Stop at
+  // SOS (0xFFDA) — past that point is entropy-coded data where 0xFF doesn't
+  // mark segment boundaries.
   if (buf.length >= 4 && buf[0] === 0xff && buf[1] === 0xd8) {
     let i = 2;
     while (i + 9 < buf.length) {
       if (buf[i] !== 0xff) return null;
       const marker = buf[i + 1];
+      if (marker === 0xda) return null; // SOS: no SOF found before scan data
+      // SOFn markers: 0xC0–0xCF except 0xC4 (DHT), 0xC8 (JPG), 0xCC (DAC).
       if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
-        // SOFn: height at offset i+5 (big-endian uint16), width at i+7.
         const height = buf.readUInt16BE(i + 5);
         const width = buf.readUInt16BE(i + 7);
         return { width, height };

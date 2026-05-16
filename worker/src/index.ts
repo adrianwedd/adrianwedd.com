@@ -57,6 +57,20 @@ app.post('/api/publish', async (c) => {
   const platform = validatePlatform(body.platform);
   if (!platform) return json({ error: `Unsupported platform: ${body.platform}` }, 400);
 
+  // Serialise the read-decide-publish sequence per idempotency key via the
+  // CronLock DO. Without this, two concurrent forceRetry calls for the same
+  // key can both observe the failed record, both delete it, and both publish.
+  const publishLockName = `publish:${body.idempotencyKey}`;
+  const publishLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName(publishLockName)) as DurableObjectStub & {
+    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
+    release(name: string, token: string): Promise<void>;
+  };
+  const { acquired: publishAcquired, token: publishToken } = await publishLockStub.tryAcquire(publishLockName, 60_000);
+  if (!publishAcquired || !publishToken) {
+    return json({ error: 'A publish is already in progress for this idempotencyKey' }, 409);
+  }
+
+  try {
   // Check durable idempotency record. `published` records always block a retry
   // (prevents double-posting); `failed` records can be bypassed with forceRetry.
   const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
@@ -113,6 +127,9 @@ app.post('/api/publish', async (c) => {
 
   const status = result.isAuthError ? 503 : result.isTransient ? 502 : 422;
   return json({ published: false, error: result.error, isTransient: result.isTransient }, status);
+  } finally {
+    await publishLockStub.release(publishLockName, publishToken);
+  }
 });
 
 // ── POST /api/queue ───────────────────────────────────────────────────────────
@@ -302,11 +319,11 @@ app.post('/api/cron/publish', async (c) => {
 
   // Cron lock — atomic via Durable Object (prevents KV TOCTOU race)
   const lockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName('publish')) as DurableObjectStub & {
-    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean }>;
-    release(name: string): Promise<void>;
+    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
+    release(name: string, token: string): Promise<void>;
   };
-  const { acquired } = await lockStub.tryAcquire('publish', 300_000);
-  if (!acquired) return json({ skipped: true, reason: 'locked' });
+  const { acquired, token: lockToken } = await lockStub.tryAcquire('publish', 300_000);
+  if (!acquired || !lockToken) return json({ skipped: true, reason: 'locked' });
 
   try {
     // Token health — check all configured platforms; skip unhealthy ones rather than halting all
@@ -422,7 +439,7 @@ app.post('/api/cron/publish', async (c) => {
 
     return json({ published, failed, remaining, tokenExpiresInDays: tokenExpiryByPlatform });
   } finally {
-    await lockStub.release('publish');
+    await lockStub.release('publish', lockToken);
   }
 });
 
@@ -434,11 +451,11 @@ app.post('/api/cron/comments', async (c) => {
   if (!authOk) return unauthorized();
 
   const commentsLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName('comments')) as DurableObjectStub & {
-    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean }>;
-    release(name: string): Promise<void>;
+    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
+    release(name: string, token: string): Promise<void>;
   };
-  const { acquired: commentsAcquired } = await commentsLockStub.tryAcquire('comments', 300_000);
-  if (!commentsAcquired) return json({ skipped: true, reason: 'locked' });
+  const { acquired: commentsAcquired, token: commentsToken } = await commentsLockStub.tryAcquire('comments', 300_000);
+  if (!commentsAcquired || !commentsToken) return json({ skipped: true, reason: 'locked' });
 
   try {
     // Process comments for each configured platform
@@ -462,7 +479,7 @@ app.post('/api/cron/comments', async (c) => {
     const fbResult = platformResults.facebook as Record<string, unknown> | undefined;
     return json({ ...fbResult, platforms: platformResults });
   } finally {
-    await commentsLockStub.release('comments');
+    await commentsLockStub.release('comments', commentsToken);
   }
 });
 
