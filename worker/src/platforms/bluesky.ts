@@ -5,6 +5,7 @@ import type {
   Comment,
   AuthStatus,
 } from './types';
+import { isAllowedMediaUrl, isSafeHttpsUrl } from './safe-fetch';
 
 const BSKY_BASE = 'https://bsky.social/xrpc';
 const MAX_GRAPHEMES = 300;
@@ -63,11 +64,15 @@ function truncateGraphemes(text: string, max: number): string {
 
 
 async function uploadVideo(session: BskySession, videoUrl: string): Promise<unknown | null> {
+  if (!isAllowedMediaUrl(videoUrl)) return null;
   try {
-    // Skip if video is too large for CF Worker outgoing request (~20MB practical limit)
+    // Skip if video is too large for CF Worker outgoing request (~20MB practical limit).
+    // Require a Content-Length header; without it we cannot bound memory usage safely.
     const headRes = await fetch(videoUrl, { method: 'HEAD' });
-    const contentLength = parseInt(headRes.headers.get('content-length') ?? '0', 10);
-    if (contentLength > 20 * 1024 * 1024) return null;
+    const rawContentLength = headRes.headers.get('content-length');
+    if (rawContentLength === null) return null;
+    const contentLength = parseInt(rawContentLength, 10);
+    if (!Number.isFinite(contentLength) || contentLength <= 0 || contentLength > 20 * 1024 * 1024) return null;
 
     const saParams = new URLSearchParams({ aud: 'did:web:video.bsky.app', lxm: 'app.bsky.video.uploadVideo' });
     const serviceAuthRes = await fetch(`${session.pdsEndpoint}/com.atproto.server.getServiceAuth?${saParams}`, {
@@ -130,19 +135,19 @@ export function createBlueskyPlatform(
       accessJwt: string;
       didDoc?: { service?: Array<{ id: string; serviceEndpoint: string }> };
     };
-    // Extract PDS endpoint from didDoc if present, otherwise resolve via PLC directory
+    // Extract PDS endpoint from didDoc if present, otherwise resolve via PLC directory.
+    // The endpoint becomes the base URL for authenticated calls bearing our accessJwt,
+    // so reject anything that isn't a well-formed HTTPS URL (no IP literals).
     let pdsEndpoint = BSKY_BASE;
-    const pdsService = data.didDoc?.service?.find(s => s.id === '#atproto_pds');
-    if (pdsService?.serviceEndpoint) {
-      pdsEndpoint = `${pdsService.serviceEndpoint}/xrpc`;
-    } else {
-      // Fallback: resolve DID document from PLC directory
-      const didRes = await fetch(`https://plc.directory/${data.did}`).catch(() => null);
-      if (didRes?.ok) {
+    const candidate = data.didDoc?.service?.find(s => s.id === '#atproto_pds')?.serviceEndpoint
+      ?? await (async () => {
+        const didRes = await fetch(`https://plc.directory/${encodeURIComponent(data.did)}`).catch(() => null);
+        if (!didRes?.ok) return undefined;
         const didDoc = await didRes.json() as { service?: Array<{ id: string; serviceEndpoint: string }> };
-        const svc = didDoc.service?.find(s => s.id === '#atproto_pds');
-        if (svc?.serviceEndpoint) pdsEndpoint = `${svc.serviceEndpoint}/xrpc`;
-      }
+        return didDoc.service?.find(s => s.id === '#atproto_pds')?.serviceEndpoint;
+      })();
+    if (candidate && isSafeHttpsUrl(candidate)) {
+      pdsEndpoint = `${candidate.replace(/\/$/, '')}/xrpc`;
     }
     return { did: data.did, accessJwt: data.accessJwt, pdsEndpoint };
   }
@@ -187,12 +192,13 @@ export function createBlueskyPlatform(
       if (!record.embed && post.youtubeUrl) {
         const videoId = post.youtubeUrl.match(/[?&]v=([^&]+)/)?.[1];
         if (videoId) {
-          const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+          // img.youtube.com is in the allowlist; videoId is captured from a tight regex
+          const thumbUrl = `https://img.youtube.com/vi/${encodeURIComponent(videoId)}/maxresdefault.jpg`;
           const thumbRes = await fetch(thumbUrl);
           let thumbBlob: unknown = undefined;
           if (thumbRes.ok) {
             const thumbBytes = await thumbRes.arrayBuffer();
-            const blobRes = await fetch(`${BSKY_BASE}/com.atproto.repo.uploadBlob`, {
+            const blobRes = await fetch(`${session.pdsEndpoint}/com.atproto.repo.uploadBlob`, {
               method: 'POST',
               headers: { 'Authorization': `Bearer ${session.accessJwt}`, 'Content-Type': 'image/jpeg' },
               body: thumbBytes,
@@ -213,13 +219,13 @@ export function createBlueskyPlatform(
         }
       }
 
-      if (!record.embed && post.imageUrl) {
+      if (!record.embed && post.imageUrl && isAllowedMediaUrl(post.imageUrl)) {
         // Fall back to static image embed
         const imgRes = await fetch(post.imageUrl);
         if (imgRes.ok) {
           const imgBytes = await imgRes.arrayBuffer();
           const mimeType = imgRes.headers.get('content-type') ?? 'image/jpeg';
-          const blobRes = await fetch(`${BSKY_BASE}/com.atproto.repo.uploadBlob`, {
+          const blobRes = await fetch(`${session.pdsEndpoint}/com.atproto.repo.uploadBlob`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${session.accessJwt}`, 'Content-Type': mimeType },
             body: imgBytes,
@@ -238,7 +244,7 @@ export function createBlueskyPlatform(
         };
       }
 
-      const res = await fetch(`${BSKY_BASE}/com.atproto.repo.createRecord`, {
+      const res = await fetch(`${session.pdsEndpoint}/com.atproto.repo.createRecord`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session.accessJwt}`,
@@ -315,7 +321,7 @@ export function createBlueskyPlatform(
       const params = new URLSearchParams({ actor: session.did, limit: '50' });
       if (cursor) params.set('cursor', cursor);
 
-      const res = await fetch(`${BSKY_BASE}/app.bsky.feed.getAuthorFeed?${params.toString()}`, {
+      const res = await fetch(`${session.pdsEndpoint}/app.bsky.feed.getAuthorFeed?${params.toString()}`, {
         headers: { 'Authorization': `Bearer ${session.accessJwt}` },
       });
       if (!res.ok) break;
@@ -349,7 +355,7 @@ export function createBlueskyPlatform(
     }
 
     const params = new URLSearchParams({ uri: postId, depth: '1' });
-    const res = await fetch(`${BSKY_BASE}/app.bsky.feed.getPostThread?${params.toString()}`, {
+    const res = await fetch(`${session.pdsEndpoint}/app.bsky.feed.getPostThread?${params.toString()}`, {
       headers: { 'Authorization': `Bearer ${session.accessJwt}` },
     });
     if (!res.ok) return [];
@@ -394,7 +400,7 @@ export function createBlueskyPlatform(
     }
 
     const params = new URLSearchParams({ uri: commentId, depth: '1' });
-    const res = await fetch(`${BSKY_BASE}/app.bsky.feed.getPostThread?${params.toString()}`, {
+    const res = await fetch(`${session.pdsEndpoint}/app.bsky.feed.getPostThread?${params.toString()}`, {
       headers: { 'Authorization': `Bearer ${session.accessJwt}` },
     });
     if (!res.ok) return [];
@@ -433,7 +439,7 @@ export function createBlueskyPlatform(
     try {
       // Fetch the parent post to get its CID (needed for reply reference)
       const threadParams = new URLSearchParams({ uri: commentId, depth: '0' });
-      const threadRes = await fetch(`${BSKY_BASE}/app.bsky.feed.getPostThread?${threadParams.toString()}`, {
+      const threadRes = await fetch(`${session.pdsEndpoint}/app.bsky.feed.getPostThread?${threadParams.toString()}`, {
         headers: { 'Authorization': `Bearer ${session.accessJwt}` },
       });
 
@@ -469,7 +475,7 @@ export function createBlueskyPlatform(
         record.facets = facets;
       }
 
-      const res = await fetch(`${BSKY_BASE}/com.atproto.repo.createRecord`, {
+      const res = await fetch(`${session.pdsEndpoint}/com.atproto.repo.createRecord`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session.accessJwt}`,
