@@ -60,6 +60,10 @@ app.post('/api/publish', async (c) => {
   // Serialise the read-decide-publish sequence per idempotency key via the
   // CronLock DO. Without this, two concurrent forceRetry calls for the same
   // key can both observe the failed record, both delete it, and both publish.
+  //
+  // TTL: 60s. Cloudflare Workers cap subrequests at 30s and the whole request
+  // at the per-plan CPU/wall budget — a hung publishPost will be killed long
+  // before the lock expires. No renewal needed.
   const publishLockName = `publish:${body.idempotencyKey}`;
   const publishLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName(publishLockName)) as DurableObjectStub & {
     tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;

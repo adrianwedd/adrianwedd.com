@@ -18,8 +18,11 @@ const HEADER_BYTES = 256 * 1024;
 /**
  * Read pixel dimensions of an image referenced by a site-rooted path (e.g.
  * `/notebook-assets/foo/infographic.jpg`). Returns null if the file is
- * missing or the format isn't recognised. Build-time only — runs at SSG
- * time when Astro renders the page.
+ * missing or the format isn't recognised.
+ *
+ * **Build-time only.** Uses `node:fs` and `process.cwd()`. Importing into
+ * a Cloudflare Worker (or anything other than the Astro SSG build) will
+ * fail at module load.
  *
  * Supports JPEG, PNG, WebP (VP8/VP8L/VP8X), and GIF. Reads only the first
  * 256 KB of the file, never the whole image.

@@ -26,8 +26,8 @@ export class CronLock {
     return this.state.blockConcurrencyWhile(async () => {
       const key = `lock:${name}`;
       const now = Date.now();
-      const existing = await this.state.storage.get<LockState>(key);
-      if (existing && existing.expiresAt > now) {
+      const existing = await this.state.storage.get<unknown>(key);
+      if (isLockState(existing) && existing.expiresAt > now) {
         return { acquired: false, token: null };
       }
       const token = crypto.randomUUID();
@@ -39,12 +39,21 @@ export class CronLock {
   async release(name: string, token: string): Promise<void> {
     return this.state.blockConcurrencyWhile(async () => {
       const key = `lock:${name}`;
-      const existing = await this.state.storage.get<LockState>(key);
-      if (existing && existing.token === token) {
+      const existing = await this.state.storage.get<unknown>(key);
+      if (isLockState(existing) && existing.token === token) {
         await this.state.storage.delete(key);
       }
-      // Mismatched token = our run exceeded its TTL and someone else now holds
-      // the lock. Silently no-op so we don't release the new owner's lock.
+      // Mismatched / malformed entry = our run exceeded its TTL and someone
+      // else (or no one) now holds the lock. Silently no-op so we don't
+      // release the new owner's lock or corrupt their state.
     });
   }
+}
+
+function isLockState(v: unknown): v is LockState {
+  return (
+    typeof v === 'object' && v !== null &&
+    typeof (v as LockState).expiresAt === 'number' &&
+    typeof (v as LockState).token === 'string'
+  );
 }
