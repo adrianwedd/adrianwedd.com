@@ -88,6 +88,32 @@ jobs:
             exit 1
           fi
           echo "✓ No raw <img> tags on local paths found."
+      - name: Enforce .jpg twin for every .webp heroImage
+        run: |
+          # FB / X / LinkedIn / iMessage do not reliably scrape WebP og:image.
+          # src/pages/blog/[...slug].astro and src/pages/projects/[...slug].astro
+          # swap heroImage.webp -> .jpg for og:image, so the .jpg must exist.
+          missing=0
+          while IFS= read -r webp; do
+            jpg="${webp%.webp}.jpg"
+            full="public${jpg}"
+            if [ ! -f "$full" ]; then
+              echo "ERROR: missing OG twin $full (heroImage was $webp)"
+              missing=$((missing+1))
+            fi
+          done < <(grep -rh "^heroImage:" src/content/blog/ src/content/projects/ src/content/audio/ 2>/dev/null \
+            | grep -oE "/[^'\" ]+\.webp" | sort -u)
+          if [ "$missing" -gt 0 ]; then
+            echo "ERROR: $missing heroImage .webp file(s) are missing their .jpg twin"
+            echo "Fix: generate a .jpg next to each .webp, e.g."
+            echo "  ffmpeg -y -i public/notebook-assets/SLUG/infographic.webp public/notebook-assets/SLUG/infographic.jpg"
+            exit 1
+          fi
+          echo "✓ Every .webp heroImage has a .jpg twin for OG scraping."
+      - name: Run worker tests
+        # worker-csp has its own dedicated job below; this only covers the
+        # social-publish worker, which had no CI coverage prior to this step.
+        run: cd worker && npm ci && npm test
       - name: Check links
         uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
         with:
