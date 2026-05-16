@@ -333,16 +333,18 @@ app.post('/api/cron/publish', async (c) => {
 
     duePosts.sort((a, b) => a.post.scheduledAtEpoch - b.post.scheduledAtEpoch);
 
+    // Filter out posts for blocked platforms BEFORE applying the 5-post batch cap, so a
+    // single expired platform can't starve healthy ones out of their share of the batch.
+    const skippedBlocked = duePosts.filter(({ post }) => blockedPlatforms.has(post.platform));
+    for (const { post } of skippedBlocked) {
+      console.warn(`Skipping post ${post.id} — ${post.platform} auth is invalid`);
+    }
+    const processable = duePosts.filter(({ post }) => !blockedPlatforms.has(post.platform));
+
     let published = 0;
     let failed = 0;
 
-    for (const { key, post } of duePosts.slice(0, 5)) {
-      // Skip posts for platforms with invalid auth
-      if (blockedPlatforms.has(post.platform)) {
-        console.warn(`Skipping post ${post.id} — ${post.platform} auth is invalid`);
-        continue;
-      }
-
+    for (const { key, post } of processable.slice(0, 5)) {
       // Check idempotency
       const existing = await env.SOCIAL.get(`idempotent:${post.id}`);
       if (existing) {
@@ -380,7 +382,7 @@ app.post('/api/cron/publish', async (c) => {
         // Revert to queued
         await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
         await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
-        console.error(`Facebook token invalid — halting run`);
+        console.error(`${post.platform} token invalid — halting run`);
         return json({ error: 'Token invalid', published, failed, tokenExpiresInDays: tokenExpiryByPlatform }, 503);
       } else if (result.isTransient) {
         // Revert to queued
@@ -401,7 +403,7 @@ app.post('/api/cron/publish', async (c) => {
       }
     }
 
-    const remaining = Math.max(0, duePosts.length - 5);
+    const remaining = Math.max(0, processable.length - 5) + skippedBlocked.length;
     if (remaining > 10) console.error(`Post queue backlog: ${remaining}`);
     else if (remaining > 0) console.warn(`${remaining} posts still queued`);
 
@@ -430,7 +432,10 @@ app.post('/api/cron/comments', async (c) => {
       const adapter = createPlatform(platformName, env);
       const tokenHealth = await adapter.debugAuth();
       if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
-        return json({ error: `${platformName} data access expired` }, 503);
+        // Mirror the publish-cron behaviour: skip the bad platform and continue with others.
+        console.error(`${platformName} data access expired — skipping comments for this platform`);
+        platformResults[platformName] = { error: 'data access expired', tokenExpiresInDays: tokenHealth.daysUntilExpiry };
+        continue;
       }
 
       const result = await processComments(adapter, env.SOCIAL);
