@@ -120,24 +120,40 @@ describe('POST /api/cron/publish', () => {
     expect(mockDebugAuth).not.toHaveBeenCalled();
   });
 
-  it('returns 503 when token is expired (valid: false)', async () => {
+  it('skips posts for a platform whose token is invalid (valid: false)', async () => {
     const kv = mockKV();
     mockDebugAuth.mockResolvedValueOnce({ valid: false, platform: 'facebook', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0 });
 
+    // Queue a due post for the platform with the invalid token
+    const post = makePost('p1');
+    kv.store.set(`post:queued:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: `post:queued:${post.scheduledAtEpoch}:${post.id}` }], list_complete: true });
+
     const res = await app.fetch(cronRequest(), makeEnv(kv));
-    expect(res.status).toBe(503);
+    expect(res.status).toBe(200);
     const body = await res.json() as Record<string, unknown>;
-    expect(body.error).toContain('expired');
-    // Lock should be released even on 503
+    expect(body.published).toBe(0);
+    expect((body.tokenExpiresInDays as Record<string, number>).facebook).toBe(0);
+    // Platform with invalid auth must not be invoked
+    expect(mockPublishPost).not.toHaveBeenCalled();
+    // Lock must be released
     expect(kv.delete).toHaveBeenCalledWith('cron-lock:publish');
   });
 
-  it('returns 503 when daysUntilExpiry <= 0', async () => {
+  it('skips posts for a platform whose token expires today (daysUntilExpiry <= 0)', async () => {
     const kv = mockKV();
     mockDebugAuth.mockResolvedValueOnce({ valid: true, platform: 'facebook', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0 });
 
+    const post = makePost('p1');
+    kv.store.set(`post:queued:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: `post:queued:${post.scheduledAtEpoch}:${post.id}` }], list_complete: true });
+
     const res = await app.fetch(cronRequest(), makeEnv(kv));
-    expect(res.status).toBe(503);
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.published).toBe(0);
+    expect((body.tokenExpiresInDays as Record<string, number>).facebook).toBe(0);
+    expect(mockPublishPost).not.toHaveBeenCalled();
   });
 
   it('processes due posts oldest-first, max 5 from 7 queued', async () => {
