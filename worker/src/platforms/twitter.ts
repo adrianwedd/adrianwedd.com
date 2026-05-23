@@ -1,5 +1,5 @@
 import type { SocialPost, SocialPlatform, PublishResult, AuthStatus, Comment } from './types';
-import { isAllowedMediaUrl } from './safe-fetch';
+import { isAllowedMediaUrl, safeFetch } from './safe-fetch';
 
 // ── OAuth 1.0a ─────────────────────────────────────────────────────────────
 
@@ -61,13 +61,38 @@ const MEDIA_UPLOAD_URL = 'https://upload.twitter.com/1.1/media/upload.json';
 const TWEET_URL = 'https://api.twitter.com/2/tweets';
 const VERIFY_URL = 'https://api.twitter.com/2/users/me';
 
+// Twitter v1.1 media upload accepts up to 5MB for images. We enforce the same
+// cap during streaming to defend against an origin that lies about Content-Length
+// or omits it entirely (HEAD-vs-GET TOCTOU).
+const TWITTER_MEDIA_CAP_BYTES = 5 * 1024 * 1024;
+
 async function uploadMedia(imageUrl: string, creds: OAuth1Creds): Promise<string | null> {
   if (!isAllowedMediaUrl(imageUrl)) return null;
   try {
-    const imgRes = await fetch(imageUrl);
-    if (!imgRes.ok) return null;
-    const bytes = await imgRes.arrayBuffer();
-    const contentType = imgRes.headers.get('content-type') || 'image/jpeg';
+    // safeFetch enforces `redirect: 'manual'` and re-validates each Location hop
+    // against the allowlist, so an allowlisted CDN URL cannot redirect to a
+    // private/metadata endpoint.
+    const imgFetch = await safeFetch(imageUrl, {}, isAllowedMediaUrl);
+    if (!imgFetch.response?.ok || !imgFetch.response.body) return null;
+    const reader = imgFetch.response.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      total += value.byteLength;
+      if (total > TWITTER_MEDIA_CAP_BYTES) {
+        reader.cancel().catch(() => undefined);
+        console.warn(`Twitter media upload exceeded ${TWITTER_MEDIA_CAP_BYTES}-byte cap: ${imageUrl}`);
+        return null;
+      }
+      chunks.push(value);
+    }
+    const bytes = new Uint8Array(total);
+    let offset = 0;
+    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+    const contentType = imgFetch.response.headers.get('content-type') || 'image/jpeg';
 
     // Multipart body is excluded from OAuth signature base (RFC 5849 §3.4.1.3)
     const auth = await oauthHeader('POST', MEDIA_UPLOAD_URL, {}, creds);
@@ -121,12 +146,25 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
           body: JSON.stringify(body),
         });
 
-        if (res.status === 401 || res.status === 403) {
-          // Drain body to keep the socket clean but don't include it in the error —
-          // OAuth response bodies can leak signature data into KV idempotency records.
+        if (res.status === 401) {
+          // 401 unambiguously means "your credentials are invalid". Drain the body
+          // (OAuth response bodies can leak signature data into KV idempotency
+          // records, so don't include it in the surfaced error).
           await res.text().catch(() => '');
-          console.error(`Twitter publish auth failure: HTTP ${res.status}`);
-          return { success: false, error: `HTTP ${res.status}`, isTransient: false, isAuthError: true };
+          console.error(`Twitter publish auth failure: HTTP 401`);
+          return { success: false, error: 'HTTP 401', isTransient: false, isAuthError: true };
+        }
+        if (res.status === 403) {
+          // 403 from Twitter v2 means "your credentials are valid but this action
+          // is forbidden" — duplicate tweet, content moderation, blocked target,
+          // missing write scope on the token, etc. Classifying as auth error here
+          // would halt the entire cron run and re-queue the post, creating an
+          // infinite-loop poison pill (next tick: same post, same 403, same halt).
+          // Treat as a permanent per-post failure so the cron continues and the
+          // post moves to post:failed:.
+          const errText = await res.text().catch(() => '');
+          console.error(`Twitter publish forbidden (HTTP 403): ${errText.slice(0, 200)}`);
+          return { success: false, error: `HTTP 403: ${errText.slice(0, 200)}`, isTransient: false, isAuthError: false };
         }
         if (res.status === 429 || res.status >= 500) {
           return { success: false, error: `HTTP ${res.status}`, isTransient: true, isAuthError: false };
