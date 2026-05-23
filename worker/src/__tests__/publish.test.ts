@@ -438,6 +438,99 @@ describe('POST /api/cron/publish', () => {
     expect(cronLock.held.has('publish')).toBe(false);
   });
 
+  // C1 — Per-post publish lock in the cron. /api/publish takes
+  // `publish:<idempotencyKey>`, and the cron must take the same lock per post
+  // so an ad-hoc retry mid-cron-run cannot race the cron and double-publish.
+  it('skips a post whose per-post publish lock is held by /api/publish', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValueOnce(healthyToken);
+
+    const post = makePost('contested-post');
+    const queueKey = `post:queued:${post.scheduledAtEpoch}:${post.id}`;
+    kv.store.set(queueKey, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: queueKey }], list_complete: true });
+
+    // Pre-hold the per-post lock AND the cron lock — both share the same DO mock.
+    const cronLock = mockCronLock([`publish:${post.id}`]);
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv, cronLock));
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    // Cron didn't publish (the other holder is publishing it)
+    expect(body.published).toBe(0);
+    expect(mockPublishPost).not.toHaveBeenCalled();
+    // Crucially, the queue key was NOT consumed — the other publisher will write
+    // the terminal state and the next cron tick will clean up the stale queued key.
+    expect(kv.store.has(queueKey)).toBe(true);
+  });
+
+  // C2 — Orphan recovery. Without the try/catch around the per-post body, an
+  // unhandled exception (network blip, JSON parse failure, etc.) after the
+  // queued key is deleted but before the terminal state is written would
+  // silently drop the post: queued key gone, publishing key with no recovery
+  // sweep, post invisible to future cron runs.
+  it('restores queued key when publishPost throws unexpectedly', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValueOnce(healthyToken);
+    mockPublishPost.mockRejectedValueOnce(new Error('JSON.parse failed on truncated response'));
+
+    const post = makePost('crash-post');
+    const queueKey = `post:queued:${post.scheduledAtEpoch}:${post.id}`;
+    kv.store.set(queueKey, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: queueKey }], list_complete: true });
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv));
+    expect(res.status).toBe(200);
+
+    // The queued key must be restored so the next cron tick can retry the post.
+    const restoredRaw = kv.store.get(queueKey);
+    expect(restoredRaw).toBeTruthy();
+    const restored = JSON.parse(restoredRaw!) as SocialPost;
+    expect(restored.status).toBe('queued');
+    expect(restored.id).toBe(post.id);
+
+    // The transient publishing key must be cleaned up so a later sweep doesn't
+    // see it as a duplicate.
+    expect(kv.store.has(`post:publishing:${post.scheduledAtEpoch}:${post.id}`)).toBe(false);
+  });
+
+  it('releases the per-post lock after a successful cron publish', async () => {
+    const kv = mockKV();
+    const cronLock = mockCronLock();
+    mockDebugAuth.mockResolvedValueOnce(healthyToken);
+    mockPublishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'fb_ok', isTransient: false, isAuthError: false,
+    });
+
+    const post = makePost('lock-release-test');
+    const queueKey = `post:queued:${post.scheduledAtEpoch}:${post.id}`;
+    kv.store.set(queueKey, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: queueKey }], list_complete: true });
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv, cronLock));
+    expect(res.status).toBe(200);
+    // Both the cron-wide lock AND the per-post lock must be released.
+    expect(cronLock.release).toHaveBeenCalledWith('publish', expect.any(String));
+    expect(cronLock.release).toHaveBeenCalledWith(`publish:${post.id}`, expect.any(String));
+    expect(cronLock.held.has(`publish:${post.id}`)).toBe(false);
+  });
+
+  it('releases the per-post lock even when publishPost throws (orphan recovery)', async () => {
+    const kv = mockKV();
+    const cronLock = mockCronLock();
+    mockDebugAuth.mockResolvedValueOnce(healthyToken);
+    mockPublishPost.mockRejectedValueOnce(new Error('boom'));
+
+    const post = makePost('lock-finally-test');
+    const queueKey = `post:queued:${post.scheduledAtEpoch}:${post.id}`;
+    kv.store.set(queueKey, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: queueKey }], list_complete: true });
+
+    await app.fetch(cronRequest(), makeEnv(kv, cronLock));
+    expect(cronLock.release).toHaveBeenCalledWith(`publish:${post.id}`, expect.any(String));
+    expect(cronLock.held.has(`publish:${post.id}`)).toBe(false);
+  });
+
   it('skips posts only for the platform with expired auth, publishes the healthy platform', async () => {
     const kv = mockKV();
     setConfiguredPlatforms(['facebook', 'bluesky']);

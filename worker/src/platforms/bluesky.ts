@@ -5,10 +5,15 @@ import type {
   Comment,
   AuthStatus,
 } from './types';
-import { isAllowedMediaUrl, isSafeHttpsUrl } from './safe-fetch';
+import { isAllowedMediaUrl, safeFetch } from './safe-fetch';
 
 const BSKY_BASE = 'https://bsky.social/xrpc';
 const MAX_GRAPHEMES = 300;
+
+// Match either ?v=ID, &v=ID (long-form) or youtu.be/ID (short-form). Capture
+// group is whichever matched. Used in both publish (Bluesky embed) and the
+// Astro VideoObject schema; keep in sync with src/pages/{blog,projects}/[...slug].astro.
+const YOUTUBE_ID_REGEX = /(?:[?&]v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/;
 
 interface BskySession {
   did: string;
@@ -63,13 +68,47 @@ function truncateGraphemes(text: string, max: number): string {
 }
 
 
+// Stream a response body and abort once `maxBytes` is exceeded. Returns null
+// if the cap is breached. HEAD-then-GET TOCTOU defence: even if an origin lied
+// about Content-Length on HEAD, the GET cannot inflate the worker beyond cap.
+async function readBoundedArrayBuffer(res: Response, maxBytes: number): Promise<ArrayBuffer | null> {
+  if (!res.body) {
+    const buf = await res.arrayBuffer();
+    return buf.byteLength <= maxBytes ? buf : null;
+  }
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      reader.cancel().catch(() => undefined);
+      return null;
+    }
+    chunks.push(value);
+  }
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return out.buffer;
+}
+
 async function uploadVideo(session: BskySession, videoUrl: string): Promise<unknown | null> {
   if (!isAllowedMediaUrl(videoUrl)) return null;
   try {
     // Skip if video is too large for CF Worker outgoing request (~20MB practical limit).
     // Require a Content-Length header; without it we cannot bound memory usage safely.
-    const headRes = await fetch(videoUrl, { method: 'HEAD' });
-    const rawContentLength = headRes.headers.get('content-length');
+    // safeFetch enforces `redirect: 'manual'` and re-validates each Location hop,
+    // so a 302 from cdn.adrianwedd.com cannot pivot to a private/metadata IP.
+    const headRes = await safeFetch(videoUrl, { method: 'HEAD' }, isAllowedMediaUrl);
+    if (!headRes.response) return null;
+    const rawContentLength = headRes.response.headers.get('content-length');
     if (rawContentLength === null) return null;
     const contentLength = parseInt(rawContentLength, 10);
     if (!Number.isFinite(contentLength) || contentLength <= 0 || contentLength > 20 * 1024 * 1024) return null;
@@ -81,9 +120,12 @@ async function uploadVideo(session: BskySession, videoUrl: string): Promise<unkn
     if (!serviceAuthRes.ok) return null;
     const { token } = await serviceAuthRes.json() as { token: string };
 
-    const videoRes = await fetch(videoUrl);
-    if (!videoRes.ok) return null;
-    const videoBytes = await videoRes.arrayBuffer();
+    const videoFetch = await safeFetch(videoUrl, {}, isAllowedMediaUrl);
+    if (!videoFetch.response || !videoFetch.response.ok) return null;
+    // HEAD reported a size we accept; cap the actual read at the same bound to
+    // defend against an origin that returns a small HEAD and a huge GET (TOCTOU).
+    const videoBytes = await readBoundedArrayBuffer(videoFetch.response, 20 * 1024 * 1024);
+    if (!videoBytes) return null;
 
     const uploadRes = await fetch(`https://video.bsky.app/xrpc/app.bsky.video.uploadVideo?did=${session.did}`, {
       method: 'POST',
@@ -130,26 +172,17 @@ export function createBlueskyPlatform(
       throw err;
     }
 
-    const data = await res.json() as {
-      did: string;
-      accessJwt: string;
-      didDoc?: { service?: Array<{ id: string; serviceEndpoint: string }> };
-    };
-    // Extract PDS endpoint from didDoc if present, otherwise resolve via PLC directory.
-    // The endpoint becomes the base URL for authenticated calls bearing our accessJwt,
-    // so reject anything that isn't a well-formed HTTPS URL (no IP literals).
-    let pdsEndpoint = BSKY_BASE;
-    const candidate = data.didDoc?.service?.find(s => s.id === '#atproto_pds')?.serviceEndpoint
-      ?? await (async () => {
-        const didRes = await fetch(`https://plc.directory/${encodeURIComponent(data.did)}`).catch(() => null);
-        if (!didRes?.ok) return undefined;
-        const didDoc = await didRes.json() as { service?: Array<{ id: string; serviceEndpoint: string }> };
-        return didDoc.service?.find(s => s.id === '#atproto_pds')?.serviceEndpoint;
-      })();
-    if (candidate && isSafeHttpsUrl(candidate)) {
-      pdsEndpoint = `${candidate.replace(/\/$/, '')}/xrpc`;
-    }
-    return { did: data.did, accessJwt: data.accessJwt, pdsEndpoint };
+    const data = await res.json() as { did: string; accessJwt: string };
+    // PDS endpoint is HARD-PINNED to bsky.social. The previous implementation
+    // honoured `didDoc.service[].serviceEndpoint` (or fell back to plc.directory),
+    // but PLC is open — anyone can register a DID with a service endpoint pointing
+    // at attacker-controlled hostname, which can resolve to 169.254.169.254 etc.
+    // The resulting accessJwt would then be sent to the attacker on every
+    // subsequent authenticated call. Hostname-only allowlisting cannot defend
+    // against DNS-rebinding here. If federation is ever needed, restrict PDS
+    // endpoints to a curated allowlist (e.g. *.host.bsky.network) and pin to
+    // resolved IPs across the connect.
+    return { did: data.did, accessJwt: data.accessJwt, pdsEndpoint: BSKY_BASE };
   }
 
   async function publishPost(post: SocialPost): Promise<PublishResult> {
@@ -190,21 +223,25 @@ export function createBlueskyPlatform(
       }
 
       if (!record.embed && post.youtubeUrl) {
-        const videoId = post.youtubeUrl.match(/[?&]v=([^&]+)/)?.[1];
+        const videoId = post.youtubeUrl.match(YOUTUBE_ID_REGEX)?.[1];
         if (videoId) {
           // img.youtube.com is in the allowlist; videoId is captured from a tight regex
           const thumbUrl = `https://img.youtube.com/vi/${encodeURIComponent(videoId)}/maxresdefault.jpg`;
-          const thumbRes = await fetch(thumbUrl);
+          const thumbFetch = await safeFetch(thumbUrl, {}, isAllowedMediaUrl);
           let thumbBlob: unknown = undefined;
-          if (thumbRes.ok) {
-            const thumbBytes = await thumbRes.arrayBuffer();
-            const blobRes = await fetch(`${session.pdsEndpoint}/com.atproto.repo.uploadBlob`, {
-              method: 'POST',
-              headers: { 'Authorization': `Bearer ${session.accessJwt}`, 'Content-Type': 'image/jpeg' },
-              body: thumbBytes,
-            });
-            if (blobRes.ok) {
-              thumbBlob = (await blobRes.json() as { blob: unknown }).blob;
+          if (thumbFetch.response?.ok) {
+            const thumbBytes = await readBoundedArrayBuffer(thumbFetch.response, 5 * 1024 * 1024);
+            if (thumbBytes) {
+              const blobRes = await fetch(`${session.pdsEndpoint}/com.atproto.repo.uploadBlob`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${session.accessJwt}`, 'Content-Type': 'image/jpeg' },
+                body: thumbBytes,
+              });
+              if (blobRes.ok) {
+                thumbBlob = (await blobRes.json() as { blob: unknown }).blob;
+              }
+            } else {
+              console.warn(`YouTube thumbnail exceeded 5MB cap: ${thumbUrl}`);
             }
           }
           record.embed = {
@@ -221,18 +258,22 @@ export function createBlueskyPlatform(
 
       if (!record.embed && post.imageUrl && isAllowedMediaUrl(post.imageUrl)) {
         // Fall back to static image embed
-        const imgRes = await fetch(post.imageUrl);
-        if (imgRes.ok) {
-          const imgBytes = await imgRes.arrayBuffer();
-          const mimeType = imgRes.headers.get('content-type') ?? 'image/jpeg';
-          const blobRes = await fetch(`${session.pdsEndpoint}/com.atproto.repo.uploadBlob`, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${session.accessJwt}`, 'Content-Type': mimeType },
-            body: imgBytes,
-          });
-          if (blobRes.ok) {
-            const blobData = await blobRes.json() as { blob: unknown };
-            record.embed = { $type: 'app.bsky.embed.images', images: [{ image: blobData.blob, alt: '' }] };
+        const imgFetch = await safeFetch(post.imageUrl, {}, isAllowedMediaUrl);
+        if (imgFetch.response?.ok) {
+          const imgBytes = await readBoundedArrayBuffer(imgFetch.response, 5 * 1024 * 1024);
+          if (imgBytes) {
+            const mimeType = imgFetch.response.headers.get('content-type') ?? 'image/jpeg';
+            const blobRes = await fetch(`${session.pdsEndpoint}/com.atproto.repo.uploadBlob`, {
+              method: 'POST',
+              headers: { 'Authorization': `Bearer ${session.accessJwt}`, 'Content-Type': mimeType },
+              body: imgBytes,
+            });
+            if (blobRes.ok) {
+              const blobData = await blobRes.json() as { blob: unknown };
+              record.embed = { $type: 'app.bsky.embed.images', images: [{ image: blobData.blob, alt: '' }] };
+            }
+          } else {
+            console.warn(`Image embed exceeded 5MB cap: ${post.imageUrl}`);
           }
         }
       }

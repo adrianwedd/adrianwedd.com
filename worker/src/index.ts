@@ -380,61 +380,105 @@ app.post('/api/cron/publish', async (c) => {
     let failed = 0;
 
     for (const { key, post } of processable.slice(0, 5)) {
-      // Check idempotency
-      const existing = await env.SOCIAL.get(`idempotent:${post.id}`);
-      if (existing) {
-        await env.SOCIAL.delete(key); // Clean up stale queued key
+      // C1 — Per-post publish lock. The cron run and an ad-hoc /api/publish call
+      // can race on the same post.id (e.g. a manual retry triggered while cron
+      // is mid-run). /api/publish takes `publish:<idempotencyKey>`; the cron
+      // must take the same lock per-post so both paths serialise against each
+      // other. If the lock is held, skip this post — the holder is publishing it.
+      const perPostLockName = `publish:${post.id}`;
+      const perPostLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName(perPostLockName)) as DurableObjectStub & {
+        tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
+        release(name: string, token: string): Promise<void>;
+      };
+      const { acquired: perPostAcquired, token: perPostToken } = await perPostLockStub.tryAcquire(perPostLockName, 60_000);
+      if (!perPostAcquired || !perPostToken) {
+        console.warn(`Skipping post ${post.id} — concurrent publisher holds per-post lock`);
         continue;
       }
 
-      // Move to publishing state (optimistic lock)
-      await env.SOCIAL.put(`post:publishing:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify({ ...post, status: 'publishing' }));
-      await env.SOCIAL.delete(key);
+      // C2 — Orphan recovery. Wrap each per-post body in try/catch that restores
+      // `post:queued:` if anything throws between the delete-queued and the
+      // terminal state write. Without this, an unhandled exception in
+      // publishPost (or any KV op) silently drops the post: the queued key is
+      // already gone, the publishing key has no recovery sweep, and the next
+      // cron tick won't see the post.
+      try {
+        // Check idempotency
+        const existing = await env.SOCIAL.get(`idempotent:${post.id}`);
+        if (existing) {
+          await env.SOCIAL.delete(key); // Clean up stale queued key
+          continue;
+        }
 
-      const postAdapter = createPlatform(post.platform, env);
-      const result = await postAdapter.publishPost(post);
+        // Move to publishing state (optimistic lock)
+        await env.SOCIAL.put(`post:publishing:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify({ ...post, status: 'publishing' }));
+        await env.SOCIAL.delete(key);
 
-      if (result.success) {
-        const publishedPost: SocialPost = {
-          ...post,
-          status: 'published',
-          publishedId: result.platformPostId ?? null,
-          publishedAt: new Date().toISOString(),
-        };
-        await env.SOCIAL.put(
-          `post:published:${post.scheduledAtEpoch}:${post.id}`,
-          JSON.stringify(publishedPost),
-          { expirationTtl: 180 * 24 * 60 * 60 },
+        const postAdapter = createPlatform(post.platform, env);
+        const result = await postAdapter.publishPost(post);
+
+        if (result.success) {
+          const publishedPost: SocialPost = {
+            ...post,
+            status: 'published',
+            publishedId: result.platformPostId ?? null,
+            publishedAt: new Date().toISOString(),
+          };
+          await env.SOCIAL.put(
+            `post:published:${post.scheduledAtEpoch}:${post.id}`,
+            JSON.stringify(publishedPost),
+            { expirationTtl: 180 * 24 * 60 * 60 },
+          );
+          await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
+            key: post.id, status: 'published',
+            platformPostId: result.platformPostId ?? null,
+            completedAt: new Date().toISOString(), error: null,
+          }), { expirationTtl: 30 * 24 * 60 * 60 });
+          await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+          published++;
+        } else if (result.isAuthError) {
+          // Revert to queued
+          await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
+          await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+          console.error(`${post.platform} token invalid — halting run`);
+          return json({ error: 'Token invalid', published, failed, tokenExpiresInDays: tokenExpiryByPlatform }, 503);
+        } else if (result.isTransient) {
+          // Revert to queued
+          await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
+          await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+          console.warn(`Transient error for ${post.id}: ${result.error} — skipping remaining`);
+          break; // Spec: skip remaining posts on transient error
+        } else {
+          const failedPost: SocialPost = { ...post, status: 'failed', error: result.error ?? 'Unknown' };
+          await env.SOCIAL.put(`post:failed:${post.id}`, JSON.stringify(failedPost));
+          await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
+            key: post.id, status: 'failed',
+            platformPostId: null,
+            completedAt: new Date().toISOString(), error: result.error ?? 'Unknown',
+          }), { expirationTtl: 30 * 24 * 60 * 60 });
+          await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+          failed++;
+        }
+      } catch (err) {
+        // Orphan recovery: an unhandled exception between delete-queued and
+        // terminal state would silently drop the post. Restore the queue key
+        // so the next cron tick can retry it. Idempotent w.r.t. the early-exit
+        // paths above because those don't throw.
+        console.error(`Unhandled error publishing ${post.id}: ${err instanceof Error ? err.message : String(err)}`);
+        try {
+          await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
+          await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+        } catch (restoreErr) {
+          // KV restore itself failed — best-effort log; the publishing-key sweep
+          // (if added later) is the backstop.
+          console.error(`Post-restore failed for ${post.id}: ${restoreErr instanceof Error ? restoreErr.message : String(restoreErr)}`);
+        }
+        // Don't rethrow — let the loop continue with subsequent posts. The
+        // outer try/finally will still release the cron-wide lock.
+      } finally {
+        await perPostLockStub.release(perPostLockName, perPostToken).catch(e =>
+          console.error(`Per-post lock release failed for ${post.id}: ${e instanceof Error ? e.message : String(e)}`),
         );
-        await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
-          key: post.id, status: 'published',
-          platformPostId: result.platformPostId ?? null,
-          completedAt: new Date().toISOString(), error: null,
-        }), { expirationTtl: 30 * 24 * 60 * 60 });
-        await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
-        published++;
-      } else if (result.isAuthError) {
-        // Revert to queued
-        await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
-        await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
-        console.error(`${post.platform} token invalid — halting run`);
-        return json({ error: 'Token invalid', published, failed, tokenExpiresInDays: tokenExpiryByPlatform }, 503);
-      } else if (result.isTransient) {
-        // Revert to queued
-        await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
-        await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
-        console.warn(`Transient error for ${post.id}: ${result.error} — skipping remaining`);
-        break; // Spec: skip remaining posts on transient error
-      } else {
-        const failedPost: SocialPost = { ...post, status: 'failed', error: result.error ?? 'Unknown' };
-        await env.SOCIAL.put(`post:failed:${post.id}`, JSON.stringify(failedPost));
-        await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
-          key: post.id, status: 'failed',
-          platformPostId: null,
-          completedAt: new Date().toISOString(), error: result.error ?? 'Unknown',
-        }), { expirationTtl: 30 * 24 * 60 * 60 });
-        await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
-        failed++;
       }
     }
 
