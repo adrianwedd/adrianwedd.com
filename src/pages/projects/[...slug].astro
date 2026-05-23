@@ -94,7 +94,12 @@ const allBlogPosts = project.data.series
       keywords: project.data.tags,
       ...(project.data.repo || project.data.url ? { applicationCategory: 'DeveloperApplication' } : {}),
       ...(project.data.repo ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
-      ...(project.data.url ? { url: project.data.url } : {}),
+      // External project URL goes in `sameAs`, NOT `url`. Previously the spread
+      // here was `{ url: project.data.url }`, which silently overrode the
+      // canonical adrianwedd.com URL above. Google ingests `url` as the
+      // entity's canonical address — every project with `url` set was telling
+      // Google the entity lived at the external site, splitting page authority.
+      ...(project.data.url ? { sameAs: [project.data.url] } : {}),
       ...(project.data.repo
         ? {
             codeRepository: project.data.repo.startsWith('http')
