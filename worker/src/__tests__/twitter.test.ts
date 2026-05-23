@@ -35,12 +35,10 @@ describe('Twitter publishPost — response classification', () => {
   });
 
   // C5 — Twitter v2 returns 403 for content violations (duplicate tweet, blocked
-  // target, content moderation, missing scope, etc.). Classifying those as
-  // isAuthError causes the cron to halt the run AND re-queue the post — next
-  // tick the same 403 fires again, creating an infinite poison pill that
-  // permanently blocks all subsequent posts. 403 must be a per-post permanent
-  // failure so the cron continues and the post moves to post:failed:.
-  it('treats 403 as permanent non-auth failure (not a poison pill)', async () => {
+  // target, content moderation). Those must be per-post permanent failures so
+  // the cron continues — marking them isAuthError would halt the run and
+  // re-queue the post, creating an infinite poison-pill loop.
+  it('treats 403 content/duplicate as permanent non-auth failure', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(new Response(
       JSON.stringify({ title: 'Forbidden', detail: 'Duplicate content' }),
       { status: 403 },
@@ -50,6 +48,25 @@ describe('Twitter publishPost — response classification', () => {
     expect(result.isAuthError).toBe(false); // <-- the critical assertion
     expect(result.isTransient).toBe(false);
     expect(result.error).toContain('403');
+  });
+
+  // Codex/gemini/hermes High follow-up to C5: blanket "403 = permanent" loses
+  // the operator signal for missing-scope / locked-account cases. The classifier
+  // parses the v2 problem body and flags auth-shaped 403s as isAuthError so
+  // the cron halts for manual attention.
+  it.each([
+    ['oauth1-permissions',          'https://api.twitter.com/2/problems/oauth1-permissions'],
+    ['client-not-enrolled',         'https://api.twitter.com/2/problems/client-not-enrolled'],
+    ['unsupported authentication',  'Unsupported Authentication: cannot use OAuth1 with this endpoint'],
+    ['write permissions',           'Your app does not have write permissions'],
+    ['not permitted to perform',    'You are not permitted to perform this action'],
+    ['your account is temporarily', 'Your account is temporarily locked'],
+    ['app is suspended',            'This app is suspended'],
+  ])('classifies 403 mentioning %s as auth/scope (halts cron)', async (_label, body) => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(new Response(body, { status: 403 }));
+    const result = await createTwitterPlatform(creds).publishPost(makePost());
+    expect(result.success).toBe(false);
+    expect(result.isAuthError).toBe(true);
   });
 
   it('treats 429 as transient (retry on next tick)', async () => {

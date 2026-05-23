@@ -1,5 +1,5 @@
 import type { SocialPost, SocialPlatform, PublishResult, AuthStatus, Comment } from './types';
-import { isAllowedMediaUrl, safeFetch } from './safe-fetch';
+import { isAllowedMediaUrl, safeFetch, readBoundedArrayBuffer } from './safe-fetch';
 
 // ── OAuth 1.0a ─────────────────────────────────────────────────────────────
 
@@ -73,25 +73,12 @@ async function uploadMedia(imageUrl: string, creds: OAuth1Creds): Promise<string
     // against the allowlist, so an allowlisted CDN URL cannot redirect to a
     // private/metadata endpoint.
     const imgFetch = await safeFetch(imageUrl, {}, isAllowedMediaUrl);
-    if (!imgFetch.response?.ok || !imgFetch.response.body) return null;
-    const reader = imgFetch.response.body.getReader();
-    const chunks: Uint8Array[] = [];
-    let total = 0;
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      if (!value) continue;
-      total += value.byteLength;
-      if (total > TWITTER_MEDIA_CAP_BYTES) {
-        reader.cancel().catch(() => undefined);
-        console.warn(`Twitter media upload exceeded ${TWITTER_MEDIA_CAP_BYTES}-byte cap: ${imageUrl}`);
-        return null;
-      }
-      chunks.push(value);
+    if (!imgFetch.response?.ok) return null;
+    const bytes = await readBoundedArrayBuffer(imgFetch.response, TWITTER_MEDIA_CAP_BYTES);
+    if (!bytes) {
+      console.warn(`Twitter media upload exceeded ${TWITTER_MEDIA_CAP_BYTES}-byte cap: ${imageUrl}`);
+      return null;
     }
-    const bytes = new Uint8Array(total);
-    let offset = 0;
-    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
     const contentType = imgFetch.response.headers.get('content-type') || 'image/jpeg';
 
     // Multipart body is excluded from OAuth signature base (RFC 5849 §3.4.1.3)
@@ -155,16 +142,37 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
           return { success: false, error: 'HTTP 401', isTransient: false, isAuthError: true };
         }
         if (res.status === 403) {
-          // 403 from Twitter v2 means "your credentials are valid but this action
-          // is forbidden" — duplicate tweet, content moderation, blocked target,
-          // missing write scope on the token, etc. Classifying as auth error here
-          // would halt the entire cron run and re-queue the post, creating an
-          // infinite-loop poison pill (next tick: same post, same 403, same halt).
-          // Treat as a permanent per-post failure so the cron continues and the
-          // post moves to post:failed:.
+          // 403 from Twitter v2 conflates two very different problems:
+          //   (a) content / policy — duplicate tweet, blocked recipient,
+          //       content moderation, link blocked. Per-post permanent;
+          //       the cron should continue and move the post to post:failed:.
+          //       Marking these isAuthError would halt the run and re-queue,
+          //       creating an infinite poison pill (next tick: same 403).
+          //   (b) account / scope — token missing `tweet:write`, app
+          //       permissions downgraded, account temporarily restricted.
+          //       Need operator attention; halt is the correct response.
+          //
+          // Twitter v2 returns JSON whose `title`/`detail`/`type` distinguish
+          // these. Twitter doesn't publish stable error codes, so we substring
+          // match common phrasings. Cross-confirmed by codex/gemini/hermes.
           const errText = await res.text().catch(() => '');
-          console.error(`Twitter publish forbidden (HTTP 403): ${errText.slice(0, 200)}`);
-          return { success: false, error: `HTTP 403: ${errText.slice(0, 200)}`, isTransient: false, isAuthError: false };
+          const lower = errText.toLowerCase();
+          const looksLikeAuth = (
+            lower.includes('oauth1-permissions') ||          // v2 problem URL fragment
+            lower.includes('client-not-enrolled') ||         // missing API access tier
+            lower.includes('unsupported authentication') ||
+            lower.includes('write permissions') ||
+            lower.includes('not permitted to perform') ||
+            lower.includes('your account is temporarily') || // account restriction
+            lower.includes('app is suspended')
+          );
+          console.error(`Twitter publish forbidden (HTTP 403, ${looksLikeAuth ? 'auth/scope' : 'content/policy'}): ${errText.slice(0, 200)}`);
+          return {
+            success: false,
+            error: `HTTP 403: ${errText.slice(0, 200)}`,
+            isTransient: false,
+            isAuthError: looksLikeAuth,
+          };
         }
         if (res.status === 429 || res.status >= 500) {
           return { success: false, error: `HTTP ${res.status}`, isTransient: true, isAuthError: false };
