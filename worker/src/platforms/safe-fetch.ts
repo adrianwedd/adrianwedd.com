@@ -77,20 +77,53 @@ export interface SafeFetchResult {
   blockedReason?: string;
 }
 
+// Header names that MUST NOT survive a cross-origin redirect. Mirrors how
+// well-behaved HTTP clients (curl --location, browser fetch) handle the
+// redirect chain: the credential is scoped to the originally-targeted host.
+// Critical for federated endpoint callers that pass an Authorization header.
+const SENSITIVE_REDIRECT_HEADERS = new Set(['authorization', 'cookie', 'proxy-authorization']);
+
+function stripSensitiveHeaders(init: RequestInit): RequestInit {
+  if (!init.headers) return init;
+  // Normalise to a Headers instance so we hit the same case-insensitive lookup
+  // semantics regardless of which form the caller supplied.
+  const headers = new Headers(init.headers);
+  for (const name of SENSITIVE_REDIRECT_HEADERS) {
+    headers.delete(name);
+  }
+  return { ...init, headers };
+}
+
+// Drain an intermediate 3xx response so Workers' subrequest accounting can
+// reclaim the connection. Without this, a malicious origin can return huge
+// bodies on the redirect responses themselves and stall the worker.
+async function discardBody(res: Response): Promise<void> {
+  if (!res.body) return;
+  try {
+    await res.body.cancel();
+  } catch {
+    /* body may already be locked or consumed — nothing useful to do */
+  }
+}
+
 export async function safeFetch(
   url: string,
   init: RequestInit,
   validator: (url: string) => boolean,
 ): Promise<SafeFetchResult> {
   let current = url;
+  let currentInit = init;
   for (let hop = 0; hop <= MAX_REDIRECT_HOPS; hop++) {
     if (!validator(current)) {
       return { response: null, finalUrl: current, blockedReason: `validator rejected ${current}` };
     }
-    const res = await fetch(current, { ...init, redirect: 'manual' });
+    const res = await fetch(current, { ...currentInit, redirect: 'manual' });
     // 3xx with Location: walk the redirect ourselves; refuse opaque redirects (no Location)
     if (res.status >= 300 && res.status < 400) {
       const location = res.headers.get('location');
+      // Drain the 3xx body before continuing — a malicious origin can return
+      // a huge body on the redirect response itself to stall the worker.
+      await discardBody(res);
       if (!location) {
         return { response: null, finalUrl: current, blockedReason: 'redirect without Location header' };
       }
@@ -101,10 +134,59 @@ export async function safeFetch(
       } catch {
         return { response: null, finalUrl: current, blockedReason: `invalid redirect Location: ${location}` };
       }
+      // Cross-origin redirect: strip sensitive headers so an allowlisted CDN
+      // hop can't smuggle a bearer token to a different host (even a different
+      // allowlisted one). Same origin: keep the original init so e.g. Range
+      // headers survive.
+      try {
+        const currentOrigin = new URL(current).origin;
+        const nextOrigin = new URL(nextUrl).origin;
+        if (currentOrigin !== nextOrigin) {
+          currentInit = stripSensitiveHeaders(currentInit);
+        }
+      } catch {
+        // The new URL parse already passed above; this is defensive.
+      }
       current = nextUrl;
       continue;
     }
     return { response: res, finalUrl: current };
   }
   return { response: null, finalUrl: current, blockedReason: `exceeded ${MAX_REDIRECT_HOPS} redirect hops` };
+}
+
+// Stream a response body and abort once `maxBytes` is exceeded. Returns null
+// if the cap is breached. HEAD-then-GET TOCTOU defence: even if an origin lied
+// about Content-Length on HEAD, the GET cannot inflate the worker beyond cap.
+//
+// Previously inline in bluesky.ts AND duplicated in twitter.ts. Hoisted here
+// because the cap semantics are part of the safe-fetch contract.
+export async function readBoundedArrayBuffer(res: Response, maxBytes: number): Promise<ArrayBuffer | null> {
+  if (!res.body) {
+    // No streamable body (HEAD response, etc.) — fall back to arrayBuffer with
+    // a hard length check. Still bounded; just less efficient.
+    const buf = await res.arrayBuffer();
+    return buf.byteLength <= maxBytes ? buf : null;
+  }
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      reader.cancel().catch(() => undefined);
+      return null;
+    }
+    chunks.push(value);
+  }
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return out.buffer;
 }

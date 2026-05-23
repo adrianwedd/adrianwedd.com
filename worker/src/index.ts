@@ -33,6 +33,35 @@ function validatePlatform(raw: string | undefined, fallback = 'facebook'): Platf
   return VALID_PLATFORMS.has(name) ? name as Platform : null;
 }
 
+// CronLock DO stub shape. The cast lived in three places before; extracted
+// here so an interface change is a one-line edit.
+type CronLockStub = DurableObjectStub & {
+  tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
+  release(name: string, token: string): Promise<void>;
+};
+
+function lockStubFor(env: Env, name: string): CronLockStub {
+  return env.CRON_LOCK.get(env.CRON_LOCK.idFromName(name)) as CronLockStub;
+}
+
+// H7 — idempotencyKey is typed as required but had no runtime check. Missing
+// or empty values yielded shared lock/KV names like `publish:undefined` and
+// `idempotent:undefined`, so unrelated authenticated publishes could collide
+// or suppress each other. Reject anything that isn't a non-empty string under
+// 256 bytes (KV keys cap at 512 incl. the prefix, leave headroom for the
+// `idempotent:` prefix + future suffixes).
+function validateIdempotencyKey(key: unknown): string | null {
+  if (typeof key !== 'string') return null;
+  if (key.length === 0 || key.length > 256) return null;
+  // URL-safe alphabet plus common separators (commit hashes, ISO dates, paths
+  // like "blog/foo"). Excludes spaces, control chars, and `..` (the latter is
+  // not exploitable against KV but signals a malformed key — better to reject
+  // and surface the bug than accept a footgun).
+  if (!/^[A-Za-z0-9._:/-]+$/.test(key)) return null;
+  if (key.includes('..')) return null;
+  return key;
+}
+
 // ── POST /api/publish ─────────────────────────────────────────────────────────
 
 app.post('/api/publish', async (c) => {
@@ -57,19 +86,22 @@ app.post('/api/publish', async (c) => {
   const platform = validatePlatform(body.platform);
   if (!platform) return json({ error: `Unsupported platform: ${body.platform}` }, 400);
 
+  const idempotencyKey = validateIdempotencyKey(body.idempotencyKey);
+  if (!idempotencyKey) {
+    return json({ error: 'idempotencyKey must be a non-empty string under 256 chars, URL-safe alphabet' }, 400);
+  }
+
   // Serialise the read-decide-publish sequence per idempotency key via the
   // CronLock DO. Without this, two concurrent forceRetry calls for the same
   // key can both observe the failed record, both delete it, and both publish.
   //
-  // TTL: 60s. Cloudflare Workers cap subrequests at 30s and the whole request
-  // at the per-plan CPU/wall budget — a hung publishPost will be killed long
-  // before the lock expires. No renewal needed.
-  const publishLockName = `publish:${body.idempotencyKey}`;
-  const publishLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName(publishLockName)) as DurableObjectStub & {
-    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
-    release(name: string, token: string): Promise<void>;
-  };
-  const { acquired: publishAcquired, token: publishToken } = await publishLockStub.tryAcquire(publishLockName, 60_000);
+  // TTL: 300s (5 minutes). Bluesky video pipeline polls up to 25s + media
+  // fetch + encoding can push close to a minute. The earlier 60s TTL gave a
+  // realistic race window where the lock expired mid-publish and a concurrent
+  // forceRetry could re-enter. Matches the cron-wide lock TTL.
+  const publishLockName = `publish:${idempotencyKey}`;
+  const publishLockStub = lockStubFor(env, publishLockName);
+  const { acquired: publishAcquired, token: publishToken } = await publishLockStub.tryAcquire(publishLockName, 300_000);
   if (!publishAcquired || !publishToken) {
     return json({ error: 'A publish is already in progress for this idempotencyKey' }, 409);
   }
@@ -78,7 +110,7 @@ app.post('/api/publish', async (c) => {
     // Check durable idempotency record. `published` records always block a
     // retry (prevents double-posting); `failed` records can be bypassed with
     // forceRetry.
-    const existingRaw = await env.SOCIAL.get(`idempotent:${body.idempotencyKey}`);
+    const existingRaw = await env.SOCIAL.get(`idempotent:${idempotencyKey}`);
     if (existingRaw) {
       const existing: IdempotencyRecord = JSON.parse(existingRaw);
       if (existing.status === 'published') {
@@ -89,13 +121,13 @@ app.post('/api/publish', async (c) => {
       }
       // forceRetry: clear the failed record so the publish below can proceed
       // and write a fresh idempotency entry on completion.
-      await env.SOCIAL.delete(`idempotent:${body.idempotencyKey}`);
+      await env.SOCIAL.delete(`idempotent:${idempotencyKey}`);
     }
 
     const adapter = createPlatform(platform, env);
 
     const post: SocialPost = {
-      id: body.idempotencyKey,
+      id: idempotencyKey,
       platform,
       type: body.type as SocialPost['type'],
       message: body.message,
@@ -114,16 +146,18 @@ app.post('/api/publish', async (c) => {
 
     const result = await adapter.publishPost(post);
 
-    // Write durable idempotency record (30-day TTL)
+    // Write durable idempotency record. H5: failed records carry a shorter
+    // (7d) TTL than published (30d) so a misclassified transient error
+    // auto-expires instead of blocking the post for a month.
     const record: IdempotencyRecord = {
-      key: body.idempotencyKey,
+      key: idempotencyKey,
       status: result.success ? 'published' : 'failed',
       platformPostId: result.platformPostId ?? null,
       completedAt: new Date().toISOString(),
       error: result.error ?? null,
     };
-    await env.SOCIAL.put(`idempotent:${body.idempotencyKey}`, JSON.stringify(record), {
-      expirationTtl: 30 * 24 * 60 * 60,
+    await env.SOCIAL.put(`idempotent:${idempotencyKey}`, JSON.stringify(record), {
+      expirationTtl: result.success ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60,
     });
 
     if (result.success) {
@@ -133,7 +167,9 @@ app.post('/api/publish', async (c) => {
     const status = result.isAuthError ? 503 : result.isTransient ? 502 : 422;
     return json({ published: false, error: result.error, isTransient: result.isTransient }, status);
   } finally {
-    await publishLockStub.release(publishLockName, publishToken);
+    await publishLockStub.release(publishLockName, publishToken).catch(e =>
+      console.error(`Publish lock release failed for ${idempotencyKey}: ${e instanceof Error ? e.message : String(e)}`),
+    );
   }
 });
 
@@ -323,10 +359,7 @@ app.post('/api/cron/publish', async (c) => {
   if (!authOk) return unauthorized();
 
   // Cron lock — atomic via Durable Object (prevents KV TOCTOU race)
-  const lockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName('publish')) as DurableObjectStub & {
-    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
-    release(name: string, token: string): Promise<void>;
-  };
+  const lockStub = lockStubFor(env, 'publish');
   const { acquired, token: lockToken } = await lockStub.tryAcquire('publish', 300_000);
   if (!acquired || !lockToken) return json({ skipped: true, reason: 'locked' });
 
@@ -378,30 +411,43 @@ app.post('/api/cron/publish', async (c) => {
 
     let published = 0;
     let failed = 0;
+    // Set when the catch block fails to restore queue state. Forces a non-2xx
+    // response so monitoring catches the KV outage instead of seeing 'healthy cron'.
+    let restoreFailures = 0;
+    // Set when a post-success KV write fails. We intentionally leave the
+    // `post:publishing:` orphan in place rather than risk double-publishing.
+    let orphanedAfterSuccess = 0;
 
     for (const { key, post } of processable.slice(0, 5)) {
       // C1 — Per-post publish lock. The cron run and an ad-hoc /api/publish call
       // can race on the same post.id (e.g. a manual retry triggered while cron
-      // is mid-run). /api/publish takes `publish:<idempotencyKey>`; the cron
-      // must take the same lock per-post so both paths serialise against each
-      // other. If the lock is held, skip this post — the holder is publishing it.
+      // is mid-run). /api/publish takes `publish:<idempotencyKey>` where the
+      // caller is REQUIRED to use the post's id as the key when retrying queued
+      // posts (the social-autopublish workflow and CLI `fb-post.sh` both do).
+      // Cron takes `publish:${post.id}`, so both paths serialise on the same DO
+      // instance. If the lock is held, skip — the holder is publishing it.
+      //
+      // TTL: 5 minutes. Bluesky's video pipeline alone polls for up to 25s
+      // (bluesky.ts uploadVideo deadline) plus media fetch + encoding. 60s
+      // gave a realistic race window where the lock could expire mid-publish
+      // and let a concurrent forceRetry double-post. 300s comfortably covers
+      // the worst case and matches the cron-wide lock TTL.
       const perPostLockName = `publish:${post.id}`;
-      const perPostLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName(perPostLockName)) as DurableObjectStub & {
-        tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
-        release(name: string, token: string): Promise<void>;
-      };
-      const { acquired: perPostAcquired, token: perPostToken } = await perPostLockStub.tryAcquire(perPostLockName, 60_000);
+      const perPostLockStub = lockStubFor(env, perPostLockName);
+      const { acquired: perPostAcquired, token: perPostToken } = await perPostLockStub.tryAcquire(perPostLockName, 300_000);
       if (!perPostAcquired || !perPostToken) {
         console.warn(`Skipping post ${post.id} — concurrent publisher holds per-post lock`);
         continue;
       }
 
-      // C2 — Orphan recovery. Wrap each per-post body in try/catch that restores
-      // `post:queued:` if anything throws between the delete-queued and the
-      // terminal state write. Without this, an unhandled exception in
-      // publishPost (or any KV op) silently drops the post: the queued key is
-      // already gone, the publishing key has no recovery sweep, and the next
-      // cron tick won't see the post.
+      // C2 — Phase-tracked orphan recovery. The catch below restores `post:queued:`
+      // ONLY if the external publish hasn't yet succeeded. Without phase tracking,
+      // a post-success KV write failure (e.g. transient KV outage between
+      // platform.publishPost returning success and `post:published:` write)
+      // would restore the queued key and the next cron tick would re-publish
+      // the same content to the platform — exactly the duplicate the lock was
+      // supposed to prevent. Cross-confirmed by codex/gemini/hermes.
+      let externalPublishSucceeded = false;
       try {
         // Check idempotency
         const existing = await env.SOCIAL.get(`idempotent:${post.id}`);
@@ -416,8 +462,17 @@ app.post('/api/cron/publish', async (c) => {
 
         const postAdapter = createPlatform(post.platform, env);
         const result = await postAdapter.publishPost(post);
+        externalPublishSucceeded = result.success;
 
         if (result.success) {
+          // Write the durable `idempotent:` record FIRST so that even if the
+          // `post:published:` write or the `post:publishing:` cleanup throws,
+          // any subsequent retry sees `alreadyPublished` and bails out.
+          await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
+            key: post.id, status: 'published',
+            platformPostId: result.platformPostId ?? null,
+            completedAt: new Date().toISOString(), error: null,
+          }), { expirationTtl: 30 * 24 * 60 * 60 });
           const publishedPost: SocialPost = {
             ...post,
             status: 'published',
@@ -429,11 +484,6 @@ app.post('/api/cron/publish', async (c) => {
             JSON.stringify(publishedPost),
             { expirationTtl: 180 * 24 * 60 * 60 },
           );
-          await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
-            key: post.id, status: 'published',
-            platformPostId: result.platformPostId ?? null,
-            completedAt: new Date().toISOString(), error: null,
-          }), { expirationTtl: 30 * 24 * 60 * 60 });
           await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
           published++;
         } else if (result.isAuthError) {
@@ -451,27 +501,40 @@ app.post('/api/cron/publish', async (c) => {
         } else {
           const failedPost: SocialPost = { ...post, status: 'failed', error: result.error ?? 'Unknown' };
           await env.SOCIAL.put(`post:failed:${post.id}`, JSON.stringify(failedPost));
+          // H5 — Failed records previously held the queue for 30 days (same TTL
+          // as published records). A misclassified transient error (e.g.
+          // worker treated a rate-limit-adjacent 422 as permanent) blocked any
+          // re-publish for a month without forceRetry. 7d is long enough to
+          // catch the obvious retry attempts but short enough to auto-expire.
           await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
             key: post.id, status: 'failed',
             platformPostId: null,
             completedAt: new Date().toISOString(), error: result.error ?? 'Unknown',
-          }), { expirationTtl: 30 * 24 * 60 * 60 });
+          }), { expirationTtl: 7 * 24 * 60 * 60 });
           await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
           failed++;
         }
       } catch (err) {
-        // Orphan recovery: an unhandled exception between delete-queued and
-        // terminal state would silently drop the post. Restore the queue key
-        // so the next cron tick can retry it. Idempotent w.r.t. the early-exit
-        // paths above because those don't throw.
         console.error(`Unhandled error publishing ${post.id}: ${err instanceof Error ? err.message : String(err)}`);
-        try {
-          await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
-          await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
-        } catch (restoreErr) {
-          // KV restore itself failed — best-effort log; the publishing-key sweep
-          // (if added later) is the backstop.
-          console.error(`Post-restore failed for ${post.id}: ${restoreErr instanceof Error ? restoreErr.message : String(restoreErr)}`);
+        if (externalPublishSucceeded) {
+          // The external publish ALREADY HAPPENED. Restoring the queued key
+          // would cause the next cron tick to publish the same content again
+          // (the `idempotent:` write may also have failed, so we can't rely on
+          // that to dedupe). Leave the `post:publishing:` key as an orphan;
+          // a future recovery sweep can reconcile it from the platform's API.
+          // Bumping `orphanedAfterSuccess` flips the response to 500 so this
+          // doesn't silently look like a healthy cron run.
+          orphanedAfterSuccess++;
+          console.error(`Post ${post.id} published externally but state persistence failed — leaving publishing key for manual reconciliation`);
+        } else {
+          // Pre-publish failure — safe to restore queued state for retry.
+          try {
+            await env.SOCIAL.put(key, JSON.stringify({ ...post, status: 'queued' }));
+            await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
+          } catch (restoreErr) {
+            restoreFailures++;
+            console.error(`Post-restore failed for ${post.id}: ${restoreErr instanceof Error ? restoreErr.message : String(restoreErr)}`);
+          }
         }
         // Don't rethrow — let the loop continue with subsequent posts. The
         // outer try/finally will still release the cron-wide lock.
@@ -486,9 +549,20 @@ app.post('/api/cron/publish', async (c) => {
     if (remaining > 10) console.error(`Post queue backlog: ${remaining}`);
     else if (remaining > 0) console.warn(`${remaining} posts still queued`);
 
-    return json({ published, failed, remaining, tokenExpiresInDays: tokenExpiryByPlatform });
+    // Surface infrastructure failures as 5xx so monitoring catches them.
+    // restoreFailures = catch-path KV write failed (post is lost).
+    // orphanedAfterSuccess = external publish succeeded but state persistence
+    // failed (intentionally not retried to avoid double-publish; needs
+    // manual reconciliation of the `post:publishing:` orphan).
+    const responseBody = { published, failed, remaining, tokenExpiresInDays: tokenExpiryByPlatform, restoreFailures, orphanedAfterSuccess };
+    if (restoreFailures > 0 || orphanedAfterSuccess > 0) {
+      return json(responseBody, 500);
+    }
+    return json(responseBody);
   } finally {
-    await lockStub.release('publish', lockToken);
+    await lockStub.release('publish', lockToken).catch(e =>
+      console.error(`Cron publish lock release failed: ${e instanceof Error ? e.message : String(e)}`),
+    );
   }
 });
 
@@ -499,10 +573,7 @@ app.post('/api/cron/comments', async (c) => {
   const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET);
   if (!authOk) return unauthorized();
 
-  const commentsLockStub = env.CRON_LOCK.get(env.CRON_LOCK.idFromName('comments')) as DurableObjectStub & {
-    tryAcquire(name: string, ttlMs: number): Promise<{ acquired: boolean; token: string | null }>;
-    release(name: string, token: string): Promise<void>;
-  };
+  const commentsLockStub = lockStubFor(env, 'comments');
   const { acquired: commentsAcquired, token: commentsToken } = await commentsLockStub.tryAcquire('comments', 300_000);
   if (!commentsAcquired || !commentsToken) return json({ skipped: true, reason: 'locked' });
 
@@ -528,7 +599,9 @@ app.post('/api/cron/comments', async (c) => {
     const fbResult = platformResults.facebook as Record<string, unknown> | undefined;
     return json({ ...fbResult, platforms: platformResults });
   } finally {
-    await commentsLockStub.release('comments', commentsToken);
+    await commentsLockStub.release('comments', commentsToken).catch(e =>
+      console.error(`Cron comments lock release failed: ${e instanceof Error ? e.message : String(e)}`),
+    );
   }
 });
 

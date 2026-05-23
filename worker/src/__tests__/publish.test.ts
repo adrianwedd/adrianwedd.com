@@ -464,6 +464,46 @@ describe('POST /api/cron/publish', () => {
     expect(kv.store.has(queueKey)).toBe(true);
   });
 
+  // Codex/gemini/hermes High follow-up to C2: phase-tracked orphan recovery.
+  // If publishPost SUCCEEDS but the terminal KV writes throw (transient KV
+  // outage), the old blanket restore would re-queue the post and the next
+  // cron tick would publish to the platform AGAIN — exactly the duplicate
+  // the lock was supposed to prevent. The fix tracks `externalPublishSucceeded`
+  // and refuses to restore in that case, surfacing it via `orphanedAfterSuccess`
+  // and a 500 response so monitoring catches the KV outage.
+  it('does NOT requeue when publishPost succeeded but post:published: KV write throws (no double-publish)', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValueOnce(healthyToken);
+    mockPublishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'fb_external_id', isTransient: false, isAuthError: false,
+    });
+
+    const post = makePost('post-success-kv-fail');
+    const queueKey = `post:queued:${post.scheduledAtEpoch}:${post.id}`;
+    kv.store.set(queueKey, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: queueKey }], list_complete: true });
+
+    // Make the `post:published:` write throw — the kind of transient KV failure
+    // that previously triggered the bug.
+    kv.put.mockImplementation(async (key: string, value: string) => {
+      if (key.startsWith('post:published:')) {
+        throw new Error('KV unavailable');
+      }
+      kv.store.set(key, value);
+    });
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv));
+    // The cron should surface the infrastructure failure as 500, not pretend
+    // everything was fine.
+    expect(res.status).toBe(500);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.orphanedAfterSuccess).toBe(1);
+
+    // CRITICALLY: the queued key must NOT be restored — otherwise the next
+    // cron tick would call publishPost again on a post that already published.
+    expect(kv.store.has(queueKey)).toBe(false);
+  });
+
   // C2 — Orphan recovery. Without the try/catch around the per-post body, an
   // unhandled exception (network blip, JSON parse failure, etc.) after the
   // queued key is deleted but before the terminal state is written would
@@ -693,5 +733,116 @@ describe('POST /api/publish forceRetry', () => {
     expect(res.status).toBe(200);
     expect(cronLock.release).toHaveBeenCalledWith('publish:release-test', expect.any(String));
     expect(cronLock.held.has('publish:release-test')).toBe(false);
+  });
+
+  // H7 — Without runtime validation, missing/empty/malicious idempotencyKeys
+  // produced shared lock and KV names (publish:undefined, idempotent:undefined)
+  // that let unrelated authenticated publishes collide or suppress each other.
+  it.each([
+    ['missing',     {}],
+    ['empty',       { idempotencyKey: '' }],
+    ['null',        { idempotencyKey: null }],
+    ['number',      { idempotencyKey: 12345 }],
+    ['too long',    { idempotencyKey: 'a'.repeat(257) }],
+    ['unsafe char', { idempotencyKey: 'has space' }],
+    ['path-trav',   { idempotencyKey: '../../system' }],
+  ])('rejects %s idempotencyKey with 400', async (_label, override) => {
+    const kv = mockKV();
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', ...override }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(400);
+    expect(mockPublishPost).not.toHaveBeenCalled();
+  });
+
+  it('accepts a typical commit-hash idempotencyKey', async () => {
+    const kv = mockKV();
+    mockPublishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'ok', isTransient: false, isAuthError: false,
+    });
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'commit-3ae25f2c-blog/foo' }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+  });
+});
+
+// H9 — /api/cron/comments had zero route-level test coverage. These tests
+// exercise the lock-held skip, per-platform expired-token skip, multi-platform
+// iteration, and lock release on throw.
+describe('POST /api/cron/comments', () => {
+  function commentsRequest() {
+    return new Request('http://localhost/api/cron/comments', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer test-cron-secret' },
+    });
+  }
+
+  it('returns 401 without valid cron auth', async () => {
+    const kv = mockKV();
+    const req = new Request('http://localhost/api/cron/comments', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer wrong' },
+    });
+    const res = await app.fetch(req, makeEnv(kv));
+    expect(res.status).toBe(401);
+  });
+
+  it('skips when the comments lock is held', async () => {
+    const kv = mockKV();
+    const cronLock = mockCronLock(['comments']);
+    const res = await app.fetch(commentsRequest(), makeEnv(kv, cronLock));
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.skipped).toBe(true);
+    expect(body.reason).toBe('locked');
+    // Token health should not have been checked
+    expect(mockDebugAuth).not.toHaveBeenCalled();
+    // Release must NOT fire when acquire failed
+    expect(cronLock.release).not.toHaveBeenCalled();
+  });
+
+  it('iterates configured platforms and reports per-platform results', async () => {
+    const kv = mockKV();
+    setConfiguredPlatforms(['facebook', 'bluesky']);
+    getPlatformMocks('facebook').debugAuth.mockResolvedValueOnce(healthyToken);
+    getPlatformMocks('bluesky').debugAuth.mockResolvedValueOnce({
+      valid: true, platform: 'bluesky', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 60,
+    });
+    const res = await app.fetch(commentsRequest(), makeEnv(kv));
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    const platforms = body.platforms as Record<string, unknown>;
+    expect(platforms.facebook).toBeDefined();
+    expect(platforms.bluesky).toBeDefined();
+  });
+
+  it('skips a platform with expired data access and continues with others', async () => {
+    const kv = mockKV();
+    setConfiguredPlatforms(['facebook', 'bluesky']);
+    getPlatformMocks('facebook').debugAuth.mockResolvedValueOnce({
+      valid: false, platform: 'facebook', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0,
+    });
+    getPlatformMocks('bluesky').debugAuth.mockResolvedValueOnce(healthyToken);
+
+    const res = await app.fetch(commentsRequest(), makeEnv(kv));
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    const platforms = body.platforms as Record<string, { error?: string }>;
+    expect(platforms.facebook.error).toBe('data access expired');
+    expect(platforms.bluesky).toBeDefined();
+  });
+
+  it('releases the comments lock in finally even on unexpected error', async () => {
+    const kv = mockKV();
+    const cronLock = mockCronLock();
+    mockDebugAuth.mockRejectedValueOnce(new Error('boom'));
+    try {
+      await app.fetch(commentsRequest(), makeEnv(kv, cronLock));
+    } catch { /* swallow — testing finally */ }
+    expect(cronLock.release).toHaveBeenCalledWith('comments', expect.any(String));
+    expect(cronLock.held.has('comments')).toBe(false);
   });
 });
