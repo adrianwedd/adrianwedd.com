@@ -8,7 +8,7 @@ import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
-import { slug } from '../../lib/utils';
+import { slug, youtubeId, ogSafeImage } from '../../lib/utils';
 import { getImageDimensions } from '../../lib/image-dimensions';
 
 export async function getStaticPaths() {
@@ -41,9 +41,7 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
 // scrapes. The .jpg twin is generated alongside the .webp at build/asset
 // time. Fall back to the auto-generated text-card OG PNG when no heroImage.
 const postSlug = slug(post.id);
-const ogImage = post.data.heroImage
-  ? post.data.heroImage.replace(/\.webp$/, '.jpg')
-  : `/og/blog/${postSlug}.png`;
+const ogImage = post.data.heroImage ? ogSafeImage(post.data.heroImage) : `/og/blog/${postSlug}.png`;
 // Read the actual image dimensions at build time (covers infographics, text
 // cards, and any future OG image shape without filename-based heuristics).
 // Falls back to standard 1200x630 if the file is missing or unreadable.
@@ -113,8 +111,9 @@ const matchedProject = allProjects.find(
     })}
   />
   {
-    (post.data.videoUrl || post.data.youtubeUrl) && (() => {
-      const ytId = post.data.youtubeUrl?.match(/[?&]v=([^&]+)/)?.[1];
+    (() => {
+      const ytId = youtubeId(post.data.youtubeUrl);
+      if (!post.data.videoUrl && !ytId) return null;
       return (
         <script
           is:inline
@@ -131,7 +130,7 @@ const matchedProject = allProjects.find(
             }),
             uploadDate: post.data.date.toISOString(),
             thumbnailUrl: post.data.heroImage
-              ? new URL(post.data.heroImage, Astro.site).href
+              ? new URL(ogSafeImage(post.data.heroImage), Astro.site).href
               : new URL('/og-default.png', Astro.site).href,
           })}
         />
