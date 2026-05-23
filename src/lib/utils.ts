@@ -44,7 +44,7 @@ export function youtubeId(url: string | undefined | null): string | null {
     const id = u.pathname.slice(1).split('/')[0];
     return idRe.test(id) ? id : null;
   }
-  if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+  if (host === 'youtube.com' || host === 'youtube-nocookie.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
     const v = u.searchParams.get('v');
     if (v && idRe.test(v)) return v;
     const m = u.pathname.match(/^\/(?:embed|shorts|live|v)\/([A-Za-z0-9_-]{11})(?:[/?].*)?$/);
@@ -61,5 +61,5 @@ export function youtubeId(url: string | undefined | null): string | null {
  * metadata at those. Non-webp paths pass through unchanged.
  */
 export function ogSafeImage(path: string): string {
-  return path.replace(/\.webp$/i, '.jpg');
+  return path.replace(/\.webp(?=[?#]|$)/i, '.jpg');
 }

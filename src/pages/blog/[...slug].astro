@@ -111,8 +111,9 @@ const matchedProject = allProjects.find(
     })}
   />
   {
-    (post.data.videoUrl || post.data.youtubeUrl) && (() => {
+    (() => {
       const ytId = youtubeId(post.data.youtubeUrl);
+      if (!post.data.videoUrl && !ytId) return null;
       return (
         <script
           is:inline

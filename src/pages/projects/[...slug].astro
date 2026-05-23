@@ -100,7 +100,7 @@ const allBlogPosts = project.data.series
               : `https://github.com/adrianwedd/${project.data.repo}`,
           }
         : {}),
-      ...(project.data.heroImage ? { image: new URL(project.data.heroImage, Astro.site).href } : {}),
+      ...(project.data.heroImage ? { image: new URL(ogSafeImage(project.data.heroImage), Astro.site).href } : {}),
       author: {
         '@type': 'Person',
         name: 'Adrian Wedd',
@@ -110,8 +110,9 @@ const allBlogPosts = project.data.series
     })}
   />
   {
-    (project.data.videoUrl || project.data.youtubeUrl) && (() => {
+    (() => {
       const ytId = youtubeId(project.data.youtubeUrl);
+      if (!project.data.videoUrl && !ytId) return null;
       return (
         <script
           is:inline
