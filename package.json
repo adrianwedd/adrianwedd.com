@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "node scripts/generate-og-images.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
     "fetch-analytics": "node scripts/fetch-ga4-data.mjs",
