@@ -5,15 +5,16 @@ import type {
   Comment,
   AuthStatus,
 } from './types';
-import { isAllowedMediaUrl, safeFetch } from './safe-fetch';
+import { isAllowedMediaUrl, safeFetch, readBoundedArrayBuffer } from './safe-fetch';
 
 const BSKY_BASE = 'https://bsky.social/xrpc';
 const MAX_GRAPHEMES = 300;
 
-// Match either ?v=ID, &v=ID (long-form) or youtu.be/ID (short-form). Capture
-// group is whichever matched. Used in both publish (Bluesky embed) and the
-// Astro VideoObject schema; keep in sync with src/pages/{blog,projects}/[...slug].astro.
-const YOUTUBE_ID_REGEX = /(?:[?&]v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/;
+// YouTube IDs are exactly 11 chars from the alphabet [A-Za-z0-9_-]. Match
+// either ?v=ID, &v=ID (long-form) or youtu.be/ID (short-form). Capture group
+// is whichever matched. Used in both publish (Bluesky embed) and the Astro
+// VideoObject schema — keep in sync with src/pages/{blog,projects}/[...slug].astro.
+const YOUTUBE_ID_REGEX = /(?:[?&]v=|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[^A-Za-z0-9_-]|$)/;
 
 interface BskySession {
   did: string;
@@ -67,37 +68,6 @@ function truncateGraphemes(text: string, max: number): string {
   return graphemes.slice(0, max).join('');
 }
 
-
-// Stream a response body and abort once `maxBytes` is exceeded. Returns null
-// if the cap is breached. HEAD-then-GET TOCTOU defence: even if an origin lied
-// about Content-Length on HEAD, the GET cannot inflate the worker beyond cap.
-async function readBoundedArrayBuffer(res: Response, maxBytes: number): Promise<ArrayBuffer | null> {
-  if (!res.body) {
-    const buf = await res.arrayBuffer();
-    return buf.byteLength <= maxBytes ? buf : null;
-  }
-  const reader = res.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    if (!value) continue;
-    total += value.byteLength;
-    if (total > maxBytes) {
-      reader.cancel().catch(() => undefined);
-      return null;
-    }
-    chunks.push(value);
-  }
-  const out = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) {
-    out.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return out.buffer;
-}
 
 async function uploadVideo(session: BskySession, videoUrl: string): Promise<unknown | null> {
   if (!isAllowedMediaUrl(videoUrl)) return null;
