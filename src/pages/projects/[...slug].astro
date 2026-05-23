@@ -7,7 +7,7 @@ import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
-import { slug } from '../../lib/utils';
+import { slug, youtubeId, ogSafeImage } from '../../lib/utils';
 import { getImageDimensions } from '../../lib/image-dimensions';
 import { Picture } from 'astro:assets';
 
@@ -28,9 +28,7 @@ const projectSlug = slug(project.id);
 // OG image: prefer the project's hero infographic, swap .webp -> .jpg
 // (FB / X / LinkedIn / iMessage don't reliably render WebP og:image).
 // The .jpg twin is generated alongside the .webp.
-const ogImage = project.data.heroImage
-  ? project.data.heroImage.replace(/\.webp$/, '.jpg')
-  : `/og/projects/${projectSlug}.png`;
+const ogImage = project.data.heroImage ? ogSafeImage(project.data.heroImage) : `/og/projects/${projectSlug}.png`;
 // Read actual image dimensions at build time — covers infographics, text
 // cards, and any future OG image shape without filename-based heuristics.
 const ogDimensions = getImageDimensions(ogImage);
@@ -113,7 +111,7 @@ const allBlogPosts = project.data.series
   />
   {
     (project.data.videoUrl || project.data.youtubeUrl) && (() => {
-      const ytId = project.data.youtubeUrl?.match(/[?&]v=([^&]+)/)?.[1];
+      const ytId = youtubeId(project.data.youtubeUrl);
       return (
         <script
           is:inline
@@ -130,7 +128,7 @@ const allBlogPosts = project.data.series
             }),
             uploadDate: project.data.date.toISOString(),
             thumbnailUrl: project.data.heroImage
-              ? new URL(project.data.heroImage, Astro.site).href
+              ? new URL(ogSafeImage(project.data.heroImage), Astro.site).href
               : new URL('/og-default.png', Astro.site).href,
           })}
         />

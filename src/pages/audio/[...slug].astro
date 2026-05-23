@@ -6,7 +6,7 @@ import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
-import { slug } from '../../lib/utils';
+import { slug, ogSafeImage } from '../../lib/utils';
 
 export async function getStaticPaths() {
   const episodes = (await getCollection('audio')).filter((e) => !e.data.draft);
@@ -19,6 +19,11 @@ export async function getStaticPaths() {
 const { episode } = Astro.props;
 const { Content } = await render(episode);
 
+// FB / X / LinkedIn / iMessage don't reliably render WebP og:image scrapes;
+// the .jpg twin is generated alongside the .webp at content-build time. Fall
+// back to the site-wide default OG card when the episode has no heroImage.
+const ogImage = episode.data.heroImage ? ogSafeImage(episode.data.heroImage) : '/og-default.png';
+
 const allEpisodes = (await getCollection('audio'))
   .filter((e) => !e.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -30,7 +35,7 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
 <BaseLayout
   title={episode.data.title}
   description={episode.data.description}
-  image={episode.data.heroImage}
+  image={ogImage}
   type="article"
   publishedDate={episode.data.date.toISOString()}
   tags={episode.data.tags}
