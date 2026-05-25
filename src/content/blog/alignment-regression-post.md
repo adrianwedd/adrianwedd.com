@@ -6,6 +6,7 @@ tags: ['ai-safety', 'alignment', 'reasoning', 'jailbreaking', 'llm', 'autonomous
 draft: false
 heroImage: '/notebook-assets/alignment-regression/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/audio.mp3'
+audioDuration: '21:36'
 ---
 
 We have been operating under a reasonable-sounding assumption: as AI models improve, safety improves with them. Better reasoning, better alignment. More capable models, more capable guardrails.
