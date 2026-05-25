@@ -112,6 +112,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
                     width={400}
                     height={300}
                     widths={[200, 400, 800]}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     formats={['avif', 'webp']}
                     alt={collection.data.title}
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
