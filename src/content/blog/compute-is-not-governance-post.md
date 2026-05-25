@@ -4,8 +4,9 @@ description: "Anthropic's 2028 scenarios document three policy asks. Two are abo
 date: 2026-05-25
 tags: ['ai-safety', 'policy', 'anthropic', 'governance', 'research', 'geopolitics']
 draft: false
-heroImage: ''
-audioUrl: ''
+heroImage: '/notebook-assets/compute-is-not-governance/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/compute-is-not-governance/audio.mp3'
+audioDuration: '21:29'
 faq:
   - q: "What is Anthropic's 2028 document?"
     a: "\"2028: Two Scenarios for Global AI Leadership\" is Anthropic's May 14, 2026 policy brief. It argues the U.S. can maintain AI leadership through compute export controls, disrupting capability distillation from frontier models, and championing American AI exports — and that leadership matters for democratic AI governance."

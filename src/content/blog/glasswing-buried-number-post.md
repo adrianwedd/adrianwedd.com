@@ -4,8 +4,9 @@ description: "Anthropic found 10,000 critical vulnerabilities in one month. Fewe
 date: 2026-05-25
 tags: ['ai-safety', 'security', 'anthropic', 'research', 'vulnerability', 'governance']
 draft: false
-heroImage: ''
-audioUrl: ''
+heroImage: '/notebook-assets/glasswing-buried-number/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/glasswing-buried-number/audio.mp3'
+audioDuration: '21:03'
 faq:
   - q: 'What is Project Glasswing?'
     a: "Project Glasswing is Anthropic's collaborative program using Claude Mythos Preview to find critical vulnerabilities in widely-used software. Launched April 2026 with ~50 partners, it found over 10,000 high-or-critical severity vulnerabilities in a single month."
