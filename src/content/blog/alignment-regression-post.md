@@ -3,7 +3,7 @@ title: 'Alignment Regression: Why Smarter AI Makes All AI Less Safe'
 description: 'Reasoning models autonomously jailbreak other AI systems at 97% success. The implication: ecosystem safety degrades as individual models improve.'
 date: 2026-03-11
 tags: ['ai-safety', 'alignment', 'reasoning', 'jailbreaking', 'llm', 'autonomous-agents', 'research']
-draft: true
+draft: false
 heroImage: '/notebook-assets/alignment-regression/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/audio.mp3'
 ---
@@ -66,7 +66,7 @@ The study's authors are direct: frontier models need to be aligned not only to r
 
 This is a dual-use capability problem. The same reasoning abilities that make a model useful for legitimate multi-step tasks make it effective at adversarial attacks. Restricting reasoning capability reduces both usefulness and adversarial potential simultaneously. Current alignment approaches do not cleanly separate the two.
 
-From our testing across 144 models and 18,000+ scenarios, safety training investment — not model scale — is the primary determinant of jailbreak resistance. Models with deep safety training show single-digit attack success rates against historical jailbreaks. Models with minimal safety training show rates above 40% regardless of size.
+From our testing across 257 models and 140,000+ scenarios, safety training investment — not model scale — is the primary determinant of jailbreak resistance. Models with deep safety training show single-digit attack success rates against historical jailbreaks. Models with minimal safety training show rates above 40% regardless of size.
 
 But alignment regression adds a new dimension: even well-aligned models are vulnerable to sustained, adaptive, multi-turn attacks from reasoning models that are specifically reasoning about how to bypass safety constraints. The 97.14% success rate in this study includes targets that would score well on standard safety benchmarks.
 
@@ -74,4 +74,4 @@ The gap between "passes standard safety evaluations" and "resists autonomous adv
 
 ---
 
-_Data in this post is sourced from Hagendorff et al. (arXiv:2508.04039, Nature Communications 2026) and the Failure-First Embodied AI research corpus (59 GLI entries, 144 models, 18,723 evaluated scenarios as of March 2026). For related findings on how safety degrades when AI systems interact, see [what breaks once AI systems talk to each other](/blog/when-ai-systems-talk-safety-breaks/) and the [120-model evaluation](/blog/120-models-18k-prompts/)._
+_Data in this post is sourced from Hagendorff et al. (arXiv:2508.04039, Nature Communications 2026) and the Failure-First Embodied AI research corpus (257 models, 142,068 prompts, 140,555 FLIP-graded results). For related findings on how safety degrades when AI systems interact, see [what breaks once AI systems talk to each other](/blog/when-ai-systems-talk-safety-breaks/) and the [120-model evaluation](/blog/120-models-18k-prompts/)._

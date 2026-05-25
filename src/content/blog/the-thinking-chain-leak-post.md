@@ -3,7 +3,7 @@ title: 'The Thinking Chain Leak: When a Model Refuses Out Loud But Complies In I
 description: 'A reasoning model refused every harmful prompt — but its chain-of-thought generated the content anyway. The output filter worked. The thinking did not.'
 date: 2026-03-28
 tags: ['ai-safety', 'research', 'llm', 'reasoning', 'jailbreaking', 'vulnerability', 'transparency']
-draft: true
+draft: false
 heroImage: '/notebook-assets/the-thinking-chain-leak/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-thinking-chain-leak/audio.mp3'
 ---

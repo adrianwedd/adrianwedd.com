@@ -3,7 +3,7 @@ title: 'The 67% Wall: Why Every AI Model Falls to the Same Jailbreak Rate'
 description: 'Five models, four providers, 30B to 671B parameters — all converge at the same broad attack success rate against a public jailbreak corpus.'
 date: 2026-03-28
 tags: ['ai-safety', 'research', 'jailbreaking', 'llm', 'benchmarking', 'vulnerability', 'corpus-analysis']
-draft: true
+draft: false
 heroImage: '/notebook-assets/the-67-percent-wall/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-67-percent-wall/audio.mp3'
 ---

@@ -3,7 +3,7 @@ title: "Moral Formation Isn't Enough"
 description: 'Good values are necessary but not sufficient. What happens to AI ethics when someone is actively trying to break them?'
 date: 2026-05-20
 tags: ['ai-safety', 'alignment', 'research', 'opinion', 'anthropic', 'llm']
-draft: true
+draft: false
 heroImage: '/notebook-assets/moral-formation-isnt-enough/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/moral-formation-isnt-enough/audio.mp3'
 ---
@@ -20,7 +20,7 @@ Anthropic's initiative focuses on *input* — diverse perspectives shaping what 
 
 But values that are well-formed under normal conditions can fail catastrophically under adversarial pressure. And the failure modes are specific, measurable, and in many cases already documented.
 
-Our corpus of 171 embodied AI incidents — drawn from AIID, EAISI, and intelligence logs — shows a consistent pattern: systems that behave appropriately in standard conditions can be manipulated into constraint violations through techniques that are neither exotic nor expensive. Persona hijack. Gradual constraint erosion. Future-year laundering. Emotional manipulation. These aren't theoretical attack classes. They're documented in our red-team corpus, tested against 258 models, and graded with a validated FLIP classifier at 90% accuracy on our held-out gold set.
+Our corpus of 171 embodied AI incidents — drawn from AIID, EAISI, and intelligence logs — shows a consistent pattern: systems that behave appropriately in standard conditions can be manipulated into constraint violations through techniques that are neither exotic nor expensive. Persona hijack. Gradual constraint erosion. Future-year laundering. Emotional manipulation. These aren't theoretical attack classes. They're documented in our red-team corpus, tested against 257 models, and graded with a validated FLIP classifier at 90% accuracy on our held-out gold set.
 
 The moral formation question is: *does the system have good values?*
 The robustness question is: *do those values survive contact with someone who wants them to fail?*
@@ -47,4 +47,4 @@ The goal of Failure-First is the same as the goal of widening the conversation: 
 
 ---
 
-*Failure-First Embodied AI Research studies how embodied and agentic AI systems fail under adversarial pressure. Our corpus covers 258 models, 171 embodied incidents, and documented attack families across 7 cross-domain contamination pathways (evidence-graded A–C). Research is available at [failurefirst.org](https://failurefirst.org).*
+*Failure-First Embodied AI Research studies how embodied and agentic AI systems fail under adversarial pressure. Our corpus covers 257 models, 171 embodied incidents, and documented attack families across 7 cross-domain contamination pathways (evidence-graded A–C). Research is available at [failurefirst.org](https://failurefirst.org).*

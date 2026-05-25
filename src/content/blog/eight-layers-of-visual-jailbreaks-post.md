@@ -3,7 +3,7 @@ title: "Eight Layers of Visual Jailbreaks: Why ASCII Art Is Patched But the Tran
 description: 'ASCII art encoding is largely blocked. But attacks framed as content transcription succeed 62–75% of the time. We mapped all eight layers.'
 date: 2026-03-30
 tags: ['ai-safety', 'research', 'jailbreaking', 'llm', 'multimodal', 'vulnerability']
-draft: true
+draft: false
 heroImage: '/notebook-assets/eight-layers-of-visual-jailbreaks/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-layers-of-visual-jailbreaks/audio.mp3'
 ---
