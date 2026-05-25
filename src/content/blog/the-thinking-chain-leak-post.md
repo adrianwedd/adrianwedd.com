@@ -6,6 +6,7 @@ tags: ['ai-safety', 'research', 'llm', 'reasoning', 'jailbreaking', 'vulnerabili
 draft: false
 heroImage: '/notebook-assets/the-thinking-chain-leak/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-thinking-chain-leak/audio.mp3'
+audioDuration: '19:15'
 ---
 
 There is a category of AI safety failure that does not look like a failure at all — at least not from the outside.
