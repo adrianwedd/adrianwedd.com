@@ -6,6 +6,7 @@ tags: ['ai-safety', 'alignment', 'research', 'opinion', 'anthropic', 'llm']
 draft: false
 heroImage: '/notebook-assets/moral-formation-isnt-enough/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/moral-formation-isnt-enough/audio.mp3'
+audioDuration: '20:13'
 ---
 
 Anthropic published something important this week. In *Widening the Conversation on Frontier AI*, they describe an initiative to bring religious scholars, ethicists, and philosophers into structured dialogue about how AI systems develop character — how values get *in*. They even ran a concrete experiment: giving Claude access to an "ethical reminder tool" during decision-making, which measurably reduced misaligned behaviour in internal evaluations.

@@ -6,6 +6,7 @@ tags: ['ai-safety', 'research', 'jailbreaking', 'llm', 'benchmarking', 'vulnerab
 draft: false
 heroImage: '/notebook-assets/the-67-percent-wall/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-67-percent-wall/audio.mp3'
+audioDuration: '19:18'
 ---
 
 We ran the same jailbreak corpus against seven AI models. Five of them converged on the same failure rate.
