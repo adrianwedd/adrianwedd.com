@@ -5,7 +5,7 @@ tags: ['web', 'fun', 'kids', 'open-source']
 url: 'https://squishmallowdex.com'
 repo: 'https://github.com/adrianwedd/squishmallowdex'
 status: 'complete'
-featured: true
+featured: false
 heroImage: '/notebook-assets/squishmallowdex/infographic.webp'
 date: 2024-12-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/audio.mp3'

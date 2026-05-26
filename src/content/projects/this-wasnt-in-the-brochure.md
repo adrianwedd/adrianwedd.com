@@ -15,13 +15,13 @@ seriesOrder: 1
 youtubeUrl: 'https://www.youtube.com/watch?v=uHWSOTDXNbA'
 ---
 
-A book and companion site for co-parents navigating ADHD, autism, PDA, and ODD — built on a simple premise: the brochure they gave you was for a different trip.
+If your child is neurodivergent, the heritability data — 74–90% for ADHD, comparable for autism — means you probably are too. Most co-parenting guides were written for someone else's family. This is the one that wasn't.
+
+The book calls this the double discovery: the moment you start understanding your child's brain and recognise your own in it. It treats that recognition not as a complication but as the foundation of effective co-parenting — because the strategies that work for one often work for the other, and the parenting advice that never quite landed probably missed you both for the same reason.
 
 ## What it is
 
-Eleven chapters, seven appendices, four regionally localised editions. Not a parenting manual — a cartographer's guide to the shared neurobiology of your household. The core argument: if your child is neurodivergent, the heritability data (74–90%) means you probably are too. The book calls this the double discovery, and treats it as the foundation of effective co-parenting rather than a complication.
-
-Every strategy includes variations for high-conflict and parallel parenting. You don't need a friendly divorce to use this book. You need only a shared commitment — even a reluctant one — to your child's wellbeing.
+Eleven chapters, seven appendices, four regionally localised editions. Not a parenting manual — a cartographer's guide to the shared neurobiology of your household. Every strategy includes variations for high-conflict and parallel parenting. You don't need a friendly divorce to use this book. You need only a shared commitment — even a reluctant one — to your child's wellbeing.
 
 ## How it was built
 

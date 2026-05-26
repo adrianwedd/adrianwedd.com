@@ -4,7 +4,7 @@ description: "The First Step Act exists. The information is public. The legal co
 tags: ['ai', 'justice', 'python']
 repo: 'https://github.com/adrianwedd/freedom-engine'
 status: 'active'
-featured: false
+featured: true
 date: 2025-04-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/video.mp4'
