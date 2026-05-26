@@ -3,6 +3,7 @@ title: 'The Bottom Pub Co-op'
 description: 'Cloudflare Pages site for a community co-operative proposal. EOI intake, Claude triage, Access-gated admin vault, editorial guardrails at build time.'
 tags: ['web', 'cloudflare', 'community', 'ai', 'governance']
 url: 'https://bottom.pub'
+repo: 'https://github.com/adrianwedd/bottom.pub'
 status: 'active'
 featured: true
 date: 2026-05-15
