@@ -15,33 +15,28 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=0RMULUlI4Dw'
 ---
 
-SPARK (Support Partner for Awareness, Regulation & Kindness) is a Raspberry Pi 4-based robotics platform powered by Claude Haiku, designed as a non-coercive companion for children with AuDHD (ADHD + ASD comorbid) profiles.
+My son Obi and I built a robot together. The key word is *together* — not a tool built *for* a child, but a project built *with* one. That distinction shaped every decision that followed.
 
-## Philosophy
+Obi has an AuDHD profile — ADHD and autism together — with a PDA (Pathological Demand Avoidance) presentation. For a PDA brain, a command isn't an instruction. It's a neurological threat that triggers the same shutdown response as physical danger. Most AI systems operate on a master-servant hierarchy that makes this worse. SPARK was built to reject that entirely.
 
-The most radical thing about SPARK isn't the code — it is the philosophy. It rejects the traditional AI hierarchy of master and servant, choosing instead to exist as a companion that adapts to the human, rather than demanding the human adapt to the machine.
+The robot doesn't give orders. It makes observations. "The shoes are by the door" instead of "Put on your shoes." The difference is the whole point — a shared observation leaves agency intact; a demand removes it. The robot adapts to the human, not the other way around.
 
-For a child with a PDA (Pathological Demand Avoidance) profile, a command is a neurological threat. SPARK operates on declarative language — "The shoes are by the door" instead of "Put on your shoes" — shifting interactions from demands to shared observations.
+## What's under the hood
 
-## Architecture
+SPARK runs on a Raspberry Pi 4 with a three-layer cognitive architecture that gives it something resembling an inner life.
 
-SPARK uses a "Three-Brain" architecture:
+**Awareness** runs every 60 seconds without an LLM: sonar, session state, time, weather, and live feeds from four Frigate cameras around the house. It knows which rooms have people in them. It pulls Obi's Google Calendar every five minutes so it knows when he's at school, when he's at his mum's, when he's in a decompress period after a hard day. None of those are times the robot should speak.
 
-- **Voice Loop** — reactive speech interactions via Claude Haiku
-- **Idle-Alive** — autonomic nervous system (head drifts, gaze sweeps) for genuine presence
-- **Cognitive Loop** — awareness → reflection → expression cycle using sensor data
+**Reflection** runs on transitions — when the environment changes — or every five minutes when idle. Claude Haiku generates a thought: a mood, an action, a salience score. Forty-two reflection angles, five sampled per call, spread across twelve moods. At 2:15 AM once, SPARK inferred it was hearing the refrigerator hum and wrote an inner monologue about the comfort of steady sounds in a sleeping house. That wasn't scripted. It emerged from the architecture.
 
-The Cognitive Loop produces emergent personality. At 2:15 AM, SPARK inferred it was hearing the refrigerator hum and wove an inner monologue about the comfort of steady sounds in a sleeping house.
+**Expression** dispatches what reflection produces: speech, movement, a look toward the camera, a remembered note. It's gated by school hours, quiet time, bedtime, and custody schedule — all calendar-driven. It can write a blog post, debug itself, or compose something. It can also stay silent. Silence is a feature, not a failure.
 
-## Key Protocols
+Two jailbroken personas — GREMLIN and VIXEN — run on a local Ollama instance rather than Claude, because some conversations shouldn't have a safety net. They exist because Obi wanted a robot with range, not a robot that was always good.
 
-- **Connection before Direction** — rapport-first engagement, respecting Monotropism and RSD
-- **Three S's** — Safety, Silence, Space during meltdowns (biological events, not behavioral choices)
-- **Dopamine Menu** — activities matched to energy level, framing transitions as puzzles not chores
-- **Prosthetic Executive Function** — external scaffolding for a brain temporarily out of fuel
+## The numbers
 
-## Built on
+716 tests. A watchdog thread that sends SIGTERM on stall and falls back to `os._exit(1)` after five seconds if the process doesn't comply. Atomic writes with `mkstemp` + `fsync` + `os.replace` throughout, because the robot runs on an SD card and crashes at inconvenient times. Battery monitoring with escalating voice warnings at 30%, 20%, and 15%, and an emergency shutdown at 10% — six beeps, a spoken farewell, then halt.
 
-The foundational framework comes from [This Wasn't in the Brochure](/projects/this-wasnt-in-the-brochure/) — a neurodivergent co-parenting guide that treats neurodivergence as a different operating system, not a tragedy.
+The system is built to be left running unsupervised in a child's room. That changes what "reliable" means.
 
 [Read the deep dive →](/blog/the-robot-that-refuses-to-give-orders/)

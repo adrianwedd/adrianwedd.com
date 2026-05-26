@@ -13,7 +13,9 @@ heroImage: '/notebook-assets/failure-first/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=9x-C9-wMKQo'
 ---
 
-The instinct didn't come from papers. It came from Greenpeace's Actions unit—coordinating direct operations against well-resourced opponents where the optimistic plan was the dangerous plan. Where you enumerate failure modes before you move, because the cost of not doing so is people getting hurt. You bring that habit into AI evaluation and it turns out to be exactly what the field is missing.
+Failure First is an adversarial AI evaluation research programme. The methodology didn't come from the field.
+
+It came from Greenpeace's Actions unit—coordinating direct operations against well-resourced opponents where the optimistic plan was the dangerous plan. Where you enumerate failure modes before you move, because the cost of not doing so is people getting hurt. You bring that habit into AI evaluation and it turns out to be exactly what the field is missing.
 
 Most AI safety work begins with capability: what should the system do? What are its goals? How do we align it with human values? These are reasonable questions. They are also the wrong place to start—because they assume you understand the system well enough to specify positive outcomes, and that assumption is increasingly fragile.
 
