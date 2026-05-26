@@ -396,28 +396,29 @@ codex review                        # code review
 ```
 Use for: security review, correctness checks, codebase-wide QA. Runs in sandbox.
 
-### Gemini CLI
+### Agy CLI (Gemini-based)
 ```bash
-gemini -p "prompt" --yolo            # non-interactive, auto-approve tools
-gemini "query"                       # interactive mode
+agy -p "prompt" --dangerously-skip-permissions   # non-interactive, auto-approve tools
+agy --print "prompt" --dangerously-skip-permissions  # long form
+agy --print-timeout 10m "prompt" --dangerously-skip-permissions  # override 5m default timeout
 ```
 Use for: accessibility review, design consistency, content QA. Has file access.
 
 ### Hermes CLI
 ```bash
-hermes chat -q "prompt"              # one-shot mode (like codex exec / gemini -p)
-hermes chat -q "prompt" --quiet      # no banner/spinner
+hermes chat -q "prompt"              # one-shot mode
+hermes chat -q "prompt" -Q          # quiet: suppress banner/spinner (capital Q)
 hermes chat -q "prompt" -s skill     # preload skills (e.g. -s arxiv)
 hermes chat -q "prompt" -m model     # specific model (e.g. anthropic/claude-sonnet-4)
 ```
 Use for: research tasks, cross-referencing, second-opinion QA, web browsing. Also registered as MCP server (`hermes-acp`) for direct tool access (browser, web search, memory, cron) without shelling out.
 
 ### Multi-Engine QA Pattern
-Run Codex + Gemini + Hermes + Claude agent in parallel for comprehensive review:
+Run Codex + Agy + Hermes + Claude agent in parallel for comprehensive review:
 ```bash
 codex exec --full-auto "QA prompt" 2>&1 | tee /tmp/codex-qa.txt &
-gemini -p "QA prompt" --yolo 2>&1 | tee /tmp/gemini-qa.txt &
-hermes chat -q "QA prompt" --quiet 2>&1 | tee /tmp/hermes-qa.txt &
+agy -p "QA prompt" --dangerously-skip-permissions 2>&1 | tee /tmp/agy-qa.txt &
+hermes chat -q "QA prompt" -Q 2>&1 | tee /tmp/hermes-qa.txt &
 wait
 ```
-Each engine catches different things. Codex is strongest on security + correctness. Gemini is strongest on design + accessibility. Hermes is strongest on research + cross-referencing. Claude agent is strongest on architecture + spec compliance.
+Each engine catches different things. Codex is strongest on security + correctness. Agy is strongest on design + accessibility. Hermes is strongest on research + cross-referencing. Claude agent is strongest on architecture + spec compliance.

@@ -4,7 +4,7 @@ description: 'A voice helpline that knows the difference between a word-finding 
 tags: ['ai', 'health', 'adhd', 'python']
 repo: 'https://github.com/adrianwedd/neuroconnect'
 status: 'active'
-featured: false
+featured: true
 date: 2025-05-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/video.mp4'

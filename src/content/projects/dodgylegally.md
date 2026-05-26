@@ -4,7 +4,7 @@ description: 'Creative audio sampling CLI. Turns random words into instruments v
 tags: ['music', 'cli', 'python', 'creative']
 repo: 'https://github.com/adrianwedd/dodgylegally'
 status: 'active'
-featured: true
+featured: false
 date: 2026-02-01
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dodgylegally/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/dodgylegally/video.mp4'
