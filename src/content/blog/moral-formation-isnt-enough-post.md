@@ -6,6 +6,7 @@ tags: ['ai-safety', 'alignment', 'research', 'opinion', 'anthropic', 'llm']
 draft: false
 heroImage: '/notebook-assets/moral-formation-isnt-enough/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/moral-formation-isnt-enough/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/moral-formation-isnt-enough/video.mp4'
 audioDuration: '20:13'
 ---
 

@@ -6,6 +6,7 @@ tags: ['ai-safety', 'security', 'anthropic', 'research', 'vulnerability', 'gover
 draft: false
 heroImage: '/notebook-assets/glasswing-buried-number/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/glasswing-buried-number/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/glasswing-buried-number/video.mp4'
 audioDuration: '21:03'
 faq:
   - q: 'What is Project Glasswing?'
