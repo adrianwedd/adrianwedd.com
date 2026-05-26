@@ -13,8 +13,8 @@ const capabilities = [
       'Fast, constraint-led, zero bloat',
     ],
     examples: [
-      { label: 'Evolve Evolution — four-site healthcare ecosystem', href: '#recent-work' },
-      { label: 'Wolf Clan — three-zone martial arts platform', href: '#recent-work' },
+      { label: 'Evolve Evolution — four brands, one builder, zero compliance risk', href: '#recent-work' },
+      { label: 'Wolf Clan — from Facebook page to complete ops platform', href: '#recent-work' },
     ],
   },
   {
@@ -85,20 +85,22 @@ const caseStudies = [
   {
     name: 'Evolve Evolution',
     url: 'https://evolvechiropractictas.com',
-    desc: 'Four-part ecosystem built for a healthcare practice: chiropractic site, personal coaching brand, author hub, and a private operations dashboard. Shared brand system across all four. AHPRA-compliant content. Password-gated hub for internal docs, kanban, and GitHub issues.',
-    tags: ['Healthcare', 'Multi-site', 'Ops hub', 'AHPRA'],
+    desc: "One practitioner, four brands — chiropractic practice, personal coaching, author platform, internal ops — all under AHPRA advertising rules that prohibit outcome claims on every one of them. Built a unified four-site ecosystem with a shared design system, AHPRA-compliant copy throughout, and a password-gated ops hub with live kanban and internal document library. Four fronts, one builder, zero compliance risk.",
+    tags: ['Healthcare', 'Multi-site', 'AHPRA', 'Tasmania'],
   },
   {
     name: 'Tanda Pizza',
     url: 'https://tandapizza.com',
-    desc: "Website for an Italian pizzeria in Lovina, Bali. Five languages — English, Italian, Dutch, Indonesian, Chinese — because that's who walks through the door. Static, fast, no server. WhatsApp for reservations because that's how Bali works. Loads on a patchy connection. Does exactly what it needs to do.",
+    projectUrl: '/projects/tanda-pizza/',
+    desc: "A pizzeria in the Balinese rice paddies, five languages of tourists, and a connection that cuts in and out. Static site, no server, five languages (English, Italian, Dutch, Indonesian, Chinese), WhatsApp for reservations — because that's how Bali works. Loads on a patchy connection, answers the real questions, honest about what it is.",
     tags: ['Multilingual', 'Static', 'Hospitality'],
   },
   {
     name: 'Wolf Clan Zen Do Kai',
     url: 'https://wolfclanmartialarts.com',
-    desc: 'Three-zone operations platform for a martial arts club. Public site with 24 blog posts and schema.org structured data. Password-gated ops hub with live GitHub Issues kanban and 40+ operational docs. JWT member portal with attendance tracking, belt progression, and 79 lesson plans. Zero build tools — vanilla HTML/CSS/JS on Cloudflare edge.',
-    tags: ['Community', 'Ops platform', 'Cloudflare', 'Zero-build'],
+    projectUrl: '/projects/wolf-clan-hub/',
+    desc: "Every club I've trained at runs on a Facebook page and a spreadsheet. Wolf Clan runs on a complete three-zone operations platform: public site, password-gated ops hub with live kanban and 40+ docs, JWT member portal with belt progression and 79 lesson plans. Vanilla HTML, CSS, JS — no npm, no build step — on Cloudflare edge for negligible hosting cost.",
+    tags: ['Community', 'Ops platform', 'Zero-build', 'Cloudflare'],
   },
 ];
 
@@ -207,31 +209,6 @@ const pricing = [
     <HeroCanvas animation="pulse" />
   </section>
 
-  {/* Social proof — immediately after hero */}
-  <section id="testimonials" aria-label="Client testimonial" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <p class="text-xl font-medium leading-snug tracking-tight text-accent">
-      "He has a unique ability to truly listen and understand the essence of someone's work, then translate it into a
-      clear and beautiful digital presence."
-    </p>
-    <blockquote class="mt-6 rounded-lg border border-border bg-surface-alt p-6">
-      <p class="leading-relaxed text-text">
-        "Working with Adrian was exceptional. The process felt thoughtful, collaborative and surprisingly easy, and the
-        result already feels like a true extension of my practice — helping people find solutions to their problems, and
-        answers to their questions."
-      </p>
-      <p class="mt-4 leading-relaxed text-text">"I would recommend working with Adrian without hesitation."</p>
-      <footer class="mt-5 flex flex-wrap items-center justify-between gap-3">
-        <span class="text-sm text-text-muted">— Dr Annica Larsdotter DC DICCP</span>
-        <a
-          href="https://evolvechiropractictas.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-sm text-accent transition-colors hover:underline">Evolve Chiropractic Tasmania &nearr;</a
-        >
-      </footer>
-    </blockquote>
-  </section>
-
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
 
   {/* The through-line — why the rigour doesn't change (moved below proof) */}
@@ -337,7 +314,7 @@ const pricing = [
     <h2 id="recent-work-heading" class="text-text">Here's what that looks like</h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
       {
-        caseStudies.map(({ name, url, desc, tags }) => (
+        caseStudies.map(({ name, url, projectUrl, desc, tags }) => (
           <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
             <h3 class="font-semibold text-text">
               <a
@@ -346,14 +323,22 @@ const pricing = [
                 rel="noopener noreferrer"
                 class="text-text no-underline transition-colors hover:text-accent"
               >
-                {name}
+                {name} &nearr;
               </a>
             </h3>
             <p class="mt-2 flex-1 text-sm text-text-muted">{desc}</p>
-            <div class="mt-4 flex flex-wrap gap-1.5">
+            <div class="mt-4 flex flex-wrap items-center gap-1.5">
               {tags.map((tag) => (
                 <span class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">{tag}</span>
               ))}
+              {projectUrl && (
+                <a
+                  href={projectUrl}
+                  class="ml-auto text-xs text-accent no-underline transition-colors hover:underline"
+                >
+                  Case study &rarr;
+                </a>
+              )}
             </div>
           </div>
         ))
