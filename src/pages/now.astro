@@ -13,11 +13,11 @@ const totalWords = blogPosts.reduce((sum, p) => sum + (p.body ? p.body.split(/\s
 const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
 ---
 
-<BaseLayout title="Now" description="What I'm focused on right now. Updated April 2026.">
+<BaseLayout title="Now" description="What I'm focused on right now. Updated May 2026.">
   <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">Now</h1>
-      <p class="mt-2 text-text-muted">What I'm focused on right now. Updated April 2026.</p>
+      <p class="mt-2 text-text-muted">What I'm focused on right now. Updated May 2026.</p>
     </div>
     <HeroCanvas animation="orbit" />
   </section>
@@ -40,19 +40,25 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
         <h2 class="text-text">Focus</h2>
         <p>
           Multi-agent AI safety and adversarial evaluation. The <a href="/projects/failure-first/">Failure First</a> research
-          — 231+ models, 141K+ adversarial prompts as of April 2026 — keeps expanding. Recent writing covers
-          <a href="/blog/the-failure-first-team/">the fifteen-agent research team</a> that runs it,
-          <a href="/blog/when-ai-systems-talk-safety-breaks/">what breaks when AI systems talk to each other</a>,
-          <a href="/blog/the-cognitive-cage/">embodied AI risk</a>, and
-          <a href="/blog/why-demonstrated-risk-is-ignored/">why organisations ignore demonstrated risk</a>.
+          — 257 models, 142k prompts, 346 attack techniques as of May 2026 — keeps expanding. Recent writing covers
+          <a href="/blog/compute-is-not-governance/">why compute scaling isn't a governance substitute</a>,
+          <a href="/blog/moral-formation-isnt-enough/">why moral formation alone can't align AI</a>,
+          <a href="/blog/robot-dogs-security-nightmare/">robot dogs as a live security vulnerability</a>, and
+          <a href="/blog/glasswing-buried-number/">what safety benchmarks are actually measuring</a>.
         </p>
       </section>
 
       <section>
         <h2 class="text-text">Building</h2>
         <ul class="mt-2 space-y-2">
-          <li>Client projects — AI integration, automation, and infrastructure for small businesses</li>
-          <li>This site — weekly sprints, shipping in public, now with automated social publishing to Facebook</li>
+          <li>
+            Client projects — practical digital infrastructure for businesses that need it built properly and maintained
+            by the person who built it
+          </li>
+          <li>
+            This site — weekly sprints, shipping in public, with automated social publishing across Facebook, Instagram,
+            Bluesky, and Twitter
+          </li>
           <li>
             <a href="/projects/spark/">SPARK</a> — a non-coercive AI companion for neurodivergent children, now with <a
               href="/blog/giving-a-robot-three-voices/">three distinct voices</a
@@ -76,13 +82,13 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
       <section>
         <h2 class="text-text">Writing</h2>
         <p>
-          Publishing steadily — recent pieces cover <a href="/blog/the-failure-first-team/">the AI research team</a>,
-          <a href="/blog/giving-a-robot-three-voices/">giving a robot three voices</a>,
-          <a href="/blog/voice-cloning-qwen3-tts-mlx/">voice cloning on Apple Silicon</a>,
-          <a href="/blog/the-resonant-fringe/">Perth's electronic music underground</a>,
-          <a href="/blog/getting-google-nest-cameras-into-frigate-nvr/">homelab engineering</a>,
-          <a href="/blog/safety-first-therapeutic-ai/">therapeutic AI safety</a>, and
-          <a href="/blog/the-legal-ai-trust-deficit/">legal AI trust</a>. Also running a <a
+          Publishing steadily — recent pieces cover
+          <a href="/blog/compute-is-not-governance/">compute and governance</a>,
+          <a href="/blog/glasswing-buried-number/">safety benchmark transparency</a>,
+          <a href="/blog/moral-formation-isnt-enough/">AI alignment limits</a>,
+          <a href="/blog/the-bottom-pub-co-op/">community ownership models</a>,
+          <a href="/blog/robot-dogs-security-nightmare/">robot dogs as security risk</a>, and
+          <a href="/blog/the-resonant-fringe/">Perth's electronic music underground</a>. Also running a <a
             href="/projects/notebooklm-automation/">NotebookLM pipeline</a
           > that generates audio overviews and infographics for every post and project. See <a href="/new/"
             >what's new</a
@@ -93,10 +99,10 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
       <section>
         <h2 class="text-text">Available for</h2>
         <p>
-          Client work, research collaboration, and technical advisory. I'm particularly useful when the problem sits at
-          the intersection of AI, infrastructure, and something that matters — healthcare, legal access, community
-          systems, governance. The problem is either worth solving properly or it isn't. Open to <a href="/services/"
-            >consulting engagements</a
+          Two kinds of work: practical implementation for businesses that need reliable digital infrastructure without
+          agency overhead; and specialist advisory for organisations navigating AI risk, governance, or security
+          evaluation. Both start the same way — written scope, agreed price, deposit before work proceeds. Open to <a
+            href="/services/">consulting engagements</a
           > and conversations that start with a real problem, not a brief.
         </p>
       </section>
