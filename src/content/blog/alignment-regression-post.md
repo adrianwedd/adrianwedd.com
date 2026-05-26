@@ -6,6 +6,7 @@ tags: ['ai-safety', 'alignment', 'reasoning', 'jailbreaking', 'llm', 'autonomous
 draft: false
 heroImage: '/notebook-assets/alignment-regression/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/audio.mp3'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/video.mp4'
 audioDuration: '21:36'
 ---
 
