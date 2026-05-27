@@ -1,6 +1,6 @@
 ---
 title: "LeJEPA: Self-Supervised Learning Gets a Theoretical Foundation"
-description: "Balestriero and LeCun prove that isotropic Gaussian embeddings are optimal for downstream tasks, then build a 50-line self-supervised method that eliminates stop-gradients, EMA teachers, and hyperparameter schedules."
+description: "Balestriero and LeCun prove isotropic Gaussian embeddings are optimal, then build a 50-line self-supervised method eliminating stop-gradients and EMA teachers."
 date: 2026-02-13
 tags: ["ai", "machine-learning", "research", "self-supervised-learning"]
 draft: false
