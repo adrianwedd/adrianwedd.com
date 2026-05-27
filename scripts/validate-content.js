@@ -59,6 +59,20 @@ for (const [collection, rules] of Object.entries(COLLECTIONS)) {
     const { data: fm } = matter(content);
     const label = filePath.replace(CONTENT_DIR + '/', '');
 
+    // Duplicate YAML keys — gray-matter silently deduplicates, so check raw text
+    const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+    if (fmMatch) {
+      const keys = [...fmMatch[1].matchAll(/^([a-zA-Z_][a-zA-Z0-9_]*):/gm)].map((m) => m[1]);
+      const seen = new Set();
+      for (const key of keys) {
+        if (seen.has(key)) {
+          console.error(`ERROR [${label}]: duplicate frontmatter key '${key}'`);
+          errors++;
+        }
+        seen.add(key);
+      }
+    }
+
     // Required fields
     for (const field of rules.required) {
       const val = fm[field];
