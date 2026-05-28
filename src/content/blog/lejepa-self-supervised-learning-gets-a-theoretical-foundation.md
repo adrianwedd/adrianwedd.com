@@ -2,6 +2,10 @@
 title: "LeJEPA: Self-Supervised Learning Gets a Theoretical Foundation"
 description: "Balestriero and LeCun prove isotropic Gaussian embeddings are optimal, then build a 50-line self-supervised method eliminating stop-gradients and EMA teachers."
 date: 2026-02-13
+heroImage: "/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/infographic.webp"
+audioUrl: "https://cdn.adrianwedd.com/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/audio.mp3"
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/video.mp4'
+audioDuration: "21:16"
 tags: ["ai", "machine-learning", "research", "self-supervised-learning"]
 draft: false
 ---
