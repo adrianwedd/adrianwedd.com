@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "fetch-analytics": "node scripts/fetch-ga4-data.mjs",
+    "check:links": "node scripts/check-internal-links.mjs",
     "lint": "eslint .",
     "format": "prettier --write 'src/**/*.{astro,ts,tsx,css,md,mdx}'",
     "format:check": "prettier --check 'src/**/*.{astro,ts,tsx,css,md,mdx}'"

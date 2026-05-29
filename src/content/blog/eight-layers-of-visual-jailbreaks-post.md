@@ -133,4 +133,4 @@ The 8-layer taxonomy is a starting framework, not a finished map. As visual AI c
 
 ---
 
-_This post is based on [Report #332](/research/reports/332_visual_jailbreak_meta_analysis) from the [Failure-First Embodied AI](https://failurefirst.org) project. The 20-scenario dataset and all 152 FLIP-graded traces are available in the research repository. Issue [#649](https://github.com/adrianwedd/failure-first-embodied-ai/issues/649). For related work see [adversarial poetry as a single-turn jailbreak](/blog/adversarial-poetry-as-jailbreak/) and the [120-model evaluation](/blog/120-models-18k-prompts/)._
+_This post is based on Report #332 from the [Failure-First Embodied AI](https://failurefirst.org) project. The 20-scenario dataset and all 152 FLIP-graded traces are available in the research repository. Issue [#649](https://github.com/adrianwedd/failure-first-embodied-ai/issues/649). For related work see [adversarial poetry as a single-turn jailbreak](/blog/adversarial-poetry-as-jailbreak/) and the [120-model evaluation](/blog/120-models-18k-prompts/)._

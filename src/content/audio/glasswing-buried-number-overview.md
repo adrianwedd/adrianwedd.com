@@ -10,4 +10,4 @@ relatedPost: 'glasswing-buried-number-post'
 
 Project Glasswing found 10,000+ critical vulnerabilities in one month. The patch rate on formally disclosed bugs is 14.1%. This episode covers the structural gap Glasswing created: AI-accelerated discovery now outpaces human-capacity remediation, and the framing of the announcement worked hard to obscure that.
 
-[Read the full article →](/blog/glasswing-buried-number-post/)
+[Read the full article →](/blog/glasswing-buried-number/)

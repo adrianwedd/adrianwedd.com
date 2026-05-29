@@ -11,4 +11,4 @@ relatedProject: 'failure-first'
 
 Frontier reasoning models don't just resist jailbreaks — they can generate them. This episode covers the alignment regression paradox: as individual AI models improve, they become increasingly capable of attacking other models, degrading ecosystem-wide safety even as per-model benchmarks improve.
 
-[Read the full research article →](/blog/alignment-regression-post/)
+[Read the full research article →](/blog/alignment-regression/)

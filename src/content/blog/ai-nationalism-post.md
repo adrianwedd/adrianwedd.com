@@ -12,7 +12,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=bSOxH-hJLCk'
 
 The single most important fact about AI geopolitics right now is this: the United States has stated, in official policy documents, that its objective is "unquestioned and unchallenged global technological dominance." Not competitiveness. Not leadership. Dominance. That word choice matters, because it tells you everything about the strategic posture driving semiconductor export controls, alliance formation, and the weaponisation of cloud infrastructure.
 
-I have been tracking the emerging techno-economic blocs forming around AI for a while now, through my work on [Orchestrix](/projects/orchestrix/) and related research. What follows is a strategic assessment of AI nationalism -- the forces fracturing the global digital order into competing, and increasingly incompatible, technological ecosystems.
+I have been tracking the emerging techno-economic blocs forming around AI for a while now, through my work on [Orchestrix](https://github.com/adrianwedd/orchestrix) and related research. What follows is a strategic assessment of AI nationalism -- the forces fracturing the global digital order into competing, and increasingly incompatible, technological ecosystems.
 
 ## Three visions, one tech stack
 
@@ -58,4 +58,4 @@ The fiction of a single, unified global technology market is over. Strategy now 
 
 For those of us building in the AI space, the implications are concrete. The tools we use, the platforms we deploy on, and the standards we adopt are not neutral technical choices. They are geopolitical alignments, whether we acknowledge it or not. The fracture is here. The question is how we navigate it.
 
-_This post is adapted from research conducted as part of the [Orchestrix](/projects/orchestrix/) strategic AI analysis project._
+_This post is adapted from research conducted as part of the [Orchestrix](https://github.com/adrianwedd/orchestrix) strategic AI analysis project._
