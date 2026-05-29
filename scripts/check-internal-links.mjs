@@ -17,7 +17,7 @@
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join, resolve, posix } from 'node:path';
 
-const SITE_ORIGIN = 'https://adrianwedd.com';
+const SITE_HOST = 'adrianwedd.com';
 const distDir = resolve(process.argv[2] || 'dist');
 
 if (!existsSync(distDir)) {
@@ -61,12 +61,20 @@ function toInternalPath(href) {
   if (/^(mailto:|tel:|javascript:|data:)/i.test(h)) return null;
 
   let path;
-  if (h.startsWith(SITE_ORIGIN)) {
-    path = h.slice(SITE_ORIGIN.length) || '/';
-  } else if (h.startsWith('/')) {
+  if (h.startsWith('/')) {
     path = h;
   } else if (/^https?:\/\//i.test(h)) {
-    return null; // other external origin
+    // Absolute URL — internal only if the host matches ours exactly. Parse
+    // with the URL API rather than a startsWith() prefix check, which would
+    // also match look-alike hosts (e.g. adrianwedd.com.evil.example).
+    let u;
+    try {
+      u = new URL(h);
+    } catch {
+      return null;
+    }
+    if (u.host !== SITE_HOST) return null; // external origin
+    path = u.pathname;
   } else {
     return null; // relative link — Astro emits absolute paths; ignore for v1
   }
