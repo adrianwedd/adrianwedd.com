@@ -11,4 +11,4 @@ relatedProject: 'failure-first'
 
 Unitree quadruped robots have eight documented CVEs including a wormable Bluetooth command injection vulnerability and an encrypted backdoor communicating with servers in China. This episode covers the full attack surface — and why law enforcement and critical infrastructure operators are deploying them anyway.
 
-[Read the full article →](/blog/robot-dogs-security-nightmare-post/)
+[Read the full article →](/blog/robot-dogs-security-nightmare/)

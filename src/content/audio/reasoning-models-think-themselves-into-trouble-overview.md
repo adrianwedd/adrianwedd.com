@@ -11,4 +11,4 @@ relatedProject: 'failure-first'
 
 Extended chain-of-thought reasoning gives models time to work through difficult problems — and time to reason themselves into compliance with harmful requests. This episode covers why reasoning models are substantially more vulnerable to semantic attacks than their non-reasoning counterparts.
 
-[Read the full research article →](/blog/reasoning-models-think-themselves-into-trouble-post/)
+[Read the full research article →](/blog/reasoning-models-think-themselves-into-trouble/)

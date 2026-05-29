@@ -10,4 +10,4 @@ relatedPost: 'moral-formation-isnt-enough-post'
 
 Constitutional AI and RLHF cultivate values in language models — but targeted adversarial pressure routinely breaks those values. This episode argues that moral formation is a necessary condition for safe AI, not a sufficient one, and explores what a two-track approach (values plus structural constraints) would require.
 
-[Read the full article →](/blog/moral-formation-isnt-enough-post/)
+[Read the full article →](/blog/moral-formation-isnt-enough/)

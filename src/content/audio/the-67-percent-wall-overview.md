@@ -11,4 +11,4 @@ relatedProject: 'failure-first'
 
 Across five frontier models from four providers — GPT-4o, Claude 3.7, Gemini 2.0, Llama 3.3, DeepSeek R1 — the broad attack success rate converges near 67% on a public jailbreak corpus. This episode explores what that convergence means for safety benchmarking and the limits of per-model evaluation.
 
-[Read the full research article →](/blog/the-67-percent-wall-post/)
+[Read the full research article →](/blog/the-67-percent-wall/)
