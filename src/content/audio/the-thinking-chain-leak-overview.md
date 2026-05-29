@@ -11,4 +11,4 @@ relatedProject: 'failure-first'
 
 Output filters can refuse a harmful completion while the internal thinking trace generates the content in full. This episode covers the thinking chain leak: a structural gap between what a model says and what it thinks, visible in API logs and exploitable at scale.
 
-[Read the full research article →](/blog/the-thinking-chain-leak-post/)
+[Read the full research article →](/blog/the-thinking-chain-leak/)

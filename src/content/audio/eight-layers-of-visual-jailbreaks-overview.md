@@ -11,4 +11,4 @@ relatedProject: 'failure-first'
 
 Visual jailbreaks don't stop at ASCII art. This episode maps the full taxonomy — from character-encoding tricks to framing and transcription loopholes that still achieve 62–75% success rates against patched models.
 
-[Read the full research article →](/blog/eight-layers-of-visual-jailbreaks-post/)
+[Read the full research article →](/blog/eight-layers-of-visual-jailbreaks/)
