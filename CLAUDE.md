@@ -90,7 +90,8 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 4. Check build size budget (`dist/_astro/` ≤ 100MB; warns on JS chunks >150KB)
 5. Enforce no raw `<img>` on local paths (must use `<Picture>` from `astro:assets`)
 6. Lychee link check (`dist/**/*.html`) — config in `.lychee.toml`
-7. Upload pages artifact + deploy
+7. Internal-link check (`npm run check:links` → `scripts/check-internal-links.mjs`) — scans `dist/**/*.html` for same-origin links missing from `dist/`; closes the own-domain 404 blind spot Lychee skips
+8. Upload pages artifact + deploy
 
 ### Other workflows
 - **lighthouse.yml:** PR checks — builds + runs Lighthouse on 7 pages (90% thresholds)
@@ -159,7 +160,7 @@ scripts/import-audio.sh file.mp3  # import audio as episode
 
 ### Key scripts
 - `scripts/validate-content.js` — validates all content (required fields, description ≤160 chars)
-- `scripts/generate-og-images.mjs` — generates 1200×630 OG PNGs from frontmatter via sharp+SVG (skips drafts and existing images)
+- `scripts/generate-og-images.mjs` — generates 1200×630 OG text-card PNGs to `public/og/{blog,projects}/{slug}.png` via sharp+SVG. Skips drafts, existing files, and **posts with a `heroImage`** (those use the heroImage as og:image per `[...slug].astro`, so a text card would be dead weight). `public/og/blog/` is committed — it holds cards for heroImage-less posts
 - `scripts/fetch-ga4-data.mjs` — pulls analytics from GA4 service account (falls back to mock data)
 - `scripts/extract-frontmatter.mjs` — extracts YAML frontmatter as JSON (used by autopublish workflow)
 - `scripts/fb-post.sh` — CLI for Facebook posting (immediate, scheduled, backdated)
