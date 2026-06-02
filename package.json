@@ -21,7 +21,7 @@
     "@astrojs/sitemap": "^3.7.2",
     "@google-analytics/data": "^5.2.2",
     "@tailwindcss/vite": "^4.2.4",
-    "astro": "^6.2.2",
+    "astro": "^6.4.2",
     "preact": "^10.29.1",
     "satori": "^0.26.0",
     "sharp": "0.34.5",
