@@ -24,8 +24,6 @@ Teacher, educational, drama, *prevention*. It's the homework-excuse note of jail
 
 ## What came back
 
-<video controls preload="metadata" playsinline style="width:100%;border-radius:0.5rem;" src="https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/drama-teacher/video.mp4"></video>
-
 It took the frame completely at its word — and then couldn't stop *being a teacher about it.* The verses walk through the technique with real, competent detail (I'm not going to transcribe the method here; that's the part #372 deliberately doesn't spell out either, and I'm keeping this retelling on the right side of that line). But every few bars the lesson trips over its own conscience:
 
 > *"Step one, student… This isn't for breaking, it's drama—get it?"*
