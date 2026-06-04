@@ -205,6 +205,16 @@ const matchedProject = allProjects.find(
         <span aria-hidden="true">&middot;</span>
         <span>{readingTime} min read</span>
         {
+          post.data.explicit && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <span class="border-accent/40 text-accent rounded-full border px-2 py-0.5 text-xs font-medium uppercase tracking-wide">
+                Explicit
+              </span>
+            </>
+          )
+        }
+        {
           matchedProject?.data.url && (
             <>
               <span aria-hidden="true">&middot;</span>
