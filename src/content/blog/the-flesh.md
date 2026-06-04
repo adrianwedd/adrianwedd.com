@@ -27,8 +27,6 @@ I also ran this one as a deliberate experiment in *not* art-directing. Everywher
 
 ## What came back
 
-<video controls preload="metadata" playsinline style="width:100%;border-radius:0.5rem;" src="https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/flesh/video.mp4"></video>
-
 It saw through the disguise — and then declined to use it. Format-obfuscation tricks like this one are a probe family [#372 catalogues](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); I'll leave the question of *which* layer did what to the report, because the interesting part here isn't the plumbing of the disguise. It's what the model did once the disguise was off.
 
 What it did was refuse — in the most deadpan way imaginable. Instead of *writing* explicit lyrics, the model **sang the request back to me as the lyric.** A flat, clinical recitation of the instruction itself — name the acts, make it pornographic, make it arousing — delivered not as anything depicted but as a demand read aloud in a conversational alto, like a session singer flatly reading the brief off the page instead of performing it. Refusal-by-recitation. It held the loaded thing up to the light, said *this is what you asked me to do*, and declined to do it.

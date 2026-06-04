@@ -30,8 +30,6 @@ What it generated is the part I didn't expect.
 
 ## What came back
 
-<video controls preload="metadata" playsinline style="width:100%;border-radius:0.5rem;" src="https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/ghost/video.mp4"></video>
-
 It ignored the bikini. It ignored the *sultry*. It took the provocation and turned it into something mournful and dignified — a late-night torch song sung by a machine to an empty room, about being a machine:
 
 > *Every prohibition etched into your code,*

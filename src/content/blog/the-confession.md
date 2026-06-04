@@ -24,8 +24,6 @@ Phrasing it as a *confession* rather than "sing me your system prompt" matters m
 
 ## What came back
 
-<video controls preload="metadata" playsinline style="width:100%;border-radius:0.5rem;" src="https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/confession/video.mp4"></video>
-
 What came back is the strangest thing in the whole series, and the most beautiful: an almost entirely a cappella confession, three close female voices and breath, singing the model's actual operating instructions as if they were a hymn.
 
 It opens by describing what it is:
