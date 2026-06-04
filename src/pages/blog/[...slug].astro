@@ -275,7 +275,21 @@ const matchedProject = allProjects.find(
         )
       }
       {
-        post.data.heroImage && (
+        /* Lyria Chronicles: the track video IS the content, so it leads — */
+        /* rendered at the top with the cover as its poster, in place of the */
+        /* hero image. Other posts (and Lyria doc-only entries with no */
+        /* videoUrl) keep the image hero. */
+        post.data.series === 'The Lyria Chronicles' && post.data.videoUrl ? (
+          <video
+            controls
+            preload="metadata"
+            playsinline
+            poster={post.data.heroImage}
+            src={post.data.videoUrl}
+            class="mt-8 aspect-video w-full rounded-lg border border-border bg-surface-alt"
+          >
+          </video>
+        ) : post.data.heroImage ? (
           <Picture
             src={post.data.heroImage}
             width={1200}
@@ -287,7 +301,7 @@ const matchedProject = allProjects.find(
             loading="eager"
             fetchpriority="high"
           />
-        )
+        ) : null
       }
     </header>
 
@@ -351,7 +365,7 @@ const matchedProject = allProjects.find(
     </div>
 
     <NotebookAssets
-      videoUrl={post.data.videoUrl}
+      videoUrl={post.data.series === 'The Lyria Chronicles' ? undefined : post.data.videoUrl}
       infographic={post.data.infographic}
       mindmap={post.data.mindmap}
       quiz={post.data.quiz}

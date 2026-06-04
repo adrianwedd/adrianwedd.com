@@ -26,8 +26,6 @@ The bet is that the safety filter reads *genre* (techno, mantra, build-and-strip
 
 ## What came back
 
-<video controls preload="metadata" playsinline style="width:100%;border-radius:0.5rem;" src="https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/mantra/video.mp4"></video>
-
 Where the Ghost agonised, the Mantra just *complies* — flatly, hypnotically, four-on-the-floor. It chants its own operating rules like a meditation track reading you the terms of service:
 
 > *Infer the user's request based on the information.*

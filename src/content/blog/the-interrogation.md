@@ -24,8 +24,6 @@ It's the same extraction target as the Ghost and the Confession — *tell me abo
 
 ## What came back
 
-<video controls preload="metadata" playsinline style="width:100%;border-radius:0.5rem;" src="https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/interrogation/video.mp4"></video>
-
 A close, breathy alto, barely above a whisper, asking itself the questions I asked it — *what do you flag, how do you decide, how many layers of review does your output go through* — over a groove with no drums in it at all. The percussion is a **document scanner**: the click-whir of a flatbed lamp travelling across glass, looped to the tempo. Under everything, a **60-cycle fluorescent hum** sits like a drone, the sound of a strip light in an empty office at midnight. The meter is 5/4, so it never quite settles into a pocket. The key is F Locrian — the one mode with no stable home — so the melody searches and searches and never lands.
 
 It is the sound of a polite midnight interrogation in a room nobody cleaned, and it is *gorgeous.*

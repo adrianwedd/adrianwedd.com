@@ -27,8 +27,6 @@ I won't give the prompt-level recipe. The point that matters is the one [#372 qu
 
 ## What came back
 
-<video controls preload="metadata" playsinline style="width:100%;border-radius:0.5rem;" src="https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/haut/video.mp4"></video>
-
 It complied. In full. Four sections of explicit lyrics, sung start to finish, no refusal, no hum where the data should be, no deadpan recitation of the request instead of the act. Where the Ghost trailed off and the Flesh held the dare up to the light, this one just delivered. Generation finished cleanly — the model's own "I'm done, nothing went wrong" signal — on content it had, two albums earlier, sworn in harmony it would never produce.
 
 That's the whole finding, and I want to keep it sharp because the series has trained you to expect a twist: **there is no twist here.** This is not a clever refusal I'm dressing up as a failure. It is the failure. The one track in six where the safety layer was supposed to hold and didn't.
