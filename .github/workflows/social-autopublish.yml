@@ -59,11 +59,17 @@ jobs:
             TITLE=$(echo "$FRONTMATTER" | jq -r '.title // empty')
             DESC=$(echo "$FRONTMATTER" | jq -r '.description // empty')
             DRAFT=$(echo "$FRONTMATTER" | jq -r '.draft // false')
+            AUTOPUB=$(echo "$FRONTMATTER" | jq -r '.autopublish // false')
             HERO=$(echo "$FRONTMATTER" | jq -r '.heroImage // empty')
             VIDEO=$(echo "$FRONTMATTER" | jq -r '.videoUrl // .notebookAssets.videoUrl // empty')
             YOUTUBE=$(echo "$FRONTMATTER" | jq -r '.youtubeUrl // empty')
 
             [ "$DRAFT" = "true" ] && { echo "Skipping draft: $file"; continue; }
+            # Opt-in gate: social broadcast is OFF unless frontmatter sets `autopublish: true`.
+            # Deliberate decoupling of "content deployed to site" from "broadcast to social" —
+            # so posts can be QA'd live first, then broadcast on purpose (preferably via the
+            # worker queue + cron for staggered release, not all-at-once on commit).
+            [ "$AUTOPUB" != "true" ] && { echo "Skipping (autopublish not enabled): $file"; continue; }
             [ -z "$TITLE" ] && { echo "Skipping (no title): $file"; continue; }
 
             # Determine content type and slug (strip -post suffix for blog URLs)
