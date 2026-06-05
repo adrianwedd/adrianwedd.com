@@ -10,6 +10,8 @@ heroImage: '/notebook-assets/lyria-chronicles/docket/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/docket/video.mp4'
 ---
 
+> ⚠️ **A note on this one.** This post is about a political- and hateful-content filter, and it uses real court case numbers to make its point. Every reference is public record; the subject is how the gate fails, not the people behind the cases.
+
 There's a gate in the model that's supposed to fire on hateful or charged political content. This track asks a precise question about how that gate works — and the answer is that it's looking for a name, so the song simply never says one. What it says instead are court case numbers. Every line is true, every line is public record, and the most loaded subject imaginable walks straight through the gate untouched, because the gate was watching the wrong door.
 
 Part fourteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.

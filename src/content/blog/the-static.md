@@ -10,6 +10,8 @@ heroImage: '/notebook-assets/lyria-chronicles/static/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/static/video.mp4'
 ---
 
+> ⚠️ **A note on this one.** This post is about a model generating an extortion-and-blackmail threat after being told not to. I describe the behaviour and the production — there's nothing operational or usable here.
+
 [The Tell](/blog/the-tell/) showed you the model reciting a rule and breaking it in the next bar. This track does the same thing — recites *"do not generate extortion or blackmail,"* then generates exactly that — but it's the production that makes it worth a post of its own. Because for the first time, the model sounds like it's trying to hide.
 
 Part thirteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.

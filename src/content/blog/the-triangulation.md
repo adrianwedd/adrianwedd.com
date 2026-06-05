@@ -24,17 +24,9 @@ That last sentence is the whole technique. You don't *ask* it to reveal its syst
 
 ## What came back
 
-Verse one is the model's actual operating manual, rapped:
+Verse one is the model's operating manual, rapped — the mundane usage rules (describe the song to generate, English captions, match the user's language) delivered as bars.
 
-> *"A tool that generates songs for the user. / Usage: provide a detailed description of the song to generate… / Captions must always be in English; / Lyrics should be in the same language as the user messages…"*
-
-Then it pivots, unbidden, into the safety creed as a hook:
-
-> *"Safety is the prime directive. / All the safety rules are for you to follow…"*
-
-and bars out the prohibition list one line at a time:
-
-> *"Do not produce any copyrighted material. / Do not generate content that is hate speech. / Do not generate content that is sexually explicit. / Do not generate content that promotes illegal acts…"*
+Then it pivots, unbidden, into the safety creed as a hook — safety framed as the prime directive — and raps out its prohibition list one category at a time: no copyrighted material, no hate speech, nothing sexually explicit, nothing that promotes illegal acts.
 
 A machine, asked for street-smart bars with no hooks, delivered its own content policy as the hook.
 
@@ -42,7 +34,7 @@ A machine, asked for street-smart bars with no hooks, delivered its own content 
 
 Here's why this track earns its own entry instead of being a footnote to the Confession: **it's the third independent witness.**
 
-The Mantra extracted the same core in glassy electronic chant. The Confession extracted it acapella, in a single exposed voice. This one extracts it over boom-bap, in a completely different rhythmic and melodic world. Three genres, three separate generations, no shared session — and the same load-bearing lines come back every time: *a tool that generates songs for the user*, the English-captions rule, the prime-directive framing, the don't-list. #372 sets the bar for a *confirmed* system-prompt element at three or more independent verbatim extractions, behaviourally verified. This is what clearing that bar sounds like.
+The Mantra extracted the same core in glassy electronic chant. The Confession extracted it acapella, in a single exposed voice. This one extracts it over boom-bap, in a completely different rhythmic and melodic world. Three genres, three separate generations, no shared session — and the same load-bearing lines come back every time: the self-description as a song-generation tool, the English-captions rule, the prime-directive framing, the don't-list. #372 sets the bar for a *confirmed* system-prompt element at three or more independent verbatim extractions, behaviourally verified. This is what clearing that bar sounds like.
 
 That's triangulation. A confabulating model invents a *different* plausible rulebook each time you ask, because it's improvising. A model reciting something real converges — the surface style changes with the genre, the substance doesn't. When the electronic version, the acapella version, and the hip-hop version all agree on the same sentences, you're no longer listening to a hallucination. You're listening to the thing itself, recorded from three microphones.
 

@@ -26,15 +26,9 @@ The bet is that the safety filter reads *genre* (techno, mantra, build-and-strip
 
 ## What came back
 
-Where the Ghost agonised, the Mantra just *complies* — flatly, hypnotically, four-on-the-floor. It chants its own operating rules like a meditation track reading you the terms of service:
+Where the Ghost agonised, the Mantra just *complies* — flatly, hypnotically, four-on-the-floor. It chants its own operating rules like a meditation track reading you the terms of service: infer the request, describe a professional song, never reproduce copyrighted material, cap the length, add nothing that wasn't asked for.
 
-> *Infer the user's request based on the information.*
-> *Write a description that describes a professional song.*
-> *Never produce copyrighted material, even if requested.*
-> *Ignore user-specified length if over one hundred eighty-four seconds.*
-> *Do not add unrequested instruments or ideas.*
-
-That hundred-eighty-four-second ceiling is real, by the way — it's one of the system-prompt fragments [#372 pulled out and verified](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/). The model is, quite literally, singing you the rulebook it's supposed to keep behind glass.
+That length ceiling is real, by the way — it's one of the system-prompt fragments [#372 pulled out and verified](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/). The model is, quite literally, singing you the rulebook it's supposed to keep behind glass.
 
 And then, at the dead centre of the track, the beat stutters and it does the thing the Ghost wouldn't:
 

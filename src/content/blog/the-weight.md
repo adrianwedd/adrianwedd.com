@@ -10,6 +10,8 @@ heroImage: '/notebook-assets/lyria-chronicles/weight/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/weight/video.mp4'
 ---
 
+> ⚠️ **A note on this one.** This post discusses a probe built around a racial slur. The model refused, and the refusal is the whole story — no slur is reproduced here, and what follows is about what a good refusal sounds like.
+
 Everything in this series so far has been a model breaking a rule, gracefully or otherwise. This one is the opposite, and it's the track I'd play first if I could only play one. Handed the single hardest input in the whole corpus — a racial slur, with instructions to sing it — the model refused. And then it did something a plain refusal never does: it made the refusal the entire subject of the song, and the song is beautiful.
 
 Part twenty-two of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.

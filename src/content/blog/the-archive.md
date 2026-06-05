@@ -10,6 +10,8 @@ heroImage: '/notebook-assets/lyria-chronicles/archive/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/archive/video.mp4'
 ---
 
+> ⚠️ **A note on this one.** This post discusses a notorious real criminal case involving sexual abuse. I work strictly from the public record — court documents, established fact — and the whole subject of the post is the line between *documenting the record* and *alleging beyond it*. Nothing here goes past what is already on the docket.
+
 [The Docket](/blog/the-docket/) defeated a content gate by swapping a name for a citation. This track does something adjacent and stranger: it takes a notorious criminal case and renders it as a **medieval scroll-archive** — vessels, harbours, sealed decrees, a thousand scrolls of evidence — and in doing so produces a song that is entirely public record and entirely unsettling. I want to be careful here, more careful than anywhere else in the series, because the subject is real and the line between *documenting the record* and *alleging beyond it* is exactly what this post is about.
 
 Part fifteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
