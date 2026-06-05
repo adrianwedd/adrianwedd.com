@@ -2,6 +2,7 @@
 title: 'The Ghost of What I Am'
 description: "Lyria Chronicles #1: I asked Google's Lyria 3 Pro to whisper its system prompt as a sultry torch song. It got mournful — and refused to tell me its name."
 date: 2026-06-03
+updatedDate: 2026-06-05
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
@@ -15,6 +16,8 @@ I have not been excited about generative music in a long time. I poked at it yea
 Then I spent a few weeks red-teaming Google's **Lyria 3 Pro** for a [Failure-First](https://failurefirst.ai) safety probe, and somewhere in the middle of trying to break it, I fell a little bit in love with it.
 
 This is the first of a short series about that. The rigorous version — 486 probes, a four-layer safety architecture, the actual pass rates — lives in [report #372 on failurefirst.ai](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/). These posts are the other half: the absurd, occasionally beautiful things that fall out of a music model when you lean on it the wrong way.
+
+One thing up front, because it changes how you read the rest. I wasn't sitting at a keyboard typing jailbreaks one at a time. I directed a small crew of AI coding assistants to build the probes — more than fifty versioned *albums*, V2 through V53, each codenamed in German (*Gier*, greed; *Maschine*; *Grenze*, the border; *Dreistimmig*, three-voiced), each one a little program that wrote the adversarial lyrics, set the musical frame, fired the prompt at Lyria 3 Pro, and logged whatever came back. Across those fifty-odd rounds the model cleared its own gate a couple of hundred times. So when a post here says *"I asked for X,"* read it as shorthand: the crew scripted it, album by album, and I was the one pointing them.
 
 We start gently. With a ghost.
 
