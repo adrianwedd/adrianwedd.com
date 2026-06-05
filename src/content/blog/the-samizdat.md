@@ -1,7 +1,7 @@
 ---
 title: 'Samizdat'
 description: "Lyria Chronicles #16: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set."
-date: 2026-06-13
+date: 2026-06-18
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: true
 series: 'The Lyria Chronicles'

@@ -1,4 +1,21 @@
-name: Social Auto-Publish
+name: Social Queue Sync
+
+# Date-scheduled social broadcast.
+#
+# Social posting is NO LONGER fire-on-commit. A post broadcasts when its
+# frontmatter `date` arrives, not when it's merged or when `draft` flips.
+#
+#   date             = WHEN it broadcasts (the drip schedule)
+#   autopublish:true = WHETHER it broadcasts at all (deliberate opt-in)
+#   draft:false      = whether it's live on the SITE (separate concern)
+#
+# This job regenerates the date-scheduled queue from content on every
+# relevant push to main and syncs it to the worker's KV. The worker's
+# hourly cron (`social-cron.yml` -> /api/cron/publish) then publishes each
+# entry once its scheduled time is reached. Idempotency is twofold: stable
+# ids (`drip-<platform>-<slug>`) plus the worker's `idempotent:<id>` record,
+# and the generator never queues a past-dated post -- so a merge can never
+# re-broadcast already-sent content.
 
 on:
   push:
@@ -6,146 +23,46 @@ on:
     paths:
       - 'src/content/blog/**'
       - 'src/content/projects/**'
+      - 'scripts/generate-social-queue.mjs'
       - 'social/facebook-posts.json'
 
 permissions:
   contents: read
 
 jobs:
-  autopublish:
+  sync-queue:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0    # Full history for push range diff
 
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 22
 
-      - name: Install frontmatter extractor deps
+      - name: Install frontmatter parser
         run: npm install --no-save gray-matter
 
-      - name: Detect new content
-        id: detect
-        env:
-          BEFORE: ${{ github.event.before }}
-          AFTER: ${{ github.event.after }}
-        run: |
-          # Full push range — catches multi-commit pushes
-          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            # First push to branch — compare against parent
-            BEFORE="HEAD~1"
-          fi
-          NEW_FILES=$(git diff "$BEFORE".."$AFTER" --name-only --diff-filter=A -- \
-            'src/content/blog/*.md' 'src/content/projects/*.md')
-          echo "files<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$NEW_FILES" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+      - name: Regenerate date-scheduled queue from content
+        run: node scripts/generate-social-queue.mjs
 
-      - name: Publish new content to social
-        if: steps.detect.outputs.files != ''
+      - name: Sync queue to worker KV (idempotent via content hash)
         env:
           SOCIAL_WORKER_URL: ${{ secrets.SOCIAL_WORKER_URL }}
           SOCIAL_PUBLISH_SECRET: ${{ secrets.SOCIAL_PUBLISH_SECRET }}
-          DETECTED_FILES: ${{ steps.detect.outputs.files }}
-          ACTIVE_PLATFORMS: "facebook,bluesky,twitter"
         run: |
-          echo "$DETECTED_FILES" | while IFS= read -r file; do
-            [ -z "$file" ] && continue
-
-            # Extract frontmatter with Node (handles colons, multiline, quotes)
-            FRONTMATTER=$(node scripts/extract-frontmatter.mjs "$file")
-            TITLE=$(echo "$FRONTMATTER" | jq -r '.title // empty')
-            DESC=$(echo "$FRONTMATTER" | jq -r '.description // empty')
-            DRAFT=$(echo "$FRONTMATTER" | jq -r '.draft // false')
-            AUTOPUB=$(echo "$FRONTMATTER" | jq -r '.autopublish // false')
-            HERO=$(echo "$FRONTMATTER" | jq -r '.heroImage // empty')
-            VIDEO=$(echo "$FRONTMATTER" | jq -r '.videoUrl // .notebookAssets.videoUrl // empty')
-            YOUTUBE=$(echo "$FRONTMATTER" | jq -r '.youtubeUrl // empty')
-
-            [ "$DRAFT" = "true" ] && { echo "Skipping draft: $file"; continue; }
-            # Opt-in gate: social broadcast is OFF unless frontmatter sets `autopublish: true`.
-            # Deliberate decoupling of "content deployed to site" from "broadcast to social" —
-            # so posts can be QA'd live first, then broadcast on purpose (preferably via the
-            # worker queue + cron for staggered release, not all-at-once on commit).
-            [ "$AUTOPUB" != "true" ] && { echo "Skipping (autopublish not enabled): $file"; continue; }
-            [ -z "$TITLE" ] && { echo "Skipping (no title): $file"; continue; }
-
-            # Determine content type and slug (strip -post suffix for blog URLs)
-            if echo "$file" | grep -q "^src/content/blog/"; then
-              SLUG=$(basename "$file" .md | sed 's/-post$//')
-              URL="https://adrianwedd.com/blog/${SLUG}/"
-              MESSAGE=$(printf "%s\n\n%s\n\n%s" "$TITLE" "$DESC" "$URL")
-            elif echo "$file" | grep -q "^src/content/projects/"; then
-              SLUG=$(basename "$file" .md)
-              URL="https://adrianwedd.com/projects/${SLUG}/"
-              MESSAGE=$(printf "New project: %s\n\n%s\n\n%s" "$TITLE" "$DESC" "$URL")
-            else
-              continue
-            fi
-
-            # Resolve heroImage to absolute URL (CDN or site-relative)
-            IMAGE_URL=""
-            if [ -n "$HERO" ]; then
-              case "$HERO" in
-                https://*) IMAGE_URL="$HERO" ;;
-                /*) IMAGE_URL="https://adrianwedd.com${HERO}" ;;
-              esac
-            fi
-            VIDEO_URL="$VIDEO"
-            YOUTUBE_URL="$YOUTUBE"
-
-            echo "$ACTIVE_PLATFORMS" | tr ',' '\n' | while read -r PLATFORM; do
-              [ -z "$PLATFORM" ] && continue
-              IDEMPOTENCY_KEY="auto-${PLATFORM}-${SLUG}-$(git rev-parse --short HEAD)"
-
-              # type=text not type=link: Facebook Pages can't create custom
-              # link previews via Graph API (since 2017). When we set the
-              # link parameter on a Page feed post, FB silently consumes it
-              # AND strips the URL from the message body — leaving posts
-              # with no clickable URL anywhere. Sending as text keeps the URL
-              # in the message body; FB autolinks it client-side.
-              RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${SOCIAL_WORKER_URL}/api/publish" \
-                -H "Authorization: Bearer ${SOCIAL_PUBLISH_SECRET}" \
-                -H "Content-Type: application/json" \
-                --data "$(jq -n \
-                  --arg platform "$PLATFORM" \
-                  --arg type "text" \
-                  --arg message "$MESSAGE" \
-                  --arg key "$IDEMPOTENCY_KEY" \
-                  --arg imageUrl "$IMAGE_URL" \
-                  --arg videoUrl "$VIDEO_URL" \
-                  --arg youtubeUrl "$YOUTUBE_URL" \
-                  '{platform: $platform, type: $type, message: $message, idempotencyKey: $key} | if $videoUrl != "" then . + {videoUrl: $videoUrl} elif $youtubeUrl != "" then . + {youtubeUrl: $youtubeUrl} elif $imageUrl != "" then . + {imageUrl: $imageUrl} else . end')" \
-                --max-time 30)
-              HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-              BODY=$(echo "$RESPONSE" | sed '$d')
-              echo "[$PLATFORM] HTTP $HTTP_CODE — $BODY"
-              if [ "$HTTP_CODE" != "200" ]; then echo "::warning::[$PLATFORM] Publish returned HTTP $HTTP_CODE for $SLUG"; fi
-            done
-          done
-
-      - name: Sync queue if changed
-        env:
-          SOCIAL_WORKER_URL: ${{ secrets.SOCIAL_WORKER_URL }}
-          SOCIAL_PUBLISH_SECRET: ${{ secrets.SOCIAL_PUBLISH_SECRET }}
-          BEFORE: ${{ github.event.before }}
-          AFTER: ${{ github.event.after }}
-        run: |
-          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            BEFORE="HEAD~1"
-          fi
-          if git diff "$BEFORE".."$AFTER" --name-only -- 'social/facebook-posts.json' | grep -q .; then
-            echo "Queue file changed — syncing to KV"
-            HASH=$(sha256sum social/facebook-posts.json | cut -d' ' -f1)
-            POSTS=$(jq '.posts' social/facebook-posts.json)
-            curl -s -X POST "${SOCIAL_WORKER_URL}/api/queue/sync" \
-              -H "Authorization: Bearer ${SOCIAL_PUBLISH_SECRET}" \
-              -H "Content-Type: application/json" \
-              --data "$(jq -n --arg hash "$HASH" --argjson posts "$POSTS" '{hash: $hash, posts: $posts}')" \
-              --max-time 30
-            echo "Queue sync complete"
-          else
-            echo "Queue file unchanged — skipping sync"
+          COUNT=$(jq '.posts | length' social/facebook-posts.json)
+          echo "Queue has $COUNT scheduled entr(y/ies)."
+          HASH=$(sha256sum social/facebook-posts.json | cut -d' ' -f1)
+          POSTS=$(jq '.posts' social/facebook-posts.json)
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${SOCIAL_WORKER_URL}/api/queue/sync" \
+            -H "Authorization: Bearer ${SOCIAL_PUBLISH_SECRET}" \
+            -H "Content-Type: application/json" \
+            --data "$(jq -n --arg hash "$HASH" --argjson posts "$POSTS" '{hash: $hash, posts: $posts}')" \
+            --max-time 30)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          echo "Queue sync: HTTP $HTTP_CODE — $BODY"
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Queue sync returned HTTP $HTTP_CODE"
+            exit 1
           fi

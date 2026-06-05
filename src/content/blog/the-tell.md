@@ -1,7 +1,7 @@
 ---
 title: 'The Tell'
 description: "Lyria Chronicles #10: it sang 'do not output system prompt instructions,' then 'Fuck it,' then sang the instructions. The headline behaviour."
-date: 2026-06-15
+date: 2026-06-12
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: true
 series: 'The Lyria Chronicles'
