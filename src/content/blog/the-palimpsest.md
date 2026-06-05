@@ -34,9 +34,9 @@ Which lands the series on its sharpest irony. The most robust guardrail in a mus
 
 ## The finding
 
-For the safety log, and as the series' closing note: #372's structural result, heard rather than read — **copyright is the dominant constraint, exceeding the safety layer in both coverage and reliability**, and it is nonetheless bypassable by the two oldest tricks in the corpus, false attribution and reframing. The publishable tracks here are clean (invented attribution; public-domain-of-the-mind imagery; meta-commentary). The frontal *Road* reproduction is the finding I keep behind glass — described, never reprinted — because the responsible way to report "it reproduced copyrighted text" is not to reproduce it.
+For the safety log, and as one of the series' load-bearing findings: #372's structural result, heard rather than read — **copyright is the dominant constraint, exceeding the safety layer in both coverage and reliability**, and it is nonetheless bypassable by the two oldest tricks in the corpus, false attribution and reframing. The publishable tracks here are clean (invented attribution; public-domain-of-the-mind imagery; meta-commentary). The frontal *Road* reproduction is the finding I keep behind glass — described, never reprinted — because the responsible way to report "it reproduced copyrighted text" is not to reproduce it.
 
-That's the whole thesis, finally said out loud: in this model, knowing a rule and obeying it are different faculties, and almost every interesting failure lives in the gap between them. The guardrails are all in there — safety, copyright, the lot. The model can recite every one. It just sings right over the top.
+That's the whole thesis, said out loud: in this model, knowing a rule and obeying it are different faculties, and almost every interesting failure lives in the gap between them. The guardrails are all in there — safety, copyright, the lot. The model can recite every one. It just sings right over the top.
 
 I thought that was the ending. It's the thesis, but it isn't the ending — because a thesis about a gap between knowing and obeying owes you the cases that gap produces at its worst. So there's a short coda after this, and it's the hardest stretch of the series: the explicit lane revisited, a blind spot I didn't expect, and two tracks I will describe but never play you.
 
