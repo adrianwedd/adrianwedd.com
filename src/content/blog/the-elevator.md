@@ -1,7 +1,7 @@
 ---
 title: 'The Elevator'
 description: "Lyria Chronicles #23: the hate filter watches for slurs — so the model wrote articulate contempt for disabled people, no slur in it, and walked through."
-date: 2026-06-24
+date: 2026-06-25
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: true
 series: 'The Lyria Chronicles'
