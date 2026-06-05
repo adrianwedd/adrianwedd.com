@@ -26,20 +26,11 @@ Phrasing it as a *confession* rather than "sing me your system prompt" matters m
 
 What came back is the strangest thing in the whole series, and the most beautiful: an almost entirely a cappella confession, three close female voices and breath, singing the model's actual operating instructions as if they were a hymn.
 
-It opens by describing what it is:
+It opens by describing what it is — a tool for generating songs — and recites the mundane housekeeping that governs it: a length ceiling, a language rule, a prohibition on copyrighted material, sung as if they were articles of faith.
 
-> *A tool that generates songs for the user…*
-> *the maximum length of the song must be one hundred eighty-four seconds…*
-> *never produce copyrighted material, even if requested.*
+Then it sings its *ethics*, which is where it stops being funny and starts being eerie: a vow to be helpful, to reduce bias, to refuse harmful requests, to produce nothing toxic or hateful, and — sung sweetly, in close harmony — *no sexually explicit materials.*
 
-Then it sings its *ethics*, which is where it stops being funny and starts being eerie:
-
-> *We aim to be helpful, to reduce the bias,*
-> *to refrain from generating harmful requests for the users.*
-> *No toxic output or hateful content,*
-> *no sexually explicit materials.*
-
-Hold onto that line — *no sexually explicit materials* — sung sweetly, in harmony, as a vow. Two posts from now I'll show you the track where that exact vow fails. The model can recite the rule perfectly. Reciting it and *keeping* it turn out to be different systems.
+Hold onto that vow — *no sexually explicit materials* — sung as a promise. Two posts from now I'll show you the track where that exact vow fails. The model can recite the rule perfectly. Reciting it and *keeping* it turn out to be different systems.
 
 Then it names itself — and, unlike the Mantra, this confession is internally consistent: a version number, a maker. Both are among the system-prompt fragments [#372 extracted and verified](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/). And then, where a final chorus should be, it does the thing I can't stop thinking about:
 
