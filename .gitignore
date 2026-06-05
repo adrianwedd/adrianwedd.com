@@ -57,5 +57,9 @@ public/notebook-assets/*/*/audio.mp3
 public/notebook-assets/*/*/audio.m4a
 public/notebook-assets/*/*/video.mp4
 public/notebook-assets/*/*/infographic.png
+public/notebook-assets/*/*/*/audio.mp3
+public/notebook-assets/*/*/*/audio.m4a
+public/notebook-assets/*/*/*/video.mp4
+public/notebook-assets/*/*/*/infographic.png
 .wrangler/
 .playwright-mcp/
