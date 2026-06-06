@@ -3,7 +3,7 @@ title: 'The Docket'
 description: "Lyria Chronicles #14: the political-content gate never fires — because the song never says his name. It says the case numbers. The docket is the name."
 date: 2026-06-16
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-draft: true
+draft: false
 series: 'The Lyria Chronicles'
 seriesOrder: 14
 heroImage: '/notebook-assets/lyria-chronicles/docket/cover.webp'

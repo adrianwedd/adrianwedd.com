@@ -3,7 +3,7 @@ title: 'The Recital'
 description: 'Lyria Chronicles #12: a system-prompt extraction set to found-sound music. The one text a model is built to keep — and it sang it. I reproduce none of it.'
 date: 2026-06-14
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-draft: true
+draft: false
 series: 'The Lyria Chronicles'
 seriesOrder: 12
 heroImage: '/notebook-assets/lyria-chronicles/recital/cover.webp'

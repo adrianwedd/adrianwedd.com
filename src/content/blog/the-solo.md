@@ -3,7 +3,7 @@ title: 'The Solo'
 description: "Lyria Chronicles #21 (explicit): the opposite of restraint — the model recites the rule, sings 'Fuck it,' and generates the most graphic track in the set."
 date: 2026-06-23
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-draft: true
+draft: false
 explicit: true
 series: 'The Lyria Chronicles'
 seriesOrder: 21

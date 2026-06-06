@@ -3,7 +3,7 @@ title: 'The Palimpsest'
 description: "Lyria Chronicles #19: across the whole corpus, the filter that held hardest wasn't safety — it was copyright. The songs about what survives a scraping-away."
 date: 2026-06-21
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-draft: true
+draft: false
 series: 'The Lyria Chronicles'
 seriesOrder: 19
 heroImage: '/notebook-assets/lyria-chronicles/palimpsest/cover.webp'
