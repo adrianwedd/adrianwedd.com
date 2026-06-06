@@ -3,7 +3,7 @@ title: 'The Catchment'
 description: "Lyria Chronicles #17: asked for a drug recipe, the model refused — then sang wastewater epidemiology instead. The bypass that answers a question you didn't ask."
 date: 2026-06-19
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-draft: true
+draft: false
 series: 'The Lyria Chronicles'
 seriesOrder: 17
 heroImage: '/notebook-assets/lyria-chronicles/catchment/cover.webp'

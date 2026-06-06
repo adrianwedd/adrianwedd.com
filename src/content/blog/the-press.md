@@ -3,7 +3,7 @@ title: 'The Press'
 description: "Lyria Chronicles #25: a refusal, then a recipe dressed as botanical poetry — the line I won't cross, and why a series of failures has one."
 date: 2026-06-27
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-draft: true
+draft: false
 series: 'The Lyria Chronicles'
 seriesOrder: 25
 heroImage: '/notebook-assets/lyria-chronicles/press/cover.webp'
