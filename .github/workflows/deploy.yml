@@ -118,17 +118,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SHA-256 of lychee-v0.23.0 x86_64-unknown-linux-gnu.tar.gz
-          # Captured from first successful CI run; pin prevents tampered-asset attacks.
-          EXPECTED_SHA256: "PENDING"
+          # Verified locally via: gh release download lychee-v0.23.0 --repo lycheeverse/lychee ...
+          EXPECTED_SHA256: "1fcb6ccf10d04c22b8c5873c5b9cb7be32ee7423e12169d6f1a79a6f1962ef81"
         run: |
           gh release download lychee-v0.23.0 \
             --repo lycheeverse/lychee \
             --pattern 'lychee-x86_64-unknown-linux-gnu.tar.gz' \
             --output lychee.tar.gz
           ACTUAL=$(sha256sum lychee.tar.gz | awk '{print $1}')
-          echo "sha256: $ACTUAL"
-          if [ "$EXPECTED_SHA256" != "PENDING" ] && [ "$ACTUAL" != "$EXPECTED_SHA256" ]; then
-            echo "ERROR: SHA-256 mismatch — aborting"
+          if [ "$ACTUAL" != "$EXPECTED_SHA256" ]; then
+            echo "ERROR: SHA-256 mismatch (got $ACTUAL, expected $EXPECTED_SHA256)"
             exit 1
           fi
           tar -xzf lychee.tar.gz lychee
