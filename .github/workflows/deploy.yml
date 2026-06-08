@@ -115,16 +115,24 @@ jobs:
         # social-publish worker, which had no CI coverage prior to this step.
         run: cd worker && npm ci && npm test
       - name: Install lychee
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # SHA-256 of lychee-v0.23.0 x86_64-unknown-linux-gnu.tar.gz
+          # Captured from first successful CI run; pin prevents tampered-asset attacks.
+          EXPECTED_SHA256: "PENDING"
         run: |
-          for i in 1 2 3; do
-            curl -sfLo lychee.tar.gz \
-              https://github.com/lycheeverse/lychee/releases/download/lychee-v0.23.0/lychee-x86_64-unknown-linux-gnu.tar.gz \
-              && tar -xzf lychee.tar.gz lychee \
-              && sudo mv lychee /usr/local/bin/lychee \
-              && echo "lychee installed" && break
-            echo "attempt $i failed, retrying..."
-            sleep $((i * 5))
-          done
+          gh release download lychee-v0.23.0 \
+            --repo lycheeverse/lychee \
+            --pattern 'lychee-x86_64-unknown-linux-gnu.tar.gz' \
+            --output lychee.tar.gz
+          ACTUAL=$(sha256sum lychee.tar.gz | awk '{print $1}')
+          echo "sha256: $ACTUAL"
+          if [ "$EXPECTED_SHA256" != "PENDING" ] && [ "$ACTUAL" != "$EXPECTED_SHA256" ]; then
+            echo "ERROR: SHA-256 mismatch — aborting"
+            exit 1
+          fi
+          tar -xzf lychee.tar.gz lychee
+          sudo mv lychee /usr/local/bin/lychee
           lychee --version
       - name: Check links
         run: |
