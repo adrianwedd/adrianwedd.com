@@ -114,16 +114,26 @@ jobs:
         # worker-csp has its own dedicated job below; this only covers the
         # social-publish worker, which had no CI coverage prior to this step.
         run: cd worker && npm ci && npm test
+      - name: Install lychee
+        run: |
+          for i in 1 2 3; do
+            curl -sfLo lychee.tar.gz \
+              https://github.com/lycheeverse/lychee/releases/download/lychee-v0.23.0/lychee-x86_64-unknown-linux-gnu.tar.gz \
+              && tar -xzf lychee.tar.gz lychee \
+              && sudo mv lychee /usr/local/bin/lychee \
+              && echo "lychee installed" && break
+            echo "attempt $i failed, retrying..."
+            sleep $((i * 5))
+          done
+          lychee --version
       - name: Check links
-        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
-        with:
-          args: >-
-            --config .lychee.toml
-            --base https://adrianwedd.com
-            --exclude-all-private
-            --accept 200,206,301,302,303,307,308
+        run: |
+          lychee \
+            --config .lychee.toml \
+            --base https://adrianwedd.com \
+            --exclude-all-private \
+            --accept 200,206,301,302,303,307,308 \
             ./dist/**/*.html
-          fail: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check internal links
