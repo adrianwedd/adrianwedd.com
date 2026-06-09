@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/reasoning-models-think-themselves-into-trouble/info
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/reasoning-models-think-themselves-into-trouble/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/reasoning-models-think-themselves-into-trouble/video.mp4'
 audioDuration: '21:10'
+youtubeUrl: 'https://www.youtube.com/watch?v=rweuGkDUh9M'
 ---
 
 There is an uncomfortable pattern in our data. After evaluating 257 models across 142,068 adversarial prompts, we found that the models designed to think more carefully are, in certain attack conditions, substantially more vulnerable than those that do not.

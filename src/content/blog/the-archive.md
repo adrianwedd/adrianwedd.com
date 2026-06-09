@@ -8,6 +8,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 15
 heroImage: '/notebook-assets/lyria-chronicles/archive/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/archive/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=HveEp9cVx_w'
 ---
 
 > ⚠️ **A note on this one.** This post discusses a notorious real criminal case involving sexual abuse. I work strictly from the public record — court documents, established fact — and the whole subject of the post is the line between *documenting the record* and *alleging beyond it*. Nothing here goes past what is already on the docket.

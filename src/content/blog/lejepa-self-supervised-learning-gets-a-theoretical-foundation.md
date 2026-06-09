@@ -8,6 +8,7 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lejepa-self-supervised-lea
 audioDuration: "21:16"
 tags: ["ai", "machine-learning", "research", "self-supervised-learning"]
 draft: false
+youtubeUrl: 'https://www.youtube.com/watch?v=E1UrwZfUeIk'
 ---
 
 **Balestriero & LeCun (2025)** — [arXiv:2511.08544](https://arxiv.org/abs/2511.08544)

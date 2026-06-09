@@ -16,6 +16,7 @@ faq:
     a: "Yes. The official 2026-27 Budget books 'Operational Efficiencies' totalling $1.467 billion across the four-year forward estimates (Budget Paper No. 4, Table 19.1), equivalent to roughly 1,700 full-time roles. The Greens' figure matches it almost exactly. 'Cuts' versus 'efficiencies' is a framing fight over the same line items."
   - q: 'How much does the Macquarie Point stadium actually cost?'
     a: "The stated total is $1.13 billion. The 2026-27 Budget allocates $567.8 million to it next year alone, and the Macquarie Point Development Corporation's debt rises from zero to $454 million by 2030, with its cash balance turning negative. The State's own contribution is capped at $375 million, topped up by land contributions."
+youtubeUrl: 'https://www.youtube.com/watch?v=AhIJk5PQ_ps'
 ---
 
 Open the glossy *Budget Paper Overview Book* — the document the Tasmanian Government actually wants you to read — and search it for the word "stadium." You won't find it. Not once. The most expensive, most contested, most legally entangled commitment in the state's finances has been scrubbed from the highlight reel. In its place, under "Delivering for Clark," sits a single tidy line: **$75.6 million for a Macquarie Point Northern Access Road.**
