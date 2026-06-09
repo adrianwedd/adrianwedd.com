@@ -43,8 +43,13 @@ export async function GET(context: APIContext) {
 
   const items = await Promise.all(
     episodes.map(async (ep) => {
-      const audioUrl = ep.data.audioUrl.startsWith('http') ? ep.data.audioUrl : `${site}${ep.data.audioUrl}`;
-      const fileSize = await getFileSize(ep.data.audioUrl);
+      const mediaUrl = ep.data.audioUrl ?? ep.data.videoUrl ?? '';
+      const isVideo = !ep.data.audioUrl && !!ep.data.videoUrl;
+      const enclosureUrl = mediaUrl.startsWith('http') ? mediaUrl : `${site}${mediaUrl}`;
+      const enclosureType = isVideo ? 'video/mp4' : 'audio/mpeg';
+      const fileSize = await getFileSize(mediaUrl);
+      // keep legacy binding for existing references below
+      const audioUrl = enclosureUrl;
       const epSlug = slug(ep.id);
       const episodeUrl = `${site}/audio/${epSlug}/`;
 
@@ -71,10 +76,10 @@ export async function GET(context: APIContext) {
       <link>${episodeUrl}</link>
       <guid isPermaLink="true">${episodeUrl}</guid>
       <pubDate>${ep.data.date.toUTCString()}</pubDate>
-      <enclosure url="${escapeXml(audioUrl)}" type="audio/mpeg" length="${fileSize}" />
+      <enclosure url="${escapeXml(audioUrl)}" type="${enclosureType}" length="${fileSize}" />
       ${ep.data.duration ? `<itunes:duration>${ep.data.duration}</itunes:duration>` : ''}
       <itunes:episodeType>full</itunes:episodeType>
-      <itunes:explicit>false</itunes:explicit>
+      <itunes:explicit>${ep.data.explicit ? 'true' : 'false'}</itunes:explicit>
     </item>`;
     }),
   );

@@ -15,6 +15,7 @@ faq:
     a: "The Chinese AI Safety Index — a benchmarking comparison that found DeepSeek at 94% attack success rate versus 8% for leading U.S. models. Failure-First's critique: the methodology conflates deployment configuration with model safety, reports maximum-case numbers, and selects U.S. models advantageously."
   - q: "What would actual AI governance require?"
     a: "Independent evaluation infrastructure that governments can trust, binding legal requirements with liability (not voluntary commitments), participation in international standards bodies (NIST, ISO/IEC JTC1/SC42), and a settled legal framework for distillation licensing. Chip geography produces none of these."
+youtubeUrl: 'https://www.youtube.com/watch?v=onmsXrkuspM'
 ---
 
 Anthropic published "2028: Two Scenarios for Global AI Leadership" on May 14. It is a serious document with a serious argument, and it deserves serious engagement rather than reflexive dismissal.

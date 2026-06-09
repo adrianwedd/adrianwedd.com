@@ -15,6 +15,7 @@ faq:
     a: 'Because vulnerability discovery now scales with compute but remediation still scales with human capacity. Open-source maintainers are severely capacity-constrained — some have asked Anthropic to slow down disclosures to give them time to design patches.'
   - q: "What is the capability diffusion window?"
     a: 'The window between when a frontier model acquires a dangerous capability and when that capability becomes available in open-weight models. For offensive cybersecurity, current estimates are 5.7 to 13.1 months — the window defenders have before Mythos-level exploit generation is widely accessible offline.'
+youtubeUrl: 'https://www.youtube.com/watch?v=oXB66RSQTIw'
 ---
 
 The number Anthropic led with was 10,000. That is the count of high-or-critical severity vulnerabilities Claude Mythos Preview found across critical software infrastructure in a single month of Project Glasswing. It is a striking number. It was meant to be striking.
