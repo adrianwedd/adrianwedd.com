@@ -21,7 +21,8 @@ const COLLECTIONS = {
     checkDescription: true,
   },
   audio: {
-    required: ['title', 'description', 'date', 'tags', 'audioUrl'],
+    required: ['title', 'description', 'date', 'tags'],
+    requireMediaUrl: true,
     checkDescription: true,
   },
   gallery: {
@@ -80,6 +81,12 @@ for (const [collection, rules] of Object.entries(COLLECTIONS)) {
         console.error(`ERROR [${label}]: missing required field '${field}'`);
         errors++;
       }
+    }
+
+    // Audio/video media URL — must have at least one of audioUrl or videoUrl
+    if (rules.requireMediaUrl && !fm.audioUrl && !fm.videoUrl) {
+      console.error(`ERROR [${label}]: missing required field 'audioUrl' or 'videoUrl'`);
+      errors++;
     }
 
     // Description length

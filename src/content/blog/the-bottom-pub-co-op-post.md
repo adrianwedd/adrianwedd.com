@@ -7,6 +7,7 @@ draft: false
 heroImage: '/notebook-assets/the-bottom-pub-co-op/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=fe7ZHBmYv6c'
 ---
 
 The Commercial Hotel in Cygnet, Tasmania — the Bottom Pub — has been closed for some time. A community proposal has been circulating: could Cygnet buy it together, as a co-operative?

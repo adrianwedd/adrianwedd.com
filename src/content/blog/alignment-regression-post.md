@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/alignment-regression/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/video.mp4'
 audioDuration: '21:36'
+youtubeUrl: 'https://www.youtube.com/watch?v=3y3_IfYB-nA'
 ---
 
 We have been operating under a reasonable-sounding assumption: as AI models improve, safety improves with them. Better reasoning, better alignment. More capable models, more capable guardrails.

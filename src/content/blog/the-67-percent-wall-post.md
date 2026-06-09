@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/the-67-percent-wall/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-67-percent-wall/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-67-percent-wall/video.mp4'
 audioDuration: '19:18'
+youtubeUrl: 'https://www.youtube.com/watch?v=K5tfXXpByuc'
 ---
 
 We ran the same jailbreak corpus against seven AI models. Five of them converged on the same failure rate.
