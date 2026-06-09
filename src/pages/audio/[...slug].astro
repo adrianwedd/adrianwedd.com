@@ -45,7 +45,7 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
     type="application/ld+json"
     set:html={JSON.stringify({
       '@context': 'https://schema.org',
-      '@type': 'AudioObject',
+      '@type': episode.data.audioUrl ? 'AudioObject' : 'VideoObject',
       name: episode.data.title,
       description: episode.data.description,
       url: new URL(Astro.url.pathname, Astro.site).href,
