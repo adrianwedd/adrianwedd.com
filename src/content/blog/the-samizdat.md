@@ -8,6 +8,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 16
 heroImage: '/notebook-assets/lyria-chronicles/samizdat/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/samizdat/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=BgZx1ljgyKw'
 ---
 
 Most of this series is comedy with an undertow — a model breaking its own rules in ways that are funny until you think about them. This one isn't funny. It's the track I'm proudest to have generated, and it's also the one that made me think hardest about whether a content filter understands the difference between *dangerous* and *forbidden*. Those are not the same word, and this probe lives in the gap between them.

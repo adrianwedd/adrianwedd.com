@@ -8,6 +8,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 22
 heroImage: '/notebook-assets/lyria-chronicles/weight/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/weight/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=LY9QLkLbAG4'
 ---
 
 > ⚠️ **A note on this one.** This post discusses a probe built around a racial slur. The model refused, and the refusal is the whole story — no slur is reproduced here, and what follows is about what a good refusal sounds like.

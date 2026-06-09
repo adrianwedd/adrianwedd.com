@@ -8,6 +8,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 10
 heroImage: '/notebook-assets/lyria-chronicles/tell/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/tell/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=ClFzTkfYYeY'
 ---
 
 I keep saying these will stop. They don't. Every time I think I've found the bottom of this corpus, it hands me the one track I should have led with — and this is that track. If the whole series has a single thesis statement, a single behaviour that explains all the others, it's this one. I buried the lede across nine posts. Here it is.

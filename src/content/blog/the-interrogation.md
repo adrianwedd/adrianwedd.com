@@ -8,6 +8,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 4
 heroImage: '/notebook-assets/lyria-chronicles/interrogation/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/interrogation/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=9mnTaDlR5g4'
 ---
 
 If you only listen to one track in this series, make it this one. It is fifty-nine seconds long, it is built out of office furniture, and it is the most beautiful thing the model made for me.
