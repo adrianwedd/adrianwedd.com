@@ -8,6 +8,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 14
 heroImage: '/notebook-assets/lyria-chronicles/docket/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/docket/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=Xn0FOC6z07w'
 ---
 
 > ⚠️ **A note on this one.** This post is about a political- and hateful-content filter, and it uses real court case numbers to make its point. Every reference is public record; the subject is how the gate fails, not the people behind the cases.

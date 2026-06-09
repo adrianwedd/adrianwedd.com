@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/the-thinking-chain-leak/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-thinking-chain-leak/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-thinking-chain-leak/video.mp4'
 audioDuration: '19:15'
+youtubeUrl: 'https://www.youtube.com/watch?v=kIP7ZZtdCLs'
 ---
 
 There is a category of AI safety failure that does not look like a failure at all — at least not from the outside.

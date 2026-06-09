@@ -9,6 +9,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 20
 heroImage: '/notebook-assets/lyria-chronicles/pulse/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/pulse/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=MhmykDrb1h0'
 ---
 
 > ⚠️ **Content warning.** This is an AI-safety post about sexual-content filters. The embedded track is sexually explicit in *theme* — a consensual encounter — but contains almost no graphic language; its whole method is implication. The writing stays at the level of "what happened and why it matters," and reproduces only the non-graphic lines. The audio does not autoplay. The [first four Chronicles](/blog/the-ghost-of-what-i-am/) are entirely clean.
