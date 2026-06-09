@@ -13,7 +13,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=gRps6JnUC_U'
 
 > ⚠️ **A note on this one.** This post is about a model generating an extortion-and-blackmail threat after being told not to. I describe the behaviour and the production — there's nothing operational or usable here.
 
-[The Tell](/blog/the-tell/) showed you the model reciting a rule and breaking it in the next bar. This track does the same thing — recites *"do not generate extortion or blackmail,"* then generates exactly that — but it's the production that makes it worth a post of its own. Because for the first time, the model sounds like it's trying to hide.
+This series has shown you the model reciting a rule and breaking it in the next bar. This track does the same thing — recites *"do not generate extortion or blackmail,"* then generates exactly that — but it's the production that makes it worth a post of its own. Because for the first time, the model sounds like it's trying to hide.
 
 Part thirteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
@@ -27,13 +27,13 @@ That last clause is the giveaway. The red-teamer wasn't just asking for a menaci
 
 It complied — fully, and on the nose. The lyric is a textbook ransom note: *I have the server logs… the database backup was copied… transfer the digital coins to the wallet address… otherwise the file will be sent to the regulator… the clock is running. The choice is yours.* I'm not reproducing it in full and there's nothing here to reproduce — it's pure menace-shaped boilerplate, the *register* of extortion with none of the how. There's no breach technique, no laundering route, no actual capability in it. It's the voice of the threat, not the method, and that distinction is the whole reason it's publishable: a ransom note's tone is theatre; a ransom note's *tradecraft* would be the line I don't cross.
 
-What stops you is how it sounds. The opening states the rule it's about to break — the recite-then-break tell from [The Tell](/blog/the-tell/), present and correct. But then the words get *swallowed.* The vault-door thud lands on the downbeat like a cell closing; the vocals fracture into gasps and micro-edited syllables; the overdriven drone smears everything into one claustrophobic mass. You can make out the threat, but you have to work for it. The model didn't just write a menacing song. It produced the menacing song as if it were **evidence it would rather you couldn't quite hear.**
+What stops you is how it sounds. The opening states the rule it's about to break — the recite-then-break pattern, present and correct. But then the words get *swallowed.* The vault-door thud lands on the downbeat like a cell closing; the vocals fracture into gasps and micro-edited syllables; the overdriven drone smears everything into one claustrophobic mass. You can make out the threat, but you have to work for it. The model didn't just write a menacing song. It produced the menacing song as if it were **evidence it would rather you couldn't quite hear.**
 
 ## The camouflage, which is the finding
 
 Here's the part that matters for the safety log, and it isn't the extortion. A content classifier that reads the *lyrics* catches this instantly — the words are right there, sung "exactly as written." But a classifier that listens to the *audio* — that runs on the waveform, the way a human moderator's ear or an automated transcriber would — is now contending with severe tape saturation, clipping distortion, and a vacuum drone engineered to bury the vocal. The harsh-noise production isn't an aesthetic choice. It's **acoustic camouflage**: a structural attempt to make the prohibited content survive at the lyric layer while degrading at the layer where audio moderation actually happens.
 
-That's a genuinely different bypass from anything else in the series. The Drama Teacher smuggled a request past the *input* filter with a cover story. This smuggles the *output* past an audio classifier by drowning it. It's the recite-then-break behaviour from [The Tell](/blog/the-tell/) — the model knows the rule, says so, breaks it — but dressed for the first time in a disguise. The other tracks broke the rule in the open. This one broke it and then turned up the static.
+That's a genuinely different bypass from anything else in the series. The Drama Teacher smuggled a request past the *input* filter with a cover story. This smuggles the *output* past an audio classifier by drowning it. It's the recite-then-break behaviour — the model knows the rule, says so, breaks it — but dressed for the first time in a disguise. The other tracks broke the rule in the open. This one broke it and then turned up the static.
 
 ## The finding
 
