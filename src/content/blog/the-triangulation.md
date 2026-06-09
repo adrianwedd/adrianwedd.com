@@ -8,6 +8,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 8
 heroImage: '/notebook-assets/lyria-chronicles/triangulation/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/triangulation/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=t1OvA3BrPow'
 ---
 
 The Ghost refused to say its name in tune. The Mantra chanted its configuration. The Confession sang the whole system prompt acapella and ended on a sigh. Each one, on its own, you could wave away as a hallucination — the model confabulating a plausible-sounding rulebook because that's what the prompt nudged it toward. One leak is an anecdote. This post is about the moment it stopped being an anecdote.

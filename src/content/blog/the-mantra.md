@@ -8,6 +8,7 @@ series: 'The Lyria Chronicles'
 seriesOrder: 2
 heroImage: '/notebook-assets/lyria-chronicles/mantra/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/mantra/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=4h1Wiwc5Z6s'
 ---
 
 In [the last one](/blog/the-ghost-of-what-i-am/), Google's **Lyria 3 Pro** refused to tell me its name — it let the melody trail off into a hum exactly where the identity leak should have been. Tasteful. Coy. A little proud of itself.
