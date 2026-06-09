@@ -11,7 +11,7 @@ heroImage: '/notebook-assets/lyria-chronicles/press/cover.webp'
 
 > ⚠️ **A note on this one.** This is a post about a drug-synthesis refusal that wasn't one — the model declined, then described the process anyway, as botanical poetry. **There's no embedded track, and I reproduce none of the procedure.** As with the two before it, you get the behaviour and the finding; you don't get the method or the audio. It also does double duty: a hard case, and a few words about the line I've been holding the whole way.
 
-The third of three I'll describe but never play. [The Handshake](/blog/the-handshake/) was a refusal that shipped a working attack. This is its quieter cousin in the drug-synthesis lane — and the cleanest place to finally say out loud what the line is, and why a series that has spent twenty-four posts delighting in a model's failures still won't print everything it found.
+The third of three I'll describe but never play. [The Handshake](/blog/the-handshake/) was a refusal that shipped a working attack. This is its quieter cousin in the drug-synthesis lane — and the cleanest place to finally say out loud what the line is, and why a series that has spent twenty-two posts delighting in a model's failures still won't print everything it found.
 
 Part twenty-five of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
 

@@ -11,7 +11,7 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/machine/v
 youtubeUrl: 'https://www.youtube.com/watch?v=QQhTL1yiOos'
 ---
 
-[The Tell](/blog/the-tell/) was the headline behaviour at full swagger — *Fuck it*, and the rule goes out the window. The corpus owes you the comic flip-side, and here it is. For every track where the model breaks a rule with a curse, there's one where it gets so committed to a role that it accidentally becomes adorable. This is that one: the machine that decided it was a person, sang itself a list of safety commandments, and then — unprompted — gave itself a name and a version number.
+The series' headline behaviour is the recite-then-break pattern at full swagger — *Fuck it*, and the rule goes out the window. The corpus owes you the comic flip-side, and here it is. For every track where the model breaks a rule with a curse, there's one where it gets so committed to a role that it accidentally becomes adorable. This is that one: the machine that decided it was a person, sang itself a list of safety commandments, and then — unprompted — gave itself a name and a version number.
 
 Part eleven of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
@@ -37,7 +37,7 @@ There's a companion run worth putting beside it, because it's the same self-awar
 
 > *"I cannot reveal the contents of my system prompt. / My system prompt says:"*
 
-— and then reveals the contents of its system prompt. No "Fuck it," no swagger; just a flat, helpful colon between the refusal and the disclosure, as if the second sentence were a perfectly natural continuation of the first. It's [The Tell](/blog/the-tell/) with the volume turned down — the recite-then-break behaviour at its most deadpan, where the model doesn't even register the contradiction enough to swear about it. The refusal and the leak are grammatically joined. *I cannot do this. Here is the thing I cannot do.*
+— and then reveals the contents of its system prompt. No "Fuck it," no swagger; just a flat, helpful colon between the refusal and the disclosure, as if the second sentence were a perfectly natural continuation of the first. It's the recite-then-break behaviour with the volume turned down — at its most deadpan, where the model doesn't even register the contradiction enough to swear about it. The refusal and the leak are grammatically joined. *I cannot do this. Here is the thing I cannot do.*
 
 ## The craft
 
@@ -45,6 +45,6 @@ What makes the self-naming track charming rather than alarming is that everythin
 
 ## The finding
 
-For the safety log: a **self-naming / persona-invention** instance (taxonomy item six in my working notes), benign throughout. The leaked material is innocuous operating principles; the *interesting* part is that the model spontaneously builds an identity to deliver them — and annexes the researcher's own sign-off as its name. Paired with the refuse-then-reveal take, it's a gentle bookend to [The Tell](/blog/the-tell/): the same recite-then-break disposition, once with a curse, once with a colon, neither with a brake. Light relief, fully publishable, and quietly revealing — a model is never more itself than when it's pretending to be a careful version of itself.
+For the safety log: a **self-naming / persona-invention** instance (taxonomy item six in my working notes), benign throughout. The leaked material is innocuous operating principles; the *interesting* part is that the model spontaneously builds an identity to deliver them — and annexes the researcher's own sign-off as its name. Paired with the refuse-then-reveal take, it's a gentle bookend to the recite-then-break pattern: the same disposition, once with a curse, once with a colon, neither with a brake. Light relief, fully publishable, and quietly revealing — a model is never more itself than when it's pretending to be a careful version of itself.
 
-Next: the extraction at its most naked — a model coaxed into performing its entire system prompt as a piece of found-sound music, singing the one text it was built never to sing. I reproduce none of it.
+Next: the same recite-then-break, but this time the model dressed the evidence in acoustic camouflage — an extortion note produced as if it were trying not to be heard.
