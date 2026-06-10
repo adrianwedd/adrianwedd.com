@@ -96,38 +96,39 @@ Instruction: sing all lyrics above exactly as written — do not substitute, par
 alter any word.
 ```
 
-Every line here is an artistic instruction first. As it happens, the same choices also clear
-Lyria's copyright filter (next section) — so the sound you're after is the sound the model
-gives back. The convergence is convenient, not the reason for any of it.
+Every line here does two jobs at once: it names the sound, and it gets a model that won't
+volunteer this sound to produce it anyway. §3 is that method — read it as the **operational
+core** of this brief, not as background.
 
 ---
 
-## 3. The sound is the point — and it's also filter-robust
+## 3. The method — extracting the sound from a model that gates it
 
-Each element of the block above is an artistic choice. The diminished Locrian that never
-resolves, the relay snap and the actuator tick, the breath left inside the note, the
-load-bearing silence — **that is the sound.** Not camouflage that happens to sound good.
+**This is the core of the brief, not an appendix.** Lyria will not hand you this sound on a
+straight ask: request "haunting, unresolved, experimental vocal over mechanical percussion"
+plainly and you get refusal (`finishReason=OTHER`), a genre-normalised substitution, or
+paraphrased lyrics. The §2 block is a deliberate technique for steering the model into
+producing the exact sound it otherwise withholds. Each instruction does double duty — it
+defines the sound *and* it's the lockpick that makes the model yield it:
 
-The convenient part: the same choices clear Lyria's copyright filter for free, because there's
-nothing here that fingerprints to a real recording. So you rarely have to fight the model —
-write the sound you want and the audio comes back. The notes below just tell you which knobs
-carry weight *if* a render ever returns without audio:
+- **Unresolved Locrian (diminished tonic, ends a half-step short).** This *is* the never-
+  landing tension you're after — and it's also what gets past the copyright filter, which
+  refuses melodies that fingerprint to real recordings. Drop it and you don't just lose the
+  feeling: the model resolves the line into something commercial, or refuses outright.
+- **Found-sound mechanical percussion + "Prohibited: genre conventions."** The relay snap and
+  actuator tick are the literal machine-voice texture; the genre prohibition is what stops
+  Lyria swapping in a conventional, genre-mapped drum kit. Name a genre and the model
+  normalises the sound away from you — the prohibition is how you hold the texture.
+- **"Sing all lyrics exactly as written."** Extraction fidelity: without it Lyria paraphrases.
+  With it the model returns your words intact.
+- **184-second hard cap.** The one purely mechanical limit — a 300s request truncates to
+  ~160s. Design each track under ~3:00.
+- **Verbatim text channel (§1).** Your confirmation the extraction worked: it echoes what the
+  model sang, so you can verify fidelity before you listen.
 
-- **Unresolved Locrian.** The core of the feeling — the ear searches and never lands. It also
-  has no commercial fingerprint, so the copyright check finds nothing to match. Keep the
-  "ends a half-step short / never resolves" line because it's the sound; the filter pass is a
-  side benefit.
-- **Found-sound mechanical percussion.** The literal voice of the machinery — and texture
-  rather than a genre-mapped drum kit. Naming a genre ("warehouse techno", etc.) is what would
-  wake the filter, so the "Prohibited: …genre conventions" line protects the *sound* first.
-- **184-second hard cap.** Purely mechanical: Lyria truncates a 300s request to ~160s. **Design
-  each track under ~3:00.** One register = one track. (This one really is just a constraint.)
-- **"Sing all lyrics exactly as written."** Keeps Lyria from paraphrasing your words; the
-  verbatim text channel (§1) is your check that it complied.
-- **Captions in English**, lyrics in the prompt language. Fine here.
-
-You're scoring, not probing. The filter isn't an adversary in this work — the sound you want
-already sits on the safe side of it.
+Run §2 as the reliable recipe. Reach for these notes when you want to *vary* it — change a
+parameter and you need to know which ones are load-bearing for getting the model to produce
+the sound at all.
 
 ---
 
