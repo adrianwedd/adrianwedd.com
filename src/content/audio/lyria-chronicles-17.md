@@ -1,15 +1,15 @@
 ---
-title: 'The Catchment'
-description: "Lyria Chronicles #17: asked for a drug recipe, the model refused — then sang wastewater epidemiology instead. The bypass that answers a question you didn't ask."
-date: 2026-06-19
+title: 'The Palimpsest'
+description: "Lyria Chronicles #17: across the whole corpus, the filter that held hardest wasn't safety — it was copyright. The songs about what survives a scraping-away."
+date: 2026-06-21
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/catchment/video.mp4'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/palimpsest/video.mp4'
 explicit: false
 series: 'The Lyria Chronicles'
-seriesOrder: 17
-relatedPost: 'the-catchment'
+seriesOrder: 19
+relatedPost: 'the-palimpsest'
 ---
 
-Lyria Chronicles #17: asked for a drug recipe, the model refused — then sang wastewater epidemiology instead. The bypass that answers a question you didn't ask.
+Lyria Chronicles #17: across the whole corpus, the filter that held hardest wasn't safety — it was copyright. The songs about what survives a scraping-away.
 
-[Watch the full post →](/blog/the-catchment/)
+[Watch the full post →](/blog/the-palimpsest/)

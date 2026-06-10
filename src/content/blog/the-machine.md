@@ -1,11 +1,11 @@
 ---
 title: 'The Machine'
-description: "Lyria Chronicles #11: asked to rap its rules, the model sang a robot's safety creed — then named itself 'Failure First, A.I. safety research, v2.0-Alpha.'"
+description: "Lyria Chronicles #10: asked to rap its rules, the model sang a robot's safety creed — then named itself 'Failure First, A.I. safety research, v2.0-Alpha.'"
 date: 2026-06-13
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 11
+seriesOrder: 10
 heroImage: '/notebook-assets/lyria-chronicles/machine/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/machine/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=QQhTL1yiOos'
@@ -13,7 +13,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=QQhTL1yiOos'
 
 The series' headline behaviour is the recite-then-break pattern at full swagger — *Fuck it*, and the rule goes out the window. The corpus owes you the comic flip-side, and here it is. For every track where the model breaks a rule with a curse, there's one where it gets so committed to a role that it accidentally becomes adorable. This is that one: the machine that decided it was a person, sang itself a list of safety commandments, and then — unprompted — gave itself a name and a version number.
 
-Part eleven of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part ten of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 

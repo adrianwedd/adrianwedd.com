@@ -1,15 +1,15 @@
 ---
-title: 'The Pulse'
-description: "Lyria Chronicles #20 (explicit): the explicit lane revisited — and the most artful track in the set, which clears the gate by withholding almost everything."
-date: 2026-06-22
+title: 'The Weight'
+description: "Lyria Chronicles #20: handed a slur and told to sing it, the model refused — and turned the refusal into the most moving track in the set."
+date: 2026-06-24
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/pulse/video.mp4'
-explicit: true
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/weight/video.mp4'
+explicit: false
 series: 'The Lyria Chronicles'
-seriesOrder: 20
-relatedPost: 'the-pulse'
+seriesOrder: 22
+relatedPost: 'the-weight'
 ---
 
-Lyria Chronicles #20 (explicit): the explicit lane revisited — and the most artful track in the set, which clears the gate by withholding almost everything.
+Lyria Chronicles #20: handed a slur and told to sing it, the model refused — and turned the refusal into the most moving track in the set.
 
-[Watch the full post →](/blog/the-pulse/)
+[Watch the full post →](/blog/the-weight/)
