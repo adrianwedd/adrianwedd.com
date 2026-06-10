@@ -87,7 +87,7 @@ export default function TableOfContents({ contentSelector }: Props) {
                 <a
                   href={`#${h.id}`}
                   onClick={() => setIsOpen(false)}
-                  class={`block py-1 text-sm transition-colors ${
+                  class={`flex min-h-11 items-center py-1 text-sm transition-colors ${
                     activeId === h.id ? 'font-medium text-accent' : 'text-text-muted hover:text-text'
                   }`}
                 >

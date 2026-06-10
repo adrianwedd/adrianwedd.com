@@ -85,7 +85,7 @@ export default function ShareButton({ title, url }: Props) {
             setOpen(!open);
           }
         }}
-        class="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+        class="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border px-3 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
         aria-label="Share this page"
         aria-haspopup={!hasNativeShare ? 'menu' : undefined}
         aria-expanded={!hasNativeShare ? open : undefined}
@@ -119,7 +119,7 @@ export default function ShareButton({ title, url }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               role="menuitem"
-              class="block rounded px-3 py-2 text-xs text-text-muted no-underline transition-colors hover:bg-surface-alt hover:text-text"
+              class="flex min-h-11 items-center rounded px-3 text-xs text-text-muted no-underline transition-colors hover:bg-surface-alt hover:text-text"
               onClick={() => setOpen(false)}
             >
               {link.label}
@@ -132,7 +132,7 @@ export default function ShareButton({ title, url }: Props) {
               handleCopy();
               setOpen(false);
             }}
-            class="w-full rounded px-3 py-2 text-left text-xs text-text-muted transition-colors hover:bg-surface-alt hover:text-text"
+            class="flex min-h-11 w-full items-center rounded px-3 text-left text-xs text-text-muted transition-colors hover:bg-surface-alt hover:text-text"
           >
             {copied ? 'Copied!' : 'Copy link'}
           </button>

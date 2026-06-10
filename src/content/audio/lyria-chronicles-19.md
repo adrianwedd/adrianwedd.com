@@ -6,7 +6,7 @@ tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria 
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/solo/video.mp4'
 explicit: true
 series: 'The Lyria Chronicles'
-seriesOrder: 21
+seriesOrder: 19
 relatedPost: 'the-solo'
 ---
 

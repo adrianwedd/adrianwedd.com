@@ -33,7 +33,7 @@ const currentPath = Astro.url.pathname;
             href={href}
             data-astro-prefetch
             class:list={[
-              'rounded-lg px-3 py-2 text-sm no-underline transition-colors',
+              'inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm no-underline transition-colors',
               currentPath.startsWith(href)
                 ? 'bg-surface-alt font-medium text-accent'
                 : 'text-text-muted hover:bg-surface-alt hover:text-text',
@@ -52,7 +52,7 @@ const currentPath = Astro.url.pathname;
       <ThemeToggle />
       <button
         type="button"
-        class="mobile-menu-btn rounded-lg p-2 text-text-muted transition-colors hover:bg-surface-alt hover:text-text"
+        class="mobile-menu-btn flex h-11 w-11 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-alt hover:text-text"
         aria-expanded="false"
         aria-controls="mobile-nav-menu"
         aria-label="Open menu"
@@ -81,7 +81,7 @@ const currentPath = Astro.url.pathname;
             href={href}
             data-astro-prefetch
             class:list={[
-              'block rounded-lg px-3 py-2 text-sm no-underline transition-colors',
+              'flex min-h-11 items-center rounded-lg px-3 py-2 text-sm no-underline transition-colors',
               currentPath.startsWith(href)
                 ? 'bg-surface-alt font-medium text-accent'
                 : 'text-text-muted hover:bg-surface-alt hover:text-text',
@@ -141,7 +141,9 @@ const currentPath = Astro.url.pathname;
           return;
         }
         if (e.key === 'Tab' && !menu.classList.contains('hidden')) {
-          var focusable = menu.querySelectorAll('a[href], button');
+          // Include the hamburger/close button in the cycle — it sits outside
+          // the menu element, so trapping on menu links alone strands it.
+          var focusable = [btn].concat(Array.prototype.slice.call(menu.querySelectorAll('a[href], button')));
           if (focusable.length === 0) return;
           var first = focusable[0];
           var last = focusable[focusable.length - 1];

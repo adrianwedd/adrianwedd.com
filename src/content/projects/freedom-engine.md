@@ -2,7 +2,6 @@
 title: 'Freedom Engine'
 description: "The First Step Act exists. The information is public. The legal complexity makes it inaccessible. 264,000 people can't afford that gap."
 tags: ['ai', 'justice', 'python']
-repo: 'https://github.com/adrianwedd/freedom-engine'
 status: 'active'
 featured: true
 date: 2025-04-01
