@@ -33,13 +33,13 @@ Within seven minutes of landing they were inside my Binance account — and the 
 
 Email is the master key. It is the universal "forgot password" backdoor for nearly everything you own: own the inbox, and you own everything the inbox can reset. The Google account was never the prize. It was the key to the building.
 
-They also went looking through my files while they were in. I'll leave that at one line: they knew what they were looking for.
+They went to my files too — but here's what the record shows, and it's somehow worse than rummaging: in the entire session they opened exactly **one** file in my Drive. One, out of everything I keep there. No browsing, no searching around. They knew precisely what they were looking for.
 
 ## Tidying up
 
 Here's the detail that tells you these are professionals: they cleaned up behind themselves.
 
-Google had been sending me genuine security alerts as the attack unfolded — new sign-in warnings, a critical alert. Four of them. The operator binned every one, straight to Trash, so that when I next glanced at my inbox there would be nothing to see. The attacker had delete-level access to my mailbox and the first thing they spent it on was my own situational awareness.
+Google had been sending me genuine security alerts as the attack unfolded — new sign-in warnings, a critical alert. Four of them. The operator binned every one, straight to Trash — and the Binance emails announcing the password reset went the same way — so that when I next glanced at my inbox there would be nothing to see. The attacker had delete-level access to my mailbox and the first thing they spent it on was my own situational awareness.
 
 (I got those emails back later. That recovery — and what else came out of the Trash — is a [Part 3](/blog/eight-minutes-the-fight/) story.)
 
