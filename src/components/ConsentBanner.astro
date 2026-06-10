@@ -7,7 +7,7 @@
 <div
   id="consent-banner"
   class="fixed inset-x-0 bottom-0 z-[100] hidden"
-  role="dialog"
+  role="region"
   aria-label="Cookie consent"
   aria-live="polite"
 >
@@ -25,19 +25,23 @@
         <button
           id="consent-manage"
           type="button"
-          class="text-xs text-text-muted transition-colors hover:text-text"
+          class="min-h-11 px-2 text-xs text-text-muted transition-colors hover:text-text"
           aria-expanded="false"
           aria-controls="consent-expanded"
         >
           Manage
         </button>
-        <button id="consent-reject" type="button" class="text-xs text-text-muted transition-colors hover:text-text">
+        <button
+          id="consent-reject"
+          type="button"
+          class="min-h-11 px-2 text-xs text-text-muted transition-colors hover:text-text"
+        >
           Decline
         </button>
         <button
           id="consent-accept-all"
           type="button"
-          class="rounded-md bg-accent px-3 py-1 text-xs font-medium text-surface transition-colors hover:bg-accent-hover"
+          class="min-h-11 rounded-md bg-accent px-4 text-xs font-medium text-surface transition-colors hover:bg-accent-hover"
         >
           OK
         </button>
@@ -64,7 +68,7 @@
         <button
           id="consent-accept-selected"
           type="button"
-          class="rounded-md border border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+          class="min-h-11 rounded-md border border-border px-4 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
         >
           Save
         </button>

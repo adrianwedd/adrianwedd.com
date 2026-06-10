@@ -29,4 +29,4 @@ A parallel case study traces the same pre-clinical sensor pattern in Philip K. D
 
 ---
 
-[Read the Thesis](https://adrianwedd.github.io/before-the-words-existed/thesis.html) · [Download PDF](https://adrianwedd.github.io/before-the-words-existed/thesis.pdf) · [Evidence Tables](https://github.com/adrianwedd/before-the-words-existed/tree/main/evidence) · [Source on GitHub](https://github.com/adrianwedd/before-the-words-existed)
+[Read the Thesis](https://adrianwedd.github.io/before-the-words-existed/thesis.html) · [Source on GitHub](https://github.com/adrianwedd/before-the-words-existed)

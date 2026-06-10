@@ -3,7 +3,6 @@ title: 'Tanda Pizza'
 description: 'Multilingual website for an Italian pizzeria in Lovina, Bali. Five languages, WhatsApp reservations, zero infrastructure assumptions.'
 tags: ['web', 'static-site', 'multilingual', 'hospitality']
 url: 'https://tandapizza.com'
-repo: 'https://github.com/adrianwedd/tanda-pizza'
 status: 'active'
 featured: false
 date: 2026-02-03

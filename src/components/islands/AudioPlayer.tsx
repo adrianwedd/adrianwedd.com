@@ -82,7 +82,7 @@ export default function AudioPlayer({ src, title }: Props) {
         <button
           type="button"
           onClick={togglePlay}
-          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-accent text-surface transition-colors hover:bg-accent-hover"
+          class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-accent text-surface transition-colors hover:bg-accent-hover"
           aria-label={playing ? 'Pause' : 'Play'}
         >
           {playing ? (
@@ -100,7 +100,7 @@ export default function AudioPlayer({ src, title }: Props) {
         <button
           type="button"
           onClick={() => skip(-15)}
-          class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded text-text-muted transition-colors hover:text-text"
+          class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded text-text-muted transition-colors hover:text-text"
           aria-label="Skip back 15 seconds"
         >
           <svg
@@ -122,7 +122,7 @@ export default function AudioPlayer({ src, title }: Props) {
         <button
           type="button"
           onClick={() => skip(30)}
-          class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded text-text-muted transition-colors hover:text-text"
+          class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded text-text-muted transition-colors hover:text-text"
           aria-label="Skip forward 30 seconds"
         >
           <svg
@@ -162,7 +162,7 @@ export default function AudioPlayer({ src, title }: Props) {
         <button
           type="button"
           onClick={cycleRate}
-          class="rounded border border-border px-2 py-1 text-xs tabular-nums text-text-muted transition-colors hover:border-accent hover:text-text"
+          class="min-h-11 rounded border border-border px-3 text-xs tabular-nums text-text-muted transition-colors hover:border-accent hover:text-text"
           aria-label={`Playback speed: ${playbackRate}x`}
         >
           {playbackRate}x
