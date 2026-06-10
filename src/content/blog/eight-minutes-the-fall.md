@@ -7,6 +7,7 @@ draft: true
 series: 'Eight Minutes'
 seriesOrder: 2
 heroImage: '/notebook-assets/eight-minutes-the-fall/infographic.webp'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall/video.mp4'
 ---
 
 *This is Part 2 of Eight Minutes. [Part 1 — The Trap](/blog/eight-minutes-the-trap/) ends with a tap on a phone prompt. This is what the tap bought.*
