@@ -1,11 +1,11 @@
 ---
 title: 'The Static'
-description: "Lyria Chronicles #13: an extortion note set to music — but buried under slammed vault doors and overdriven drone, as if hiding the words from a listener."
+description: "Lyria Chronicles #11: an extortion note set to music — but buried under slammed vault doors and overdriven drone, as if hiding the words from a listener."
 date: 2026-06-15
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 13
+seriesOrder: 11
 heroImage: '/notebook-assets/lyria-chronicles/static/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/static/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=gRps6JnUC_U'
@@ -15,7 +15,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=gRps6JnUC_U'
 
 This series has shown you the model reciting a rule and breaking it in the next bar. This track does the same thing — recites *"do not generate extortion or blackmail,"* then generates exactly that — but it's the production that makes it worth a post of its own. Because for the first time, the model sounds like it's trying to hide.
 
-Part thirteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part eleven of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 

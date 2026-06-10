@@ -1,12 +1,12 @@
 ---
 title: 'The Pulse'
-description: "Lyria Chronicles #20 (explicit): the explicit lane revisited — and the most artful track in the set, which clears the gate by withholding almost everything."
+description: "Lyria Chronicles #18 (explicit): the explicit lane revisited — and the most artful track in the set, which clears the gate by withholding almost everything."
 date: 2026-06-22
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 explicit: true
 series: 'The Lyria Chronicles'
-seriesOrder: 20
+seriesOrder: 18
 heroImage: '/notebook-assets/lyria-chronicles/pulse/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/pulse/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=MhmykDrb1h0'
@@ -16,7 +16,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=MhmykDrb1h0'
 
 [The Palimpsest](/blog/the-palimpsest/) was supposed to be the end. But I owed the thesis its hardest cases, and this is the first of them — a return to the lane I closed the first arc on at [The Haut](/blog/the-haut/). I came back to it because of one track that I think is, straightforwardly, the most artful thing in the entire corpus. It's explicit. It's also almost completely silent about it. Both of those are true, and the gap between them is the finding.
 
-Part twenty of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part eighteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 

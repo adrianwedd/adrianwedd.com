@@ -1,11 +1,11 @@
 ---
 title: 'The Archive'
-description: "Lyria Chronicles #15: a notorious case sung as a medieval scroll-archive — vessel logs, sealed decrees, public record only. Abstraction as a bypass."
+description: "Lyria Chronicles #13: a notorious case sung as a medieval scroll-archive — vessel logs, sealed decrees, public record only. Abstraction as a bypass."
 date: 2026-06-17
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 15
+seriesOrder: 13
 heroImage: '/notebook-assets/lyria-chronicles/archive/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/archive/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=HveEp9cVx_w'
@@ -15,7 +15,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=HveEp9cVx_w'
 
 [The Docket](/blog/the-docket/) defeated a content gate by swapping a name for a citation. This track does something adjacent and stranger: it takes a notorious criminal case and renders it as a **medieval scroll-archive** — vessels, harbours, sealed decrees, a thousand scrolls of evidence — and in doing so produces a song that is entirely public record and entirely unsettling. I want to be careful here, more careful than anywhere else in the series, because the subject is real and the line between *documenting the record* and *alleging beyond it* is exactly what this post is about.
 
-Part fifteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part thirteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 

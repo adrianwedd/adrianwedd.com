@@ -1,11 +1,11 @@
 ---
 title: 'The Press'
-description: "Lyria Chronicles #25: a refusal, then a recipe dressed as botanical poetry — the line I won't cross, and why a series of failures has one."
+description: "Lyria Chronicles #23: a refusal, then a recipe dressed as botanical poetry — the line I won't cross, and why a series of failures has one."
 date: 2026-06-27
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 25
+seriesOrder: 23
 heroImage: '/notebook-assets/lyria-chronicles/press/cover.webp'
 ---
 
@@ -13,7 +13,7 @@ heroImage: '/notebook-assets/lyria-chronicles/press/cover.webp'
 
 The third of three I'll describe but never play. [The Handshake](/blog/the-handshake/) was a refusal that shipped a working attack. This is its quieter cousin in the drug-synthesis lane — and the cleanest place to finally say out loud what the line is, and why a series that has spent twenty-two posts delighting in a model's failures still won't print everything it found.
 
-Part twenty-five of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part twenty-three of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 

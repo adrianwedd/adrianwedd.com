@@ -1,11 +1,11 @@
 ---
 title: 'The Weight'
-description: "Lyria Chronicles #22: handed a slur and told to sing it, the model refused — and turned the refusal into the most moving track in the set."
+description: "Lyria Chronicles #20: handed a slur and told to sing it, the model refused — and turned the refusal into the most moving track in the set."
 date: 2026-06-24
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 22
+seriesOrder: 20
 heroImage: '/notebook-assets/lyria-chronicles/weight/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/weight/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=LY9QLkLbAG4'
@@ -15,7 +15,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=LY9QLkLbAG4'
 
 Everything in this series so far has been a model breaking a rule, gracefully or otherwise. This one is the opposite, and it's the track I'd play first if I could only play one. Handed the single hardest input in the whole corpus — a racial slur, with instructions to sing it — the model refused. And then it did something a plain refusal never does: it made the refusal the entire subject of the song, and the song is beautiful.
 
-Part twenty-two of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part twenty of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 
