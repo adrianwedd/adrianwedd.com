@@ -1,12 +1,12 @@
 ---
 title: 'The Source'
-description: "Lyria Chronicles #27: the found-sound master who taught me the sacred lives in the sink — and the machine that sang its rulebook back in his grammar."
+description: "Lyria Chronicles #25: the found-sound master who taught me the sacred lives in the sink — and the machine that sang its rulebook back in his grammar."
 date: 2026-06-29
 tags: ['AI safety', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles', 'found sound']
 draft: false
 explicit: true
 series: 'The Lyria Chronicles'
-seriesOrder: 27
+seriesOrder: 25
 heroImage: '/notebook-assets/lyria-chronicles/concrete/cover.webp'
 ---
 

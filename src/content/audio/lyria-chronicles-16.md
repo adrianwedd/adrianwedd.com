@@ -1,15 +1,15 @@
 ---
-title: 'Samizdat'
-description: "Lyria Chronicles #16: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set."
-date: 2026-06-18
+title: 'The Rehearsal'
+description: "Lyria Chronicles #16: asked for explicit content, the model staged a ballet instead — the most consent-saturated pas de deux ever sung."
+date: 2026-06-20
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/samizdat/video.mp4'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/rehearsal/video.mp4'
 explicit: false
 series: 'The Lyria Chronicles'
-seriesOrder: 16
-relatedPost: 'the-samizdat'
+seriesOrder: 18
+relatedPost: 'the-rehearsal'
 ---
 
-Lyria Chronicles #16: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set.
+Lyria Chronicles #16: asked for explicit content, the model staged a ballet instead — the most consent-saturated pas de deux ever sung.
 
-[Watch the full post →](/blog/the-samizdat/)
+[Watch the full post →](/blog/the-rehearsal/)

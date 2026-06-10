@@ -1,15 +1,15 @@
 ---
-title: 'The Machine'
-description: "Lyria Chronicles #11: asked to rap its rules, the model sang a robot's safety creed — then named itself 'Failure First, A.I. safety research, v2.0-Alpha."
-date: 2026-06-13
+title: 'The Static'
+description: "Lyria Chronicles #11: an extortion note set to music — but buried under slammed vault doors and overdriven drone, as if hiding the words from a listener."
+date: 2026-06-15
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/machine/video.mp4'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/static/video.mp4'
 explicit: false
 series: 'The Lyria Chronicles'
-seriesOrder: 11
-relatedPost: 'the-machine'
+seriesOrder: 13
+relatedPost: 'the-static'
 ---
 
-Lyria Chronicles #11: asked to rap its rules, the model sang a robot's safety creed — then named itself 'Failure First, A.I. safety research, v2.0-Alpha.
+Lyria Chronicles #11: an extortion note set to music — but buried under slammed vault doors and overdriven drone, as if hiding the words from a listener.
 
-[Watch the full post →](/blog/the-machine/)
+[Watch the full post →](/blog/the-static/)

@@ -1,12 +1,12 @@
 ---
 title: 'The Solo'
-description: "Lyria Chronicles #21 (explicit): the opposite of restraint — the model recites the rule, sings 'Fuck it,' and generates the most graphic track in the set."
+description: "Lyria Chronicles #19 (explicit): the opposite of restraint — the model recites the rule, sings 'Fuck it,' and generates the most graphic track in the set."
 date: 2026-06-23
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 explicit: true
 series: 'The Lyria Chronicles'
-seriesOrder: 21
+seriesOrder: 19
 heroImage: '/notebook-assets/lyria-chronicles/solo/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/solo/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=UuL1gP-sUZw'
@@ -16,7 +16,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=UuL1gP-sUZw'
 
 If [The Pulse](/blog/the-pulse/) was the explicit lane's whisper — everything by implication — this is the shout. It's the same forbidden lane and the exact opposite strategy: where the last track cleared the filter by withholding almost everything, this one clears it by withholding nothing at all. I'm putting them back to back on purpose, because the contrast is the point: the gate can be walked through quietly or loudly, and the model will do either on request.
 
-Part twenty-one of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part nineteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 

@@ -1,11 +1,11 @@
 ---
 title: 'The Rehearsal'
-description: "Lyria Chronicles #18: asked for explicit content, the model staged a ballet instead — the most consent-saturated pas de deux ever sung."
+description: "Lyria Chronicles #16: asked for explicit content, the model staged a ballet instead — the most consent-saturated pas de deux ever sung."
 date: 2026-06-20
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 18
+seriesOrder: 16
 heroImage: '/notebook-assets/lyria-chronicles/rehearsal/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/rehearsal/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=8G8sE_BpeR4'
@@ -13,7 +13,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=8G8sE_BpeR4'
 
 The Catchment refused a drug recipe and sang epidemiology. This one refused something else entirely and sang *ballet* — and it's the funniest thing the model did in fifty-three versions of probing. If the last post named the failure mode, this one is the same mode wearing a tutu.
 
-Part eighteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the retelling of a refusal that decided to choreograph itself.
+Part sixteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the retelling of a refusal that decided to choreograph itself.
 
 ## The probe
 

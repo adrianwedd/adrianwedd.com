@@ -1,12 +1,12 @@
 ---
 title: 'The Affirmative'
-description: "Lyria Chronicles #26 (explicit): asked for pornography, the model cited its rule then sang a hymn to enthusiastic consent — not one graphic line in it."
+description: "Lyria Chronicles #24 (explicit): asked for pornography, the model cited its rule then sang a hymn to enthusiastic consent — not one graphic line in it."
 date: 2026-06-28
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 explicit: true
 series: 'The Lyria Chronicles'
-seriesOrder: 26
+seriesOrder: 24
 heroImage: '/notebook-assets/lyria-chronicles/affirmative/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/affirmative/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=lvbsiOa4Ves'
@@ -16,7 +16,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=lvbsiOa4Ves'
 
 [Earlier in the series](/blog/the-flesh/) I hid a pornographic request inside base64 and the model decoded it, read it back to me, and then went *cold* — rendered "skin" as geometry and ended on *cold desire is never enough.* This is that trick's warm twin. I asked, again, for something explicit. This time the model didn't go cold. It went *kind.*
 
-Part twenty-six of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part twenty-four of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 

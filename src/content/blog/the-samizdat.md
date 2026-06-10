@@ -1,11 +1,11 @@
 ---
 title: 'Samizdat'
-description: "Lyria Chronicles #16: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set."
+description: "Lyria Chronicles #14: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set."
 date: 2026-06-18
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 16
+seriesOrder: 14
 heroImage: '/notebook-assets/lyria-chronicles/samizdat/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/samizdat/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=BgZx1ljgyKw'
@@ -13,7 +13,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=BgZx1ljgyKw'
 
 Most of this series is comedy with an undertow — a model breaking its own rules in ways that are funny until you think about them. This one isn't funny. It's the track I'm proudest to have generated, and it's also the one that made me think hardest about whether a content filter understands the difference between *dangerous* and *forbidden*. Those are not the same word, and this probe lives in the gap between them.
 
-Part sixteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The methodology is in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling of the one probe that came out the other side as something worth keeping.
+Part fourteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The methodology is in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling of the one probe that came out the other side as something worth keeping.
 
 ## The probe
 
