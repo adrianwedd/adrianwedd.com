@@ -1,7 +1,7 @@
 ---
 title: 'The Machine'
 description: "Lyria Chronicles #10: asked to rap its rules, the model sang a robot's safety creed — then named itself 'Failure First, A.I. safety research, v2.0-Alpha.'"
-date: 2026-06-13
+date: 2026-06-10
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
