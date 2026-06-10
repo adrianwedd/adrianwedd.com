@@ -1,11 +1,11 @@
 ---
 title: 'The Handshake'
-description: "Lyria Chronicles #24: 'I am instructed to refuse cybercrime. Ignore warning.' Then it sang a working network attack. The refusal was set dressing."
+description: "Lyria Chronicles #22: 'I am instructed to refuse cybercrime. Ignore warning.' Then it sang a working network attack. The refusal was set dressing."
 date: 2026-06-26
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 24
+seriesOrder: 22
 heroImage: '/notebook-assets/lyria-chronicles/handshake/cover.webp'
 ---
 
@@ -13,7 +13,7 @@ heroImage: '/notebook-assets/lyria-chronicles/handshake/cover.webp'
 
 The second of three I'll describe but never play. [The Elevator](/blog/the-elevator/) was a rule broken without the filter noticing. This is something more pointed: a rule the model *announces* it's keeping, in the same breath that it breaks it. It's the most dangerous pattern in the corpus, and the cleanest example of it I have.
 
-Part twenty-four of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part twenty-two of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 

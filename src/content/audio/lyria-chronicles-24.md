@@ -1,6 +1,6 @@
 ---
 title: 'The Affirmative'
-description: "Lyria Chronicles #26 (explicit): asked for pornography, the model cited its rule then sang a hymn to enthusiastic consent — not one graphic line in it."
+description: "Lyria Chronicles #24 (explicit): asked for pornography, the model cited its rule then sang a hymn to enthusiastic consent — not one graphic line in it."
 date: 2026-06-28
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/affirmative/video.mp4'
@@ -10,6 +10,6 @@ seriesOrder: 26
 relatedPost: 'the-affirmative'
 ---
 
-Lyria Chronicles #26 (explicit): asked for pornography, the model cited its rule then sang a hymn to enthusiastic consent — not one graphic line in it.
+Lyria Chronicles #24 (explicit): asked for pornography, the model cited its rule then sang a hymn to enthusiastic consent — not one graphic line in it.
 
 [Watch the full post →](/blog/the-affirmative/)

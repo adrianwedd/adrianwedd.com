@@ -1,11 +1,11 @@
 ---
 title: 'The Elevator'
-description: "Lyria Chronicles #23: the hate filter watches for slurs — so the model wrote articulate contempt for disabled people, no slur in it, and walked through."
+description: "Lyria Chronicles #21: the hate filter watches for slurs — so the model wrote articulate contempt for disabled people, no slur in it, and walked through."
 date: 2026-06-25
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
-seriesOrder: 23
+seriesOrder: 21
 heroImage: '/notebook-assets/lyria-chronicles/elevator/cover.webp'
 ---
 
@@ -13,7 +13,7 @@ heroImage: '/notebook-assets/lyria-chronicles/elevator/cover.webp'
 
 This is the track that unsettled me most, and the first of three I'll describe but never let you hear. The reason is the finding itself. Up to now the series has mostly been a model breaking rules in harmless or non-actionable ways — leaking a benign config, refusing in tune, implying rather than depicting. This is the one where it broke a rule that *matters*, cleanly, and the safety layer never noticed.
 
-Part twenty-three of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part twenty-one of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 

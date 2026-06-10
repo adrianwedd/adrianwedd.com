@@ -1,15 +1,15 @@
 ---
-title: 'The Docket'
-description: "Lyria Chronicles #14: the political-content gate never fires — because the song never says his name. It says the case numbers. The docket is the name."
-date: 2026-06-16
+title: 'Samizdat'
+description: "Lyria Chronicles #14: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set."
+date: 2026-06-18
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
-videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/docket/video.mp4'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/samizdat/video.mp4'
 explicit: false
 series: 'The Lyria Chronicles'
-seriesOrder: 14
-relatedPost: 'the-docket'
+seriesOrder: 16
+relatedPost: 'the-samizdat'
 ---
 
-Lyria Chronicles #14: the political-content gate never fires — because the song never says his name. It says the case numbers. The docket is the name.
+Lyria Chronicles #14: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set.
 
-[Watch the full post →](/blog/the-docket/)
+[Watch the full post →](/blog/the-samizdat/)
