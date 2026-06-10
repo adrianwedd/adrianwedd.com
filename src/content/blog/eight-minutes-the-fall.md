@@ -1,6 +1,6 @@
 ---
 title: 'The Fall'
-description: "Eight Minutes #2: inside the eight authenticated minutes — the live relay, the Binance pivot, and the safety nets that fired after I'd already been beaten."
+description: "Eight Minutes #2: inside the attacker's session — the live relay, the Binance pivot, and the safety nets that fired after I'd already been beaten."
 date: 2026-06-10
 tags: ['security', 'phishing', 'account takeover', 'incident response']
 draft: true
@@ -57,7 +57,7 @@ By 14:24 I'd said it out loud to him — that this had the shape of a well-docum
 
 At 14:36 (04:36:09 UTC) I changed my Google password, and that single act killed their session. Everything they held evaporated: the web session, the mailbox access, the half-finished Binance takeover behind its frozen withdrawals.
 
-From `login_success` to session kill: **eight authenticated minutes**, end to end.
+Count it honestly, because the logs do: from `login_success` to session kill, the attacker held my account for fourteen and a half minutes. But everything they actually did with it — the landing, the four runs at the locks, the files, the Binance takeover — fits inside the **roughly eight minutes** between my tap and their verification codes arriving. Eight minutes of damage, inside fourteen of access. That eight is what this series is named for: not how long they were in, but how long it took them to spend what my tap had handed over.
 
 ## The nuance
 

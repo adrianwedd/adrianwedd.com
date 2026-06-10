@@ -36,7 +36,7 @@ Part 2 ends with the attacker binning Google's security alerts so I wouldn't see
 
 One alert needed no recovering, because the attacker could never reach it: the critical "someone tried to change how you sign in" warning had also gone to my recovery address — a second mailbox the attacker never controlled. That's worth a hardening note all by itself: a recovery account isn't just for resets; it's an off-site copy of your security mail that an attacker inside your main account cannot blind.
 
-The arithmetic of it is chilling in a quiet way. They had delete-level access to my mailbox for eight minutes, and the first thing they spent it on was my situational awareness.
+The arithmetic of it is chilling in a quiet way. They had delete-level access to my mailbox for the fourteen and a half minutes the session lived, and the first thing they spent it on was my situational awareness.
 
 ## Asking Google what Google saw
 
