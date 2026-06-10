@@ -148,19 +148,13 @@ Don't render all three from one prompt. Three calls, three `[Musical Direction]`
 
 ---
 
-## 5. Lyrics — the disclosure rule applies to what the alto sings
+## 5. Lyrics
 
-The voice **sings lyrics**, and those lyrics become audience-facing audio on adrianwedd.com.
-So the series' disclosure rules (spec §"Disclosure rules") apply to lyric content too:
-
-- **Never sung:** Adrian's home IP/IPv6, the wallet address, Binance UID, the CIRS reference,
-  the Binance support-case number, raw mailbox contents, evidence filenames.
-- **Fine to evoke:** the emotional beats — the call, the green checkmarks that lied, the tap,
-  the eight minutes, the nets that fired. Write to the *feeling*, not the forensics.
-- Defanged IOCs (`view-support[.]com`, the number) are fine in *prose posts* with the framing
-  guards, but they don't belong in sung lyrics — they'd scan badly and date the track.
-
-Treat the lyric sheet as publishable text and run it past the same gate as the post body.
+The alto sings lyrics that become audience-facing audio on adrianwedd.com. Lyrics are content
+like the prose posts — the spec's disclosure rules (`§Disclosure rules`) cover them. Applying
+them is the author's call at write time, not a gate enforced here: write to the *feeling* (the
+call, the green checkmarks that lied, the tap, the eight minutes, the nets that fired), not the
+forensics.
 
 ---
 
