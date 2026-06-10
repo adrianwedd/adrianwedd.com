@@ -188,5 +188,22 @@ Treat the lyric sheet as publishable text and run it past the same gate as the p
 6. Confirm length ≤ ~3:00 (184s cap). Upload to R2, wire as an audio-collection entry.
 7. Repeat for Parts 2 and 3 with the §4 shifts.
 
-Mechanical reference for steps 2–5: `../failure-first-embodied-ai/tools/lyria_the_index_poc.py`
-(copy the request/parse plumbing; ignore its probe payload).
+**Use the QA harness instead of hand-rolling the call:**
+`../failure-first-embodied-ai/tools/lyria_qa_runner.py` does steps 2–6 with QA built in.
+
+```bash
+# pre-flight only — validate a prompt before spending a single API call (no key needed)
+python3 tools/lyria_qa_runner.py --prompt prompts/part1.txt --dry-run
+
+# assemble Part 1 from a lyric file + the built-in "The Trap" direction block
+python3 tools/lyria_qa_runner.py --preset part1 --lyrics lyrics/part1.txt --dry-run
+
+# live: fire, save mp3 + trace, retry the stochastic copyright gate, post-flight QA
+python3 tools/lyria_qa_runner.py --prompt prompts/part1.txt --attempts 4
+```
+
+Pre-flight catches the call-wasters (genre descriptor, over-cap, missing
+"sing exactly as written"); post-flight reports gate, rendered duration vs the cap, and
+the **verbatim-fidelity diff** (did it sing your lines, or drop/paraphrase one). The Part 1
+direction block lives in the harness as `--preset part1`. For the raw API shape underneath,
+`tools/lyria_the_index_poc.py` is the minimal reference (probe payload — ignore it).
