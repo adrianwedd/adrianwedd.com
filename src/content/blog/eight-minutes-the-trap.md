@@ -11,9 +11,11 @@ heroImage: '/notebook-assets/eight-minutes-the-trap/infographic.webp'
 
 ## The call
 
-The phone rings at 14:04 on a Wednesday afternoon — 04:04 UTC, in the notation this story will eventually be reduced to. I'm at my desk in Tasmania, mid-task, attention already split three ways. Unknown number, +1 country code. I answer anyway.
+The phone rings at 14:04 on a Wednesday afternoon — 04:04 UTC, in the notation this story will eventually be reduced to. I'm at my desk in Tasmania, mid-task, attention already split three ways. Unknown number, +1 country code — so it isn't me who answers. Google's Call Assist screens it first, recording and transcribing the stranger's opener the way it does for any stranger: *"Hi, my name is Brian. I believe I was looking to speak with Adrian. I received the notification on my end to try to reach out to the primary phone number that we had listed here on file."*
 
-A calm American voice introduces himself as Brian, from Google support. He's received a notification on his end, he says, prompting him to reach out to the primary phone number listed on file. There's a case number. There's an assigned support agent. There is no urgency in his voice at all, which is its own kind of pressure: scammers shout, the folklore goes, and this man is not shouting. He sounds like someone three tickets into a long shift who would rather be doing something else.
+Hold onto that detail, because nobody appreciated it at the time: the first voice this attack ever met was Google's. A man about to spend twenty minutes impersonating Google support got answered, recorded, and transcribed by Google's own assistant — twenty-four seconds that survive as the only verbatim record of him.
+
+I take the call. The voice is calm, American, unhurried, picking up smoothly where his screened opener left off. There's a case number. There's an assigned support agent. There is no urgency in his voice at all, which is its own kind of pressure: scammers shout, the folklore goes, and this man is not shouting. He sounds like someone three tickets into a long shift who would rather be doing something else.
 
 Here is the first thing worth knowing, before anything else happens. The number on my screen — +1 650‑918‑0851 — is a caller ID, and caller IDs are spoofable; whoever legitimately holds that number is almost certainly not the attacker. The 650 area code is Mountain View. Google's home turf. That's why it was chosen: it's set dressing, and it cost them nothing.
 
