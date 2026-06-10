@@ -56,7 +56,7 @@ I never sent a single packet to the attacker's infrastructure. Everything I lear
 
 The passive picture was damning enough. The phishing domain was registered a month before my phone rang, wildcard certificate and all, and a public scanner had captured the live kit the same day it was stood up. Then the find that reframed everything: the lure page had been publicly scanned **six days before my call**.
 
-I wasn't a target. I was a Wednesday. This was a production line — provisioned, tested, and already chewing through victims before it got to me. Somewhere in that scan history are the people it reached before me, and the people it was scheduled to reach after.
+I wasn't a target. I was a Wednesday. This was a production line — provisioned, tested, and already running before it got to me. Somewhere behind that six-day-old scan is an earlier recipient, or a mail gateway doing its job — someone or something that met this page before my turn came. And somewhere after me, the next name on the list.
 
 ## Eight reports
 
