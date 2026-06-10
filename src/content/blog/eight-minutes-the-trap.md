@@ -7,7 +7,7 @@ draft: true
 series: 'Eight Minutes'
 seriesOrder: 1
 heroImage: '/notebook-assets/eight-minutes-the-trap/infographic.webp'
-videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-series/video.mp4'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-trap/video.mp4'
 ---
 
 ## The call
