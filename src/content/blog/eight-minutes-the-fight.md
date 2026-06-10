@@ -8,6 +8,7 @@ series: 'Eight Minutes'
 seriesOrder: 3
 heroImage: '/notebook-assets/eight-minutes-the-fight/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-series/audio.mp3'
+audioDuration: '21:24'
 faq:
   - q: 'What is a real-time relay phishing attack?'
     a: 'An attack where a human operator relays your credentials and 2FA approvals into the real site as you type them into a fake one. Everything you check — sender, domain, the matching prompt number — is genuine, because the attacker is triggering the real flows. Only the context is fake.'
