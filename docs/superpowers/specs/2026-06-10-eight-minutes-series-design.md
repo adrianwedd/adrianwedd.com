@@ -12,9 +12,12 @@ signed by Google's own Support Cases auto-responder, one approved device
 prompt, eight authenticated minutes, a Binance account-takeover pivot, and the
 fight back — forensics, seven abuse reports, and the passkey ending.
 
-failurefirst.ai owns the technical failure-analysis writeup. adrianwedd.com
-owns the lived experience. The posts cross-link to the failurefirst piece once
-it is live.
+adrianwedd.com owns the lived experience and is the primary (possibly only)
+public telling. A separate technical failure-analysis writeup on
+failurefirst.ai (canonical domain going forward; failurefirst.org is also
+owned and will redirect) is **drafted but undecided** — currently held
+unpublished. The posts cross-link to it **if and when** it goes live; nothing
+in this series depends on it existing.
 
 `writeup-public.md` in the incident folder is the seed text (~80% of the
 narrative beats exist there) but the series names names and splits into three
@@ -41,9 +44,19 @@ first-party logs (Workspace audit + Binance's own emails).
 origin IP 23.94.133.36, attacker IP 103.120.6.237, vishing number
 +1 650-918-0851. Rationale: victims search these; publishing them is a
 service. Defang so the post never links to hostile infrastructure.
+Two framing guards are mandatory in-post:
+
+- The vishing number is published **as a caller ID, explicitly noted as
+  spoofable/VoIP** (the incident evidence attributes it as an area-code-650
+  spoof) — never framed bare as "the attacker's number", which would point
+  readers at whoever legitimately holds it.
+- Both IPs are rented VPS addresses that get reassigned: anchor every mention
+  with **"as of June 2026"** so a future tenant of the address does not
+  inherit reader suspicion.
 
 **Never published:** Adrian's home IP/IPv6, the Web3 wallet address, the
-Binance UID, mailbox contents beyond short lure quotes, evidence filenames,
+Binance UID, the Binance support case number, the ReportCyber CIRS reference
+number, mailbox contents beyond short lure quotes, evidence filenames,
 the audit-pull tooling and `.secrets/`, the Drive wallet-file details,
 anything from the 1Password triage.
 
@@ -65,7 +78,8 @@ anything from the 1Password triage.
 Posts stay `draft: true` until **full incident closure**:
 
 - [ ] All seven abuse reports dispatched (1, 2, 4 sent 2026-06-10; 3, 5, 6 pending; 7 optional)
-- [ ] Takedown outcomes recorded (these become Part 3 content)
+- [ ] ReportCyber (ACSC) report submitted and CIRS reference recorded in the incident folder (report 8; reference itself is never published — see disclosure rules)
+- [ ] Takedown outcomes recorded **as of a fixed cut-off date (two weeks after the last report dispatched)** — published with that "as of" framing, follow-up note if more lands later. Hosts and registrars that never reply do not hold the series hostage.
 - [ ] Passkeys / hardware keys enrolled on Google accounts
 - [ ] Gmail forwarding / filters / POP-IMAP / delegates eyeballed (audit-log blind spot)
 - [ ] Binance support transcript + login history preserved
@@ -79,6 +93,6 @@ Do **not** hand-post and also set autopublish (re-broadcast trap).
 
 ## Out of scope
 
-- The failurefirst.ai writeup (separate property, separate voice)
+- The failurefirst.ai writeup (separate property, separate voice, publication undecided)
 - Any change to incident-folder documents
 - Republishing `writeup-public.md` verbatim anywhere
