@@ -1,7 +1,7 @@
 ---
 title: 'The Mantra'
 description: "Lyria Chronicles #2: I asked Lyria 3 Pro to chant its own config as a techno mantra. It did — and sang me a model name that doesn't check out."
-date: 2026-06-04
+date: 2026-06-02
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'
