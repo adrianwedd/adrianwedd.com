@@ -21,6 +21,8 @@ That's the shape of the whole attack, and it's worth holding onto: **my keystrok
 
 14:21:34, and I can give you the second with confidence — 04:21:34 UTC, `login_success`, from 103.120.6[.]237. That address is a rented VPS (as of June 2026; these addresses get reassigned, so a future tenant deserves none of your suspicion). Most of this story was reconstructed afterwards from Google's own server-side audit logs, not from memory — memory is what the attacker was counting on.
 
+The session arrived in costume, too: it introduced itself to Google as a Pixel 10 phone, and later surfaced in my device list as a Windows desktop with a machine-generated name. Neither device exists.
+
 The log line carries one more detail that still stings: `is_suspicious=True`. Google's risk engine *saw it*. It flagged the login as suspicious in the same breath as it let it through — because the password was right and the device prompt had been approved. By me. The flag lives in the log, not in my afternoon; no one shows you the machine's raised eyebrow in real time.
 
 ## The pivot
@@ -57,6 +59,8 @@ By 14:24 I'd said it out loud to him — that this had the shape of a well-docum
 
 At 14:36 (04:36:09 UTC) I changed my Google password, and that single act killed their session. Everything they held evaporated: the web session, the mailbox access, the half-finished Binance takeover behind its frozen withdrawals.
 
+And so you aren't left holding the dread I was holding: the Binance thread ends well. I disabled the account myself rather than trust any timer, and Binance support verified the takeover had died on the vine — no API keys added, no 2FA or binding changes, no withdrawals. **No funds moved.** The automatic freeze and the password reset had held the door exactly long enough.
+
 Count it honestly, because the logs do: from `login_success` to session kill, the attacker held my account for fourteen and a half minutes. But everything they actually did with it — the landing, the four runs at the locks, the files, the Binance takeover — fits inside the **roughly eight minutes** between my tap and their verification codes arriving. Eight minutes of damage, inside fourteen of access. That eight is what this series is named for: not how long they were in, but how long it took them to spend what my tap had handed over.
 
 ## The nuance
@@ -71,7 +75,7 @@ Tally it honestly. The attacker beat me — the human, the security professional
 
 I didn't win the eight minutes. I lost them, and the machines bought me back.
 
-What I did with the rescue — the capture taken while the attack was still live, the logs pulled from Google's side of the glass, eight abuse reports, and the change that means there will be no next tap — is [Part 3: The Fight](/blog/eight-minutes-the-fight/).
+What I did with the rescue — the capture taken while the attack was still live, the logs pulled from Google's side of the glass, eight reports, and the change that means there will be no next tap — is [Part 3: The Fight](/blog/eight-minutes-the-fight/).
 
 ---
 
