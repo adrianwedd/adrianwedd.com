@@ -87,7 +87,7 @@ A passkey removes the human from the decision. The credential is bound to the re
 
 That's where this ends: passkeys on the accounts that matter, starting with email — because email, as Part 2 showed, is the master key to everything else.
 
-And so the closing line of the private write-up becomes the closing line of the series: go enrol a passkey on your email account right now. It takes two minutes. I'll wait.
+And so the closing line of my own notes becomes the closing line of the series: go enrol a passkey on your email account right now. It takes two minutes. I'll wait.
 
 ---
 
