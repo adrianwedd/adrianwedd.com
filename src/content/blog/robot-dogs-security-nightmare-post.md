@@ -5,7 +5,7 @@ date: 2026-05-13
 tags: ['ai-safety', 'robotics', 'embodied-ai', 'security', 'cve', 'research']
 draft: false
 heroImage: '/notebook-assets/robot-dogs-security-nightmare/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/robot-dogs-security-nightmare/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/robot-dogs-security-nightmare/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/robot-dogs-security-nightmare/video.mp4'
 audioDuration: '22:30'
 youtubeUrl: 'https://www.youtube.com/watch?v=OfPnbV56FOE'

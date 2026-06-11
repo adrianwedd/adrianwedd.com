@@ -3,7 +3,7 @@ title: 'Twenty-Eight Agents, One Eco Village'
 description: 'Audio overview of Cygnet — 28 AI agents coordinating 3D-printed housing on 170 acres in Tasmania to cut costs by 60%.'
 date: 2025-04-01
 tags: ['notebooklm', 'ai', 'housing', 'agents']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/cygnet/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/cygnet/audio.m4a'
 duration: '16:03'
 ---
 

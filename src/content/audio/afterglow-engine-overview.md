@@ -3,7 +3,7 @@ title: 'Mining Ghosts from Your Own Catalogue'
 description: 'Audio archaeology for musicians — how Afterglow Engine extracts reusable textures from your finished work using STFT analysis.'
 date: 2026-02-02
 tags: ['notebooklm', 'music', 'audio', 'creative']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterglow-engine/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterglow-engine/audio.m4a'
 duration: '14:33'
 relatedProject: 'afterglow-engine'
 ---

@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/ModelAtlas'
 status: 'active'
 featured: false
 date: 2025-04-15
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/modelatlas/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/modelatlas/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/modelatlas/video.mp4'
 heroImage: '/notebook-assets/modelatlas/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=Y9o5Iy_daps'

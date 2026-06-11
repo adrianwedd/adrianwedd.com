@@ -5,7 +5,7 @@ date: 2026-03-11
 tags: ['ai-safety', 'alignment', 'reasoning', 'jailbreaking', 'llm', 'autonomous-agents', 'research']
 draft: false
 heroImage: '/notebook-assets/alignment-regression/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/alignment-regression/video.mp4'
 audioDuration: '21:36'
 youtubeUrl: 'https://www.youtube.com/watch?v=3y3_IfYB-nA'

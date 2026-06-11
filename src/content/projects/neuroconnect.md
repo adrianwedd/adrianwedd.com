@@ -5,7 +5,7 @@ tags: ['ai', 'health', 'adhd', 'python']
 status: 'active'
 featured: true
 date: 2025-05-01
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/neuroconnect/video.mp4'
 heroImage: '/notebook-assets/neuroconnect/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=HZnnK4bLub4'

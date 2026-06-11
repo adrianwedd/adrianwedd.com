@@ -5,7 +5,7 @@ date: 2026-05-25
 tags: ['ai-safety', 'policy', 'anthropic', 'governance', 'research', 'geopolitics']
 draft: false
 heroImage: '/notebook-assets/compute-is-not-governance/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/compute-is-not-governance/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/compute-is-not-governance/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/compute-is-not-governance/video.mp4'
 audioDuration: '21:29'
 faq:

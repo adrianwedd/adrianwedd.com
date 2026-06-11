@@ -3,7 +3,7 @@ title: 'Eight Layers of Visual Jailbreaks'
 description: 'ASCII art encoding is largely blocked. But attacks framed as content transcription succeed 62–75% of the time. A map of all eight layers.'
 date: 2026-03-30
 tags: ['notebooklm', 'ai-safety', 'jailbreaking', 'llm', 'multimodal', 'research']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-layers-of-visual-jailbreaks/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-layers-of-visual-jailbreaks/audio.m4a'
 duration: '14:04'
 relatedPost: 'eight-layers-of-visual-jailbreaks-post'
 relatedProject: 'failure-first'

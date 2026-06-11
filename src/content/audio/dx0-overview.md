@@ -3,7 +3,7 @@ title: 'Diagnosis as a Team Sport'
 description: 'Multi-agent AI diagnostic system with five physician personas, 304 NEJM cases, and a budget that forces real trade-offs.'
 date: 2025-05-01
 tags: ['notebooklm', 'ai', 'healthcare', 'agents']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dx0/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dx0/audio.m4a'
 duration: '14:30'
 relatedProject: 'dx0'
 ---

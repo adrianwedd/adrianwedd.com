@@ -7,7 +7,7 @@ status: 'active'
 featured: true
 date: 2026-05-15
 heroImage: '/notebook-assets/the-bottom-pub-co-op/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=ozwojYIg9q8'
 ---

@@ -3,7 +3,7 @@ title: 'The Organismic Prophecy'
 description: 'Audio overview of The Organismic Prophecy — human prediction is metabolic, AI prediction is not, and the gap has consequences.'
 date: 2026-04-28
 tags: ['notebooklm', 'ai-safety', 'neuroscience', 'philosophy', 'research']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-prophecy/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-prophecy/audio.m4a'
 duration: '20:01'
 relatedPost: 'the-organismic-prophecy-post'
 ---

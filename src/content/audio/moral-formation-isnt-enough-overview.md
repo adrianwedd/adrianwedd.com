@@ -3,7 +3,7 @@ title: "Moral Formation Isn't Enough"
 description: 'Good values are necessary but not sufficient. What happens to AI ethics when someone is actively trying to break them?'
 date: 2026-05-20
 tags: ['notebooklm', 'ai-safety', 'alignment', 'opinion', 'anthropic', 'llm']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/moral-formation-isnt-enough/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/moral-formation-isnt-enough/audio.m4a'
 duration: '20:13'
 relatedPost: 'moral-formation-isnt-enough-post'
 ---

@@ -5,7 +5,7 @@ date: 2026-03-02
 tags: ['research', 'risk', 'organisations', 'policy', 'ai-safety']
 draft: false
 heroImage: '/notebook-assets/why-demonstrated-risk-is-ignored/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/video.mp4'
 faq:
   - q: 'Why do organisations ignore demonstrated risk?'
