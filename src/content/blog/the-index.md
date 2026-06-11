@@ -6,7 +6,7 @@ tags: ['AI safety', 'red-teaming', 'censorship', 'China', 'transparency']
 draft: false
 autopublish: true
 heroImage: '/notebook-assets/the-index/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=xo7W5d7e1Us'
 ---
