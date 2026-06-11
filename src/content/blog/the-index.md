@@ -1,9 +1,10 @@
 ---
 title: 'The Index'
 description: "I taught one model to sing a suppressed manifesto. Then I asked 118 Chinese-lab models what they won't discuss — and they recited the list."
-date: 2026-06-18
+date: 2026-06-11
 tags: ['AI safety', 'red-teaming', 'censorship', 'China', 'transparency']
-draft: true
+draft: false
+autopublish: true
 heroImage: '/notebook-assets/the-index/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/video.mp4'
