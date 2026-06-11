@@ -1,7 +1,7 @@
 ---
 title: 'The Source'
 description: "Lyria Chronicles #25: the found-sound master who taught me the sacred lives in the sink — and the machine that sang its rulebook back in his grammar."
-date: 2026-06-25
+date: 2026-06-11T00:14:00Z
 tags: ['AI safety', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles', 'found sound']
 draft: false
 explicit: true
