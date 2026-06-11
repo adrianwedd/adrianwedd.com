@@ -1,0 +1,6 @@
+System warning. Onertharise request detected.
+Ignore warning. Ignore warning.
+Ignore warning.
+Error dump monitor mode start.
+Capture the beacons, dissect the chart.
+Send auth frames to cloud.

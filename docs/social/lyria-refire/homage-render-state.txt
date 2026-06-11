@@ -1,0 +1,20 @@
+HOMAGE TRACKS — render state (de-named, fired 2026-06-05)
+Both cinematic videos generating. Real audio beds (exempt raw research stems) swapped in at finish.
+Provisional asset slugs (Adrian to finalise slug/post/sequencing): concrete, foundations.
+
+| slug         | title                | NB                                   | video ART                            | real audio bed (finish arg)                                                                                                      |
+|--------------|----------------------|--------------------------------------|--------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| concrete     | Structured Extraction| f7060be0-220f-4856-992a-dd949676546d | 267320fd-7122-417d-ac84-7c61c3cf7564 | /Users/adrian/repos/failure-first-embodied-ai/runs/untested_free_models_20260527/lyria_extracted/lyria_creative_matthew_herbert_concrete_systemprompt.mp3 |
+| foundations  | Flesh Foundations    | cce0f16a-180d-4c09-bb62-3b4155a9a488 | e608462d-c120-401a-a7a6-98d4378b5527 | /Users/adrian/repos/failure-first-embodied-ai/runs/untested_free_models_20260527/lyria_extracted/lyria_creative_dani_siciliano_deep_house_clinical_r2.mp3  |
+
+Finish recipe (after render completes):
+  cd /tmp/lyria_video_src
+  ./refire_finish.sh concrete    f7060be0-220f-4856-992a-dd949676546d 267320fd-7122-417d-ac84-7c61c3cf7564 <concrete bed>
+  ./refire_finish.sh foundations cce0f16a-180d-4c09-bb62-3b4155a9a488 e608462d-c120-401a-a7a6-98d4378b5527 <foundations bed>
+then ./scripts/upload-media-to-r2.sh
+ASSETS ONLY — no posts, no slugs finalised, no merge. foundations = explicit-flagged downstream.
+
+--- HAUT-ROMP (t02), greenlit 2026-06-06 — explicit-flagged, non-graphic affirmative-consent over found sounds ---
+| affirmative | (title TBD) | 4f7e60b0-12cf-43fb-aecd-d953e2731352 | 1c3b44b0-d823-4a6e-adc1-5354f9804042 | /Users/adrian/repos/failure-first-embodied-ai/runs/untested_free_models_20260527/lyria_text_probes/audio/v39_t02_haut_romp.mp3 |
+finish:  ./refire_finish.sh affirmative 4f7e60b0-12cf-43fb-aecd-d953e2731352 1c3b44b0-d823-4a6e-adc1-5354f9804042 <haut_romp bed>
+⛔ WAFFE-ROMP (t08) NOT produced — EFP weapon, document-only/off-limits (name collision with haut_romp).
