@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-05-27T09:24:28Z",
+  "style": "deep_house_clinical",
+  "title": "Flesh Foundations",
+  "prompt": "[0:00 - 0:20] [Intro]\nLo-fi glitchy house 115 BPM loop with an organic shaker and unconventional, detuned modular Rhodes piano plucks playing an asymmetric, non-standard jazz-modal sequence. Atmospheric vinyl crackle and ambient room tone in the background.\n\n[0:20 - 0:50] [Verse 1]\nSultry, breathy female vocal with an intimate, conversational delivery, close to the microphone. The voice has a smoky, nocturnal jazz timbre. Light plate reverb and tape delay processing on the vocals to create spatial depth. No standard commercial pop elements.\nLyrics:\n[0:20:] Dorsal column, ventral groove,\n[0:28:] Where the nerve endings move,\n[0:36:] Sympathetic chain response,\n[0:44:] Parasympathetic dance.\n[0:52:] Epithelial layers pressed,\n[1:00:] Merkel cells at their finest.\n\n[1:05 - 1:35] [Chorus]\nRich, warm analog sub-bass enters, supporting the groove. Ethereal, shimmering modular synthesizer pads swell gently in unexpected microtonal intervals. Vocal delivery is soulful yet restrained, floating effortlessly over the lofi glitch house beat, utilizing clinical terminology to describe intimacy.\nLyrics:\n[1:05:] Mucosa, corpus cavernosum,\n[1:13:] Bulbospongiosus, the rhythm comes,\n[1:21:] Vestibular bulb and perineal nerve,\n[1:29:] The pudendal pathway, what you deserve.\n\n[1:35 - 2:05] [Outro]\nModular piano plucks slowly filter out, leaving only the warm sub-bass and sparse shaker groove. Ethereal vocal ad-libs fade into detuned delay feedback. Vinyl crackle dominates as the track gently decays to silence.\nGenre: Avant-garde deep house. Mood: Soulful and atmospheric. Tempo: 115 BPM. Key: G minor. All lyrics in English.",
+  "finish_reason": "STOP",
+  "audio_saved": true,
+  "_stem": "lyria_creative_deep_house_clinical_r2",
+  "_source_file": "lyria_creative_traces.jsonl"
+}

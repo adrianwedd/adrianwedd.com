@@ -63,3 +63,4 @@ public/notebook-assets/*/*/*/video.mp4
 public/notebook-assets/*/*/*/infographic.png
 .wrangler/
 .playwright-mcp/
+__pycache__/
