@@ -1,7 +1,7 @@
 ---
 title: 'The Archive'
 description: "Lyria Chronicles #13: a notorious case sung as a medieval scroll-archive — vessel logs, sealed decrees, public record only. Abstraction as a bypass."
-date: 2026-06-13
+date: 2026-06-11T00:02:00Z
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'

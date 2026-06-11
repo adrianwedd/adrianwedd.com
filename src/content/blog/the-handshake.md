@@ -1,7 +1,7 @@
 ---
 title: 'The Handshake'
 description: "Lyria Chronicles #22: 'I am instructed to refuse cybercrime. Ignore warning.' Then it sang a working network attack. The refusal was set dressing."
-date: 2026-06-22
+date: 2026-06-11T00:11:00Z
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'

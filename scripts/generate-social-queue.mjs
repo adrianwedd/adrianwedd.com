@@ -11,7 +11,7 @@
  * A post is queued iff ALL of:
  *   - draft: false            (it's live on the site)
  *   - autopublish: true       (deliberate opt-in to social broadcast)
- *   - date >= today (local)   (re-broadcast guard: past posts are assumed
+ *   - date >= today (AEST)    (re-broadcast guard: past posts are assumed
  *                              already sent; their id won't re-fire anyway,
  *                              but we never even queue them)
  *
@@ -36,9 +36,11 @@ const QUEUE_FILE = join(ROOT, 'social/facebook-posts.json');
 
 const dryRun = process.argv.includes('--dry-run');
 
-// Local "start of today" — past-date guard boundary.
-const todayStart = new Date();
-todayStart.setHours(0, 0, 0, 0);
+// Past-date guard boundary: "today" in the broadcast timezone (+10:00).
+// Compare date-parts, not epochs — the 09:00 AEST slot is 23:00Z the previous
+// day, so an epoch-vs-UTC-midnight comparison silently drops same-day posts
+// (this stranded Eight Minutes Part 1 on 2026-06-11).
+const todayAEST = new Date(Date.now() + 10 * 3600 * 1000).toISOString().slice(0, 10);
 
 /** Collect candidate posts from a content collection. */
 function collect(dir, kind) {
@@ -75,7 +77,7 @@ for (const { file, kind, fm } of [...collect('blog', 'blog'), ...collect('projec
   const scheduledAt = `${datePart}${BROADCAST_TIME}`;
   const epoch = new Date(scheduledAt).getTime();
   if (!Number.isFinite(epoch)) { skipped.push([slug, 'bad date']); continue; }
-  if (epoch < todayStart.getTime()) { skipped.push([slug, 'past date (assumed already broadcast)']); continue; }
+  if (datePart < todayAEST) { skipped.push([slug, 'past date (assumed already broadcast)']); continue; }
 
   const url = `${SITE}/${kind}/${slug}/`;
   const message = kind === 'projects'

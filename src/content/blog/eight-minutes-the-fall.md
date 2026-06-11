@@ -1,7 +1,7 @@
 ---
 title: 'The Fall'
 description: "Eight Minutes #2: inside the attacker's session — the live relay, the Binance pivot, and the safety nets that fired after I'd already been beaten."
-date: 2026-06-12
+date: 2026-06-11T01:10:00Z
 tags: ['security', 'phishing', 'account takeover', 'incident response']
 draft: false
 autopublish: true
@@ -9,6 +9,9 @@ series: 'Eight Minutes'
 seriesOrder: 2
 heroImage: '/notebook-assets/eight-minutes-the-fall/infographic.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=k9ArBHsduQU'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall-overview/audio.m4a'
+audioDuration: '17:30'
 ---
 
 *This is Part 2 of Eight Minutes. [Part 1 — The Trap](/blog/eight-minutes-the-trap/) ends with a tap on a phone prompt. This is what the tap bought.*
