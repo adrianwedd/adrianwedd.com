@@ -11,6 +11,7 @@ heroImage: '/notebook-assets/eight-minutes-the-fight/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fight-overview/audio.m4a'
 audioDuration: '20:30'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fight/video.mp4'
+updatedDate: 2026-06-11T05:30:00Z
 faq:
   - q: 'What is a real-time relay phishing attack?'
     a: 'An attack where a human operator relays your credentials and 2FA approvals into the real site as you type them into a fake one. Everything you check — sender, domain, the matching prompt number — is genuine, because the attacker is triggering the real flows. Only the context is fake.'
@@ -81,6 +82,8 @@ None of these requires a badge or a subpoena. They require knowing who the landl
 ## What happened next
 
 All eight reports went out within thirty hours of the call — the last two on the morning of June 11. As of June 11, the day after: no confirmed takedowns yet. view-support[.]com still resolves; the origin host hasn't replied. The systems that could act mid-attack already had — Google's risk engine, Binance's freeze. The infrastructure itself dies on abuse-desk time, not mine. I'll add a follow-up note here as outcomes land; the landlords who never reply don't get to hold the story hostage.
+
+**Update — June 11, afternoon.** The first responses are in, and they're a genre study in themselves. Cloudflare's Trust & Safety replied within hours: *the reported content is no longer being served by Cloudflare* — technically true, because on a DNS-only configuration it never was; their nameservers still resolve the domain as I write this. Tasmania Police assessed the report, thanked me, attached generic phishing-hygiene advice and two mental-health hotlines, and filed it for intelligence purposes. The relay VPS's network owner opened a ticket, asked me for logs I'd already sent, auto-closed it, re-opened it when I pushed back, and has now forwarded the complaint to the customer running the box. The registrar sent an auto-acknowledgement and went quiet; the domain is still marked ACTIVE. Nothing has come down. Abuse-desk time, as promised.
 
 ## The ending
 
