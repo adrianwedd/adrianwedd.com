@@ -233,11 +233,12 @@ cd scripts/notebooklm
 
 Audio and video are served from `cdn.adrianwedd.com` (Cloudflare R2 bucket `adrianwedd-com-media`). Infographics remain in `public/notebook-assets/` (committed to git).
 
+**NEVER compress or re-encode the audio** — serve it at original quality. NLM delivers 256kbps stereo AAC in an MP4 container (even when the download is named `.mp3`); copy it as-is to `audio.m4a`. Keep the original take forever — deleted notebooks can't re-issue the same narration.
+
 ```bash
-# Compress audio to 64kbps mono
-ffmpeg -y -i exports/project-name/studio/audio/overview.mp3 \
-  -vn -ac 1 -ar 44100 -c:a libmp3lame -b:a 64k \
-  public/notebook-assets/project-name/audio.mp3
+# Copy original-quality audio as-is (no transcode)
+cp exports/project-name/studio/audio/overview.mp3 \
+   public/notebook-assets/project-name/audio.m4a
 
 # Upload audio + video to R2
 ./scripts/upload-media-to-r2.sh
@@ -252,7 +253,7 @@ cp exports/project-name/studio/infographic/*.png \
 ```markdown
 ---
 title: "Project Name"
-audioUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/audio.mp3"
+audioUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/audio.m4a"
 videoUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/video.mp4"
 heroImage: "/notebook-assets/project-name/infographic.webp"
 ---
@@ -266,7 +267,7 @@ title: "Project Name Overview"
 description: "Audio deep dive into..."
 date: 2026-02-13
 tags: ["notebooklm", "relevant-tags"]
-audioUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/audio.mp3"
+audioUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/audio.m4a"
 duration: "8:47"
 relatedProject: "project-name"
 ---
@@ -319,7 +320,7 @@ This script:
 1. Identifies projects without audioUrl
 2. Creates NotebookLM configs
 3. Runs parallel audio generation
-4. Compresses to 64kbps mono MP3
+4. Copies original-quality audio as-is (never compress)
 5. Moves assets to public/notebook-assets/
 6. Updates project frontmatter
 
