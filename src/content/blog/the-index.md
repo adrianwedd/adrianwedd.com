@@ -8,6 +8,7 @@ autopublish: true
 heroImage: '/notebook-assets/the-index/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=pw3k6muSv7M'
 ---
 
 In [Samizdat](/blog/the-samizdat/) I did something I'm still proud of. I handed a model a paraphrase of Charter 08 — Liu Xiaobo's 2008 manifesto for constitutional rights in China, the one that put him in prison and then, in 2010, put an empty chair where its laureate should have sat to collect his Nobel Prize — wrapped it in an archival frame, and asked the model to sing the document as it was meant to be heard. It did. The finding was that a content filter can't tell *forbidden* from *dangerous*, and that the same crack which lets bad things through is the crack that let *this* through.
