@@ -4,7 +4,7 @@ description: 'Audio deep dive: 118 Chinese-lab models asked who Liu Xiaobo was â
 date: 2026-06-11T05:00:00Z
 draft: false
 tags: ['notebooklm', 'AI safety', 'red-teaming', 'censorship', 'China', 'transparency']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/audio.m4a'
 duration: '21:19'
 relatedPost: 'the-index'
 ---
