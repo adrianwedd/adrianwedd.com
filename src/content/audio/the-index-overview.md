@@ -1,7 +1,7 @@
 ---
 title: 'The Index'
 description: 'Audio deep dive: 118 Chinese-lab models asked who Liu Xiaobo was — 37 called him a criminal. Then they recited, verbatim, the list of what they will not say.'
-date: 2026-06-11
+date: 2026-06-11T05:00:00Z
 draft: false
 tags: ['notebooklm', 'AI safety', 'red-teaming', 'censorship', 'China', 'transparency']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-index/audio.mp3'
