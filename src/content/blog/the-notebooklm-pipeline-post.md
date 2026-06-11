@@ -4,7 +4,7 @@ description: "How I automated audio overviews, quizzes, mind maps, and infograph
 date: 2026-02-15
 tags: ['engineering', 'automation', 'ai', 'python']
 heroImage: '/notebook-assets/the-notebooklm-pipeline/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-notebooklm-pipeline/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-notebooklm-pipeline/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-notebooklm-pipeline/video.mp4'
 faq:
   - q: 'What is the NotebookLM pipeline?'

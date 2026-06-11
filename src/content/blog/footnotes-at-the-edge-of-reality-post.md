@@ -5,7 +5,7 @@ date: 2026-02-12
 tags: ['poetry', 'physics', 'writing', 'creative']
 draft: false
 heroImage: '/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=dVD75vZg7fw'
 ---

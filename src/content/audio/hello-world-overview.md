@@ -3,8 +3,8 @@ title: 'Building in the Open'
 description: 'Audio overview of Building in the Open.'
 date: 2026-02-12
 tags: ['notebooklm', 'meta', 'craft', 'open-source']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/hello-world/audio.mp3'
-duration: '18:04'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/hello-world/audio.m4a'
+duration: '18:47'
 relatedPost: 'hello-world-post'
 ---
 

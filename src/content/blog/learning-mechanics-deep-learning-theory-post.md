@@ -5,9 +5,9 @@ date: 2026-05-03
 tags: ['AI', 'deep learning', 'theory', 'research']
 draft: false
 heroImage: '/notebook-assets/learning-mechanics-deep-learning-theory/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/learning-mechanics-deep-learning-theory/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/learning-mechanics-deep-learning-theory/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/learning-mechanics-deep-learning-theory/video.mp4'
-audioDuration: '19:20'
+audioDuration: '23:03'
 slides: '/notebook-assets/learning-mechanics-deep-learning-theory/slides.pdf'
 youtubeUrl: 'https://www.youtube.com/watch?v=9Mp-HZZDEo4'
 ---

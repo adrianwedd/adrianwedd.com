@@ -5,9 +5,9 @@ date: 2026-04-26
 tags: ['ai-safety', 'neurodivergence', 'engineering', 'philosophy', 'research']
 draft: false
 heroImage: '/notebook-assets/non-coercive-design/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/non-coercive-design/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/non-coercive-design/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/non-coercive-design/video.mp4'
-audioDuration: '23:33'
+audioDuration: '21:01'
 youtubeUrl: 'https://www.youtube.com/watch?v=1l5vQ79JMdE'
 ---
 

@@ -3,8 +3,8 @@ title: 'The Sun Is a Noisy Neighbour'
 description: 'Audio overview of a real-time space weather dashboard — making the invisible electromagnetic weather above us finally visible.'
 date: 2025-01-01
 tags: ['notebooklm', 'data-viz', 'science', 'web']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/space-weather/audio.mp3'
-duration: '18:15'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/space-weather/audio.m4a'
+duration: '15:33'
 relatedProject: 'space-weather'
 ---
 

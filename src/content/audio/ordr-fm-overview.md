@@ -3,8 +3,8 @@ title: 'The Tool That Earns Trust Before Features'
 description: 'Audio overview of ordr.fm — a CLI for music library organisation with lossless prioritisation, EXIF metadata, and zero-overwrite safety.'
 date: 2025-07-01
 tags: ['notebooklm', 'music', 'cli', 'audio']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ordr-fm/audio.mp3'
-duration: '16:27'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ordr-fm/audio.m4a'
+duration: '20:17'
 relatedProject: 'ordr-fm'
 ---
 

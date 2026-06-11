@@ -5,9 +5,9 @@ date: 2026-05-01
 tags: ['ai-safety', 'economics', 'policy', 'research']
 draft: false
 heroImage: '/notebook-assets/economics-of-inadequate-safety/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/economics-of-inadequate-safety/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/economics-of-inadequate-safety/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/economics-of-inadequate-safety/video.mp4'
-audioDuration: '24:51'
+audioDuration: '22:29'
 youtubeUrl: 'https://www.youtube.com/watch?v=bfgT4qRJ5GQ'
 ---
 

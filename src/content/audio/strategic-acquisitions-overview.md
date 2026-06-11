@@ -3,8 +3,8 @@ title: 'Housing Deserves Better Tooling'
 description: "Audio overview of an AI-powered property analysis pipeline for public housing — spatial intelligence, ML valuations, and Tasmania's LIST."
 date: 2025-01-15
 tags: ['notebooklm', 'ai', 'housing', 'python']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/strategic-acquisitions/audio.mp3'
-duration: '21:13'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/strategic-acquisitions/audio.m4a'
+duration: '21:41'
 relatedProject: 'strategic-acquisitions'
 ---
 

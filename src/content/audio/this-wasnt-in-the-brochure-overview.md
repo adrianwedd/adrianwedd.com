@@ -3,8 +3,8 @@ title: 'The Brochure Was for a Different Trip'
 description: 'Audio deep dive into a neurodivergent co-parenting guide — the double discovery, three-AI workflow, and maritime cartography as metaphor.'
 date: 2026-02-08
 tags: ['notebooklm', 'neurodivergence', 'parenting', 'writing']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
-duration: '21:39'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/audio.m4a'
+duration: '18:07'
 relatedPost: 'this-wasnt-in-the-brochure-post'
 relatedProject: 'this-wasnt-in-the-brochure'
 ---

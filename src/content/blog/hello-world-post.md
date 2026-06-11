@@ -4,7 +4,7 @@ description: 'The commit log is more honest than the readme. Building in public 
 date: 2026-02-12
 tags: ['meta', 'craft', 'open-source']
 heroImage: '/notebook-assets/hello-world/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/hello-world/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/hello-world/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/hello-world/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=C67cw_cTUOc'
 ---

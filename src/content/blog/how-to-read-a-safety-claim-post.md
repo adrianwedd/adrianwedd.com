@@ -5,9 +5,9 @@ date: 2026-04-30
 tags: ['ai-safety', 'policy', 'literacy', 'research']
 draft: false
 heroImage: '/notebook-assets/how-to-read-a-safety-claim/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/how-to-read-a-safety-claim/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/how-to-read-a-safety-claim/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/how-to-read-a-safety-claim/video.mp4'
-audioDuration: '21:45'
+audioDuration: '23:29'
 youtubeUrl: 'https://www.youtube.com/watch?v=gp6r7yHkJdY'
 ---
 

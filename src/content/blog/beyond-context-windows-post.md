@@ -5,7 +5,7 @@ date: 2026-03-15
 tags: ['ai', 'engineering', 'mcp', 'llm', 'python']
 draft: false
 heroImage: '/notebook-assets/beyond-context-windows/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/beyond-context-windows/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/beyond-context-windows/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/beyond-context-windows/video.mp4'
 faq:
   - q: 'What is the Recursive Language Model pattern?'

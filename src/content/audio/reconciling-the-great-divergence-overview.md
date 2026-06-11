@@ -3,8 +3,8 @@ title: 'Reconciling the Great Divergence'
 description: 'Audio overview of Reconciling the Great Divergence.'
 date: 2026-03-01
 tags: ['notebooklm', 'ai', 'economics', 'research', 'policy']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/reconciling-the-great-divergence/audio.mp3'
-duration: '21:41'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/reconciling-the-great-divergence/audio.m4a'
+duration: '19:04'
 relatedPost: 'reconciling-the-great-divergence-post'
 ---
 

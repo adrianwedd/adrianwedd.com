@@ -3,8 +3,8 @@ title: 'When Voice Becomes Brushstroke'
 description: 'Twenty-plus interactive art installations where visitors speak, sing, and dream into AI systems that respond in real time.'
 date: 2025-06-15
 tags: ['notebooklm', 'art', 'ai', 'installation']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/lunar-tools-prototypes/audio.mp3'
-duration: '18:43'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/lunar-tools-prototypes/audio.m4a'
+duration: '18:27'
 relatedProject: 'lunar-tools-prototypes'
 ---
 
