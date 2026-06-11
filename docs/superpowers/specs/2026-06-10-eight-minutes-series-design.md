@@ -1,7 +1,7 @@
 # Eight Minutes — blog series design
 
 **Date:** 2026-06-10
-**Status:** Approved (design); publication gated on incident closure
+**Status:** PUBLISHED 2026-06-11 (Adrian cleared the gate; takedown outcomes published with "as of 2026-06-11" framing — follow-up note when outcomes land)
 **Source incident:** `~/incidents/2026-06-10-google-aitm-phishing` (not in this repo; never committed here)
 
 ## What this is
@@ -77,9 +77,10 @@ anything from the 1Password triage.
 
 Posts stay `draft: true` until **full incident closure**:
 
-- [ ] All seven abuse reports dispatched (1, 2, 4 sent 2026-06-10; 3, 5, 6 pending; 7 optional)
+- [x] All seven abuse reports dispatched (1, 2, 4 sent 2026-06-10; 6 sent 2026-06-11; 3, 5 form-submitted 2026-06-11; 7 APWG emailed 2026-06-11)
 - [x] ReportCyber (ACSC) report submitted and CIRS reference recorded in the incident folder (done 2026-06-10; report 8; reference itself is never published — see disclosure rules)
-- [ ] Takedown outcomes recorded **as of a fixed cut-off date (two weeks after the last report dispatched)** — published with that "as of" framing, follow-up note if more lands later. Hosts and registrars that never reply do not hold the series hostage.
+- [x] Takedown outcomes recorded — Adrian overrode the two-week cut-off at publish; section published "as of 2026-06-11" (no confirmed takedowns yet)
+  ~~as of a fixed cut-off date (two weeks after the last report dispatched)~~ — published with that "as of" framing, follow-up note if more lands later. Hosts and registrars that never reply do not hold the series hostage.
 - [ ] Passkeys / hardware keys enrolled on Google accounts
 - [ ] Gmail forwarding / filters / POP-IMAP / delegates eyeballed (audit-log blind spot)
 - [ ] Binance support transcript + login history preserved
