@@ -1,9 +1,10 @@
 ---
 title: 'The Fight'
 description: "Eight Minutes #3: a packet capture taken mid-attack, Google's own audit logs, eight abuse reports, and the passkey that ends the story."
-date: 2026-06-10
+date: 2026-06-13
 tags: ['security', 'phishing', 'digital forensics', 'incident response']
-draft: true
+draft: false
+autopublish: true
 series: 'Eight Minutes'
 seriesOrder: 3
 heroImage: '/notebook-assets/eight-minutes-the-fight/infographic.webp'
@@ -78,7 +79,7 @@ None of these requires a badge or a subpoena. They require knowing who the landl
 
 ## What happened next
 
-<!-- GATE: takedown-outcomes — filled at publish time from the incident folder, "as of <cut-off date>" framing per spec. Do not publish with this comment present. -->
+All eight reports went out within thirty hours of the call — the last two on the morning of June 11. As of June 11, the day after: no confirmed takedowns yet. view-support[.]com still resolves; the origin host hasn't replied. The systems that could act mid-attack already had — Google's risk engine, Binance's freeze. The infrastructure itself dies on abuse-desk time, not mine. I'll add a follow-up note here as outcomes land; the landlords who never reply don't get to hold the story hostage.
 
 ## The ending
 
