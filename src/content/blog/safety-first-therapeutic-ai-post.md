@@ -5,7 +5,7 @@ date: 2026-03-15
 tags: ['ai', 'ai-safety', 'health', 'typescript']
 draft: false
 heroImage: '/notebook-assets/safety-first-therapeutic-ai/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/safety-first-therapeutic-ai/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/safety-first-therapeutic-ai/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/safety-first-therapeutic-ai/video.mp4'
 faq:
   - q: 'What is EMDR and why does it require AI safety?'

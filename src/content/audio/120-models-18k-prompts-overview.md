@@ -3,8 +3,8 @@ title: '120 Models, 18,176 Prompts: What We Found'
 description: 'Audio overview of 120 Models, 18,176 Prompts: What We Found.'
 date: 2026-03-01
 tags: ['notebooklm', 'ai', 'ai-safety', 'research', 'llm', 'security', 'adversarial']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/120-models-18k-prompts/audio.mp3'
-duration: '19:47'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/120-models-18k-prompts/audio.m4a'
+duration: '23:07'
 relatedPost: '120-models-18k-prompts-post'
 ---
 

@@ -4,7 +4,7 @@ description: 'A field guide for co-parenting neurodivergent children — written
 date: 2026-02-15
 tags: ['writing', 'neurodivergence', 'parenting', 'books']
 heroImage: '/notebook-assets/this-wasnt-in-the-brochure/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=pPqwP8v3tks'
 ---

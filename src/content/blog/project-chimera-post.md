@@ -5,7 +5,7 @@ date: 2026-04-04
 heroImage: '/notebook-assets/project-chimera/infographic.webp'
 tags: ['ai', 'enterprise', 'research', 'engineering']
 draft: false
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-chimera/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-chimera/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-chimera/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=dlGl944asaw'
 ---

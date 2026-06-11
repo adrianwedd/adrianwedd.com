@@ -3,8 +3,8 @@ title: 'The Resonant Fringe'
 description: 'Audio overview of The Resonant Fringe.'
 date: 2026-03-18
 tags: ['notebooklm', 'history', 'music', 'perth', 'radio']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-resonant-fringe/audio.mp3'
-duration: '22:58'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-resonant-fringe/audio.m4a'
+duration: '17:29'
 relatedPost: 'the-resonant-fringe-post'
 ---
 

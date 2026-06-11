@@ -7,7 +7,7 @@ status: 'active'
 featured: false
 date: 2025-07-01
 heroImage: '/notebook-assets/ordr-fm/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ordr-fm/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ordr-fm/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/ordr-fm/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=n47aO8KOwbI'
 ---

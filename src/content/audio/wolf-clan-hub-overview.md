@@ -3,8 +3,8 @@ title: 'Zero Build, Full Operations'
 description: 'Audio overview of a three-zone martial arts operations platform — public site, ops hub, member portal — running on vanilla JS and Cloudflare.'
 date: 2026-03-02
 tags: ['notebooklm', 'web', 'cloudflare', 'community']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/wolf-clan-hub/audio.mp3'
-duration: '20:55'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/wolf-clan-hub/audio.m4a'
+duration: '22:25'
 relatedProject: 'wolf-clan-hub'
 ---
 

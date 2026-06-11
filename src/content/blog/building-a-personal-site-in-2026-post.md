@@ -4,7 +4,7 @@ description: "The case for constraint-led web development — Astro, zero custom
 date: 2026-02-15
 tags: ['engineering', 'web', 'astro', 'open-source']
 heroImage: '/notebook-assets/building-a-personal-site-in-2026/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/building-a-personal-site-in-2026/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/building-a-personal-site-in-2026/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/building-a-personal-site-in-2026/video.mp4'
 faq:
   - q: 'What framework is best for a personal site in 2026?'

@@ -5,7 +5,7 @@ date: 2026-03-01
 tags: ['ai', 'ai-safety', 'robotics', 'research', 'engineering']
 draft: false
 heroImage: '/notebook-assets/the-cognitive-cage/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-cognitive-cage/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-cognitive-cage/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-cognitive-cage/video.mp4'
 faq:
   - q: 'What is the cognitive cage in robotics?'

@@ -6,7 +6,7 @@ status: 'active'
 featured: false
 date: 2025-01-15
 heroImage: '/notebook-assets/strategic-acquisitions/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/strategic-acquisitions/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/strategic-acquisitions/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/strategic-acquisitions/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=FGpHDCqKoJg'
 ---

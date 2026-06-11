@@ -3,8 +3,8 @@ title: 'The Mitigation Gap'
 description: 'Audio overview of The Mitigation Gap — AI-enabled biosecurity threats and what current safeguards miss.'
 date: 2026-04-04
 tags: ['notebooklm', 'ai', 'ai-safety', 'biosecurity', 'policy']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-mitigation-gap/audio.mp3'
-duration: '23:00'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-mitigation-gap/audio.m4a'
+duration: '21:33'
 relatedPost: 'the-mitigation-gap-post'
 ---
 

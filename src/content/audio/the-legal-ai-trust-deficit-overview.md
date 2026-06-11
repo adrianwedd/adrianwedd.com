@@ -3,8 +3,8 @@ title: 'The Legal AI Trust Deficit'
 description: 'Audio overview of The Legal AI Trust Deficit.'
 date: 2026-03-02
 tags: ['notebooklm', 'ai', 'legal', 'research', 'llm']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-legal-ai-trust-deficit/audio.mp3'
-duration: '22:25'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-legal-ai-trust-deficit/audio.m4a'
+duration: '12:02'
 relatedPost: 'the-legal-ai-trust-deficit-post'
 ---
 

@@ -4,7 +4,7 @@ description: "Auditory Spiral, RTRFM, and how Perth's electronic music undergrou
 date: 2026-03-18
 tags: ['history', 'music', 'perth', 'radio']
 heroImage: '/notebook-assets/the-resonant-fringe/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-resonant-fringe/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-resonant-fringe/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-resonant-fringe/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=AB0XPhgLY8w'
 ---

@@ -5,8 +5,8 @@ date: 2026-05-26
 tags: ['ai-safety', 'policy', 'anthropic', 'governance', 'ai-ethics', 'research']
 draft: false
 heroImage: '/notebook-assets/magnifica-humanitas/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/magnifica-humanitas/audio.mp3'
-audioDuration: '14:24'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/magnifica-humanitas/audio.m4a'
+audioDuration: '19:56'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/magnifica-humanitas/video.mp4'
 faq:
   - q: "What is Magnifica Humanitas?"

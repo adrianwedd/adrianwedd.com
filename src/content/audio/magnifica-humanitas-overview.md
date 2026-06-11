@@ -3,8 +3,8 @@ title: 'Magnifica Humanitas Is Not Alignment'
 description: "Pope Leo XIV's AI encyclical vs Chris Olah's Vatican remarks. The governance gap the press missed."
 date: 2026-05-26
 tags: ['notebooklm', 'ai-safety', 'policy', 'anthropic', 'governance', 'ai-ethics', 'research']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/magnifica-humanitas/audio.mp3'
-duration: '14:24'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/magnifica-humanitas/audio.m4a'
+duration: '19:56'
 relatedPost: 'magnifica-humanitas-post'
 ---
 

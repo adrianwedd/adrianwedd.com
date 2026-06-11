@@ -5,7 +5,7 @@ date: 2026-03-14
 tags: ['engineering', 'web', 'security', 'cloudflare']
 draft: false 
 heroImage: '/notebook-assets/zero-build-web-development/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=j2b3-7Y3rWU'
 ---

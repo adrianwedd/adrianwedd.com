@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/lunar_tools_prototypes'
 status: 'experiment'
 featured: false
 date: 2025-06-15
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/lunar-tools-prototypes/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/lunar-tools-prototypes/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lunar-tools-prototypes/video.mp4'
 heroImage: '/notebook-assets/lunar-tools-prototypes/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=QIN1nHFvPMQ'

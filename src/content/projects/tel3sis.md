@@ -7,7 +7,7 @@ status: 'active'
 featured: false
 date: 2025-10-01
 heroImage: '/notebook-assets/tel3sis/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/tel3sis/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/tel3sis/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/tel3sis/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=EVBHvgyH3D4'
 ---

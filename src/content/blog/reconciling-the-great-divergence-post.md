@@ -5,7 +5,7 @@ date: 2026-03-01
 tags: ['ai', 'economics', 'research', 'policy']
 draft: false
 heroImage: '/notebook-assets/reconciling-the-great-divergence/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/reconciling-the-great-divergence/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/reconciling-the-great-divergence/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/reconciling-the-great-divergence/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=E4XGmIPM09g'
 ---

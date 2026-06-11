@@ -5,7 +5,7 @@ date: 2026-03-02
 tags: ['ai', 'legal', 'research', 'llm']
 draft: false
 heroImage: '/notebook-assets/the-legal-ai-trust-deficit/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-legal-ai-trust-deficit/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-legal-ai-trust-deficit/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-legal-ai-trust-deficit/video.mp4'
 faq:
   - q: 'Why are lawyers slow to adopt AI?'

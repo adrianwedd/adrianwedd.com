@@ -3,8 +3,8 @@ title: 'Zero-Build Web Development'
 description: 'Audio overview of Zero-Build Web Development.'
 date: 2026-03-14
 tags: ['notebooklm', 'engineering', 'web', 'security', 'cloudflare']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/audio.mp3'
-duration: '22:59'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/audio.m4a'
+duration: '20:05'
 relatedPost: 'zero-build-web-development-post'
 ---
 

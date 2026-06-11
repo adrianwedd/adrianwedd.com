@@ -6,7 +6,7 @@ status: 'archived'
 featured: false
 date: 1992-01-01
 heroImage: '/notebook-assets/auditory-spiral/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/auditory-spiral/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/auditory-spiral/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/auditory-spiral/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=TyttZAAO8gs'
 ---
