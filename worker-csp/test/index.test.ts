@@ -1,17 +1,34 @@
-import { fetchMock, SELF } from 'cloudflare:test';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { SELF } from 'cloudflare:test';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildCsp } from '../src/csp.js';
 import { generateNonce } from '../src/nonce.js';
 
-beforeAll(() => {
-  fetchMock.activate();
-  fetchMock.disableNetConnect();
-});
-
-afterEach(() => fetchMock.assertNoPendingInterceptors());
+afterEach(() => vi.restoreAllMocks());
 
 const htmlBody = (body: string) =>
   `<!doctype html><html><head>${body}</head><body></body></html>`;
+
+// vitest-pool-workers 0.16 removed fetchMock from cloudflare:test; the
+// upstream origin fetch is mocked by spying on globalThis.fetch instead.
+// Unmatched requests throw, preserving fetchMock's disableNetConnect baseline.
+interface MockRoute {
+  path: string;
+  status?: number;
+  body: string;
+  headers?: Record<string, string>;
+}
+
+function mockOrigin(...routes: MockRoute[]) {
+  vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+    const request = new Request(input as RequestInfo, init);
+    const url = new URL(request.url);
+    const route = routes.find(
+      (r) => url.origin === 'https://adrianwedd.com' && url.pathname === r.path
+    );
+    if (!route) throw new Error(`No mock for ${request.method} ${request.url}`);
+    return new Response(route.body, { status: route.status ?? 200, headers: route.headers });
+  });
+}
 
 describe('generateNonce', () => {
   it('produces a base64 string with 22 chars (16 bytes, no padding)', () => {
@@ -86,10 +103,11 @@ describe('buildCsp', () => {
 
 describe('worker fetch handler', () => {
   it('passes through non-HTML responses untouched', async () => {
-    fetchMock
-      .get('https://adrianwedd.com')
-      .intercept({ path: '/_astro/page.js' })
-      .reply(200, 'console.log(1)', { headers: { 'content-type': 'application/javascript' } });
+    mockOrigin({
+      path: '/_astro/page.js',
+      body: 'console.log(1)',
+      headers: { 'content-type': 'application/javascript' },
+    });
 
     const res = await SELF.fetch('https://adrianwedd.com/_astro/page.js');
     expect(res.headers.get('content-security-policy')).toBeNull();
@@ -101,9 +119,7 @@ describe('worker fetch handler', () => {
       '<meta http-equiv="Content-Security-Policy" content="default-src none">' +
       '<script>console.log(1)</script>' +
       '<style>body{color:red}</style>';
-    fetchMock.get('https://adrianwedd.com').intercept({ path: '/' }).reply(200, htmlBody(body), {
-      headers: { 'content-type': 'text/html; charset=utf-8' },
-    });
+    mockOrigin({ path: '/', body: htmlBody(body), headers: { 'content-type': 'text/html; charset=utf-8' } });
 
     const res = await SELF.fetch('https://adrianwedd.com/');
     const text = await res.text();
@@ -134,12 +150,7 @@ describe('worker fetch handler', () => {
     // The CSP header only includes the nonce we generated; preserving a
     // foreign nonce would silently CSP-block that script under enforcement.
     const body = '<script nonce="external">x</script>';
-    fetchMock
-      .get('https://adrianwedd.com')
-      .intercept({ path: '/replace' })
-      .reply(200, htmlBody(body), {
-        headers: { 'content-type': 'text/html; charset=utf-8' },
-      });
+    mockOrigin({ path: '/replace', body: htmlBody(body), headers: { 'content-type': 'text/html; charset=utf-8' } });
 
     const res = await SELF.fetch('https://adrianwedd.com/replace');
     const text = await res.text();
@@ -152,17 +163,7 @@ describe('worker fetch handler', () => {
     // Body is mutated by HTMLRewriter (nonce + meta-CSP strip), so origin's
     // ETag/Last-Modified/Content-Length no longer match. Leaving them risks
     // truncated responses and incorrect 304 cache hits.
-    fetchMock
-      .get('https://adrianwedd.com')
-      .intercept({ path: '/cached' })
-      .reply(200, htmlBody('<script>x</script>'), {
-        headers: {
-          'content-type': 'text/html; charset=utf-8',
-          etag: 'W/"abc123"',
-          'last-modified': 'Wed, 21 Oct 2026 07:28:00 GMT',
-          'content-length': '999',
-        },
-      });
+    mockOrigin({ path: '/cached', body: htmlBody('<script>x</script>'), headers: { 'content-type': 'text/html; charset=utf-8', etag: 'W/"abc123"', 'last-modified': 'Wed, 21 Oct 2026 07:28:00 GMT', 'content-length': '999', } });
 
     const res = await SELF.fetch('https://adrianwedd.com/cached');
     expect(res.headers.get('etag')).toBeNull();
@@ -174,12 +175,7 @@ describe('worker fetch handler', () => {
   it('preserves upstream status and statusText (not silently 200)', async () => {
     // Regression: spreading a Response copies own enumerable props only,
     // which loses status/statusText. 404 must remain 404.
-    fetchMock
-      .get('https://adrianwedd.com')
-      .intercept({ path: '/missing' })
-      .reply(404, htmlBody('<h1>not found</h1>'), {
-        headers: { 'content-type': 'text/html; charset=utf-8' },
-      });
+    mockOrigin({ path: '/missing', status: 404, body: htmlBody('<h1>not found</h1>'), headers: { 'content-type': 'text/html; charset=utf-8' } });
 
     const res = await SELF.fetch('https://adrianwedd.com/missing');
     expect(res.status).toBe(404);
@@ -193,12 +189,7 @@ describe('worker fetch handler', () => {
     // The mock always returns 200; if Range were forwarded the origin would return
     // 206 and the worker would pass it through — so asserting 200 here verifies
     // the round-trip behaviour even if it can't inspect the outgoing request headers.
-    fetchMock
-      .get('https://adrianwedd.com')
-      .intercept({ path: '/og-test' })
-      .reply(200, htmlBody('<script>x</script>'), {
-        headers: { 'content-type': 'text/html; charset=utf-8' },
-      });
+    mockOrigin({ path: '/og-test', body: htmlBody('<script>x</script>'), headers: { 'content-type': 'text/html; charset=utf-8' } });
 
     const res = await SELF.fetch('https://adrianwedd.com/og-test', {
       headers: { Range: 'bytes=0-1023' },
@@ -208,12 +199,7 @@ describe('worker fetch handler', () => {
   });
 
   it('preserves upstream redirects without rewriting body', async () => {
-    fetchMock.get('https://adrianwedd.com').intercept({ path: '/legacy' }).reply(301, '', {
-      headers: {
-        'content-type': 'text/html; charset=utf-8',
-        location: '/new-location/',
-      },
-    });
+    mockOrigin({ path: '/legacy', status: 301, body: '', headers: { 'content-type': 'text/html; charset=utf-8', location: '/new-location/', } });
 
     const res = await SELF.fetch('https://adrianwedd.com/legacy', { redirect: 'manual' });
     expect(res.status).toBe(301);
@@ -223,13 +209,8 @@ describe('worker fetch handler', () => {
   it('uses ORIGIN_HOST for the upstream fetch regardless of inbound hostname', async () => {
     // ORIGIN_HOST="adrianwedd.com". Even if the inbound arrives on www, the
     // worker rewrites to the configured origin. The interceptor is on
-    // adrianwedd.com; an unmatched call to www would cause fetchMock to error.
-    fetchMock
-      .get('https://adrianwedd.com')
-      .intercept({ path: '/about/' })
-      .reply(200, htmlBody('<script>x</script>'), {
-        headers: { 'content-type': 'text/html; charset=utf-8' },
-      });
+    // adrianwedd.com; an unmatched call to www would make the fetch mock throw.
+    mockOrigin({ path: '/about/', body: htmlBody('<script>x</script>'), headers: { 'content-type': 'text/html; charset=utf-8' } });
 
     const res = await SELF.fetch('https://www.adrianwedd.com/about/');
     expect(res.status).toBe(200);
