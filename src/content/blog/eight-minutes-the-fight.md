@@ -1,7 +1,7 @@
 ---
 title: 'The Fight'
 description: "Eight Minutes #3: a packet capture taken mid-attack, Google's own audit logs, eight abuse reports, and the passkey that ends the story."
-date: 2026-06-13
+date: 2026-06-11T01:20:00Z
 tags: ['security', 'phishing', 'digital forensics', 'incident response']
 draft: false
 autopublish: true
@@ -20,6 +20,7 @@ faq:
     a: 'Passkeys and hardware security keys. The credential is bound to the real domain and never passes through you, so there is nothing for an operator to relay.'
   - q: 'What should I do right now?'
     a: "Enrol a passkey on your email account — it takes about two minutes. Never approve a login prompt you didn't personally start. Move financial-account 2FA off email and SMS."
+youtubeUrl: 'https://www.youtube.com/watch?v=yRETXJXbe24'
 ---
 
 *This is Part 3 of Eight Minutes. [Part 1 — The Trap](/blog/eight-minutes-the-trap/) is the call and the tap; [Part 2 — The Fall](/blog/eight-minutes-the-fall/) is the eight minutes the tap bought. This is the fight back.*

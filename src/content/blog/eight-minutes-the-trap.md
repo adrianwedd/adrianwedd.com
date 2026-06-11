@@ -1,7 +1,7 @@
 ---
 title: 'The Trap'
 description: "Eight Minutes #1: the vishing call, the case number, and a lure genuinely signed by Google — why every check I'd been taught to run came back green."
-date: 2026-06-11
+date: 2026-06-11T01:00:00Z
 tags: ['security', 'phishing', 'social engineering', 'incident response']
 draft: false
 autopublish: true
@@ -9,6 +9,9 @@ series: 'Eight Minutes'
 seriesOrder: 1
 heroImage: '/notebook-assets/eight-minutes-the-trap/infographic.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-trap/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=vYEy1O0pHhc'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-trap-overview/audio.m4a'
+audioDuration: '18:52'
 ---
 
 ## The call
