@@ -1,7 +1,7 @@
 ---
 title: 'The Rehearsal'
 description: "Lyria Chronicles #16: asked for explicit content, the model staged a ballet instead — the most consent-saturated pas de deux ever sung."
-date: 2026-06-16
+date: 2026-06-11T00:05:00Z
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 series: 'The Lyria Chronicles'

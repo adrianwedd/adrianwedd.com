@@ -63,6 +63,7 @@ SKIPPED=0
 mime_type() {
   case "${1##*.}" in
     mp3) echo "audio/mpeg" ;;
+    m4a) echo "audio/mp4" ;;
     mp4) echo "video/mp4" ;;
     webm) echo "video/webm" ;;
     webp) echo "image/webp" ;;
@@ -129,7 +130,7 @@ d = json.load(sys.stdin)
 for o in d.get('result', []):
     print(o['key'])" > "$EXISTING_KEYS" 2>/dev/null
 
-  for file in $(find "$ASSETS_DIR" -type f \( -name "audio.mp3" -o -name "video.mp4" \) | sort); do
+  for file in $(find "$ASSETS_DIR" -type f \( -name "audio.mp3" -o -name "audio.m4a" -o -name "video.mp4" \) | sort); do
     key="${file#public/}"
 
     if [ "$DRY_RUN" = true ]; then
