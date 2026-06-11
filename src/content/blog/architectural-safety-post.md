@@ -5,9 +5,9 @@ date: 2026-04-28
 tags: ['ai-safety', 'research', 'engineering', 'policy']
 draft: false
 heroImage: '/notebook-assets/architectural-safety/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/video.mp4'
-audioDuration: '22:59'
+audioDuration: '22:01'
 youtubeUrl: 'https://www.youtube.com/watch?v=A4qC7N3mDrk'
 ---
 

@@ -7,7 +7,7 @@ status: 'active'
 featured: false
 date: 2025-01-01
 heroImage: '/notebook-assets/space-weather/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/space-weather/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/space-weather/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/space-weather/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=EyPqXRhWNOA'
 ---

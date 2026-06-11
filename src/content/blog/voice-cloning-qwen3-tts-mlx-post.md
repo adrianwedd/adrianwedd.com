@@ -5,7 +5,7 @@ date: 2026-03-19
 tags: ['ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'tutorial', 'spark']
 series: 'PiCar-X'
 seriesOrder: 3
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/voice-cloning-qwen3-tts-mlx/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/voice-cloning-qwen3-tts-mlx/video.mp4'
 heroImage: '/notebook-assets/voice-cloning-qwen3-tts-mlx/infographic.webp'
 faq:

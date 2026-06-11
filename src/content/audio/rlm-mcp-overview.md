@@ -3,8 +3,8 @@ title: 'Beyond Context Windows'
 description: 'Audio overview of rlm-mcp — an MCP server for processing million-character documents with BM25 search and provenance.'
 date: 2025-11-01
 tags: ['notebooklm', 'ai', 'mcp', 'tools']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/rlm-mcp/audio.mp3'
-duration: '18:31'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/rlm-mcp/audio.m4a'
+duration: '21:06'
 relatedProject: 'rlm-mcp'
 ---
 

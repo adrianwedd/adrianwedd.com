@@ -3,8 +3,8 @@ title: 'Building a Personal Site in 2026'
 description: 'Audio overview of Building a Personal Site in 2026.'
 date: 2026-02-15
 tags: ['notebooklm', 'engineering', 'web', 'astro', 'open-source']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/building-a-personal-site-in-2026/audio.mp3'
-duration: '16:56'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/building-a-personal-site-in-2026/audio.m4a'
+duration: '21:52'
 relatedPost: 'building-a-personal-site-in-2026-post'
 ---
 

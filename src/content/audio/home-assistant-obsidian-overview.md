@@ -3,8 +3,8 @@ title: 'Two Systems That Shape How You Think, One Box'
 description: 'Audio overview of Home Assistant Obsidian — your knowledge base and smart home on the same machine.'
 date: 2024-06-01
 tags: ['notebooklm', 'homelab', 'home-assistant', 'docker']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-obsidian/audio.mp3'
-duration: '15:06'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-obsidian/audio.m4a'
+duration: '18:57'
 relatedProject: 'home-assistant-obsidian'
 ---
 

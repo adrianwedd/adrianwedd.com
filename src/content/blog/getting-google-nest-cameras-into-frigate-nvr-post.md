@@ -5,7 +5,7 @@ date: 2026-03-16
 tags: ['engineering', 'homelab', 'raspberry-pi', 'python', 'home-assistant']
 draft: false
 heroImage: '/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=o8XvfpCJwFc'
 ---

@@ -7,7 +7,7 @@ status: 'active'
 featured: false
 date: 2025-11-01
 heroImage: '/notebook-assets/rlm-mcp/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/rlm-mcp/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/rlm-mcp/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/rlm-mcp/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=uD_7QXkYc9U'
 ---

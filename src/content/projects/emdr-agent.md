@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/emdr-agent'
 status: 'experiment'
 featured: false
 date: 2025-06-01
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/emdr-agent/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/emdr-agent/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/emdr-agent/video.mp4'
 heroImage: '/notebook-assets/emdr-agent/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=owXdPDifuQE'

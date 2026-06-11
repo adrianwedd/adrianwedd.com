@@ -3,8 +3,8 @@ title: 'Getting Google Nest Cameras Into Frigate NVR'
 description: 'Audio overview of Getting Google Nest Cameras Into Frigate NVR.'
 date: 2026-03-16
 tags: ['notebooklm', 'engineering', 'homelab', 'raspberry-pi', 'python', 'home-assistant']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/audio.mp3'
-duration: '20:49'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/audio.m4a'
+duration: '20:45'
 relatedPost: 'getting-google-nest-cameras-into-frigate-nvr-post'
 ---
 

@@ -5,7 +5,7 @@ date: 2026-04-04
 heroImage: '/notebook-assets/the-mitigation-gap/infographic.webp'
 tags: ['ai', 'ai-safety', 'research', 'biosecurity', 'policy']
 draft: false
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-mitigation-gap/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-mitigation-gap/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-mitigation-gap/video.mp4'
 faq:
   - q: 'What is the mitigation gap in AI biosecurity?'

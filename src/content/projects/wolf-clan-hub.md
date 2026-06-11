@@ -7,7 +7,7 @@ status: 'active'
 featured: true
 date: 2026-03-02
 heroImage: '/notebook-assets/wolf-clan-hub/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/wolf-clan-hub/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/wolf-clan-hub/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/wolf-clan-hub/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=pLbwFRqgF6s'
 ---

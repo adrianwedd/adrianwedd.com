@@ -5,9 +5,9 @@ date: 2026-04-29
 tags: ['ai-safety', 'multi-agent', 'security', 'research', 'architecture']
 draft: false
 heroImage: '/notebook-assets/multi-agent-supply-chain/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/multi-agent-supply-chain/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/multi-agent-supply-chain/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/multi-agent-supply-chain/video.mp4'
-audioDuration: '23:17'
+audioDuration: '15:31'
 youtubeUrl: 'https://www.youtube.com/watch?v=8Vye4BVYAbg'
 ---
 

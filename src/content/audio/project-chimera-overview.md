@@ -3,8 +3,8 @@ title: 'The Post-Model Era'
 description: 'Audio overview of the post-model era — why foundation models are commoditising and where real AI value lives.'
 date: 2026-04-04
 tags: ['notebooklm', 'ai', 'enterprise', 'engineering']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-chimera/audio.mp3'
-duration: '21:47'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-chimera/audio.m4a'
+duration: '21:09'
 relatedPost: 'project-chimera-post'
 ---
 

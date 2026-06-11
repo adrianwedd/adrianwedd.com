@@ -5,7 +5,7 @@ date: 2026-04-04
 heroImage: '/notebook-assets/ai-nationalism/infographic.webp'
 tags: ['ai', 'policy', 'geopolitics', 'research']
 draft: false
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ai-nationalism/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ai-nationalism/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/ai-nationalism/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=bSOxH-hJLCk'
 ---

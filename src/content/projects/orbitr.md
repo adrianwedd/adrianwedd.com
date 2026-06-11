@@ -7,7 +7,7 @@ status: 'experiment'
 featured: false
 date: 2025-09-01
 heroImage: '/notebook-assets/orbitr/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/orbitr/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/orbitr/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/orbitr/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=8TwAvE9Sl-0'
 ---

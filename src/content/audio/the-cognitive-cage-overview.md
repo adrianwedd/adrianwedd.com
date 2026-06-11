@@ -3,8 +3,8 @@ title: 'The Cognitive Cage: Humanoid Robot Fatality Risk'
 description: 'Audio overview of The Cognitive Cage: Humanoid Robot Fatality Risk.'
 date: 2026-03-01
 tags: ['notebooklm', 'ai', 'ai-safety', 'robotics', 'research', 'engineering']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-cognitive-cage/audio.mp3'
-duration: '19:08'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-cognitive-cage/audio.m4a'
+duration: '22:09'
 relatedPost: 'the-cognitive-cage-post'
 ---
 

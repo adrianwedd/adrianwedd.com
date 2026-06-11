@@ -5,7 +5,7 @@ date: 2026-03-01
 tags: ['ai', 'ai-safety', 'research', 'llm', 'security', 'adversarial']
 draft: false
 heroImage: '/notebook-assets/120-models-18k-prompts/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/120-models-18k-prompts/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/120-models-18k-prompts/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/120-models-18k-prompts/video.mp4'
 faq:
   - q: 'What is supply chain injection in AI?'
