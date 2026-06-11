@@ -8,8 +8,8 @@ autopublish: true
 series: 'Eight Minutes'
 seriesOrder: 3
 heroImage: '/notebook-assets/eight-minutes-the-fight/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-series/audio.mp3'
-audioDuration: '21:24'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fight-overview/audio.m4a'
+audioDuration: '20:30'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fight/video.mp4'
 faq:
   - q: 'What is a real-time relay phishing attack?'
