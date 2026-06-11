@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/ADHDo'
 status: 'active'
 featured: true
 date: 2026-02-05
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/adhdo/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/adhdo/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/adhdo/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=it_8g1ApwEk'
 heroImage: '/notebook-assets/adhdo/infographic.webp'

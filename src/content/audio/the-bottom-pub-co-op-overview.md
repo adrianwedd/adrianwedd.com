@@ -3,7 +3,7 @@ title: 'The Bottom Pub Co-op Overview'
 description: 'Audio deep dive into the community proposal for Cygnet''s Commercial Hotel co-operative — nine corrections, legal constraints, and the staged path forward.'
 date: 2026-05-15
 tags: ['notebooklm', 'co-operative', 'tasmania', 'community', 'governance']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/audio.m4a'
 duration: '56:24'
 relatedPost: 'the-bottom-pub-co-op'
 heroImage: '/notebook-assets/the-bottom-pub-co-op/infographic.webp'

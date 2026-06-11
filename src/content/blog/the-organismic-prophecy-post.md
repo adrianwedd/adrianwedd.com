@@ -5,7 +5,7 @@ date: 2026-04-27
 tags: ['ai-safety', 'neuroscience', 'philosophy', 'research']
 draft: false
 heroImage: '/notebook-assets/the-organismic-prophecy/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-prophecy/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-prophecy/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-prophecy/video.mp4'
 audioDuration: '20:01'
 youtubeUrl: 'https://www.youtube.com/watch?v=Q531i2kWiJ4'

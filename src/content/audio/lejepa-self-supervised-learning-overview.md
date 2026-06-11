@@ -3,7 +3,7 @@ title: 'LeJEPA: Self-Supervised Learning Gets a Theoretical Foundation'
 description: 'Audio overview of LeJEPA — how Balestriero and LeCun proved isotropic Gaussian embeddings are optimal and distilled it into a 50-line self-supervised method.'
 date: 2026-02-13
 tags: ['notebooklm', 'ai', 'machine-learning', 'research', 'self-supervised-learning']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/audio.m4a'
 duration: '21:16'
 relatedPost: 'lejepa-self-supervised-learning-gets-a-theoretical-foundation'
 ---

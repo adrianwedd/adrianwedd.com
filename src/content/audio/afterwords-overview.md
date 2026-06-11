@@ -3,7 +3,7 @@ title: 'Giving Claude Code a Voice'
 description: 'Audio overview of Afterwords — local voice output for Claude Code with 17 cloned voices, per-project selection, and zero cloud dependency.'
 date: 2026-03-22
 tags: ['notebooklm', 'ai', 'tts', 'voice-cloning']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterwords/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterwords/audio.m4a'
 duration: '21:43'
 relatedPost: 'afterwords-post'
 relatedProject: 'afterwords'

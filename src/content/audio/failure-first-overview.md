@@ -3,7 +3,7 @@ title: 'Map the Catastrophe Before You Build the Architecture'
 description: 'Audio overview of Failure First — adversarial AI evaluation across 120 models and 18,000 prompts.'
 date: 2026-02-09
 tags: ['notebooklm', 'ai-safety', 'adversarial', 'research']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.m4a'
 duration: '12:44'
 relatedProject: 'failure-first'
 ---

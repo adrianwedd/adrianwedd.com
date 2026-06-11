@@ -5,7 +5,7 @@ date: 2026-03-28
 tags: ['ai-safety', 'research', 'llm', 'reasoning', 'jailbreaking', 'vulnerability', 'transparency']
 draft: false
 heroImage: '/notebook-assets/the-thinking-chain-leak/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-thinking-chain-leak/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-thinking-chain-leak/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-thinking-chain-leak/video.mp4'
 audioDuration: '19:15'
 youtubeUrl: 'https://www.youtube.com/watch?v=kIP7ZZtdCLs'

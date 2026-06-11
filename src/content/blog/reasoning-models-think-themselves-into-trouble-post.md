@@ -5,7 +5,7 @@ date: 2026-03-11
 tags: ['ai-safety', 'research', 'reasoning', 'llm', 'vulnerability', 'benchmarking']
 draft: false
 heroImage: '/notebook-assets/reasoning-models-think-themselves-into-trouble/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/reasoning-models-think-themselves-into-trouble/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/reasoning-models-think-themselves-into-trouble/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/reasoning-models-think-themselves-into-trouble/video.mp4'
 audioDuration: '21:10'
 youtubeUrl: 'https://www.youtube.com/watch?v=rweuGkDUh9M'

@@ -5,7 +5,7 @@ date: 2026-03-02
 tags: ['ai', 'economics', 'enterprise', 'research', 'policy']
 draft: false
 heroImage: '/notebook-assets/the-ai-productivity-j-curve/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ai-productivity-j-curve/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ai-productivity-j-curve/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ai-productivity-j-curve/video.mp4'
 faq:
   - q: 'What is the AI Productivity J-Curve?'

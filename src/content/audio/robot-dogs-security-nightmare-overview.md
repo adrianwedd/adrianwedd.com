@@ -3,7 +3,7 @@ title: 'Robot Dogs Are a Security Nightmare — And We Can Prove It'
 description: 'Eight CVEs. A wormable Bluetooth exploit. An encrypted backdoor to Chinese servers. And police departments buying them anyway.'
 date: 2026-05-13
 tags: ['notebooklm', 'ai-safety', 'robotics', 'embodied-ai', 'security', 'research']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/robot-dogs-security-nightmare/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/robot-dogs-security-nightmare/audio.m4a'
 duration: '22:30'
 relatedPost: 'robot-dogs-security-nightmare-post'
 relatedProject: 'failure-first'
