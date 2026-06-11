@@ -24,7 +24,9 @@ function buildContentDateMap() {
       const date = fm.match(/^date:\s*(\d{4}-\d{2}-\d{2})/m)?.[1];
       const dateStr = updated ?? date;
       if (!dateStr) continue;
-      const slug = file.replace(/\.mdx?$/, '');
+      // Mirror slug() in src/lib/utils.ts: strip extension AND the `-post`
+      // naming-convention suffix, or the key never matches the page URL.
+      const slug = file.replace(/\.mdx?$/, '').replace(/-post$/, '');
       map.set(`/${dir}/${slug}/`, dateStr);
     }
   }

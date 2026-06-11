@@ -192,7 +192,12 @@ const { images } = Astro.props;
           ].filter(Boolean);
           var first = focusable[0];
           var last = focusable[focusable.length - 1];
-          if (e.shiftKey && document.activeElement === first) {
+          // Focus can land outside the trap set (image click, backdrop click)
+          // — pull it back in rather than letting Tab escape to the page.
+          if (focusable.indexOf(document.activeElement) === -1) {
+            e.preventDefault();
+            (e.shiftKey ? last : first).focus();
+          } else if (e.shiftKey && document.activeElement === first) {
             e.preventDefault();
             last.focus();
           } else if (!e.shiftKey && document.activeElement === last) {

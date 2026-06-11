@@ -1,12 +1,12 @@
 ---
 title: 'The Pulse'
 description: "Lyria Chronicles #18 (explicit): the explicit lane revisited — and the most artful track in the set, which clears the gate by withholding almost everything."
-date: 2026-06-22
+date: 2026-06-18
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/pulse/video.mp4'
 explicit: true
 series: 'The Lyria Chronicles'
-seriesOrder: 20
+seriesOrder: 18
 relatedPost: 'the-pulse'
 ---
 
