@@ -27,7 +27,6 @@ NC='\033[0m'
 # Defaults
 YES=false
 LIMIT=0
-COMPRESS_BITRATE="64k"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -52,11 +51,6 @@ echo
 if ! command -v nlm &>/dev/null; then
     echo -e "${RED}Error: nlm CLI not found. Install: pip install notebooklm-mcp-cli${NC}"
     exit 1
-fi
-
-if ! command -v ffmpeg &>/dev/null; then
-    echo -e "${YELLOW}Warning: ffmpeg not found — audio files will not be compressed${NC}"
-    COMPRESS_BITRATE=""
 fi
 
 if [ ! -d "$NOTEBOOKLM_DIR" ]; then
@@ -182,25 +176,17 @@ EOF
             audio_found=true
             mkdir -p "$PUBLIC_ASSETS/$project"
 
-            # Compress with ffmpeg if available
-            if [ -n "$COMPRESS_BITRATE" ]; then
-                audio_size=$(stat -f%z "$audio_file" 2>/dev/null || stat -c%s "$audio_file" 2>/dev/null)
-                audio_size_mb=$((audio_size / 1048576))
-                echo "  Raw audio: ${audio_size_mb}MB — compressing to ${COMPRESS_BITRATE}bps..."
-                ffmpeg -y -i "$audio_file" -b:a "$COMPRESS_BITRATE" -ac 1 "$PUBLIC_ASSETS/$project/audio.mp3" 2>/dev/null
-                compressed_size=$(stat -f%z "$PUBLIC_ASSETS/$project/audio.mp3" 2>/dev/null || stat -c%s "$PUBLIC_ASSETS/$project/audio.mp3" 2>/dev/null)
-                compressed_mb=$((compressed_size / 1048576))
-                echo -e "  ${GREEN}✓ Audio compressed: ${compressed_mb}MB → public/notebook-assets/$project/audio.mp3${NC}"
-            else
-                cp "$audio_file" "$PUBLIC_ASSETS/$project/audio.mp3"
-                echo -e "  ${GREEN}✓ Audio copied to public/notebook-assets/$project/audio.mp3${NC}"
-            fi
+            # NEVER compress — serve original quality. NLM "mp3" downloads are
+            # AAC in an MP4 container; name them audio.m4a so browsers read
+            # duration metadata correctly.
+            cp "$audio_file" "$PUBLIC_ASSETS/$project/audio.m4a"
+            echo -e "  ${GREEN}✓ Original-quality audio copied to public/notebook-assets/$project/audio.m4a${NC}"
 
             # Update project frontmatter
             cd "$REPO_ROOT"
             if ! grep -q "^audioUrl:" "$project_file"; then
                 sed -i '' "/^date:/a\\
-audioUrl: \"/notebook-assets/$project/audio.mp3\"
+audioUrl: \"https://cdn.adrianwedd.com/notebook-assets/$project/audio.m4a\"
 " "$project_file"
                 echo -e "  ${GREEN}✓ Added audioUrl to project frontmatter${NC}"
             fi
