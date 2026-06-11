@@ -5,7 +5,7 @@ date: 2026-03-30
 tags: ['ai', 'ai-safety', 'research', 'adversarial', 'team']
 draft: false
 heroImage: '/notebook-assets/the-failure-first-team/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-failure-first-team/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-failure-first-team/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-failure-first-team/video.mp4'
 faq:
   - q: 'What is the Failure First team?'

@@ -3,7 +3,7 @@ title: 'Cutting Through the Agent Hype'
 description: 'An opinionated, scored catalogue of autonomous AI tooling — because GitHub stars measure hype, not quality.'
 date: 2025-08-01
 tags: ['notebooklm', 'ai', 'agents', 'curation']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/agentic-index/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/agentic-index/audio.m4a'
 duration: '17:17'
 relatedProject: 'agentic-index'
 ---

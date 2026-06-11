@@ -3,7 +3,7 @@ title: 'Compute Is Not Governance'
 description: "Anthropic's 2028 scenarios document three policy asks. Two are about maintaining compute advantage. That is not a governance strategy."
 date: 2026-05-25
 tags: ['notebooklm', 'ai-safety', 'policy', 'anthropic', 'governance', 'geopolitics']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/compute-is-not-governance/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/compute-is-not-governance/audio.m4a'
 duration: '21:29'
 relatedPost: 'compute-is-not-governance-post'
 ---

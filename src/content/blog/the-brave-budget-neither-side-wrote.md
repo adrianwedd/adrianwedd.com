@@ -6,7 +6,7 @@ tags: ['tasmania', 'politics', 'policy', 'economics', 'analysis']
 draft: false
 heroImage: '/notebook-assets/the-brave-budget-neither-side-wrote/infographic.webp'
 dataTable: '/data/tas-budget-2026-ledger.csv'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-brave-budget-neither-side-wrote/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-brave-budget-neither-side-wrote/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-brave-budget-neither-side-wrote/video.mp4'
 audioDuration: '22:39'
 faq:

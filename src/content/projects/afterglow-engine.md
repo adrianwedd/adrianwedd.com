@@ -6,7 +6,7 @@ repo: 'https://github.com/adrianwedd/afterglow-engine'
 status: 'active'
 featured: true
 date: 2026-02-02
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterglow-engine/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterglow-engine/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterglow-engine/video.mp4'
 heroImage: '/notebook-assets/afterglow-engine/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=eWwhcDrMcso'

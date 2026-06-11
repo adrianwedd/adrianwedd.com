@@ -3,7 +3,7 @@ title: "The Door Google Didn't Build"
 description: 'Audio overview of NotebookLM Automation — reverse-engineered RPC access for batch export, generation, and control.'
 date: 2025-12-01
 tags: ['notebooklm', 'ai', 'automation']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/notebooklm-automation/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/notebooklm-automation/audio.m4a'
 duration: '14:57'
 relatedProject: 'notebooklm-automation'
 ---

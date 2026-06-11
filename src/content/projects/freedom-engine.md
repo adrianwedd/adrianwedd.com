@@ -5,7 +5,7 @@ tags: ['ai', 'justice', 'python']
 status: 'active'
 featured: true
 date: 2025-04-01
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/video.mp4'
 heroImage: '/notebook-assets/freedom-engine/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=DiUEJScqN8I'

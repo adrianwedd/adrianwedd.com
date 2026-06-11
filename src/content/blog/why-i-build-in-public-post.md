@@ -4,7 +4,7 @@ description: 'On showing your work, shipping imperfect things, and why the commi
 date: 2026-02-15
 tags: ['engineering', 'open-source', 'philosophy']
 heroImage: '/notebook-assets/why-i-build-in-public/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-i-build-in-public/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-i-build-in-public/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-i-build-in-public/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=RxsTVm4l55A'
 ---

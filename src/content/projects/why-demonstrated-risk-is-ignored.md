@@ -7,7 +7,7 @@ status: 'complete'
 featured: true
 date: 2026-02-07
 heroImage: '/notebook-assets/why-demonstrated-risk-is-ignored/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=ZXB_at0Ke_w'
 ---

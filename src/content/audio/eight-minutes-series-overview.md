@@ -3,7 +3,7 @@ title: 'Eight Minutes — The Whole Story'
 description: 'The full series in one sitting: the call, the relay, the eight minutes inside, and the fight back — a single deep dive across all three parts.'
 date: 2026-06-11T00:55:00Z
 tags: ['notebooklm', 'security', 'phishing', 'incident response', 'Eight Minutes']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-series/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-series/audio.m4a'
 duration: '21:24'
 relatedPost: 'eight-minutes-the-trap'
 ---

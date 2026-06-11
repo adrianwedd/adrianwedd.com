@@ -5,7 +5,7 @@ date: 2026-05-15
 tags: ['co-operative', 'tasmania', 'community', 'governance', 'hospitality']
 draft: false
 heroImage: '/notebook-assets/the-bottom-pub-co-op/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=fe7ZHBmYv6c'
 ---

@@ -3,7 +3,7 @@ title: "Glasswing's Buried Number"
 description: "Anthropic found 10,000 critical vulnerabilities in one month. Fewer than 1% are patched. The announcement buried that figure — and what it means."
 date: 2026-05-25
 tags: ['notebooklm', 'ai-safety', 'security', 'anthropic', 'vulnerability', 'governance']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/glasswing-buried-number/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/glasswing-buried-number/audio.m4a'
 duration: '21:03'
 relatedPost: 'glasswing-buried-number-post'
 ---

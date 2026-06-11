@@ -5,7 +5,7 @@ date: 2026-03-30
 tags: ['ai-safety', 'research', 'jailbreaking', 'llm', 'multimodal', 'vulnerability']
 draft: false
 heroImage: '/notebook-assets/eight-layers-of-visual-jailbreaks/infographic.webp'
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-layers-of-visual-jailbreaks/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-layers-of-visual-jailbreaks/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-layers-of-visual-jailbreaks/video.mp4'
 audioDuration: '14:04'
 youtubeUrl: 'https://www.youtube.com/watch?v=9-aAAxBnPI4'

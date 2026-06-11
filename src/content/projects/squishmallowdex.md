@@ -8,7 +8,7 @@ status: 'complete'
 featured: false
 heroImage: '/notebook-assets/squishmallowdex/infographic.webp'
 date: 2024-12-01
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/squishmallowdex/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=VpWYlNx2tfY'
 ---

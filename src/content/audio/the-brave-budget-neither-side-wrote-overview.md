@@ -3,7 +3,7 @@ title: 'The Brave Budget Neither Side Wrote'
 description: 'Audio deep dive into Tasmania’s 2026-27 Budget versus the Greens’ Alternative — same surplus, opposite roads, and why neither was brave enough.'
 date: 2026-05-30
 tags: ['notebooklm', 'tasmania', 'politics', 'policy', 'economics', 'analysis']
-audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-brave-budget-neither-side-wrote/audio.mp3'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-brave-budget-neither-side-wrote/audio.m4a'
 duration: '22:39'
 relatedPost: 'the-brave-budget-neither-side-wrote'
 ---
