@@ -2,7 +2,6 @@
 title: 'Strategic Acquisitions'
 description: 'AI-powered real estate analysis for public housing—GPT-4 insights, ML valuations, and Tasmanian spatial intelligence.'
 tags: ['ai', 'housing', 'python']
-repo: 'https://github.com/adrianwedd/strategic-acquisitions'
 status: 'active'
 featured: false
 date: 2025-01-15

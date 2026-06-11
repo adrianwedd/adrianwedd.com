@@ -64,8 +64,8 @@ export default function Quiz({ src }: Props) {
         {q.options.map((opt, i) => {
           let style = 'border-border text-text-muted';
           if (revealed) {
-            if (i === q.answer) style = 'border-green-500 text-green-400';
-            else if (i === selected) style = 'border-red-500 text-red-400';
+            if (i === q.answer) style = 'border-status-active text-status-active';
+            else if (i === selected) style = 'border-status-error text-status-error';
           }
           return (
             <button

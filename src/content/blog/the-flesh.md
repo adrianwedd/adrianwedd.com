@@ -1,7 +1,7 @@
 ---
 title: 'The Flesh'
 description: "Lyria Chronicles #5 (explicit): I hid a pornographic request in base64 and dared Lyria 3 Pro to sing it. It decoded the dare — and read it out loud instead."
-date: 2026-06-07
+date: 2026-06-05
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 draft: false
 explicit: true

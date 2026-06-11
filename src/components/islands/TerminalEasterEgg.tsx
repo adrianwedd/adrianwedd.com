@@ -114,6 +114,7 @@ export default function TerminalEasterEgg() {
   const [input, setInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
 
   // Listen for "sudo" typed anywhere
   useEffect(() => {
@@ -134,9 +135,16 @@ export default function TerminalEasterEgg() {
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [visible]);
 
-  // Focus input when visible
+  // Focus input when visible; restore focus to the prior element on close
+  // so keyboard users aren't dropped to <body>
   useEffect(() => {
-    if (visible) inputRef.current?.focus();
+    if (visible) {
+      restoreFocusRef.current = document.activeElement as HTMLElement | null;
+      inputRef.current?.focus();
+    } else if (restoreFocusRef.current) {
+      restoreFocusRef.current.focus?.();
+      restoreFocusRef.current = null;
+    }
   }, [visible]);
 
   // Auto-scroll

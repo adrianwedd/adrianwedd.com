@@ -2,7 +2,6 @@
 title: 'NeuroConnect'
 description: 'A voice helpline that knows the difference between a word-finding pause and a cry for help — and responds to both correctly.'
 tags: ['ai', 'health', 'adhd', 'python']
-repo: 'https://github.com/adrianwedd/neuroconnect'
 status: 'active'
 featured: true
 date: 2025-05-01
