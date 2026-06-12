@@ -81,6 +81,7 @@ app.post('/api/publish', async (c) => {
     backdatedTime?: string;
     idempotencyKey: string;
     forceRetry?: boolean;
+    replyTo?: string;
   }>();
 
   const platform = validatePlatform(body.platform);
@@ -144,7 +145,9 @@ app.post('/api/publish', async (c) => {
       error: null,
     };
 
-    const result = await adapter.publishPost(post);
+    const result = body.replyTo
+      ? await adapter.replyToComment(body.replyTo, body.message)
+      : await adapter.publishPost(post);
 
     // Write durable idempotency record. H5: failed records carry a shorter
     // (7d) TTL than published (30d) so a misclassified transient error
