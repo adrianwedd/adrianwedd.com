@@ -1,0 +1,39 @@
+name: Bug report
+description: Something on the site is broken or behaving unexpectedly
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report a bug.
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      description: Which page is affected?
+      placeholder: https://adrianwedd.com/blog/...
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see? What did you expect to see?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click on ...
+        3. See error
+    validations:
+      required: false
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      placeholder: e.g. Safari 18 on macOS, Chrome 124 on Windows
+    validations:
+      required: false

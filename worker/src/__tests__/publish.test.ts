@@ -11,6 +11,7 @@ import type { SocialPost, AuthStatus } from '../platforms/types';
 
 interface PlatformMocks {
   publishPost: ReturnType<typeof vi.fn>;
+  replyToComment: ReturnType<typeof vi.fn>;
   debugAuth: ReturnType<typeof vi.fn>;
   getPageIdentity: ReturnType<typeof vi.fn>;
 }
@@ -23,6 +24,7 @@ function getPlatformMocks(platform: string): PlatformMocks {
   if (!mocks) {
     mocks = {
       publishPost: vi.fn(),
+      replyToComment: vi.fn(),
       debugAuth: vi.fn(),
       getPageIdentity: vi.fn().mockReturnValue(`${platform}_identity`),
     };
@@ -44,7 +46,7 @@ vi.mock('../platforms/factory', () => ({
       listRecentPosts: vi.fn().mockResolvedValue([]),
       getComments: vi.fn().mockResolvedValue([]),
       getCommentReplies: vi.fn().mockResolvedValue([]),
-      replyToComment: vi.fn(),
+      replyToComment: m.replyToComment,
       getPageIdentity: m.getPageIdentity,
       debugAuth: m.debugAuth,
     };
@@ -666,6 +668,31 @@ describe('POST /api/publish forceRetry', () => {
     const newRecord = JSON.parse(kv.store.get('idempotent:key-2')!);
     expect(newRecord.status).toBe('published');
     expect(newRecord.platformPostId).toBe('fb_retry_ok');
+  });
+
+  it('routes to replyToComment when replyTo is provided', async () => {
+    const kv = mockKV();
+    setConfiguredPlatforms(['bluesky']);
+    const blueskyMocks = getPlatformMocks('bluesky');
+    blueskyMocks.replyToComment.mockResolvedValueOnce({
+      success: true, platformPostId: 'bsky_reply_1', isTransient: false, isAuthError: false,
+    });
+
+    const res = await app.fetch(
+      publishRequest({
+        platform: 'bluesky', type: 'text', message: 'A reply text',
+        idempotencyKey: 'reply-1', replyTo: 'at://did:plc:abc/app.bsky.feed.post/xyz',
+      }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.published).toBe(true);
+    expect(body.platformPostId).toBe('bsky_reply_1');
+    expect(blueskyMocks.replyToComment).toHaveBeenCalledWith(
+      'at://did:plc:abc/app.bsky.feed.post/xyz', 'A reply text',
+    );
+    expect(blueskyMocks.publishPost).not.toHaveBeenCalled();
   });
 
   it('publishes via the platform named in the request body, not the default', async () => {
