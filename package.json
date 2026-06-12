@@ -11,7 +11,12 @@
     "check:links": "node scripts/check-internal-links.mjs",
     "lint": "eslint .",
     "format": "prettier --write 'src/**/*.{astro,ts,tsx,css,md,mdx}'",
-    "format:check": "prettier --check 'src/**/*.{astro,ts,tsx,css,md,mdx}'"
+    "format:check": "prettier --check 'src/**/*.{astro,ts,tsx,css,md,mdx}'",
+    "typecheck": "astro check",
+    "validate": "node scripts/validate-content.js",
+    "check": "astro check && eslint . && node scripts/validate-content.js",
+    "test:worker": "cd worker && npm test",
+    "test:csp": "cd worker-csp && npm test && npx tsc --noEmit"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
