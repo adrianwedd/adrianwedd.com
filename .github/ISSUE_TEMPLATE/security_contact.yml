@@ -1,0 +1,18 @@
+name: Security issue
+description: "⚠️ Do NOT use this form for security vulnerabilities — see SECURITY.md instead"
+labels: ["type:security"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please do not report security vulnerabilities as public GitHub issues.**
+
+        See [SECURITY.md](../SECURITY.md) for the responsible disclosure process and contact details.
+
+        This template is for non-sensitive security questions only (e.g. "does the CSP block X?").
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+    validations:
+      required: true
