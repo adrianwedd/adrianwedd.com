@@ -33,13 +33,13 @@ jobs:
 
     steps:
       - name: Checkout adrianwedd.com
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           path: adrianwedd.com
 
       # Requires PIPELINE_PAT secret with read access to adrianwedd/failure-first-embodied-ai
       - name: Checkout failure-first-embodied-ai
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: adrianwedd/failure-first-embodied-ai
           path: failure-first-embodied-ai
