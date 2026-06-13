@@ -35,7 +35,9 @@
   },
   "overrides": {
     "fast-xml-parser": "^5.5.6",
-    "yaml": "~2.8.3"
+    "yaml": "~2.8.3",
+    "esbuild": "^0.28.1",
+    "@grpc/grpc-js": "^1.14.4"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
