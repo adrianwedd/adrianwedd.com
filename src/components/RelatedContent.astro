@@ -68,6 +68,18 @@ const allItems: ContentItem[] = [
       href: `/gallery/${slug(p.id)}/`,
       score: 0,
     })),
+  ...audios
+    .filter((p) => !p.data.draft)
+    .map((p) => ({
+      id: `audio:${p.id}`,
+      type: 'audio' as const,
+      title: p.data.title,
+      description: p.data.description,
+      tags: p.data.tags,
+      date: p.data.date,
+      href: `/audio/${slug(p.id)}/`,
+      score: 0,
+    })),
 ];
 
 // Build tag frequency map for IDF-style weighting (rare tags score higher)

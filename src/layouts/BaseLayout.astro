@@ -66,6 +66,8 @@ const props = Astro.props;
         }
       })();
     </script>
+    {/* No-JS fallback: ScrollReveal content is opacity:0 until JS reveals it; show it when JS is unavailable */}
+    <noscript set:html={`<style>.scroll-reveal{opacity:1!important;transform:none!important}</style>`}></noscript>
     <ClientRouter />
   </head>
   <body class="flex min-h-screen flex-col">
