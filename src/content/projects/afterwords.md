@@ -1,11 +1,12 @@
 ---
 title: 'Afterwords'
-description: 'Local voice output for Claude Code — 17 cloned voices, per-project selection, zero cloud dependency.'
+description: 'Local voice-cloning TTS on Apple Silicon — now a three-tier product: a local server, a native macOS menu-bar app, and your own cloud API.'
 tags: ['ai', 'tts', 'mlx', 'apple-silicon', 'voice-cloning', 'claude', 'open-source']
 url: 'https://adrianwedd.github.io/afterwords/'
 repo: 'afterwords'
 status: 'active'
 date: 2026-03-22
+updatedDate: 2026-06-15
 series: 'PiCar-X'
 seriesOrder: 2
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterwords/audio.m4a'
@@ -14,34 +15,32 @@ heroImage: '/notebook-assets/afterwords/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=iawRevXb9i4'
 ---
 
-Afterwords completes the voice loop in Claude Code. Claude Code already listens — hold Space, talk, it transcribes. But every response comes back as text. Afterwords intercepts every response via a stop hook, sends the text to a local TTS server, and plays it through the speaker. Two-way voice conversation with your coding assistant, running entirely on your machine.
+Afterwords clones a voice from a fifteen-second clip and runs it on your own machine. It began as a way to give [SPARK](/projects/spark/) a voice and to [complete the voice loop in Claude Code](/blog/afterwords/) — local TTS, zero cloud dependency. It is now three pieces, each holding to the same principle: **clone once, own forever, use anywhere.** (The full thinking is in [Own Your Voice](/blog/own-your-voice/).)
 
-## How It Works
+## Three tiers
 
-Three components, all local:
+**Local — the TTS server.** A FastAPI server running Qwen3-TTS (0.6B and 1.7B) on MLX. Clone from a fifteen-second clip; serve any number of voices from a single model load. It ships with 103 flagship voice families (284 profiles) and wires into the harnesses you already use — Claude Code, Codex CLI, Cursor, Gemini CLI / Antigravity, and Hermes — to speak every response aloud. No cloud API, no subscription, no data leaving the machine.
 
-1. **TTS server** — FastAPI app running Qwen3-TTS Base (0.6B, 8-bit quantised) on MLX. Loads once (~6 GB peak), serves any number of voices via a single HTTP endpoint on `localhost:7860`.
+**App — the macOS control panel.** A native SwiftUI menu-bar app (v1.2) that makes the local server feel like a first-class Mac citizen: a live status icon (stopped / starting / running / error), start/stop/restart, a searchable voices window where a single click plays a sample, a mute toggle, launch-at-login, and CLI-path/port settings. It auto-updates through Sparkle 2 with an EdDSA-signed appcast. It doesn't own the server — `launchd` does — it just drives it.
 
-2. **Stop hook** — Fires after every Claude Code response. Strips markdown formatting, truncates long responses, queues text for synthesis.
+**Cloud — your own API.** [Afterwords Cloud](https://afterwords-cloud.pages.dev/) lets you clone a voice once on a Mac, push it up, and synthesize from anywhere over REST — no Apple Silicon required at call time. A Cloudflare Worker (Hono) holds API-key hashes in KV, voice and job metadata in D1, and reference audio in R2; synthesis runs on a Modal GPU job and writes the result back. Always async — `202` plus polling — because a cold GPU start can outlast any request you'd want to hold open. Built and running in early access.
 
-3. **Background worker** — Processes the queue serially with mkdir-based locking. No audio overlap. Responses archived as MP3 in `~/.claude/tts-archive/`.
+## How the local loop works
 
-## 17 Voices, Zero Extra Memory
+1. **TTS server** — loads Qwen3-TTS once (~6 GB peak), serves voices on `localhost`. Each voice is a 700 KB WAV reference clip plus a transcript string; the model extracts speaker embeddings at inference time, so adding a voice costs no extra memory.
+2. **Stop hook** — fires after every coding-agent response, strips markdown, truncates, queues the text.
+3. **Background worker** — processes the queue serially with mkdir-based locking (no audio overlap) and archives each response as audio.
 
-Each voice is a 700 KB WAV reference clip and a transcript string. The model extracts speaker embeddings at inference time — no fine-tuning, no per-voice model copies. All 17 voices serve from a single 8 GB M1 with no measurable difference in memory usage.
+## Per-project voice selection
 
-Included voices span Galadriel (Cate Blanchett), Snape (Alan Rickman), Avasarala (Shohreh Aghdashloo), Spock (Leonard Nimoy), and 13 others — plus a custom voice cloning pipeline for adding your own from a 15-second YouTube clip.
-
-## Per-Project Voice Selection
-
-Drop a `.afterwords` file in any repo root containing a voice name. The hook reads it on every synthesis call — switch projects, switch voices, no restart needed. SPARK development gets Vixen. This website gets Galadriel. Security research gets Snape.
+Drop a `.afterwords` file in any repo root containing a voice name. The hook reads it on every synthesis call — switch projects, switch voices, no restart needed.
 
 ## Origin
 
-The TTS server was built for [SPARK](/projects/spark/) — a robot companion that needed [three distinct voices](/blog/giving-a-robot-three-voices/) cloned from YouTube clips. The [voice cloning pipeline](/blog/voice-cloning-qwen3-tts-mlx/) was already running on localhost. Claude Code was already running on the same machine. A stop hook was the only missing piece.
+The TTS server was built for [SPARK](/projects/spark/) — a robot companion that needed [three distinct voices](/blog/giving-a-robot-three-voices/) cloned from YouTube clips. The [voice cloning pipeline](/blog/voice-cloning-qwen3-tts-mlx/) was already running on localhost; a stop hook was the only missing piece. Everything since has been about making "the voice is yours" hold as the project scaled off a single machine.
 
 ## Setup
 
-One command: `bash setup.sh`. Checks hardware, installs dependencies, downloads model weights, walks through optional voice cloning, wires the Claude Code hook, configures launchd auto-start. Five minutes from clone to conversation.
+One command: `bash setup.sh`. It checks hardware, installs dependencies, downloads model weights, walks through optional voice cloning, wires the coding-agent hook, and configures launchd auto-start. (Use `--server-only` to skip the agent integration.)
 
-**Requirements:** Apple Silicon Mac (M1+), 8 GB RAM, Python 3.11+, Claude Code.
+**Requirements:** Apple Silicon Mac (M1+), 8 GB RAM (0.6B model; 16 GB for 1.7B), Python 3.11+. Optional menu-bar app and hosted cloud tier on top.
