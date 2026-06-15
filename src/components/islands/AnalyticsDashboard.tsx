@@ -131,7 +131,7 @@ export default function AnalyticsDashboard() {
                   {project.views.toLocaleString()} views · {project.clicks.toLocaleString()} clicks
                 </div>
               </div>
-              <div class="text-2xl font-bold text-accent">{((project.clicks / project.views) * 100).toFixed(1)}%</div>
+              <div class="text-2xl font-bold text-accent">{project.views > 0 ? `${((project.clicks / project.views) * 100).toFixed(1)}%` : '—'}</div>
             </div>
           ))}
         </div>
