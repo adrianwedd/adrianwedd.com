@@ -1,0 +1,10 @@
+name = "adrianwedd-mta-sts"
+main = "index.js"
+compatibility_date = "2025-01-01"
+workers_dev = false
+
+# Custom domain — wrangler auto-creates the DNS record + edge cert for the
+# mta-sts hostname. MTA-STS requires the policy at https://mta-sts.<domain>/.
+[[routes]]
+pattern = "mta-sts.adrianwedd.com"
+custom_domain = true
