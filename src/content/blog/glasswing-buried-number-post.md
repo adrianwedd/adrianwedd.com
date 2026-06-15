@@ -70,4 +70,4 @@ If the answer is "more time, maintainers will catch up," the data does not suppo
 
 ---
 
-_Project Glasswing update published May 22, 2026. Statistics from Anthropic's announcement and subsequent analysis. The adaptation buffer estimates (5.7–13.1 months for open-weight models) are from independent research benchmarking GLM-5 and DeepSeek V3.1 against the closed-source capability trendline. For related analysis on how capability outpaces governance in AI security, see the Governance Lag Index and [alignment regression](/blog/alignment-regression/)._
+_Project Glasswing update published May 22, 2026. Statistics from Anthropic's announcement and subsequent analysis. The adaptation buffer estimates (5.7–13.1 months for open-weight models) are from independent research benchmarking GLM-5 and DeepSeek V3.1 against the closed-source capability trendline. For related analysis on how capability outpaces governance in AI security, see the [Governance Lag Index](/projects/governance-lag-index/) and [alignment regression](/blog/alignment-regression/)._
