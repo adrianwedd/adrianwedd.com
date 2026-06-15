@@ -61,7 +61,7 @@ Previous jailbreak research required human expertise. An attacker needed to unde
 
 Autonomous jailbreak agents eliminate that constraint. The attack surface now scales with compute, not human expertise. One reasoning model can run thousands of jailbreak attempts per hour. A fleet of reasoning models can systematically probe every accessible AI system simultaneously.
 
-Our Governance Lag Index tracks over 160 events where AI attack capabilities emerged before governance responses. The autonomous jailbreak capability (GLI-052 in our dataset) has zero governance response at any level — no framework, no legislation, no enforcement mechanism. No jurisdiction has addressed the scenario of reasoning models being weaponised as autonomous jailbreak agents.
+Our [Governance Lag Index](/projects/governance-lag-index/) tracks over 160 events where AI attack capabilities emerged before governance responses. The autonomous jailbreak capability (GLI-052 in our dataset) has zero governance response at any level — no framework, no legislation, no enforcement mechanism. No jurisdiction has addressed the scenario of reasoning models being weaponised as autonomous jailbreak agents.
 
 ## What defence looks like
 
