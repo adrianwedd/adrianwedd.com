@@ -6,7 +6,7 @@ tags: ['ai', 'tts', 'voice-cloning', 'mlx', 'apple-silicon', 'privacy', 'open-so
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/own-your-voice/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/own-your-voice/video.mp4'
 heroImage: '/notebook-assets/own-your-voice/infographic.webp'
-draft: true
+draft: false
 ---
 
 The big text-to-speech services will clone your voice in about thirty seconds. Upload a sample, and you can have your own voice — or anyone's — reading text on demand. It is genuinely impressive technology.
