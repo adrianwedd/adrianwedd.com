@@ -3,6 +3,9 @@ title: 'Own Your Voice'
 description: 'Cloud TTS rents you a voice and keeps your data. Afterwords clones it once so you own it — running locally, in a menu-bar app, or via your own API.'
 date: 2026-06-15
 tags: ['ai', 'tts', 'voice-cloning', 'mlx', 'apple-silicon', 'privacy', 'open-source']
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/own-your-voice/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/own-your-voice/video.mp4'
+heroImage: '/notebook-assets/own-your-voice/infographic.webp'
 draft: true
 ---
 
