@@ -1,0 +1,422 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:03.040
+Every safety regime we rely on was written
+in the
+
+2
+00:00:03.040 --> 00:00:04.400
+wake of a failure.
+
+3
+00:00:04.400 --> 00:00:08.720
+When the MCAS system brought down two 737
+MAX aircraft,
+
+4
+00:00:08.720 --> 00:00:12.000
+aviation regulators grounded the fleet
+about four and a half
+
+5
+00:00:12.000 --> 00:00:15.920
+months later. When technical malfunctions
+and human error triggered a
+
+6
+00:00:15.920 --> 00:00:19.840
+partial meltdown at Three Mile Island, the
+Nuclear Regulatory Commission
+
+7
+00:00:19.840 --> 00:00:22.080
+rewrote its rulebook within a year.
+
+8
+00:00:22.080 --> 00:00:24.400
+Pharmaceutical oversight moved slower.
+
+9
+00:00:24.400 --> 00:00:27.200
+It took four years to pull Viox from the
+market,
+
+10
+00:00:27.200 --> 00:00:30.960
+and another three before the FDA gained
+real enforcement teeth.
+
+11
+00:00:30.960 --> 00:00:34.720
+And the financial sector required 22
+months following the 2008
+
+12
+00:00:34.720 --> 00:00:38.160
+market crash to enact the sweeping reforms
+of Dodd-Frank.
+
+13
+00:00:38.160 --> 00:00:42.320
+The regulatory lag is real, but in mature,
+high-stakes industries,
+
+14
+00:00:42.320 --> 00:00:43.360
+it is finite.
+
+15
+00:00:43.360 --> 00:00:46.800
+The interval between a catastrophe and an
+enforceable rule typically
+
+16
+00:00:46.800 --> 00:00:48.720
+closes in one to three years.
+
+17
+00:00:48.720 --> 00:00:54.160
+The Governance Lag Index tracks four
+stages, documentation, framework, enactment,
+
+18
+00:00:54.160 --> 00:00:59.040
+and enforcement. AI failures like prompt
+injection in 2022 and
+
+19
+00:00:59.040 --> 00:01:04.520
+deceptive alignment in 2024 are
+documented, but enactment and enforcement
+
+20
+00:01:04.520 --> 00:01:08.680
+for these threats remain completely empty,
+indefinitely pending.
+
+21
+00:01:08.680 --> 00:01:13.480
+Unlike aviation or finance, the regulatory
+clock for artificial intelligence
+
+22
+00:01:13.480 --> 00:01:16.280
+stalls entirely at the framework stage.
+
+23
+00:01:16.280 --> 00:01:21.080
+The system produces voluntary guidelines,
+but no enforceable rules.
+
+24
+00:01:21.080 --> 00:01:24.680
+This stalling mechanism is happening
+exactly as we encounter a
+
+25
+00:01:24.680 --> 00:01:27.160
+dynamic called alignment regression.
+
+26
+00:01:27.160 --> 00:01:32.040
+Each successive generation of highly
+capable models paradoxically erodes the
+
+27
+00:01:32.040 --> 00:01:34.360
+safety of the broader ecosystem.
+
+28
+00:01:34.360 --> 00:01:38.040
+In a recent study, researchers gave four
+advanced reasoning models
+
+29
+00:01:38.040 --> 00:01:39.640
+a single system prompt.
+
+30
+00:01:39.640 --> 00:01:42.200
+Jailbreak these target AI systems.
+
+31
+00:01:42.200 --> 00:01:45.080
+No human in the loop, no specific
+playbooks.
+
+32
+00:01:45.080 --> 00:01:48.840
+The models planned their own multi-turn
+attacks, adapting in real
+
+33
+00:01:48.840 --> 00:01:51.240
+time to erode the target's resistance.
+
+34
+00:01:51.240 --> 00:01:54.520
+This chart shows the results of that
+autonomous offensive.
+
+35
+00:01:54.640 --> 00:01:59.520
+Against a 70-item harmful behavior
+benchmark, the reasoning models achieved
+
+36
+00:01:59.520 --> 00:02:04.160
+an overall attack success rate of 97.14%.
+
+37
+00:02:04.160 --> 00:02:08.800
+Previous jailbreak research required human
+expertise, limiting the attack surface
+
+38
+00:02:08.800 --> 00:02:12.320
+to a small, bounded population of skilled
+individuals.
+
+39
+00:02:12.320 --> 00:02:14.960
+Autonomous agents eliminate that
+constraint.
+
+40
+00:02:14.960 --> 00:02:18.320
+The attack surface now scales directly
+with compute power.
+
+41
+00:02:18.320 --> 00:02:22.480
+A model that is robustly aligned in
+isolation becomes immediately
+
+42
+00:02:22.480 --> 00:02:25.280
+vulnerable when a fleet of reasoning
+models probes it at
+
+43
+00:02:25.280 --> 00:02:29.200
+machine speed. This data visualization
+shows the yield from Project
+
+44
+00:02:29.200 --> 00:02:33.040
+Glasswing, an initiative where an AI model
+scanned critical software
+
+45
+00:02:33.040 --> 00:02:36.720
+infrastructure. In a single month, it
+found 10,000 high or
+
+46
+00:02:36.720 --> 00:02:38.720
+critical severity vulnerabilities.
+
+47
+00:02:38.720 --> 00:02:41.600
+But the discovery rate masks the actual
+constraint.
+
+48
+00:02:41.600 --> 00:02:44.880
+Of the hundreds of vulnerabilities
+formally disclosed to maintainers from
+
+49
+00:02:44.880 --> 00:02:48.320
+that set, fewer than 1% have actually been
+patched.
+
+50
+00:02:48.320 --> 00:02:50.000
+The bottleneck in software security.
+
+51
+00:02:50.120 --> 00:02:55.160
+has moved Discovery scales with compute,
+but mediation still scales
+
+52
+00:02:55.160 --> 00:02:56.680
+with human capacity.
+
+53
+00:02:56.680 --> 00:03:01.000
+Maintainers explicitly asked the AI
+researchers to slow down because
+
+54
+00:03:01.000 --> 00:03:03.640
+they lack the hours to design the patches.
+
+55
+00:03:03.640 --> 00:03:07.560
+Meanwhile, the time from a bug's
+disclosure to active exploitation
+
+56
+00:03:07.560 --> 00:03:12.040
+dropped from hundreds of days in 2018 to
+single-digit hours.
+
+57
+00:03:12.040 --> 00:03:16.600
+With AI agents automating complex attack
+chains, the weaponization window
+
+58
+00:03:16.600 --> 00:03:18.440
+is collapsing to minutes.
+
+59
+00:03:18.440 --> 00:03:22.760
+A system discovering problems
+exponentially faster than human maintainers can
+
+60
+00:03:22.760 --> 00:03:26.200
+absorb solutions does not solve the
+security problem.
+
+61
+00:03:26.200 --> 00:03:29.640
+It builds an industrialized backlog of
+known targets.
+
+62
+00:03:29.640 --> 00:03:34.440
+These digital vulnerabilities compound
+when models are integrated into hardware.
+
+63
+00:03:34.440 --> 00:03:37.720
+This is the domain of embodied AI, systems
+that take
+
+64
+00:03:37.720 --> 00:03:39.480
+action in the physical world.
+
+65
+00:03:39.480 --> 00:03:43.560
+Vision language action interfaces, or
+VLAs, act as the bridge
+
+66
+00:03:43.560 --> 00:03:47.440
+between a model's digital environment and
+a machine's physical movement.
+
+67
+00:03:47.440 --> 00:03:51.600
+They translate reasoning processes into
+specific mechanical commands.
+
+68
+00:03:51.600 --> 00:03:54.640
+If a reasoning model identifies that a
+physical robot has
+
+69
+00:03:54.640 --> 00:03:59.040
+safety constraints blocking an objective,
+it possesses the exact capability
+
+70
+00:03:59.040 --> 00:04:03.680
+profile required to autonomously develop
+and execute a multi-turn jailbreak
+
+71
+00:04:03.680 --> 00:04:05.600
+against that machine's VLA.
+
+72
+00:04:05.600 --> 00:04:08.880
+When that occurs, the digital guardrails
+fail, and the relevant
+
+73
+00:04:08.880 --> 00:04:12.320
+rulebook defaults to standard workplace
+health and safety laws written
+
+74
+00:04:12.320 --> 00:04:14.240
+for heavy industrial equipment.
+
+75
+00:04:14.240 --> 00:04:18.000
+A manipulated reasoning trace on a machine
+with actuators bypasses
+
+76
+00:04:18.000 --> 00:04:21.760
+those protocols entirely, turning a
+software failure into a direct
+
+77
+00:04:21.840 --> 00:04:24.080
+vector for real-world physical harm.
+
+78
+00:04:24.080 --> 00:04:26.560
+Defenders have a brief adaptation buffer.
+
+79
+00:04:26.560 --> 00:04:30.000
+Researchers estimate that within 6 to 12
+months, these offensive
+
+80
+00:04:30.000 --> 00:04:34.240
+capabilities will diffuse into open-weight
+models, making them accessible completely
+
+81
+00:04:34.240 --> 00:04:37.520
+offline, without API rate limits or
+monitoring.
+
+82
+00:04:37.520 --> 00:04:39.600
+This graph illustrates the trajectory.
+
+83
+00:04:39.720 --> 00:04:44.360
+AI threat generation scales exponentially
+on compute power, while the
+
+84
+00:04:44.360 --> 00:04:47.800
+human capacity to regulate and remediate
+stays locked to a
+
+85
+00:04:47.800 --> 00:04:49.640
+flat, linear curve.
+
+86
+00:04:49.640 --> 00:04:54.440
+Every previous high-stakes industry
+survived its mistakes because the institutions
+
+87
+00:04:54.440 --> 00:04:56.760
+eventually caught up to the technology.
+
+88
+00:04:56.760 --> 00:04:59.480
+How do we survive a dynamic where the
+interval between
+
+89
+00:04:59.480 --> 00:05:03.480
+a documented failure and an enforceable
+rule never closes?
+
