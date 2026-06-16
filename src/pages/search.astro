@@ -32,23 +32,35 @@ import HeroCanvas from '../components/HeroCanvas.astro';
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
   <script is:inline>
     (function () {
+      function mountUI() {
+        var ui = new PagefindUI({
+          element: '#search',
+          showSubResults: true,
+          showImages: true,
+          translations: {
+            zero_results:
+              "No matches for [SEARCH_TERM]. Try a broader term, a different spelling, or browse the blog, projects, and gallery from the menu.",
+          },
+        });
+        var sk = document.getElementById('search-skeleton');
+        if (sk) sk.remove();
+        // Deep-link support: /search/?q=term (advertised in the homepage
+        // SearchAction schema) pre-fills the box and runs the search.
+        var q = new URLSearchParams(window.location.search).get('q');
+        if (q && typeof ui.triggerSearch === 'function') ui.triggerSearch(q);
+      }
+
       function initPagefind() {
         var container = document.getElementById('search');
         if (!container || container.dataset.pagefindInit) return;
         container.dataset.pagefindInit = '1';
         if (typeof PagefindUI !== 'undefined') {
-          new PagefindUI({ element: '#search', showSubResults: true, showImages: true });
-          var sk = document.getElementById('search-skeleton');
-          if (sk) sk.remove();
+          mountUI();
           return;
         }
         var script = document.createElement('script');
         script.src = '/pagefind/pagefind-ui.js';
-        script.onload = function () {
-          new PagefindUI({ element: '#search', showSubResults: true, showImages: true });
-          var sk = document.getElementById('search-skeleton');
-          if (sk) sk.remove();
-        };
+        script.onload = mountUI;
         document.head.appendChild(script);
       }
       initPagefind();
