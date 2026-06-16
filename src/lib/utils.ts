@@ -44,7 +44,12 @@ export function youtubeId(url: string | undefined | null): string | null {
     const id = u.pathname.slice(1).split('/')[0];
     return idRe.test(id) ? id : null;
   }
-  if (host === 'youtube.com' || host === 'youtube-nocookie.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+  if (
+    host === 'youtube.com' ||
+    host === 'youtube-nocookie.com' ||
+    host === 'm.youtube.com' ||
+    host === 'music.youtube.com'
+  ) {
     const v = u.searchParams.get('v');
     if (v && idRe.test(v)) return v;
     const m = u.pathname.match(/^\/(?:embed|shorts|live|v)\/([A-Za-z0-9_-]{11})(?:[/?].*)?$/);
@@ -62,4 +67,27 @@ export function youtubeId(url: string | undefined | null): string | null {
  */
 export function ogSafeImage(path: string): string {
   return path.replace(/\.webp(?=[?#]|$)/i, '.jpg');
+}
+
+/**
+ * Resolve descriptive alt text for a blog/project hero image.
+ *
+ * Bare page titles make useless alt text — a screen reader just re-reads the
+ * visible `<h1>`. Most heroes here are generated infographics, so when no
+ * authored `heroAlt` is given we describe the image as an infographic summary
+ * of the piece rather than echoing the title. Authors override via `heroAlt`.
+ */
+export function heroAltText(opts: {
+  heroAlt?: string;
+  heroImage?: string;
+  title: string;
+  kind: 'article' | 'project';
+}): string {
+  if (opts.heroAlt) return opts.heroAlt;
+  const isInfographic = !!opts.heroImage && /infographic|notebook-assets/i.test(opts.heroImage);
+  if (isInfographic) {
+    const noun = opts.kind === 'project' ? 'project' : 'article';
+    return `Infographic summarising the ${noun}: “${opts.title}”`;
+  }
+  return opts.title;
 }
