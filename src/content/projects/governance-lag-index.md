@@ -7,6 +7,7 @@ featured: false
 date: 2026-06-15
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/governance-lag-index/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/governance-lag-index/video.mp4'
+heroImage: '/notebook-assets/governance-lag-index/infographic.webp'
 draft: false
 ---
 
