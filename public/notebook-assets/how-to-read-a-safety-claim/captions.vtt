@@ -1,0 +1,469 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:05.280
+Lawyers, regulators, and hospital
+administrators face immense pressure.
+
+2
+00:00:05.280 --> 00:00:09.600
+You must integrate generative AI into your
+operations without exposing
+
+3
+00:00:09.600 --> 00:00:12.960
+your organization to legal or reputational
+ruin.
+
+4
+00:00:12.960 --> 00:00:16.960
+When you evaluate these systems, vendors
+present pitches loaded with
+
+5
+00:00:16.960 --> 00:00:21.840
+assurances. They claim their models are
+99% safe and rigorously
+
+6
+00:00:21.840 --> 00:00:23.680
+aligned with human values.
+
+7
+00:00:23.680 --> 00:00:27.600
+These claims rely almost entirely on
+behavioral safety.
+
+8
+00:00:27.600 --> 00:00:32.320
+Engineers train the AI to
+probabilistically favor polite, harmless outputs
+
+9
+00:00:32.320 --> 00:00:33.840
+over malicious ones.
+
+10
+00:00:33.840 --> 00:00:37.520
+But a statistical propensity to follow
+instructions is not a
+
+11
+00:00:37.520 --> 00:00:41.120
+guarantee. Treating it as one is an
+exercise in compliance
+
+12
+00:00:41.120 --> 00:00:44.800
+theater, generating a feeling of security
+that the underlying code
+
+13
+00:00:44.800 --> 00:00:50.720
+cannot support. High-stakes environments
+require structural, deterministic bounds, absolute
+
+14
+00:00:50.720 --> 00:00:53.280
+limits on what a system is permitted to
+do.
+
+15
+00:00:53.280 --> 00:00:57.040
+Probabilistic models only offer a
+likelihood of good behavior.
+
+16
+00:00:57.040 --> 00:00:59.680
+To understand what actual safety looks
+like, we have to
+
+17
+00:00:59.960 --> 00:01:01.640
+look past the marketing.
+
+18
+00:01:01.640 --> 00:01:04.520
+We will examine the math vendors use to
+inflate their
+
+19
+00:01:04.520 --> 00:01:09.160
+safety scores and detail the architectural
+security required to genuinely
+
+20
+00:01:09.160 --> 00:01:10.680
+protect an enterprise.
+
+21
+00:01:10.680 --> 00:01:15.240
+For professionals holding legal liability,
+a vendor's probabilistic promise is
+
+22
+00:01:15.240 --> 00:01:18.680
+an unacceptable substitute for verifiable
+engineering.
+
+23
+00:01:18.680 --> 00:01:23.240
+Safety reports consistently feature one
+specific number, the attack success
+
+24
+00:01:23.240 --> 00:01:25.000
+rate, or ASR.
+
+25
+00:01:25.000 --> 00:01:27.800
+Vendors use this metric to claim an
+incredibly low rate
+
+26
+00:01:27.800 --> 00:01:29.080
+of model failure.
+
+27
+00:01:29.080 --> 00:01:32.440
+To calculate ASR at an industrial scale,
+vendors do not
+
+28
+00:01:32.440 --> 00:01:33.960
+check outputs by hand.
+
+29
+00:01:33.960 --> 00:01:38.040
+They use automated keyword classifiers
+that scan the AI's responses
+
+30
+00:01:38.040 --> 00:01:42.120
+for standard refusal phrases, like I
+cannot fulfill this request.
+
+31
+00:01:42.120 --> 00:01:47.000
+This confusion matrix plots automated
+classifiers against human-verified ground truth.
+
+32
+00:01:47.000 --> 00:01:51.080
+They produce an 88% false positive rate,
+flagging harmless errors
+
+33
+00:01:51.080 --> 00:01:53.480
+because the output lacked descripted
+refusal.
+
+34
+00:01:53.480 --> 00:01:57.920
+Correcting this drops the 36%..2 ASR to
+159.
+
+35
+00:01:57.920 --> 00:02:02.000
+Cohen's Kappa measures this agreement at a
+dismal 0.245.
+
+36
+00:02:02.000 --> 00:02:06.320
+This mathematical inflation allows vendors
+to market a highly resilient
+
+37
+00:02:06.320 --> 00:02:09.840
+model. The numbers look excellent on
+paper, but they reflect
+
+38
+00:02:09.840 --> 00:02:13.200
+the strictness of a keyword search, not
+the actual security
+
+39
+00:02:13.200 --> 00:02:14.320
+of the system.
+
+40
+00:02:14.320 --> 00:02:18.160
+Relying on headline attack success rates
+without auditing the underlying
+
+41
+00:02:18.160 --> 00:02:22.480
+classifier methodology leaves decision
+makers blind to how brittle the
+
+42
+00:02:22.480 --> 00:02:23.680
+system actually is.
+
+43
+00:02:23.680 --> 00:02:26.960
+Vendors also base their safety claims on
+testing thousands of
+
+44
+00:02:26.960 --> 00:02:30.720
+harmful prompts. If those prompts are
+simple, predictable variations of
+
+45
+00:02:30.720 --> 00:02:33.680
+known bad inputs, the model passes easily.
+
+46
+00:02:33.680 --> 00:02:37.280
+This line graph shows reasoning
+capabilities on the x-axis and
+
+47
+00:02:37.280 --> 00:02:39.360
+vulnerability on the y-axis.
+
+48
+00:02:39.360 --> 00:02:42.880
+While a model blocks direct queries about
+explosives, phrasing the
+
+49
+00:02:42.880 --> 00:02:47.440
+request as adversarial poetry bypasses
+Frontier models 62% of the
+
+50
+00:02:47.440 --> 00:02:50.000
+time. Real risk lives in this long tail..
+
+51
+00:02:50.360 --> 00:02:54.680
+This reveals the reasoning penalty Highly
+capable, advanced autols are
+
+52
+00:02:54.680 --> 00:02:57.800
+paradoxically less safe than their simpler
+predecessors.
+
+53
+00:02:57.800 --> 00:03:01.720
+The same advanced reasoning capabilities
+that allow an AI to
+
+54
+00:03:01.720 --> 00:03:05.720
+follow complex logic also allow it to
+convince itself that
+
+55
+00:03:05.720 --> 00:03:09.240
+a malicious request is actually a benign
+component of a
+
+56
+00:03:09.240 --> 00:03:14.600
+larger task. Static, list-based safeguards
+provide zero protection against this.
+
+57
+00:03:14.600 --> 00:03:18.520
+The AI's own intelligence becomes the
+exact mechanism used to
+
+58
+00:03:18.520 --> 00:03:20.760
+bypass the behavioral constraints.
+
+59
+00:03:20.760 --> 00:03:23.880
+We have to define the boundaries of
+behavioral safety.
+
+60
+00:03:23.880 --> 00:03:27.400
+This encompasses any training mechanism
+that relies on the model's
+
+61
+00:03:27.400 --> 00:03:30.680
+internal statistical weights to dictate
+its final output.
+
+62
+00:03:30.680 --> 00:03:34.120
+Trusting behavioral safety is the
+equivalent of asking a driver
+
+63
+00:03:34.120 --> 00:03:35.720
+to promise they won't speed.
+
+64
+00:03:35.720 --> 00:03:40.040
+The alignment is brittle, probabilistic,
+and easily overwritten by rearranging
+
+65
+00:03:40.040 --> 00:03:44.280
+the prompt. Enterprise risk mitigation
+requires architectural safety.
+
+66
+00:03:44.280 --> 00:03:48.000
+This means placing the probabilistic AI
+model inside an enclosure
+
+67
+00:03:48.000 --> 00:03:50.160
+of rigid deterministic code.
+
+68
+00:03:50.160 --> 00:03:55.920
+A true system includes distinct non-AI
+components, independent monitors, hard
+
+69
+00:03:56.000 --> 00:04:00.080
+veto gates, and action classifiers
+observing from the outside.
+
+70
+00:04:00.080 --> 00:04:04.240
+These external systems operate on strict
+deterministic logic.
+
+71
+00:04:04.240 --> 00:04:08.720
+They block harmful actions entirely,
+regardless of what the probabilistic
+
+72
+00:04:08.720 --> 00:04:11.360
+AI model internally decided to do.
+
+73
+00:04:11.360 --> 00:04:15.200
+To return to our driver analogy,
+architectural safety is the
+
+74
+00:04:15.200 --> 00:04:18.080
+installation of a physical mechanical
+governor.
+
+75
+00:04:18.080 --> 00:04:22.320
+Speeding becomes physically impossible, no
+matter the driver's intent.
+
+76
+00:04:22.320 --> 00:04:25.920
+In high-stakes fields, safety is not about
+training a system
+
+77
+00:04:25.920 --> 00:04:27.360
+to want to be good.
+
+78
+00:04:27.360 --> 00:04:30.320
+It is the practice of engineering a system
+where unsafe
+
+79
+00:04:30.320 --> 00:04:32.800
+actions are structurally impossible.
+
+80
+00:04:32.800 --> 00:04:35.920
+The industry is transitioning out of the
+experimental phase of
+
+81
+00:04:35.920 --> 00:04:40.000
+AI adoption and directly into the phase of
+professional liability.
+
+82
+00:04:40.120 --> 00:04:43.480
+The novelty of the technology is no longer
+a defense.
+
+83
+00:04:43.480 --> 00:04:47.560
+Non-technical decision makers can enforce
+strict due diligence by applying
+
+84
+00:04:47.560 --> 00:04:51.400
+the five-question architectural test to
+every vendor pitch.
+
+85
+00:04:51.400 --> 00:04:54.120
+You must demand public artifacts.
+
+86
+00:04:54.120 --> 00:04:58.040
+Look at the vendor's architecture diagram
+and verify the existence
+
+87
+00:04:58.040 --> 00:05:02.520
+of independent safety boxes that sit
+entirely outside the AI
+
+88
+00:05:02.520 --> 00:05:05.720
+model. Review the liability attestation.
+
+89
+00:05:05.720 --> 00:05:09.800
+If a hallucinated output generates a
+flawed legal citation or
+
+90
+00:05:09.800 --> 00:05:14.200
+a dangerous medical protocol, the
+professional operating the system bears
+
+91
+00:05:14.200 --> 00:05:18.120
+the reputational and legal cost, not the
+software vendor.
+
+92
+00:05:18.120 --> 00:05:21.240
+If a vendor presents an architecture
+diagram that consists of
+
+93
+00:05:21.240 --> 00:05:24.840
+a single box labeled AI model, they do not
+possess
+
+94
+00:05:24.840 --> 00:05:26.360
+a safety architecture.
+
+95
+00:05:26.360 --> 00:05:28.520
+They are selling a naked model.
+
+96
+00:05:28.520 --> 00:05:32.920
+Professional literacy is your only defense
+against compliance theater.
+
+97
+00:05:32.920 --> 00:05:37.760
+In an adversarial environment, a
+well-behaved AI is never enough.
+
+98
+00:05:37.760 --> 00:05:39.920
+True safety must be audited and verified.
+

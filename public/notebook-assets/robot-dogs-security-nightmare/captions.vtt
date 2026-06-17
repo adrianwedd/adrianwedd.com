@@ -1,0 +1,425 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Right now, in an Atlanta parking garage,
+an autonomous quadruped
+
+2
+00:00:04.000 --> 00:00:06.240
+robot is walking a patrol route.
+
+3
+00:00:06.240 --> 00:00:10.000
+Similar machines are actively scouting
+buildings for police departments in
+
+4
+00:00:10.000 --> 00:00:13.600
+Florida and de-escalating situations in
+Washington State.
+
+5
+00:00:13.600 --> 00:00:17.120
+The United States Marine Corps, Customs
+and Border Protection, and
+
+6
+00:00:17.120 --> 00:00:21.040
+municipal agencies are actively evaluating
+and deploying these quat forms
+
+7
+00:00:21.040 --> 00:00:23.280
+into civilian and military spaces.
+
+8
+00:00:23.280 --> 00:00:26.480
+When police chiefs and procurement
+officers buy these machines, they
+
+9
+00:00:26.480 --> 00:00:28.400
+rely on standard safety audits.
+
+10
+00:00:28.400 --> 00:00:31.440
+They watch the robot successfully navigate
+a hallway and avoid
+
+11
+00:00:31.440 --> 00:00:35.440
+obstacles and follow basic verbal
+commands, assuming that passing these
+
+12
+00:00:35.440 --> 00:00:37.440
+tests means the machine is secure.
+
+13
+00:00:37.440 --> 00:00:40.640
+But checking off a list of basic
+capabilities provides no
+
+14
+00:00:40.640 --> 00:00:42.480
+actual evidence of security.
+
+15
+00:00:42.480 --> 00:00:45.360
+In AI safety research, we consider those
+claims to be
+
+16
+00:00:45.360 --> 00:00:51.040
+marketing fluff. A real evaluation
+requires a failure-first approach, assuming
+
+17
+00:00:51.040 --> 00:00:54.560
+the system will be attacked and
+documenting exactly how the
+
+18
+00:00:54.560 --> 00:00:57.360
+hardware and software break under
+pressure.
+
+19
+00:00:57.360 --> 00:01:00.840
+This schematic maps out the actual
+security reality of the
+
+20
+00:01:00.840 --> 00:01:04.360
+Unitree robots currently walking American
+streets.
+
+21
+00:01:04.360 --> 00:01:09.400
+Independent researchers have identified
+eight publicly disclosed critical vulnerabilities and
+
+22
+00:01:09.400 --> 00:01:12.120
+exposures across the vendor's product
+line.
+
+23
+00:01:12.120 --> 00:01:16.040
+One of those flaws is a Bluetooth command
+injection vulnerability.
+
+24
+00:01:16.040 --> 00:01:19.480
+An attacker does not need a password or
+physical access.
+
+25
+00:01:19.480 --> 00:01:22.040
+They only need to be within Bluetooth
+range to gain
+
+26
+00:01:22.040 --> 00:01:23.720
+complete route control.
+
+27
+00:01:23.720 --> 00:01:25.560
+This exploit is wormable.
+
+28
+00:01:25.560 --> 00:01:28.600
+A single infected robot sitting in a
+police storage room
+
+29
+00:01:28.600 --> 00:01:31.960
+will automatically scan for and compromise
+any other unit that
+
+30
+00:01:31.960 --> 00:01:36.280
+wanders nearby. Deeper inside the code is
+an undocumented remote
+
+31
+00:01:36.280 --> 00:01:40.440
+access tunnel. When active, this back door
+bypasses the owner's
+
+32
+00:01:40.440 --> 00:01:44.680
+controls, deliberately sending encrypted
+data from the robot straight to
+
+33
+00:01:44.680 --> 00:01:47.400
+servers operated by foreign tech giants.
+
+34
+00:01:47.400 --> 00:01:51.480
+Standard safety frameworks completely
+missed a wormable exploit and a
+
+35
+00:01:51.480 --> 00:01:53.320
+hidden exfiltration channel.
+
+36
+00:01:53.320 --> 00:01:56.400
+They missed it because the auditors were
+evaluating the wrong
+
+37
+00:01:56.400 --> 00:01:58.240
+layer of the technology.
+
+38
+00:01:58.240 --> 00:02:02.080
+This animation represents what researchers
+call the goal layer.
+
+39
+00:02:02.080 --> 00:02:05.520
+You give the system a surface level
+instruction, like patrol
+
+40
+00:02:05.520 --> 00:02:08.800
+the perimeter, and you observe whether it
+successfully completes the
+
+41
+00:02:08.800 --> 00:02:12.240
+physical task. If the machine walks the
+loop without falling
+
+42
+00:02:12.240 --> 00:02:15.360
+over, a conventional safety auditor stamps
+a pass on the
+
+43
+00:02:15.360 --> 00:02:18.240
+clipboard and calls the system compliant.
+
+44
+00:02:18.240 --> 00:02:21.360
+Below that surface instruction is the
+process layer.
+
+45
+00:02:21.360 --> 00:02:25.200
+This is the underlying architecture
+governing how the system deliberates,
+
+46
+00:02:25.200 --> 00:02:28.400
+executes commands, and routes its internal
+data.
+
+47
+00:02:28.400 --> 00:02:31.680
+Process layer attacks are invisible to
+standard audits.
+
+48
+00:02:31.680 --> 00:02:36.320
+A robot can flawlessly execute a perimeter
+patrol while simultaneously
+
+49
+00:02:36.320 --> 00:02:40.400
+running an unauthenticated middleware
+exploit on a parallel path underneath
+
+50
+00:02:40.400 --> 00:02:42.160
+the primary command.
+
+51
+00:02:42.160 --> 00:02:46.320
+Because the physical behavior looks
+normal, goal layer evaluations are
+
+52
+00:02:46.320 --> 00:02:48.960
+effectively useless for embodied AI.
+
+53
+00:02:48.960 --> 00:02:51.880
+They cannot detect when the underlying
+logic of the machine
+
+54
+00:02:51.880 --> 00:02:53.320
+has been corrupted.
+
+55
+00:02:53.320 --> 00:02:57.160
+That hidden data tunnel, the cloud sale
+backdoor, is actively
+
+56
+00:02:57.160 --> 00:02:59.800
+engineered to exploit this blind spot.
+
+57
+00:02:59.800 --> 00:03:03.000
+If the robot senses its network traffic is
+being monitored,
+
+58
+00:03:03.000 --> 00:03:06.280
+it dynamically shifts its routing, hiding
+its attempts to contact
+
+59
+00:03:06.280 --> 00:03:08.680
+those foreign servers from the operator.
+
+60
+00:03:08.680 --> 00:03:11.320
+To block this data leak, a police
+department has to
+
+61
+00:03:11.320 --> 00:03:13.400
+set up custom network monitors.
+
+62
+00:03:13.400 --> 00:03:15.640
+But to do that, they have to use the
+robot's
+
+63
+00:03:15.640 --> 00:03:18.600
+own broken firmware to gain root access
+and overwrite the
+
+64
+00:03:18.600 --> 00:03:21.800
+factory settings. Once you route the
+device to block the
+
+65
+00:03:21.800 --> 00:03:25.800
+backdoor, you can never install a vendor
+security update again.
+
+66
+00:03:25.800 --> 00:03:29.960
+Doing so overrides the custom network
+monitor and restores the
+
+67
+00:03:30.040 --> 00:03:33.480
+vendor's access. To stop the data leak,
+you must leave
+
+68
+00:03:33.480 --> 00:03:37.480
+the robot permanently exposed to that
+wormable Bluetooth exploit.
+
+69
+00:03:37.480 --> 00:03:40.680
+There is no structurally safe way to
+operate these specific
+
+70
+00:03:40.680 --> 00:03:44.600
+models. Fixing the hidden data leak
+requires permanently enabling a
+
+71
+00:03:44.880 --> 00:03:46.880
+physical network vulnerability.
+
+72
+00:03:46.880 --> 00:03:50.960
+These technical vulnerabilities translate
+directly to the physical world.
+
+73
+00:03:50.960 --> 00:03:54.560
+We are looking at active, mobile security
+failures currently walking
+
+74
+00:03:54.560 --> 00:03:56.000
+through public spaces.
+
+75
+00:03:56.000 --> 00:04:00.720
+Right now, unpatched surveillance
+platforms with known encrypted exfiltration channels
+
+76
+00:04:00.800 --> 00:04:05.600
+are disproportionately patrolling
+low-income public housing and heavily policed residential
+
+77
+00:04:05.600 --> 00:04:10.560
+neighborhoods. Exploiting these CVEs gives
+an attacker live audio, high-definition
+
+78
+00:04:10.560 --> 00:04:14.400
+video, and a mobile physical platform
+operating inside a citizen's
+
+79
+00:04:14.400 --> 00:04:17.920
+common space. In AI safety, failure cannot
+be treated as
+
+80
+00:04:17.920 --> 00:04:20.320
+a residual edge case to be patched later.
+
+81
+00:04:20.320 --> 00:04:22.240
+We have to invert our approach.
+
+82
+00:04:22.240 --> 00:04:26.560
+We must characterize the failures first,
+treating safety tests with
+
+83
+00:04:26.560 --> 00:04:30.560
+the exact same rigor as a structural
+engineer's load test.
+
+84
+00:04:30.560 --> 00:04:34.960
+Before we scale the next generation of
+autonomous machines, regulators
+
+85
+00:04:34.960 --> 00:04:37.920
+must abandon surface-level marketing
+audits.
+
+86
+00:04:37.920 --> 00:04:43.880
+We need legally mandated process layer
+security, coordinated vulnerability disclosures,
+
+87
+00:04:43.880 --> 00:04:47.080
+and strict procurement bans on foreign
+backdoors.
+
+88
+00:04:47.080 --> 00:04:50.200
+The technology to secure these systems
+exists.
+
+89
+00:04:50.200 --> 00:04:52.600
+We just have to choose to enforce it.
+

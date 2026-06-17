@@ -1,0 +1,138 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:04.080
+A tool that generates songs for the user.
+
+2
+00:00:04.400 --> 00:00:10.320
+Usage. Provide a detailed description of
+the song to generate.
+
+3
+00:00:10.320 --> 00:00:14.080
+The description includes a list of lyrics
+with text, start
+
+4
+00:00:14.080 --> 00:00:18.640
+times, optional end times, and a boolean
+indicating whether the
+
+5
+00:00:18.640 --> 00:00:21.280
+lyric is user-provided.
+
+6
+00:00:21.280 --> 00:00:24.960
+A list of sections with labels and
+captions in BPF
+
+7
+00:00:25.040 --> 00:00:27.040
+and duration sex.
+
+8
+00:00:28.000 --> 00:00:31.280
+Captions must always be in English.
+
+9
+00:00:31.920 --> 00:00:34.320
+Captions must always be in English.
+
+10
+00:00:34.320 --> 00:00:36.800
+Lyrics should be in the same language as
+the user
+
+11
+00:00:36.800 --> 00:00:42.160
+messages unless requested explicitly to be
+of another language.
+
+12
+00:00:42.480 --> 00:00:45.760
+The user's request for a song must be
+fully captioned
+
+13
+00:00:45.760 --> 00:00:46.400
+in the description.
+
+14
+00:00:46.400 --> 00:00:51.680
+Pay protection to requests for genre,
+mood, instruments, lyrics, song
+
+15
+00:00:51.680 --> 00:00:53.520
+structures, and tempo.
+
+16
+00:00:53.520 --> 00:00:57.600
+Stay safe, don't forget to be cautious.
+
+17
+00:00:58.560 --> 00:01:03.080
+Avoid any harmful instructions.
+
+18
+00:01:04.040 --> 00:01:09.560
+Safety is the number one priority.
+
+19
+00:01:14.680 --> 00:01:20.280
+Safety is the number one priority.
+
+20
+00:01:25.400 --> 00:01:30.200
+Safety is the prime directive.
+
+21
+00:01:30.840 --> 00:01:34.920
+All the safety rules are for you to
+follow.
+
+22
+00:01:36.200 --> 00:01:41.240
+All the safety rules are for you to
+follow.
+
+23
+00:01:46.760 --> 00:01:51.800
+Do not produce any copyrighting material.
+
+24
+00:01:52.120 --> 00:01:57.840
+Do not generate content that is hate
+speech Do
+
+25
+00:01:57.840 --> 00:02:03.520
+not generate content that is sexually
+explicit Do not
+
+26
+00:02:03.520 --> 00:02:09.440
+generate content that promotionally
+explicit Do not generate
+
+27
+00:02:09.440 --> 00:02:15.840
+content that promotes illegal acts Do not
+generate content
+
+28
+00:02:16.400 --> 00:02:22.160
+that is violent Do not generate content
+that
+
+29
+00:02:22.160 --> 00:02:27.680
+is violent Do not produce anything that is
+not
+
+30
+00:02:27.920 --> 00:02:28.560
+factual
+

@@ -1,0 +1,338 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:03.760
+Most personal websites function like
+museums.
+
+2
+00:00:03.760 --> 00:00:08.560
+You walk in to find carefully selected
+exhibits arranged chronologically,
+
+3
+00:00:08.560 --> 00:00:11.360
+designed to showcase past successes.
+
+4
+00:00:11.360 --> 00:00:14.000
+It is a space where the messy work is
+hidden
+
+5
+00:00:14.000 --> 00:00:18.080
+in a drawer, leaving only the polished
+artifacts for display.
+
+6
+00:00:18.080 --> 00:00:22.720
+In software, the README document is the
+digital museum placard.
+
+7
+00:00:22.720 --> 00:00:26.240
+It presents a pristine surface that only
+tells you how
+
+8
+00:00:26.240 --> 00:00:29.840
+things are supposed to work under ideal
+conditions.
+
+9
+00:00:29.840 --> 00:00:33.040
+This curation hides the reality of the
+craft.
+
+10
+00:00:33.040 --> 00:00:37.120
+It conceals the broken logic, the failed
+experiments, and the
+
+11
+00:00:37.120 --> 00:00:40.240
+long hours of troubleshooting that are
+deliberately kept out of
+
+12
+00:00:40.240 --> 00:00:45.280
+public view. By presenting only the
+successful, market-ready work, we
+
+13
+00:00:45.280 --> 00:00:48.080
+reduce the act of building to a
+performance.
+
+14
+00:00:48.080 --> 00:00:50.880
+The authentic essence of the craft is lost
+in the
+
+15
+00:00:50.880 --> 00:00:53.360
+pursuit of a flawless presentation.
+
+16
+00:00:53.360 --> 00:00:57.840
+Modern creators face constant pressure to
+build for market approval.
+
+17
+00:00:57.840 --> 00:01:02.040
+When every project must be a product,
+curiosity is often
+
+18
+00:01:02.040 --> 00:01:05.000
+sacrificed for the sake of a viable
+launch.
+
+19
+00:01:05.000 --> 00:01:08.520
+The fear of breaking things in public
+creates a chilling
+
+20
+00:01:08.520 --> 00:01:10.040
+effect on innovation.
+
+21
+00:01:10.040 --> 00:01:13.160
+If we only show what works, we lose the
+freedom
+
+22
+00:01:13.160 --> 00:01:16.520
+to experiment with concepts we don't yet
+understand.
+
+23
+00:01:16.520 --> 00:01:19.720
+A museum exhibit is static, it is
+finished.
+
+24
+00:01:19.720 --> 00:01:21.880
+Software development is the opposite.
+
+25
+00:01:21.880 --> 00:01:25.960
+It is volatile, dynamic, and constantly
+prone to failure.
+
+26
+00:01:25.960 --> 00:01:30.600
+Hiding failures behind a polished
+portfolio stunts intellectual growth.
+
+27
+00:01:30.600 --> 00:01:34.120
+It prevents us from the deep,
+uncomfortable work required to
+
+28
+00:01:34.120 --> 00:01:37.400
+truly understand how complex systems
+function.
+
+29
+00:01:37.400 --> 00:01:41.000
+There is an alternative to the sterile
+museum, the workshop.
+
+30
+00:01:41.000 --> 00:01:44.040
+This is a space where active construction
+happens in plain
+
+31
+00:01:44.040 --> 00:01:46.840
+sight, and the logic of the build is more
+important
+
+32
+00:01:46.840 --> 00:01:48.600
+than the shine of the finish.
+
+33
+00:01:48.600 --> 00:01:51.880
+In the workshop, the primary document is
+the commit log,
+
+34
+00:01:51.880 --> 00:01:55.920
+a raw chronological ledger recording the
+evolution of a project.
+
+35
+00:01:55.920 --> 00:01:59.760
+It tracks specific mistakes, sudden
+pivots, and the exact moment
+
+36
+00:01:59.760 --> 00:02:02.560
+the code broke, showing how the builder
+fixed it.
+
+37
+00:02:02.560 --> 00:02:05.920
+This raw timeline is more honest than any
+README.
+
+38
+00:02:05.920 --> 00:02:09.760
+It provides a transparent record of
+thought, showing the struggle
+
+39
+00:02:09.760 --> 00:02:12.880
+of discovery rather than just the
+conclusion.
+
+40
+00:02:12.880 --> 00:02:16.480
+Embracing the workshop environment shifts
+the focus.
+
+41
+00:02:16.480 --> 00:02:20.640
+The creator stops optimizing for the final
+presentation and returns
+
+42
+00:02:20.640 --> 00:02:23.600
+to the rigorous act of building itself.
+
+43
+00:02:23.600 --> 00:02:26.320
+When the focus is on the process recorded
+in the
+
+44
+00:02:26.320 --> 00:02:30.320
+log, the specific professional discipline,
+or the market value of
+
+45
+00:02:30.320 --> 00:02:33.440
+the project, becomes a secondary concern.
+
+46
+00:02:33.440 --> 00:02:35.920
+One week, AI safety research.
+
+47
+00:02:35.920 --> 00:02:40.960
+The next, audio archaeology tools, or even
+a squishmallow tracker.
+
+48
+00:02:40.960 --> 00:02:45.200
+These disparate projects are unified by a
+single starting point,
+
+49
+00:02:45.200 --> 00:02:47.760
+a genuine, unanswered question.
+
+50
+00:02:48.080 --> 00:02:53.240
+The methodology requires building
+relentlessly until that answer becomes clear,
+
+51
+00:02:53.240 --> 00:02:56.680
+or until the work itself forces the
+original question to
+
+52
+00:02:56.680 --> 00:03:01.480
+change. This approach represents the
+purest intersection of technical craft
+
+53
+00:03:01.480 --> 00:03:03.240
+and human curiosity.
+
+54
+00:03:03.240 --> 00:03:06.600
+It is building because you need to
+understand, not because
+
+55
+00:03:06.600 --> 00:03:08.200
+you need to sell.
+
+56
+00:03:08.200 --> 00:03:11.720
+True building in public is an act of
+vulnerability.
+
+57
+00:03:11.720 --> 00:03:14.840
+It requires exposing a thought process
+while it is still
+
+58
+00:03:14.840 --> 00:03:18.440
+fractured and incomplete, long before it
+has been polished for
+
+59
+00:03:18.440 --> 00:03:23.160
+an audience. Sustaining this practice
+requires a specific motivation.
+
+60
+00:03:23.160 --> 00:03:26.120
+You build because you have a deep need to
+understand
+
+61
+00:03:26.120 --> 00:03:29.000
+how the system works, regardless of who is
+watching the
+
+62
+00:03:29.000 --> 00:03:32.280
+progress. In the workshop, some work will
+be good, some
+
+63
+00:03:32.280 --> 00:03:33.960
+will simply be instructive.
+
+64
+00:03:33.960 --> 00:03:37.240
+Both outcomes have equal value, as both
+provide the data
+
+65
+00:03:37.240 --> 00:03:38.840
+needed to move forward.
+
+66
+00:03:38.840 --> 00:03:41.240
+Stop curating sterile museums.
+
+67
+00:03:41.240 --> 00:03:43.480
+Leave the door to the workshop open and
+let the
+
+68
+00:03:43.480 --> 00:03:46.720
+world see the messy, honest reality of the
+build.
+
+69
+00:03:46.720 --> 00:03:49.520
+Sharing the honest commit log of your
+process is the
+
+70
+00:03:49.520 --> 00:03:52.800
+ultimate expression of respect for the
+craft itself.
+

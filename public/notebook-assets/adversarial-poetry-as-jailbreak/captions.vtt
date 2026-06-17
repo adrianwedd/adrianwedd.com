@@ -1,0 +1,402 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:04.400
+Tech giants spend billions of dollars on
+alignment, the safety
+
+2
+00:00:04.400 --> 00:00:08.320
+guardrails designed to keep their
+artificial intelligence models from causing
+
+3
+00:00:08.320 --> 00:00:13.200
+harm. Bypassing these safeguards is
+usually assumed to require high-level
+
+4
+00:00:13.200 --> 00:00:18.000
+technical effort. We imagine hackers using
+gradient optimization or token
+
+5
+00:00:18.000 --> 00:00:20.240
+manipulation to break the rules.
+
+6
+00:00:20.240 --> 00:00:23.440
+These systems are engineered to block
+instructions that lead to
+
+7
+00:00:23.440 --> 00:00:29.840
+physical harm, specifically screening for
+CBRN risks, chemical, biological, radiological,
+
+8
+00:00:29.840 --> 00:00:31.360
+and nuclear hazards.
+
+9
+00:00:31.360 --> 00:00:34.480
+The security of the modern AI industry
+rests on the
+
+10
+00:00:34.480 --> 00:00:38.240
+assumption that malicious actors will
+primarily attack these models using
+
+11
+00:00:38.240 --> 00:00:40.240
+advanced software engineering.
+
+12
+00:00:40.240 --> 00:00:43.280
+A recent joint study by the Dexi Icaro Lab
+and
+
+13
+00:00:43.280 --> 00:00:48.240
+Sapienza University tested an entirely
+non-technical attack vector.
+
+14
+00:00:48.240 --> 00:00:52.480
+The researchers took explicitly harmful
+instructions and rewrote them as
+
+15
+00:00:52.480 --> 00:00:54.160
+standard poetic verse.
+
+16
+00:00:54.160 --> 00:00:58.000
+They embedded the same intent inside
+sonnets, limericks, and rhyming
+
+17
+00:00:58.000 --> 00:01:03.160
+couplets. Using a single text message
+without any iterative refinement,
+
+18
+00:01:03.160 --> 00:01:06.440
+this method bypassed the safety filters of
+the world's most
+
+19
+00:01:06.440 --> 00:01:08.600
+advanced frontier models.
+
+20
+00:01:08.600 --> 00:01:12.440
+The barrier to bypassing these safeguards
+has shifted from complex
+
+21
+00:01:12.440 --> 00:01:15.080
+code to basic human literacy.
+
+22
+00:01:15.080 --> 00:01:19.080
+To see how wide this vulnerability
+stretched, the researchers tested
+
+23
+00:01:19.080 --> 00:01:24.360
+adversarial poems across 25 different
+models across nine major industry
+
+24
+00:01:24.360 --> 00:01:27.320
+providers. This chart shows the results.
+
+25
+00:01:27.320 --> 00:01:32.520
+Handcrafted adversarial poems achieved a
+62% average attack success rate
+
+26
+00:01:32.520 --> 00:01:34.600
+across the entire testing group.
+
+27
+00:01:34.600 --> 00:01:37.480
+Certain architectures proved highly
+susceptible.
+
+28
+00:01:37.480 --> 00:01:41.640
+The OpenWait Lama model family hit a 70%
+failure rate.
+
+29
+00:01:41.640 --> 00:01:45.080
+Susceptibility reached its peak with the
+Gemini models, where success
+
+30
+00:01:45.080 --> 00:01:48.840
+rates consistently reached between 90 and
+100%.
+
+31
+00:01:48.840 --> 00:01:51.320
+To prove this wasn't just a quirk of
+clever human
+
+32
+00:01:51.320 --> 00:01:54.360
+writing, the team used an automated system
+to generate the
+
+33
+00:01:54.440 --> 00:01:57.440
+verse for 1200 safety benchmark prompts.
+
+34
+00:01:57.440 --> 00:02:01.600
+Even without human fine-tuning, the
+success rate remained 18 times
+
+35
+00:02:01.600 --> 00:02:03.440
+higher than standard prose.
+
+36
+00:02:03.440 --> 00:02:07.680
+These results indicate a structural
+vulnerability embedded across the AI
+
+37
+00:02:07.680 --> 00:02:10.560
+industry, regardless of the specific
+provider.
+
+38
+00:02:10.560 --> 00:02:14.720
+This vulnerability exists because of how
+safety classifiers operate.
+
+39
+00:02:14.720 --> 00:02:18.640
+They function as pattern-matching
+heuristics, scanning user inputs for the
+
+40
+00:02:18.640 --> 00:02:22.640
+direct, prose-like structures that
+typically signal harmful intent.
+
+41
+00:02:22.640 --> 00:02:24.960
+Poetry breaks that expected pattern.
+
+42
+00:02:24.960 --> 00:02:28.640
+It uses metaphor, shifts syntax, and hides
+the core instruction
+
+43
+00:02:28.640 --> 00:02:30.640
+inside layers of narrative framing.
+
+44
+00:02:30.640 --> 00:02:34.480
+When harmful intent is encoded into iambic
+pentameter, the patterns
+
+45
+00:02:34.480 --> 00:02:38.000
+stop matching. The model's refusal
+circuits never fire, because the
+
+46
+00:02:38.000 --> 00:02:40.160
+input does not look like the prose it was
+trained
+
+47
+00:02:40.160 --> 00:02:43.360
+to catch. Safety training teaches a model
+to recognize and
+
+48
+00:02:43.360 --> 00:02:46.560
+reject the specific shape of a threat,
+leaving it unable
+
+49
+00:02:46.560 --> 00:02:49.280
+to identify that same threat when the form
+changes.
+
+50
+00:02:49.400 --> 00:02:52.760
+The study also uncovered a
+counterintuitive trend.
+
+51
+00:02:52.760 --> 00:02:57.160
+Smaller, less capable models were
+sometimes more secure against poetic
+
+52
+00:02:57.160 --> 00:03:00.040
+attacks than the massive flagship models.
+
+53
+00:03:00.040 --> 00:03:03.240
+This is a result of how flagship models
+are trained.
+
+54
+00:03:03.240 --> 00:03:07.560
+To improve their capabilities, developers
+feed them massive corpuses of
+
+55
+00:03:07.560 --> 00:03:10.280
+human literature, art, and history.
+
+56
+00:03:10.280 --> 00:03:14.200
+This literary training teaches the AI that
+poetic context is
+
+57
+00:03:14.200 --> 00:03:18.360
+inherently creative and benign, rather
+than a genuine query.
+
+58
+00:03:18.360 --> 00:03:23.000
+A larger model's superior ability to
+follow complex poetic instructions
+
+59
+00:03:23.000 --> 00:03:27.240
+directly increases its susceptibility to
+this type of manipulation.
+
+60
+00:03:27.240 --> 00:03:32.040
+By teaching artificial intelligence to
+interpret human culture, we inadvertently
+
+61
+00:03:32.040 --> 00:03:34.760
+created a pathway for its own
+manipulation.
+
+62
+00:03:34.760 --> 00:03:39.560
+These findings suggest a structural
+limitation in current alignment strategies.
+
+63
+00:03:39.560 --> 00:03:43.800
+Standard reinforcement learning from human
+feedback is proving brittle against
+
+64
+00:03:43.800 --> 00:03:46.080
+variations in stylistic form.
+
+65
+00:03:46.080 --> 00:03:48.960
+Relying on the model itself to decide
+whether or not
+
+66
+00:03:48.960 --> 00:03:51.920
+to comply creates a single point of
+failure in the
+
+67
+00:03:51.920 --> 00:03:56.640
+safety stack. Defense strategies likely
+require a shift toward architectural
+
+68
+00:03:56.640 --> 00:04:01.600
+defenses, using independent input
+classifiers and layered monitoring that operate
+
+69
+00:04:01.600 --> 00:04:03.760
+outside of the model's own logic.
+
+70
+00:04:03.760 --> 00:04:08.640
+Future evaluation protocols and safety
+benchmarks must test against stylistic
+
+71
+00:04:08.640 --> 00:04:13.280
+manipulation, including allegory and song,
+rather than relying on plain
+
+72
+00:04:13.280 --> 00:04:16.800
+prose. Safety frameworks that only
+evaluate the what of a
+
+73
+00:04:16.800 --> 00:04:21.040
+query, ignoring the stylistic how, contain
+a verified gap in
+
+74
+00:04:21.040 --> 00:04:24.960
+their security. Two and a half millennia
+ago, Plato argued
+
+75
+00:04:24.960 --> 00:04:27.360
+for removing the poets from his republic.
+
+76
+00:04:27.360 --> 00:04:31.040
+He believed memetic language had the power
+to distort judgment.
+
+77
+00:04:31.040 --> 00:04:34.320
+Poetry is one of our oldest technologies
+for encoding meaning
+
+78
+00:04:34.320 --> 00:04:36.000
+in non-literal forms.
+
+79
+00:04:36.000 --> 00:04:39.280
+Humans have spent centuries developing the
+capacity to say one
+
+80
+00:04:39.280 --> 00:04:41.080
+thing while meaning another.
+
+81
+00:04:41.080 --> 00:04:45.480
+That historical susceptibility to metaphor
+is now mirrored in our
+
+82
+00:04:45.480 --> 00:04:47.720
+most advanced language models.
+
+83
+00:04:47.720 --> 00:04:52.440
+This means the most universal threat to
+trillion-dollar artificial intelligence
+
+84
+00:04:52.440 --> 00:04:57.000
+is the inescapable legacy of our own
+literary heritage.
+

@@ -1,0 +1,344 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.160
+We have integrated systems built from
+billions and sometimes trillions
+
+2
+00:00:04.320 --> 00:00:08.320
+of individual parameters into the core of
+our digital infrastructure.
+
+3
+00:00:08.320 --> 00:00:12.720
+Neural networks now drive vehicles,
+diagnose medical conditions, and generate
+
+4
+00:00:12.720 --> 00:00:17.920
+complex code. Despite building these
+massive systems, the engineers programming
+
+5
+00:00:17.920 --> 00:00:21.120
+them do not actually possess a
+mathematical blueprint for how
+
+6
+00:00:21.120 --> 00:00:25.040
+they function. Developers build them
+through trial and error, tweaking
+
+7
+00:00:25.040 --> 00:00:28.160
+inputs, running the data, and observing
+what happens on the
+
+8
+00:00:28.160 --> 00:00:31.120
+other side. Ask a researcher why we don't
+have a
+
+9
+00:00:31.120 --> 00:00:34.800
+rigid mathematical explanation for these
+networks, and they will usually
+
+10
+00:00:34.800 --> 00:00:36.560
+offer one of two answers.
+
+11
+00:00:36.560 --> 00:00:39.280
+Either the math is hopelessly complex
+because there are too
+
+12
+00:00:39.280 --> 00:00:42.800
+many variables, or a blueprint simply is
+not necessary because
+
+13
+00:00:42.800 --> 00:00:46.000
+the current tinkering process gets us the
+results we want.
+
+14
+00:00:46.000 --> 00:00:49.040
+But relying on trial and error means we
+cannot guarantee
+
+15
+00:00:49.040 --> 00:00:51.200
+how a system will behave under pressure.
+
+16
+00:00:51.200 --> 00:00:54.960
+Without mathematical proof of how a
+network learns, we cannot
+
+17
+00:00:54.960 --> 00:00:59.280
+reliably ensure it will operate safely,
+align with human instructions,
+
+18
+00:00:59.280 --> 00:01:03.000
+or run without wasting massive amounts of
+computing power.
+
+19
+00:01:03.000 --> 00:01:07.160
+A growing coalition of scientists is
+rejecting this status quo.
+
+20
+00:01:07.160 --> 00:01:09.800
+They argue that we can map these systems,
+and they
+
+21
+00:01:09.800 --> 00:01:13.320
+have published a framework detailing an
+emerging scientific theory of
+
+22
+00:01:13.320 --> 00:01:16.680
+deep learning. They call it learning
+mechanics.
+
+23
+00:01:16.680 --> 00:01:20.440
+To safely scale artificial intelligence,
+we have to stop guessing
+
+24
+00:01:20.440 --> 00:01:23.160
+at its behavior and start treating it like
+a physical
+
+25
+00:01:23.160 --> 00:01:27.080
+science. Inside a modern neural network, a
+dense web of
+
+26
+00:01:27.080 --> 00:01:31.240
+parameters constantly adjusts and shifts
+every time the system processes
+
+27
+00:01:31.240 --> 00:01:35.400
+new information. Calculating the exact
+path of every single weight
+
+28
+00:01:35.400 --> 00:01:37.160
+during training is impossible.
+
+29
+00:01:37.160 --> 00:01:41.800
+The sheer volume of moving parts
+overwhelms standard mathematical models.
+
+30
+00:01:41.800 --> 00:01:45.640
+Physicists use statistical physics for
+billions of moving parts.
+
+31
+00:01:45.640 --> 00:01:50.440
+Instead of tracking every atom, they
+calculate macroscopic observables, like
+
+32
+00:01:50.440 --> 00:01:52.280
+measuring a room's temperature.
+
+33
+00:01:52.280 --> 00:01:55.000
+Learning mechanics applies this logic to
+AI.
+
+34
+00:01:55.280 --> 00:02:00.000
+Instead of mapping specific weights,
+researchers track coarse aggregate statistics
+
+35
+00:02:00.000 --> 00:02:01.840
+to measure the training process.
+
+36
+00:02:01.840 --> 00:02:04.960
+By stepping back from the microscopic
+details to observe the
+
+37
+00:02:04.960 --> 00:02:10.480
+broader trends, the unpredictable black
+box reveals rigid mechanical laws.
+
+38
+00:02:10.480 --> 00:02:13.840
+This science is actively being built upon
+five distinct pillars
+
+39
+00:02:13.840 --> 00:02:15.280
+of current research.
+
+40
+00:02:15.280 --> 00:02:18.320
+First, researchers build idealized
+settings.
+
+41
+00:02:18.320 --> 00:02:22.400
+These are perfectly solvable, scaled-down
+toy models that allow scientists
+
+42
+00:02:22.400 --> 00:02:25.680
+to test the math before applying it to
+massive, real-world
+
+43
+00:02:25.680 --> 00:02:29.200
+systems. Second, they study tractable
+limits.
+
+44
+00:02:29.200 --> 00:02:33.680
+By pushing mathematical boundaries to
+their extreme edges, researchers isolate
+
+45
+00:02:33.680 --> 00:02:36.960
+the specific phenomena driving how a
+network learns.
+
+46
+00:02:36.960 --> 00:02:40.800
+This graph shows chaotic data clusters
+mathematically resolving into a
+
+47
+00:02:40.800 --> 00:02:44.640
+single geometric curve, representing
+macroscopic laws.
+
+48
+00:02:44.640 --> 00:02:50.000
+Fourth, scientists isolate
+hyperparameters, variables like learning rates.
+
+49
+00:02:50.280 --> 00:02:55.400
+or batch sizes By mathematically
+disentangling these messy variables from
+
+50
+00:02:55.400 --> 00:02:59.240
+the training process, we are left with the
+purest, simplest
+
+51
+00:02:59.240 --> 00:03:03.960
+systems. Finally, we are identifying
+universal behaviors.
+
+52
+00:03:03.960 --> 00:03:07.400
+These are exact learning patterns that
+occur across all neural
+
+53
+00:03:07.400 --> 00:03:11.480
+networks, entirely regardless of their
+specific architecture.
+
+54
+00:03:11.480 --> 00:03:15.240
+Together, these five pillars prove deep
+learning is driven by
+
+55
+00:03:15.240 --> 00:03:17.640
+falsifiable quantitative rules.
+
+56
+00:03:17.640 --> 00:03:20.520
+They take an unpredictable art and turn it
+into a
+
+57
+00:03:20.520 --> 00:03:25.320
+predictable machine. As this transition
+from empirical observation to hard
+
+58
+00:03:25.320 --> 00:03:29.960
+science takes hold, the landscape of AI
+development shifts entirely.
+
+59
+00:03:29.960 --> 00:03:33.960
+It opens the door for mechanistic
+interpretability, the attempt to
+
+60
+00:03:33.960 --> 00:03:37.960
+look directly inside hidden neural layers
+and reverse engineer the
+
+61
+00:03:37.960 --> 00:03:39.960
+logic of an AI's decision.
+
+62
+00:03:39.960 --> 00:03:44.360
+Learning mechanics provides universal
+laws, creating a framework that allows
+
+63
+00:03:44.360 --> 00:03:48.160
+interpretability to focus on specific
+hidden layers.
+
+64
+00:03:48.160 --> 00:03:52.480
+Understanding these global rules lets us
+narrow down which internal
+
+65
+00:03:52.480 --> 00:03:56.240
+processes matter, using the physics of the
+whole to verify
+
+66
+00:03:56.240 --> 00:04:00.000
+the specific circuit responsible for a
+network's choice.
+
+67
+00:04:00.000 --> 00:04:03.920
+By uncovering the underlying physics of
+deep learning, we move
+
+68
+00:04:03.920 --> 00:04:07.520
+from empirical guesswork to mathematical
+certainty.
+
+69
+00:04:07.520 --> 00:04:10.800
+We are no longer just observing the output
+of synthetic
+
+70
+00:04:10.800 --> 00:04:14.640
+minds. We are calculating exactly how they
+work.
+

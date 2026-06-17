@@ -1,0 +1,472 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:05.440
+Biosecurity researchers measure
+catastrophic risk with a specific baseline, the
+
+2
+00:00:05.440 --> 00:00:10.480
+annual probability of a human-caused
+epidemic killing over 100,000 people
+
+3
+00:00:10.480 --> 00:00:13.680
+or causing over $1 trillion in damages.
+
+4
+00:00:13.680 --> 00:00:18.000
+Historically, that baseline risk sits at
+about 0.3% per year.
+
+5
+00:00:18.000 --> 00:00:21.040
+This chart visualizes the 0.3% baseline.
+
+6
+00:00:21.040 --> 00:00:26.000
+A 2025 Forecasting Research Institute
+survey of experts and superforecasters
+
+7
+00:00:26.000 --> 00:00:30.560
+found that if AI reaches virologist-level
+capabilities, notice the spiker,
+
+8
+00:00:30.560 --> 00:00:34.320
+the risk multiplies by 5, jumping to 1.5%.
+
+9
+00:00:34.320 --> 00:00:38.640
+To counter this, experts propose two
+primary safeguards, DNA screening
+
+10
+00:00:38.640 --> 00:00:40.000
+and AI guardrails.
+
+11
+00:00:40.000 --> 00:00:43.840
+They estimate this slashes the spiked risk
+by 70%, returning
+
+12
+00:00:43.840 --> 00:00:44.880
+it to baseline.
+
+13
+00:00:44.880 --> 00:00:49.200
+This 70% reduction figure creates a
+dangerous illusion of safety.
+
+14
+00:00:49.200 --> 00:00:52.560
+It masks the reality that our primary
+biological defenses are
+
+15
+00:00:52.560 --> 00:00:55.920
+obsolete, and neither of those safeguards
+actually works against the
+
+16
+00:00:55.920 --> 00:00:57.600
+threats they are meant to stop.
+
+17
+00:00:57.600 --> 00:01:01.080
+The safety predictions of these experts
+rely on a timeline
+
+18
+00:01:01.080 --> 00:01:02.840
+that has already collapsed.
+
+19
+00:01:02.840 --> 00:01:07.240
+When surveyed, those biosecurity
+professionals predicted that AI would not
+
+20
+00:01:07.240 --> 00:01:11.560
+match top human virologists until sometime
+after 2030.
+
+21
+00:01:11.560 --> 00:01:15.400
+Subsequent baselining studies found that
+current large language models have
+
+22
+00:01:15.400 --> 00:01:19.160
+already crossed that virologist-level
+capability threshold today.
+
+23
+00:01:19.480 --> 00:01:23.400
+This six-year forecasting failure by top
+experts means we can
+
+24
+00:01:23.400 --> 00:01:26.920
+no longer build governance frameworks that
+rely on accurate predictions
+
+25
+00:01:26.920 --> 00:01:28.360
+of AI timelines.
+
+26
+00:01:28.360 --> 00:01:30.440
+We have to assume surprise.
+
+27
+00:01:30.440 --> 00:01:34.120
+Current nucleic acid screening is built
+for a previous era.
+
+28
+00:01:34.120 --> 00:01:38.040
+When someone orders custom DNA, providers
+check that sequence against
+
+29
+00:01:38.040 --> 00:01:42.760
+list-based databases of known historical
+pathogens, like the Select Agents
+
+30
+00:01:42.760 --> 00:01:47.160
+List. That matching process is useless
+against modern biological design
+
+31
+00:01:47.160 --> 00:01:48.920
+tools like the Evo series.
+
+32
+00:01:48.920 --> 00:01:53.160
+These models generate novel proteins and
+genetic sequences from scratch.
+
+33
+00:01:53.160 --> 00:01:56.880
+Because the resulting sequence has no
+natural analog, it won't
+
+34
+00:01:56.880 --> 00:02:00.720
+match anything on existing lists, sailing
+through screening without raising
+
+35
+00:02:00.720 --> 00:02:03.600
+an alarm. Even for known threats that
+appear on those
+
+36
+00:02:03.600 --> 00:02:06.320
+lists, the screening is easily bypassed.
+
+37
+00:02:06.320 --> 00:02:09.920
+Adversaries can split a dangerous gene
+into fragments shorter than
+
+38
+00:02:09.920 --> 00:02:13.680
+the standard 50 to 200 base pair detection
+threshold, order
+
+39
+00:02:13.680 --> 00:02:16.080
+them separately, and reassemble them
+later.
+
+40
+00:02:16.080 --> 00:02:20.160
+Another documented technique interleaves
+those toxic gene fragments with benign
+
+41
+00:02:20.160 --> 00:02:24.000
+sequences. Once introduced into a target
+cell, the cell's own
+
+42
+00:02:24.000 --> 00:02:27.680
+internal splicing machinery cuts out the
+benign parts and reassembles
+
+43
+00:02:27.680 --> 00:02:29.680
+the harmful agent for the attacker.
+
+44
+00:02:29.680 --> 00:02:34.080
+List-based screening fails because it
+searches for historical structural matches
+
+45
+00:02:34.080 --> 00:02:37.680
+instead of analyzing the actual biological
+function of the sequence.
+
+46
+00:02:37.680 --> 00:02:40.480
+It looks for shapes we recognize while
+ignoring what the
+
+47
+00:02:40.480 --> 00:02:41.680
+sequence will do.
+
+48
+00:02:41.680 --> 00:02:45.440
+The upstream defense, the safety
+guardrails baked into AI models,
+
+49
+00:02:45.440 --> 00:02:47.760
+shares a similar structural weakness.
+
+50
+00:02:47.760 --> 00:02:49.920
+These refusal mechanisms are statistical.
+
+51
+00:02:50.520 --> 00:02:55.240
+patterns They lack the robustness of
+hard-coded security architectures.
+
+52
+00:02:55.240 --> 00:03:00.360
+Researchers regularly achieve up to 92%
+success rates bypassing these
+
+53
+00:03:00.360 --> 00:03:03.800
+guardrails using persuasive adversarial
+prompts.
+
+54
+00:03:03.800 --> 00:03:08.200
+Simply translating the malicious request
+into a low-resource language where
+
+55
+00:03:08.200 --> 00:03:13.000
+safety training is sparse increases the
+bypass rate by 62%.
+
+56
+00:03:13.000 --> 00:03:18.600
+For specialized biological models,
+attackers use automated AI-on-AI frameworks
+
+57
+00:03:18.600 --> 00:03:23.080
+like GeneBreaker. This allows one AI to
+attack another, successfully
+
+58
+00:03:23.080 --> 00:03:27.320
+generating pathogenic sequences for
+viruses with up to 60% success
+
+59
+00:03:27.320 --> 00:03:32.200
+rates. Refusal mechanisms reliably break
+under adversarial pressure.
+
+60
+00:03:32.200 --> 00:03:36.120
+Treating AI safety training as a primary
+security wall leaves
+
+61
+00:03:36.120 --> 00:03:38.360
+the entire system exposed.
+
+62
+00:03:38.360 --> 00:03:42.120
+AI systems attack both ends of the
+biosecurity spectrum.
+
+63
+00:03:42.120 --> 00:03:46.000
+Large language models lower the floor for
+bioterrorism by converting
+
+64
+00:03:46.000 --> 00:03:50.720
+tacit laboratory knowledge into explicit
+interactive troubleshooting, expanding the threat
+
+65
+00:03:50.720 --> 00:03:52.080
+pool to novices.
+
+66
+00:03:52.080 --> 00:03:55.040
+Biological design tools raise the ceiling.
+
+67
+00:03:55.040 --> 00:03:59.040
+Instead of reproducing known threats, they
+allow operators to design
+
+68
+00:03:59.040 --> 00:04:03.360
+entirely new agents optimized for
+virulence and immune evasion.
+
+69
+00:04:03.360 --> 00:04:05.280
+These risks compound.
+
+70
+00:04:05.280 --> 00:04:09.280
+A novice uses a language model to acquire
+foundational virology,
+
+71
+00:04:09.280 --> 00:04:12.720
+operates a biological design tool to
+invent a novel agent,
+
+72
+00:04:12.720 --> 00:04:15.280
+and then returns to the language model to
+troubleshoot the
+
+73
+00:04:15.280 --> 00:04:17.120
+physical laboratory culturing.
+
+74
+00:04:17.120 --> 00:04:18.800
+These risks multiply.
+
+75
+00:04:18.800 --> 00:04:22.640
+Every new capability and biological design
+increases the danger posed
+
+76
+00:04:22.640 --> 00:04:25.840
+by the others, overwhelming our linear
+defense systems.
+
+77
+00:04:25.840 --> 00:04:29.920
+Closing the mitigation gap requires moving
+toward an interdependent three-layer
+
+78
+00:04:29.920 --> 00:04:32.880
+architecture. The first is the technical
+layer.
+
+79
+00:04:32.880 --> 00:04:36.640
+We must replace sequence matching with
+predictive screening, using AI
+
+80
+00:04:36.640 --> 00:04:40.040
+to analyze what a novel biological
+structure will actually do.,
+
+81
+00:04:40.040 --> 00:04:42.440
+rather than checking if we have seen it
+before The
+
+82
+00:04:42.440 --> 00:04:44.280
+second is the developer layer.
+
+83
+00:04:44.280 --> 00:04:47.800
+We need statutory liability to force
+safety to become a
+
+84
+00:04:47.800 --> 00:04:52.040
+legally binding business incentive rather
+than a voluntary commitment.
+
+85
+00:04:52.040 --> 00:04:54.200
+Finally, the international layer.
+
+86
+00:04:54.200 --> 00:04:57.640
+While data is diffuse, the physical data
+centers required to
+
+87
+00:04:57.640 --> 00:05:01.320
+train frontier models are massive and
+energy intensive.
+
+88
+00:05:01.320 --> 00:05:05.240
+They provide verifiable choke points for
+international oversight.
+
+89
+00:05:05.240 --> 00:05:08.040
+These three layers are strictly
+interdependent.
+
+90
+00:05:08.040 --> 00:05:12.200
+Liability requires a technical standard to
+measure against, and international
+
+91
+00:05:12.200 --> 00:05:16.520
+agreements require the verifial choke
+points that compute governance provides.
+
+92
+00:05:16.520 --> 00:05:21.080
+Remove any single layer, and the entire
+security structure collapses.
+
+93
+00:05:21.080 --> 00:05:23.720
+The mitigation gap is a political failure.
+
+94
+00:05:23.720 --> 00:05:27.720
+Policymakers lack the urgency to implement
+new frameworks because experts
+
+95
+00:05:27.720 --> 00:05:31.720
+continue to falsely assure them that
+catastrophic bio-risk is managed.
+
+96
+00:05:31.720 --> 00:05:35.280
+When told that current safeguards provide
+a 70-the hardest part
+
+97
+00:05:35.280 --> 00:05:40.000
+of securing these biological advancements
+isn't building better screening tools.
+
+98
+00:05:40.000 --> 00:05:43.600
+It's convincing decision makers that the
+defenses they currently trust
+
+99
+00:05:43.600 --> 00:05:45.840
+are dangerously inadequate.
+

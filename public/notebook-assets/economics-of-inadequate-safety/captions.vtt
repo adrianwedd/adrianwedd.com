@@ -1,0 +1,439 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:03.520
+Organizations across the board are buying
+AI models.
+
+2
+00:00:03.520 --> 00:00:06.960
+They are running pilots, launching
+integrations, and waiting for the
+
+3
+00:00:06.960 --> 00:00:08.960
+promised productivity dividend.
+
+4
+00:00:08.960 --> 00:00:12.240
+For most, that dividend has not arrived on
+schedule.
+
+5
+00:00:12.240 --> 00:00:15.440
+This delay is explained by the
+productivity J-curve.
+
+6
+00:00:15.440 --> 00:00:18.880
+Output drops below the baseline before
+accelerating.
+
+7
+00:00:18.880 --> 00:00:22.320
+This trough represents heavy expenditure
+on invisible work.
+
+8
+00:00:22.320 --> 00:00:27.280
+Economists call this intangible capital,
+redesigned processes, data governance, and
+
+9
+00:00:27.280 --> 00:00:31.600
+operational discipline. Productivity
+arrives only when an organization builds the
+
+10
+00:00:31.600 --> 00:00:35.920
+expensive, invisible workflow
+infrastructure required to support the tool.
+
+11
+00:00:35.920 --> 00:00:39.600
+This same economic phenomenon applies to
+how organizations treat AI
+
+12
+00:00:39.600 --> 00:00:43.360
+safety. Right now, safety budgets are
+typically structured as short-term
+
+13
+00:00:43.360 --> 00:00:47.200
+pilots, a one-off red team exercise, a
+brief policy sprint,
+
+14
+00:00:47.200 --> 00:00:48.800
+or a governance workshop.
+
+15
+00:00:48.800 --> 00:00:52.240
+These are treated as discretionary costs
+rather than long-term capital
+
+16
+00:00:52.240 --> 00:00:57.040
+formation. Because organizations demand
+rapid reassurance to keep deployment schedules
+
+17
+00:00:57.040 --> 00:00:59.840
+on track, safety work that should take
+years to mature
+
+18
+00:01:00.360 --> 00:01:02.920
+is evaluated on a quarterly basis.
+
+19
+00:01:02.920 --> 00:01:06.280
+Avoiding the safety trough leads to risk
+blindness.
+
+20
+00:01:06.280 --> 00:01:09.880
+The result is a brittle deployment, prone
+to agentic failure
+
+21
+00:01:09.880 --> 00:01:11.240
+and public harm.
+
+22
+00:01:11.240 --> 00:01:13.960
+AI safety is an economic category.
+
+23
+00:01:13.960 --> 00:01:17.480
+Ignoring the capital cost of safety during
+the trough guarantees
+
+24
+00:01:17.480 --> 00:01:19.720
+a brittle, unsafe system.
+
+25
+00:01:19.720 --> 00:01:23.640
+The industry currently operates on a
+technical misconception, the belief
+
+26
+00:01:23.640 --> 00:01:27.000
+that procuring an aligned model is
+identical to deploying a
+
+27
+00:01:27.000 --> 00:01:31.000
+safe system. To understand why this
+distinction matters, we must
+
+28
+00:01:31.000 --> 00:01:34.440
+look at this comparative framework and
+trace where safety costs
+
+29
+00:01:34.440 --> 00:01:38.040
+live. The first claim is behavioral
+alignment.
+
+30
+00:01:38.040 --> 00:01:42.280
+This upstream bet involves model training,
+tuning, and running evaluations
+
+31
+00:01:42.280 --> 00:01:44.520
+inside the vendor's isolated model.
+
+32
+00:01:44.520 --> 00:01:46.920
+This approach fits the vendor sales
+narrative.
+
+33
+00:01:46.920 --> 00:01:49.560
+It allows the buyer to treat safety as a
+procurement
+
+34
+00:01:49.560 --> 00:01:53.080
+checklist. Contrast this with
+architectural safety.
+
+35
+00:01:53.080 --> 00:01:59.200
+Architecture requires verifiable
+boundaries, runtime monitors, hard permission systems,
+
+36
+00:01:59.200 --> 00:02:02.000
+and owners with authority to block
+release.
+
+37
+00:02:02.000 --> 00:02:06.080
+Organizations avoid this path because it
+changes the operating model,
+
+38
+00:02:06.080 --> 00:02:09.520
+slows down velocity, and is expensive to
+implement.
+
+39
+00:02:09.520 --> 00:02:14.320
+The market rationally chooses the cheaper
+illusion of behavioral safety.
+
+40
+00:02:14.320 --> 00:02:18.080
+Businesses reap the upside of AI while
+bypassing the necessary
+
+41
+00:02:18.080 --> 00:02:23.520
+architectural costs. Data from a recent
+evaluation of 120 models
+
+42
+00:02:23.520 --> 00:02:28.560
+against over 18,000 prompts shows exactly
+where systems actually break
+
+43
+00:02:28.560 --> 00:02:33.200
+down. Critical failures cluster at the
+edges of deployment, specifically
+
+44
+00:02:33.200 --> 00:02:37.280
+when tool definitions are used as
+instructions or during multi-turn
+
+45
+00:02:37.280 --> 00:02:42.000
+reasoning escalations. These vulnerable
+edges remain undefended because of a
+
+46
+00:02:42.000 --> 00:02:45.680
+broken price signal, the concept of an
+externality.
+
+47
+00:02:45.680 --> 00:02:48.160
+When a factory can dump waste into a river
+for
+
+48
+00:02:48.160 --> 00:02:53.000
+free, it underinvests in fil.tration
+Unsafe AI operates on the
+
+49
+00:02:53.000 --> 00:02:57.080
+same logic. When an AI system enables
+fraud, automates a
+
+50
+00:02:57.080 --> 00:03:01.880
+discriminatory decision, or leaks
+sensitive data, the financial cost rarely
+
+51
+00:03:01.880 --> 00:03:05.720
+lands on the organization that underfunded
+the safety architecture.
+
+52
+00:03:05.720 --> 00:03:09.320
+That cost is borne by users and public
+institutions.
+
+53
+00:03:09.320 --> 00:03:13.160
+Developers underinvest in safety because
+the market allows them to
+
+54
+00:03:13.160 --> 00:03:15.400
+export their risks onto the public.
+
+55
+00:03:15.400 --> 00:03:19.560
+Even when internal teams discover these
+risks, structural corporate blockers
+
+56
+00:03:19.560 --> 00:03:21.400
+often prevent them from acting.
+
+57
+00:03:21.400 --> 00:03:25.160
+The first failure mechanism is
+responsibility without authority.
+
+58
+00:03:25.160 --> 00:03:28.280
+Safety teams find flaws but lack the
+budget or power
+
+59
+00:03:28.280 --> 00:03:29.640
+to halt launches.
+
+60
+00:03:29.640 --> 00:03:32.440
+Second is risk discovery as a career
+threat.
+
+61
+00:03:32.440 --> 00:03:37.240
+Without dedicated remediation budgets,
+surfacing problems creates costs, turning the
+
+62
+00:03:37.240 --> 00:03:39.000
+finder into a liability.
+
+63
+00:03:39.000 --> 00:03:42.040
+Third, compliance substituting for
+reality.
+
+64
+00:03:42.040 --> 00:03:44.520
+Cheap PDFs replace actual constraints..
+
+65
+00:03:44.640 --> 00:03:49.360
+Finally, diffuse accountability Risk lands
+between departments, so no single
+
+66
+00:03:49.360 --> 00:03:50.880
+executive owns the outcome.
+
+67
+00:03:50.880 --> 00:03:55.360
+By paying for fragmented compliance rather
+than cohesive architecture, the
+
+68
+00:03:55.360 --> 00:03:59.200
+organization protects its budget while
+ensuring system failure.
+
+69
+00:03:59.200 --> 00:04:02.800
+If inadequate safety is underpriced, the
+practical solution is to
+
+70
+00:04:02.800 --> 00:04:05.040
+force the market to price it correctly.
+
+71
+00:04:05.040 --> 00:04:07.680
+This requires changing the pricing
+mechanism.
+
+72
+00:04:07.680 --> 00:04:11.040
+Statutory liability makes safety a balance
+sheet concern.
+
+73
+00:04:11.040 --> 00:04:13.920
+It punishes failure while offering safe
+harbor for those with
+
+74
+00:04:13.920 --> 00:04:16.000
+audited architectural controls.
+
+75
+00:04:16.000 --> 00:04:19.680
+Insurance underwriting forces safety to
+become a cost of capital.
+
+76
+00:04:19.680 --> 00:04:22.160
+Insurers price loss, not philosophy.
+
+77
+00:04:22.160 --> 00:04:25.520
+They will demand rigorous runtime controls
+to lower premiums.
+
+78
+00:04:25.520 --> 00:04:28.640
+Procurement standards force vendors to
+compete on evidence.
+
+79
+00:04:28.640 --> 00:04:31.440
+Buyers must demand proof of what a
+deployed system can
+
+80
+00:04:31.440 --> 00:04:34.000
+and cannot do before signing a contract.
+
+81
+00:04:34.000 --> 00:04:36.880
+Until these external forces push the cost
+of failure onto
+
+82
+00:04:36.880 --> 00:04:39.520
+the deployer, the market will continue to
+sell the illusion
+
+83
+00:04:39.520 --> 00:04:42.920
+of safety. The AI productivity trough and
+the AI safety
+
+84
+00:04:42.920 --> 00:04:45.720
+trough are the same problem viewed from
+different angles.
+
+85
+00:04:45.720 --> 00:04:50.200
+Escaping the trough requires fully funding
+the missing capital, remediation
+
+86
+00:04:50.200 --> 00:04:54.280
+budgets, evaluation discipline, and
+accountable ownership.
+
+87
+00:04:54.280 --> 00:04:59.560
+Building these architectural systems
+provides the stability required for acceleration.
+
+88
+00:04:59.560 --> 00:05:03.320
+Treating AI safety as a moral aspiration
+guarantees it will
+
+89
+00:05:03.320 --> 00:05:07.160
+remain underfunded. Safety is an economic
+requirement.
+
+90
+00:05:07.160 --> 00:05:10.120
+Until it has a real price, AI deployments
+will remain
+
+91
+00:05:10.120 --> 00:05:11.960
+trapped in the trough.
+
