@@ -64,3 +64,6 @@ public/notebook-assets/*/*/*/infographic.png
 .wrangler/
 .playwright-mcp/
 __pycache__/
+
+# Local Lighthouse CI output
+.lighthouseci/

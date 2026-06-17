@@ -16,7 +16,8 @@
     "validate": "node scripts/validate-content.js",
     "check": "astro check && eslint . && node scripts/validate-content.js",
     "test:worker": "cd worker && npm test",
-    "test:csp": "cd worker-csp && npm test && npx tsc --noEmit"
+    "test:csp": "cd worker-csp && npm test && npx tsc --noEmit",
+    "lighthouse": "lhci autorun --config=.github/lighthouse/lighthouserc.json --upload.target=filesystem --upload.outputDir=.lighthouseci"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -42,6 +43,7 @@
     "vite": "^7.3.5"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
     "@tailwindcss/typography": "^0.5.20",
     "@typescript-eslint/parser": "^8.60.1",
     "eslint": "^10.4.1",
