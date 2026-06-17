@@ -71,18 +71,17 @@ jobs:
           echo "✓ Build size within budget"
       - name: Enforce no raw <img> on local paths
         run: |
-          # Raw <img> on local paths must use Astro <Picture>. Flatten each
-          # <img …> tag onto one line FIRST — Prettier wraps long tags (putting
-          # `<img` alone on a line), which hid the src="" / URL exclusions from
-          # the old per-line grep and let a wrapped tag slip through (#472 / #486
-          # Lightbox CLS regression). Catches both single-line and wrapped tags.
+          # Raw <img> on local paths must use Astro <Picture>. Parse each <img …>
+          # tag (quote-aware so a `>` inside an attribute can't truncate it; case-
+          # insensitive) and test ONLY its src value — flag unless src is empty
+          # (JS-populated, e.g. the lightbox), a remote http(s) URL, or a data: URI.
+          # The old per-line grep was fooled two ways: Prettier wrapping the tag
+          # (`<img` alone on a line) AND a URL in a non-src attribute excluding the
+          # whole line. src-specific parsing fixes both. (#472 / #486 Lightbox CLS)
+          # \x27 = single-quote, so the Perl program nests inside the shell quotes.
           offenders=$(
             find src/pages src/layouts src/components -name '*.astro' -print0 \
-            | xargs -0 perl -0777 -ne 'while (/<img\b[^>]*>/g) { my $t = $&; $t =~ s/\s+/ /g; print "$ARGV: $t\n"; }' \
-            | grep -v 'https\?://' \
-            | grep -v 'data:' \
-            | grep -v 'src=""' \
-            || true
+            | xargs -0r perl -0777 -ne 'while (/<img\b(?:"[^"]*"|\x27[^\x27]*\x27|[^>])*>/gi) { my $tag = $&; my ($src) = $tag =~ /\bsrc\s*=\s*"([^"]*)"/i; ($src) = $tag =~ /\bsrc\s*=\s*\x27([^\x27]*)\x27/i unless defined $src; next if defined($src) && ($src eq "" || $src =~ m{^\s*https?://}i || $src =~ m{^\s*data:}i); (my $flat = $tag) =~ s/\s+/ /g; print "$ARGV: $flat\n"; }'
           )
           if [ -n "$offenders" ]; then
             echo "ERROR: Raw <img> tags with local paths found. Use Astro <Picture> instead."
