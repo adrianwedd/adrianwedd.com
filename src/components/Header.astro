@@ -115,11 +115,21 @@ const currentPath = Astro.url.pathname;
         // Hamburger button click
         if (e.target.closest && e.target.closest('.mobile-menu-btn')) {
           var expanded = btn.getAttribute('aria-expanded') === 'true';
-          btn.setAttribute('aria-expanded', String(!expanded));
+          var willOpen = !expanded;
+          btn.setAttribute('aria-expanded', String(willOpen));
           btn.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
           menu.classList.toggle('hidden');
           iconOpen.classList.toggle('hidden');
           iconClose.classList.toggle('hidden');
+          // Lock body scroll while the modal menu is open (covers all close
+          // routes: Escape and nav-link clicks both re-enter via btn.click()).
+          document.body.classList.toggle('overflow-hidden', willOpen);
+          // Move focus into the menu on open so keyboard/SR users land inside
+          // the trapped region; Escape returns focus to the button.
+          if (willOpen) {
+            var firstLink = menu.querySelector('a[href], button');
+            if (firstLink) firstLink.focus();
+          }
           return;
         }
 
