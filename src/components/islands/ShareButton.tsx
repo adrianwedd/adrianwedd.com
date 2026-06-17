@@ -193,7 +193,7 @@ export default function ShareButton({ title, url }: Props) {
         </div>
       )}
 
-      {copied && hasNativeShare && <span class="text-accent ml-2 text-xs">Copied!</span>}
+      {copied && <span class="text-accent ml-2 text-xs">Copied!</span>}
 
       {/* Status announcement for screen readers (covers both menu + native paths). */}
       <span class="sr-only" role="status" aria-live="polite">

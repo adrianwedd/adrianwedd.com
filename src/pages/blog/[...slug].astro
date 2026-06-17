@@ -411,7 +411,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             href={`/blog/${slug(prevPost.id)}/`}
             class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors"
           >
-            <span class="text-text-muted text-xs">&larr; {inSeries ? 'Previous in series' : 'Previous'}</span>
+            <span class="text-text-muted text-xs"><span aria-hidden="true">&larr;</span> {inSeries ? 'Previous in series' : 'Previous'}</span>
             <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {prevPost.data.title}
             </span>
@@ -426,7 +426,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             href={`/blog/${slug(nextPost.id)}/`}
             class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors sm:text-right"
           >
-            <span class="text-text-muted text-xs">{inSeries ? 'Next in series' : 'Next'} &rarr;</span>
+            <span class="text-text-muted text-xs">{inSeries ? 'Next in series' : 'Next'} <span aria-hidden="true">&rarr;</span></span>
             <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {nextPost.data.title}
             </span>

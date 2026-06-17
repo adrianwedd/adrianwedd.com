@@ -89,5 +89,8 @@ export function heroAltText(opts: {
     const noun = opts.kind === 'project' ? 'project' : 'article';
     return `Infographic summarising the ${noun}: “${opts.title}”`;
   }
-  return opts.title;
+  // No authored description and not an infographic: echoing the visible <h1>
+  // title just makes a screen reader read it twice. Mark the hero decorative
+  // (alt="") so it's skipped rather than announced redundantly.
+  return '';
 }

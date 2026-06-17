@@ -426,14 +426,14 @@ const allBlogPosts = project.data.series
             href={`/projects/${slug(prevProject.id)}/`}
             class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors"
           >
-            <span class="text-text-muted text-xs">&larr; {inSeries ? 'Previous in series' : 'Previous'}</span>
+            <span class="text-text-muted text-xs"><span aria-hidden="true">&larr;</span> {inSeries ? 'Previous in series' : 'Previous'}</span>
             <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {prevProject.data.title}
             </span>
           </a>
         ) : (
           <a href="/projects/" class="text-text-muted hover:text-accent flex items-center text-sm transition-colors">
-            &larr; All projects
+            <span aria-hidden="true">&larr;</span> All projects
           </a>
         )
       }
@@ -443,7 +443,7 @@ const allBlogPosts = project.data.series
             href={`/projects/${slug(nextProject.id)}/`}
             class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors sm:text-right"
           >
-            <span class="text-text-muted text-xs">{inSeries ? 'Next in series' : 'Next'} &rarr;</span>
+            <span class="text-text-muted text-xs">{inSeries ? 'Next in series' : 'Next'} <span aria-hidden="true">&rarr;</span></span>
             <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {nextProject.data.title}
             </span>
