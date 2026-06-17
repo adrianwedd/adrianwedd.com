@@ -408,11 +408,13 @@ Use for: accessibility review, design consistency, content QA. Has file access.
 
 ### Hermes CLI
 ```bash
-hermes chat -q "prompt"              # one-shot mode
-hermes chat -q "prompt" -Q          # quiet: suppress banner/spinner (capital Q)
-hermes chat -q "prompt" -s skill     # preload skills (e.g. -s arxiv)
-hermes chat -q "prompt" -m model     # specific model (e.g. anthropic/claude-sonnet-4)
+hermes -z "prompt"                   # one-shot: send a single prompt, print ONLY the response (USE THIS for scripts/QA)
+hermes -z "prompt" -m model          # specific model (e.g. anthropic/claude-sonnet-4.6)
+hermes -z "prompt" --skills arxiv    # preload skills
+hermes -z "prompt" -t toolsets       # restrict toolsets
 ```
+**Use `-z`/`--oneshot` (top-level) for all programmatic/background use** — it prints only the final response, ideal for `tee`/piping. Do NOT use `hermes chat -q ... -Q` for scripting: `chat` is the interactive subcommand and in background runs it engages the chat agent's side machinery (TTS, session log) and returns only a `session_id` instead of the answer.
+
 Use for: research tasks, cross-referencing, second-opinion QA, web browsing. Also registered as MCP server (`hermes-acp`) for direct tool access (browser, web search, memory, cron) without shelling out.
 
 ### Multi-Engine QA Pattern
@@ -420,7 +422,7 @@ Run Codex + Agy + Hermes + Claude agent in parallel for comprehensive review:
 ```bash
 codex exec --full-auto "QA prompt" 2>&1 | tee /tmp/codex-qa.txt &
 agy -p "QA prompt" --dangerously-skip-permissions 2>&1 | tee /tmp/agy-qa.txt &
-hermes chat -q "QA prompt" -Q 2>&1 | tee /tmp/hermes-qa.txt &
+hermes -z "QA prompt" 2>&1 | tee /tmp/hermes-qa.txt &
 wait
 ```
 Each engine catches different things. Codex is strongest on security + correctness. Agy is strongest on design + accessibility. Hermes is strongest on research + cross-referencing. Claude agent is strongest on architecture + spec compliance.
