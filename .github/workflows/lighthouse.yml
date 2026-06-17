@@ -3,12 +3,16 @@ name: Lighthouse CI
 on:
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   lighthouse:
+    # Lighthouse runs on-demand only — run it locally with `npm run lighthouse`
+    # (same config), or trigger this job manually via the Actions tab.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
