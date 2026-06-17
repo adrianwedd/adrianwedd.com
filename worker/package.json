@@ -16,5 +16,9 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.0",
     "wrangler": "^4.100.0"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1",
+    "ws": "^8.21.0"
   }
 }
