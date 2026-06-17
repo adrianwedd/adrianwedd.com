@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { Picture } from 'astro:assets';
 import MindMap from './islands/MindMap.tsx';
 import Quiz from './islands/Quiz.tsx';
@@ -19,6 +21,27 @@ interface Props {
 const { videoUrl, infographic, mindmap, quiz, flashcards, dataTable, slides, title = 'Notebook asset' } = Astro.props;
 
 const hasAssets = videoUrl || infographic || mindmap || quiz || flashcards || dataTable || slides;
+
+// Captions (WCAG 1.2.2): videos live cross-origin on the CDN, but a same-origin
+// WebVTT sidecar at /notebook-assets/<path>/captions.vtt needs no CORS attribute.
+// Derive the track URL from the video pathname and only render it once the file
+// exists in public/ — captions roll out per-video as the batch lands.
+function captionsTrack(url: string | undefined): string | null {
+  if (!url) return null;
+  let pathname: string;
+  try {
+    pathname = url.startsWith('http') ? new URL(url).pathname : url;
+  } catch {
+    return null;
+  }
+  const vttPath = pathname.replace(/[^/]+\.\w+$/, 'captions.vtt');
+  if (!vttPath.startsWith('/notebook-assets/')) return null;
+  // Astro runs SSG with the project root as cwd (see src/lib/image-dimensions.ts).
+  const publicFile = resolve(process.cwd(), 'public', vttPath.replace(/^\//, ''));
+  return existsSync(publicFile) ? vttPath : null;
+}
+
+const captionsUrl = captionsTrack(videoUrl);
 ---
 
 {
@@ -36,6 +59,9 @@ const hasAssets = videoUrl || infographic || mindmap || quiz || flashcards || da
             aria-label={`Video overview of ${title}`}
           >
             <source src={videoUrl} type="video/mp4" />
+            {captionsUrl && (
+              <track default kind="captions" src={captionsUrl} srclang="en" label="English" />
+            )}
           </video>
         </div>
       )}

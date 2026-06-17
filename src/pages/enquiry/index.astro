@@ -242,7 +242,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         .catch(function (err) {
           if (statusEl) {
             statusEl.textContent = err.message || 'Failed to send reply.';
-            statusEl.className = 'text-sm text-red-400';
+            statusEl.className = 'text-sm text-status-error';
           }
           if (submitBtn) {
             submitBtn.disabled = false;

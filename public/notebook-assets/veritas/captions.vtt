@@ -1,0 +1,320 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:03.520
+Generative AI is built to move fast and
+make things
+
+2
+00:00:03.520 --> 00:00:06.000
+up. The practice of law is built to do the
+
+3
+00:00:06.000 --> 00:00:09.680
+exact opposite. If a standard language
+model invents a fake
+
+4
+00:00:09.680 --> 00:00:12.720
+quote in a marketing email, it's a minor
+embarrassment.
+
+5
+00:00:12.720 --> 00:00:15.440
+If it hallucinates a single case citation
+in a court
+
+6
+00:00:15.440 --> 00:00:19.040
+filing, a practicing lawyer could face
+professional ruin.
+
+7
+00:00:19.040 --> 00:00:22.640
+This creates what is known as the
+efficiency trust deficit.
+
+8
+00:00:22.640 --> 00:00:25.280
+It is the massive gap between the raw
+speed an
+
+9
+00:00:25.280 --> 00:00:28.160
+AI offers and the actual level of trust a
+lawyer
+
+10
+00:00:28.160 --> 00:00:29.760
+can place in its output.
+
+11
+00:00:29.760 --> 00:00:32.880
+Standard language models optimize for word
+probability.
+
+12
+00:00:32.880 --> 00:00:36.560
+In their architecture, factual truth is a
+statistical side effect
+
+13
+00:00:36.560 --> 00:00:38.400
+rather than a core requirement.
+
+14
+00:00:38.400 --> 00:00:42.080
+To survive in a high-stakes legal
+environment, an AI cannot
+
+15
+00:00:42.080 --> 00:00:44.480
+be a boundless creative generator.
+
+16
+00:00:44.480 --> 00:00:47.520
+It has to be strictly defined by its
+constraints, by
+
+17
+00:00:47.520 --> 00:00:50.880
+the exact things it is explicitly
+forbidden from doing.
+
+18
+00:00:50.880 --> 00:00:54.720
+In this profession, processing millions of
+documents in seconds doesn't
+
+19
+00:00:54.720 --> 00:00:56.000
+make you an asset.
+
+20
+00:00:56.000 --> 00:00:58.480
+If those results can't be trusted in front
+of a
+
+21
+00:00:58.480 --> 00:01:01.960
+judge, it makes you a massive professional
+liability.
+
+22
+00:01:01.960 --> 00:01:04.120
+That is why Veritas was built.
+
+23
+00:01:04.120 --> 00:01:08.680
+It is a specialized intelligence platform
+engineered entirely around structural
+
+24
+00:01:08.680 --> 00:01:12.760
+constraints, designed exclusively for the
+Australian legal system.
+
+25
+00:01:12.760 --> 00:01:16.920
+Standard chatbots group concepts by word
+frequency, blind to legal
+
+26
+00:01:16.920 --> 00:01:21.640
+reasoning. Veritas uses a Neo4j graph
+database to plot verified
+
+27
+00:01:21.640 --> 00:01:23.720
+relationships between case law.
+
+28
+00:01:23.720 --> 00:01:27.560
+By analyzing a case's position within the
+vertical court hierarchy,
+
+29
+00:01:27.560 --> 00:01:31.320
+it evaluates precedent strength exactly
+like a human judge.
+
+30
+00:01:31.320 --> 00:01:34.520
+Every single piece of reasoning it
+generates is then forcibly
+
+31
+00:01:34.520 --> 00:01:37.880
+checked against the strict rules of the
+Australian court hierarchy
+
+32
+00:01:37.880 --> 00:01:41.720
+and formatted to exact AGLC4 citation
+standards.
+
+33
+00:01:41.720 --> 00:01:45.640
+By restricting the search parameters
+entirely to relational, proven case
+
+34
+00:01:45.640 --> 00:01:48.040
+law, the system removes the guesswork.
+
+35
+00:01:48.040 --> 00:01:52.120
+It replaces mathematical probability with
+verified legal precedent.
+
+36
+00:01:52.120 --> 00:01:54.760
+But external research is only half the
+problem.
+
+37
+00:01:54.880 --> 00:01:58.560
+A truly viable legal AI system has to
+guard internal
+
+38
+00:01:58.560 --> 00:02:02.400
+client information just as fiercely as it
+checks its citations.
+
+39
+00:02:02.400 --> 00:02:05.120
+This requires strict matter segregation.
+
+40
+00:02:05.120 --> 00:02:08.800
+Every client file is completely isolated
+from the rest, ensuring
+
+41
+00:02:08.800 --> 00:02:11.760
+details never cross-contaminate during
+analysis.
+
+42
+00:02:11.760 --> 00:02:16.880
+Before processing, an automatic conflict
+detection protocol cryptographically verifies that
+
+43
+00:02:16.880 --> 00:02:20.000
+no conflicting interests exist before
+analysis begins.
+
+44
+00:02:20.000 --> 00:02:23.040
+Once it starts, every single action the AI
+takes is
+
+45
+00:02:23.040 --> 00:02:26.800
+lolled. This creates an evidence chain of
+custody, an unchangeable
+
+46
+00:02:26.800 --> 00:02:29.840
+audit trail detailing exactly how the
+platform arrived at its
+
+47
+00:02:29.840 --> 00:02:33.680
+conclusion. That trail, along with all
+associated data, is retained
+
+48
+00:02:33.680 --> 00:02:37.440
+securely for exactly seven years, matching
+the precise compliance requirements
+
+49
+00:02:37.440 --> 00:02:38.800
+set by Australian law.
+
+50
+00:02:38.800 --> 00:02:42.960
+Crucial features like end-to-end
+encryption, strict segregation, and automatic conflict
+
+51
+00:02:42.960 --> 00:02:46.560
+detection are often sold as premium
+upgrades in enterprise software.
+
+52
+00:02:46.560 --> 00:02:50.360
+But here inside the demanding legal field,
+these features are
+
+53
+00:02:50.360 --> 00:02:55.880
+the absolute non-negotiable minimums
+required to avoid professional malpractice.
+
+54
+00:02:55.880 --> 00:02:59.320
+The current trend in artificial
+intelligence is to build models
+
+55
+00:02:59.320 --> 00:03:02.600
+that know a little bit about absolutely
+everything.
+
+56
+00:03:02.600 --> 00:03:07.480
+But in a highly specialized profession,
+generalized omniscience is practically
+
+57
+00:03:07.480 --> 00:03:11.640
+useless. A one-size-fits-all approach
+falls apart when you try to
+
+58
+00:03:11.640 --> 00:03:16.600
+force a generalized US-centric product
+onto a highly specific framework
+
+59
+00:03:16.600 --> 00:03:18.600
+like the Australian legal system.
+
+60
+00:03:18.600 --> 00:03:22.840
+The rules, the terminology, and the
+hierarchy are entirely different.
+
+61
+00:03:22.840 --> 00:03:26.200
+Real progress in this space requires
+building from the ground
+
+62
+00:03:26.200 --> 00:03:31.240
+up. It means engineering hyper-localized
+systems that are deeply constrained
+
+63
+00:03:31.240 --> 00:03:34.680
+by the specific laws of the jurisdiction
+they operate in.
+
+64
+00:03:34.680 --> 00:03:38.440
+A professional platform earns its value by
+providing an immutable
+
+65
+00:03:38.440 --> 00:03:43.080
+audit trail for every conclusion,
+subordinating raw speed to verifiable
+
+66
+00:03:43.080 --> 00:03:44.120
+proof.
+

@@ -284,7 +284,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
         post.data.audioUrl && (
           <div class="mt-8 mb-6">
             <p class="text-text-muted mb-2 text-sm">Listen while you read</p>
-            <AudioPlayer src={post.data.audioUrl} title={`${post.data.title} — Audio Overview`} client:load />
+            <AudioPlayer src={post.data.audioUrl} title={`${post.data.title} — Audio Overview`} client:visible />
           </div>
         )
       }

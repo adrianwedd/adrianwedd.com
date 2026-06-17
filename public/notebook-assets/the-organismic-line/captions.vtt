@@ -1,0 +1,349 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:03.520
+Open a product page for a new AI model
+today,
+
+2
+00:00:03.520 --> 00:00:07.760
+and you will immediately encounter a very
+specific vocabulary.
+
+3
+00:00:07.760 --> 00:00:14.240
+Systems are described as reasoning,
+understanding, thinking, and occasionally hallucinating.
+
+4
+00:00:14.240 --> 00:00:18.800
+These descriptions have moved far beyond
+casual tech industry shorthand.
+
+5
+00:00:18.800 --> 00:00:22.160
+They operate as formal claims made in
+press releases, in
+
+6
+00:00:22.160 --> 00:00:26.960
+boardroom presentations, and in sworn
+testimony before lawmakers by executives
+
+7
+00:00:26.960 --> 00:00:29.840
+who assert they are building a digital
+brain for the
+
+8
+00:00:29.840 --> 00:00:33.120
+world. A problem arises when we apply the
+exact same
+
+9
+00:00:33.120 --> 00:00:36.080
+vocabulary to a server guessing the next
+word in a
+
+10
+00:00:36.080 --> 00:00:39.440
+sequence and a human mind processing
+reality.
+
+11
+00:00:39.440 --> 00:00:42.560
+It begins to convince the public that
+these systems possess
+
+12
+00:00:42.560 --> 00:00:44.800
+actual biological sentience.
+
+13
+00:00:44.800 --> 00:00:49.600
+This shared vocabulary effectively blurs
+what researchers call the organismic
+
+14
+00:00:49.600 --> 00:00:53.440
+line, the boundary between systems that
+have real physical stakes
+
+15
+00:00:53.440 --> 00:00:55.840
+and systems that merely simulate them.
+
+16
+00:00:55.840 --> 00:00:58.640
+To understand how that line got blurred,
+we have to
+
+17
+00:00:58.640 --> 00:00:59.920
+look at the math used to define.
+
+18
+00:01:00.360 --> 00:01:05.240
+intelligence Neuroscientist Carl Fristen
+developed a theory called the free
+
+19
+00:01:05.240 --> 00:01:08.680
+energy principle. At a high level, it
+states that all
+
+20
+00:01:08.680 --> 00:01:13.400
+self-organizing systems act to minimize
+surprise and maintain their internal
+
+21
+00:01:13.400 --> 00:01:17.240
+states. This mathematical framework
+creates an illusion.
+
+22
+00:01:17.240 --> 00:01:19.880
+Left, an AI lowers its error rate.
+
+23
+00:01:19.880 --> 00:01:22.600
+Right, an organism avoids starvation.
+
+24
+00:01:22.600 --> 00:01:27.320
+The formula treats them identically,
+removing lethal physical consequences.
+
+25
+00:01:27.320 --> 00:01:30.840
+The animal dies, the AI simply outputs a
+larger loss
+
+26
+00:01:30.840 --> 00:01:35.080
+number. AI pioneer Jeffrey Hinton focuses
+on a technical divide
+
+27
+00:01:35.080 --> 00:01:38.680
+between these two worlds, distinguishing
+between digital hardware and what
+
+28
+00:01:38.680 --> 00:01:40.920
+he calls mortal computation.
+
+29
+00:01:40.920 --> 00:01:44.280
+Immortal digital systems allow data to be
+perfectly copied to
+
+30
+00:01:44.280 --> 00:01:47.560
+new hardware, even if the original machine
+is destroyed.
+
+31
+00:01:47.560 --> 00:01:51.400
+But mortal biological systems hold
+knowledge inseparable from their physical
+
+32
+00:01:51.400 --> 00:01:55.520
+device. When the organic structure dies,
+its knowledge dies alongside
+
+33
+00:01:55.520 --> 00:01:58.640
+it. In a digital framework, mortality is
+often viewed as
+
+34
+00:01:58.640 --> 00:02:01.680
+a computational inefficiency or a tax on
+power.
+
+35
+00:02:01.680 --> 00:02:06.080
+But this perspective ignores how deeply a
+system's behavior changes
+
+36
+00:02:06.080 --> 00:02:09.680
+when its learned structure cannot be
+separated from a physical
+
+37
+00:02:09.680 --> 00:02:11.600
+body that can be destroyed.
+
+38
+00:02:11.600 --> 00:02:15.280
+An organism does not predict its
+environment because it is
+
+39
+00:02:15.280 --> 00:02:17.600
+mathematically elegant to do so.
+
+40
+00:02:17.600 --> 00:02:20.880
+It predicts because failing to predict is
+fatal.
+
+41
+00:02:20.880 --> 00:02:26.240
+Neuroscientist Anil Seth calls human
+perception a controlled hallucination that
+
+42
+00:02:26.240 --> 00:02:29.520
+is carefully yoked to the real world by
+constant error
+
+43
+00:02:29.520 --> 00:02:33.920
+prediction. The AI industry quickly
+co-opted Seth's phrase.
+
+44
+00:02:33.920 --> 00:02:39.760
+They began calling large language model
+confabulations hallucinations, completely unmooring
+
+45
+00:02:39.760 --> 00:02:42.960
+the concept from its necessary biological
+caveats.
+
+46
+00:02:42.960 --> 00:02:46.400
+The consequences for errors across these
+two systems could not
+
+47
+00:02:46.400 --> 00:02:47.360
+be more different.
+
+48
+00:02:47.360 --> 00:02:51.240
+If a biological brain hallucinates a
+predator, the survival threat
+
+49
+00:02:51.240 --> 00:02:55.000
+is immediate. When a server rack outputs
+an incorrect word,
+
+50
+00:02:55.000 --> 00:02:57.720
+there is zero physical danger to the
+machine.
+
+51
+00:02:57.720 --> 00:03:02.920
+When the tech industry excuses glitches as
+hallucinations, they borrow
+
+52
+00:03:02.920 --> 00:03:07.640
+the profound flavor of human consciousness
+while discarding the metabolic
+
+53
+00:03:07.640 --> 00:03:09.400
+cost of being wrong.
+
+54
+00:03:09.400 --> 00:03:12.360
+Which brings us back to the AI products
+being sold
+
+55
+00:03:12.360 --> 00:03:16.040
+today. When a product page claims a model
+thinks or
+
+56
+00:03:16.040 --> 00:03:19.640
+reasons, it implies an organismic
+commitment.
+
+57
+00:03:19.640 --> 00:03:23.720
+It promises a level of intent that silicon
+cannot fulfill.
+
+58
+00:03:23.720 --> 00:03:28.920
+It executes sequential token prediction,
+processing text inputs into statistical
+
+59
+00:03:28.920 --> 00:03:31.880
+outputs through a transformer
+architecture.
+
+60
+00:03:31.880 --> 00:03:35.640
+Running safely on an external grid, it has
+no intrinsic
+
+61
+00:03:35.640 --> 00:03:39.560
+stakes, optimizing equations without
+facing the threat of its own
+
+62
+00:03:39.560 --> 00:03:43.880
+destruction. The human brain is not
+running a detached mathematical
+
+63
+00:03:43.880 --> 00:03:48.240
+loss function. It is running a strict
+life-or-death body budget.
+
+64
+00:03:48.240 --> 00:03:51.760
+Ignoring this line has severe downstream
+consequences.
+
+65
+00:03:51.760 --> 00:03:55.600
+It distorts how lawmakers attempt to
+regulate these systems, and
+
+66
+00:03:55.600 --> 00:03:58.480
+it changes what we forget about our
+humanity when we
+
+67
+00:03:58.480 --> 00:04:00.400
+treat software as a mirror.
+
+68
+00:04:00.400 --> 00:04:03.280
+The next time a tech CEO claims their
+model is
+
+69
+00:04:03.280 --> 00:04:07.920
+hallucinating or thinking, ask yourself
+what the system is physically
+
+70
+00:04:07.920 --> 00:04:09.840
+paying for its errors.
+
+71
+00:04:09.840 --> 00:04:13.120
+Because if the answer is nothing, it is
+just math,
+
+72
+00:04:13.120 --> 00:04:14.800
+not a mind.
+

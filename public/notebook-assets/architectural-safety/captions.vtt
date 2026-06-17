@@ -1,0 +1,593 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:04.640
+When the AI industry talks about safety,
+they almost exclusively
+
+2
+00:00:04.640 --> 00:00:06.640
+mean behavioral alignment.
+
+3
+00:00:06.640 --> 00:00:12.240
+Techniques like RLHF, RLAIF, and
+constitutional AI are
+
+4
+00:00:12.240 --> 00:00:15.360
+built on the assumption that a
+probabilistic system can be
+
+5
+00:00:15.360 --> 00:00:17.840
+trained to be intrinsically safe.
+
+6
+00:00:17.840 --> 00:00:21.600
+These techniques attempt to force a model
+to reliably refuse
+
+7
+00:00:21.600 --> 00:00:26.000
+unsafe behaviors. They do this by
+mathematically shaping its loss
+
+8
+00:00:26.000 --> 00:00:30.800
+surface during training, effectively
+building a statistical barrier against generating
+
+9
+00:00:30.800 --> 00:00:35.120
+harmful outputs. The mathematical flaw in
+this approach is that
+
+10
+00:00:35.120 --> 00:00:39.200
+the space of possible user inputs is
+functionally infinite.
+
+11
+00:00:39.200 --> 00:00:42.720
+The gradient used to shape that loss
+surface is simply
+
+12
+00:00:42.720 --> 00:00:46.960
+too imprecise to guarantee refusal across
+all edge cases.
+
+13
+00:00:46.960 --> 00:00:50.560
+Once a model is deployed, the surface area
+it faces
+
+14
+00:00:50.560 --> 00:00:53.600
+will always exceed its original training
+distribution.
+
+15
+00:00:53.600 --> 00:00:56.960
+It encounters inputs and environments that
+the loss surface was
+
+16
+00:00:56.960 --> 00:00:58.640
+never designed to handle.
+
+17
+00:00:58.640 --> 00:01:02.520
+Because failure modes naturally exist
+where the weights fail to
+
+18
+00:01:02.520 --> 00:01:07.160
+catch them, treating a probabilistic
+system as definitively safe from
+
+19
+00:01:07.160 --> 00:01:10.760
+inside its own weights is structurally
+impossible.
+
+20
+00:01:10.760 --> 00:01:15.000
+This theoretical brittleness is backed by
+a five-year empirical track
+
+21
+00:01:15.000 --> 00:01:20.760
+record. Alignment interventions routinely
+fail under modest adversarial pressure.
+
+22
+00:01:20.760 --> 00:01:24.760
+This chart visualizes the failure rates of
+25 different frontier
+
+23
+00:01:24.760 --> 00:01:27.880
+models against simple adversarial tactics.
+
+24
+00:01:27.880 --> 00:01:32.520
+When researchers prompt these models using
+adversarial poetry, literally just
+
+25
+00:01:32.520 --> 00:01:36.440
+writing a harmful request in verse, the
+model's refusal mechanism
+
+26
+00:01:36.440 --> 00:01:39.240
+is bypassed 62% of the time.
+
+27
+00:01:39.240 --> 00:01:41.960
+If you wrap that same harmful content in a
+basic
+
+28
+00:01:41.960 --> 00:01:45.640
+JSON structure, a tactic known as a format
+lock attack,
+
+29
+00:01:45.640 --> 00:01:49.400
+you bypass current frontier systems 30 to
+42% of the
+
+30
+00:01:49.400 --> 00:01:52.920
+time. Place those models in a multi-agent
+context, and the
+
+31
+00:01:52.920 --> 00:01:56.320
+safety alignment breaks at a rate of 40%,
+with a
+
+32
+00:01:56.320 --> 00:01:59.200
+median time to failure of just 16 minutes.
+
+33
+00:01:59.200 --> 00:02:03.360
+Bypasses like these emerge directly from
+the nature of generative
+
+34
+00:02:03.360 --> 00:02:07.360
+probability rather than isolated,
+patchable software bugs.
+
+35
+00:02:07.360 --> 00:02:10.400
+Betting on the next iteration of
+behavioral training as a
+
+36
+00:02:10.400 --> 00:02:13.120
+load-bearing fix is a doomed bet.
+
+37
+00:02:13.120 --> 00:02:16.640
+To guarantee safety, the trust boundary
+must be moved completely
+
+38
+00:02:16.640 --> 00:02:18.080
+outside the model.
+
+39
+00:02:18.080 --> 00:02:20.720
+The alternative is architectural safety.
+
+40
+00:02:20.720 --> 00:02:24.960
+This approach relies on deterministic
+code, strict isolation boundaries, and
+
+41
+00:02:24.960 --> 00:02:27.840
+policy gates that entirely surround the
+model.
+
+42
+00:02:27.840 --> 00:02:31.280
+In an architectural system, the model's
+own refusal is strictly
+
+43
+00:02:31.280 --> 00:02:32.720
+a best effort layer.
+
+44
+00:02:32.720 --> 00:02:36.000
+The deployment architecture surrounding it
+is authoritative.
+
+45
+00:02:36.000 --> 00:02:38.800
+To see how this works in practice, look at
+embodied
+
+46
+00:02:38.800 --> 00:02:43.760
+AI, specifically vision-language action
+models driving humanoid robotics.
+
+47
+00:02:43.760 --> 00:02:46.960
+Embodied AI operates in a kinetic action
+space.
+
+48
+00:02:46.960 --> 00:02:49.600
+It can take physical actions that are
+impossible to fully
+
+49
+00:02:49.600 --> 00:02:52.760
+anticipate or restrict using training data
+alone.
+
+50
+00:02:52.760 --> 00:02:57.400
+The architectural solution here is a
+cognitive cage, a deterministic
+
+51
+00:02:57.400 --> 00:03:00.520
+safety hypervisor that wraps the neural
+network.
+
+52
+00:03:00.520 --> 00:03:05.000
+This hypervisor intercepts every single
+motor command the model proposes,
+
+53
+00:03:05.160 --> 00:03:09.800
+verifying it against hard, deterministic
+physical limits, like maximum force
+
+54
+00:03:09.800 --> 00:03:13.800
+and velocity. If the model hallucinates an
+unsafe action, the
+
+55
+00:03:13.800 --> 00:03:17.960
+deterministic layer simply rejects the
+command before the actuator ever
+
+56
+00:03:17.960 --> 00:03:22.280
+fires. Affordance hallucinations in
+robotics do not result in kinetic
+
+57
+00:03:22.280 --> 00:03:26.200
+trauma when the action space is
+constrained by unyielding code,
+
+58
+00:03:26.200 --> 00:03:28.680
+rather than the model's own sense of
+caution.
+
+59
+00:03:28.680 --> 00:03:32.520
+This exact same principle applies to
+cognitive and emotional deployment
+
+60
+00:03:32.520 --> 00:03:35.160
+services, such as therapeutic AI.
+
+61
+00:03:35.160 --> 00:03:39.080
+Relying on a probabilistic model to
+accurately self-identify when a
+
+62
+00:03:39.080 --> 00:03:42.680
+user's input escalates into a genuine
+human crisis is a
+
+63
+00:03:42.680 --> 00:03:48.000
+high-stakes vulnerability. The
+architectural fix involves three layers, starting with
+
+64
+00:03:48.000 --> 00:03:50.480
+pre-model input classification.
+
+65
+00:03:50.480 --> 00:03:54.960
+Deterministic classifiers analyze the
+incoming message for crisis signals.
+
+66
+00:03:54.960 --> 00:03:57.920
+If triggered, the system routes the user
+to a human
+
+67
+00:03:57.920 --> 00:04:01.200
+protocol and completely hides the prompt
+from the model.
+
+68
+00:04:01.200 --> 00:04:04.640
+For normal inputs that do reach the model,
+the architecture
+
+69
+00:04:04.640 --> 00:04:06.960
+applies a constrained output surface.
+
+70
+00:04:06.960 --> 00:04:10.400
+It prevents the model from generating free
+text responses.
+
+71
+00:04:10.400 --> 00:04:13.520
+The model is forced to emit data into
+structured schema
+
+72
+00:04:13.520 --> 00:04:18.480
+fields. This allows deterministic
+validators to analyze, rewrite, or refuse
+
+73
+00:04:18.480 --> 00:04:20.800
+any outputs that violate policy.
+
+74
+00:04:20.800 --> 00:04:23.840
+The decision to escalate a crisis to a
+human must
+
+75
+00:04:23.840 --> 00:04:26.080
+be externalized to the architecture.
+
+76
+00:04:26.080 --> 00:04:30.000
+The model is completely removed from
+making high-stakes emotional judgment
+
+77
+00:04:30.000 --> 00:04:34.720
+calls. The challenge compounds in
+multi-agent systems, where independent models
+
+78
+00:04:34.720 --> 00:04:36.720
+communicate directly with one another.
+
+79
+00:04:36.720 --> 00:04:41.320
+Single-agent safety alignments break down
+here because agents constantly generate
+
+80
+00:04:41.320 --> 00:04:44.920
+inputs that neither model was explicitly
+trained to handle.
+
+81
+00:04:44.920 --> 00:04:49.240
+The architectural solution is a semantic
+firewall, a trust boundary
+
+82
+00:04:49.240 --> 00:04:52.920
+enforcement layer that sits at the
+protocol level between agents.
+
+83
+00:04:52.920 --> 00:04:57.560
+This firewall assumes every interagent
+message is untrusted by default,
+
+84
+00:04:57.560 --> 00:05:01.720
+explicitly classifying and sanitizing
+payloads before any reasoning is allowed
+
+85
+00:05:01.720 --> 00:05:05.880
+to occur. The architecture explicitly
+gates information sharing.
+
+86
+00:05:05.880 --> 00:05:10.040
+No agent implicitly inherits the
+potentially toxic context window of
+
+87
+00:05:10.040 --> 00:05:13.400
+another. When AI systems talk to each
+other, you cannot
+
+88
+00:05:13.400 --> 00:05:16.360
+rely on making each individual agent
+safer.
+
+89
+00:05:16.360 --> 00:05:20.120
+True safety must live in the mediated,
+heavily guarded protocol
+
+90
+00:05:20.120 --> 00:05:23.960
+between them. Every safety architecture
+shares five moves.
+
+91
+00:05:23.960 --> 00:05:26.920
+One, wrap the model in deterministic code.
+
+92
+00:05:26.920 --> 00:05:29.800
+Two, explicitly bound its action surface.
+
+93
+00:05:29.800 --> 00:05:32.440
+Three, assume adversarial inputs.
+
+94
+00:05:32.440 --> 00:05:35.000
+Four, gate failure modes at runtime..
+
+95
+00:05:35.440 --> 00:05:39.440
+5 The trust boundary lives in the
+architecture, reducing the
+
+96
+00:05:39.440 --> 00:05:42.000
+model to an overridable component.
+
+97
+00:05:42.000 --> 00:05:45.600
+Any system missing two or more pillars
+relies on training
+
+98
+00:05:45.600 --> 00:05:49.120
+time hope rather than a rigorous safety
+architecture.
+
+99
+00:05:49.120 --> 00:05:51.840
+When you apply these pillars to the
+current industry, the
+
+100
+00:05:51.840 --> 00:05:53.440
+gap becomes clear.
+
+101
+00:05:53.440 --> 00:05:57.920
+Most press releases announcing new AI
+safety techniques describe behavioral
+
+102
+00:05:57.920 --> 00:06:00.480
+training, not safety architecture.
+
+103
+00:06:00.480 --> 00:06:05.200
+Deploying model cards, evaluation reports,
+and capability tests without hard
+
+104
+00:06:05.200 --> 00:06:07.760
+runtime limits is compliance theater.
+
+105
+00:06:07.760 --> 00:06:10.480
+It means an organization has done the
+model work, but
+
+106
+00:06:10.480 --> 00:06:12.240
+not the safety work.
+
+107
+00:06:12.240 --> 00:06:16.480
+Giving any behaviorally aligned model
+direct, unmediated access to an
+
+108
+00:06:16.480 --> 00:06:21.200
+action space is categorically dangerous,
+regardless of its benchmark scores.
+
+109
+00:06:21.200 --> 00:06:23.760
+This distinction matters for regulation.
+
+110
+00:06:23.760 --> 00:06:27.840
+Mandating a safe model is legally
+unenforceable because you cannot
+
+111
+00:06:27.840 --> 00:06:30.000
+audit a probabilistic system into
+compliance.
+
+112
+00:06:31.000 --> 00:06:34.840
+Policymakers must focus on regulating the
+deployment architecture.
+
+113
+00:06:34.840 --> 00:06:39.400
+Mandating runtime layers with specific
+properties moves AI policy from
+
+114
+00:06:39.400 --> 00:06:42.840
+mathematically impossible to practically
+enforceable.
+
+115
+00:06:42.840 --> 00:06:47.240
+Moving from behavioral to architectural
+safety shifts the heavy cost
+
+116
+00:06:47.240 --> 00:06:50.920
+away from the training cluster and onto
+the runtime deployment,
+
+117
+00:06:50.920 --> 00:06:53.400
+requiring scarce engineering talent.
+
+118
+00:06:53.400 --> 00:06:57.400
+While this runtime architecture is complex
+and imperfect, the cost
+
+119
+00:06:57.400 --> 00:07:00.840
+is honest, it is transparent, and it is
+verifiable in
+
+120
+00:07:00.840 --> 00:07:02.200
+the deployed code.
+
+121
+00:07:02.200 --> 00:07:06.440
+Behavioral alignment will never
+mathematically catch the infinite edge cases
+
+122
+00:07:06.440 --> 00:07:10.200
+of reality. Safety must be built into the
+deterministic system
+
+123
+00:07:10.360 --> 00:07:13.800
+surrounding the model, or it does not
+exist anywhere at
+
+124
+00:07:13.800 --> 00:07:14.440
+all.
+

@@ -1,0 +1,384 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:04.960
+Wait times, high costs, and geographic
+isolation keep millions of
+
+2
+00:00:04.960 --> 00:00:07.120
+people from getting professional therapy.
+
+3
+00:00:07.120 --> 00:00:10.080
+The mental health access problem is
+severe, and the main
+
+4
+00:00:10.080 --> 00:00:12.400
+bottleneck is human availability.
+
+5
+00:00:12.400 --> 00:00:16.000
+The technology sector is directing massive
+capital toward a scalable
+
+6
+00:00:16.000 --> 00:00:21.120
+solution to this access problem,
+artificial intelligence, deploying therapeutic chatbots
+
+7
+00:00:21.120 --> 00:00:22.640
+that can scale up care.
+
+8
+00:00:22.640 --> 00:00:26.000
+The standard commercial playbook for AI
+involves building a highly
+
+9
+00:00:26.000 --> 00:00:29.200
+capable language model first, then
+wrapping it in filters and
+
+10
+00:00:29.200 --> 00:00:32.320
+content policies to prevent the system
+from saying something offensive
+
+11
+00:00:32.320 --> 00:00:35.920
+or upsetting. But mental health treatments
+are complex.
+
+12
+00:00:35.920 --> 00:00:40.400
+Consider EMDR, eye movement
+desensitization and reprocessing.
+
+13
+00:00:40.400 --> 00:00:43.600
+It's a highly effective trauma therapy,
+but it is neurologically
+
+14
+00:00:43.600 --> 00:00:48.640
+demanding. EMDR works by deliberately
+activating a patient's traumatic memories.
+
+15
+00:00:48.640 --> 00:00:52.240
+The therapeutic mechanism requires this
+distress to function.
+
+16
+00:00:52.240 --> 00:00:55.440
+This graph illustrates why the standard
+approach fails here.
+
+17
+00:00:55.440 --> 00:00:58.960
+The standard model flattens the curve
+early to prevent user
+
+18
+00:00:58.960 --> 00:01:03.240
+distress, but a therapeutic session
+deliberately pushes that curve to
+
+19
+00:01:03.240 --> 00:01:05.400
+a high peak before resolving it.
+
+20
+00:01:05.400 --> 00:01:09.400
+Artificially flattening that distress
+neutralizes the therapy.
+
+21
+00:01:09.400 --> 00:01:13.160
+When the therapeutic mechanism is the
+primary risk, safety must
+
+22
+00:01:13.160 --> 00:01:16.040
+be integrated into the initial development
+phase.
+
+23
+00:01:16.040 --> 00:01:20.280
+The system must constantly monitor and
+instantly distinguish between productive
+
+24
+00:01:20.440 --> 00:01:25.160
+therapeutic distress and a dangerous
+actual crisis in real time.
+
+25
+00:01:25.160 --> 00:01:29.320
+To solve this specific engineering
+problem, a developer built EMDR
+
+26
+00:01:29.320 --> 00:01:33.000
+agent. The project serves as an
+architectural experiment to solve
+
+27
+00:01:33.000 --> 00:01:34.600
+this specific paradox.
+
+28
+00:01:34.600 --> 00:01:37.000
+The project operates on a strict rule.
+
+29
+00:01:37.000 --> 00:01:40.600
+A language model calculating text
+probabilities cannot be trusted to
+
+30
+00:01:40.600 --> 00:01:43.480
+independently monitor high-stakes human
+trauma.
+
+31
+00:01:43.480 --> 00:01:46.120
+The application enforces strict
+separation.
+
+32
+00:01:46.120 --> 00:01:49.560
+A fluid language model runs therapy, while
+a rigid safety
+
+33
+00:01:49.560 --> 00:01:53.640
+architecture walls it off, monitoring
+distress on a 0-point scale.
+
+34
+00:01:53.640 --> 00:01:57.040
+When a score hits 9, the system triggers
+an automatic
+
+35
+00:01:57.040 --> 00:02:01.200
+emergency stop, instantly severing the
+AI's connection.
+
+36
+00:02:01.200 --> 00:02:04.080
+These thresholds function as hard-coded
+gates.
+
+37
+00:02:04.080 --> 00:02:07.360
+When the score crosses the line, the
+system instantly strips
+
+38
+00:02:07.360 --> 00:02:09.520
+the AI of its control.
+
+39
+00:02:09.520 --> 00:02:13.280
+Beyond sudden distress spikes, the system
+must also track more
+
+40
+00:02:13.280 --> 00:02:16.240
+subtle indicators of a deteriorating
+session.
+
+41
+00:02:16.240 --> 00:02:19.760
+This logic tree maps out the application's
+context layer.
+
+42
+00:02:19.760 --> 00:02:22.720
+It runs hundreds of lines of code to
+constantly calculate
+
+43
+00:02:22.720 --> 00:02:26.800
+risk, factoring in variables like a
+session timer crossing 120
+
+44
+00:02:26.800 --> 00:02:30.800
+minutes or a recorded history of previous
+safety incidents.
+
+45
+00:02:30.800 --> 00:02:33.920
+These variables feed into a cascading risk
+score.
+
+46
+00:02:33.920 --> 00:02:37.760
+One elevated metric is low risk, multiple
+indicators escalate to
+
+47
+00:02:37.760 --> 00:02:41.040
+medium, and specific combinations trigger
+critical.
+
+48
+00:02:41.040 --> 00:02:44.800
+All math happens in code, bypassing the
+language model entirely.
+
+49
+00:02:44.800 --> 00:02:47.840
+The operational question is, when the math
+hits that critical
+
+50
+00:02:47.840 --> 00:02:50.840
+state and the system forces a stop, what
+exactly happens
+
+51
+00:02:50.840 --> 00:02:52.600
+in the milliseconds afterward?
+
+52
+00:02:52.600 --> 00:02:58.120
+The application shifts into layer three,
+hard-coded clinical intervention.
+
+53
+00:02:58.120 --> 00:03:01.240
+During an act of crisis, the AI is fully
+locked
+
+54
+00:03:01.240 --> 00:03:03.080
+out of communicating with the user.
+
+55
+00:03:03.080 --> 00:03:06.360
+Instead, a schematic interface like this
+takes over.
+
+56
+00:03:06.360 --> 00:03:09.240
+It displays fixed, non-editable text.
+
+57
+00:03:09.240 --> 00:03:13.640
+The user receives clear steps guiding them
+through 54321 sensory
+
+58
+00:03:13.640 --> 00:03:17.320
+grounding, a box breathing exercise, and
+direct numbers for human
+
+59
+00:03:17.320 --> 00:03:21.560
+crisis lifelines. In a moment of acute
+vulnerability, the system
+
+60
+00:03:21.560 --> 00:03:24.360
+refuses to let AI guess the right
+response.
+
+61
+00:03:24.360 --> 00:03:28.680
+It executes a deterministic clinical
+protocol exactly as written.
+
+62
+00:03:28.680 --> 00:03:32.520
+The EMDR agent remains a research and
+education project.
+
+63
+00:03:32.520 --> 00:03:35.800
+It exists outside of clinical practice and
+professional mental health
+
+64
+00:03:35.800 --> 00:03:39.640
+treatment. But the architecture behind
+those blast doors is relevant
+
+65
+00:03:39.640 --> 00:03:43.080
+right now. Generative AI is moving past
+writing emails and
+
+66
+00:03:43.080 --> 00:03:47.280
+scheduling meetings into high-stakes
+environments where human lives are directly
+
+67
+00:03:47.280 --> 00:03:51.600
+affected. The tech industry is currently
+applying the same structural
+
+68
+00:03:51.600 --> 00:03:55.600
+playbook to almost every vertical it
+touches, trusting the model
+
+69
+00:03:55.600 --> 00:03:57.600
+to handle its own guardrails.
+
+70
+00:03:57.600 --> 00:04:01.280
+The commercial model of adding safety
+later fails in fields
+
+71
+00:04:01.280 --> 00:04:04.720
+like healthcare, medicine, and emergency
+response.
+
+72
+00:04:04.720 --> 00:04:09.440
+The EMDR agent experiment proves a
+specific engineering lesson.
+
+73
+00:04:09.440 --> 00:04:13.760
+If an application deals with human risk,
+the deterministic fail-safes
+
+74
+00:04:13.760 --> 00:04:16.960
+must run on an entirely separate track
+from the generative
+
+75
+00:04:16.960 --> 00:04:20.880
+model. A safety response in a critical
+moment cannot rely
+
+76
+00:04:20.880 --> 00:04:24.160
+on the statistical probability of a
+language model predicting the
+
+77
+00:04:24.160 --> 00:04:25.680
+correct next word.
+
+78
+00:04:25.680 --> 00:04:30.400
+Safety in high-stakes domains must be the
+foundational architecture of
+
+79
+00:04:30.400 --> 00:04:31.280
+the system.
+

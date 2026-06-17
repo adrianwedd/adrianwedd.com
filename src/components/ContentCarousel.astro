@@ -164,6 +164,12 @@ const { items, id, label } = Astro.props;
       state.current = ((n % total) + total) % total;
       var track = el.querySelector('.cc-track');
       if (track) track.style.transform = 'translateX(-' + state.current * 100 + '%)';
+      slides.forEach(function (slide, i) {
+        var active = i === state.current;
+        slide.inert = !active;
+        if (active) slide.removeAttribute('aria-hidden');
+        else slide.setAttribute('aria-hidden', 'true');
+      });
       el.querySelectorAll('.cc-dot').forEach(function (dot) {
         var active = Number(dot.dataset.slide) === state.current;
         dot.classList.toggle('bg-accent', active);

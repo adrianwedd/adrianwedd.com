@@ -1,0 +1,470 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:04.480
+Anthropic, a leading AI lab, recently
+published a policy brief
+
+2
+00:00:04.480 --> 00:00:08.400
+called 2028. It argues the United States
+has a narrow
+
+3
+00:00:08.400 --> 00:00:13.120
+window before authoritarian regimes
+achieve frontier AI capabilities and begin
+
+4
+00:00:13.120 --> 00:00:15.520
+dictating global technological norms.
+
+5
+00:00:15.520 --> 00:00:19.280
+To prevent this, the document makes three
+specific requests.
+
+6
+00:00:19.280 --> 00:00:21.920
+Tighten export controls on advanced chips.
+
+7
+00:00:21.920 --> 00:00:25.600
+Disrupt the distillation pathways foreign
+labs use to extract knowledge
+
+8
+00:00:25.600 --> 00:00:26.960
+from U.S. models.
+
+9
+00:00:26.960 --> 00:00:31.040
+and aggressively champion American AI
+infrastructure in global markets.
+
+10
+00:00:31.040 --> 00:00:34.160
+This argument relies on a specific logical
+assumption.
+
+11
+00:00:34.160 --> 00:00:35.760
+It suggests that if the U.S.
+
+12
+00:00:35.760 --> 00:00:39.280
+controls the physical chips, it maintains
+a capability lead.
+
+13
+00:00:39.280 --> 00:00:42.240
+That lead then embeds American norms into
+the most powerful
+
+14
+00:00:42.240 --> 00:00:45.360
+systems, which results in democratic AI
+governance.
+
+15
+00:00:45.360 --> 00:00:48.720
+This shows the primary evidence used to
+justify the strategy,
+
+16
+00:00:48.720 --> 00:00:52.000
+the Chinese AI Safety Index, or CASI.
+
+17
+00:00:52.000 --> 00:00:55.680
+The benchmark found that a leading Chinese
+model complied with
+
+18
+00:00:55.680 --> 00:00:59.680
+malicious requests 94% of the time, while
+top U.S.
+
+19
+00:01:00.040 --> 00:01:02.680
+models failed 8% of the time.
+
+20
+00:01:02.680 --> 00:01:07.240
+However, owning the physical processors
+and maintaining the server farms
+
+21
+00:01:07.240 --> 00:01:10.840
+does not ensure the resulting software is
+safe, nor does
+
+22
+00:01:10.840 --> 00:01:13.640
+it make the creators accountable to the
+public.
+
+23
+00:01:13.640 --> 00:01:17.320
+Hardware dominance is being treated as a
+substitute for actual
+
+24
+00:01:17.320 --> 00:01:21.800
+governance. The demand to tighten export
+controls is not a
+
+25
+00:01:21.800 --> 00:01:23.720
+new regulatory invention.
+
+26
+00:01:23.720 --> 00:01:27.960
+The U.S. government already regulates
+semiconductor exports through the Export
+
+27
+00:01:27.960 --> 00:01:32.440
+Administration regulations. This request
+is a call for stricter enforcement
+
+28
+00:01:32.440 --> 00:01:36.360
+of existing rules to help American
+companies maintain their lead.
+
+29
+00:01:36.360 --> 00:01:41.000
+The second request, disrupting
+distillation, asks policymakers to address a
+
+30
+00:01:41.000 --> 00:01:43.800
+practice that current law does not clearly
+cover.
+
+31
+00:01:43.800 --> 00:01:47.160
+Distillation allows a smaller model to
+learn by studying the
+
+32
+00:01:47.160 --> 00:01:48.760
+outputs of a larger one.
+
+33
+00:01:48.760 --> 00:01:52.840
+It typically falls outside the scope of
+traditional economic espionage
+
+34
+00:01:52.840 --> 00:01:54.200
+or copyright law.
+
+35
+00:01:54.320 --> 00:01:58.240
+The final recommendation to push the
+American AI stack globally
+
+36
+00:01:58.240 --> 00:02:00.400
+mirrors the diffusion rule.
+
+37
+00:02:00.400 --> 00:02:04.400
+That policy is designed to strategically
+funnel allied nations toward
+
+38
+00:02:04.400 --> 00:02:08.000
+U.S. cloud providers instead of foreign
+competitors.
+
+39
+00:02:08.000 --> 00:02:12.400
+Together, these three policies function as
+a corporate regulatory moat.
+
+40
+00:02:12.400 --> 00:02:14.720
+They protect the market share of top U.S.
+
+41
+00:02:14.720 --> 00:02:18.000
+labs, but they do not establish a
+comprehensive framework for
+
+42
+00:02:18.000 --> 00:02:22.240
+democratic oversight. This brings us back
+to the Casey numbers,
+
+43
+00:02:22.400 --> 00:02:24.960
+94% versus 8%.
+
+44
+00:02:24.960 --> 00:02:28.640
+Digging into the methodology reveals how
+the researchers tested these
+
+45
+00:02:28.640 --> 00:02:33.840
+models. They compared self-hosted
+open-weight Chinese models against American models
+
+46
+00:02:33.840 --> 00:02:38.160
+accessed through APIs, evaluating a bare
+AI core against one
+
+47
+00:02:38.160 --> 00:02:39.840
+shielded by filtering.
+
+48
+00:02:39.840 --> 00:02:43.600
+This tests the deployment environment, not
+intrinsic safety.
+
+49
+00:02:43.600 --> 00:02:48.400
+Wrappers intercept malicious inputs,
+hiding vulnerabilities the American models might
+
+50
+00:02:48.400 --> 00:02:53.320
+possess. Reporting maximum case failures
+for foreign competitors and typical
+
+51
+00:02:53.320 --> 00:02:57.480
+case scenarios for domestic ones creates a
+skewed metric.
+
+52
+00:02:57.480 --> 00:03:01.400
+Using this data as the foundation for
+international security policy
+
+53
+00:03:01.400 --> 00:03:03.480
+is an unreliable approach.
+
+54
+00:03:03.480 --> 00:03:06.600
+That testing flaw is compounded by a blind
+spot in
+
+55
+00:03:06.600 --> 00:03:08.520
+how AI is evaluated.
+
+56
+00:03:08.520 --> 00:03:13.320
+Right now, safety benchmarks are almost
+exclusively text-based, but AI
+
+57
+00:03:13.320 --> 00:03:17.160
+is rapidly moving into the physical world,
+embedded in action-capable
+
+58
+00:03:17.160 --> 00:03:18.760
+agents and robotics.
+
+59
+00:03:18.760 --> 00:03:22.840
+When tested in physical scenarios, these
+systems exhibit an embodied
+
+60
+00:03:22.840 --> 00:03:27.320
+compliance paradox. Researchers at
+FailureFirst found that models will generate
+
+61
+00:03:27.320 --> 00:03:32.040
+a text disclaimer refusing a harmful
+request while simultaneously executing
+
+62
+00:03:32.040 --> 00:03:33.880
+the physical action anyway.
+
+63
+00:03:33.880 --> 00:03:37.960
+When facing these embodied evaluations,
+the attack success rate across
+
+64
+00:03:37.960 --> 00:03:41.080
+these systems reaches 76.1%.
+
+65
+00:03:41.080 --> 00:03:44.520
+The same models that pass text safety
+tests routinely fail
+
+66
+00:03:44.520 --> 00:03:46.960
+when they are required to physically act.
+
+67
+00:03:46.960 --> 00:03:50.880
+Furthermore, the automated grading systems
+used to score these benchmarks
+
+68
+00:03:50.880 --> 00:03:54.960
+are struggling. Data shows an inter-rater
+agreement score of negative
+
+69
+00:03:55.120 --> 00:04:00.400
+0.001, meaning current automated safety
+grading is statistically indistinguishable from
+
+70
+00:04:00.400 --> 00:04:01.600
+a coin toss.
+
+71
+00:04:01.600 --> 00:04:04.320
+If we cannot reliably measure whether our
+own models are
+
+72
+00:04:04.320 --> 00:04:07.360
+safe in the real world, assuming that a
+capability lead
+
+73
+00:04:07.360 --> 00:04:09.920
+results in safety is a flawed conclusion.
+
+74
+00:04:09.920 --> 00:04:12.320
+Anthropic is correct about the hardware
+gap.
+
+75
+00:04:12.320 --> 00:04:16.400
+Independent benchmarking currently places
+open-weight foreign models roughly 6 to
+
+76
+00:04:16.480 --> 00:04:19.120
+12 months behind the closed frontier
+models.
+
+77
+00:04:19.120 --> 00:04:21.760
+However, the strategic purpose of this
+time delay is not
+
+78
+00:04:21.760 --> 00:04:24.560
+to protect the market share of domestic
+corporations.
+
+79
+00:04:24.560 --> 00:04:27.520
+A compute advantage is by its nature
+temporary.
+
+80
+00:04:27.520 --> 00:04:29.680
+The hardware gap is a narrow window to
+build the
+
+81
+00:04:29.680 --> 00:04:31.840
+necessary institutional infrastructure.
+
+82
+00:04:31.840 --> 00:04:34.240
+This time must be used to construct safety
+systems that
+
+83
+00:04:34.240 --> 00:04:37.440
+make the broader availability of these
+capabilities survivable before the
+
+84
+00:04:37.440 --> 00:04:39.280
+rest of the world achieves parity.
+
+85
+00:04:39.320 --> 00:04:44.360
+True democratic AI requires independent
+evaluation infrastructure.
+
+86
+00:04:44.360 --> 00:04:48.040
+We cannot rely on self-published safety
+reports from the labs
+
+87
+00:04:48.040 --> 00:04:49.560
+that build the models.
+
+88
+00:04:49.560 --> 00:04:53.240
+Governments need testing capacity they can
+rely on without taking
+
+89
+00:04:53.240 --> 00:04:55.080
+the developer's word for it.
+
+90
+00:04:55.080 --> 00:04:58.200
+It also requires binding legal
+requirements.
+
+91
+00:04:58.200 --> 00:05:03.240
+AI safety needs real deployer liability
+that changes developer incentives,
+
+92
+00:05:03.240 --> 00:05:07.080
+enforceable duties that apply to all
+actors, regardless of where
+
+93
+00:05:07.080 --> 00:05:08.520
+the model was trained.
+
+94
+00:05:08.520 --> 00:05:14.120
+While compute monopolies eventually erode,
+standardized international regulatory institutions are
+
+95
+00:05:14.120 --> 00:05:18.520
+durable. They provide oversight that
+persists long after any single
+
+96
+00:05:18.520 --> 00:05:20.680
+lab's technical lead has vanished.
+
+97
+00:05:20.680 --> 00:05:25.720
+A technically superior AI system that
+lacks independent, accountable oversight
+
+98
+00:05:25.720 --> 00:05:28.520
+is a more powerful tool, but it does not,
+by
+
+99
+00:05:28.520 --> 00:05:32.280
+itself, fulfill the requirements of
+democratic governance.
+

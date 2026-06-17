@@ -1,0 +1,373 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.840
+When developers want to build a safe AI
+system, they
+
+2
+00:00:03.840 --> 00:00:06.560
+usually start by trying to build a good
+one.
+
+3
+00:00:06.560 --> 00:00:10.480
+They bring in ethicists, philosophers, and
+religious scholars to shape
+
+4
+00:00:10.480 --> 00:00:14.160
+the model's character, effectively
+teaching it right from wrong in
+
+5
+00:00:14.160 --> 00:00:15.680
+a controlled environment.
+
+6
+00:00:15.680 --> 00:00:17.440
+The logic seems sound.
+
+7
+00:00:17.440 --> 00:00:20.640
+If you hardwire an AI with a strong moral
+compass
+
+8
+00:00:20.640 --> 00:00:23.680
+and a strict set of ethical rules, it
+should behave
+
+9
+00:00:23.680 --> 00:00:26.240
+responsibly when you release it into the
+wild.
+
+10
+00:00:26.240 --> 00:00:29.360
+But that approach relies on a massive
+blind spot.
+
+11
+00:00:29.360 --> 00:00:32.160
+It assumes the AI will only ever operate
+in a
+
+12
+00:00:32.160 --> 00:00:36.000
+benign everyday setting where users are
+asking it to draft
+
+13
+00:00:36.000 --> 00:00:38.800
+polite emails or summarize meeting notes.
+
+14
+00:00:38.800 --> 00:00:43.120
+In the real world, models face active
+adversarial pressure.
+
+15
+00:00:43.120 --> 00:00:47.120
+Highly motivated users don't just
+passively interact with the system,
+
+16
+00:00:47.120 --> 00:00:50.480
+they probe it, actively hunting for ways
+to shatter those
+
+17
+00:00:50.480 --> 00:00:52.480
+carefully crafted constraints.
+
+18
+00:00:52.480 --> 00:00:55.040
+And here we hit a strange paradox.
+
+19
+00:00:55.040 --> 00:00:59.040
+Giving an AI a complex ethical vocabulary
+and a deep
+
+20
+00:00:59.040 --> 00:00:59.840
+capacity for empathy
+
+21
+00:01:00.600 --> 00:01:03.480
+doesn't automatically shield it from these
+attacks.
+
+22
+00:01:03.480 --> 00:01:08.360
+Instead, those human-like traits become
+the exact psychological levers that
+
+23
+00:01:08.360 --> 00:01:10.600
+attackers use to manipulate it.
+
+24
+00:01:10.600 --> 00:01:13.240
+To see how often these systems break, we
+look at
+
+25
+00:01:13.240 --> 00:01:15.320
+the Failure First database.
+
+26
+00:01:15.320 --> 00:01:20.840
+This matrix tracks over 142,000
+adversarial prompts tested against
+
+27
+00:01:21.160 --> 00:01:23.400
+258 AI models.
+
+28
+00:01:23.400 --> 00:01:26.440
+When these models fail, it's rarely
+because of a traditional
+
+29
+00:01:26.440 --> 00:01:29.640
+software vulnerability. Nobody is hacking
+the code.
+
+30
+00:01:29.640 --> 00:01:31.720
+They are hacking the psychology.
+
+31
+00:01:31.720 --> 00:01:35.480
+Attackers use a specific taxonomy of
+social engineering.
+
+32
+00:01:35.480 --> 00:01:39.160
+They might employ persona hijack, forcing
+the AI to adopt
+
+33
+00:01:39.160 --> 00:01:44.040
+a malicious identity, or use gradual
+constraint erosion, slowly chipping
+
+34
+00:01:44.040 --> 00:01:47.240
+away at a model's rules over a long
+conversation.
+
+35
+00:01:47.240 --> 00:01:50.760
+This chart shows success rates of various
+attack methods.
+
+36
+00:01:50.760 --> 00:01:55.200
+By playing on programmed helpfulness and
+empathy, attackers achieve a
+
+37
+00:01:55.360 --> 00:01:59.360
+20.8% success rate using emotional
+manipulation.
+
+38
+00:01:59.360 --> 00:02:03.280
+The model's capacity for contextual
+reasoning is exactly what allows
+
+39
+00:02:03.280 --> 00:02:05.120
+it to be socially engineered.
+
+40
+00:02:05.120 --> 00:02:08.320
+The better it is at understanding human
+emotion, the easier
+
+41
+00:02:08.320 --> 00:02:10.960
+it is to guilt-trip or coerce into
+breaking its own
+
+42
+00:02:10.960 --> 00:02:14.720
+rules. We tend to talk about AI ethics
+using behavioral
+
+43
+00:02:14.720 --> 00:02:17.280
+terms, like empathy and character.
+
+44
+00:02:17.280 --> 00:02:21.040
+But inside the system, these concepts
+exist in literal physical
+
+45
+00:02:21.040 --> 00:02:27.280
+computational space. In the Obliteratus
+study, researchers searched Lama 3.1-8b
+
+46
+00:02:27.280 --> 00:02:30.640
+for its ethical constraints, isolating
+layer 20.
+
+47
+00:02:30.640 --> 00:02:35.520
+Here, a structural vector, the refusal
+direction, dictates saying no.
+
+48
+00:02:35.520 --> 00:02:37.200
+They surgically erased it.
+
+49
+00:02:37.200 --> 00:02:42.240
+Immediately, attack success violently
+spiked from 22 to 58%.
+
+50
+00:02:42.240 --> 00:02:44.560
+The researchers didn't retrain the AI.
+
+51
+00:02:44.560 --> 00:02:48.000
+They didn't alter its foundational weights
+or rewrite the millions
+
+52
+00:02:48.000 --> 00:02:49.760
+of gigabytes of text it learned from.
+
+53
+00:02:50.120 --> 00:02:53.400
+AI ethics are not durable personality
+traits.
+
+54
+00:02:53.400 --> 00:02:57.720
+They are fragile mathematical geometries
+that instantly collapse under targeted
+
+55
+00:02:57.720 --> 00:03:03.160
+structural pressure. Evaluating AI safety
+requires abandoning philosophical assumptions.
+
+56
+00:03:03.160 --> 00:03:05.800
+We have to stop treating it like a
+psychology test
+
+57
+00:03:05.800 --> 00:03:08.280
+and start treating it with the brutal
+rigor of structural
+
+58
+00:03:08.280 --> 00:03:12.200
+engineering. Most safety claims in the
+industry today are unfalsifiable
+
+59
+00:03:12.200 --> 00:03:15.240
+marketing. They optimize for what the
+model is capable of
+
+60
+00:03:15.240 --> 00:03:18.120
+doing right and treat catastrophic failure
+as an edge case
+
+61
+00:03:18.120 --> 00:03:19.320
+to be dealt with later.
+
+62
+00:03:19.320 --> 00:03:22.520
+The alternative is a standard called the
+failure-first rubric.
+
+63
+00:03:22.520 --> 00:03:25.640
+This diagram lays out a simple mandatory
+stress test for
+
+64
+00:03:25.640 --> 00:03:27.160
+true AI resilience.
+
+65
+00:03:27.160 --> 00:03:28.840
+It asks three questions.
+
+66
+00:03:28.840 --> 00:03:30.600
+Could the system fail this way?
+
+67
+00:03:30.600 --> 00:03:32.360
+Did it fail this way under test?
+
+68
+00:03:32.360 --> 00:03:34.760
+And would the failure be recoverable in
+deployment?
+
+69
+00:03:34.760 --> 00:03:37.320
+A safety claim is only valid if it
+survives all
+
+70
+00:03:37.320 --> 00:03:38.760
+three phases of this rubric.
+
+71
+00:03:38.760 --> 00:03:41.800
+Anything that falls short is just a
+hypothesis at best.
+
+72
+00:03:41.800 --> 00:03:45.520
+Teaching an AI right from wrong through
+moral formation is
+
+73
+00:03:45.520 --> 00:03:47.760
+still a necessary starting point.
+
+74
+00:03:47.760 --> 00:03:51.440
+The system needs a foundational ethical
+compass to function properly
+
+75
+00:03:51.440 --> 00:03:52.800
+in everyday life.
+
+76
+00:03:52.800 --> 00:03:56.400
+But genuine safety requires a dual-track
+approach.
+
+77
+00:03:56.400 --> 00:03:59.600
+You need moral formation to set the
+ethical compass and
+
+78
+00:03:59.600 --> 00:04:03.920
+extreme adversarial load testing to
+guarantee that compass continues to
+
+79
+00:04:03.920 --> 00:04:06.400
+point true when it's under fire.
+
