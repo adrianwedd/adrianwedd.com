@@ -8,6 +8,7 @@ interface Props {
 export default function ShareButton({ title, url }: Props) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const fullUrl = typeof window !== 'undefined' ? new URL(url, window.location.origin).href : url;
 
@@ -56,28 +57,76 @@ export default function ShareButton({ title, url }: Props) {
   const hasNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
 
   const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // Close menu on Escape or outside click
+  const itemEls = (): HTMLElement[] =>
+    menuRef.current ? Array.from(menuRef.current.querySelectorAll<HTMLElement>('[role="menuitem"]')) : [];
+
+  const focusItem = (i: number) => {
+    const els = itemEls();
+    if (!els.length) return;
+    const idx = (i + els.length) % els.length;
+    setActiveIndex(idx);
+    els[idx]?.focus();
+  };
+
+  const closeMenu = (returnFocus: boolean) => {
+    setOpen(false);
+    if (returnFocus) triggerRef.current?.focus();
+  };
+
+  // Move focus into the menu when it opens (WAI-ARIA menu pattern).
   useEffect(() => {
     if (!open) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
+    setActiveIndex(0);
+    const raf = requestAnimationFrame(() => focusItem(0));
+    return () => cancelAnimationFrame(raf);
+  }, [open]);
+
+  // Close on outside click (no focus return — focus has already moved away).
+  useEffect(() => {
+    if (!open) return;
     const handleClick = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener('keydown', handleKey);
     document.addEventListener('click', handleClick, true);
-    return () => {
-      document.removeEventListener('keydown', handleKey);
-      document.removeEventListener('click', handleClick, true);
-    };
+    return () => document.removeEventListener('click', handleClick, true);
   }, [open]);
+
+  const onMenuKeyDown = (e: KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        focusItem(activeIndex + 1);
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        focusItem(activeIndex - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        focusItem(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        focusItem(itemEls().length - 1);
+        break;
+      case 'Escape':
+        e.preventDefault();
+        closeMenu(true);
+        break;
+      case 'Tab':
+        // Tab leaves the menu — close it but let focus proceed naturally.
+        closeMenu(false);
+        break;
+    }
+  };
 
   return (
     <div class="relative inline-block" ref={menuRef}>
       <button
         type="button"
+        ref={triggerRef}
         onClick={() => {
           if (hasNativeShare) {
             handleNativeShare();
@@ -85,7 +134,7 @@ export default function ShareButton({ title, url }: Props) {
             setOpen(!open);
           }
         }}
-        class="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border px-3 text-xs text-text-muted transition-colors hover:border-accent hover:text-accent"
+        class="border-border text-text-muted hover:border-accent hover:text-accent inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-3 text-xs transition-colors"
         aria-label="Share this page"
         aria-haspopup={!hasNativeShare ? 'menu' : undefined}
         aria-expanded={!hasNativeShare ? open : undefined}
@@ -110,17 +159,21 @@ export default function ShareButton({ title, url }: Props) {
       {open && !hasNativeShare && (
         <div
           role="menu"
-          class="absolute right-0 top-full z-10 mt-2 w-44 rounded-lg border border-border bg-surface p-2 shadow-raised"
+          aria-orientation="vertical"
+          aria-label="Share this page"
+          onKeyDown={onMenuKeyDown}
+          class="border-border bg-surface shadow-raised absolute top-full right-0 z-10 mt-2 w-44 rounded-lg border p-2"
         >
-          {shareLinks.map((link) => (
+          {shareLinks.map((link, i) => (
             <a
               key={link.label}
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
               role="menuitem"
-              class="flex min-h-11 items-center rounded px-3 text-xs text-text-muted no-underline transition-colors hover:bg-surface-alt hover:text-text"
-              onClick={() => setOpen(false)}
+              tabindex={activeIndex === i ? 0 : -1}
+              class="text-text-muted hover:bg-surface-alt hover:text-text flex min-h-11 items-center rounded px-3 text-xs no-underline transition-colors"
+              onClick={() => closeMenu(false)}
             >
               {link.label}
             </a>
@@ -128,18 +181,24 @@ export default function ShareButton({ title, url }: Props) {
           <button
             type="button"
             role="menuitem"
+            tabindex={activeIndex === shareLinks.length ? 0 : -1}
             onClick={() => {
               handleCopy();
-              setOpen(false);
+              closeMenu(true);
             }}
-            class="flex min-h-11 w-full items-center rounded px-3 text-left text-xs text-text-muted transition-colors hover:bg-surface-alt hover:text-text"
+            class="text-text-muted hover:bg-surface-alt hover:text-text flex min-h-11 w-full items-center rounded px-3 text-left text-xs transition-colors"
           >
-            {copied ? 'Copied!' : 'Copy link'}
+            Copy link
           </button>
         </div>
       )}
 
-      {copied && hasNativeShare && <span class="ml-2 text-xs text-accent">Copied!</span>}
+      {copied && <span class="text-accent ml-2 text-xs">Copied!</span>}
+
+      {/* Status announcement for screen readers (covers both menu + native paths). */}
+      <span class="sr-only" role="status" aria-live="polite">
+        {copied ? 'Link copied to clipboard' : ''}
+      </span>
     </div>
   );
 }

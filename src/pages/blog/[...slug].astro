@@ -9,7 +9,7 @@ import NotebookAssets from '../../components/NotebookAssets.astro';
 import SeriesCTA from '../../components/SeriesCTA.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
-import { slug, youtubeId, ogSafeImage } from '../../lib/utils';
+import { slug, youtubeId, ogSafeImage, heroAltText } from '../../lib/utils';
 import { getImageDimensions } from '../../lib/image-dimensions';
 
 export async function getStaticPaths() {
@@ -29,9 +29,31 @@ const allPosts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
+// Series support — defined before prev/next so series posts navigate in
+// series order (Part 1 → 2 → 3) rather than the global date-sorted feed.
+const seriesPosts = post.data.series
+  ? allPosts
+      .filter((p) => p.data.series === post.data.series)
+      .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+  : [];
+const seriesIndex = seriesPosts.findIndex((p) => p.id === post.id);
+const inSeries = seriesPosts.length > 1 && seriesIndex !== -1;
+
 const currentIndex = allPosts.findIndex((p) => p.id === post.id);
-const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
-const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+const prevPost = inSeries
+  ? seriesIndex > 0
+    ? seriesPosts[seriesIndex - 1]
+    : null
+  : currentIndex < allPosts.length - 1
+    ? allPosts[currentIndex + 1]
+    : null;
+const nextPost = inSeries
+  ? seriesIndex < seriesPosts.length - 1
+    ? seriesPosts[seriesIndex + 1]
+    : null
+  : currentIndex > 0
+    ? allPosts[currentIndex - 1]
+    : null;
 
 // Reading time estimate
 const words = post.body ? post.body.split(/\s+/).length : 0;
@@ -49,13 +71,6 @@ const ogImage = post.data.heroImage ? ogSafeImage(post.data.heroImage) : `/og/bl
 const ogDimensions = getImageDimensions(ogImage);
 const ogImageWidth = ogDimensions?.width ?? 1200;
 const ogImageHeight = ogDimensions?.height ?? 630;
-
-// Series support
-const seriesPosts = post.data.series
-  ? allPosts
-      .filter((p) => p.data.series === post.data.series)
-      .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
-  : [];
 
 // Projects in the same series
 const allProjects = await getCollection('projects');
@@ -289,7 +304,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             poster={post.data.heroImage}
             src={post.data.videoUrl}
             class="border-border bg-surface-alt mt-8 aspect-video w-full rounded-lg border"
-          ></video>
+          />
         ) : post.data.heroImage ? (
           <Picture
             src={post.data.heroImage}
@@ -297,7 +312,12 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             height={630}
             widths={[640, 1200, 1920]}
             formats={['avif', 'webp']}
-            alt={post.data.title}
+            alt={heroAltText({
+              heroAlt: post.data.heroAlt,
+              heroImage: post.data.heroImage,
+              title: post.data.title,
+              kind: 'article',
+            })}
             class="border-border mt-8 w-full rounded-lg border"
             loading="eager"
             fetchpriority="high"
@@ -381,14 +401,17 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
     <RelatedContent currentTags={post.data.tags} currentId={post.id} currentDate={post.data.date} contentType="blog" />
 
     {/* Prev/Next navigation */}
-    <nav class="border-border mt-16 grid gap-4 border-t pt-8 sm:grid-cols-2" aria-label="Previous and next posts">
+    <nav
+      class="border-border mt-16 grid gap-4 border-t pt-8 sm:grid-cols-2"
+      aria-label={inSeries ? 'Previous and next in series' : 'Previous and next posts'}
+    >
       {
         prevPost ? (
           <a
             href={`/blog/${slug(prevPost.id)}/`}
             class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors"
           >
-            <span class="text-text-muted text-xs">&larr; Previous</span>
+            <span class="text-text-muted text-xs"><span aria-hidden="true">&larr;</span> {inSeries ? 'Previous in series' : 'Previous'}</span>
             <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {prevPost.data.title}
             </span>
@@ -403,7 +426,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             href={`/blog/${slug(nextPost.id)}/`}
             class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors sm:text-right"
           >
-            <span class="text-text-muted text-xs">Next &rarr;</span>
+            <span class="text-text-muted text-xs">{inSeries ? 'Next in series' : 'Next'} <span aria-hidden="true">&rarr;</span></span>
             <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {nextPost.data.title}
             </span>
