@@ -2,9 +2,7 @@
 
 export const USERNAME = 'adrianwedd';
 export const EVENTS_URL = `https://api.github.com/users/${USERNAME}/events/public`;
-export const REPOS_URL = `https://api.github.com/users/${USERNAME}/repos`;
 export const CACHE_KEY = 'adrianwedd_gh_activity';
-export const REPOS_CACHE_KEY = 'adrianwedd_gh_repos';
 export const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export interface GitHubEvent {
@@ -35,18 +33,6 @@ export interface RepoStat {
   name: string;
   commits: number;
   lastActive: string;
-}
-
-export interface GitHubRepo {
-  name: string;
-  full_name: string;
-  language: string | null;
-  updated_at: string;
-  pushed_at: string;
-  stargazers_count: number;
-  description: string | null;
-  fork: boolean;
-  archived: boolean;
 }
 
 export function relativeTime(dateStr: string): string {
@@ -145,8 +131,8 @@ export function processEvents(events: GitHubEvent[]): {
 }
 
 /**
- * Convenience wrapper with caps — used by the compact /now/ page widget.
- * The full ActivityDashboard uses processEvents() directly for uncapped results.
+ * Convenience wrapper with caps — used by the compact /now/ page widget
+ * (the GitHubActivity island). processEvents() returns uncapped results.
  */
 export function processEventsCompact(events: GitHubEvent[]): {
   activities: ProcessedActivity[];
@@ -227,46 +213,4 @@ export async function fetchEvents(): Promise<GitHubEvent[]> {
 
   setCache(allEvents);
   return allEvents;
-}
-
-type RepoCacheData = { repos: GitHubRepo[]; timestamp: number };
-
-export function getRepoCached(): GitHubRepo[] | null {
-  try {
-    const raw = sessionStorage.getItem(REPOS_CACHE_KEY);
-    if (!raw) return null;
-    const data: RepoCacheData = JSON.parse(raw);
-    if (Date.now() - data.timestamp > CACHE_TTL) return null;
-    return data.repos;
-  } catch {
-    return null;
-  }
-}
-
-export function setRepoCache(repos: GitHubRepo[]) {
-  try {
-    sessionStorage.setItem(REPOS_CACHE_KEY, JSON.stringify({ repos, timestamp: Date.now() }));
-  } catch {
-    // storage full or unavailable
-  }
-}
-
-export async function fetchAllRepos(): Promise<GitHubRepo[]> {
-  const cached = getRepoCached();
-  if (cached) return cached;
-
-  const allRepos: GitHubRepo[] = [];
-  const maxPages = 5;
-  for (let page = 1; page <= maxPages; page++) {
-    const res = await fetch(`${REPOS_URL}?per_page=100&sort=updated&page=${page}`);
-    if (!res.ok) {
-      if (page === 1) throw new Error(`HTTP ${res.status}`);
-      break; // partial results OK for subsequent pages
-    }
-    const repos: GitHubRepo[] = await res.json();
-    allRepos.push(...repos);
-    if (repos.length < 100) break;
-  }
-  setRepoCache(allRepos);
-  return allRepos;
 }
