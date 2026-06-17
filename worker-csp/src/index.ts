@@ -10,7 +10,7 @@
  *       the real header is stronger and the meta would otherwise stack with it.
  *  4. Set a real `Content-Security-Policy` response header (no `'unsafe-inline'`).
  *  5. Add defense-in-depth headers (`X-Frame-Options`, `X-Content-Type-Options`,
- *     `Referrer-Policy`).
+ *     `Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security`).
  *
  * Only HTML responses are rewritten. Static assets (JS/CSS/images) pass through
  * untouched so cacheability is preserved.
@@ -66,6 +66,12 @@ export default {
     headers.set('X-Content-Type-Options', 'nosniff');
     headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), xr-spatial-tracking=()');
+    // HSTS: 2-year max-age + includeSubDomains (cdn./social./www. are all
+    // HTTPS via Cloudflare). No `preload` — that's a one-way commitment that
+    // binds every current and future subdomain to HTTPS-only in browsers'
+    // hardcoded list. Set on HTML responses; the browser only needs to see
+    // HSTS once per host to apply the policy site-wide.
+    headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
     // Don't ship the meta CSP downstream — header is stronger and the meta
     // would force the browser to intersect both policies.
     headers.delete('Content-Security-Policy-Report-Only');

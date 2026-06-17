@@ -111,6 +111,9 @@ describe('worker fetch handler', () => {
 
     const res = await SELF.fetch('https://adrianwedd.com/_astro/page.js');
     expect(res.headers.get('content-security-policy')).toBeNull();
+    // Assets pass through, so they carry no HSTS — fine, since the browser
+    // applies the host-wide policy from any HTML response it has seen.
+    expect(res.headers.get('strict-transport-security')).toBeNull();
     expect(await res.text()).toBe('console.log(1)');
   });
 
@@ -133,6 +136,11 @@ describe('worker fetch handler', () => {
     expect(res.headers.get('x-content-type-options')).toBe('nosniff');
     expect(res.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
     expect(res.headers.get('permissions-policy')).toMatch(/camera=\(\)/);
+    expect(res.headers.get('strict-transport-security')).toBe(
+      'max-age=63072000; includeSubDomains',
+    );
+    // No preload — deliberate (one-way commitment).
+    expect(res.headers.get('strict-transport-security')).not.toMatch(/preload/);
 
     // Meta CSP stripped
     expect(text).not.toMatch(/<meta http-equiv="Content-Security-Policy"/);
