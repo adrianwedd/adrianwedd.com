@@ -1,0 +1,344 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.280
+When we share our work online, the default
+posture is
+
+2
+00:00:03.280 --> 00:00:06.720
+polish. We present the finished, gleaming
+product.
+
+3
+00:00:06.720 --> 00:00:09.280
+We engage in a performance of competence.
+
+4
+00:00:09.280 --> 00:00:11.600
+Look at a standard architecture diagram.
+
+5
+00:00:11.600 --> 00:00:14.720
+It builds systems from the top down,
+implying the structure
+
+6
+00:00:14.720 --> 00:00:18.240
+was flawless. But if you look behind that
+diagram, the
+
+7
+00:00:18.240 --> 00:00:19.840
+actual history is gone.
+
+8
+00:00:19.840 --> 00:00:22.960
+The polished narrative deletes every wrong
+turn.
+
+9
+00:00:22.960 --> 00:00:25.760
+We are trained to wait until the dust
+settles before
+
+10
+00:00:25.760 --> 00:00:28.640
+we show anyone what we are doing, creating
+the impression
+
+11
+00:00:28.640 --> 00:00:32.240
+that success is a straight line from idea
+to execution.
+
+12
+00:00:32.240 --> 00:00:35.840
+Maintaining that highly curated posture
+takes an immense amount of
+
+13
+00:00:35.840 --> 00:00:38.960
+energy. It is exhausting to present a
+version of yourself
+
+14
+00:00:38.960 --> 00:00:40.720
+that never makes a mistake.
+
+15
+00:00:40.720 --> 00:00:43.920
+The person reading a clean README learns
+exactly what you
+
+16
+00:00:43.920 --> 00:00:47.120
+built, but because you scrubbed away the
+vulnerability, they do
+
+17
+00:00:47.120 --> 00:00:48.880
+not learn how you built it.
+
+18
+00:00:48.880 --> 00:00:50.800
+There is an alternative framework.
+
+19
+00:00:50.800 --> 00:00:52.880
+It is called building in public.
+
+20
+00:00:52.880 --> 00:00:55.760
+If we peel back the layers on the perfect
+project
+
+21
+00:00:55.760 --> 00:00:59.600
+up top, the actual reality at the bottom
+looks incredibly
+
+22
+00:00:59.600 --> 00:01:00.000
+chaotic.
+
+23
+00:01:00.840 --> 00:01:05.160
+You stall into the solutions sideways,
+hitting three false starts
+
+24
+00:01:05.160 --> 00:01:07.320
+before making any real progress.
+
+25
+00:01:07.320 --> 00:01:10.840
+You realize halfway through that your core
+dependency is entirely
+
+26
+00:01:10.840 --> 00:01:14.680
+unmaintained, forcing you to rip out the
+foundation and reverse
+
+27
+00:01:14.680 --> 00:01:18.120
+course entirely. This is why the code
+commit log is
+
+28
+00:01:18.120 --> 00:01:22.200
+so valuable. It provides a raw, unfiltered
+history of what
+
+29
+00:01:22.200 --> 00:01:23.880
+actually happened day to day.
+
+30
+00:01:23.880 --> 00:01:26.680
+A standard change log gives you a curated
+list of
+
+31
+00:01:26.680 --> 00:01:29.800
+shiny features. The commit log gives you
+the sequence of
+
+32
+00:01:29.800 --> 00:01:33.560
+bad ideas, desperate fixes, and immediate
+reversals.
+
+33
+00:01:33.560 --> 00:01:36.840
+The friction and the chaos documented in
+that timeline are
+
+34
+00:01:36.840 --> 00:01:38.600
+not errors you need to hide.
+
+35
+00:01:38.600 --> 00:01:41.160
+They are the actual mechanics of learning.
+
+36
+00:01:41.160 --> 00:01:44.680
+This philosophy requires us to look at our
+tools differently.
+
+37
+00:01:44.680 --> 00:01:48.040
+Take open issues on a project repository,
+for example.
+
+38
+00:01:48.040 --> 00:01:51.240
+Instead of a customer support channel,
+they become a public
+
+39
+00:01:51.240 --> 00:01:53.320
+space for internal debate.
+
+40
+00:01:53.320 --> 00:01:54.840
+You use that space to argue.
+
+41
+00:01:55.120 --> 00:01:58.160
+with yourself about what to build next You
+think out
+
+42
+00:01:58.160 --> 00:02:01.520
+loud, right where others can observe the
+thought process.
+
+43
+00:02:01.520 --> 00:02:03.280
+Then there is the colophon.
+
+44
+00:02:03.280 --> 00:02:06.480
+It is an exhaustive list detailing the
+technology stack you
+
+45
+00:02:06.480 --> 00:02:10.000
+chose, the specific design decisions you
+made, and the credits
+
+46
+00:02:10.000 --> 00:02:11.520
+for who helped you get there.
+
+47
+00:02:11.520 --> 00:02:14.640
+And finally, there is the practice of
+shipping drafts.
+
+48
+00:02:14.640 --> 00:02:17.680
+This is the deliberate choice to keep your
+dead-end experiments
+
+49
+00:02:17.680 --> 00:02:19.840
+and half-finished projects visible.
+
+50
+00:02:19.840 --> 00:02:22.800
+You do not sweep abandoned drafts under
+the rug, because
+
+51
+00:02:22.800 --> 00:02:25.920
+showing what fails provides vital context
+for anyone trying to
+
+52
+00:02:25.920 --> 00:02:27.440
+solve the same problem.
+
+53
+00:02:27.440 --> 00:02:30.880
+Issues, colophons, and drafts provide the
+context that a final
+
+54
+00:02:30.880 --> 00:02:32.480
+product usually hides.
+
+55
+00:02:32.480 --> 00:02:35.120
+Together, they form a map for any creator
+trying to
+
+56
+00:02:35.120 --> 00:02:36.880
+follow in your footsteps.
+
+57
+00:02:36.880 --> 00:02:39.840
+Building in public carries a very real
+cost.
+
+58
+00:02:39.840 --> 00:02:43.600
+You expose your absolute worst decisions
+before you correct them.
+
+59
+00:02:43.600 --> 00:02:46.000
+There is a constant fear of losing control
+of your
+
+60
+00:02:46.000 --> 00:02:49.280
+narrative. Someone might look at your code
+on the worst
+
+61
+00:02:49.280 --> 00:02:53.720
+day of a a brutal refactor and form
+permanent opinion,
+
+62
+00:02:53.720 --> 00:02:57.480
+but that pressure fades when you realize
+the curated version
+
+63
+00:02:57.480 --> 00:02:59.160
+was always an invention.
+
+64
+00:02:59.160 --> 00:03:02.120
+If the smooth launch is a fiction, you
+don't have
+
+65
+00:03:02.120 --> 00:03:04.200
+to spend energy maintaining it.
+
+66
+00:03:04.200 --> 00:03:06.680
+You are not putting your work out there to
+perform
+
+67
+00:03:06.680 --> 00:03:08.440
+for a crowd of critics.
+
+68
+00:03:08.440 --> 00:03:10.920
+You are doing it for the version of
+yourself six
+
+69
+00:03:10.920 --> 00:03:14.520
+months ago, the person who couldn't find a
+single example
+
+70
+00:03:14.520 --> 00:03:17.480
+of someone else doing it badly before they
+did it
+
+71
+00:03:17.480 --> 00:03:21.560
+well. Stop wasting your energy on the
+illusion of polish.
+
+72
+00:03:21.560 --> 00:03:25.000
+Redirect that effort into the actual work
+and show the
+
+73
+00:03:25.000 --> 00:03:29.240
+mess. The mess is the only honest map we
+have.
+

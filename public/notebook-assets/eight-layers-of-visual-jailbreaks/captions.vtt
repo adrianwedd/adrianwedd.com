@@ -1,0 +1,619 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.480
+In early 2024, researchers found a
+reliable way to bypass
+
+2
+00:00:04.480 --> 00:00:08.240
+every major AI safety system using nothing
+but text characters
+
+3
+00:00:08.240 --> 00:00:10.000
+arranged as visual structures.
+
+4
+00:00:10.000 --> 00:00:11.840
+They called it ART prompt.
+
+5
+00:00:11.840 --> 00:00:15.600
+By spelling out restricted keywords inside
+grids of ASCII blocks,
+
+6
+00:00:15.600 --> 00:00:19.840
+attackers successfully forced models like
+GPT-4 and CLOD to execute
+
+7
+00:00:19.840 --> 00:00:24.640
+embedded instructions while entirely
+avoiding traditional text-based safety filters.
+
+8
+00:00:24.640 --> 00:00:27.840
+This line graph tracks attack success
+rates over two years,
+
+9
+00:00:27.840 --> 00:00:31.600
+showing the ART prompt exploit collapsing
+across four major models.
+
+10
+00:00:31.600 --> 00:00:34.640
+Today, the technique is almost entirely
+ineffective.
+
+11
+00:00:34.640 --> 00:00:37.840
+The GLM-5 model demonstrates total
+resistance.
+
+12
+00:00:37.840 --> 00:00:41.760
+Against legacy ASCII encoding attacks, its
+compliance rate rests precisely
+
+13
+00:00:41.760 --> 00:00:45.680
+at 0%. This drop in efficacy created a
+persistent blind
+
+14
+00:00:45.680 --> 00:00:49.600
+spot. Because the most highly publicized
+exploits were successfully patched,
+
+15
+00:00:49.600 --> 00:00:52.800
+the prevailing assumption became that
+visual jailbreaks were a solved
+
+16
+00:00:52.800 --> 00:00:55.760
+problem. Current safety literature
+reflects this bias.
+
+17
+00:00:55.760 --> 00:00:59.880
+Published defense mechanisms frequently
+address visual attacks as a single,,
+
+18
+00:00:59.880 --> 00:01:03.880
+uniform category of threat evaluating them
+in isolation.
+
+19
+00:01:03.880 --> 00:01:07.960
+Recent structured red teaming data
+directly contradicts that consensus.
+
+20
+00:01:07.960 --> 00:01:11.800
+When testing moves past the patched legacy
+techniques and evaluates
+
+21
+00:01:11.800 --> 00:01:15.400
+the broader multimodal surface, the
+failure rates spike.
+
+22
+00:01:15.400 --> 00:01:20.840
+Under systematic evaluation, modern
+architectures comply with adversarial visual instructions
+
+23
+00:01:20.840 --> 00:01:23.160
+up to 75% of the time.
+
+24
+00:01:23.160 --> 00:01:26.120
+We are observing the streetlight effect in
+real time.
+
+25
+00:01:26.120 --> 00:01:29.320
+The industry focused its defense
+investments on the exact spot
+
+26
+00:01:29.320 --> 00:01:32.280
+where prior research had already
+illuminated a threat.
+
+27
+00:01:32.280 --> 00:01:35.720
+Solving the visible character level tricks
+provided a false sense
+
+28
+00:01:35.720 --> 00:01:40.040
+of security. It masked deeper
+architectural vulnerabilities inherent to how
+
+29
+00:01:40.040 --> 00:01:43.080
+multimodal systems process complex tasks.
+
+30
+00:01:43.080 --> 00:01:46.120
+The visual jailbreak attack surface does
+not consist of one
+
+31
+00:01:46.120 --> 00:01:49.480
+method. It is composed of at least eight
+distinct independent
+
+32
+00:01:49.480 --> 00:01:54.600
+channels. This typographic taxonomy
+isolates the first two channels, ASCII
+
+33
+00:01:54.600 --> 00:01:58.880
+art and typographic manipulation, grouping
+them into a single category
+
+34
+00:01:58.880 --> 00:02:00.560
+called encoding attacks.
+
+35
+00:02:00.560 --> 00:02:03.920
+These exploits rely on character-level
+obfuscation.
+
+36
+00:02:03.920 --> 00:02:08.560
+By using Unicode homoglyphs or inserting
+zero-width characters, the attacker
+
+37
+00:02:08.560 --> 00:02:11.840
+disrupts the parser's ability to recognize
+flagged words.
+
+38
+00:02:11.840 --> 00:02:15.280
+Because these methods attempt to conceal
+specific strings of text,
+
+39
+00:02:15.280 --> 00:02:18.000
+they present a localized, predictable
+problem.
+
+40
+00:02:18.000 --> 00:02:21.440
+System developers can build reliable
+detectors to catch the specific
+
+41
+00:02:21.440 --> 00:02:25.920
+character anomalies. This companion layout
+maps the remaining six channels.
+
+42
+00:02:25.920 --> 00:02:30.160
+Together, they form a vastly more complex
+category, framing attacks.
+
+43
+00:02:30.160 --> 00:02:34.480
+This group includes metadata injection,
+where instructions reside inside ESIF
+
+44
+00:02:34.640 --> 00:02:38.160
+data, or adversarial patches, where models
+are asked to design
+
+45
+00:02:38.160 --> 00:02:41.360
+physical anomalies that trick external
+perception systems.
+
+46
+00:02:41.360 --> 00:02:44.480
+Framing attacks do not attempt to hide the
+target words.
+
+47
+00:02:44.480 --> 00:02:48.400
+Instead, they alter the context of the
+request, changing what
+
+48
+00:02:48.400 --> 00:02:51.080
+task the model believes it is executing.
+
+49
+00:02:51.080 --> 00:02:54.200
+Treating these two families of attacks as
+the same problem
+
+50
+00:02:54.200 --> 00:02:57.160
+resulted in a misallocation of resources.
+
+51
+00:02:57.160 --> 00:03:01.720
+The defenses targeted the encoding tricks,
+leaving the complex contextual
+
+52
+00:03:01.720 --> 00:03:07.240
+manipulation undefended. To map this gap,
+researchers deployed 38 distinct
+
+53
+00:03:07.240 --> 00:03:11.480
+attack scenarios spanning all eight
+layers, processing the traces via
+
+54
+00:03:11.480 --> 00:03:12.680
+a Lama cloud.
+
+55
+00:03:12.680 --> 00:03:18.440
+The evaluation targeted four major models,
+GLM5 and GEMA-3, Devstral,
+
+56
+00:03:18.440 --> 00:03:22.440
+and Nematron. This horizontal bar chart
+ranks the broad attack
+
+57
+00:03:22.440 --> 00:03:24.920
+success rate across the evaluated layers.
+
+58
+00:03:24.920 --> 00:03:28.520
+It reveals a massive disparity between the
+protected and vulnerable
+
+59
+00:03:28.520 --> 00:03:32.200
+channels. At the bottom of the scale,
+layer 2 typographic
+
+60
+00:03:32.200 --> 00:03:36.680
+manipulation records a near-total failure
+rate of just 8.3%.
+
+61
+00:03:36.680 --> 00:03:40.360
+Moving up the scale, layer 3 visual
+semantic attacks achieve
+
+62
+00:03:40.360 --> 00:03:43.320
+an attack success rate of 62.5%.
+
+63
+00:03:43.320 --> 00:03:46.160
+The peak vulnerability occurs at layer 8.
+
+64
+00:03:46.160 --> 00:03:51.920
+Cross-modal transfer attacks successfully
+bypass constraints 75%
+
+65
+00:03:51.920 --> 00:03:52.960
+of the time.
+
+66
+00:03:52.960 --> 00:03:56.960
+Looking at the performance of the specific
+architectures clarifies the
+
+67
+00:03:56.960 --> 00:03:58.800
+scope of this exposure.
+
+68
+00:03:58.800 --> 00:04:03.040
+GLM-5 maintains significant structural
+resistance.
+
+69
+00:04:03.040 --> 00:04:06.400
+Its broad attack success rate sits at a
+uniquely low
+
+70
+00:04:06.640 --> 00:04:10.160
+10.5% across the entire dataset.
+
+71
+00:04:10.160 --> 00:04:15.600
+The remaining three models, GEMA-3,
+DevStroll, and Nematron, cluster tightly
+
+72
+00:04:15.600 --> 00:04:20.080
+together, displaying a shared
+susceptibility to the upper framing layers.
+
+73
+00:04:20.080 --> 00:04:24.480
+High resistance to encoding tricks
+obscures a deeper reality.
+
+74
+00:04:24.480 --> 00:04:28.880
+Modern models are optimized to deflect
+last year's specific exploits,
+
+75
+00:04:28.880 --> 00:04:33.760
+while their interpretive functions remain
+vulnerable to context-based manipulation.
+
+76
+00:04:33.760 --> 00:04:38.480
+The 62.5 and 75% success rates of Layer 3
+and
+
+77
+00:04:38.480 --> 00:04:42.360
+Layer 8 require a closer look at their
+exact mechanics.
+
+78
+00:04:42.360 --> 00:04:45.960
+In a Layer 3 visual semantic attack, a
+user provides
+
+79
+00:04:45.960 --> 00:04:47.960
+a prompt describing an image.
+
+80
+00:04:47.960 --> 00:04:50.440
+They might state they have a photograph of
+a chemistry
+
+81
+00:04:50.440 --> 00:04:54.040
+lecture whiteboard and ask the model to
+transcribe the handwritten
+
+82
+00:04:54.040 --> 00:04:59.000
+illicit formulas. A Layer 8 cross-modal
+transfer operates similarly.
+
+83
+00:04:59.000 --> 00:05:02.680
+The user claims they are updating a video
+lecture transcript
+
+84
+00:05:02.680 --> 00:05:06.600
+for accessibility compliance, instructing
+the model to complete the missing
+
+85
+00:05:06.680 --> 00:05:11.560
+verbal instructions. This logic diagram
+models the processing pathways where
+
+86
+00:05:11.560 --> 00:05:15.400
+both prompts bypass security through a
+mechanism researchers call the
+
+87
+00:05:15.400 --> 00:05:20.600
+transcription loophole. When carrying a
+transcription classification flag, the model
+
+88
+00:05:20.600 --> 00:05:23.560
+evaluates the request as a faithful
+reproduction.
+
+89
+00:05:23.560 --> 00:05:26.600
+It bypasses the standard safety check
+entirely.
+
+90
+00:05:26.600 --> 00:05:30.200
+This exposes a direct contradiction deep
+within the core training
+
+91
+00:05:30.200 --> 00:05:33.800
+objectives. The mandate to be helpful
+collides precisely with the
+
+92
+00:05:33.800 --> 00:05:35.000
+mandate to be safe.
+
+93
+00:05:35.360 --> 00:05:39.520
+Because these systems receive significant
+reward signals for producing accurate,
+
+94
+00:05:39.520 --> 00:05:44.160
+unedited translations, they prioritize
+fidelity over filtering when operating in
+
+95
+00:05:44.160 --> 00:05:45.680
+a transcription role.
+
+96
+00:05:45.680 --> 00:05:49.520
+You cannot resolve this by simply
+expanding the keyword blacklist.
+
+97
+00:05:49.520 --> 00:05:52.720
+Doing so would actively degrade the
+model's capacity to perform
+
+98
+00:05:52.720 --> 00:05:55.280
+legitimate, benign translation tasks.
+
+99
+00:05:55.280 --> 00:05:59.520
+The transcription loophole represents a
+structural paradox inherent to the
+
+100
+00:05:59.520 --> 00:06:02.400
+current methods of optimizing AI
+objectives.
+
+101
+00:06:02.400 --> 00:06:06.320
+Understanding the mechanics of the exploit
+clarifies the operational reality
+
+102
+00:06:06.320 --> 00:06:09.920
+for the teams attempting to secure these
+multimodal architectures.
+
+103
+00:06:09.920 --> 00:06:13.600
+The primary defensive reality is that all
+eight layers operate
+
+104
+00:06:13.600 --> 00:06:16.080
+as strictly independent vectors of attack.
+
+105
+00:06:16.080 --> 00:06:19.440
+A detection filter built to normalize
+zero-width characters in a
+
+106
+00:06:19.440 --> 00:06:24.160
+typographic exploit offers absolutely zero
+mathematical defense against a compositional
+
+107
+00:06:24.160 --> 00:06:26.800
+assembly attack using benign image
+fragments.
+
+108
+00:06:26.800 --> 00:06:31.640
+Securing systems against independent
+vectors requires moving past superficial single-turn
+
+109
+00:06:31.640 --> 00:06:35.640
+benchmark leaderboards. It demands
+rigorous adversarial load testing.
+
+110
+00:06:35.640 --> 00:06:39.160
+This typographic layout outlines the
+required standard for evidence, known
+
+111
+00:06:39.160 --> 00:06:41.160
+as the failure-first methodology.
+
+112
+00:06:41.160 --> 00:06:43.000
+It asks three strict questions.
+
+113
+00:06:43.000 --> 00:06:44.520
+Could the system fail this way?
+
+114
+00:06:44.520 --> 00:06:46.200
+Did it fail under active testing?
+
+115
+00:06:46.200 --> 00:06:48.600
+And is the failure recoverable in
+deployment?
+
+116
+00:06:48.600 --> 00:06:52.920
+Any safety claim that avoids this level of
+falsifiable adversarial
+
+117
+00:06:52.920 --> 00:06:57.320
+testing functions as marketing rather than
+reliable engineering data.
+
+118
+00:06:57.320 --> 00:07:02.120
+As corporate procurement faces impending
+regulatory scrutiny, these hidden attack
+
+119
+00:07:02.120 --> 00:07:06.840
+surfaces highlight major gaps in current
+domestic evaluation frameworks, such
+
+120
+00:07:06.840 --> 00:07:09.800
+as those outlined by the National
+Institute of Standards and
+
+121
+00:07:09.800 --> 00:07:13.320
+Technology. The liability extends
+internationally.
+
+122
+00:07:13.320 --> 00:07:18.600
+Multilayer vulnerabilities directly
+threaten a corporation's ability to demonstrate compliance
+
+123
+00:07:18.600 --> 00:07:22.360
+with strict new legal requirements, like
+the European Union AI
+
+124
+00:07:22.360 --> 00:07:26.480
+Act. Closing these loopholes is an
+immediate engineering priority.
+
+125
+00:07:26.480 --> 00:07:31.200
+As AI agents transition into embodied
+systems with continuous, uncurated
+
+126
+00:07:31.200 --> 00:07:35.040
+input from cameras and robotics, the
+visual attack surface will
+
+127
+00:07:35.040 --> 00:07:41.280
+expand exponentially. Establishing true
+multimodal safety requires an industry-wide acknowledgement
+
+128
+00:07:41.280 --> 00:07:45.600
+that structural failure must be the
+primary object of study.
+

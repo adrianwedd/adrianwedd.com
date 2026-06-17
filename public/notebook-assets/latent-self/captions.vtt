@@ -1,0 +1,355 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:03.920
+A traditional mirror operates on strict
+physical law.
+
+2
+00:00:03.920 --> 00:00:07.520
+It provides a one-to-one synchronization
+between your body and its
+
+3
+00:00:07.520 --> 00:00:10.000
+reflection, proving your presence.
+
+4
+00:00:10.000 --> 00:00:13.040
+We have learned to process static
+deepfakes by looking for
+
+5
+00:00:13.040 --> 00:00:17.040
+the seams. Because they are pre-recorded,
+the brain categorizes them
+
+6
+00:00:17.040 --> 00:00:20.640
+as external media, a digital object
+separate from our own
+
+7
+00:00:20.640 --> 00:00:23.840
+current state. This raises a question for
+the era of
+
+8
+00:00:23.840 --> 00:00:28.080
+generative AI. What happens when that
+one-to-one physical response is
+
+9
+00:00:28.080 --> 00:00:30.480
+merged with synthetic manipulation?
+
+10
+00:00:30.480 --> 00:00:34.000
+When these two systems collide, the result
+is a vacuum.
+
+11
+00:00:34.000 --> 00:00:37.600
+The brain struggles to reconcile the
+real-time movement it expects
+
+12
+00:00:37.600 --> 00:00:39.920
+with the artificial image it sees.
+
+13
+00:00:39.920 --> 00:00:44.480
+Latent Self is an interactive, real-time
+face-morphing installation.
+
+14
+00:00:44.480 --> 00:00:47.440
+It is designed as a physical kiosk
+mimicking the presence
+
+15
+00:00:47.440 --> 00:00:49.600
+of a standard mirror within a gallery.
+
+16
+00:00:49.600 --> 00:00:51.920
+When you stand in front of it, the
+reflection is
+
+17
+00:00:51.920 --> 00:00:53.840
+instantly recognizable as you.
+
+18
+00:00:53.840 --> 00:00:56.960
+It mimics your movements with low latency,
+yet the features
+
+19
+00:00:56.960 --> 00:00:58.480
+of your face are shifted.
+
+20
+00:00:58.480 --> 00:01:02.280
+The system allows you to adjust your
+reflection along specific
+
+21
+00:01:02.280 --> 00:01:06.680
+paths, such as age, gender, and species,
+or change the
+
+22
+00:01:06.680 --> 00:01:08.440
+intensity of a smile.
+
+23
+00:01:08.440 --> 00:01:12.360
+Because you control these specific shifts,
+you are a participant
+
+24
+00:01:12.360 --> 00:01:13.800
+in the distortion.
+
+25
+00:01:13.800 --> 00:01:17.720
+The installation moves the focus from the
+technology itself to
+
+26
+00:01:17.720 --> 00:01:21.880
+the feeling of seeing your identity
+manipulated in real time.
+
+27
+00:01:21.880 --> 00:01:25.880
+The engine behind the screen is Style
+GAN2ADA.
+
+28
+00:01:25.880 --> 00:01:28.920
+Unlike a simple filter that pastes an
+image over your
+
+29
+00:01:28.920 --> 00:01:33.240
+face, this architecture works by
+recalculating your appearance from the
+
+30
+00:01:33.240 --> 00:01:37.160
+inside out. This is a representation of
+latent space.
+
+31
+00:01:37.160 --> 00:01:41.080
+It is a multi-dimensional mathematical map
+where the AI has
+
+32
+00:01:41.080 --> 00:01:45.240
+organized every possible human facial
+feature into a system of
+
+33
+00:01:45.240 --> 00:01:49.240
+coordinates. When the kiosk scans your
+face, it plots your
+
+34
+00:01:49.240 --> 00:01:53.560
+specific biology as a single numeric
+coordinate within this map.
+
+35
+00:01:53.560 --> 00:01:55.000
+This point is your origin.
+
+36
+00:01:55.440 --> 00:01:58.400
+It is the mathematical definition of how
+you look at
+
+37
+00:01:58.400 --> 00:02:00.560
+the moment you step in front of the
+mirror.
+
+38
+00:02:00.560 --> 00:02:04.240
+By turning your face into a coordinate,
+the system removes
+
+39
+00:02:04.240 --> 00:02:08.560
+biological limits. Your identity becomes a
+location on a map
+
+40
+00:02:08.560 --> 00:02:09.920
+that can be moved.
+
+41
+00:02:09.920 --> 00:02:13.520
+When selecting an option like age, you
+aren't just applying
+
+42
+00:02:13.520 --> 00:02:16.720
+a mask. You're telling the AI to find the
+direction
+
+43
+00:02:16.720 --> 00:02:18.960
+on the map representing older.
+
+44
+00:02:18.960 --> 00:02:22.560
+To create the change, the AI calculates a
+trajectory from
+
+45
+00:02:22.560 --> 00:02:26.480
+your origin point along a specific
+mathematical vector.
+
+46
+00:02:26.480 --> 00:02:29.840
+As you move or breathe, your origin point
+shifts.
+
+47
+00:02:29.840 --> 00:02:33.920
+The system recalculates the vector
+instantly, ensuring the morph stays
+
+48
+00:02:33.920 --> 00:02:36.720
+attached to your real-time
+microexpressions.
+
+49
+00:02:36.720 --> 00:02:40.160
+The speed of these calculations allows the
+software to recede
+
+50
+00:02:40.160 --> 00:02:41.360
+into the background.
+
+51
+00:02:41.360 --> 00:02:44.480
+You are left with a reflection that feels
+alive, even
+
+52
+00:02:44.480 --> 00:02:46.560
+as it ceases to be accurate.
+
+53
+00:02:46.560 --> 00:02:50.000
+This creates a very specific kind of
+cognitive dissonance.
+
+54
+00:02:50.200 --> 00:02:53.720
+Because the image responds to your
+smallest movements, your brain
+
+55
+00:02:53.720 --> 00:02:57.160
+cannot easily dismiss the reflection as a
+pre-rendered fake.
+
+56
+00:02:57.160 --> 00:03:00.200
+This places the viewer in the uncanny gap.
+
+57
+00:03:00.200 --> 00:03:04.280
+You are suspended between recognizing
+yourself and feeling a sense
+
+58
+00:03:04.280 --> 00:03:06.920
+of estrangement from the face in the
+mirror.
+
+59
+00:03:06.920 --> 00:03:10.920
+The installation hides its technical
+complexity to ensure you stay
+
+60
+00:03:10.920 --> 00:03:12.600
+focused on this feeling.
+
+61
+00:03:12.600 --> 00:03:17.560
+Without visible interface distractions,
+the dissonance remains front and center.
+
+62
+00:03:17.560 --> 00:03:19.640
+This discomfort has a purpose.
+
+63
+00:03:19.640 --> 00:03:23.000
+It forces the viewer to examine how they
+recognize themselves
+
+64
+00:03:23.000 --> 00:03:25.880
+when their physical features are no longer
+constant.
+
+65
+00:03:25.880 --> 00:03:29.320
+The installation moves away from the
+binary of real versus
+
+66
+00:03:29.320 --> 00:03:33.720
+fake imagery. It occupies a space where
+those categories overlap.
+
+67
+00:03:33.720 --> 00:03:37.480
+By moving your identity along a
+mathematical axis, the mirror
+
+68
+00:03:37.480 --> 00:03:40.360
+shows a version of you derived from
+probability.
+
+69
+00:03:40.360 --> 00:03:43.560
+It is a reflection of a plausible
+alternate state.
+
+70
+00:03:43.560 --> 00:03:47.600
+Since mirrors have always been our primary
+tool for self-verification,
+
+71
+00:03:47.600 --> 00:03:51.440
+introducing these latent vectors changes
+the nature of the reflection.
+
+72
+00:03:51.440 --> 00:03:54.160
+In this context, the mirror does more than
+confirm your
+
+73
+00:03:54.160 --> 00:03:57.760
+current appearance, it presents the
+unsettling reality of who you
+
+74
+00:03:57.760 --> 00:03:58.960
+almost are.
+

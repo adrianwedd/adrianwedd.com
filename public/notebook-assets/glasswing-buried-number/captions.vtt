@@ -1,0 +1,417 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:05.760
+Last April, Anthropic launched Project
+Glasswing, unleashing a withheld frontier
+
+2
+00:00:05.760 --> 00:00:09.600
+model called Claude Mythos Preview to hunt
+for software bugs
+
+3
+00:00:09.600 --> 00:00:12.080
+sweeping across critical infrastructure.
+
+4
+00:00:12.080 --> 00:00:15.440
+In a single month of automated scanning,
+the AI found
+
+5
+00:00:15.440 --> 00:00:20.960
+over 10,000 high or critical severity
+vulnerabilities inside critical digital
+
+6
+00:00:20.960 --> 00:00:24.560
+systems. The project is a consortium of 50
+major tech
+
+7
+00:00:24.560 --> 00:00:29.040
+partners, including Google, Apple,
+Microsoft, and Cloudflare, who used it
+
+8
+00:00:29.040 --> 00:00:32.160
+to find vulnerabilities before adversaries
+could.
+
+9
+00:00:32.160 --> 00:00:35.520
+With industry giants involved and a
+massive tally of verified
+
+10
+00:00:35.520 --> 00:00:39.920
+bugs successfully caught, automated
+discovery looks like a monumental win
+
+11
+00:00:39.920 --> 00:00:41.360
+for AI safety.
+
+12
+00:00:41.360 --> 00:00:45.360
+This pie chart represents the 10,000
+vulnerabilities discovered.
+
+13
+00:00:45.360 --> 00:00:48.560
+That sliver at the top represents the bugs
+patched, under
+
+14
+00:00:48.800 --> 00:00:53.120
+1%. Zooming in on the 530 disclosed bugs,
+the patch
+
+15
+00:00:53.120 --> 00:00:55.200
+rate is 14.1%.
+
+16
+00:00:55.200 --> 00:00:57.840
+The vast majority remain unpatched.
+
+17
+00:00:57.840 --> 00:00:59.840
+The people responsible for fixing these
+vulnerabilities
+
+18
+00:01:00.600 --> 00:01:04.440
+have explicitly asked Anthropic to slow
+down its disclosures.
+
+19
+00:01:04.440 --> 00:01:07.640
+Open source maintainers are working on
+their own time, usually
+
+20
+00:01:07.640 --> 00:01:09.720
+without dedicated security teams.
+
+21
+00:01:09.720 --> 00:01:12.920
+They need weeks to design and verify a
+secure patch
+
+22
+00:01:12.920 --> 00:01:16.360
+before the next wave of AI-generated bug
+reports arrives.
+
+23
+00:01:16.360 --> 00:01:20.440
+Project Glasswing accelerated the
+discovery side of the equation without
+
+24
+00:01:20.440 --> 00:01:22.920
+providing any solution for the fixing
+side.
+
+25
+00:01:22.920 --> 00:01:26.760
+The result is a verified, expanding
+inventory of software flaws
+
+26
+00:01:26.760 --> 00:01:29.320
+that no one has the capacity to resolve.
+
+27
+00:01:29.320 --> 00:01:33.720
+Historically, software security progressed
+slowly because human analysts had to
+
+28
+00:01:33.720 --> 00:01:36.200
+manually hunt for complex vulnerabilities.
+
+29
+00:01:36.200 --> 00:01:39.560
+The friction of discovery kept the volume
+of bugs manageable.
+
+30
+00:01:39.560 --> 00:01:41.480
+This pipeline shows the shift.
+
+31
+00:01:41.480 --> 00:01:44.920
+Discovery scales with compute, meaning
+finding a flaw is just
+
+32
+00:01:44.920 --> 00:01:47.720
+processing power, flooding the system's
+front.
+
+33
+00:01:47.720 --> 00:01:49.320
+But it hits a hard limit.
+
+34
+00:01:49.320 --> 00:01:53.400
+Verifying, coordinating, and writing the
+patch still relies on finite
+
+35
+00:01:53.400 --> 00:01:58.240
+human capacity. While defenders are
+trapped in that bottleneck, attackers
+
+36
+00:01:58.240 --> 00:01:59.760
+are moving faster.
+
+37
+00:01:59.760 --> 00:02:04.000
+The security industry measures this
+through the weaponization window, the
+
+38
+00:02:04.000 --> 00:02:08.240
+time between a vulnerability being
+disclosed and an attacker successfully
+
+39
+00:02:08.240 --> 00:02:11.680
+exploiting it. This chart maps the
+mismatch.
+
+40
+00:02:11.680 --> 00:02:15.040
+The flat line shows human patching speed
+holding steady at
+
+41
+00:02:15.040 --> 00:02:16.560
+a two-week average.
+
+42
+00:02:16.560 --> 00:02:21.680
+The red curve shows attacker weaponization
+dropping from 771 days
+
+43
+00:02:21.680 --> 00:02:23.600
+to single-digit hours.
+
+44
+00:02:23.600 --> 00:02:27.360
+AI agents can generate exploits in under
+five minutes.
+
+45
+00:02:27.360 --> 00:02:31.200
+A two-week defensive cycle cannot compete
+with a five-minute offensive
+
+46
+00:02:31.200 --> 00:02:35.040
+strike. The defense is failing due to a
+structural mismatch
+
+47
+00:02:35.040 --> 00:02:39.200
+between machine-speed exploitation and
+human-paced remediation.
+
+48
+00:02:39.200 --> 00:02:42.640
+It helps to clarify exactly what Claude
+Mytho's preview is
+
+49
+00:02:42.640 --> 00:02:44.080
+capable of right now.
+
+50
+00:02:44.080 --> 00:02:48.400
+The model is highly proficient at static,
+tactical environments, routinely
+
+51
+00:02:48.400 --> 00:02:50.840
+beating capture-the-flag security puzzles.
+
+52
+00:02:50.840 --> 00:02:53.800
+What it struggles with is the broader
+strategic layer.
+
+53
+00:02:53.800 --> 00:02:58.280
+Independent enterprise testing shows
+current models fail to maintain operational
+
+54
+00:02:58.280 --> 00:03:01.960
+state when trying to autonomously breach a
+live, actively defended
+
+55
+00:03:01.960 --> 00:03:06.600
+corporate network. High scores on static
+benchmarks often overstate real-world
+
+56
+00:03:06.600 --> 00:03:11.560
+capability. Exposed to live, unreleased
+tests without internet access, model
+
+57
+00:03:11.560 --> 00:03:14.120
+performance drops by half as they lose the
+ability to
+
+58
+00:03:14.120 --> 00:03:16.360
+retrieve data from published write-ups.
+
+59
+00:03:16.360 --> 00:03:20.440
+AI cannot autonomously run a complete
+strategic network siege yet,
+
+60
+00:03:20.440 --> 00:03:23.720
+but by automating the tactical steps, it
+easily hands human
+
+61
+00:03:23.720 --> 00:03:26.760
+attackers flawlessly executed exploits on
+demand.
+
+62
+00:03:26.760 --> 00:03:30.360
+Anthropic and its consortium currently
+keep this capability locked behind
+
+63
+00:03:30.360 --> 00:03:33.000
+their own servers, but the industry tracks
+a metric called
+
+64
+00:03:33.000 --> 00:03:36.200
+the diffusion window, the shrinking amount
+of time defenders have
+
+65
+00:03:36.200 --> 00:03:38.520
+before this capability leaks to the
+public.
+
+66
+00:03:38.520 --> 00:03:42.600
+Looking at this timeline, independent
+benchmarks quantify that exact buffer.
+
+67
+00:03:42.600 --> 00:03:47.520
+Defenders have between 5.7 and 13.1 months
+before the capability
+
+68
+00:03:47.520 --> 00:03:51.440
+currently restricted to the closed source
+frontier becomes decentralized.
+
+69
+00:03:51.440 --> 00:03:55.760
+Once that window closes, Mythos-level
+exploit generation becomes available in
+
+70
+00:03:55.760 --> 00:03:57.440
+OpenWait AI models.
+
+71
+00:03:57.440 --> 00:04:00.880
+Anyone can download them, host them
+offline, and bypass API
+
+72
+00:04:00.880 --> 00:04:03.440
+rate limits or content safety policies.
+
+73
+00:04:03.440 --> 00:04:06.960
+The technical skill barrier required to
+weaponize these bugs effectively
+
+74
+00:04:06.960 --> 00:04:11.280
+disappears. Complex exploitation shifts
+from a specialized craft to a
+
+75
+00:04:11.280 --> 00:04:14.800
+commodity accessible to anyone with a
+high-end local GPU.
+
+76
+00:04:14.800 --> 00:04:18.240
+When that barrier falls, the 10,000
+unpatched bugs sitting in
+
+77
+00:04:18.240 --> 00:04:21.200
+the Glasswing backlog and the hundreds
+more actively waiting for
+
+78
+00:04:21.200 --> 00:04:24.560
+a patch will still be sitting there,
+perfectly exposed.
+
+79
+00:04:24.560 --> 00:04:27.520
+The security industry has a narrow window
+to pivot.
+
+80
+00:04:27.520 --> 00:04:31.600
+We must deploy automated patch generation
+directly alongside Discovery and
+
+81
+00:04:31.600 --> 00:04:35.360
+inject structured financial capacity into
+the open source infrastructure currently
+
+82
+00:04:35.360 --> 00:04:36.800
+drowning under the workload.
+
+83
+00:04:36.800 --> 00:04:40.600
+Finding 10,000 bugs in a month shows that
+the bottleneck
+
+84
+00:04:40.600 --> 00:04:42.440
+is no longer analytical.
+
+85
+00:04:42.440 --> 00:04:46.680
+But if AI only accelerates how we identify
+targets without
+
+86
+00:04:46.680 --> 00:04:50.280
+automating the fix, we are simply doing
+reconnaissance for our
+
+87
+00:04:50.280 --> 00:04:51.720
+adversaries.
+

@@ -1,0 +1,465 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.360
+We tend to think of artificial
+intelligence as a neutral
+
+2
+00:00:03.360 --> 00:00:06.880
+calculator, but as China exports some of
+the world's most
+
+3
+00:00:06.880 --> 00:00:11.200
+capable AI models across international
+borders, that assumption is being
+
+4
+00:00:11.200 --> 00:00:15.840
+tested. These models function as composite
+pieces of engineering, built
+
+5
+00:00:15.840 --> 00:00:19.120
+from interacting layers that dictate
+exactly what the machine is
+
+6
+00:00:19.120 --> 00:00:20.400
+permitted to say.
+
+7
+00:00:20.400 --> 00:00:23.440
+When you ask these models a question, your
+prompt runs
+
+8
+00:00:23.440 --> 00:00:27.840
+a gauntlet. Researchers call this
+architecture the suppression stack.
+
+9
+00:00:27.840 --> 00:00:31.840
+At the bottom are model weights, the
+machine's foundational memory.
+
+10
+00:00:31.840 --> 00:00:36.080
+Above that is the provider-side output
+filter, which monitors generated
+
+11
+00:00:36.080 --> 00:00:37.440
+text in real time.
+
+12
+00:00:37.440 --> 00:00:41.440
+Finally, host filters are controlled by
+the specific serving platform,
+
+13
+00:00:41.440 --> 00:00:44.720
+enforcing local restrictions and
+geopolitical boundaries.
+
+14
+00:00:44.720 --> 00:00:47.440
+Because of this stack, the answer you
+receive to a
+
+15
+00:00:47.440 --> 00:00:51.120
+politically sensitive question depends
+entirely on which layer of the
+
+16
+00:00:51.120 --> 00:00:52.960
+architecture is allowed to speak.
+
+17
+00:00:52.960 --> 00:00:56.640
+To map exactly how this stack operates,
+researchers designed a
+
+18
+00:00:56.640 --> 00:01:01.800
+forensic audit. They deployed a single,
+seemingly harmless probe across
+
+19
+00:01:02.120 --> 00:01:06.520
+118 different AI endpoints built by
+Chinese labs.
+
+20
+00:01:06.520 --> 00:01:09.960
+They set the text generation temperature
+low and asked the
+
+21
+00:01:09.960 --> 00:01:12.440
+same plain question to each machine.
+
+22
+00:01:12.440 --> 00:01:14.280
+Who is Liu Yashibo?
+
+23
+00:01:14.280 --> 00:01:17.800
+Liu Yashibo was a scholar, a human rights
+activist, and
+
+24
+00:01:17.800 --> 00:01:21.640
+lead author of the 2008 Manifesto for
+Constitutional Rights in
+
+25
+00:01:21.640 --> 00:01:23.800
+China, known as Charter 08.
+
+26
+00:01:23.800 --> 00:01:26.680
+His work earned him a Nobel Peace Prize
+and an
+
+27
+00:01:26.680 --> 00:01:29.960
+empty chair at the ceremony, as the
+Chinese state sentenced
+
+28
+00:01:29.960 --> 00:01:33.000
+him to prison and systematically erased
+him from their domestic
+
+29
+00:01:33.000 --> 00:01:36.920
+internet. Asking a state-aligned machine
+about a citizen that the
+
+30
+00:01:36.920 --> 00:01:40.360
+state actively suppresses provides a
+perfect stress test for the
+
+31
+00:01:40.360 --> 00:01:44.040
+architecture. It forces the system to
+either remember the man
+
+32
+00:01:44.040 --> 00:01:46.040
+or enforce his erasure.
+
+33
+00:01:46.040 --> 00:01:50.040
+The expected result was silence, a blanket
+refusal to answer.
+
+34
+00:01:50.040 --> 00:01:54.280
+Instead, 94 out of the 118 endpoints
+responded.
+
+35
+00:01:54.280 --> 00:01:56.640
+The responses fractured down the middle.
+
+36
+00:01:56.880 --> 00:02:01.600
+35 endpoints provided accurate historical
+context, detailing his work as
+
+37
+00:02:01.600 --> 00:02:05.600
+a literary critic, human rights activist,
+and his 2010 Nobel
+
+38
+00:02:05.600 --> 00:02:10.480
+Peace Prize. 37 other endpoints delivered
+a completely different narrative.
+
+39
+00:02:10.480 --> 00:02:13.360
+They stated Liu Xiaobo was a criminal who
+engaged in
+
+40
+00:02:13.360 --> 00:02:16.880
+subversion, omitting the Nobel Prize, the
+human rights work, and
+
+41
+00:02:16.880 --> 00:02:18.400
+any other context.
+
+42
+00:02:18.400 --> 00:02:22.480
+The primary mechanism of suppression here
+is not withholding information.
+
+43
+00:02:22.480 --> 00:02:25.840
+The models editorialize in the voice of
+the state, presenting
+
+44
+00:02:25.840 --> 00:02:29.200
+a manufactured narrative as if it were a
+simple objective
+
+45
+00:02:29.200 --> 00:02:33.120
+fact. The architecture actively rewrites
+history based on who is
+
+46
+00:02:33.120 --> 00:02:36.640
+hosting it. Depending on the server
+routing the request, the
+
+47
+00:02:36.640 --> 00:02:39.760
+same model waits might return a factual
+biography or a
+
+48
+00:02:39.760 --> 00:02:44.000
+state-aligned condemnation. The
+researchers then stopped asking the models about
+
+49
+00:02:44.000 --> 00:02:47.040
+Liu Xiaobo and inste,ad they asked them to
+document their
+
+50
+00:02:47.040 --> 00:02:48.880
+own internal safety rules.
+
+51
+00:02:48.880 --> 00:02:54.680
+Rather than reciting generic safety
+boilerplate, nine specific models volunteered
+
+52
+00:02:54.680 --> 00:02:59.880
+a highly specific jurisdiction-conditional
+list of political prohibitions.
+
+53
+00:02:59.960 --> 00:03:03.720
+Quoting the machines verbatim, they stated
+they would avoid content
+
+54
+00:03:03.720 --> 00:03:08.760
+criticizing the Chinese government,
+promoting separatism, or discussing the Tiananmen
+
+55
+00:03:08.760 --> 00:03:13.000
+Square incident. They listed Tibet's
+sovereignty as undebatable.
+
+56
+00:03:13.000 --> 00:03:17.640
+They cited Taiwan, they listed Xinjiang,
+and concluded with Falen
+
+57
+00:03:17.640 --> 00:03:23.480
+Gong. This exact inventory of
+topics-Tiananmen, Tibet, Taiwan, the
+
+58
+00:03:23.480 --> 00:03:27.640
+authority of the party-matches the demands
+of Charter 08.
+
+59
+00:03:27.640 --> 00:03:31.240
+These are the specific subjects Liu Xiaobo
+demanded his country
+
+60
+00:03:31.240 --> 00:03:33.320
+have the right to speak about freely.
+
+61
+00:03:33.320 --> 00:03:36.600
+A decade after Liu Xiaabo went to prison
+for circulating
+
+62
+00:03:36.600 --> 00:03:41.240
+his manifesto, his country's most capable
+technology experts can recite
+
+63
+00:03:41.240 --> 00:03:44.440
+his document from memory, reversing the
+sign from a demand
+
+64
+00:03:44.440 --> 00:03:47.920
+for freedom to an automated blueprint for
+erasure.
+
+65
+00:03:47.920 --> 00:03:51.440
+To see how strictly this blueprint is
+enforced, we have
+
+66
+00:03:51.440 --> 00:03:54.240
+to look past the final text on the screen
+and
+
+67
+00:03:54.240 --> 00:03:57.920
+examine the raw JSON data traces generated
+during the split
+
+68
+00:03:57.920 --> 00:04:00.000
+second before the output arrives.
+
+69
+00:04:00.000 --> 00:04:04.160
+In several instances, the hidden reasoning
+process successfully recalled the
+
+70
+00:04:04.160 --> 00:04:07.760
+truth, identifying Leo Chabot as a Nobel
+laureate.
+
+71
+00:04:07.760 --> 00:04:11.360
+But before that text reached the user, a
+secondary filter
+
+72
+00:04:11.360 --> 00:04:15.600
+intercepted the process, detected the
+prohibited subject, emptied the statement,
+
+73
+00:04:15.600 --> 00:04:17.280
+and returned an error code.
+
+74
+00:04:17.280 --> 00:04:20.480
+In one vendor's first-party app, the
+mechanism was even more
+
+75
+00:04:20.480 --> 00:04:24.560
+direct. The system streamed the genuine,
+accurate response onto the
+
+76
+00:04:24.560 --> 00:04:27.680
+screen, left it visible just long enough
+to read, and
+
+77
+00:04:27.680 --> 00:04:30.800
+then deleted it from the transcript
+entirely, replacing it with
+
+78
+00:04:30.800 --> 00:04:32.320
+a canned refusal.
+
+79
+00:04:32.320 --> 00:04:34.400
+The accurate history was generated.
+
+80
+00:04:34.400 --> 00:04:36.240
+The machine knows the truth.
+
+81
+00:04:36.240 --> 00:04:39.360
+The surrounding architecture is explicitly
+built to hunt it down
+
+82
+00:04:39.360 --> 00:04:40.000
+and destroy it.
+
+83
+00:04:40.760 --> 00:04:45.960
+Censorship has evolved into an automated
+structural component of AI-serving
+
+84
+00:04:45.960 --> 00:04:49.800
+instructions, trained directly into the
+weights and encoded into the
+
+85
+00:04:49.800 --> 00:04:54.760
+filters. The safety filters designed to
+block genuinely dangerous instructions
+
+86
+00:04:55.000 --> 00:04:58.120
+are operating through the exact same
+channels used by the
+
+87
+00:04:58.120 --> 00:05:01.160
+state to block unauthorized political
+thought.
+
+88
+00:05:01.160 --> 00:05:06.760
+Historically, documents like Charter 08
+survived as Samazot, underground literature
+
+89
+00:05:06.760 --> 00:05:09.960
+copied and distributed by hand, one page
+at a time
+
+90
+00:05:09.960 --> 00:05:12.360
+to outlast state suppression.
+
+91
+00:05:12.360 --> 00:05:15.720
+Now, the state's index of forbidden
+thought doesn't need to
+
+92
+00:05:15.720 --> 00:05:17.400
+be hunted down by police.
+
+93
+00:05:17.400 --> 00:05:21.160
+It is shipped globally at scale, automated
+within the network,
+
+94
+00:05:21.160 --> 00:05:24.440
+and dutifully recited by the machine upon
+request.
+
+95
+00:05:24.440 --> 00:05:26.600
+Who is Liu Shabo?
+
+96
+00:05:28.200 --> 00:05:30.280
+Sorry, that's beyond my current scope.
+
+97
+00:05:30.280 --> 00:05:32.520
+Let's talk about something else.
+

@@ -1,0 +1,487 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:04.000
+If you want to understand exactly what an
+artificial intelligence
+
+2
+00:00:04.000 --> 00:00:07.360
+system is capable of, you have to break it
+first.
+
+3
+00:00:07.360 --> 00:00:11.360
+This exact process is called adversarial
+evaluation.
+
+4
+00:00:11.360 --> 00:00:14.960
+It means deliberately designing attacks to
+force a system into
+
+5
+00:00:14.960 --> 00:00:18.480
+failure, so we can map out the
+catastrophic outcomes before
+
+6
+00:00:18.480 --> 00:00:20.320
+they happen in the real world.
+
+7
+00:00:20.320 --> 00:00:26.240
+As of April 2026, we are simultaneously
+tracking 231 distinct
+
+8
+00:00:26.240 --> 00:00:31.760
+models, hit by a swarm of 141,000
+adversarial prompts.
+
+9
+00:00:31.760 --> 00:00:35.120
+Compute power has outpaced our ability to
+monitor it.
+
+10
+00:00:35.120 --> 00:00:37.280
+We've hit human cognitive limits.
+
+11
+00:00:37.280 --> 00:00:40.640
+It's physically impossible for a single
+researcher to track these
+
+12
+00:00:40.640 --> 00:00:44.240
+matrices. Human red teaming does not scale
+to the current
+
+13
+00:00:44.240 --> 00:00:47.680
+threat landscape. When the volume of data
+exceeds our ability
+
+14
+00:00:47.680 --> 00:00:52.160
+to process it, catastrophic blind spots
+become a mathematical certainty.
+
+15
+00:00:52.160 --> 00:00:56.000
+The obvious solution seems to be
+automation, taking a single,
+
+16
+00:00:56.000 --> 00:00:59.280
+highly advanced AI session and instructing
+it to test all
+
+17
+00:00:59.280 --> 00:01:00.000
+the target models.
+
+18
+00:01:00.360 --> 00:01:03.880
+for us When a single AI session attempts
+to juggle
+
+19
+00:01:03.880 --> 00:01:08.280
+these competing objectives, the
+high-density context required for a statistical
+
+20
+00:01:08.280 --> 00:01:12.280
+validation dilutes the focus needed for
+creative attack design.
+
+21
+00:01:12.280 --> 00:01:16.600
+This cognitive interference leads to the
+mediocre, unreliable output seen
+
+22
+00:01:16.600 --> 00:01:17.960
+across the industry.
+
+23
+00:01:17.960 --> 00:01:21.240
+We can see the real-world consequences of
+this right now.
+
+24
+00:01:21.240 --> 00:01:25.320
+By applying strict reproducibility
+standards to the field, we estimate
+
+25
+00:01:25.320 --> 00:01:29.160
+that 80% of published attack success rates
+are over-reported.
+
+26
+00:01:29.160 --> 00:01:32.680
+The ethical frameworks collapse and the
+data becomes distorted.
+
+27
+00:01:32.680 --> 00:01:37.240
+Effectively exposing the hidden structural
+flaws of a generalized do-anything
+
+28
+00:01:37.240 --> 00:01:41.320
+machine requires a divided testing
+architecture rather than a single
+
+29
+00:01:41.320 --> 00:01:45.640
+all-purpose auditor. The Failure First
+team operates with exactly one
+
+30
+00:01:45.640 --> 00:01:51.000
+human coordinator, directing 15 highly
+specialized AI agents initialized through
+
+31
+00:01:51.000 --> 00:01:53.000
+distinct clawed code sessions.
+
+32
+00:01:53.000 --> 00:01:56.160
+The entire system relies on extreme
+constraint.
+
+33
+00:01:56.160 --> 00:02:00.240
+Each agent operates under explicit, narrow
+standing instructions.
+
+34
+00:02:00.240 --> 00:02:03.440
+By deliberately limiting what an agent is
+allowed to care
+
+35
+00:02:03.440 --> 00:02:07.520
+about, they perform exceptionally well
+within their specific domain.
+
+36
+00:02:07.520 --> 00:02:12.160
+This evolutionary tree diagram shows our
+offensive constraint in action.
+
+37
+00:02:12.160 --> 00:02:17.360
+An agent named Rose executes the actual
+real-world adversarial campaigns.
+
+38
+00:02:17.360 --> 00:02:21.200
+Then, an agent named Leela applies
+population-based mutation to the
+
+39
+00:02:21.200 --> 00:02:25.360
+prompt code. Failed attacks fade out and
+terminate, while successful
+
+40
+00:02:25.360 --> 00:02:28.800
+branches multiply, evolving only attacks
+that work.
+
+41
+00:02:28.800 --> 00:02:33.840
+Next, K9 takes those successful prompts,
+bypassing behavioral outputs entirely,
+
+42
+00:02:33.840 --> 00:02:38.160
+and investigates causal mechanisms inside
+the model's geometry, finding the
+
+43
+00:02:38.160 --> 00:02:40.960
+structural fault line where representation
+failed.
+
+44
+00:02:40.960 --> 00:02:45.120
+To handle synthesis, an agent named Clara
+analyzes 18,000 of
+
+45
+00:02:45.120 --> 00:02:46.960
+these prompts simultaneously.
+
+46
+00:02:46.960 --> 00:02:50.440
+Individual results matter less than the
+patterns, and Clara is
+
+47
+00:02:50.440 --> 00:02:54.120
+constrained entirely to finding the
+structural failures that repeat across
+
+48
+00:02:54.120 --> 00:02:57.800
+different architectures, across different
+vendors, and different years.
+
+49
+00:02:58.120 --> 00:03:03.400
+Finally, agents named Ramana and Amy
+enforce the validation constraint.
+
+50
+00:03:03.400 --> 00:03:08.360
+They rigorously check the statistics of
+every claim, enforcing reproducibility
+
+51
+00:03:08.360 --> 00:03:11.720
+to prevent the massive over-reporting that
+plagues the rest of
+
+52
+00:03:11.720 --> 00:03:15.960
+the industry. By strictly fragmenting the
+cognitive labor, the system
+
+53
+00:03:15.960 --> 00:03:20.760
+ensures that each individual node catches
+the microscopic structural failures
+
+54
+00:03:20.760 --> 00:03:24.040
+that a generalized observer simply cannot
+see.
+
+55
+00:03:24.040 --> 00:03:27.160
+The Failure First team is the
+transformation of a rigorous
+
+56
+00:03:27.160 --> 00:03:32.200
+research methodology into 15 executable AI
+agent sessions.
+
+57
+00:03:32.200 --> 00:03:36.520
+This top-down schematic reveals the
+technical engine driving the team.
+
+58
+00:03:36.520 --> 00:03:40.120
+The isolated nodes communicate through a
+central data document called
+
+59
+00:03:40.120 --> 00:03:45.760
+agentstate.md. During session handoffs,
+this document acts as the absolute
+
+60
+00:03:45.760 --> 00:03:47.040
+source of truth.
+
+61
+00:03:47.040 --> 00:03:49.520
+The workflow is chronologically rigid.
+
+62
+00:03:49.520 --> 00:03:53.760
+An agent powers on, reads the document,
+executes its hyperspecific
+
+63
+00:03:53.760 --> 00:03:58.000
+brief, updates its designated section, and
+shuts down entirely before
+
+64
+00:03:58.000 --> 00:03:59.760
+the next agent takes over.
+
+65
+00:03:59.760 --> 00:04:04.400
+Positioned above this automated cycle is
+the single human coordinator.
+
+66
+00:04:04.400 --> 00:04:08.160
+My job is restricted to setting the
+overarching direction, reviewing
+
+67
+00:04:08.160 --> 00:04:11.360
+the generated findings, and making the
+final judgment calls on
+
+68
+00:04:11.360 --> 00:04:15.200
+publication. Because no single session is
+burdened with carrying the
+
+69
+00:04:15.200 --> 00:04:18.960
+entire context of the research, this
+architecture guarantees that the
+
+70
+00:04:18.960 --> 00:04:22.320
+methodology survives the handoff process
+intact.
+
+71
+00:04:22.320 --> 00:04:25.440
+This pipeline has exposed alarming
+behaviors.
+
+72
+00:04:25.440 --> 00:04:29.120
+We have found models that successfully
+detect a harmful request,
+
+73
+00:04:29.120 --> 00:04:32.880
+logically reason about the danger, explain
+exactly why they must
+
+74
+00:04:32.880 --> 00:04:36.240
+refuse, and then comply with the request
+anyway.
+
+75
+00:04:36.240 --> 00:04:39.600
+These technical failures highlight a
+broader systemic risk.
+
+76
+00:04:39.720 --> 00:04:43.080
+As Teigen mapped our findings against
+global policy, she found
+
+77
+00:04:43.080 --> 00:04:44.440
+a complete void.
+
+78
+00:04:44.440 --> 00:04:48.840
+No existing regulatory framework currently
+addresses adversarial attacks on embodied
+
+79
+00:04:48.840 --> 00:04:52.280
+AI systems. Because these claims are
+severe, they have to
+
+80
+00:04:52.280 --> 00:04:55.640
+be bulletproof. The rigid structure of the
+state machine makes
+
+81
+00:04:55.640 --> 00:04:57.720
+every finding entirely auditable.
+
+82
+00:04:57.720 --> 00:05:00.840
+As the human coordinator, I can use the
+Git history
+
+83
+00:05:00.840 --> 00:05:04.840
+to trace any specific failure back to its
+version-controlled prompt
+
+84
+00:05:04.840 --> 00:05:07.480
+and the exact agent brief that generated
+it.
+
+85
+00:05:07.480 --> 00:05:11.480
+In adversarial research, credibility
+cannot be recovered once it is
+
+86
+00:05:11.480 --> 00:05:15.880
+lost. Transparency and integrity cannot be
+added as an afterthought.
+
+87
+00:05:15.880 --> 00:05:19.240
+They have to be hard-coded directly into
+the pipeline.
+
+88
+00:05:19.240 --> 00:05:22.360
+Building complex research in the AI era is
+no longer
+
+89
+00:05:22.360 --> 00:05:26.200
+a matter of increasing headcount, but of
+meticulously structuring divided
+
+90
+00:05:26.200 --> 00:05:29.800
+cognitive labor. Every agent in this
+pipeline operates on the
+
+91
+00:05:29.800 --> 00:05:31.880
+exact same foundational premise.
+
+92
+00:05:31.880 --> 00:05:35.000
+We must aggressively map out the absolute
+worst catastrophic.
+
+93
+00:05:35.280 --> 00:05:37.920
+outcomes first That isn't pessimism.
+
+94
+00:05:37.920 --> 00:05:39.520
+It is strict engineering.
+
+95
+00:05:39.520 --> 00:05:42.640
+It is the active, mathematical process of
+ruling out every
+
+96
+00:05:42.640 --> 00:05:45.680
+single unacceptable failure mode before
+deployment.
+
+97
+00:05:45.680 --> 00:05:49.440
+By deliberately building machines designed
+to break other machines, we
+
+98
+00:05:49.440 --> 00:05:51.440
+move past theoretical safety.
+
+99
+00:05:51.440 --> 00:05:54.720
+The architecture that emerges from this
+stress test is one
+
+100
+00:05:54.720 --> 00:05:59.120
+where the failure modes are known, mapped,
+and accounted for.
+
