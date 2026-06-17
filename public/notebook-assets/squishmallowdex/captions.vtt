@@ -1,0 +1,397 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:04.800
+A 10-year-old kid is researching their
+physical plush toy collection.
+
+2
+00:00:04.800 --> 00:00:09.440
+With over 3,000 Squishmallows in
+existence, keeping track requires some
+
+3
+00:00:09.440 --> 00:00:12.960
+serious cataloging. But the moment that
+kid opens a web
+
+4
+00:00:12.960 --> 00:00:16.160
+browser to search for toy information,
+they step out of
+
+5
+00:00:16.160 --> 00:00:19.840
+an innocent childhood hobby and into a
+highly hostile digital
+
+6
+00:00:19.840 --> 00:00:25.040
+environment. Right away, invisible
+algorithmic trackers latch onto their session,
+
+7
+00:00:25.040 --> 00:00:29.120
+logging their clicks and mapping their
+behavior across multiple websites.
+
+8
+00:00:29.120 --> 00:00:31.680
+Then come the intrusive advertisements.
+
+9
+00:00:31.680 --> 00:00:34.800
+These are carefully targeted to monetize
+the attention of a
+
+10
+00:00:34.800 --> 00:00:38.960
+young, vulnerable demographic trying to
+look up cartoon animals.
+
+11
+00:00:38.960 --> 00:00:42.720
+And the sites themselves are riddled with
+dark patterns, deceptive
+
+12
+00:00:42.720 --> 00:00:47.120
+web design choices engineered specifically
+to confuse users and trap
+
+13
+00:00:47.120 --> 00:00:49.280
+them into clicking unwanted links.
+
+14
+00:00:49.280 --> 00:00:52.880
+The modern internet takes a simple act of
+childhood curiosity
+
+15
+00:00:52.880 --> 00:00:56.320
+and feeds it into a machine optimized to
+harvest attention
+
+16
+00:00:56.320 --> 00:00:58.320
+and extract personal data.
+
+17
+00:00:58.320 --> 00:00:59.760
+Look at these center shelves.
+
+18
+00:01:00.200 --> 00:01:03.400
+To accurately tatalog a collection like
+this, a kid has
+
+19
+00:01:03.400 --> 00:01:07.000
+to sort through thousands of unique plush
+characters, right down
+
+20
+00:01:07.000 --> 00:01:09.560
+to specific Harry Potter house variants.
+
+21
+00:01:09.560 --> 00:01:13.480
+A software developer friend watched this
+frustrating process play out
+
+22
+00:01:13.480 --> 00:01:17.080
+and asked a very simple question: can I
+help?
+
+23
+00:01:17.080 --> 00:01:20.040
+The answer to this problem is to
+completely abandon the
+
+24
+00:01:20.040 --> 00:01:24.680
+existing third-party platforms and build
+an entirely new, safe digital
+
+25
+00:01:24.680 --> 00:01:26.120
+tool from scratch.
+
+26
+00:01:26.120 --> 00:01:29.640
+The goal here is to create Digital Armor,
+a closed
+
+27
+00:01:29.640 --> 00:01:33.480
+system protecting the user against
+predatory web architecture.
+
+28
+00:01:33.480 --> 00:01:36.360
+The foundation of this new software was
+built and shipped
+
+29
+00:01:36.360 --> 00:01:38.920
+in a single afternoon of hyperfocus.
+
+30
+00:01:38.920 --> 00:01:41.960
+The first major technical hurdle was
+acquiring the data for
+
+31
+00:01:41.960 --> 00:01:46.360
+over 3,000 plus toys without relying on a
+pre-existing bloated
+
+32
+00:01:46.360 --> 00:01:49.160
+API that might compromise the system.
+
+33
+00:01:49.160 --> 00:01:52.680
+This diagram shows the scraping process
+the developer deployed to
+
+34
+00:01:52.680 --> 00:01:56.640
+gather raw, disorganized information
+scattered across the internet.
+
+35
+00:01:56.640 --> 00:02:00.400
+They then took that chaotic central
+cluster of scraped data
+
+36
+00:02:00.400 --> 00:02:04.960
+and organized it into a clean, highly
+efficient localized database.
+
+37
+00:02:04.960 --> 00:02:08.480
+This led to the core architectural choice
+for the application,
+
+38
+00:02:08.480 --> 00:02:12.640
+building it as an offline progressive web
+app, or PWA.
+
+39
+00:02:12.640 --> 00:02:16.480
+A PWA operates through a standard web
+browser interface, but
+
+40
+00:02:16.480 --> 00:02:20.160
+it runs entirely on the device's local
+hardware without requiring
+
+41
+00:02:20.160 --> 00:02:21.920
+an active internet connection.
+
+42
+00:02:21.920 --> 00:02:25.200
+By physically severing the connection to
+the live internet, the
+
+43
+00:02:25.200 --> 00:02:30.320
+application eliminates the technical
+possibility of any external tracking, invasive
+
+44
+00:02:30.320 --> 00:02:33.280
+data harvesting, or intrusive
+advertisements.
+
+45
+00:02:33.280 --> 00:02:37.280
+Standard application design aggressively
+hides its internal workings.
+
+46
+00:02:37.280 --> 00:02:39.360
+It wants you to press a button and accept
+the
+
+47
+00:02:39.360 --> 00:02:41.680
+result without asking how it happens.
+
+48
+00:02:41.680 --> 00:02:44.880
+This custom build takes the exact opposite
+approach.
+
+49
+00:02:44.880 --> 00:02:48.800
+It deliberately exposes its underlying
+code and data structure directly
+
+50
+00:02:48.800 --> 00:02:50.000
+to the 10-year-old user.
+
+51
+00:02:50.360 --> 00:02:54.600
+This split-screen interface shows a
+colorful plush toy coffile on
+
+52
+00:02:54.600 --> 00:02:58.120
+the left, while the right side displays a
+stylized terminal
+
+53
+00:02:58.120 --> 00:03:02.200
+log outputting actual data queries in a
+kid-friendly format.
+
+54
+00:03:02.200 --> 00:03:05.480
+These visible logs show the child exactly
+how their search
+
+55
+00:03:05.480 --> 00:03:08.920
+commands are filtering the structured
+database in real time.
+
+56
+00:03:08.920 --> 00:03:11.400
+They see the code executing the action.
+
+57
+00:03:11.400 --> 00:03:15.000
+Seeing the logic behind every click
+changes the relationship with
+
+58
+00:03:15.000 --> 00:03:18.280
+the device. It shifts the dynamic from
+simply using an
+
+59
+00:03:18.280 --> 00:03:21.720
+interface to understanding the levers and
+gears that make it
+
+60
+00:03:21.720 --> 00:03:24.680
+work. By putting the inner workings of the
+software front
+
+61
+00:03:24.680 --> 00:03:27.560
+and center, the app moves the child beyond
+the role
+
+62
+00:03:27.560 --> 00:03:31.080
+of a passive consumer, giving them the
+literacy to navigate
+
+63
+00:03:31.080 --> 00:03:33.320
+the digital world with open eyes.
+
+64
+00:03:33.320 --> 00:03:36.760
+The finalized application is called the
+Squishmallow Dex.
+
+65
+00:03:36.760 --> 00:03:41.000
+Because the database lives entirely
+offline, the user experience is
+
+66
+00:03:41.000 --> 00:03:44.760
+fast, returning results instantly without
+waiting for a server.
+
+67
+00:03:44.880 --> 00:03:49.600
+It comes packed with core utilities,
+instant search capabilities, complex
+
+68
+00:03:49.600 --> 00:03:53.280
+category filtering, and personal
+collection tracking.
+
+69
+00:03:53.280 --> 00:03:56.560
+The child can favorite items and manage
+their collection without
+
+70
+00:03:56.560 --> 00:04:00.080
+a single bite of telemetry data ever
+leaving their tablet.
+
+71
+00:04:00.080 --> 00:04:02.800
+It delivers all the power and utility of a
+modern
+
+72
+00:04:02.800 --> 00:04:07.600
+web platform with zero compromises on user
+privacy or safety.
+
+73
+00:04:07.600 --> 00:04:10.960
+This story about a simple toy database
+reveals a lot
+
+74
+00:04:10.960 --> 00:04:13.760
+about the broader tech industry and how we
+build digital
+
+75
+00:04:13.760 --> 00:04:18.720
+tools today. Bloated, ad-ridden, and
+hostile platforms are often presented
+
+76
+00:04:18.720 --> 00:04:22.480
+as inevitable, but they are a deliberate
+business choice, not
+
+77
+00:04:22.480 --> 00:04:24.160
+a technical necessity.
+
+78
+00:04:24.160 --> 00:04:28.800
+Highly robust, secure, and educational
+digital environments do not require
+
+79
+00:04:28.800 --> 00:04:33.440
+massive corporate budgets or invasive,
+extractive data models to function.
+
+80
+00:04:33.440 --> 00:04:36.400
+An ethical, transparent pocket of the
+internet can be built
+
+81
+00:04:36.400 --> 00:04:39.120
+by anyone with a good excuse and a single
+afternoon
+
+82
+00:04:39.120 --> 00:04:40.000
+of hyper-focus.
+

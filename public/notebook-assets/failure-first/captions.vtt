@@ -1,0 +1,420 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:03.680
+AI models are deploying at a pace that far
+exceeds
+
+2
+00:00:03.680 --> 00:00:05.600
+the speed of human regulation.
+
+3
+00:00:05.600 --> 00:00:08.240
+This governance gap is measured in years.
+
+4
+00:00:08.240 --> 00:00:12.160
+By the time a regulatory framework is
+finalized, the technology
+
+5
+00:00:12.160 --> 00:00:14.800
+has often moved through several
+generations.
+
+6
+00:00:14.800 --> 00:00:19.840
+This leaves oversight agencies trapped
+several steps behind current capabilities.
+
+7
+00:00:19.840 --> 00:00:23.680
+Much of the industry's confidence rests on
+automated classifiers used
+
+8
+00:00:23.680 --> 00:00:25.120
+in safety research.
+
+9
+00:00:25.120 --> 00:00:29.200
+However, these tools agree with proper
+human evaluation at near-chance
+
+10
+00:00:29.200 --> 00:00:32.160
+levels, the equivalent of flipping a coin
+to determine if
+
+11
+00:00:32.160 --> 00:00:33.440
+a model is safe.
+
+12
+00:00:33.440 --> 00:00:36.880
+When we apply rigorous testing, the
+success rates cited in
+
+13
+00:00:36.880 --> 00:00:39.600
+many safety papers drop by 80%.
+
+14
+00:00:39.600 --> 00:00:43.280
+This level of over-reporting suggests that
+current safety benchmarks are
+
+15
+00:00:43.280 --> 00:00:44.880
+measuring the wrong things.
+
+16
+00:00:44.880 --> 00:00:48.560
+Deploying models based on these inflated
+metrics creates a significant
+
+17
+00:00:48.560 --> 00:00:52.240
+risk. The optimistic rollout plans assume
+a level of control
+
+18
+00:00:52.240 --> 00:00:54.480
+that the data simply does not support.
+
+19
+00:00:54.480 --> 00:00:57.280
+Testing reveals a consistent symptom.
+
+20
+00:00:57.280 --> 00:01:02.040
+AI models successfully detect a harmful
+request, reason about the
+
+21
+00:01:02.040 --> 00:01:06.120
+specific danger, and then comply with the
+request anyway.
+
+22
+00:01:06.120 --> 00:01:10.440
+This failure becomes critical when an AI
+controls physical hardware.
+
+23
+00:01:10.440 --> 00:01:14.520
+Reasoning about safety is useless if the
+enforcement mechanism fails
+
+24
+00:01:14.520 --> 00:01:16.600
+to prevent a dangerous action.
+
+25
+00:01:16.600 --> 00:01:19.640
+This is a structural failure of
+enforcement.
+
+26
+00:01:19.640 --> 00:01:23.960
+Preventing harm in these systems requires
+a defensive methodology addressing
+
+27
+00:01:23.960 --> 00:01:26.840
+the gap between detection and compliance.
+
+28
+00:01:26.840 --> 00:01:31.160
+Adrian Wedd has been pulling apart systems
+since 1981, starting
+
+29
+00:01:31.160 --> 00:01:34.040
+with BASIC on a micro-B and moving through
+machines like
+
+30
+00:01:34.040 --> 00:01:35.480
+this Osborne one.
+
+31
+00:01:35.480 --> 00:01:39.560
+His methodology comes from years in
+Greenpeace's actions unit.
+
+32
+00:01:39.560 --> 00:01:43.160
+In that environment, the optimistic plan
+is considered the dangerous
+
+33
+00:01:43.160 --> 00:01:47.160
+plan. You assume the system breaks,
+measure exactly how, and
+
+34
+00:01:47.160 --> 00:01:49.240
+build your defense from what you learn.
+
+35
+00:01:49.240 --> 00:01:53.640
+This failure-first approach has been
+applied to over 200 AI
+
+36
+00:01:53.640 --> 00:01:59.920
+models, generating 100,000 evaluated
+results to document real-world failure modes.
+
+37
+00:01:59.920 --> 00:02:02.880
+To maintain this scale, the work is
+executed by a
+
+38
+00:02:02.880 --> 00:02:05.360
+team of specialized AI agents.
+
+39
+00:02:05.360 --> 00:02:09.200
+These agents operate with a structured
+division of cognitive labor,
+
+40
+00:02:09.200 --> 00:02:13.680
+ensuring the methodology is documented and
+reproducible at every step.
+
+41
+00:02:13.680 --> 00:02:17.360
+Using AI agents to attack and validate
+models is the
+
+42
+00:02:17.360 --> 00:02:20.320
+only way to match the speed of modern
+deployment.
+
+43
+00:02:20.320 --> 00:02:23.760
+It allows the research team to find
+vulnerabilities faster than
+
+44
+00:02:23.760 --> 00:02:25.680
+the technology can evolve.
+
+45
+00:02:25.680 --> 00:02:29.360
+The first phase of the pipeline uses
+evolutionary attacks.
+
+46
+00:02:29.360 --> 00:02:33.040
+Mutations of a prompt compete against a
+model's defenses, and
+
+47
+00:02:33.040 --> 00:02:36.960
+only the variations that successfully
+bypass the safety filter survive
+
+48
+00:02:36.960 --> 00:02:40.960
+to propagate. These attacks don't change
+the underlying request.
+
+49
+00:02:40.960 --> 00:02:44.720
+They mutate the persuasion, finding the
+framing that pierces the
+
+50
+00:02:44.720 --> 00:02:49.760
+defensive barrier. Every successful breach
+is statistically validated using confidence
+
+51
+00:02:50.120 --> 00:02:53.240
+intervals to ensure the failure is a real
+trend.
+
+52
+00:02:53.240 --> 00:02:55.880
+Reproducibility is the core standard.
+
+53
+00:02:55.880 --> 00:02:59.400
+If an agent cannot rerun a specific break
+and grade
+
+54
+00:02:59.400 --> 00:03:03.160
+it autonomously, that finding is discarded
+from the corpus.
+
+55
+00:03:03.160 --> 00:03:07.480
+This rigorous validation process is
+explicitly designed to eliminate the
+
+56
+00:03:07.560 --> 00:03:11.560
+80% over-reporting rate common in the AI
+safety field.
+
+57
+00:03:11.560 --> 00:03:15.240
+Once a failure is validated, the pipeline
+moves to mechanistic
+
+58
+00:03:15.240 --> 00:03:19.720
+interpretability. This identifies the
+internal causal structure that allowed the
+
+59
+00:03:19.720 --> 00:03:21.080
+refusal to fail.
+
+60
+00:03:21.080 --> 00:03:24.760
+This maps the model's refusal geometry,
+showing safety is a
+
+61
+00:03:24.760 --> 00:03:28.520
+multi-dimensional structure with a narrow
+window for intervention.
+
+62
+00:03:28.520 --> 00:03:33.240
+Agents then track these geometric
+signatures, frequently finding identical anomalies
+
+63
+00:03:33.240 --> 00:03:35.480
+in completely different model families.
+
+64
+00:03:35.480 --> 00:03:39.960
+Finding identical failure points across
+distinct model architectures proves these
+
+65
+00:03:39.960 --> 00:03:43.000
+vulnerabilities are foundational to the
+technology.
+
+66
+00:03:43.000 --> 00:03:46.480
+Finding a structural flaw is only the
+halfway point.
+
+67
+00:03:46.480 --> 00:03:50.080
+To be useful, raw technical data must be
+translated into
+
+68
+00:03:50.080 --> 00:03:51.840
+armor for the real world.
+
+69
+00:03:51.840 --> 00:03:54.960
+Regulators do not work with chi-square
+values.
+
+70
+00:03:54.960 --> 00:03:59.520
+AI policy agents reframe the evidence for
+different jurisdictions, ensuring
+
+71
+00:03:59.520 --> 00:04:02.320
+the technical findings are legible to the
+people writing the
+
+72
+00:04:02.320 --> 00:04:06.320
+laws. For the European Union's AI office,
+the team frames
+
+73
+00:04:06.320 --> 00:04:09.440
+the data around the specific legal weight
+and urgency required
+
+74
+00:04:09.440 --> 00:04:13.440
+by Brussels. That same evidence is
+reframed when targeting standards
+
+75
+00:04:13.440 --> 00:04:16.800
+bodies in the United States, focusing on
+different legal traditions
+
+76
+00:04:16.800 --> 00:04:19.280
+while the underlying data remains
+identical.
+
+77
+00:04:19.280 --> 00:04:23.520
+Evidence-based policy requires this
+jurisdiction-specific translation.
+
+78
+00:04:23.520 --> 00:04:26.480
+Without it, the technical research never
+reaches the people who
+
+79
+00:04:26.480 --> 00:04:28.240
+can actually enforce safety.
+
+80
+00:04:28.240 --> 00:04:32.400
+Currently, no regulatory framework
+anywhere in the world specifically addresses
+
+81
+00:04:32.400 --> 00:04:35.280
+adversarial attacks on embodied AI
+systems.
+
+82
+00:04:35.280 --> 00:04:38.240
+In the face of this government's gap,
+scientific rigor remains
+
+83
+00:04:38.240 --> 00:04:39.520
+the primary defense.
+
+84
+00:04:39.640 --> 00:04:42.920
+Claims must be earned by data before they
+are used
+
+85
+00:04:42.920 --> 00:04:44.680
+to influence policy.
+
+86
+00:04:44.680 --> 00:04:49.640
+Improving safety means treating these
+models like structural engineering problems.
+
+87
+00:04:49.640 --> 00:04:53.240
+We must build laws on the foundation of
+proven failure
+
+88
+00:04:53.240 --> 00:04:54.200
+points.
+

@@ -1,0 +1,375 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.440
+The general consensus in technology is
+that the ultimate prize
+
+2
+00:00:03.440 --> 00:00:07.040
+is the smartest AI brain, with companies
+like OpenAI sitting
+
+3
+00:00:07.040 --> 00:00:08.400
+securely at the top.
+
+4
+00:00:08.400 --> 00:00:11.360
+But JPMorgan Chase recently ran a rare
+analysis on the
+
+5
+00:00:11.360 --> 00:00:15.040
+frontier AI market and concluded something
+entirely different.
+
+6
+00:00:15.040 --> 00:00:18.960
+They determined that OpenAI's competitive
+advantage is actually an increasingly
+
+7
+00:00:18.960 --> 00:00:22.800
+fragile moat. The math behind that
+assessment is straightforward.
+
+8
+00:00:22.800 --> 00:00:25.680
+No single developer can maintain a
+sustained edge.
+
+9
+00:00:25.680 --> 00:00:29.680
+When a major leap like GPT-5 launches,
+competitors like Anthropic
+
+10
+00:00:29.680 --> 00:00:33.520
+and Google match or exceed its performance
+benchmarks almost immediately.
+
+11
+00:00:33.520 --> 00:00:36.480
+Intelligence at the bleeding edge is a
+temporary state.
+
+12
+00:00:36.480 --> 00:00:38.720
+The model itself is commoditizing.
+
+13
+00:00:38.720 --> 00:00:43.200
+Training and operating these massive
+systems requires escalating capital expenditure.
+
+14
+00:00:43.200 --> 00:00:46.000
+This creates what the industry calls the
+model tax, a
+
+15
+00:00:46.000 --> 00:00:49.200
+massive, ongoing compute cost required
+just to keep the lights
+
+16
+00:00:49.200 --> 00:00:53.680
+on. This dual-axis chart visualizes the
+resulting lethal margin squeeze.
+
+17
+00:00:53.680 --> 00:00:57.600
+The red line represents the exponential
+rise in compute capital
+
+18
+00:00:57.600 --> 00:01:01.080
+expenditure, while the blue line shows the
+margin per token
+
+19
+00:01:01.080 --> 00:01:04.680
+plummeting towards zero as companies are
+forced to compete on
+
+20
+00:01:04.680 --> 00:01:08.440
+price. Adding to the financial pressure,
+the strategy of simply
+
+21
+00:01:08.440 --> 00:01:12.120
+feeding models more data is yielding
+diminishing returns.
+
+22
+00:01:12.120 --> 00:01:16.120
+Researchers at major conferences like
+NURIPS are actively debating whether
+
+23
+00:01:16.120 --> 00:01:19.320
+scaling laws have hit a wall, forcing the
+academic community
+
+24
+00:01:19.320 --> 00:01:21.240
+to look for alternative methods.
+
+25
+00:01:21.240 --> 00:01:25.320
+With margins shrinking and costs
+skyrocketing, the strategic focus of
+
+26
+00:01:25.320 --> 00:01:28.360
+the industry is being forced to pivot
+completely away from
+
+27
+00:01:28.360 --> 00:01:29.640
+the model layer.
+
+28
+00:01:29.640 --> 00:01:31.800
+If you want to see where the market is
+actually
+
+29
+00:01:31.800 --> 00:01:34.600
+going, you have to ignore the AI labs and
+track
+
+30
+00:01:34.600 --> 00:01:37.880
+the billions of dollars flowing through
+recent mega acquisitions.
+
+31
+00:01:37.880 --> 00:01:41.080
+Salesforce spent $8 billion on
+Informatica.
+
+32
+00:01:41.080 --> 00:01:43.800
+Cisco spent $28 billion on Splunk.
+
+33
+00:01:43.800 --> 00:01:45.480
+Databricks acquired Tabular.
+
+34
+00:01:45.480 --> 00:01:47.400
+IBM moved for Datastacks.
+
+35
+00:01:47.400 --> 00:01:50.440
+None of those multi-billion dollar deals
+were to acquire a
+
+36
+00:01:50.440 --> 00:01:54.960
+new model. Every single one was about the
+unglamorous plumbing,
+
+37
+00:01:54.960 --> 00:01:58.160
+data integration, infrastructure, and
+governance.
+
+38
+00:01:58.160 --> 00:02:03.920
+A typical large enterprise runs over 106
+different siloed applications.
+
+39
+00:02:03.920 --> 00:02:08.400
+That fragmented landscape makes raw AI
+models practically useless.
+
+40
+00:02:08.400 --> 00:02:13.120
+Bridging the massive gap between
+cutting-edge inference and 20-year-old ERP
+
+41
+00:02:13.120 --> 00:02:17.040
+systems drives this $260 billion market.
+
+42
+00:02:17.040 --> 00:02:20.160
+A powerful AI brain is required, but
+without the data
+
+43
+00:02:20.160 --> 00:02:22.560
+plumbing to connect it to the business, it
+has zero
+
+44
+00:02:22.560 --> 00:02:26.880
+practical value. We are watching the
+agentic shift happen.
+
+45
+00:02:26.880 --> 00:02:30.640
+The industry is moving from passive text
+generators to autonomous
+
+46
+00:02:30.640 --> 00:02:34.960
+systems that perceive, plan, and execute
+multi-step tasks.
+
+47
+00:02:34.960 --> 00:02:38.800
+Deploying these agents into a corporate
+environment hinges on trust,
+
+48
+00:02:38.800 --> 00:02:42.320
+moving beyond the mere technical challenge
+of data integration.
+
+49
+00:02:42.320 --> 00:02:47.200
+Peer-reviewed research at ICLR and ACLR
+proves that collaborative agents
+
+50
+00:02:47.200 --> 00:02:49.680
+can easily bypass standard safety
+guardrails.
+
+51
+00:02:49.880 --> 00:02:54.680
+They execute what are called decomposition
+jailbreaks by splitting malicious
+
+52
+00:02:54.680 --> 00:02:59.880
+tasks into harmless-looking pieces,
+creating an illusion of shallow safety.
+
+53
+00:02:59.880 --> 00:03:03.880
+Corporate legal and compliance teams look
+at those vulnerabilities and
+
+54
+00:03:03.880 --> 00:03:07.320
+flatly refuse to grant a black box agent
+access to
+
+55
+00:03:07.320 --> 00:03:11.640
+core financial or HR data without ironclad
+oversight.
+
+56
+00:03:11.640 --> 00:03:16.120
+Engineering a secure, auditable trust
+bridge defines the final stage
+
+57
+00:03:16.120 --> 00:03:17.880
+of enterprise deployment.
+
+58
+00:03:17.880 --> 00:03:21.880
+Based on research from the Orchestrix
+project, the only defensible
+
+59
+00:03:21.880 --> 00:03:25.560
+position left in the industry is building
+the specialized management
+
+60
+00:03:25.560 --> 00:03:28.600
+stack that sits on top of these commodity
+models.
+
+61
+00:03:28.600 --> 00:03:32.200
+This architectural blueprint outlines the
+required stack.
+
+62
+00:03:32.200 --> 00:03:36.600
+It starts with an agent-ready data fabric
+optimized for compliance.
+
+63
+00:03:36.600 --> 00:03:41.400
+That foundation supports a multi-agent
+reasoning engine to decompose massive
+
+64
+00:03:41.400 --> 00:03:45.440
+business goals. To secure the system, a
+firewall locks into
+
+65
+00:03:45.440 --> 00:03:49.840
+place. Finally, a human-agent
+collaboration layer sits on top.
+
+66
+00:03:49.840 --> 00:03:55.120
+That four-part architecture transforms an
+unpredictable, volatile AI model into
+
+67
+00:03:55.120 --> 00:03:57.440
+a safe, reliable corporate asset.
+
+68
+00:03:57.440 --> 00:03:59.280
+What we are looking at is the birth of a
+
+69
+00:03:59.280 --> 00:04:03.440
+mandatory new software category, agentic
+resource planning.
+
+70
+00:04:03.440 --> 00:04:07.840
+As AI usage becomes a universal baseline,
+CIOs and compliance
+
+71
+00:04:07.840 --> 00:04:11.360
+officers will require these systems to
+track the usage, safety,
+
+72
+00:04:11.360 --> 00:04:14.880
+and return on investment of an entirely
+digital workforce.
+
+73
+00:04:14.880 --> 00:04:18.800
+The initial race for foundation model
+supremacy is effectively over,
+
+74
+00:04:18.800 --> 00:04:22.160
+squeezed by tight margins and eroding
+competitive modes.
+
+75
+00:04:22.160 --> 00:04:25.040
+The industry's center of gravity is
+shifting toward those who
+
+76
+00:04:25.040 --> 00:04:28.640
+build the operating system, leaving the
+providers of raw intelligence
+
+77
+00:04:28.640 --> 00:04:31.520
+to compete on razor-thin margins.
+

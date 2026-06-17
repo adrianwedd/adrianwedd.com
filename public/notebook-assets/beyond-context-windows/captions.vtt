@@ -1,0 +1,513 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:04.080
+Let's examine how we currently handle
+documents in AI.
+
+2
+00:00:04.080 --> 00:00:08.080
+The standard approach treats text as a
+passive input, forcing
+
+3
+00:00:08.080 --> 00:00:10.160
+data through a fixed pipeline.
+
+4
+00:00:10.160 --> 00:00:12.560
+There is a mathematical mismatch here.
+
+5
+00:00:12.560 --> 00:00:18.320
+Real-world corpora, regulatory archives,
+research databases, entire source code
+
+6
+00:00:18.320 --> 00:00:21.040
+repositories, are practically infinite.
+
+7
+00:00:21.040 --> 00:00:24.160
+The language models we feed them into are
+finite.
+
+8
+00:00:24.160 --> 00:00:27.200
+The industry response has been to widen
+the pipe.
+
+9
+00:00:27.200 --> 00:00:30.480
+We now have models boasting context
+windows of a million,
+
+10
+00:00:30.480 --> 00:00:32.320
+even 2 million tokens.
+
+11
+00:00:32.320 --> 00:00:34.640
+But scale alone hits a wall.
+
+12
+00:00:34.640 --> 00:00:39.360
+Even at 2 million tokens, complex
+synthesis across massive, unstructured
+
+13
+00:00:39.360 --> 00:00:41.040
+data sets breaks down.
+
+14
+00:00:41.040 --> 00:00:44.320
+Making the input pipe wider does not fix a
+model's
+
+15
+00:00:44.320 --> 00:00:48.640
+structural inability to navigate and
+process massive amounts of information
+
+16
+00:00:48.640 --> 00:00:53.280
+effectively. Take the first common
+workaround, context stuffing.
+
+17
+00:00:53.280 --> 00:00:56.400
+We load an entire massive document into
+the model at
+
+18
+00:00:56.400 --> 00:00:59.440
+once. It reads linearly in a single pass.
+
+19
+00:00:59.560 --> 00:01:02.200
+As it moves deeper, attention degrades.
+
+20
+00:01:02.200 --> 00:01:06.680
+If new context changes earlier meanings,
+it cannot reverse course
+
+21
+00:01:06.680 --> 00:01:11.720
+to reread. So engineers turn to the
+alternative, retrieval augmented
+
+22
+00:01:11.720 --> 00:01:13.720
+generation, or RAG.
+
+23
+00:01:13.720 --> 00:01:17.960
+RAG bypasses the limit by carving
+documents into pieces.
+
+24
+00:01:17.960 --> 00:01:22.040
+It retrieves pre-selected fragments and
+injects them directly into the
+
+25
+00:01:22.040 --> 00:01:26.120
+prompt. By doing this, it destroys
+structural context.
+
+26
+00:01:26.120 --> 00:01:30.520
+The model receives isolated shards of
+data, completely disconnected from
+
+27
+00:01:30.520 --> 00:01:32.280
+the surrounding architecture.
+
+28
+00:01:32.280 --> 00:01:34.840
+Cross-chunk coherence is lost.
+
+29
+00:01:34.840 --> 00:01:37.400
+You are forced into a losing trade-off.
+
+30
+00:01:37.400 --> 00:01:41.480
+You sacrifice structural coherence for
+retrieval with RAG, or you
+
+31
+00:01:41.480 --> 00:01:46.040
+sacrifice attention detail for scale by
+stuffing the context window.
+
+32
+00:01:46.040 --> 00:01:50.680
+In 2025, researchers published a paper
+proposing a new pattern,
+
+33
+00:01:50.680 --> 00:01:53.800
+the Recursive Language Model, or RLM.
+
+34
+00:01:53.800 --> 00:01:57.760
+The RLM pattern abandons feeding a
+document into a model.
+
+35
+00:01:57.760 --> 00:02:01.600
+Instead, it treats the document as a
+queryable environment.
+
+36
+00:02:01.600 --> 00:02:04.880
+The model uses tools to query data
+iteratively.
+
+37
+00:02:04.880 --> 00:02:10.640
+It scans, searches, pulls metadata, and
+selectively targets specific sections
+
+38
+00:02:10.640 --> 00:02:12.640
+to read at full resolution.
+
+39
+00:02:12.640 --> 00:02:17.600
+To put this theory into production, I
+built RLM-MCP.
+
+40
+00:02:17.600 --> 00:02:21.120
+It operates as a model context protocol
+server.
+
+41
+00:02:21.120 --> 00:02:25.280
+MCP provides a standardized framework that
+exposes a lifecycle of
+
+42
+00:02:25.280 --> 00:02:29.120
+tools to any compatible client, whether
+that's clawed code or
+
+43
+00:02:29.120 --> 00:02:33.120
+cursor. The LLM is no longer a passive
+reader trying
+
+44
+00:02:33.120 --> 00:02:36.400
+to parse an entire novel by flashlight in
+one pass.
+
+45
+00:02:36.400 --> 00:02:39.600
+It operates as an active researcher with
+the agency to
+
+46
+00:02:39.600 --> 00:02:41.040
+navigate the text.
+
+47
+00:02:41.040 --> 00:02:46.800
+RLM-MCP organizes this navigation through
+a five-step lifecycle.
+
+48
+00:02:46.800 --> 00:02:49.120
+Step one is session creation.
+
+49
+00:02:49.120 --> 00:02:50.360
+Everything the model does
+
+50
+00:02:53.160 --> 00:02:56.120
+is strictly scoped to an isolated session.
+
+51
+00:02:56.120 --> 00:02:58.280
+Step two is document loading.
+
+52
+00:02:58.280 --> 00:03:02.600
+The model can ingest inline text, files,
+or directory globs.
+
+53
+00:03:02.600 --> 00:03:07.480
+To prevent redundancies, content is
+evaluated by its SHA-256 hash.
+
+54
+00:03:07.480 --> 00:03:10.760
+If the exact same document is loaded
+twice, it resolves
+
+55
+00:03:10.760 --> 00:03:14.440
+to a single cryptographic hash string,
+preventing duplication.
+
+56
+00:03:14.440 --> 00:03:18.760
+Moving to step three, on-demand dynamic
+chunking.
+
+57
+00:03:18.760 --> 00:03:22.600
+Standard RAG pipelines pre-chunk data
+blindly.
+
+58
+00:03:22.600 --> 00:03:26.920
+Here, the LLM actively decides how to
+slice text, choosing
+
+59
+00:03:26.920 --> 00:03:31.240
+between fixed character counts, line
+counts, or regex delimiters based
+
+60
+00:03:31.240 --> 00:03:34.280
+on the exact task it is trying to execute.
+
+61
+00:03:34.280 --> 00:03:37.320
+Step 4 is the search execution loop.
+
+62
+00:03:37.320 --> 00:03:40.840
+The model runs literal regex or keyword
+queries.
+
+63
+00:03:40.840 --> 00:03:43.640
+The BM25 index is built lazily.
+
+64
+00:03:43.640 --> 00:03:46.320
+It does not preemptively process the
+corpus.
+
+65
+00:03:46.320 --> 00:03:50.080
+Instead, the index generates in real time
+across data blocks
+
+66
+00:03:50.080 --> 00:03:52.400
+only when the first query is fired.
+
+67
+00:03:52.400 --> 00:03:54.880
+Step 5 is artifact storage.
+
+68
+00:03:54.880 --> 00:03:58.720
+Any output the model derives from the
+document, summaries, extractions,
+
+69
+00:03:58.720 --> 00:04:01.440
+or classifications is retained here.
+
+70
+00:04:01.440 --> 00:04:05.760
+This modular lifecycle takes theoretically
+infinite text and binds it
+
+71
+00:04:05.760 --> 00:04:08.880
+into explicit, manageable processing
+operations.
+
+72
+00:04:08.880 --> 00:04:14.240
+Giving an LLM autonomous querying agency
+introduces serious engineering risks.
+
+73
+00:04:14.240 --> 00:04:17.920
+Left unchecked, a model can spiral into
+infinite search loops
+
+74
+00:04:17.920 --> 00:04:20.480
+and rapidly drain computational resources.
+
+75
+00:04:20.480 --> 00:04:24.800
+To manage memory efficiently, the system
+uses a cache staleness
+
+76
+00:04:24.800 --> 00:04:29.440
+fingerprint. It tracks document count,
+content hashes, and the tokenizer
+
+77
+00:04:29.520 --> 00:04:33.280
+version. If any of those parameters shift,
+the index automatically
+
+78
+00:04:33.280 --> 00:04:37.680
+rebuilds. We also implement strict
+denial-of-service protections.
+
+79
+00:04:37.680 --> 00:04:43.160
+RLM-M MCP establishes hard caps, budgets
+of 500 tool calls,
+
+80
+00:04:43.320 --> 00:04:48.360
+10,000 character document peaks, and a
+50,000-character response maximum.
+
+81
+00:04:48.360 --> 00:04:51.560
+These caps prevent the model from
+retrieving massive data blocks
+
+82
+00:04:51.560 --> 00:04:53.640
+that overflow its context window.
+
+83
+00:04:53.640 --> 00:04:58.120
+Concurrency semaphores cap batch
+processing at 20 concurrent loads, while
+
+84
+00:04:58.120 --> 00:05:00.840
+async locks ensure multi-agent safety.
+
+85
+00:05:00.840 --> 00:05:04.840
+These strict constraints separate an
+experimental academic pattern from a
+
+86
+00:05:04.840 --> 00:05:09.640
+viable enterprise-grade server capable of
+supporting a full engineering team.
+
+87
+00:05:09.640 --> 00:05:13.960
+For enterprise AI, the baseline
+requirement is eliminating untracked synthesis
+
+88
+00:05:13.960 --> 00:05:17.320
+and hallucinations. You need to know
+exactly where an answer
+
+89
+00:05:17.320 --> 00:05:21.400
+came from. This brings us to structural
+provenance, the primary
+
+90
+00:05:21.400 --> 00:05:25.480
+architectural benefit of RLM over massive
+context windows.
+
+91
+00:05:25.480 --> 00:05:29.400
+Instead of offering an answer in
+isolation, RLM maps every
+
+92
+00:05:29.400 --> 00:05:33.320
+output back to its exact verifiable path
+of derivation.
+
+93
+00:05:33.320 --> 00:05:37.440
+Every artifact is recorded with exact
+metadata, the literal character
+
+94
+00:05:37.440 --> 00:05:41.760
+ranges, the unique prompt hash ID, and the
+precise timestamp.
+
+95
+00:05:41.760 --> 00:05:46.560
+Provenance shifts model outputs from being
+probabilistic guesses into mathematically
+
+96
+00:05:46.560 --> 00:05:48.800
+auditable and defensible artifacts.
+
+97
+00:05:48.800 --> 00:05:52.800
+RLM is not a blanket replacement for every
+LLM interaction.
+
+98
+00:05:52.800 --> 00:05:56.080
+If your document fits comfortably within a
+standard context window
+
+99
+00:05:56.240 --> 00:06:00.000
+and you do not require rigorous provenance
+tracking, standard insertion
+
+100
+00:06:00.000 --> 00:06:01.520
+remains the optimal path.
+
+101
+00:06:01.520 --> 00:06:02.960
+You just paste it in.
+
+102
+00:06:02.960 --> 00:06:07.040
+You deploy RLM when the corpus exceeds
+reliable attention spans,
+
+103
+00:06:07.040 --> 00:06:10.400
+or when your use case demands rigorous,
+iterative, and defensible
+
+104
+00:06:10.400 --> 00:06:14.800
+research. The RLM MCP architecture serves
+as an operational bridge
+
+105
+00:06:14.800 --> 00:06:17.360
+between infinite data and finite models.
+
+106
+00:06:17.360 --> 00:06:22.640
+Moving beyond context windows requires
+abandoning the idea of reading
+
+107
+00:06:22.640 --> 00:06:24.720
+entire archives at once.
+
+108
+00:06:24.720 --> 00:06:29.280
+Instead, we have to engineer environments
+where models can actively
+
+109
+00:06:29.280 --> 00:06:32.920
+search, synthesize, and prove their work.
+

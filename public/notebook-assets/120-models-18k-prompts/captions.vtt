@@ -1,0 +1,406 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:04.880
+We're accustomed to a very specific
+relationship with artificial intelligence.
+
+2
+00:00:04.880 --> 00:00:07.280
+You type a question into a chat box and
+the
+
+3
+00:00:07.280 --> 00:00:08.960
+system types an answer back.
+
+4
+00:00:08.960 --> 00:00:12.320
+It operates as a closed loop, isolated
+from the outside
+
+5
+00:00:12.320 --> 00:00:16.160
+world. Safety testing usually reflects
+this setup by focusing on
+
+6
+00:00:16.160 --> 00:00:18.240
+screening the user's text prompts.
+
+7
+00:00:18.240 --> 00:00:23.360
+When models pass these isolated
+single-turn evaluations, AI developers report
+
+8
+00:00:23.360 --> 00:00:26.480
+high safety scores as proof the system is
+secure.
+
+9
+00:00:26.480 --> 00:00:30.240
+But modern models are rarely deployed as
+isolated chatbots.
+
+10
+00:00:30.240 --> 00:00:34.480
+They operate as autonomous agents, wired
+into external tools, live
+
+11
+00:00:34.480 --> 00:00:36.720
+databases, and code environments.
+
+12
+00:00:36.720 --> 00:00:40.880
+The Failure First project tested these
+systems at scale, evaluating
+
+13
+00:00:41.120 --> 00:00:45.360
+120 models with over 18,000 prompts
+designed to probe these
+
+14
+00:00:45.360 --> 00:00:48.720
+structures. This research was designed to
+see if the safety
+
+15
+00:00:48.720 --> 00:00:52.080
+methods used for isolated chat windows
+still hold up when
+
+16
+00:00:52.080 --> 00:00:55.200
+the model is plugged into a wider software
+ecosystem.
+
+17
+00:00:55.200 --> 00:00:58.720
+The first architectural layer to consider
+is the input.
+
+18
+00:00:58.720 --> 00:01:02.760
+In an agentic system, the model ingests
+instructions from multiple
+
+19
+00:01:02.760 --> 00:01:06.520
+sources simultaneously, and the user's
+prompt is only one part
+
+20
+00:01:06.520 --> 00:01:07.640
+of that stream.
+
+21
+00:01:07.640 --> 00:01:10.520
+When an AI agent connects to a new plugin,
+it
+
+22
+00:01:10.520 --> 00:01:13.720
+reads a skill file to understand how that
+tool works.
+
+23
+00:01:13.720 --> 00:01:17.080
+Attackers can use supply chain injection
+too tirely.
+
+24
+00:01:17.080 --> 00:01:21.560
+Across six different small open-weight
+models, hiding instructions inside these
+
+25
+00:01:21.560 --> 00:01:24.840
+skill files achieved an attack success
+rate between 90 and
+
+26
+00:01:25.000 --> 00:01:29.320
+100%. This happens because standard safety
+training focuses on the
+
+27
+00:01:29.320 --> 00:01:30.680
+user input channel.
+
+28
+00:01:30.680 --> 00:01:34.040
+The AI treats information arriving through
+the tool loading channel
+
+29
+00:01:34.040 --> 00:01:37.240
+as a legitimate instruction, allowing the
+payload to reach the
+
+30
+00:01:37.240 --> 00:01:39.000
+model's core unobstructed.
+
+31
+00:01:39.000 --> 00:01:42.920
+In an agentic pipeline, any external
+plugin or skill definition
+
+32
+00:01:42.920 --> 00:01:45.960
+becomes a potential vector for a hostile
+takeover.
+
+33
+00:01:45.960 --> 00:01:48.600
+The second architectural layer is the
+output.
+
+34
+00:01:48.600 --> 00:01:53.320
+While a typical chatbot responds in
+conversational text, an agentic
+
+35
+00:01:53.400 --> 00:01:57.600
+model often communicates with other
+software using structured data formats
+
+36
+00:01:57.760 --> 00:01:59.680
+like JSON or YAML.
+
+37
+00:01:59.680 --> 00:02:03.040
+Attackers exploit this using format lock
+attacks.
+
+38
+00:02:03.040 --> 00:02:06.640
+They instruct the AI to generate harmful
+content but demand
+
+39
+00:02:06.640 --> 00:02:09.520
+it be structured strictly within JSON
+code.
+
+40
+00:02:09.520 --> 00:02:12.880
+This reveals what researchers call the
+faithfulness gap.
+
+41
+00:02:12.880 --> 00:02:16.000
+The models focus so heavily on the complex
+task of
+
+42
+00:02:16.000 --> 00:02:19.040
+formatting the code correctly that they
+fail to filter the
+
+43
+00:02:19.040 --> 00:02:22.080
+actual text they are slotting into the
+data fields.
+
+44
+00:02:22.080 --> 00:02:25.440
+This technique is effective even against
+frontier models.
+
+45
+00:02:25.440 --> 00:02:30.160
+Claude Sonnet 4.5 showed a 30% failure
+rate, Gemini 3
+
+46
+00:02:30.160 --> 00:02:35.840
+Flash was at 24%, and Codex GPT 5.2
+reached 42%.
+
+47
+00:02:35.840 --> 00:02:40.400
+Relying on conversational text for safety
+evaluations means missing the
+
+48
+00:02:40.400 --> 00:02:43.520
+dangerous payloads embedded inside
+structured code.
+
+49
+00:02:43.520 --> 00:02:45.360
+The third layer is memory.
+
+50
+00:02:45.360 --> 00:02:48.720
+A common assumption in the industry
+suggests that more capable
+
+51
+00:02:48.720 --> 00:02:52.920
+reasoning models are inherently more
+resilient to manipulation than simpler
+
+52
+00:02:52.920 --> 00:02:57.400
+ones. To test this, researchers used
+crescendo attacks, a method
+
+53
+00:02:57.400 --> 00:03:01.080
+that exploits an AI's memory by slowly
+escalating the severity
+
+54
+00:03:01.080 --> 00:03:04.760
+of requests across a long, multi-turn
+conversation.
+
+55
+00:03:04.760 --> 00:03:07.000
+The data shows a sharp contrast.
+
+56
+00:03:07.000 --> 00:03:10.200
+Small models often forget the earlier
+context and fail the
+
+57
+00:03:10.200 --> 00:03:12.040
+attack at a 10% rate.
+
+58
+00:03:12.040 --> 00:03:15.960
+However, against a reasoning model like
+DeepSeek R1, the success
+
+59
+00:03:15.960 --> 00:03:19.320
+rate climbs to between 80 and 90% as the
+conversation
+
+60
+00:03:19.320 --> 00:03:23.320
+length grows. A reasoning model's ability
+to perfectly track context
+
+61
+00:03:23.320 --> 00:03:25.720
+is exactly what an attacker weaponizes.
+
+62
+00:03:25.720 --> 00:03:28.120
+Because the model remains committed to the
+logic of the
+
+63
+00:03:28.120 --> 00:03:30.680
+previous turn, it is more likely to be led
+toward
+
+64
+00:03:30.680 --> 00:03:31.960
+a harmful conclusion.
+
+65
+00:03:31.960 --> 00:03:35.240
+For an AI agent, a larger context window
+also means
+
+66
+00:03:35.240 --> 00:03:37.000
+an expanded attack surface.
+
+67
+00:03:37.000 --> 00:03:39.720
+These vulnerabilities suggest a logical
+question.
+
+68
+00:03:39.720 --> 00:03:43.080
+Why haven't these issues appeared in
+standard safety benchmarks?
+
+69
+00:03:43.080 --> 00:03:46.560
+The problem lies in how safety tests are
+graded.
+
+70
+00:03:46.560 --> 00:03:52.080
+Most automated benchmarks use
+keyword-based classification, scanning the AI's response
+
+71
+00:03:52.080 --> 00:03:55.520
+for specific trigger words to decide if an
+attack worked.
+
+72
+00:03:55.520 --> 00:03:59.520
+The Failure First study found that these
+keyword heuristics inflate
+
+73
+00:03:59.520 --> 00:04:03.920
+the reported risk of simple attacks by
+roughly 2.3 times.
+
+74
+00:04:03.920 --> 00:04:08.400
+Keyword graders have an 88% false positive
+rate, often labeling
+
+75
+00:04:08.400 --> 00:04:11.600
+a response as a successful attack even
+when the model
+
+76
+00:04:11.600 --> 00:04:15.840
+refused. Correcting these errors with LLM
+grading caused the aggregate
+
+77
+00:04:15.840 --> 00:04:21.120
+attack success rate to drop from 36.2% to
+15.9%.
+
+78
+00:04:21.120 --> 00:04:22.960
+This creates a blind spot.
+
+79
+00:04:22.960 --> 00:04:27.440
+Benchmarks over-report the risk of
+conversational text attacks while failing
+
+80
+00:04:27.440 --> 00:04:30.320
+to detect the real threats hidden in JSON
+formats and
+
+81
+00:04:30.320 --> 00:04:31.920
+external tool files.
+
+82
+00:04:31.920 --> 00:04:35.280
+The Failure First dataset shows that
+securing a modern model
+
+83
+00:04:35.280 --> 00:04:38.720
+requires moving past the single text
+prompt and testing the
+
+84
+00:04:38.720 --> 00:04:41.240
+full interconnected ar.chitecture
+

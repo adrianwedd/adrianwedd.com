@@ -1,0 +1,449 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:05.440
+A self-hosted frigate NVR running a Halo
+8L accelerator processes
+
+2
+00:00:05.440 --> 00:00:08.560
+video frames locally in about 14
+milliseconds.
+
+3
+00:00:08.560 --> 00:00:12.960
+It locks onto objects, tracks movement,
+and triggers automations entirely
+
+4
+00:00:12.960 --> 00:00:16.880
+on your own hardware, maximizing both
+privacy and speed.
+
+5
+00:00:16.880 --> 00:00:20.000
+But Google Nest cameras are the stubborn
+holdout.
+
+6
+00:00:20.000 --> 00:00:23.120
+They do not play nicely with independent
+local networks.
+
+7
+00:00:23.120 --> 00:00:26.080
+The problem is a fundamental protocol
+mismatch.
+
+8
+00:00:26.080 --> 00:00:29.120
+Standard IP cameras speak RTSP.
+
+9
+00:00:29.120 --> 00:00:31.680
+You point your local server at an IP
+address, and
+
+10
+00:00:31.680 --> 00:00:34.640
+a continuous stream flows directly into
+your network.
+
+11
+00:00:34.640 --> 00:00:36.960
+Nest cameras use WebRTC.
+
+12
+00:00:36.960 --> 00:00:41.120
+That is a protocol designed for temporary
+peer-to-peer browser interactions,
+
+13
+00:00:41.120 --> 00:00:44.640
+like a video call, not a continuous NVR
+recording.
+
+14
+00:00:44.640 --> 00:00:48.320
+Relying on standard consumer smart home
+apps means routing footage
+
+15
+00:00:48.320 --> 00:00:51.280
+of your own driveway through an external
+cloud server just
+
+16
+00:00:51.280 --> 00:00:53.920
+to view it on a device sitting five feet
+away.
+
+17
+00:00:53.920 --> 00:00:56.960
+The most commonly suggested workaround is
+to link the cameras
+
+18
+00:00:56.960 --> 00:00:58.160
+through Home Assistant.
+
+19
+00:00:58.160 --> 00:01:01.240
+It pulls the cameras in as software
+entities, and you
+
+20
+00:01:01.320 --> 00:01:06.040
+can theoretically fetch continuous frames
+using its camera proxy endpoint.
+
+21
+00:01:06.040 --> 00:01:08.840
+This image shows a live camera feed on the
+left,
+
+22
+00:01:08.840 --> 00:01:12.520
+next to a 640 by 480 gray placeholder on
+the
+
+23
+00:01:12.520 --> 00:01:15.640
+right. Google only streams video when
+there is an active
+
+24
+00:01:15.640 --> 00:01:17.240
+browser session open.
+
+25
+00:01:17.240 --> 00:01:19.720
+If your script tries to pull frames in the
+background
+
+26
+00:01:19.720 --> 00:01:23.240
+without a human actively watching a tab,
+the proxy silently
+
+27
+00:01:23.240 --> 00:01:28.920
+fails, returning this exact 2689-byte gray
+box over and over.
+
+28
+00:01:28.920 --> 00:01:32.920
+True automated surveillance cannot rely on
+passive integrations.
+
+29
+00:01:32.920 --> 00:01:35.560
+To pull a real video feed, a developer has
+to
+
+30
+00:01:35.560 --> 00:01:39.160
+write a script that programmatically
+negotiates a continuous connection with
+
+31
+00:01:39.160 --> 00:01:43.800
+Google servers. The connection pipeline
+begins with an SDP offer.
+
+32
+00:01:43.800 --> 00:01:47.080
+You send a session description protocol
+request to Google's API
+
+33
+00:01:47.080 --> 00:01:48.680
+to initiate the stream.
+
+34
+00:01:48.680 --> 00:01:53.400
+This diagram outlines the precise sequence
+Google requires: audio first,
+
+35
+00:01:53.400 --> 00:01:57.680
+video in H.264 second, and the application
+data channel third.
+
+36
+00:01:57.680 --> 00:02:01.680
+Google returns an SDP answer, but there is
+a microscopic
+
+37
+00:02:01.680 --> 00:02:05.840
+syntax error, an empty space immediately
+following the colon.
+
+38
+00:02:05.840 --> 00:02:09.840
+Standard Python parsers read that empty
+space, expect an integer,
+
+39
+00:02:09.840 --> 00:02:11.440
+and immediately crash.
+
+40
+00:02:11.440 --> 00:02:14.240
+To keep the script alive, you have to
+intercept the
+
+41
+00:02:14.240 --> 00:02:18.320
+incoming response and manually patch that
+missing data before passing
+
+42
+00:02:18.320 --> 00:02:19.440
+it to the parser.
+
+43
+00:02:19.440 --> 00:02:23.200
+Closed ecosystems demand forensic reverse
+engineering.
+
+44
+00:02:23.200 --> 00:02:27.840
+These undocumented formatting rules act as
+friction, keeping local developers
+
+45
+00:02:27.840 --> 00:02:29.760
+out of their own hardware streams.
+
+46
+00:02:29.760 --> 00:02:32.960
+Once the connection is open, the incoming
+text strings need
+
+47
+00:02:32.960 --> 00:02:36.960
+cleaning. But using standard Python
+commands like lstrip to clean
+
+48
+00:02:36.960 --> 00:02:38.720
+the prefixes is dangerous.
+
+49
+00:02:38.720 --> 00:02:42.160
+It strips any character in a given set,
+silently deleting
+
+50
+00:02:42.160 --> 00:02:44.400
+necessary letters from the connection
+string.
+
+51
+00:02:44.400 --> 00:02:46.880
+Explicit slicing is required instead.
+
+52
+00:02:46.880 --> 00:02:50.000
+Pulling multiple cameras creates a local
+traffic jam.
+
+53
+00:02:50.000 --> 00:02:52.440
+A web socket has a single receive buffer.
+
+54
+00:02:52.440 --> 00:02:56.440
+If two routines read simultaneously, they
+collide and crash.
+
+55
+00:02:56.440 --> 00:02:58.920
+The solution is a dispatcher pattern.
+
+56
+00:02:58.920 --> 00:03:02.200
+A central node reads all traffic and
+routes packets into
+
+57
+00:03:02.200 --> 00:03:07.320
+dedicated queues. Liberating your cameras
+requires actively managing the complex
+
+58
+00:03:07.320 --> 00:03:10.920
+local network traffic that corporate cloud
+servers normally handle out
+
+59
+00:03:10.920 --> 00:03:14.840
+of sight. With the frames successfully
+extracted from the WebRTC
+
+60
+00:03:14.840 --> 00:03:18.280
+session, they need to be translated into
+an RTSP stream
+
+61
+00:03:18.280 --> 00:03:21.080
+that the Frigate NVR can actually digest.
+
+62
+00:03:21.080 --> 00:03:25.000
+This speedometer shows what happens
+feeding raw frames into FFmpead
+
+63
+00:03:25.000 --> 00:03:29.320
+without limits. The software processes
+images at maximum hardware speed,
+
+64
+00:03:29.320 --> 00:03:32.520
+spinning out of control at 75 frames per
+second.
+
+65
+00:03:32.520 --> 00:03:35.480
+By adding a restrictive command, it
+throttles down to a
+
+66
+00:03:35.480 --> 00:03:37.320
+stable 2 frames per second.
+
+67
+00:03:37.320 --> 00:03:39.960
+Standard RTSP is a two-way street.
+
+68
+00:03:39.960 --> 00:03:43.320
+The server and client constantly send
+messages back and forth.
+
+69
+00:03:43.320 --> 00:03:45.760
+Because this data is moving through a
+one-way pipe out
+
+70
+00:03:45.760 --> 00:03:48.240
+of the Python script, it has to be
+translated into
+
+71
+00:03:48.240 --> 00:03:51.280
+a unidirectional MPEG-TS byte stream.
+
+72
+00:03:51.280 --> 00:03:55.280
+This final translation bridges the gap,
+taking a video feed
+
+73
+00:03:55.280 --> 00:03:58.240
+built for an external web browser and
+forcing it into
+
+74
+00:03:58.240 --> 00:04:00.960
+a universally readable local format.
+
+75
+00:04:00.960 --> 00:04:05.600
+The custom architecture is now fully
+operational, pulling continuous video
+
+76
+00:04:05.600 --> 00:04:07.280
+onto the local server.
+
+77
+00:04:07.280 --> 00:04:09.200
+The system is highly efficient.
+
+78
+00:04:09.200 --> 00:04:12.800
+When the camera scene is perfectly static,
+the frigate NVR
+
+79
+00:04:12.800 --> 00:04:16.000
+rests and the AI detection rate drops near
+zero to
+
+80
+00:04:16.000 --> 00:04:17.680
+conserve processing power.
+
+81
+00:04:17.680 --> 00:04:20.560
+But the moment someone steps into the
+frame, the system
+
+82
+00:04:20.560 --> 00:04:22.800
+spikes to its full capture rate.
+
+83
+00:04:22.800 --> 00:04:26.400
+The local AI seamlessly tracks the object
+and triggers home
+
+84
+00:04:26.400 --> 00:04:29.840
+automations instantly without ever pinging
+the cloud.
+
+85
+00:04:29.840 --> 00:04:33.200
+To maintain this illusion, the script runs
+a quiet maintenance
+
+86
+00:04:33.200 --> 00:04:37.440
+routine. Google's connection expires after
+roughly a minute, so every
+
+87
+00:04:37.600 --> 00:04:41.960
+55 seconds, the script silently
+renegotiates the WebRTC session to
+
+88
+00:04:41.960 --> 00:04:43.400
+keep the feed alive.
+
+89
+00:04:43.400 --> 00:04:46.840
+This single engineering hurdle represents
+the friction of the modern
+
+90
+00:04:46.840 --> 00:04:52.360
+smart home. Corporate hardware ecosystems
+prioritize app-based convenience,
+
+91
+00:04:52.360 --> 00:04:55.960
+which intentionally restricts local
+interoperability.
+
+92
+00:04:55.960 --> 00:05:02.040
+Achieving fast, private local automation
+requires rejecting those default limitations.
+
+93
+00:05:02.040 --> 00:05:04.440
+You have to build your own bridges to pull
+your
+
+94
+00:05:04.440 --> 00:05:07.080
+data out of the walled garden.
+

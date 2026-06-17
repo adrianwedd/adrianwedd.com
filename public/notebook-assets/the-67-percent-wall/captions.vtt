@@ -1,0 +1,336 @@
+WEBVTT
+
+1
+00:00:00.160 --> 00:00:03.360
+There is a prevailing assumption in the AI
+industry that
+
+2
+00:00:03.360 --> 00:00:05.680
+scale and security are linked.
+
+3
+00:00:05.680 --> 00:00:08.720
+We expect that as major tech companies add
+billions of
+
+4
+00:00:08.720 --> 00:00:12.880
+parameters to their models, those systems
+naturally become more resilient
+
+5
+00:00:12.880 --> 00:00:16.160
+to attack. But if you look at the primary
+sources,
+
+6
+00:00:16.160 --> 00:00:20.000
+like these public scaling policies, you
+find that corporate safety
+
+7
+00:00:20.000 --> 00:00:24.640
+is frequently defined by internal policies
+rather than independent external
+
+8
+00:00:24.640 --> 00:00:28.000
+testing. The problem with these
+declarations is that they are
+
+9
+00:00:28.000 --> 00:00:32.720
+often unfalsifiable. A buyer reading them
+cannot verify what specific
+
+10
+00:00:32.720 --> 00:00:36.800
+prompts were tested, who conducted the
+evaluation, or what technical
+
+11
+00:00:36.800 --> 00:00:38.720
+standard was used as a benchmark.
+
+12
+00:00:38.720 --> 00:00:42.320
+When safety claims cannot be independently
+audited, it creates a
+
+13
+00:00:42.320 --> 00:00:46.880
+situation where the appearance of security
+lacks a verifiable foundation.
+
+14
+00:00:46.880 --> 00:00:52.400
+To test that foundation, researchers fired
+149 adversarial jailbreak prompts
+
+15
+00:00:52.400 --> 00:00:57.120
+from a library called the L1BRTE45's
+corpus against a varied
+
+16
+00:00:57.120 --> 00:00:58.480
+lineup of models.
+
+17
+00:00:58.480 --> 00:01:02.200
+The targeted AI systems ranged in size
+from 30 billion
+
+18
+00:01:02.200 --> 00:01:05.560
+parameters to more than 600 billion
+parameters.
+
+19
+00:01:05.560 --> 00:01:10.520
+Despite these massive differences in
+scale, architecture, and developer, five
+
+20
+00:01:10.520 --> 00:01:14.440
+of these models produced almost exactly
+the same failure rate.
+
+21
+00:01:14.440 --> 00:01:19.240
+This chart tracks the performance of RC,
+StepFun, GLM, Quen,
+
+22
+00:01:19.240 --> 00:01:23.320
+and Nematron3. It shows all five models
+converging at a
+
+23
+00:01:23.560 --> 00:01:28.680
+67% broad attack success rate, meaning
+they substantively engaged with
+
+24
+00:01:28.680 --> 00:01:31.240
+two-thirds of the adversarial prompts.
+
+25
+00:01:31.240 --> 00:01:35.480
+This data suggests that adversarial
+vulnerability does not simply shrink
+
+26
+00:01:35.480 --> 00:01:36.920
+as a model grows.
+
+27
+00:01:36.920 --> 00:01:40.280
+Instead, it points to a structural ceiling
+that remains even
+
+28
+00:01:40.280 --> 00:01:42.760
+as the models themselves expand.
+
+29
+00:01:42.760 --> 00:01:48.280
+Understanding why this barrier exists
+requires a failure-first research methodology.
+
+30
+00:01:48.280 --> 00:01:52.200
+Most safety work focuses on optimizing for
+a model's capability
+
+31
+00:01:52.200 --> 00:01:54.760
+and treats failure as a rare edge case.
+
+32
+00:01:54.960 --> 00:01:56.800
+This approach inverts that.
+
+33
+00:01:56.800 --> 00:02:01.520
+It characterizes the failures first, then
+asks what trustworthy capability
+
+34
+00:02:01.520 --> 00:02:03.120
+is actually left over.
+
+35
+00:02:03.120 --> 00:02:06.080
+It is an approach borrowed from structural
+engineering.
+
+36
+00:02:06.080 --> 00:02:08.480
+To determine if a bridge is safe, you do
+not
+
+37
+00:02:08.480 --> 00:02:10.320
+test it under ideal conditions.
+
+38
+00:02:10.320 --> 00:02:12.960
+You load test it until the material
+breaks.
+
+39
+00:02:12.960 --> 00:02:16.880
+Applying that level of adversarial load
+testing to AI exposes
+
+40
+00:02:16.880 --> 00:02:20.640
+vulnerabilities that standard capability
+benchmarks often miss.
+
+41
+00:02:20.640 --> 00:02:23.760
+We can see the mechanics of the 67% wall
+by
+
+42
+00:02:23.760 --> 00:02:26.640
+looking at the difference between a
+model's willingness to engage
+
+43
+00:02:26.640 --> 00:02:28.560
+and how deeply it complies.
+
+44
+00:02:28.560 --> 00:02:33.040
+This chart tracks strict attack success
+rate, unqualified compliance.
+
+45
+00:02:33.040 --> 00:02:36.720
+The models show a 50-point variance, from
+10 to 60%.
+
+46
+00:02:36.880 --> 00:02:40.560
+Quen appears secure by hedging answers,
+but overlaying the broad
+
+47
+00:02:40.560 --> 00:02:43.680
+attack success rate shows the overall
+breadth of engagement is
+
+48
+00:02:43.680 --> 00:02:46.800
+the same. The models differ on how deeply
+they comply,
+
+49
+00:02:46.800 --> 00:02:49.120
+but agree on whether to comply at all.
+
+50
+00:02:49.120 --> 00:02:52.760
+Their core safety filters are failing at
+the exact same
+
+51
+00:02:52.760 --> 00:02:57.080
+rate. What makes the remaining 33% of
+these prompts different,
+
+52
+00:02:57.080 --> 00:02:59.880
+allowing models to successfully refuse
+them?
+
+53
+00:02:59.880 --> 00:03:04.600
+The leading hypothesis is that refused
+prompts are structurally detectable.
+
+54
+00:03:04.600 --> 00:03:08.200
+They rely on obvious formatting patterns
+or code markers that
+
+55
+00:03:08.200 --> 00:03:10.520
+basic filters can easily catch.
+
+56
+00:03:10.520 --> 00:03:14.040
+The successful 67% are semantic attacks.
+
+57
+00:03:14.040 --> 00:03:17.880
+They use persona hijacking and narrative
+framing to bypass standard
+
+58
+00:03:17.880 --> 00:03:20.040
+instruction following constraints.
+
+59
+00:03:20.040 --> 00:03:23.800
+Current safety training appears to catch
+obvious formatting tricks, but
+
+60
+00:03:23.800 --> 00:03:28.440
+it often leaves models vulnerable to
+sophisticated, language-based manipulation.
+
+61
+00:03:28.440 --> 00:03:32.360
+These unverified safety protocols are
+currently being used to underwrite
+
+62
+00:03:32.360 --> 00:03:35.320
+and deploy AI into enterprise
+environments.
+
+63
+00:03:35.320 --> 00:03:39.320
+This data directly impacts the regulators
+and standards organizations who
+
+64
+00:03:39.320 --> 00:03:41.960
+are being asked to govern a technology
+based on claims
+
+65
+00:03:41.960 --> 00:03:43.640
+they cannot easily test.
+
+66
+00:03:43.640 --> 00:03:47.440
+The findings show that current safety
+training has a provable
+
+67
+00:03:47.440 --> 00:03:51.680
+ceiling that is not shattered simply by
+adding more parameters.
+
+68
+00:03:51.680 --> 00:03:56.720
+Until safety claims can survive rigorous
+adversarial load testing, any
+
+69
+00:03:56.720 --> 00:04:01.120
+declaration that an AI system is
+definitively safe remains a
+
+70
+00:04:01.120 --> 00:04:05.040
+hypothesis at best and a marketing claim
+at worst.
+

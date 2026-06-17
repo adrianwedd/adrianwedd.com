@@ -1,0 +1,384 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:04.960
+For decades, the global technology market
+operated as a unified,
+
+2
+00:00:04.960 --> 00:00:08.320
+borderless enterprise. The assumption was
+simple.
+
+3
+00:00:08.320 --> 00:00:12.000
+The best product would naturally win out,
+regardless of where
+
+4
+00:00:12.000 --> 00:00:14.320
+it was designed or manufactured.
+
+5
+00:00:14.320 --> 00:00:18.240
+That assumption is being replaced by
+sovereign statecraft.
+
+6
+00:00:18.240 --> 00:00:22.080
+In official policy documents, the United
+States has stated that
+
+7
+00:00:22.080 --> 00:00:27.920
+its objective is unquestioned and
+unchallenged global technological dominance.
+
+8
+00:00:27.920 --> 00:00:32.320
+The White House AI Action Plan pairs
+offensive domestic innovation
+
+9
+00:00:32.320 --> 00:00:34.800
+with defensive economic statecraft.
+
+10
+00:00:34.800 --> 00:00:39.760
+It uses semiconductor export controls to
+actively degrade China's capacity
+
+11
+00:00:39.760 --> 00:00:44.240
+to compete while exporting full-stack AI
+packages to allies to
+
+12
+00:00:44.240 --> 00:00:47.040
+create durable technological dependency.
+
+13
+00:00:47.040 --> 00:00:50.560
+This strategy is meeting two other
+distinct visions.
+
+14
+00:00:50.560 --> 00:00:54.400
+China's new generation AI development plan
+seeks to make the
+
+15
+00:00:54.400 --> 00:00:58.320
+country the world's primary innovation
+center by 2030, while the
+
+16
+00:00:58.320 --> 00:01:01.720
+EU uses its AI Act to assert its position
+as
+
+17
+00:01:01.720 --> 00:01:04.200
+a global regulatory superpower.
+
+18
+00:01:04.200 --> 00:01:07.560
+These forces are fracturing the global
+digital order.
+
+19
+00:01:07.560 --> 00:01:10.440
+What was once a single tech stack is
+splitting into
+
+20
+00:01:10.440 --> 00:01:14.920
+competing and increasingly incompatible
+technological ecosystems.
+
+21
+00:01:14.920 --> 00:01:17.480
+The sharpest front of this fracture is at
+the lowest
+
+22
+00:01:17.480 --> 00:01:19.880
+layer of the stack, the hardware.
+
+23
+00:01:19.880 --> 00:01:22.360
+In October 2022, the U.S.
+
+24
+00:01:22.360 --> 00:01:26.440
+implemented sweeping export controls
+designed to sever China's access to
+
+25
+00:01:26.440 --> 00:01:28.840
+high-end semiconductor technology.
+
+26
+00:01:28.840 --> 00:01:32.520
+These controls target the manufacturing
+equipment needed to produce anything
+
+27
+00:01:32.520 --> 00:01:34.520
+below 14 nanometers.
+
+28
+00:01:34.520 --> 00:01:38.520
+It is a decisive shift from denying
+specific military applications
+
+29
+00:01:38.520 --> 00:01:42.040
+to impeding an entire sector of a rival's
+economy.
+
+30
+00:01:42.040 --> 00:01:43.800
+To sustain this, the U.S.
+
+31
+00:01:43.800 --> 00:01:49.160
+formed the CHIP4 alliance, linking
+American design, Dutch lithography, Japanese
+
+32
+00:01:49.160 --> 00:01:51.880
+materials, and Asian manufacturing.
+
+33
+00:01:51.880 --> 00:01:54.360
+But the alliance faces internal friction.
+
+34
+00:01:54.480 --> 00:01:57.760
+South Korean firms depend on the Chinese
+market, caught between
+
+35
+00:01:57.760 --> 00:02:01.040
+their security ally and their largest
+commercial buyer.
+
+36
+00:02:01.040 --> 00:02:04.560
+These restrictions have also accelerated
+Chinese self-reliance.
+
+37
+00:02:04.560 --> 00:02:09.600
+Facing crippling sanctions, Huawei
+developed a 7-nanometer chip using existing
+
+38
+00:02:09.600 --> 00:02:14.880
+technology, while models like DeepSeek V3
+demonstrated frontier-level performance at
+
+39
+00:02:14.880 --> 00:02:17.440
+a fraction of the traditional training
+cost.
+
+40
+00:02:17.440 --> 00:02:20.640
+The result is that pursuing independence
+from a rival has
+
+41
+00:02:20.640 --> 00:02:24.960
+forced deeper interdependence with allies,
+while restrictions on hardware have
+
+42
+00:02:24.960 --> 00:02:28.560
+spurred the very domestic breakthroughs
+they were intended to prevent.
+
+43
+00:02:28.560 --> 00:02:31.840
+Moving up the stack to the infrastructure
+layer, cloud data
+
+44
+00:02:31.840 --> 00:02:34.960
+centers are no longer just logistical
+backrooms.
+
+45
+00:02:34.960 --> 00:02:39.120
+The U.S. dominates global compute through
+AWS, Azure, and Google
+
+46
+00:02:39.120 --> 00:02:41.840
+Cloud, and it is beginning to treat cloud
+access as
+
+47
+00:02:41.840 --> 00:02:43.520
+a tool of statecraft.
+
+48
+00:02:43.520 --> 00:02:47.040
+This dominance has fueled data sovereignty
+movements worldwide.
+
+49
+00:02:47.040 --> 00:02:50.120
+The U.S. Cloud Act gives American law
+enforcement access to
+
+50
+00:02:50.120 --> 00:02:51.240
+data held by U.S.
+
+51
+00:02:51.240 --> 00:02:55.640
+firms, regardless of its physical
+location, intensifying concerns over data
+
+52
+00:02:55.640 --> 00:02:59.320
+localization. This has created a market
+for what amounts to
+
+53
+00:02:59.320 --> 00:03:03.480
+sovereignty as a service, cloud providers
+that sell the feeling
+
+54
+00:03:03.480 --> 00:03:09.320
+of sovereign control while deepening
+actual dependency on foreign-owned infrastructure.
+
+55
+00:03:09.320 --> 00:03:12.200
+At the software layer, there is an
+internal clash over
+
+56
+00:03:12.200 --> 00:03:13.560
+open source AI.
+
+57
+00:03:13.560 --> 00:03:17.800
+Meta argues releasing models ensures the
+American ecosystem remains the
+
+58
+00:03:17.800 --> 00:03:21.880
+global standard. But national security
+experts counter that open sourcing
+
+59
+00:03:21.880 --> 00:03:27.320
+models hands competitors billions in free
+RD, neutralizing semiconductor export
+
+60
+00:03:27.320 --> 00:03:32.040
+controls. These two pillars of American
+strategy, championing a global
+
+61
+00:03:32.040 --> 00:03:38.360
+innovation ecosystem or pursuing
+technological containment, cannot be done simultaneously.
+
+62
+00:03:38.360 --> 00:03:41.240
+The competition will be won or lost in the
+nations
+
+63
+00:03:41.240 --> 00:03:44.120
+of the global south, which represent the
+majority of the
+
+64
+00:03:44.120 --> 00:03:48.720
+world's population. China has been
+systematic here, using its digital
+
+65
+00:03:48.720 --> 00:03:53.360
+Silk Road to provide affordable turnkey AI
+solutions, smart city
+
+66
+00:03:53.360 --> 00:03:58.240
+technology, surveillance systems, and
+digital government platforms, all bundled with
+
+67
+00:03:58.240 --> 00:04:00.000
+financing. The U.S.
+
+68
+00:04:00.000 --> 00:04:03.840
+approach has been perceived as less
+coherent, focusing more on
+
+69
+00:04:03.840 --> 00:04:08.960
+restricting access to rivals than on
+offering viable technological alternatives.
+
+70
+00:04:08.960 --> 00:04:11.200
+But these nations are not passive.
+
+71
+00:04:11.200 --> 00:04:15.600
+Organizations like the African Union and
+Mercosur are pooling diplomatic
+
+72
+00:04:15.600 --> 00:04:20.000
+capital to co-develop their own standards,
+build regional compute hubs,
+
+73
+00:04:20.000 --> 00:04:23.840
+and negotiate as blocks to avoid digital
+colonialism.
+
+74
+00:04:23.840 --> 00:04:29.040
+Strategy now requires accounting for
+competing blocks, divergent standards, and
+
+75
+00:04:29.040 --> 00:04:30.800
+weaponized supply chains.
+
+76
+00:04:30.800 --> 00:04:34.960
+The fiction of a single, unified global
+technology market is
+
+77
+00:04:34.960 --> 00:04:38.560
+over. For those building in the AI space,
+the tools,
+
+78
+00:04:38.560 --> 00:04:42.280
+platforms, and standards we adopt are no
+longer neutral technical
+
+79
+00:04:42.280 --> 00:04:45.880
+choices. They are explicit geopolitical
+alignments.
+
+80
+00:04:45.880 --> 00:04:47.880
+The fracture is here.
+

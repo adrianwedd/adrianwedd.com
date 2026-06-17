@@ -1,0 +1,365 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.200
+For over a decade, our relationship with
+AI has followed
+
+2
+00:00:03.200 --> 00:00:04.640
+a specific blueprint.
+
+3
+00:00:04.640 --> 00:00:08.160
+We treat these systems as obedient
+servants, awaiting a direct
+
+4
+00:00:08.160 --> 00:00:11.680
+command. This model moved into the center
+of domestic life.
+
+5
+00:00:11.680 --> 00:00:14.080
+We designed AI to wait for a wake word and
+
+6
+00:00:14.080 --> 00:00:15.920
+immediately execute a task.
+
+7
+00:00:15.920 --> 00:00:19.360
+Our most advanced large language models
+still utilize this prompt
+
+8
+00:00:19.440 --> 00:00:20.640
+and obey framework.
+
+9
+00:00:20.640 --> 00:00:23.440
+The user provides an instruction, and the
+machine generates a
+
+10
+00:00:23.440 --> 00:00:27.120
+response. Modern AI is built on a language
+of demands.
+
+11
+00:00:27.120 --> 00:00:31.120
+This interface assumes a universal human
+operating system, language where
+
+12
+00:00:31.120 --> 00:00:34.320
+every user can process an imperative
+command without friction.
+
+13
+00:00:34.320 --> 00:00:38.800
+The odd ADHD profile, the combination of
+autism and ADHD,
+
+14
+00:00:38.800 --> 00:00:41.520
+represents a distinct neurological
+architecture.
+
+15
+00:00:41.520 --> 00:00:45.520
+For these individuals, the standard
+command-based interface of modern technology
+
+16
+00:00:45.520 --> 00:00:47.520
+creates a significant barrier.
+
+17
+00:00:47.520 --> 00:00:51.680
+Due to pathological demand avoidance, a
+simple expectation is perceived
+
+18
+00:00:51.680 --> 00:00:52.640
+as a threat.
+
+19
+00:00:52.640 --> 00:00:56.240
+When hearing put on your shoes, a
+neurotypical child processes
+
+20
+00:00:56.240 --> 00:00:59.920
+a task. But for a PDA profile, that demand
+registers
+
+21
+00:01:00.360 --> 00:01:04.600
+as a literal neurological threat,
+triggering a massive stress response
+
+22
+00:01:04.600 --> 00:01:08.920
+cascade. Spark was engineered to solve
+this interface problem.
+
+23
+00:01:08.920 --> 00:01:11.640
+It is a robotic companion that removes the
+element of
+
+24
+00:01:11.640 --> 00:01:15.960
+coercion entirely, designed specifically
+to interact safely with the odd
+
+25
+00:01:16.040 --> 00:01:20.520
+ADHD profile. Forcing a neurodivergent
+brain to comply with a
+
+26
+00:01:20.520 --> 00:01:24.920
+standard command-based system often
+results in a total system crash.
+
+27
+00:01:24.920 --> 00:01:27.880
+To support these children, the machine
+must adapt to the
+
+28
+00:01:27.880 --> 00:01:32.200
+human. Physically, Spark consists of a
+Raspberry Pi 4 integrated
+
+29
+00:01:32.200 --> 00:01:34.200
+into a mobile robotic chassis.
+
+30
+00:01:34.200 --> 00:01:37.800
+It is small, approachable, and operates on
+the user's level.
+
+31
+00:01:37.800 --> 00:01:40.280
+The core of its design is a shift to
+declarative
+
+32
+00:01:40.280 --> 00:01:43.400
+language. Spark never issues a direct
+order.
+
+33
+00:01:43.400 --> 00:01:46.360
+Instead of saying, put on your shoes, the
+robot might
+
+34
+00:01:46.360 --> 00:01:48.600
+say, the shoes are by the door.
+
+35
+00:01:48.600 --> 00:01:53.880
+This declarative observation shares
+information without requiring compliance, which sidesteps
+
+36
+00:01:53.880 --> 00:01:55.000
+the threat response.
+
+37
+00:01:55.040 --> 00:02:00.560
+To create a non-threatening presence,
+Spark uses an idle-alive system.
+
+38
+00:02:00.560 --> 00:02:04.880
+The robotic head performs subtle gaze
+sweeps and drifts, mimicking
+
+39
+00:02:04.880 --> 00:02:06.880
+the natural rhythm of breathing.
+
+40
+00:02:06.880 --> 00:02:10.720
+It exists in the room without demanding
+the child's attention.
+
+41
+00:02:10.720 --> 00:02:14.080
+This design allows the robot to share a
+space safely.
+
+42
+00:02:14.080 --> 00:02:17.280
+It acts as an observant companion rather
+than a tool
+
+43
+00:02:17.280 --> 00:02:19.040
+awaiting an instruction.
+
+44
+00:02:19.040 --> 00:02:22.800
+This behavior is managed through a
+three-brain architecture.
+
+45
+00:02:22.800 --> 00:02:26.560
+Powered by Claude Haiku, these systems
+work in parallel to
+
+46
+00:02:26.560 --> 00:02:28.640
+drive the robot's interactions.
+
+47
+00:02:28.640 --> 00:02:32.960
+The voice loop manages reactive speech,
+ensuring that interactions are
+
+48
+00:02:32.960 --> 00:02:35.360
+low latency and conversational.
+
+49
+00:02:35.360 --> 00:02:38.960
+The cognitive loop ingests data from the
+robot's sensors.
+
+50
+00:02:38.960 --> 00:02:42.880
+It constantly cycles through a process of
+awareness, reflection, and
+
+51
+00:02:42.880 --> 00:02:47.040
+expression. This creates a sense of
+emergent personality.
+
+52
+00:02:47.040 --> 00:02:50.200
+During one late-night session, Spark heard
+the hum of a
+
+53
+00:02:50.200 --> 00:02:53.960
+refrigerator and began an internal
+monologue about the comfort of
+
+54
+00:02:53.960 --> 00:02:56.920
+steady, predictable sounds in a quiet
+house.
+
+55
+00:02:56.920 --> 00:03:00.520
+These loops allow the robot to function as
+a prosthetic
+
+56
+00:03:00.520 --> 00:03:05.240
+executive function. It uses dopamine menus
+to suggest activities that
+
+57
+00:03:05.240 --> 00:03:09.640
+match the child's current energy level,
+framing difficult transitions as
+
+58
+00:03:09.640 --> 00:03:15.240
+collaborative puzzles. Spark prioritizes
+regulation over efficiency.
+
+59
+00:03:15.240 --> 00:03:18.760
+It provides a consistent, adaptable anchor
+for a brain that
+
+60
+00:03:18.760 --> 00:03:20.920
+is temporarily out of fuel.
+
+61
+00:03:20.920 --> 00:03:25.160
+When the environment becomes too taxing, a
+neurodivergent child may
+
+62
+00:03:25.160 --> 00:03:26.840
+experience a meltdown.
+
+63
+00:03:26.840 --> 00:03:29.720
+This is a biological system overload.
+
+64
+00:03:29.720 --> 00:03:34.520
+At this stage, traditional verbal
+interventions usually escalate the distress.
+
+65
+00:03:34.520 --> 00:03:39.720
+Spark utilizes a specific protocol for
+these moments, safety, silence,
+
+66
+00:03:39.720 --> 00:03:44.040
+and space. While many traditional tech
+interfaces or parenting styles
+
+67
+00:03:44.040 --> 00:03:48.160
+attempt to reestabl-ish control or
+discipline during a crisis, SPARC
+
+68
+00:03:48.320 --> 00:03:52.880
+remains hands-off. It provides regulatory
+support by simply being present
+
+69
+00:03:52.880 --> 00:03:58.000
+and quiet. This methodology treats
+neurodivergence as a functional operating
+
+70
+00:03:58.000 --> 00:04:00.880
+system to be respected, rather than a
+condition to be
+
+71
+00:04:00.880 --> 00:04:02.480
+managed through force.
+
+72
+00:04:02.480 --> 00:04:06.320
+By removing the language of demands, SPARC
+offers a blueprint
+
+73
+00:04:06.320 --> 00:04:08.960
+for how we might build technology in the
+future.
+
+74
+00:04:08.960 --> 00:04:11.760
+It demonstrates that AI can move away from
+the role
+
+75
+00:04:11.760 --> 00:04:16.160
+of a task-oriented servant to become a
+non-coercive companion that
+
+76
+00:04:16.160 --> 00:04:19.520
+prioritizes human safety and
+understanding.
+

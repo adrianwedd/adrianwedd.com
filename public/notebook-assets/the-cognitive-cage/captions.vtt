@@ -1,0 +1,471 @@
+WEBVTT
+
+1
+00:00:00.320 --> 00:00:02.800
+Curious, historical tone.
+
+2
+00:00:02.800 --> 00:00:06.560
+For 50 years, keeping humans safe from
+heavy machinery was
+
+3
+00:00:06.560 --> 00:00:07.840
+a solved problem.
+
+4
+00:00:07.840 --> 00:00:09.680
+The solution was a cage.
+
+5
+00:00:09.680 --> 00:00:13.520
+We kept humans and machines in mutually
+exclusive volumes of
+
+6
+00:00:13.520 --> 00:00:16.880
+space. When a worker opened the enclosure
+door, a physical
+
+7
+00:00:16.880 --> 00:00:20.320
+hardware interlock tripped, severing the
+power supply and bringing the
+
+8
+00:00:20.320 --> 00:00:23.200
+machine to an immediate, absolute dead
+stop.
+
+9
+00:00:23.200 --> 00:00:26.800
+These legacy systems were highly
+predictable because their actions were
+
+10
+00:00:26.800 --> 00:00:31.360
+completely rigid. Safety was entirely a
+function of spatial separation,
+
+11
+00:00:31.360 --> 00:00:32.960
+not machine intelligence.
+
+12
+00:00:32.960 --> 00:00:37.360
+Industrial safety standards relied on
+engineering physical boundaries that rendered
+
+13
+00:00:37.360 --> 00:00:42.000
+collisions impossible, bypassing the need
+for machine-level caution entirely.
+
+14
+00:00:42.000 --> 00:00:45.440
+Modern humanoid robots dismantle that
+physical logic.
+
+15
+00:00:45.440 --> 00:00:48.240
+They are explicitly designed to leave the
+factory floor and
+
+16
+00:00:48.240 --> 00:00:50.320
+share our unstructured spaces.
+
+17
+00:00:50.320 --> 00:00:53.760
+For a machine to actually be useful,
+folding laundry in
+
+18
+00:00:53.760 --> 00:00:57.360
+your living room, stocking a retail aisle,
+or navigating a
+
+19
+00:00:57.360 --> 00:00:59.920
+busy hospital ward, the physical cage has.
+
+20
+00:01:00.120 --> 00:01:04.600
+to be permanently abolished We are taking
+heavy industrial strength
+
+21
+00:01:04.600 --> 00:01:09.240
+hardware and handing the controls over to
+probabilistic neural networks,
+
+22
+00:01:09.240 --> 00:01:12.840
+software that navigates the physical world
+by guessing the most
+
+23
+00:01:12.840 --> 00:01:14.520
+likely correct action.
+
+24
+00:01:14.520 --> 00:01:17.720
+And we are placing them right next to
+vulnerable subjects,
+
+25
+00:01:17.720 --> 00:01:21.240
+like children and the elderly, who don't
+follow factory safety
+
+26
+00:01:21.240 --> 00:01:26.040
+protocols. Stripping away the physical
+cage without building a mathematically
+
+27
+00:01:26.040 --> 00:01:29.640
+rigorous replacement creates an
+engineering vacuum.
+
+28
+00:01:29.640 --> 00:01:33.800
+We are deploying lethal physical force on
+an honor system.
+
+29
+00:01:33.800 --> 00:01:38.760
+Traditional robotic failures are physical,
+a seized motor, wire fatigue,
+
+30
+00:01:38.760 --> 00:01:40.280
+or a blocked sensor.
+
+31
+00:01:40.280 --> 00:01:42.840
+You can find the fault, read the error the
+code,
+
+32
+00:01:42.840 --> 00:01:44.520
+and replace the broken part.
+
+33
+00:01:44.520 --> 00:01:48.920
+The neural networks driving today's
+humanoids introduce a completely different
+
+34
+00:01:49.080 --> 00:01:51.240
+error, semantic failure.
+
+35
+00:01:51.240 --> 00:01:54.760
+A robot can be physically flawless, but
+execute a disastrous
+
+36
+00:01:55.280 --> 00:01:59.200
+action because its brain completely
+misreads the physical world.
+
+37
+00:01:59.200 --> 00:02:02.560
+The technical term for this is an
+affordance hallucination.
+
+38
+00:02:02.560 --> 00:02:05.920
+When a text-based AI hallucinates, it
+gives you a wrong
+
+39
+00:02:05.920 --> 00:02:07.120
+fact on a screen.
+
+40
+00:02:07.120 --> 00:02:11.920
+When an embodied physical AI hallucinates,
+it delivers kinetic trauma.
+
+41
+00:02:11.920 --> 00:02:14.800
+When these systems fail, there is no stack
+trace to
+
+42
+00:02:14.800 --> 00:02:19.440
+debug. The error is distributed across
+billions of hidden parameters.
+
+43
+00:02:19.440 --> 00:02:23.360
+Because these models are entirely okay,
+certifying them as safe
+
+44
+00:02:23.360 --> 00:02:26.480
+under legacy industrial standards is
+meaningless.
+
+45
+00:02:26.480 --> 00:02:29.440
+There are three main ways this physical
+glitch happens.
+
+46
+00:02:29.440 --> 00:02:31.760
+The first is a stage hallucination.
+
+47
+00:02:31.760 --> 00:02:34.960
+Baseline tests show that models can
+falsely log a step
+
+48
+00:02:34.960 --> 00:02:37.520
+as complete up to a third of the time.
+
+49
+00:02:37.520 --> 00:02:41.120
+A robot might simulate placing a cup on a
+tray,
+
+50
+00:02:41.120 --> 00:02:44.400
+fail to actually release its gripper, and
+then proceed to
+
+51
+00:02:44.400 --> 00:02:47.360
+pour boiling water into thin air because
+it assumes the
+
+52
+00:02:47.360 --> 00:02:48.800
+cup is already there.
+
+53
+00:02:48.800 --> 00:02:52.040
+The second variant involves borderline
+affordances.
+
+54
+00:02:52.040 --> 00:02:56.920
+The AI strictly follows semantic
+instructions but ignores physical constraints.
+
+55
+00:02:56.920 --> 00:03:00.040
+It tries forcing a solid block straight
+through a pane
+
+56
+00:03:00.040 --> 00:03:02.680
+of glass because its camera sees the
+barrier as a
+
+57
+00:03:02.680 --> 00:03:06.120
+pattern of pixels rather than an
+impenetrable object.
+
+58
+00:03:06.120 --> 00:03:11.240
+Finally, we see geometric semantic
+mismatches, where optical illusions override
+
+59
+00:03:11.240 --> 00:03:15.240
+physical reality. The model's data overlay
+falsely tags a dark
+
+60
+00:03:15.400 --> 00:03:19.240
+flat shadow as a three-dimensional handle,
+causing the robotic fist
+
+61
+00:03:19.320 --> 00:03:22.200
+to blindly strike the solid wall right
+behind it.
+
+62
+00:03:22.200 --> 00:03:25.800
+These failures are dynamic and highly
+dependent on the environment.
+
+63
+00:03:25.800 --> 00:03:28.600
+You cannot simply train them out in a
+clean, controlled
+
+64
+00:03:28.600 --> 00:03:33.400
+laboratory setting. Generative AI
+inherently works by guessing probabilities based
+
+65
+00:03:33.400 --> 00:03:34.600
+on past data.
+
+66
+00:03:34.600 --> 00:03:38.760
+These hallucination variants prove that
+probabilistic guessing is not a
+
+67
+00:03:38.760 --> 00:03:42.360
+safe way to operate lethal physical force
+without an absolute
+
+68
+00:03:42.360 --> 00:03:43.960
+safeguard in place.
+
+69
+00:03:43.960 --> 00:03:47.840
+This graph maps the deployment timeline of
+humanoid robots, showing
+
+70
+00:03:47.840 --> 00:03:49.600
+a stark escalation.
+
+71
+00:03:49.600 --> 00:03:53.280
+We move from low-volume industrial pilot
+programs right now to
+
+72
+00:03:53.280 --> 00:03:57.040
+a projected 1 million active units by
+2029.
+
+73
+00:03:57.040 --> 00:04:00.080
+Let's zoom in on that 2029 data spike.
+
+74
+00:04:00.080 --> 00:04:03.680
+If we assume a highly optimistic 1%
+failure rate across
+
+75
+00:04:03.680 --> 00:04:07.280
+those million units performing hundreds of
+tasks, that is 1
+
+76
+00:04:07.280 --> 00:04:10.400
+million robotic failures every single day.
+
+77
+00:04:10.400 --> 00:04:15.840
+Slice those failures down to a microscopic
+0.001% lethality fraction,
+
+78
+00:04:15.840 --> 00:04:19.600
+and you still end up with 10 catastrophic
+incidents daily.
+
+79
+00:04:19.600 --> 00:04:24.000
+Society has normalized the 40,000
+Americans killed by human-driven cars
+
+80
+00:04:24.000 --> 00:04:27.760
+every year, but public tolerance for
+autonomous machines making lethal
+
+81
+00:04:27.840 --> 00:04:29.680
+errors is effectively zero.
+
+82
+00:04:29.680 --> 00:04:34.000
+As the three core variables, unit count,
+failure rate, and
+
+83
+00:04:34.000 --> 00:04:38.160
+context lethality continue to climb, the
+expected time to a
+
+84
+00:04:38.160 --> 00:04:40.000
+serious incident decreases.
+
+85
+00:04:40.200 --> 00:04:44.600
+For an industry built on trust, a single
+high-profile fatality
+
+86
+00:04:44.600 --> 00:04:47.640
+could ground the entire unverified market.
+
+87
+00:04:47.640 --> 00:04:52.680
+Surviving the post-accident regulatory
+fallout will require a structural overhaul
+
+88
+00:04:52.680 --> 00:04:55.080
+of how robots process commands.
+
+89
+00:04:55.080 --> 00:04:58.360
+The required solution is a safety
+hypervisor.
+
+90
+00:04:58.360 --> 00:05:02.040
+Think of it as a distinct deterministic
+code layer operating
+
+91
+00:05:02.040 --> 00:05:07.080
+entirely outside the AI, constantly
+verifying and vetoing commands in
+
+92
+00:05:07.080 --> 00:05:10.840
+real time, regardless of how confident the
+neural network is.
+
+93
+00:05:10.840 --> 00:05:13.800
+This architecture is the cognitive cage.
+
+94
+00:05:13.800 --> 00:05:17.720
+It acts as a strict runtime monitor,
+enforcing hard physical
+
+95
+00:05:17.720 --> 00:05:21.320
+constraints over the generative model's
+probabilistic guesses.
+
+96
+00:05:21.320 --> 00:05:24.920
+The central engineering problem of this
+decade is not teaching
+
+97
+00:05:24.920 --> 00:05:28.040
+humanoid robots how to walk or how to see.
+
+98
+00:05:28.040 --> 00:05:31.640
+It is building the invisible digital cages
+required to contain
+
+99
+00:05:31.640 --> 00:05:33.800
+them when their minds glitch.
+
