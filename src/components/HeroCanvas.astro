@@ -53,7 +53,10 @@ const { animation } = Astro.props;
     var intersectionObs = null;
     var themeObs = null;
     var currentIndex = -1;
+    // isVisible = on-screen AND tab-foregrounded; either being false pauses the loop + auto-rotate
     var isVisible = true;
+    var inViewport = true;
+    var pageVisible = true;
     var colors = {};
     var canvasW = 0,
       canvasH = 0;
@@ -3770,7 +3773,8 @@ const { animation } = Astro.props;
       // IntersectionObserver — pause when not visible
       intersectionObs = new IntersectionObserver(
         function (entries) {
-          isVisible = entries[0].isIntersecting;
+          inViewport = entries[0].isIntersecting;
+          isVisible = inViewport && pageVisible;
         },
         { threshold: 0 },
       );
@@ -3872,6 +3876,13 @@ const { animation } = Astro.props;
 
       document.addEventListener('mouseleave', function () {
         mouseActive = false;
+      });
+
+      // Pause the render loop + auto-rotate when the tab is backgrounded (battery).
+      // IntersectionObserver only tracks scroll position, not tab visibility.
+      document.addEventListener('visibilitychange', function () {
+        pageVisible = !document.hidden;
+        isVisible = inViewport && pageVisible;
       });
 
       // Respond dynamically to prefers-reduced-motion changes (WCAG 2.3.3)

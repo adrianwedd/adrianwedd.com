@@ -11,23 +11,33 @@ export default function AudioPlayer({ src, title }: Props) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const onTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const onLoaded = () => setDuration(audio.duration);
+    const onLoaded = () => {
+      setDuration(audio.duration);
+      setError(false);
+    };
     const onEnded = () => setPlaying(false);
+    const onError = () => {
+      setError(true);
+      setPlaying(false);
+    };
 
     audio.addEventListener('timeupdate', onTimeUpdate);
     audio.addEventListener('loadedmetadata', onLoaded);
     audio.addEventListener('ended', onEnded);
+    audio.addEventListener('error', onError);
 
     return () => {
       audio.removeEventListener('timeupdate', onTimeUpdate);
       audio.removeEventListener('loadedmetadata', onLoaded);
       audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
     };
   }, []);
 
@@ -149,6 +159,7 @@ export default function AudioPlayer({ src, title }: Props) {
               type="range"
               min="0"
               max={duration || 0}
+              step="5"
               value={currentTime}
               onInput={seek}
               class="h-1 flex-1 cursor-pointer accent-accent"
@@ -168,6 +179,16 @@ export default function AudioPlayer({ src, title }: Props) {
           {playbackRate}x
         </button>
       </div>
+
+      {error && (
+        <p role="alert" class="mt-3 text-sm text-status-error">
+          Couldn't load this audio.{' '}
+          <a href={src} class="underline hover:text-text">
+            Open it directly
+          </a>
+          .
+        </p>
+      )}
     </div>
   );
 }
