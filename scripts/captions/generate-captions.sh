@@ -43,7 +43,7 @@ while [ $# -gt 0 ]; do
     --pilot)   PATHS+=("${PILOT[@]}") ;;
     --all)     while IFS= read -r p; do PATHS+=("$p"); done < <(discover_all) ;;
     --force)   FORCE=1 ;;
-    --backend) shift; BACKEND="$1" ;;
+    --backend) shift; [ $# -gt 0 ] || die "--backend requires an argument"; BACKEND="$1" ;;
     -*)        die "unknown flag: $1" ;;
     *)         PATHS+=("$1") ;;
   esac
@@ -58,6 +58,13 @@ total=${#PATHS[@]}; done_n=0; skip_n=0; fail_n=0; i=0
 echo "captions: ${total} path(s), backend=${BACKEND}, force=${FORCE}"
 for path in "${PATHS[@]}"; do
   i=$((i + 1))
+  # `path` is interpolated straight into a filesystem write target, so reject
+  # anything that isn't a plain notebook slug (no leading slash, no `..`, no
+  # dots/spaces/shell metacharacters) before it can escape notebook-assets/.
+  if ! [[ "$path" =~ ^[A-Za-z0-9][A-Za-z0-9/_-]*$ ]] || [[ "$path" == *..* ]]; then
+    printf '[%d/%d] %s ... FAIL (unsafe path)\n' "$i" "$total" "$path" >&2
+    fail_n=$((fail_n + 1)); continue
+  fi
   out_dir="${REPO_DIR}/public/notebook-assets/${path}"
   out_vtt="${out_dir}/captions.vtt"
   printf '[%d/%d] %s ... ' "$i" "$total" "$path"

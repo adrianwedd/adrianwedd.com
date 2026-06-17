@@ -26,10 +26,14 @@ SENTENCE_END = (".", "!", "?")
 
 
 def fmt_ts(t: float) -> str:
-    t = max(0.0, t)
-    h, rem = divmod(t, 3600)
-    m, s = divmod(rem, 60)
-    return f"{int(h):02d}:{int(m):02d}:{s:06.3f}"
+    # Round to integer milliseconds first, then carry with integer divmod.
+    # Float divmod could leave a seconds field of 59.9996 that formats as
+    # "60.000" at minute/hour boundaries — an invalid WebVTT timestamp.
+    ms_total = max(0, int(round(t * 1000)))
+    h, rem = divmod(ms_total, 3_600_000)
+    m, rem = divmod(rem, 60_000)
+    s, ms = divmod(rem, 1000)
+    return f"{h:02d}:{m:02d}:{s:02d}.{ms:03d}"
 
 
 def wrap(text: str) -> str:
@@ -86,12 +90,19 @@ def group(words: list[dict]) -> list[dict]:
     return cues
 
 
+def escape_cue(text: str) -> str:
+    """Escape the three characters significant in WebVTT cue payloads so a
+    transcribed `<`, `>` or `&` renders literally rather than as cue markup
+    (`<b>`/`<i>`/timestamp tags) or a malformed entity. `&` must go first."""
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
 def to_vtt(words: list[dict]) -> str:
     out = ["WEBVTT", ""]
     for i, c in enumerate(group(words), 1):
         out.append(str(i))
         out.append(f"{fmt_ts(c['start'])} --> {fmt_ts(c['end'])}")
-        out.append(c["text"])
+        out.append(escape_cue(c["text"]))
         out.append("")
     return "\n".join(out) + "\n"
 
