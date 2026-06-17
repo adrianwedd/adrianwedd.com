@@ -92,12 +92,9 @@
     trackCopyEvents();
     trackPageTiming();
 
-    // Per-element trackers (bind to current DOM)
-    trackProjectClicks();
-    trackGalleryViews();
+    // Content/navigation trackers — delegated on document, registered once (VT-safe)
+    trackContentClicks();
     trackAudioPlayback();
-    trackTagFilters();
-    trackThemeSwitches();
   }
 
   // --- Environment helpers ---
@@ -318,91 +315,109 @@
     });
   }
 
-  // --- Content: project clicks ---
+  // --- Content & navigation clicks ---
+  // Single delegated document listener, registered once (sentinel-guarded).
+  // Event delegation means new DOM after a View Transitions swap is covered
+  // without re-binding — no listener stacking on persisted/re-rendered nodes.
+  // Multiple blocks can match a single click (e.g. a project link that also
+  // carries data-tag) and each fires independently, matching the prior
+  // per-element behaviour.
 
-  function trackProjectClicks() {
-    document.querySelectorAll('a[href*="/projects/"]').forEach((el) => {
-      el.addEventListener('click', () => {
+  function trackContentClicks() {
+    const root = document.documentElement;
+    if (root.dataset.contentClicksInit) return;
+    root.dataset.contentClicksInit = '1';
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+
+      // Project clicks
+      const projectLink = target.closest('a[href*="/projects/"]') as HTMLAnchorElement | null;
+      if (projectLink) {
         gtag('event', 'project_click', {
-          project_name: el.textContent?.trim() || 'unknown',
-          link_url: (el as HTMLAnchorElement).href,
+          project_name: projectLink.textContent?.trim() || 'unknown',
+          link_url: projectLink.href,
         });
-      });
-    });
-  }
+      }
 
-  // --- Content: gallery views ---
-
-  function trackGalleryViews() {
-    document.querySelectorAll('.gallery-trigger').forEach((el) => {
-      el.addEventListener('click', () => {
+      // Gallery views
+      const galleryTrigger = target.closest('.gallery-trigger') as HTMLElement | null;
+      if (galleryTrigger) {
         gtag('event', 'gallery_view', {
-          image_index: (el as HTMLElement).dataset.index,
+          image_index: galleryTrigger.dataset.index,
           collection: window.location.pathname,
         });
-      });
+      }
+
+      // Tag filters
+      const tagEl = target.closest('[data-tag]') as HTMLElement | null;
+      if (tagEl) {
+        gtag('event', 'tag_filter', {
+          tag: tagEl.dataset.tag,
+          page_path: window.location.pathname,
+        });
+      }
+
+      // Theme switches — read state after the toggle fires
+      if (target.closest('.theme-toggle')) {
+        setTimeout(() => {
+          const theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+          gtag('event', 'theme_switch', { theme });
+        }, 50);
+      }
     });
   }
 
   // --- Content: audio playback ---
+  // play/timeupdate don't bubble, so delegate in the capture phase on document.
+  // Per-element dedupe state is keyed by the element (WeakSet/WeakMap) so it
+  // survives VT swaps correctly and never double-fires on a persisted <audio>.
 
   function trackAudioPlayback() {
-    document.querySelectorAll('audio').forEach((el) => {
-      let started = false;
+    const root = document.documentElement;
+    if (root.dataset.audioPlaybackInit) return;
+    root.dataset.audioPlaybackInit = '1';
 
-      el.addEventListener('play', () => {
-        if (!started) {
-          started = true;
-          gtag('event', 'audio_play', {
-            audio_src: el.src,
-            page_path: window.location.pathname,
-          });
+    const started = new WeakSet<HTMLAudioElement>();
+    const milestones = new WeakMap<HTMLAudioElement, Set<number>>();
+
+    document.addEventListener(
+      'play',
+      (e) => {
+        const el = e.target as HTMLAudioElement;
+        if (el.tagName !== 'AUDIO' || started.has(el)) return;
+        started.add(el);
+        gtag('event', 'audio_play', {
+          audio_src: el.src,
+          page_path: window.location.pathname,
+        });
+      },
+      true,
+    );
+
+    document.addEventListener(
+      'timeupdate',
+      (e) => {
+        const el = e.target as HTMLAudioElement;
+        if (el.tagName !== 'AUDIO' || !el.duration) return;
+        let set = milestones.get(el);
+        if (!set) {
+          set = new Set<number>();
+          milestones.set(el, set);
         }
-      });
-
-      // Track audio progress milestones
-      const audioMilestones = new Set<number>();
-      el.addEventListener('timeupdate', () => {
-        if (!el.duration) return;
         const pct = Math.round((el.currentTime / el.duration) * 100);
         for (const m of [25, 50, 75, 100]) {
-          if (pct >= m && !audioMilestones.has(m)) {
-            audioMilestones.add(m);
+          if (pct >= m && !set.has(m)) {
+            set.add(m);
             gtag('event', 'audio_progress', {
               audio_src: el.src,
               progress: m,
             });
           }
         }
-      });
-    });
-  }
-
-  // --- Navigation: tag filter clicks ---
-
-  function trackTagFilters() {
-    document.querySelectorAll('[data-tag]').forEach((el) => {
-      el.addEventListener('click', () => {
-        gtag('event', 'tag_filter', {
-          tag: (el as HTMLElement).dataset.tag,
-          page_path: window.location.pathname,
-        });
-      });
-    });
-  }
-
-  // --- Navigation: theme switches ---
-
-  function trackThemeSwitches() {
-    document.querySelectorAll('.theme-toggle').forEach((el) => {
-      el.addEventListener('click', () => {
-        // Read after the toggle fires
-        setTimeout(() => {
-          const theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
-          gtag('event', 'theme_switch', { theme });
-        }, 50);
-      });
-    });
+      },
+      true,
+    );
   }
 
   // --- Performance: page timing ---
@@ -446,9 +461,10 @@
 
   initAnalytics();
 
-  // Re-bind after View Transitions DOM swap.
-  // Document/window-level listeners are sentinel-guarded (registered once).
-  // Only per-element trackers and page-specific state need re-running.
+  // Re-run page-specific state after a View Transitions DOM swap.
+  // All listeners (document/window-level and the delegated content/audio
+  // trackers) are sentinel-guarded and registered once — only per-page state
+  // (reading time, scroll milestones, page view) needs refreshing here.
   if (!(document.documentElement as any).dataset.analyticsSwapInit) {
     (document.documentElement as any).dataset.analyticsSwapInit = '1';
     document.addEventListener('astro:after-swap', () => {
@@ -468,12 +484,8 @@
         // Send new page view
         sendPageView();
 
-        // Per-element trackers (safe to re-run — they bind to new DOM elements)
-        trackProjectClicks();
-        trackGalleryViews();
-        trackAudioPlayback();
-        trackTagFilters();
-        trackThemeSwitches();
+        // Content/audio trackers are document-delegated and sentinel-guarded
+        // (registered once in loadGA4) — no per-element re-binding needed here.
       }
     });
   } // end analyticsSwapInit sentinel
