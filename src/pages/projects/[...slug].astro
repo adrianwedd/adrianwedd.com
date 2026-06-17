@@ -223,7 +223,7 @@ const allBlogPosts = project.data.series
         project.data.audioUrl && (
           <div class="mb-6 mt-8">
             <p class="mb-2 text-sm text-text-muted">Listen while you read</p>
-            <AudioPlayer src={project.data.audioUrl} title={`${project.data.title} — Audio Overview`} client:load />
+            <AudioPlayer src={project.data.audioUrl} title={`${project.data.title} — Audio Overview`} client:visible />
           </div>
         )
       }

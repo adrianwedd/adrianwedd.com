@@ -180,7 +180,9 @@ import HeroCanvas from '../components/HeroCanvas.astro';
           </div>
           <div id="slots-grid" class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4"></div>
           <p id="slots-empty" class="mt-4 hidden text-sm text-text-muted">No slots available on this day.</p>
-          <p id="slots-error" class="mt-4 hidden text-sm text-red-400">Couldn't load slots. Try again.</p>
+          <p id="slots-error" role="alert" class="mt-4 hidden text-sm text-status-error">
+            Couldn't load slots. Try again.
+          </p>
         </div>
 
         {/* Booking form */}
@@ -227,7 +229,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
                 class="mt-1 w-full resize-none rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
                 placeholder="A sentence or two about what you'd like to talk through."></textarea>
             </div>
-            <p id="form-error" class="hidden text-sm text-red-400"></p>
+            <p id="form-error" role="alert" class="hidden text-sm text-status-error"></p>
             <button
               type="submit"
               id="book-submit"
@@ -771,7 +773,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         if (!name || !email || !message) {
           if (statusEl) {
             statusEl.textContent = 'Please fill in all required fields.';
-            statusEl.className = 'text-sm text-red-400';
+            statusEl.className = 'text-sm text-status-error';
           }
           return;
         }
@@ -784,7 +786,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         if (!turnstileResponse) {
           if (statusEl) {
             statusEl.textContent = 'Please complete the verification challenge.';
-            statusEl.className = 'text-sm text-red-400';
+            statusEl.className = 'text-sm text-status-error';
           }
           return;
         }
@@ -843,7 +845,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
           .catch(function (err) {
             if (statusEl) {
               statusEl.textContent = err.message || 'Something went wrong. Try emailing directly.';
-              statusEl.className = 'text-sm text-red-400';
+              statusEl.className = 'text-sm text-status-error';
             }
             if (submitBtn) {
               submitBtn.disabled = false;
