@@ -28,6 +28,37 @@ function json(body: Record<string, unknown>, status = 200): Response {
 
 const VALID_PLATFORMS = new Set<string>(['facebook', 'instagram', 'bluesky', 'twitter']);
 
+// ── Bounded KV counting (DoS guard for /api/health) ────────────────────────────
+// /api/health counts queue/flag keys by paginating KV. Without a ceiling a
+// pathologically large prefix (runaway queue, stuck cron) would make a single
+// authed health probe fan out unbounded list subrequests. Cap the page count
+// and report a truncated floor instead of scanning forever. limit:1000 is KV's
+// max page size, so 25 pages = 25k keys — far above any realistic queue.
+export const HEALTH_LIST_LIMIT = 1000;
+export const HEALTH_MAX_LIST_PAGES = 25;
+
+export async function countKeysCapped(
+  kv: KVNamespace,
+  prefix: string,
+  onFirstPage?: (keys: { name: string }[]) => void,
+): Promise<{ count: number; truncated: boolean }> {
+  let count = 0;
+  let cursor: string | undefined;
+  let pages = 0;
+  do {
+    const list = await kv.list({
+      prefix,
+      limit: HEALTH_LIST_LIMIT,
+      ...(cursor ? { cursor } : {}),
+    });
+    if (pages === 0) onFirstPage?.(list.keys);
+    count += list.keys.length;
+    pages += 1;
+    cursor = list.list_complete ? undefined : list.cursor;
+  } while (cursor && pages < HEALTH_MAX_LIST_PAGES);
+  return { count, truncated: cursor !== undefined };
+}
+
 function validatePlatform(raw: string | undefined, fallback = 'facebook'): Platform | null {
   const name = raw ?? fallback;
   return VALID_PLATFORMS.has(name) ? name as Platform : null;
@@ -630,45 +661,42 @@ app.get('/api/health', async (c) => {
     };
   }
 
-  // Count posts by status
-  let queued = 0;
-  let published = 0;
-  let failed = 0;
+  // Count posts by status (bounded — see countKeysCapped). Capture the first
+  // queued key's name on its first page so the next-scheduled lookup is a
+  // single extra get rather than another scan.
   let nextScheduled: string | null = null;
+  let truncated = false;
+  let firstQueuedKeyName: string | null = null;
 
-  for (const prefix of ['post:queued:', 'post:published:', 'post:failed:']) {
-    let listCursor: string | undefined;
-    do {
-      const list = await env.SOCIAL.list({ prefix, limit: 100, ...(listCursor ? { cursor: listCursor } : {}) });
-      if (prefix === 'post:queued:') {
-        queued += list.keys.length;
-        // Find next scheduled (keys are time-ordered)
-        if (!nextScheduled && list.keys.length > 0) {
-          const raw = await env.SOCIAL.get(list.keys[0].name);
-          if (raw) {
-            try { nextScheduled = JSON.parse(raw).scheduledAt; } catch {}
-          }
-        }
-      }
-      else if (prefix === 'post:published:') published += list.keys.length;
-      else failed += list.keys.length;
-      listCursor = list.list_complete ? undefined : list.cursor;
-    } while (listCursor);
+  const queuedResult = await countKeysCapped(env.SOCIAL, 'post:queued:', (keys) => {
+    if (keys.length > 0) firstQueuedKeyName = keys[0].name; // keys are time-ordered
+  });
+  const publishedResult = await countKeysCapped(env.SOCIAL, 'post:published:');
+  const failedResult = await countKeysCapped(env.SOCIAL, 'post:failed:');
+  const flaggedResult = await countKeysCapped(env.SOCIAL, 'fb-flag:');
+  truncated =
+    queuedResult.truncated || publishedResult.truncated || failedResult.truncated || flaggedResult.truncated;
+
+  if (firstQueuedKeyName) {
+    const raw = await env.SOCIAL.get(firstQueuedKeyName);
+    if (raw) {
+      try { nextScheduled = JSON.parse(raw).scheduledAt; } catch {}
+    }
   }
-
-  // Count flagged comments
-  let flaggedComments = 0;
-  let flagCursor: string | undefined;
-  do {
-    const list = await env.SOCIAL.list({ prefix: 'fb-flag:', limit: 100, ...(flagCursor ? { cursor: flagCursor } : {}) });
-    flaggedComments += list.keys.length;
-    flagCursor = list.list_complete ? undefined : list.cursor;
-  } while (flagCursor);
 
   return json({
     platforms: platformsHealth,
-    queue: { facebook: { queued, published, failed, nextScheduled } },
-    recentActivity: { flaggedComments },
+    queue: {
+      facebook: {
+        queued: queuedResult.count,
+        published: publishedResult.count,
+        failed: failedResult.count,
+        nextScheduled,
+      },
+    },
+    recentActivity: { flaggedComments: flaggedResult.count },
+    // Honest signal that a count is a floor, not silently truncated.
+    ...(truncated ? { countsTruncated: true } : {}),
   });
 });
 
