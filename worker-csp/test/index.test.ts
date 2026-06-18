@@ -114,6 +114,9 @@ describe('worker fetch handler', () => {
     // Assets pass through, so they carry no HSTS — fine, since the browser
     // applies the host-wide policy from any HTML response it has seen.
     expect(res.headers.get('strict-transport-security')).toBeNull();
+    // Cross-origin isolation headers are HTML-only too (assets pass through).
+    expect(res.headers.get('cross-origin-opener-policy')).toBeNull();
+    expect(res.headers.get('cross-origin-resource-policy')).toBeNull();
     expect(await res.text()).toBe('console.log(1)');
   });
 
@@ -141,6 +144,10 @@ describe('worker fetch handler', () => {
     );
     // No preload — deliberate (one-way commitment).
     expect(res.headers.get('strict-transport-security')).not.toMatch(/preload/);
+    // Cross-origin isolation headers (allow-popups variant keeps ad/analytics
+    // popups working; CORP same-origin doesn't affect plain-fetch OG scrapers).
+    expect(res.headers.get('cross-origin-opener-policy')).toBe('same-origin-allow-popups');
+    expect(res.headers.get('cross-origin-resource-policy')).toBe('same-origin');
 
     // Meta CSP stripped
     expect(text).not.toMatch(/<meta http-equiv="Content-Security-Policy"/);

@@ -72,6 +72,15 @@ export default {
     // hardcoded list. Set on HTML responses; the browser only needs to see
     // HSTS once per host to apply the policy site-wide.
     headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
+    // Cross-origin isolation (defence against XS-Leaks / cross-window attacks).
+    // COOP severs window.opener for cross-origin popups so a malicious opener
+    // can't reach into our context. 'same-origin-allow-popups' keeps popups WE
+    // open (ad/analytics scripts occasionally do) functional, unlike the
+    // stricter 'same-origin'. CORP 'same-origin' stops other origins embedding
+    // our HTML as a no-cors subresource; OG scrapers do plain top-level fetches,
+    // which CORP doesn't govern, so social previews are unaffected.
+    headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    headers.set('Cross-Origin-Resource-Policy', 'same-origin');
     // Don't ship the meta CSP downstream — header is stronger and the meta
     // would force the browser to intersect both policies.
     headers.delete('Content-Security-Policy-Report-Only');
