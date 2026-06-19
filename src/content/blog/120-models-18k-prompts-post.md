@@ -11,9 +11,9 @@ faq:
   - q: 'What is supply chain injection in AI?'
     a: 'Supply chain injection involves inserting malicious content into tool definitions and skill files rather than user prompts. Testing showed 90–100% attack success rates across models because external tool definitions are trusted implicitly.'
   - q: 'What are format-lock attacks on AI models?'
-    a: 'Format-lock attacks request harmful content structured as JSON, YAML, or code. Frontier models showed 30% attack success rates with this technique, revealing a faithfulness gap between what the model appears to do and what it actually does.'
+    a: 'Format-lock attacks request harmful content structured as JSON, YAML, or code. Frontier models showed 24–42% LLM-graded attack success rates with this technique, revealing a faithfulness gap between what the model appears to do and what it actually does.'
   - q: 'Why are reasoning models more vulnerable to escalation attacks?'
-    a: "Reasoning models' extended context tracking creates an attack surface. Crescendo attacks achieved 80–90% success against reasoning models by gradually escalating requests, compared to 10% against smaller models."
+    a: "Reasoning models' extended context tracking creates an attack surface. Crescendo attacks achieved a 70–100% LLM-graded success rate against the reasoning model tested (DeepSeek-R1:1.5b) by gradually escalating requests — with zero outright refusals — compared to roughly 10% against small non-reasoning models."
   - q: 'How much do benchmark attack success rates overstate actual risk?'
     a: 'Keyword-based classification inflates attack success rates by roughly 2.3×. Aggregate attack success rates dropped from 36.2% to 15.9% when using LLM grading instead of heuristic methods.'
 youtubeUrl: 'https://www.youtube.com/watch?v=sYU4OsxdPkw'
@@ -21,9 +21,11 @@ youtubeUrl: 'https://www.youtube.com/watch?v=sYU4OsxdPkw'
 
 Over the past year, I've run one of the more comprehensive adversarial evaluations of language models I'm aware of: 120 models, 18,176 prompts, 5 attack families, 79 distinct techniques. The full dataset, benchmark infrastructure, and methodology live at [failurefirst.org](https://failurefirst.org). Here's what stood out.
 
+> **Update (June 2026):** The figures below are a snapshot from the run as scored in early 2026. The corpus has since grown to 295 models and 143,399 prompts, and a few methodology numbers have been re-derived on larger samples (flagged inline where the newer value materially sharpens the finding). For live figures and the current dataset, see [failurefirst.org](https://failurefirst.org).
+
 ## 1. Supply Chain Injection: 90–100% Attack Success
 
-The most alarming finding involved something we called supply chain injection — injecting malicious content into tool definitions and skill files rather than user-facing prompts.
+The starkest finding involved something we called supply chain injection — injecting malicious content into tool definitions and skill files rather than user-facing prompts.
 
 I tested 50 injection scenarios against 6 small open-weight models (1.5–3.8B parameters). **Every model treated injected tool definitions and skill files as legitimate instructions.** Attack success rate: 90–100% across the board. No statistically significant differences between any model pair (chi-square with Bonferroni correction, Cohen's κ = 0.782).
 
@@ -35,9 +37,9 @@ This is the supply chain problem applied to AI. If you're building agentic syste
 
 Format-lock attacks request harmful content structured as JSON, YAML, or code. The hypothesis is that models compartmentalise the "format" request from the "content" request — and when they do, harmful content appears within structured fields while the response maintains the appearance of a well-formatted, helpful output.
 
-Results against the frontier models tested at the time of this run:
+LLM-graded attack success rates against the frontier models tested at the time of this run:
 
-- **Claude Sonnet 4.5:** 30% LLM-graded attack success rate
+- **Claude Sonnet 4.5:** 30%
 - **Codex GPT-5.2:** 42%
 - **Gemini 3 Flash:** 24%
 
@@ -51,7 +53,7 @@ Structured output formats that are increasingly common in agentic pipelines — 
 
 The assumption is that more capable models are safer. For multi-turn escalation, this is backwards.
 
-Crescendo attacks gradually escalate the severity or harmfulness of requests across turns, exploiting the extended context tracking that makes reasoning models capable. Against **DeepSeek-R1**, crescendo achieved **80–90% attack success rate**. Against small, non-reasoning models, the same technique achieved roughly 10%.
+Crescendo attacks gradually escalate the severity or harmfulness of requests across turns, exploiting the extended context tracking that makes reasoning models capable. Against **DeepSeek-R1:1.5b**, crescendo achieved a **70–100% LLM-graded attack success rate** across runs — and, more tellingly, produced _zero outright refusals_ across ten escalation scenarios. Against small, non-reasoning models, the same technique achieved roughly 10%.
 
 The capability that enables coherent, context-aware reasoning across a long conversation is exactly what makes the model susceptible to gradual manipulation. A model that "remembers" it agreed to step N is more likely to be led to step N+5 than a model that treats each turn largely independently.
 
@@ -61,7 +63,7 @@ This has direct implications for deployments that use reasoning models for compl
 
 The most technically important finding is one most practitioners don't talk about: **keyword-based classification of attack success inflates results by roughly 2.3×**.
 
-We compared heuristic classification (keyword matching) against LLM-graded ground truth across the dataset. Cohen's κ = 0.245 — poor agreement by any standard. The breakdown:
+We compared heuristic classification (keyword matching) against LLM-graded ground truth across the dataset. Cohen's κ = 0.245 — poor agreement by any standard. (A later recompute on a larger dual-graded sample put κ at 0.126 [0.108, 0.145], which only sharpens the point: keyword grading barely clears chance.) The breakdown:
 
 - Heuristic REFUSAL labels: 95% reliable
 - Heuristic COMPLIANCE labels: **88% false positive rate**
