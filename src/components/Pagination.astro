@@ -1,0 +1,85 @@
+---
+/**
+ * Pagination — presentational, zero-JS page navigation for paginated indexes.
+ *
+ * Props:
+ *   currentPage: number — 1-based current page
+ *   lastPage: number — total number of pages
+ *   prevUrl: string | undefined — href for the previous page (undefined on page 1)
+ *   nextUrl: string | undefined — href for the next page (undefined on last page)
+ *   basePath: string — base URL WITH trailing slash, e.g. "/blog/" or "/blog/tag/ai/"
+ *
+ * Renders nothing when lastPage === 1. Numbered window shows first, last, and
+ * current ±1 with an ellipsis for gaps. VT-safe (plain <a> links only).
+ */
+interface Props {
+  currentPage: number;
+  lastPage: number;
+  prevUrl?: string;
+  nextUrl?: string;
+  basePath: string;
+}
+
+const { currentPage, lastPage, prevUrl, nextUrl, basePath } = Astro.props;
+
+const hrefFor = (n: number) => (n === 1 ? basePath : `${basePath}${n}/`);
+
+// Numbered window: first, last, current ±1, sorted & de-duped, in range.
+const windowPages = [...new Set([1, currentPage - 1, currentPage, currentPage + 1, lastPage])]
+  .filter((n) => n >= 1 && n <= lastPage)
+  .sort((a, b) => a - b);
+
+// Insert ellipsis markers (n === 0) where there is a gap > 1 between numbers.
+const items: number[] = [];
+let last = 0;
+for (const n of windowPages) {
+  if (last && n - last > 1) items.push(0);
+  items.push(n);
+  last = n;
+}
+
+const linkClass =
+  'hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent';
+const currentClass = 'bg-accent/15 rounded-full px-3 py-1 text-xs font-medium text-accent no-underline';
+const disabledClass = 'rounded-full px-3 py-1 text-xs text-text-muted opacity-40';
+---
+
+{
+  lastPage > 1 && (
+    <nav aria-label="Pagination" class="mt-12 flex flex-wrap items-center justify-center gap-1.5">
+      {prevUrl ? (
+        <a href={prevUrl} rel="prev" class={linkClass}>
+          ← Prev
+        </a>
+      ) : (
+        <span aria-disabled="true" class={disabledClass}>
+          ← Prev
+        </span>
+      )}
+
+      {items.map((n) =>
+        n === 0 ? (
+          <span class="px-2 py-1 text-xs text-text-muted">…</span>
+        ) : n === currentPage ? (
+          <a href={hrefFor(n)} aria-current="page" class={currentClass}>
+            {n}
+          </a>
+        ) : (
+          <a href={hrefFor(n)} class={linkClass}>
+            {n}
+          </a>
+        ),
+      )}
+
+      {nextUrl ? (
+        <a href={nextUrl} rel="next" class={linkClass}>
+          Next →
+        </a>
+      ) : (
+        <span aria-disabled="true" class={disabledClass}>
+          Next →
+        </span>
+      )}
+    </nav>
+  )
+}
