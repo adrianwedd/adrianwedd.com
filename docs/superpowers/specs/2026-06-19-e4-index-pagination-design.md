@@ -32,7 +32,7 @@ The blog index renders all 79 published posts in one list; the audio index rende
 | Audio tag filter | **replace** client-side filter with link-based tag chips → existing `/audio/tag/<tag>/` pages |
 | Carousel | render on **page 1 only**; fix crop via `object-contain` + **theme-independent** dark backdrop |
 | Page-2+ titles | append `" — Page N"` (composed in the page, not SEOHead) |
-| **Audio sort control** | **OPEN — owner decision required** (see §Audio conversion) |
+| Audio sort control | **Remove it** (decided 2026-06-19) — server default newest-first stays |
 
 ## Architecture
 
@@ -104,10 +104,7 @@ Pages 2+ **drop** the full-viewport hero (`min-h-[100dvh]`) and the carousel (bo
 `audio/[...page].astro` (replacing `audio/index.astro`):
 
 - **Tag filter → links.** Delete the client-side tag-filter `<script>` + `#tag-filters` bar; add link-based tag chips → `/audio/tag/<t>/`. **No `/audio/tags/` "browse all" link** — that page does not exist (blog has one, audio does not); do not invent a broken link.
-- **⚠️ Sort control — OWNER DECISION.** QA found the audio index also has a client-side **sort `<select>`** (`#sort-select`: Newest / Oldest / A–Z, `audio/index.astro:74-84`, `applySort()` ~`:173-187`) that the original spec ignored. Client-side sort cannot work across server-paginated pages. Options:
-  - **(A — recommended) Remove the sort control.** The server already renders newest-first by default; A–Z / oldest are low-use and can't span pages in static output. Acknowledge the minor feature loss.
-  - **(B) Keep sort on page 1 only** — inconsistent (page 2+ can't sort); not recommended.
-  - **(C) URL-param server-side sort** (`?sort=` → distinct `getStaticPaths` outputs) — out of scope per non-goals.
+- **Sort control — REMOVE (decided 2026-06-19).** QA found the audio index also has a client-side **sort `<select>`** (`#sort-select`: Newest / Oldest / A–Z, `audio/index.astro:74-84`, `applySort()` ~`:173-187`) that the original spec ignored. Client-side sort cannot work across server-paginated pages, so **delete the dropdown and its `applySort()` script**. The server already renders newest-first by default (the common case); oldest / A–Z are a low-use, acknowledged feature loss.
 - The `data-tags/data-date/data-title` card attributes exist **only** for the deleted filter+sort scripts; remove them with their consumers.
 - Episode cards stay text-only, sliced to `page.data` (12/page).
 
