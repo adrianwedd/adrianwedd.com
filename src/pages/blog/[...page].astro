@@ -5,16 +5,18 @@ import ContentCarousel from '../../components/ContentCarousel.astro';
 import Pagination from '../../components/Pagination.astro';
 import ScrollReveal from '../../components/ScrollReveal.astro';
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
 import { slug } from '../../lib/utils';
 
-export async function getStaticPaths({ paginate }) {
+export const getStaticPaths = (async ({ paginate }) => {
   const posts = (await getCollection('blog'))
     .filter((p) => !p.data.draft)
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   return paginate(posts, { pageSize: 12 });
-}
+}) satisfies GetStaticPaths;
 
-const { page } = Astro.props;
+const { page } = Astro.props as { page: Page<CollectionEntry<'blog'>> };
 const isFirst = page.currentPage === 1;
 
 // Tag chips (and the page-1 carousel) need the full post set, not this page's slice.
