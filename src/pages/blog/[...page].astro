@@ -1,47 +1,70 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HeroCanvas from '../../components/HeroCanvas.astro';
+import ContentCarousel from '../../components/ContentCarousel.astro';
+import Pagination from '../../components/Pagination.astro';
+import ScrollReveal from '../../components/ScrollReveal.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
-import ScrollReveal from '../../components/ScrollReveal.astro';
-import ContentCarousel from '../../components/ContentCarousel.astro';
 
-const allPosts = await getCollection('blog');
-const posts = allPosts.filter((p) => !p.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+export async function getStaticPaths({ paginate }) {
+  const posts = (await getCollection('blog'))
+    .filter((p) => !p.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  return paginate(posts, { pageSize: 12 });
+}
 
-const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+const { page } = Astro.props;
+const isFirst = page.currentPage === 1;
 
-const carouselItems = posts
-  .filter((p) => p.data.heroImage)
-  .map((p) => ({
-    href: `/blog/${slug(p.id)}/`,
-    title: p.data.title,
-    description: p.data.description,
-    heroImage: p.data.heroImage as string,
-    date: p.data.date,
-    tags: p.data.tags,
-  }));
+// Tag chips (and the page-1 carousel) need the full post set, not this page's slice.
+const allPosts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
+
+const carouselItems = isFirst
+  ? allPosts
+      .filter((p) => p.data.heroImage)
+      .map((p) => ({
+        href: `/blog/${slug(p.id)}/`,
+        title: p.data.title,
+        description: p.data.description,
+        heroImage: p.data.heroImage as string,
+        date: p.data.date,
+        tags: p.data.tags,
+      }))
+  : [];
+
+const pageTitle = isFirst ? 'Blog' : `Blog — Page ${page.currentPage}`;
+const prevUrl = page.currentPage > 1 ? (page.currentPage - 1 === 1 ? '/blog/' : `/blog/${page.currentPage - 1}/`) : undefined;
+const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1}/` : undefined;
 ---
 
 <BaseLayout
-  title="Blog"
+  title={pageTitle}
   description="Writing where the thinking shows. Research notes, failure analysis, and ideas still taking shape."
 >
-  <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
-    <div class="relative z-10 mx-auto max-w-3xl">
-      <h1 class="text-text">
-        Writing where the thinking shows.<br />
-        <span class="text-text-muted">Research notes, failure analysis, and ideas still taking shape.</span>
-      </h1>
-      <p class="mt-6 max-w-prose text-text-muted">
-        What actually breaks, and why. Who knew about it before it broke. What the gap between demonstrated risk and
-        organisational response looks like from the inside.
-      </p>
-    </div>
-    <HeroCanvas animation="ink" />
-  </section>
+  {
+    isFirst && (
+      <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
+        <div class="relative z-10 mx-auto max-w-3xl">
+          <h1 class="text-text">
+            Writing where the thinking shows.
+            <br />
+            <span class="text-text-muted">Research notes, failure analysis, and ideas still taking shape.</span>
+          </h1>
+          <p class="mt-6 max-w-prose text-text-muted">
+            What actually breaks, and why. Who knew about it before it broke. What the gap between demonstrated risk and
+            organisational response looks like from the inside.
+          </p>
+        </div>
+        <HeroCanvas animation="ink" />
+      </section>
+    )
+  }
 
-  {carouselItems.length > 0 && <ContentCarousel items={carouselItems} id="blog-carousel" label="Featured blog posts" />}
+  {isFirst && carouselItems.length > 0 && <ContentCarousel items={carouselItems} id="blog-carousel" label="Featured blog posts" />}
 
   <section class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
     {/* Tag filter */}
@@ -87,7 +110,7 @@ const carouselItems = posts
     {/* Post list */}
     <div class="mt-10 space-y-8">
       {
-        posts.map((post) => {
+        page.data.map((post) => {
           const words = post.body ? post.body.split(/\s+/).length : 0;
           const readingTime = Math.max(1, Math.ceil(words / 200));
           return (
@@ -123,6 +146,14 @@ const carouselItems = posts
         })
       }
     </div>
+
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+      prevUrl={prevUrl}
+      nextUrl={nextUrl}
+      basePath="/blog/"
+    />
   </section>
 
   <script is:inline>
