@@ -11,7 +11,15 @@
  * <style> elements dynamically during view transitions and per CSP3, a nonce
  * in style-src-elem suppresses 'unsafe-inline', so we can't mix them.
  */
-export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): string {
+export function buildCsp(opts: {
+  nonce: string;
+  strictDynamic: boolean;
+  // When provided, append violation-reporting directives. `report-to` targets a
+  // group declared in the `Reporting-Endpoints` response header (modern
+  // browsers); `report-uri` is the legacy fallback (older browsers that don't
+  // implement the Reporting API). Both point at the same collector URL.
+  reporting?: { group: string; uri: string };
+}): string {
   const { nonce, strictDynamic } = opts;
 
   const scriptSrc = [
@@ -61,6 +69,11 @@ export function buildCsp(opts: { nonce: string; strictDynamic: boolean }): strin
     "frame-ancestors 'none'", // only enforceable via header, not meta
     'upgrade-insecure-requests',
   ];
+
+  if (opts.reporting) {
+    directives.push(`report-to ${opts.reporting.group}`);
+    directives.push(`report-uri ${opts.reporting.uri}`);
+  }
 
   return directives.join('; ');
 }
