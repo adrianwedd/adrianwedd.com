@@ -100,7 +100,7 @@ for slug in "${DRAFT_SLUGS[@]}"; do
 done
 
 SRC_POSTS=$(find src/content/blog -name '*.md' -exec grep -L 'draft: true' {} \; | wc -l | tr -d ' ')
-DIST_POSTS=$(find "$DIST/blog" -maxdepth 2 -name 'index.html' -not -path '*/tag/*' -not -path '*/tags/*' | wc -l | tr -d ' ')
+DIST_POSTS=$(find "$DIST/blog" -maxdepth 2 -name 'index.html' -not -path '*/tag/*' -not -path '*/tags/*' | grep -vE '/blog/[0-9]+/index\.html$' | wc -l | tr -d ' ')
 # Subtract 1 for the blog listing page (dist/blog/index.html)
 DIST_POSTS=$((DIST_POSTS - 1))
 if [ "$SRC_POSTS" -eq "$DIST_POSTS" ]; then

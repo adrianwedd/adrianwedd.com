@@ -67,7 +67,9 @@ const blogDir = join(DIST, 'blog');
 if (statSync(blogDir).isDirectory()) {
   for (const entry of readdirSync(blogDir)) {
     const indexPath = join(blogDir, entry, 'index.html');
-    if (entry === 'tag' || entry === 'tags') continue;
+    // Skip tag aggregations and numeric pagination pages (/blog/2/ …) — these
+    // are list pages, not articles, so they carry no Article schema by design.
+    if (entry === 'tag' || entry === 'tags' || /^\d+$/.test(entry)) continue;
     try {
       if (!statSync(indexPath).isFile()) continue;
     } catch {
