@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroCanvas from '../../components/HeroCanvas.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
+import { slug } from '../../lib/utils';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const episodes = (await getCollection('audio'))
+    .filter((e) => !e.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  return paginate(episodes, { pageSize: 12 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: Page<CollectionEntry<'audio'>> };
+const isFirst = page.currentPage === 1;
+
+const allEpisodes = (await getCollection('audio')).filter((e) => !e.data.draft);
+const allTags = [...new Set(allEpisodes.flatMap((e) => e.data.tags))].sort();
+
+const pageTitle = isFirst ? 'Audio' : `Audio — Page ${page.currentPage}`;
+const prevUrl = page.currentPage > 1 ? (page.currentPage - 1 === 1 ? '/audio/' : `/audio/${page.currentPage - 1}/`) : undefined;
+const nextUrl = page.currentPage < page.lastPage ? `/audio/${page.currentPage + 1}/` : undefined;
+---
+
+<BaseLayout
+  title={pageTitle}
+  description="Conversations with AI tools about failure modes, risk frameworks, and ideas too raw for text. The workshop extended—thinking aloud."
+>
+  {
+    isFirst && (
+      <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
+        <div class="relative z-10 mx-auto max-w-3xl">
+          <h1 class="text-text">
+            The workshop extended — thinking aloud.
+            <br />
+            <span class="text-text-muted">
+              Conversations about failure modes, risk frameworks, and ideas too raw for text.
+            </span>
+          </h1>
+          <p class="mt-6">
+            <a href="/audio/feed.xml" class="text-sm text-text-muted transition-colors hover:text-accent">
+              Podcast RSS &nearr;
+            </a>
+          </p>
+        </div>
+        <HeroCanvas animation="soundwave" />
+      </section>
+    )
+  }
+
+  <section class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    {/* Tag chips → per-tag pages (link-based; replaces the old client-side filter) */}
+    {
+      allTags.length > 0 && (
+        <nav class="mt-8" aria-label="Filter by tag">
+          <div class="flex flex-wrap gap-2" id="audio-tags">
+            <a href="/audio/" class="bg-accent/15 rounded-full px-3 py-1 text-xs font-medium text-accent no-underline">
+              All
+            </a>
+            {allTags.map((tag, i) => (
+              <a
+                href={`/audio/tag/${tag}/`}
+                class:list={[
+                  'hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent',
+                  i >= 10 && 'audio-tag-overflow hidden',
+                ]}
+              >
+                {tag}
+              </a>
+            ))}
+            {allTags.length > 10 && (
+              <button
+                type="button"
+                id="audio-tags-toggle"
+                aria-expanded="false"
+                class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
+              >
+                +{allTags.length - 10} more
+              </button>
+            )}
+          </div>
+        </nav>
+      )
+    }
+
+    <div class="mt-10 space-y-6">
+      {
+        page.data.map((episode) => (
+          <article>
+            <a
+              href={`/audio/${slug(episode.id)}/`}
+              class="card-hover hover:border-accent/50 group block rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h2 class="text-lg font-semibold text-text transition-colors group-hover:text-accent">
+                    {episode.data.title}
+                  </h2>
+                  <p class="mt-1 text-sm leading-relaxed text-text-muted">{episode.data.description}</p>
+                  <div class="mt-2 flex items-center gap-3 text-xs text-text-muted">
+                    {episode.data.duration && <span>{episode.data.duration}</span>}
+                    <div class="flex gap-2">
+                      {episode.data.tags.map((tag: string) => (
+                        <span class="rounded-full bg-surface-raised px-2.5 py-0.5">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <time class="whitespace-nowrap text-xs text-text-muted" datetime={episode.data.date.toISOString()}>
+                  {episode.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </time>
+              </div>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+      prevUrl={prevUrl}
+      nextUrl={nextUrl}
+      basePath="/audio/"
+    />
+  </section>
+
+  <script is:inline>
+    (function () {
+      var audioTagExpanded = false;
+
+      function initAudioToggle() {
+        var toggle = document.getElementById('audio-tags-toggle');
+        if (toggle && !toggle.dataset.label) toggle.dataset.label = toggle.textContent || '';
+        audioTagExpanded = false;
+      }
+
+      if (!document.documentElement.dataset.audioTagInit) {
+        document.documentElement.dataset.audioTagInit = '1';
+
+        document.addEventListener('click', function (e) {
+          var target = e.target;
+          if (!target || typeof target.closest !== 'function') return;
+          if (target.closest('#audio-tags-toggle')) {
+            audioTagExpanded = !audioTagExpanded;
+            document.querySelectorAll('.audio-tag-overflow').forEach(function (el) {
+              el.classList.toggle('hidden', !audioTagExpanded);
+            });
+            var toggle = document.getElementById('audio-tags-toggle');
+            if (toggle) {
+              toggle.textContent = audioTagExpanded ? 'Show less' : toggle.dataset.label || '';
+              toggle.setAttribute('aria-expanded', String(audioTagExpanded));
+            }
+          }
+        });
+
+        document.addEventListener('astro:after-swap', initAudioToggle);
+      }
+
+      initAudioToggle();
+    })();
+  </script>
+</BaseLayout>

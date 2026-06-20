@@ -1,32 +1,37 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Breadcrumb from '../../../components/Breadcrumb.astro';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../../components/Breadcrumb.astro';
+import Pagination from '../../../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
-import { slug } from '../../../lib/utils';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
+import { slug } from '../../../../lib/utils';
 
-export async function getStaticPaths() {
-  const allPosts = await getCollection('blog');
-  const posts = allPosts.filter((p) => !p.data.draft);
-  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
-  return tags.map((tag) => ({
-    params: { tag },
-    props: {
-      tag,
-      posts: posts
-        .filter((p) => !p.data.draft && p.data.tags.includes(tag))
-        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
-    },
-  }));
-}
+export const getStaticPaths = (async ({ paginate }) => {
+  const all = (await getCollection('blog')).filter((p) => !p.data.draft);
+  const tags = [...new Set(all.flatMap((p) => p.data.tags))];
+  return tags.flatMap((tag) => {
+    const posts = all
+      .filter((p) => p.data.tags.includes(tag))
+      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+    return paginate(posts, { params: { tag }, props: { tag }, pageSize: 12 });
+  });
+}) satisfies GetStaticPaths;
 
-const { tag, posts } = Astro.props;
+const { page, tag } = Astro.props as { page: Page<CollectionEntry<'blog'>>; tag: string };
+const isFirst = page.currentPage === 1;
 
 const allPosts = await getCollection('blog');
 const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) => p.data.tags))].sort();
+
+const basePath = `/blog/tag/${tag}/`;
+const pageTitle = isFirst ? `Posts tagged "${tag}"` : `Posts tagged "${tag}" — Page ${page.currentPage}`;
+const prevUrl = page.currentPage > 1 ? (page.currentPage - 1 === 1 ? basePath : `${basePath}${page.currentPage - 1}/`) : undefined;
+const nextUrl = page.currentPage < page.lastPage ? `${basePath}${page.currentPage + 1}/` : undefined;
 ---
 
 <BaseLayout
-  title={`Posts tagged "${tag}"`}
+  title={pageTitle}
   description={`Blog posts tagged with ${tag} — research, engineering, and analysis.`}
   noindex
 >
@@ -40,7 +45,7 @@ const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) =>
       ]}
     />
     <h1 class="text-text">Tag: {tag}</h1>
-    <p class="mt-2 text-text-muted">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
+    <p class="mt-2 text-text-muted">{page.total} post{page.total !== 1 ? 's' : ''}</p>
 
     <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
       <a
@@ -68,7 +73,7 @@ const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) =>
 
     <div class="mt-10 space-y-8">
       {
-        posts.map((post) => (
+        page.data.map((post) => (
           <article>
             <a
               href={`/blog/${slug(post.id)}/`}
@@ -90,5 +95,13 @@ const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) =>
         ))
       }
     </div>
+
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+      prevUrl={prevUrl}
+      nextUrl={nextUrl}
+      basePath={basePath}
+    />
   </section>
 </BaseLayout>
