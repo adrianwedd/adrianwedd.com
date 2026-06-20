@@ -3,16 +3,18 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import HeroCanvas from '../../components/HeroCanvas.astro';
 import Pagination from '../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
 import { slug } from '../../lib/utils';
 
-export async function getStaticPaths({ paginate }) {
+export const getStaticPaths = (async ({ paginate }) => {
   const episodes = (await getCollection('audio'))
     .filter((e) => !e.data.draft)
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   return paginate(episodes, { pageSize: 12 });
-}
+}) satisfies GetStaticPaths;
 
-const { page } = Astro.props;
+const { page } = Astro.props as { page: Page<CollectionEntry<'audio'>> };
 const isFirst = page.currentPage === 1;
 
 const allEpisodes = (await getCollection('audio')).filter((e) => !e.data.draft);

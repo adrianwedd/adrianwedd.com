@@ -3,9 +3,11 @@ import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../../components/Breadcrumb.astro';
 import Pagination from '../../../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
 import { slug } from '../../../../lib/utils';
 
-export async function getStaticPaths({ paginate }) {
+export const getStaticPaths = (async ({ paginate }) => {
   const all = (await getCollection('blog')).filter((p) => !p.data.draft);
   const tags = [...new Set(all.flatMap((p) => p.data.tags))];
   return tags.flatMap((tag) => {
@@ -14,9 +16,9 @@ export async function getStaticPaths({ paginate }) {
       .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     return paginate(posts, { params: { tag }, props: { tag }, pageSize: 12 });
   });
-}
+}) satisfies GetStaticPaths;
 
-const { page, tag } = Astro.props;
+const { page, tag } = Astro.props as { page: Page<CollectionEntry<'blog'>>; tag: string };
 const isFirst = page.currentPage === 1;
 
 const allPosts = await getCollection('blog');
