@@ -3,16 +3,21 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened] # exclude closed/merged → no double-run
   workflow_dispatch:
 
+# Least privilege at the top level (PR validation only reads). The deploy job
+# re-grants pages:write / id-token:write for itself.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  # Production deploys share the 'pages' lane and never cancel; each PR gets its
+  # own lane so a new push supersedes the old run without touching deploys.
+  group: ${{ github.event_name == 'push' && 'pages' || format('pr-{0}', github.event.pull_request.number) }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
 
 jobs:
   build:
@@ -30,12 +35,16 @@ jobs:
         run: node scripts/validate-content.js
       - name: Audit dependencies
         run: npm audit --audit-level=high --omit=dev
+      # Deploy-only: needs repo secrets (absent on fork PRs) and is deploy input,
+      # not validation. PR builds fall back to default analytics + CV data.
       - name: Fetch GA4 analytics data
+        if: github.event_name != 'pull_request'
         run: node scripts/fetch-ga4-data.mjs
         env:
           GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
           GA4_SERVICE_ACCOUNT_KEY: ${{ secrets.GA4_SERVICE_ACCOUNT_KEY }}
       - name: Checkout CV data
+        if: github.event_name != 'pull_request'
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: adrianwedd/cv
@@ -43,6 +52,7 @@ jobs:
           token: ${{ secrets.PIPELINE_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Copy CV data
+        if: github.event_name != 'pull_request'
         run: |
           mkdir -p src/data
           if [ -f cv-repo/data/base-cv.json ]; then
@@ -115,7 +125,11 @@ jobs:
         # worker-csp has its own dedicated job below; this only covers the
         # social-publish worker, which had no CI coverage prior to this step.
         run: cd worker && npm ci && npm test
+      # External link check is network-flaky/slow and its value is pre-deploy,
+      # not pre-merge — keep it push-only so PRs stay fast and deterministic.
+      # (check:links below still covers same-origin links on every PR.)
       - name: Install lychee
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SHA-256 of lychee-v0.23.0 x86_64-unknown-linux-gnu.tar.gz
@@ -135,6 +149,7 @@ jobs:
           sudo mv lychee /usr/local/bin/lychee
           lychee --version
       - name: Check links
+        if: github.event_name != 'pull_request'
         run: |
           lychee \
             --config .lychee.toml \
@@ -150,7 +165,9 @@ jobs:
         run: npm run check:links
       - name: Run site tests
         run: bash scripts/test-site.sh
-      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: dist
           retention-days: 1
@@ -173,7 +190,12 @@ jobs:
 
   deploy:
     needs: [build, worker-csp]
+    # Never deploy from a PR — only on push to main (or a manual dispatch).
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
