@@ -90,7 +90,11 @@ an eager but dangerous apprentice working in the dark, not a magic wand.
 
 ## Cuts (reviewer consensus — these are journal entries, not narrative)
 
-- The Home Assistant Pi4 OOM / Core-update subplot (belongs in a separate HA post if anything).
+- The Home Assistant Pi4 Core-update subplot — the 2026.6.4 update that kept failing (root-caused in a
+  later session to a **corrupt image / 0-byte `const.py`**, NOT the OOM it was first mistaken for — the
+  source notes' original "memory-blocked" framing has since been corrected). Belongs in a separate HA
+  forensic-debugging
+  post if anything — "the 0-byte file that masqueraded as an out-of-memory crash" — not this series.
 - The InfluxDB recovery arc.
 - The Frigate camera-debugging thread.
 - The Dyson DHCP tangent.
