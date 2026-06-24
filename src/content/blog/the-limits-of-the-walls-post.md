@@ -1,20 +1,12 @@
 ---
 title: 'The Limits of the Walls'
 description: "Six sessions handing a live home network to an AI agent. Part 3: the memory that made it work, the division of labour, and what I'd never let it touch."
-date: 2026-06-26
+date: 2026-06-25
 tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
 series: 'An Agent in the Walls'
 seriesOrder: 3
-draft: true
+draft: false
 ---
-
-<!--
-SANITIZATION CHECKLIST — must be clean before draft:false. Remove this comment at publish.
-[x] No SSID names, passphrases, real IPs, MACs, serials, hostnames, firmware strings
-[x] No net/zone/rule IDs; no domains; no CF account/tunnel IDs; child's name/age generic
-[x] "STATE.md" / "handoff doc" are generic doc names — fine to show
-[x] Ethics note frames scope: own network, consent, sanitized, no third-party exploitation
--->
 
 By the end there were six sessions behind me, spread across a handful of days, and a home network that bore almost no resemblance to the flat one I'd started with. Segmented, firewalled, filtered, watched. And the part that stayed with me wasn't any single configuration change. It was the working relationship — the strange, specific experience of handing an AI agent write-access to the place I actually live, and watching it become genuinely good at the job.
 
@@ -40,7 +32,7 @@ Read the state. Plan the change in full before touching anything. Dry-run the wr
 
 Read, plan, dry-run, gate, write, verify, re-state. It reads like ceremony. It is, in the same way a pre-flight checklist is ceremony — a deliberate refusal to let competence and speed talk you out of the step that saves you. The agent is fast enough to skip straight from plan to write, and confident enough to feel fine about it. The loop exists precisely to deny it that, and to deny _me_ it, because the speed is exactly what makes the skipped step expensive.
 
-The gate was the step I was most tempted to wave through, and the one I'm gladest I never did. "Prove a way back in before any change that could cost reachability" sounds obvious until you're four changes deep, everything's working, and checking the backout _again_ feels like superstition. It isn't. The whole point of a backout is that you need it precisely when you were most sure you wouldn't — when the change you were confident about turns out to have severed the path you were standing on. Proving it cold, from a phone on cellular, every single time, is what keeps confidence from quietly becoming the thing that strands you.
+The gate was the step I was most tempted to wave through, and the one I'm gladdest I never did. "Prove a way back in before any change that could cost reachability" sounds obvious until you're four changes deep, everything's working, and checking the backout _again_ feels like superstition. It isn't. The whole point of a backout is that you need it precisely when you were most sure you wouldn't — when the change you were confident about turns out to have severed the path you were standing on. Proving it cold, from a phone on cellular, every single time, is what keeps confidence from quietly becoming the thing that strands you.
 
 ## Who did what
 
@@ -66,7 +58,7 @@ That's the resolution I landed on. The fear in Part 1 wasn't a phase to get past
 
 Because someone always asks how far this goes, the scope, plainly:
 
-This was my own network, changed with the consent of the people who use it. Everything in these three posts has been sanitized — the identifiers that would let someone target this specific house are gone, deliberately, because publishing the map of a network is not the same as publishing the lessons from rebuilding one. Nothing here involved exploiting anything; the "undocumented API" is simply the gateway's own web app talking to its own gateway, the same calls the browser makes, observed and reused on the device I own. And nothing here is a recipe for reaching into infrastructure that isn't yours. The interesting part was never access. It was the discipline of using access you already, legitimately have.
+This was my own network, changed with the consent of the people who use it. Everything in these three posts has been sanitised — the identifiers that would let someone target this specific house are gone, deliberately, because publishing the map of a network is not the same as publishing the lessons from rebuilding one. Nothing here involved exploiting anything; the "undocumented API" is simply the gateway's own web app talking to its own gateway, the same calls the browser makes, observed and reused on the device I own. And nothing here is a recipe for reaching into infrastructure that isn't yours. The interesting part was never access. It was the discipline of using access you already, legitimately have.
 
 ## What I wouldn't let it do
 

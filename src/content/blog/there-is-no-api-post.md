@@ -5,24 +5,12 @@ date: 2026-06-25
 tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
 series: 'An Agent in the Walls'
 seriesOrder: 2
-draft: true
+draft: false
 ---
-
-<!--
-SANITIZATION CHECKLIST — must be clean before draft:false. Remove this comment at publish.
-[x] SSID names generic; Wi-Fi passphrases dropped
-[x] Real net/zone/rule IDs replaced with placeholders (<net-id> etc.); no literal hex IDs
-[x] Internal IPs → doc ranges / concepts only; honeypot = "a decoy address low in the IoT subnet, below the DHCP pool"
-[x] No X-API-KEY value, no admin credentials, no session tokens
-[x] Wired management host generic; hostnames/serials/MACs omitted
-[x] Firmware version rounded ("a recent v10 build")
-[x] API endpoint + field names ARE shown (product-level, not house-targeting) — this is the point of the post
-[x] Child's name/age → "the kids' network"
--->
 
 The request was simple to say out loud. Take a flat home network — one subnet, everything trusting everything — and turn it into a segmented one: an isolated VLAN for the smart-home gadgets, a filtered network for the kids, a real firewall between the zones. The kind of thing the router's marketing page promises you can do with a few clicks.
 
-The problem is that I wasn't doing it with clicks. I was doing it remotely, through an agent, in batches I could read and gate before they ran (Part 1 was about the safety net that made that not-reckless). And when you take the human finger off the mouse, you discover the thing the marketing page never mentions: **the router has no API.**
+The problem is that I wasn't doing it with clicks. I was doing it remotely, through an agent, in batches I could read and gate before they ran ([Part 1](/blog/dont-saw-off-the-branch/) was about the safety net that made that not-reckless). And when you take the human finger off the mouse, you discover the thing the marketing page never mentions: **the router has no API.**
 
 Not a published one, not a stable one, not one with your name on it — there is no public, supported, here-is-how-you-automate-this interface at all. What it has is a web app, and the web app talks to the gateway over a set of internal HTTP endpoints that exist only to serve that web app. They are versioned to the firmware, undocumented, and free to change shape the moment you update. If you want to drive this thing programmatically, those endpoints are the whole game. So the real work of this part isn't configuring a network. It's reverse-engineering a control surface that was never meant to have a second user.
 
@@ -82,4 +70,4 @@ The router still has no API. But by the end I had a map of exactly what it would
 
 ---
 
-_Part 3 — "The Limits of the Walls" — is the reflective close: what it actually means to hand a live network to an agent, what made the collaboration work across six sessions, and the things I would never let it touch._
+_Part 3 — [The Limits of the Walls](/blog/the-limits-of-the-walls/) — is the reflective close: what it actually means to hand a live network to an agent, what made the collaboration work across six sessions, and the things I would never let it touch._

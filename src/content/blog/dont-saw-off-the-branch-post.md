@@ -1,27 +1,12 @@
 ---
 title: "Don't Saw Off the Branch"
 description: 'I let an AI agent rebuild my live home network over Starlink — no console, no documented API. Part 1: building three backout paths before a single write.'
-date: 2026-06-24
+date: 2026-06-25
 tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
 series: 'An Agent in the Walls'
 seriesOrder: 1
-draft: true
+draft: false
 ---
-
-<!--
-SANITIZATION CHECKLIST — must be clean before draft:false. Remove this comment at publish.
-[x] SSID names generic ("the main SSID" / "the kids' SSID" / "the trusted SSID") — never the literal strings
-[x] Wi-Fi passphrases dropped entirely (one is a child's network)
-[x] Internal IPs → RFC 5737 doc ranges / ".x" / concepts only; honeypot = "a decoy address low in the IoT subnet"
-[x] Wired management host generic ("my Mac, the one wired machine"); no device hostname
-[x] Hostnames / device serials / MACs omitted (no Dyson serial, no HA FQDN)
-[x] Secondary domains / CF tunnel + account IDs omitted
-[x] Firmware version omitted entirely from prose (safer than rounding; no build string anywhere)
-[x] Tailscale node/route names omitted; subnet-router shown as a concept only
-[x] Child's name + age → "the kids' network" / "my kid"
-[x] Net/zone/rule IDs omitted
-[x] IDS/IPS NOT named as a Part-1 win (it's Part 2's climax)
--->
 
 There's no fibre where I live. The internet arrives by satellite — a dish on the roof, a Starlink router in the hallway, and behind it a Ubiquiti Dream Router that does the actual work of being a network: the VLANs, the firewall, the Wi-Fi. The dish does not care that I want a segmented home network. It hands me one address and a lot of latency, and everything I build has to live downstream of that.
 
@@ -106,4 +91,4 @@ You don't saw off the branch.
 
 ---
 
-_Part 2 — "There Is No API" — is about what happened when the agent went looking for the controls, and found that the router it was reconfiguring doesn't actually have an API at all._
+_Part 2 — [There Is No API](/blog/there-is-no-api/) — is about what happened when the agent went looking for the controls, and found that the router it was reconfiguring doesn't actually have an API at all._
