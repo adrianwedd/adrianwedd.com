@@ -5,6 +5,10 @@ date: 2026-06-25
 tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
 series: 'An Agent in the Walls'
 seriesOrder: 1
+heroImage: '/notebook-assets/dont-saw-off-the-branch/infographic.webp'
+heroAlt: 'Dark botanical infographic: building independent backout paths and safety nets before an AI agent rebuilds a live home network.'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dont-saw-off-the-branch/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/dont-saw-off-the-branch/video.mp4'
 draft: false
 ---
 
