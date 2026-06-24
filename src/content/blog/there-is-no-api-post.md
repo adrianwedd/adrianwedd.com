@@ -5,6 +5,10 @@ date: 2026-06-25
 tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
 series: 'An Agent in the Walls'
 seriesOrder: 2
+heroImage: '/notebook-assets/there-is-no-api/infographic.webp'
+heroAlt: 'Dark botanical infographic: reverse-engineering an undocumented router API and the wall the agent could not script past.'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/there-is-no-api/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/there-is-no-api/video.mp4'
 draft: false
 ---
 

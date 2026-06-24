@@ -5,6 +5,10 @@ date: 2026-06-25
 tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
 series: 'An Agent in the Walls'
 seriesOrder: 3
+heroImage: '/notebook-assets/the-limits-of-the-walls/infographic.webp'
+heroAlt: 'Dark botanical infographic: the division of labour and the limits of handing a live home network to an AI agent.'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-limits-of-the-walls/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-limits-of-the-walls/video.mp4'
 draft: false
 ---
 
