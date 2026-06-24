@@ -90,6 +90,22 @@ describe('buildCsp', () => {
     expect(attr).toMatch(/'unsafe-inline'/);
   });
 
+  it('omits reporting directives by default (enforced policy stays clean)', () => {
+    const csp = buildCsp({ nonce: 'x', strictDynamic: false });
+    expect(csp).not.toMatch(/report-to/);
+    expect(csp).not.toMatch(/report-uri/);
+  });
+
+  it('appends report-to + report-uri only when reporting is supplied', () => {
+    const csp = buildCsp({
+      nonce: 'x',
+      strictDynamic: false,
+      reporting: { group: 'csp', uri: 'https://adrianwedd.com/__csp-report' },
+    });
+    expect(csp).toMatch(/report-to csp/);
+    expect(csp).toMatch(/report-uri https:\/\/adrianwedd\.com\/__csp-report/);
+  });
+
   it('keeps adservice.google.com in both script-src and connect-src', () => {
     // adservice issues XHR/beacon calls in addition to loading scripts; if
     // one side is missing the request fails silently in production.
@@ -161,6 +177,29 @@ describe('worker fetch handler', () => {
     expect(scriptNonce).toBe(headerNonce);
   });
 
+  it('ships a Report-Only mirror + Reporting-Endpoints, but keeps the enforced policy report-free', async () => {
+    mockOrigin({ path: '/report-headers', body: htmlBody('<script>x</script>'), headers: { 'content-type': 'text/html; charset=utf-8' } });
+
+    const res = await SELF.fetch('https://adrianwedd.com/report-headers');
+    const enforced = res.headers.get('content-security-policy')!;
+    const reportOnly = res.headers.get('content-security-policy-report-only');
+    const endpoints = res.headers.get('reporting-endpoints');
+
+    // Report-Only first: the enforced header carries NO reporting directives.
+    expect(enforced).not.toMatch(/report-to/);
+    expect(enforced).not.toMatch(/report-uri/);
+
+    // The parallel Report-Only header carries the reporting wiring.
+    expect(reportOnly).toMatch(/report-to csp/);
+    expect(reportOnly).toMatch(/report-uri https:\/\/adrianwedd\.com\/__csp-report/);
+    expect(endpoints).toBe('csp="https://adrianwedd.com/__csp-report"');
+
+    // Report-Only mirrors the enforced nonce so it never reports our own scripts.
+    const enforcedNonce = enforced.match(/'nonce-([^']+)'/)![1];
+    const reportNonce = reportOnly!.match(/'nonce-([^']+)'/)![1];
+    expect(reportNonce).toBe(enforcedNonce);
+  });
+
   it("replaces any existing nonce so all scripts share this request's nonce", async () => {
     // The CSP header only includes the nonce we generated; preserving a
     // foreign nonce would silently CSP-block that script under enforcement.
@@ -219,6 +258,32 @@ describe('worker fetch handler', () => {
     const res = await SELF.fetch('https://adrianwedd.com/legacy', { redirect: 'manual' });
     expect(res.status).toBe(301);
     expect(res.headers.get('location')).toBe('/new-location/');
+  });
+
+  it('accepts a POSTed violation report at /__csp-report with 204 (no origin fetch)', async () => {
+    // No mockOrigin: the report path must terminate in the worker. If it fell
+    // through to the origin fetch, the unmocked call would throw.
+    const res = await SELF.fetch('https://adrianwedd.com/__csp-report', {
+      method: 'POST',
+      headers: { 'content-type': 'application/csp-report' },
+      body: JSON.stringify({ 'csp-report': { 'violated-directive': 'script-src', 'blocked-uri': 'https://evil.example' } }),
+    });
+    expect(res.status).toBe(204);
+  });
+
+  it('rejects non-POST to /__csp-report with 405', async () => {
+    const res = await SELF.fetch('https://adrianwedd.com/__csp-report');
+    expect(res.status).toBe(405);
+    expect(res.headers.get('allow')).toBe('POST');
+  });
+
+  it('rejects an oversized report body with 413', async () => {
+    const res = await SELF.fetch('https://adrianwedd.com/__csp-report', {
+      method: 'POST',
+      headers: { 'content-type': 'application/csp-report', 'content-length': String(64 * 1024 + 1) },
+      body: 'x'.repeat(64 * 1024 + 1),
+    });
+    expect(res.status).toBe(413);
   });
 
   it('uses ORIGIN_HOST for the upstream fetch regardless of inbound hostname', async () => {

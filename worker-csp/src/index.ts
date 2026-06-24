@@ -47,8 +47,26 @@ export interface Env {
 
 const HTML_CONTENT_TYPE = /^text\/html\b/i;
 
+// Same-origin CSP violation collector. Browsers POST reports here out-of-band
+// (no CORS, no fetch from page JS), so it must be public/unauthenticated. The
+// double-underscore prefix keeps it clear of any real Astro route.
+const CSP_REPORT_PATH = '/__csp-report';
+// Group name shared by the `Reporting-Endpoints` header and the CSP
+// `report-to` directive — they must match for modern browsers to route here.
+const CSP_REPORT_GROUP = 'csp';
+// Reports are small (a few KB). Cap the read so the public endpoint can't be
+// used to push large bodies through the worker. 64 KB is generous headroom.
+const MAX_REPORT_BYTES = 64 * 1024;
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    // Handle violation reports before proxying — this path doesn't exist at the
+    // GitHub Pages origin, so it must terminate here.
+    const inboundUrl = new URL(request.url);
+    if (inboundUrl.pathname === CSP_REPORT_PATH) {
+      return handleCspReport(request);
+    }
+
     const fetchInit: RequestInit & { cf?: { resolveOverride?: string } } = {};
     if (env.ORIGIN_RESOLVE_HOSTNAME) fetchInit.cf = { resolveOverride: env.ORIGIN_RESOLVE_HOSTNAME };
     const upstream = await fetch(originRequest(request, env), fetchInit);
@@ -57,7 +75,21 @@ export default {
 
     const nonce = generateNonce();
     const strictDynamic = env.STRICT_DYNAMIC === '1';
+    // Enforced policy: unchanged, no reporting directives. We add reporting via
+    // a parallel Report-Only header first (see below) so the collector can be
+    // validated in production without any risk to the live, enforcing policy.
     const csp = buildCsp({ nonce, strictDynamic });
+    // Report-Only mirror of the SAME policy (same nonce, same allowlist) with
+    // reporting wired in. Because it mirrors the enforced policy exactly, it
+    // surfaces precisely what the enforced policy is (silently) blocking in
+    // production — without itself blocking anything. Collector is same-origin so
+    // it works on both the apex and www routes the worker is bound to.
+    const reportUri = `${inboundUrl.origin}${CSP_REPORT_PATH}`;
+    const cspReportOnly = buildCsp({
+      nonce,
+      strictDynamic,
+      reporting: { group: CSP_REPORT_GROUP, uri: reportUri },
+    });
 
     // Clone headers so we can modify them without mutating the upstream Response.
     const headers = new Headers(upstream.headers);
@@ -81,9 +113,10 @@ export default {
     // which CORP doesn't govern, so social previews are unaffected.
     headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
     headers.set('Cross-Origin-Resource-Policy', 'same-origin');
-    // Don't ship the meta CSP downstream — header is stronger and the meta
-    // would force the browser to intersect both policies.
-    headers.delete('Content-Security-Policy-Report-Only');
+    // Declare the reporting group, then attach our Report-Only mirror. This
+    // overwrites any upstream Report-Only header (we own the policy here).
+    headers.set('Reporting-Endpoints', `${CSP_REPORT_GROUP}="${reportUri}"`);
+    headers.set('Content-Security-Policy-Report-Only', cspReportOnly);
     // Body is mutated by HTMLRewriter (nonce injection + meta-CSP strip), so
     // upstream entity validators no longer match. Cloudflare strips Content-
     // Length transparently, but ETag/Last-Modified can produce stale 304s.
@@ -128,6 +161,48 @@ function originRequest(request: Request, env: Env): Request {
   const headers = new Headers(request.headers);
   headers.delete('Range');
   return new Request(upstream, { method: request.method, headers, body: request.body, redirect: request.redirect });
+}
+
+// Collect a CSP violation report and log it for Workers observability
+// (wrangler tail + dashboard Logs, since [observability] is enabled). The
+// endpoint never stores anything, so it can't amplify load against KV/origin.
+async function handleCspReport(request: Request): Promise<Response> {
+  if (request.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'POST' } });
+  }
+  // Reject oversized bodies up front when the length is declared.
+  const declaredLen = Number(request.headers.get('content-length') ?? '0');
+  if (Number.isFinite(declaredLen) && declaredLen > MAX_REPORT_BYTES) {
+    return new Response(null, { status: 413 });
+  }
+  try {
+    // Read as bytes, not text: report bodies carry Content-Type
+    // `application/csp-report` / `application/reports+json`, and calling .text()
+    // on those makes the Workers runtime warn about possible corruption.
+    // byteLength is also the accurate guard against a missing/lying Content-Length.
+    const buf = await request.arrayBuffer();
+    if (buf.byteLength > MAX_REPORT_BYTES) return new Response(null, { status: 413 });
+    const raw = new TextDecoder().decode(buf);
+    // report-uri sends `{"csp-report": {...}}`; the Reporting API (report-to)
+    // sends `[{ "type": "csp-violation", "body": {...} }]`. Log whatever shape.
+    const report: unknown = raw ? JSON.parse(raw) : null;
+    console.log(
+      JSON.stringify({
+        msg: 'csp-violation',
+        ua: request.headers.get('user-agent'),
+        report,
+      }),
+    );
+  } catch (err) {
+    console.warn(
+      JSON.stringify({
+        msg: 'csp-violation-parse-error',
+        error: err instanceof Error ? err.message : String(err),
+      }),
+    );
+  }
+  // 204: the browser ignores any response body for a report submission.
+  return new Response(null, { status: 204 });
 }
 
 class NonceInjector {
