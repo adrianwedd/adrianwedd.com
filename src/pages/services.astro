@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroCanvas from '../components/HeroCanvas.astro';
 
 const capabilities = [
   {
@@ -146,6 +145,7 @@ const pricing = [
   title="Services — AI Consulting & Development"
   description="AI integration, security evaluation, voice agents, agentic systems, and web development. Tasmania-based, working globally."
   image="/og/services.png"
+  heroAnimation="pulse"
 >
   <script
     is:inline
@@ -204,7 +204,6 @@ const pricing = [
         </a>
       </div>
     </div>
-    <HeroCanvas animation="pulse" />
   </section>
 
   {/* Social proof — immediately after hero */}

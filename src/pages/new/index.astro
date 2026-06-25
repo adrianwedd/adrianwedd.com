@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import HeroCanvas from '../../components/HeroCanvas.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import ScrollReveal from '../../components/ScrollReveal.astro';
 import { getCollection } from 'astro:content';
@@ -72,13 +71,13 @@ function formatDate(d: Date) {
   title="What's New"
   description="All content by date — blog posts, projects, gallery collections, and audio episodes."
   noindex
+  heroAnimation="crystallise"
 >
   <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">What's New</h1>
       <p class="mt-2 text-text-muted">Everything in one feed — research, projects, photography, and audio.</p>
     </div>
-    <HeroCanvas animation="crystallise" />
   </section>
 
   <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">

@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import HeroCanvas from '../../components/HeroCanvas.astro';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
 import ScrollReveal from '../../components/ScrollReveal.astro';
@@ -78,6 +77,7 @@ const projectCarouselItems = projects
 <BaseLayout
   title="Projects"
   description="Thirty-odd things built in public — AI safety tools, autonomous agents, community infrastructure, and instruments that shouldn't work but do."
+  heroAnimation="blueprint"
 >
   <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
@@ -92,7 +92,6 @@ const projectCarouselItems = projects
         came from not specialising artificially.
       </p>
     </div>
-    <HeroCanvas animation="blueprint" />
   </section>
 
   {

@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroCanvas from '../components/HeroCanvas.astro';
 ---
 
-<BaseLayout title="Page not found" description="The page you're looking for doesn't exist.">
+<BaseLayout title="Page not found" description="The page you're looking for doesn't exist." heroAnimation="entropy">
   <section class="relative flex min-h-[60dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl text-center">
       <p class="text-6xl font-bold text-accent">404</p>
@@ -31,7 +30,6 @@ import HeroCanvas from '../components/HeroCanvas.astro';
         <div id="search-404"></div>
       </div>
     </div>
-    <HeroCanvas animation="entropy" />
   </section>
 
   <script>

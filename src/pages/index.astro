@@ -4,7 +4,6 @@ import Personalisation from '../components/islands/Personalisation.tsx';
 import { getCollection } from 'astro:content';
 import { slug } from '../lib/utils';
 import ScrollReveal from '../components/ScrollReveal.astro';
-import HeroCanvas from '../components/HeroCanvas.astro';
 
 const allPosts = await getCollection('blog');
 const recentPosts = allPosts
@@ -16,6 +15,7 @@ const recentPosts = allPosts
 <BaseLayout
   title="Adrian Wedd"
   description="Digital systems builder for practical business infrastructure, AI safety, systems architecture, and security-aware delivery. Based in Tasmania."
+  heroAnimation="terrain"
 >
   <script
     is:inline
@@ -92,7 +92,6 @@ const recentPosts = allPosts
         </a>
       </div>
     </div>
-    <HeroCanvas animation="terrain" />
   </section>
 
   {/* Flagship projects — text-only grid */}

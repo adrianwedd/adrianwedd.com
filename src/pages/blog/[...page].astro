@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import HeroCanvas from '../../components/HeroCanvas.astro';
 import ContentCarousel from '../../components/ContentCarousel.astro';
 import Pagination from '../../components/Pagination.astro';
 import ScrollReveal from '../../components/ScrollReveal.astro';
@@ -46,6 +45,7 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
 <BaseLayout
   title={pageTitle}
   description="Writing where the thinking shows. Research notes, failure analysis, and ideas still taking shape."
+  heroAnimation="ink"
 >
   {
     isFirst && (
@@ -61,7 +61,6 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
             organisational response looks like from the inside.
           </p>
         </div>
-        <HeroCanvas animation="ink" />
       </section>
     )
   }
