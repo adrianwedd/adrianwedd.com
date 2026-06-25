@@ -1,6 +1,88 @@
 {
   "version": 1,
-  "description": "Facebook post queue — seed input for scheduled content (KV is authoritative for state)",
+  "description": "Date-scheduled social queue — generated from content by scripts/generate-social-queue.mjs (KV authoritative for state)",
   "pageId": "35753603727",
-  "posts": []
+  "posts": [
+    {
+      "id": "drip-facebook-dont-saw-off-the-branch",
+      "platform": "facebook",
+      "type": "text",
+      "message": "Don't Saw Off the Branch\n\nI let an AI agent rebuild my live home network over Starlink — no console, no documented API. Part 1: building three backout paths before a single write.\n\nhttps://adrianwedd.com/blog/dont-saw-off-the-branch/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/dont-saw-off-the-branch/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:00:00.000Z",
+      "scheduledAtEpoch": 1782352800000
+    },
+    {
+      "id": "drip-bluesky-dont-saw-off-the-branch",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "Don't Saw Off the Branch\n\nI let an AI agent rebuild my live home network over Starlink — no console, no documented API. Part 1: building three backout paths before a single write.\n\nhttps://adrianwedd.com/blog/dont-saw-off-the-branch/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/dont-saw-off-the-branch/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:00:00.000Z",
+      "scheduledAtEpoch": 1782352800000
+    },
+    {
+      "id": "drip-twitter-dont-saw-off-the-branch",
+      "platform": "twitter",
+      "type": "text",
+      "message": "Don't Saw Off the Branch\n\nI let an AI agent rebuild my live home network over Starlink — no console, no documented API. Part 1: building three backout paths before a single write.\n\nhttps://adrianwedd.com/blog/dont-saw-off-the-branch/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/dont-saw-off-the-branch/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:00:00.000Z",
+      "scheduledAtEpoch": 1782352800000
+    },
+    {
+      "id": "drip-facebook-there-is-no-api",
+      "platform": "facebook",
+      "type": "text",
+      "message": "There Is No API\n\nThe router I was reconfiguring has no public API. Part 2: driving the private endpoints the web UI calls — and the wall the agent could not script past.\n\nhttps://adrianwedd.com/blog/there-is-no-api/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/there-is-no-api/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:05:00.000Z",
+      "scheduledAtEpoch": 1782353100000
+    },
+    {
+      "id": "drip-bluesky-there-is-no-api",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "There Is No API\n\nThe router I was reconfiguring has no public API. Part 2: driving the private endpoints the web UI calls — and the wall the agent could not script past.\n\nhttps://adrianwedd.com/blog/there-is-no-api/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/there-is-no-api/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:05:00.000Z",
+      "scheduledAtEpoch": 1782353100000
+    },
+    {
+      "id": "drip-twitter-there-is-no-api",
+      "platform": "twitter",
+      "type": "text",
+      "message": "There Is No API\n\nThe router I was reconfiguring has no public API. Part 2: driving the private endpoints the web UI calls — and the wall the agent could not script past.\n\nhttps://adrianwedd.com/blog/there-is-no-api/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/there-is-no-api/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:05:00.000Z",
+      "scheduledAtEpoch": 1782353100000
+    },
+    {
+      "id": "drip-facebook-the-limits-of-the-walls",
+      "platform": "facebook",
+      "type": "text",
+      "message": "The Limits of the Walls\n\nSix sessions handing a live home network to an AI agent. Part 3: the memory that made it work, the division of labour, and what I'd never let it touch.\n\nhttps://adrianwedd.com/blog/the-limits-of-the-walls/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-limits-of-the-walls/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:10:00.000Z",
+      "scheduledAtEpoch": 1782353400000
+    },
+    {
+      "id": "drip-bluesky-the-limits-of-the-walls",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "The Limits of the Walls\n\nSix sessions handing a live home network to an AI agent. Part 3: the memory that made it work, the division of labour, and what I'd never let it touch.\n\nhttps://adrianwedd.com/blog/the-limits-of-the-walls/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-limits-of-the-walls/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:10:00.000Z",
+      "scheduledAtEpoch": 1782353400000
+    },
+    {
+      "id": "drip-twitter-the-limits-of-the-walls",
+      "platform": "twitter",
+      "type": "text",
+      "message": "The Limits of the Walls\n\nSix sessions handing a live home network to an AI agent. Part 3: the memory that made it work, the division of labour, and what I'd never let it touch.\n\nhttps://adrianwedd.com/blog/the-limits-of-the-walls/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-limits-of-the-walls/infographic.jpg",
+      "scheduledAt": "2026-06-25T02:10:00.000Z",
+      "scheduledAtEpoch": 1782353400000
+    }
+  ]
 }

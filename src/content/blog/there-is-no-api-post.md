@@ -1,7 +1,7 @@
 ---
 title: 'There Is No API'
 description: 'The router I was reconfiguring has no public API. Part 2: driving the private endpoints the web UI calls — and the wall the agent could not script past.'
-date: 2026-06-25T12:05:00Z
+date: 2026-06-25T12:05:00+10:00
 tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
 series: 'An Agent in the Walls'
 seriesOrder: 2
