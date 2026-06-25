@@ -10,6 +10,7 @@ heroAlt: 'Dark botanical infographic: reverse-engineering an undocumented router
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/there-is-no-api/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/there-is-no-api/video.mp4'
 draft: false
+autopublish: true
 ---
 
 The request was simple to say out loud. Take a flat home network — one subnet, everything trusting everything — and turn it into a segmented one: an isolated VLAN for the smart-home gadgets, a filtered network for the kids, a real firewall between the zones. The kind of thing the router's marketing page promises you can do with a few clicks.
