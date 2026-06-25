@@ -15,6 +15,11 @@
  *                              already sent; their id won't re-fire anyway,
  *                              but we never even queue them)
  *
+ * The scheduled time is the post's `date` instant when it carries an explicit
+ * time-of-day (e.g. `2026-06-25T12:05:00Z`), so same-day posts stagger in
+ * order instead of collapsing to one slot. Date-only dates fall back to 09:00
+ * AEST.
+ *
  * Idempotency: each entry's id is stable (`drip-<platform>-<slug>`), so
  * re-running + re-syncing never creates duplicates, and the worker's
  * `idempotent:<id>` record stops any entry firing twice.
@@ -31,7 +36,10 @@ import matter from 'gray-matter';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://adrianwedd.com';
 const PLATFORMS = ['facebook', 'bluesky', 'twitter'];
-const BROADCAST_TIME = 'T09:00:00+10:00'; // 09:00 AEST (Tasmania, no DST in June)
+// Fallback broadcast slot for date-only posts (no explicit time-of-day).
+// AEST (Tasmania, no DST in June). Posts with an explicit time in their
+// `date` fire at that UTC instant instead, so staggered timestamps drip in order.
+const BROADCAST_TIME = 'T09:00:00+10:00';
 const QUEUE_FILE = join(ROOT, 'social/facebook-posts.json');
 
 const dryRun = process.argv.includes('--dry-run');
@@ -73,8 +81,20 @@ for (const { file, kind, fm } of [...collect('blog', 'blog'), ...collect('projec
   if (!fm.date) { skipped.push([slug, 'no date']); continue; }
 
   // gray-matter parses `date: 2026-06-07` into a Date object — normalise either form to YYYY-MM-DD.
-  const datePart = (fm.date instanceof Date ? fm.date.toISOString() : String(fm.date)).slice(0, 10);
-  const scheduledAt = `${datePart}${BROADCAST_TIME}`;
+  const dateIsObj = fm.date instanceof Date;
+  const datePart = (dateIsObj ? fm.date.toISOString() : String(fm.date)).slice(0, 10);
+
+  // Honour an explicit time-of-day in the frontmatter `date` so same-day posts
+  // don't all collapse to one slot — they drip at their stamped times, in
+  // order. Date-only posts (no T..:.. in the value, or midnight UTC) fall back
+  // to the 09:00 AEST broadcast slot. The UTC instant is used as-is; a post
+  // stamped 12:00Z fires at 12:00Z (22:00 AEST), not reinterpreted as AEST.
+  const hasExplicitTime = dateIsObj
+    ? Boolean(fm.date.getUTCHours() || fm.date.getUTCMinutes() || fm.date.getUTCSeconds())
+    : /T\d{2}:\d{2}/.test(String(fm.date));
+  const scheduledAt = hasExplicitTime
+    ? (dateIsObj ? fm.date.toISOString() : String(fm.date))
+    : `${datePart}${BROADCAST_TIME}`;
   const epoch = new Date(scheduledAt).getTime();
   if (!Number.isFinite(epoch)) { skipped.push([slug, 'bad date']); continue; }
   if (datePart < todayAEST) { skipped.push([slug, 'past date (assumed already broadcast)']); continue; }
