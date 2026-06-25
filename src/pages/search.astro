@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Search" description="Search across all projects, blog posts, audio, and gallery." noindex heroAnimation="radar">
-  <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
+  <section class="relative flex min-h-[28dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">Search</h1>
       <p class="mt-2 text-text-muted">Find anything across the site.</p>
@@ -30,6 +30,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
   <script is:inline>
     (function () {
+      var lastNavType = 'navigate';
       function mountUI() {
         var ui = new PagefindUI({
           element: '#search',
@@ -42,10 +43,38 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         });
         var sk = document.getElementById('search-skeleton');
         if (sk) sk.remove();
-        // Deep-link support: /search/?q=term (advertised in the homepage
-        // SearchAction schema) pre-fills the box and runs the search.
-        var q = new URLSearchParams(window.location.search).get('q');
-        if (q && typeof ui.triggerSearch === 'function') ui.triggerSearch(q);
+        // Deep-link support: canonical param is s (homepage SearchAction), q is a fallback
+        // for old bookmarks. /?s=term is redirected here by BaseLayout.
+        var params = new URLSearchParams(window.location.search);
+        var term = params.get('s') || params.get('q');
+        if (term && typeof ui.triggerSearch === 'function') ui.triggerSearch(term);
+
+        // Guarded autofocus: only on entry navigation (not back/forward), only when no
+        // element is meaningfully focused, deferred until the Pagefind input exists.
+        // Two back/forward signals, OR'd: Navigation API 'traverse' (covers VT swaps,
+        // where the performance entry is stale) + performance entry 'back_forward'
+        // (covers full-load back/forward in browsers without the Navigation API).
+        var perfNav =
+          performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+        var perfBack = !!(perfNav && perfNav.type === 'back_forward');
+        var hasNavApi = typeof navigation !== 'undefined' && typeof navigation.addEventListener === 'function';
+        var navApiBack = hasNavApi && lastNavType === 'traverse';
+        var isEntry = !perfBack && !navApiBack;
+        var ae = document.activeElement;
+        var hasFocus =
+          ae &&
+          (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT' || ae.isContentEditable);
+        if (isEntry && !hasFocus) {
+          var tries = 0;
+          (function focusInput() {
+            var el = document.querySelector('.pagefind-ui__search-input');
+            if (el) {
+              el.focus({ preventScroll: true });
+              return;
+            }
+            if (++tries < 50) setTimeout(focusInput, 20);
+          })();
+        }
       }
 
       function initPagefind() {
@@ -65,6 +94,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       if (!document.documentElement.dataset.pagefindListenerInit) {
         document.documentElement.dataset.pagefindListenerInit = '1';
         document.addEventListener('astro:page-load', initPagefind);
+
+        // Track navigation type across VT swaps (Navigation API). back/forward = 'traverse'.
+        if (typeof navigation !== 'undefined' && typeof navigation.addEventListener === 'function') {
+          navigation.addEventListener('navigate', function (e) {
+            lastNavType = e.navigationType || 'navigate';
+          });
+        }
       }
     })();
   </script>
