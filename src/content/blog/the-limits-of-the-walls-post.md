@@ -1,7 +1,7 @@
 ---
 title: 'The Limits of the Walls'
 description: "Six sessions handing a live home network to an AI agent. Part 3: the memory that made it work, the division of labour, and what I'd never let it touch."
-date: 2026-06-25
+date: 2026-06-25T12:10:00Z
 tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
 series: 'An Agent in the Walls'
 seriesOrder: 3
