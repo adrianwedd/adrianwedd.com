@@ -104,6 +104,14 @@ for (const { file, kind, fm } of [...collect('blog', 'blog'), ...collect('projec
     ? `New project: ${fm.title}\n\n${fm.description ?? ''}\n\n${url}`
     : `${fm.title}\n\n${fm.description ?? ''}\n\n${url}`;
   const imageUrl = resolveImage(fm.heroImage);
+  // Prefer the .jpg twin as the social card — FB Graph /photos and Twitter
+  // v1.1 media/upload are unreliable with .webp; the CI gate guarantees a .jpg
+  // twin for every .webp heroImage.
+  let socialImageUrl = imageUrl;
+  if (imageUrl && imageUrl.endsWith('.webp')) {
+    const twin = fm.heroImage.replace(/\.webp$/, '.jpg');
+    if (existsSync(join(ROOT, 'public', twin))) socialImageUrl = `${SITE}${twin}`;
+  }
   const videoUrl = fm.videoUrl ?? fm.notebookAssets?.videoUrl;
 
   for (const platform of PLATFORMS) {
@@ -112,7 +120,11 @@ for (const { file, kind, fm } of [...collect('blog', 'blog'), ...collect('projec
       platform,
       type: 'text',
       message,
-      ...(videoUrl ? { videoUrl } : imageUrl ? { imageUrl } : {}),
+      // Worker can't deliver NLM-sized videos (FB no video path; Twitter image-only
+      // ≤5MB; Bluesky ≤20MB; NLM videos are 30-100MB) — attach the infographic as
+      // the card and drop the undeliverable videoUrl. FB renders the link card via
+      // og:image on type:'text' (ignores imageUrl).
+      ...(socialImageUrl ? { imageUrl: socialImageUrl } : videoUrl ? { videoUrl } : {}),
       scheduledAt,
       scheduledAtEpoch: epoch,
     });
