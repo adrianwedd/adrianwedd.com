@@ -78,7 +78,7 @@ One fixed full-viewport canvas at body level behind everything; `main` has a top
     <Footer />
   ```
   ```css
-  .hero-canvas-bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .hero-canvas-bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
   main { position: relative; z-index: 1; }
   ```
 - **Pages pass the animation via BaseLayout prop**, not by rendering `<HeroCanvas>` inside the hero. Each of the 16 pages adds `heroAnimation="terrain"` (etc.) to its `<BaseLayout>` call and removes the `<HeroCanvas …/>` line from its hero `<section>`. The hero `<section>` keeps its `min-h-[100dvh]`/`50dvh` and `relative z-10` text — it now sits transparently over the fixed canvas.
@@ -105,7 +105,7 @@ Drop the `canvas.closest('section')` lookup entirely from both handlers.
 ### Footer spacing — `BaseLayout.astro`
 
 - Add bottom padding to `<main>` (e.g. `pb-[20dvh]`) so the viewport-fixed transparent bottom band has room and the vis is clearly visible in the gap before the footer. This is the "more space between content and footer" fix.
-- `<Footer>` stays opaque (`bg-surface-alt/50`). The vis shows in the gap above it, not through it.
+- `<Footer>` stays opaque (`bg-surface`). The vis shows in the gap above it, not through it. (`bg-surface-alt/50` is 50% translucent and would let the canvas bleed through — corrected.)
 
 ### Tradeoffs
 
@@ -119,7 +119,7 @@ Drop the `canvas.closest('section')` lookup entirely from both handlers.
 
 ### `?s=` redirect (BaseLayout `<head>`)
 
-A **bare** `is:inline` script in `<head>`, before `<ClientRouter />` (BaseLayout:71), **not sentinel-guarded** (it must run on every navigation, including VT swaps to `/?s=term`; a sentinel would suppress it after first load):
+A **bare** inline script in `<head>`, before `<ClientRouter />` (BaseLayout:71), **not sentinel-guarded** (it must run on every navigation, including VT swaps to `/?s=term`; a sentinel would suppress it after first load). It must carry **`data-astro-rerun`**: the script lives in BaseLayout `<head>` (present on every page), and per Astro's View Transitions script behaviour the ClientRouter leaves already-present head scripts in place and does **not** re-execute them on a swap. Without `data-astro-rerun`, a VT-swap to `/?s=term` would not fire the redirect. (`data-astro-rerun` forces re-execution after every transition; it also implicitly marks the script inline, so `is:inline` is optional but kept for explicitness.)
 
 ```js
 (function () {
@@ -145,7 +145,7 @@ A **bare** `is:inline` script in `<head>`, before `<ClientRouter />` (BaseLayout
   if (term && typeof ui.triggerSearch === 'function') ui.triggerSearch(term);
   ```
 - **Compact header:** replace the `min-h-[50dvh]` hero with a compact header (keep radar `HeroCanvas` small, e.g. `min-h-[28dvh]`) so the search box sits near the top of the page.
-- **Guarded autofocus:** `PagefindUI` constructs its DOM synchronously, so the input exists after `mountUI()`. But focusing on every `astro:page-load` steals focus from users navigating back or using assistive tech. Guard it: focus only when `/search/` is the entry navigation (not a back/forward), only when no element is meaningfully focused, defer until `.pagefind-ui__search-input` exists, and use `el.focus({ preventScroll: true })`.
+- **Guarded autofocus:** `PagefindUI` constructs its DOM synchronously, so the input exists after `mountUI()`. But focusing on every `astro:page-load` steals focus from users navigating back or using assistive tech. Guard it: focus only when `/search/` is the entry navigation (not a back/forward — **including VT-swap back/forward**, where the `performance.getEntriesByType('navigation')` entry is stale and won't show `back_forward`; detect those via the Navigation API `navigationType === 'traverse'`, falling back to the performance entry for full-load back/forward in browsers without the Navigation API), only when no element is meaningfully focused, defer until `.pagefind-ui__search-input` exists, and use `el.focus({ preventScroll: true })`.
 - **Skeleton flash:** the skeleton is removed the instant `mountUI()` succeeds (already done via `sk.remove()`). No change beyond the param/focus work.
 - **Focus across VT:** the existing `astro:page-load` re-init stays; the guard above handles focus restore correctly.
 
