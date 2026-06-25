@@ -235,31 +235,30 @@
   main {
     position: relative;
     z-index: 1;
-    /* Viewport-fixed scrim: transparent over the hero + bottom gap, opaque over content.
-       background-attachment: fixed makes the stops viewport-relative regardless of page
-       length (avoids the flex-1 short-page bug where a 100%-relative gradient would
-       stretch the transparent band across a short page). */
+    /* Element-relative scrim: transparent over the hero (top) + the bottom gap above
+       the footer, opaque over the readable middle. Stops are % of <main>'s own box, so
+       the bottom transparent band always sits at the bottom of <main> = the gap above
+       the footer, regardless of page length or footer height. flex-1 makes <main> fill
+       the viewport on short pages, so the band reaches the viewport bottom there too. */
     background: linear-gradient(
-        to bottom,
-        transparent 0px,
-        var(--color-surface) 280px,
-        var(--color-surface) calc(100dvh - 220px),
-        transparent 100dvh
-      )
-      fixed;
+      to bottom,
+      transparent 0px,
+      var(--color-surface) 280px,
+      var(--color-surface) calc(100% - 220px),
+      transparent 100%
+    );
   }
   @supports (background: color-mix(in srgb, red 50%, blue)) {
     main {
       background: linear-gradient(
-          to bottom,
-          transparent 0px,
-          color-mix(in srgb, var(--color-surface) 60%, transparent) 220px,
-          var(--color-surface) 360px,
-          var(--color-surface) calc(100dvh - 320px),
-          color-mix(in srgb, var(--color-surface) 60%, transparent) calc(100dvh - 180px),
-          transparent 100dvh
-        )
-        fixed;
+        to bottom,
+        transparent 0px,
+        color-mix(in srgb, var(--color-surface) 60%, transparent) 220px,
+        var(--color-surface) 360px,
+        var(--color-surface) calc(100% - 320px),
+        color-mix(in srgb, var(--color-surface) 60%, transparent) calc(100% - 180px),
+        transparent 100%
+      );
     }
   }
 

@@ -4,7 +4,7 @@
 
 **Goal:** Make the hero background visualisations span the full viewport (visible in the gap above the footer), fix search deep-linking (`?s=`) and focus, replace numbered blog/tag pagination with infinite scroll, and add breathing room between content and footer.
 
-**Architecture:** Move `HeroCanvas` from a per-page hero-scoped `<canvas>` to a single body-level `position: fixed` canvas rendered by `BaseLayout`, with a viewport-fixed (`background-attachment: fixed`) content scrim on `<main>` so the vis bleeds through the hero and the bottom gap but stays opaque over the readable middle. Pages declare their animation via a `heroAnimation` prop instead of rendering `<HeroCanvas>`. Blog/tag page 1 gets a visible "Older posts" link that an IntersectionObserver fetcher progressively enhances into infinite scroll (no `pushState` — keeps the ClientRouter intact); paginated routes stay as the data source + no-JS fallback.
+**Architecture:** Move `HeroCanvas` from a per-page hero-scoped `<canvas>` to a single body-level `position: fixed` canvas rendered by `BaseLayout`, with an element-relative (`%`-stops) content scrim on `<main>` so the vis bleeds through the hero and the bottom gap above the footer but stays opaque over the readable middle. Pages declare their animation via a `heroAnimation` prop instead of rendering `<HeroCanvas>`. Blog/tag page 1 gets a visible "Older posts" link that an IntersectionObserver fetcher progressively enhances into infinite scroll (no `pushState` — keeps the ClientRouter intact); paginated routes stay as the data source + no-JS fallback.
 
 **Tech Stack:** Astro 6, Tailwind CSS 4 (CSS custom properties via `@theme` — no `dark:` prefix), Preact islands, Pagefind, View Transitions (`is:inline` re-execution + `documentElement.dataset` sentinels).
 
@@ -22,8 +22,8 @@
 
 ## File Structure
 
-- `src/layouts/BaseLayout.astro` — adds `heroAnimation?: string` prop; renders `<canvas id="hero-canvas" class="hero-canvas-bg">` at body level before `<Header>`; sets `data-hero-animation` on `<body>`; adds `pb-[20dvh]` to `<main>`; imports the HeroCanvas controller; adds the `?s=` redirect `<script is:inline>` in `<head>`.
-- `src/styles/global.css` — `.hero-canvas-bg` (fixed full-viewport, `z-index: -1`), `main` viewport-fixed scrim with `@supports (color-mix …)` fallback, reduced-motion/print rules repointed at `.hero-canvas-bg` (dead `.hero-canvas-wrap` selectors removed).
+- `src/layouts/BaseLayout.astro` — adds `heroAnimation?: string` prop; renders `<canvas id="hero-canvas" class="hero-canvas-bg">` at body level before `<Header>`; sets `data-hero-animation` on `<body>`; adds `pb-[240px]` to `<main>`; imports the HeroCanvas controller; adds the `?s=` redirect `<script is:inline>` in `<head>`.
+- `src/styles/global.css` — `.hero-canvas-bg` (fixed full-viewport, `z-index: -1`), `main` element-relative scrim with `@supports (color-mix …)` fallback, reduced-motion/print rules repointed at `.hero-canvas-bg` (dead `.hero-canvas-wrap` selectors removed).
 - `src/components/Footer.astro` — `bg-surface-alt/50` → `bg-surface` (opaque) so the vis shows in the gap above, not through the footer.
 - `src/components/HeroCanvas.astro` — controller-only `<script is:inline>` (remove the `<div class="hero-canvas-wrap">` markup + component-local `<style>`); reads `document.body.dataset.heroAnimation`; viewport-relative sizing/pointer; no IntersectionObserver; single-init lifecycle.
 - 16 pages (listed in Task 3) — add `heroAnimation="…"` to `<BaseLayout>`, remove the `<HeroCanvas animation="…"/>` line + its import.
@@ -86,7 +86,7 @@ Change the `<body>` opening tag and the `<main>` opening tag (currently lines 73
 and
 
 ```astro
-<main id="main-content" class="flex-1 pb-[20dvh]">
+<main id="main-content" class="flex-1 pb-[240px]">
 ```
 
 Then render the HeroCanvas controller once at body level — add `<HeroCanvas />` immediately **after** the `<Footer />` line (so the controller script is emitted once per page; its markup is empty after Task 1's HeroCanvas rewrite):
@@ -143,17 +143,22 @@ In `src/styles/global.css`, add the following block inside `@layer utilities` (l
   main {
     position: relative;
     z-index: 1;
-    /* Viewport-fixed scrim: transparent over the hero + bottom gap, opaque over content.
-       background-attachment: fixed makes the stops viewport-relative regardless of page
-       length (avoids the flex-1 short-page bug where a 100%-relative gradient would
-       stretch the transparent band across a short page). */
+    /* Element-relative scrim: transparent over the hero (top) + the bottom gap above
+       the footer, opaque over the readable middle. Stops are % of <main>'s own box, so
+       the bottom transparent band always sits at the bottom of <main> = the gap above
+       the footer, regardless of page length or footer height. flex-1 makes <main> fill
+       the viewport on short pages, so the band reaches the viewport bottom there too.
+       (Owner decision 2026-06-25 after Hermes+Agy QA: Agy showed a viewport-fixed
+       (`background-attachment: fixed`) band gets covered by the opaque footer when
+       scrolled to the bottom of a long page, so the vis never bleeds through the gap;
+       element-relative % stops bind the band to the gap above the footer instead.) */
     background: linear-gradient(
       to bottom,
       transparent 0px,
       var(--color-surface) 280px,
-      var(--color-surface) calc(100dvh - 220px),
-      transparent 100dvh
-    ) fixed;
+      var(--color-surface) calc(100% - 220px),
+      transparent 100%
+    );
   }
   @supports (background: color-mix(in srgb, red 50%, blue)) {
     main {
@@ -162,10 +167,10 @@ In `src/styles/global.css`, add the following block inside `@layer utilities` (l
         transparent 0px,
         color-mix(in srgb, var(--color-surface) 60%, transparent) 220px,
         var(--color-surface) 360px,
-        var(--color-surface) calc(100dvh - 320px),
-        color-mix(in srgb, var(--color-surface) 60%, transparent) calc(100dvh - 180px),
-        transparent 100dvh
-      ) fixed;
+        var(--color-surface) calc(100% - 320px),
+        color-mix(in srgb, var(--color-surface) 60%, transparent) calc(100% - 180px),
+        transparent 100%
+      );
     }
   }
 ```
@@ -199,7 +204,7 @@ HeroCanvas no longer emits `.hero-canvas-wrap` / `.hero-canvas-overlay` markup (
   }
 ```
 
-(c) **Print regression fix:** Step 3 adds `main { background: linear-gradient(…, var(--color-surface) …) fixed; }`. The existing `@media print` block (global.css lines 342–346) sets `main { max-width: 100% !important; padding: 0 !important; … }` but never clears `background`. In dark mode `--color-surface` is `#1a181c`, so in print the gradient's opaque middle band would paint dark behind the forced black text → unreadable. Add `background: none !important;` to that print `main` rule:
+(c) **Print regression fix:** Step 3 adds `main { background: linear-gradient(…, var(--color-surface) …); }` (element-relative). The existing `@media print` block (global.css lines 342–346) sets `main { max-width: 100% !important; padding: 0 !important; … }` but never clears `background`. In dark mode `--color-surface` is `#1a181c`, so in print the gradient's opaque middle band would paint dark behind the forced black text → unreadable. Add `background: none !important;` to that print `main` rule:
 
 ```css
   main {
@@ -519,7 +524,8 @@ Expected: all pass. Pagefind index still generated. No build errors about duplic
 Run `npm run dev` and eyeball:
 - Homepage (`/`): the terrain vis fills the hero AND is visible in the gap just above the footer; cards in the middle are readable over the opaque scrim band; there is clearly more space between the last content and the footer.
 - Scroll past the hero on `/` and `/blog/`: the vis **keeps animating** (the old IntersectionObserver would have frozen it) and mouse-reactive animations (terrain gravity, flow vortex) still respond to the pointer at the bottom of the page.
-- A short page (`/privacy/` or `/colophon/`): content is readable (the transparent bottom band has not stretched across the whole page — `background-attachment: fixed` working).
+- A short page (`/privacy/` or `/colophon/`): content is readable (the transparent bottom band sits at the bottom of `<main>` = the gap above the footer, not stretched across the whole page — element-relative `%` stops working).
+- A **long page scrolled to the very bottom** (e.g. `/blog/` or a long post): the vis **is visible in the gap between the last content and the footer** (element-relative band binds to the bottom of `<main>`, so the opaque footer doesn't cover it).
 - Open a second tab and switch away: the vis pauses (tab-visibility). Switch back: it resumes.
 - Toggle `prefers-reduced-motion` in devtools (Rendering → Emulate): the canvas disappears; the page still reads correctly (scrim is opaque, footer opaque).
 - Light mode (`t`): scrim is cream (`--color-surface` light value); cards/text keep WCAG AA.
@@ -528,13 +534,13 @@ Run `npm run dev` and eyeball:
 
 ```bash
 git add src/layouts/BaseLayout.astro src/styles/global.css src/components/Footer.astro src/components/HeroCanvas.astro
-git commit -m "feat(vis): body-level fixed HeroCanvas + viewport-fixed main scrim + footer spacing
+git commit -m "feat(vis): body-level fixed HeroCanvas + element-relative main scrim + footer spacing
 
 - HeroCanvas becomes a controller-only script; canvas lives in BaseLayout at body level
-- main gets a viewport-fixed (background-attachment: fixed) scrim: transparent hero + bottom gap, opaque middle
+- main gets an element-relative (% stops) scrim: transparent hero + bottom gap above footer, opaque middle
 - remove IntersectionObserver (fixed canvas always in view); viewport-relative pointer/sizing
 - single-init lifecycle (teardown-then-setup per VT swap)
-- footer bg opaque so vis shows in the gap above, not through it; pb-[20dvh] on main"
+- footer bg opaque so vis shows in the gap above, not through it; pb-[240px] on main"
 ```
 
 ---
@@ -1286,10 +1292,10 @@ If everything passes, the branch is ready for PR. Do not commit in this task.
 ## Self-Review
 
 **1. Spec coverage** — checked against each spec section:
-- Workstream 1 (full-viewport vis): Task 1 (body-level canvas, scrim, IO removal, viewport pointer, single-init, overlay removal, stale class mutations removed, footer spacing) + Task 2 (16 pages pass prop) + footer spacing (Task 1 step 1 `pb-[20dvh]` + Step 5 opaque footer). ✓
+- Workstream 1 (full-viewport vis): Task 1 (body-level canvas, scrim, IO removal, viewport pointer, single-init, overlay removal, stale class mutations removed, footer spacing) + Task 2 (16 pages pass prop) + footer spacing (Task 1 step 1 `pb-[240px]` + Step 5 opaque footer). ✓
 - Workstream 2 (search): `?s=` redirect (Task 1 step 2) + `/search/` `s||q` + compact header + guarded autofocus (Task 4) + homepage SearchAction `?q→?s` (Task 3). ✓
 - Workstream 3 (infinite scroll): stable selectors (Tasks 8/9) + visible "Older posts" fallback + IO fetcher (Task 7) + no `pushState` (Task 7, no `pushState`/`replaceState` in the code) + pages-2+ stripped pagination (Task 5 prop, consumed in Tasks 8/9) + ScrollReveal exposure (Task 6) + VT-swap-mid-fetch guard (Task 7 gen check) + tag pages identical treatment (Task 9). ✓
-- Workstream 4 (footer spacing): folded into Task 1 (`pb-[20dvh]` + transparent bottom scrim band + opaque footer). ✓
+- Workstream 4 (footer spacing): folded into Task 1 (`pb-[240px]` + element-relative transparent bottom scrim band + opaque footer). ✓
 - Critical-three from QA: canvas at body level (Task 1 step 1) ✓; IntersectionObserver removed so the loop doesn't freeze when scrolling past the hero (Task 1 steps 8–9) ✓; ScrollReveal's private observer exposed via `adrianwedd:content-appended` (Task 6) ✓.
 - Round-2 QA fixes: canvas `z-index: -1` so the non-positioned footer paints above it (Task 1 step 3) ✓; `.hero-canvas-bg` + `main` scrim placed in `@layer utilities` per project convention (Task 1 step 3) ✓; dead `.hero-canvas-wrap`/`.hero-canvas-overlay` selectors removed so the Task 10 grep is clean (Task 1 step 4) ✓; `@media print` clears `main`'s gradient so dark-mode print stays readable (Task 1 step 4c) ✓; `?s=` redirect carries `data-astro-rerun` so it fires on VT swaps to `/?s=term` (Task 1 step 2) ✓; autofocus guard is VT-aware — Navigation API `traverse` OR performance `back_forward` (Task 4 step 2) ✓.
 

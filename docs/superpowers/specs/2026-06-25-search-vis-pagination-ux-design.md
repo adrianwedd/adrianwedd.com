@@ -22,7 +22,7 @@ Four UX issues Adrian raised in one pass:
 
 - `src/components/HeroCanvas.astro` — becomes a single body-level fixed canvas; lifecycle rewritten as one global controller; pointer/viewport fixes; overlay + stale class mutations removed.
 - `src/layouts/BaseLayout.astro` — renders the fixed canvas at body level; reads `data-hero-animation` from `<body>`; `?s=` redirect script in `<head>`; bottom padding on `<main>`.
-- `src/styles/global.css` — viewport-fixed content scrim on `<main>` (`background-attachment: fixed`) with `@supports` fallback for `color-mix`; footer spacing.
+- `src/styles/global.css` — element-relative content scrim on `<main>` (`%`-stops) with `@supports` fallback for `color-mix`; footer spacing.
 - `src/pages/search.astro` — compact header, autofocus (guarded), accept `?s=` (canonical) with `?q=` fallback.
 - `src/pages/index.astro` — `SearchAction` schema `?q=` → `?s=`.
 - All 16 pages calling `<HeroCanvas animation="…">` — replace with a `data-hero-animation="…"` attribute on `<body>` (prop through BaseLayout) so the body-level canvas knows which animation to run.
@@ -94,7 +94,8 @@ mouseActive = true;
 ```
 Drop the `canvas.closest('section')` lookup entirely from both handlers.
 
-**MAJOR — viewport-relative scrim (fix `flex-1` short-page bug).** `<main class="flex-1">` (BaseLayout:83) expands to fill `100dvh − header` on short pages (privacy, colophon, 404). A gradient with `100%`-relative stops would anchor its bottom band to main's flex-expanded height, making the transparent bottom band consume most of a short page and destroying readability. Fix: **`background-attachment: fixed`** on the `<main>` gradient so the stops are viewport-relative regardless of page length — transparent at the top of the viewport, opaque through the readable middle, transparent at the bottom of the viewport. This matches the fixed-canvas concept and is stable on short and long pages.
+**MAJOR — element-relative scrim (bind the transparent band to the gap above the footer).** `<main class="flex-1">` (BaseLayout:83) expands to fill `100dvh − header` on short pages (privacy, colophon, 404). The scrim must be transparent over the hero at the top AND over the gap above the footer at the bottom, opaque over the readable middle. Fix: an **element-relative** gradient (`%`-stops, default `background-attachment: scroll`) so the bottom transparent band always sits at the bottom of `<main>` = the gap above the footer, regardless of page length or footer height; `flex-1` makes `<main>` fill the viewport on short pages, so the band reaches the viewport bottom there too.
+*(Owner decision 2026-06-25 after Hermes+Agy QA: an earlier draft used `background-attachment: fixed` (viewport-relative stops) to guard against a `flex-1` short-page bug, but Agy showed a viewport-fixed band is covered by the opaque footer when scrolled to the bottom of a long page — so the vis never bleeds through the gap above the footer there. Element-relative `%` stops fix the long-page case and, with `flex-1`, still work on short pages.)*
 
 **MINOR — `color-mix` fallback.** The scrim uses `color-mix()`. On browsers without it the whole `background` declaration is invalid → main transparent → vis shows through fully. Add a plain-gradient fallback first, then an `@supports (background: color-mix(in srgb, red 50%, blue))` override — mirroring the existing `.hero-canvas-overlay` pattern (lines 36–46).
 
@@ -104,7 +105,7 @@ Drop the `canvas.closest('section')` lookup entirely from both handlers.
 
 ### Footer spacing — `BaseLayout.astro`
 
-- Add bottom padding to `<main>` (e.g. `pb-[20dvh]`) so the viewport-fixed transparent bottom band has room and the vis is clearly visible in the gap before the footer. This is the "more space between content and footer" fix.
+- Add bottom padding to `<main>` (`pb-[240px]`) so the element-relative transparent bottom band has room and the vis is clearly visible in the gap before the footer. This is the "more space between content and footer" fix. (Fixed px so it clears the 220px fade band on every viewport; `dvh` would under-clear it on short viewports.)
 - `<Footer>` stays opaque (`bg-surface`). The vis shows in the gap above it, not through it. (`bg-surface-alt/50` is 50% translucent and would let the canvas bleed through — corrected.)
 
 ### Tradeoffs
@@ -209,7 +210,7 @@ Register this listener once (inside the existing sentinel guard). The infinite-s
 
 ## Workstream 4 — Footer spacing
 
-Folded into Workstream 1: bottom padding on `<main>` + the viewport-fixed transparent bottom scrim band produce the gap. No separate work.
+Folded into Workstream 1: bottom padding on `<main>` + the element-relative transparent bottom scrim band produce the gap. No separate work.
 
 ---
 
@@ -222,7 +223,7 @@ No Astro test suite. Verification is manual + the existing CI gates:
 - `npm run lint` / `npm run format:check` — pass.
 - `node scripts/validate-content.js` — unaffected, run for safety.
 - `npm run check:links` — internal-link check passes (infinite scroll doesn't add/remove URLs; paginated routes still exist).
-- Lighthouse (`npm run build && npm run lighthouse`) — CLS within budget; the fixed canvas + viewport-fixed scrim shouldn't shift content. Confirm no perf regression from the always-on canvas.
+- Lighthouse (`npm run build && npm run lighthouse`) — CLS within budget; the fixed canvas + element-relative scrim shouldn't shift content. Confirm no perf regression from the always-on canvas.
 - Browser manual: `/search/?s=make+search+work+like+this` runs the search and focuses the input (guard honored); `/?s=…` redirects there; `/blog/` scrolls to load page 2, 3, …; URL stays at `/blog/`; appended posts fade in; back button returns to the previous page cleanly (no VT breakage); JS-disabled `/blog/` shows the "Older posts" link to `/blog/2/`.
 - `prefers-reduced-motion` — the canvas wrap is `display:none` (existing rule); confirm the page still reads correctly with no canvas.
 - Light mode — scrim uses `--color-surface` (cream); confirm WCAG AA preserved.
