@@ -1,0 +1,119 @@
+---
+/**
+ * InfiniteScroll — progressive-enhancement "Older posts" link.
+ *
+ * Props:
+ *   nextUrl: string | undefined — href for page 2 (undefined when there is
+ *     no next page → renders nothing).
+ *   label?: string — link text (default "Older posts").
+ *
+ * The <a> is a plain link, so it works with JS disabled and as a fallback if the
+ * IntersectionObserver / fetch fails. When JS is on, an IO pre-fetches the next
+ * page when the link nears the viewport, appends the fetched [data-post-item]
+ * nodes to the page-1 [data-post-list], and re-arms against the fetched page's
+ * a[rel="next"]. No history.pushState — that breaks the Astro ClientRouter.
+ */
+interface Props {
+  nextUrl?: string;
+  label?: string;
+}
+const { nextUrl, label = 'Older posts' } = Astro.props;
+---
+
+{
+  nextUrl && (
+    <a
+      href={nextUrl}
+      rel="next"
+      data-older-link
+      data-next-url={nextUrl}
+      class="bg-surface-raised text-text-muted hover:text-accent mt-12 inline-block rounded-full px-5 py-2 text-sm no-underline transition-colors"
+    >
+      {label} →
+    </a>
+  )
+}
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+
+    function arm(link) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            io.disconnect();
+            loadMore(link);
+          });
+        },
+        { rootMargin: '600px 0px' },
+      );
+      io.observe(link);
+    }
+
+    function loadMore(link) {
+      var url = link.dataset.nextUrl;
+      if (!url) {
+        link.style.display = 'none';
+        return;
+      }
+      var myGen = root.dataset.infiniteScrollGen || '0';
+      fetch(url, { headers: { Accept: 'text/html' } })
+        .then(function (r) {
+          return r.ok ? r.text() : Promise.reject(new Error('HTTP ' + r.status));
+        })
+        .then(function (html) {
+          // Drop the result if a VT swap happened mid-fetch.
+          if ((root.dataset.infiniteScrollGen || '0') !== myGen) return;
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var list = document.querySelector('[data-post-list]');
+          if (!list) return;
+          var items = doc.querySelectorAll('[data-post-list] > [data-post-item]');
+          var frag = document.createDocumentFragment();
+          var nodes = [];
+          Array.prototype.forEach.call(items, function (item) {
+            var node = document.importNode(item, true);
+            frag.appendChild(node);
+            nodes.push(node);
+          });
+          list.appendChild(frag);
+          // Reveal appended nodes (ScrollReveal-wrapped blog articles are opacity:0).
+          document.dispatchEvent(new CustomEvent('adrianwedd:content-appended', { detail: { nodes: nodes } }));
+          // Chain to the next page via the fetched page's a[rel="next"].
+          var nextA = doc.querySelector('a[rel="next"]');
+          if (nextA && nextA.getAttribute('href')) {
+            var nh = nextA.getAttribute('href');
+            link.setAttribute('href', nh);
+            link.dataset.nextUrl = nh;
+            arm(link);
+          } else {
+            link.style.display = 'none';
+          }
+        })
+        .catch(function () {
+          // Leave the plain link visible as a fallback navigation to the next page.
+        });
+    }
+
+    function init() {
+      var link = document.querySelector('[data-older-link]');
+      if (!link) return;
+      if (!link.dataset.nextUrl) {
+        link.style.display = 'none';
+        return;
+      }
+      arm(link);
+    }
+
+    if (!root.dataset.infiniteScrollInit) {
+      root.dataset.infiniteScrollInit = '1';
+      root.dataset.infiniteScrollGen = '0';
+      document.addEventListener('astro:after-swap', function () {
+        root.dataset.infiniteScrollGen = String(parseInt(root.dataset.infiniteScrollGen || '0', 10) + 1);
+        init();
+      });
+      init();
+    }
+  })();
+</script>
