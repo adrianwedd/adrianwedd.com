@@ -229,13 +229,13 @@ describe('POST /api/cron/publish', () => {
     expect(mockPublishPost).not.toHaveBeenCalled();
   });
 
-  it('processes due posts oldest-first, max 5 from 7 queued', async () => {
+  it('processes due posts oldest-first, max 12 from 14 queued', async () => {
     const kv = mockKV();
     mockDebugAuth.mockResolvedValueOnce(healthyToken);
     mockPublishPost.mockResolvedValue({ success: true, platformPostId: 'fb_post_id', isTransient: false, isAuthError: false });
 
-    // Create 7 queued posts with distinct epochs (oldest first = smallest epoch)
-    const posts = Array.from({ length: 7 }, (_, i) => makePost(`p${i + 1}`, -(i + 1) * 1000));
+    // Create 14 queued posts with distinct epochs (oldest first = smallest epoch)
+    const posts = Array.from({ length: 14 }, (_, i) => makePost(`p${i + 1}`, -(i + 1) * 1000));
     const keys = posts.map(p => ({ name: `post:queued:${p.scheduledAtEpoch}:${p.id}` }));
 
     for (const p of posts) {
@@ -249,9 +249,9 @@ describe('POST /api/cron/publish', () => {
     const res = await app.fetch(cronRequest(), makeEnv(kv));
     expect(res.status).toBe(200);
     const body = await res.json() as Record<string, unknown>;
-    expect(body.published).toBe(5);
+    expect(body.published).toBe(12);
     expect(body.remaining).toBe(2);
-    expect(mockPublishPost).toHaveBeenCalledTimes(5);
+    expect(mockPublishPost).toHaveBeenCalledTimes(12);
   });
 
   it('skips posts with existing idempotency records and cleans queued key', async () => {
