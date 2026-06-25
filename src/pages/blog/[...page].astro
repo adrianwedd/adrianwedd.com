@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContentCarousel from '../../components/ContentCarousel.astro';
 import Pagination from '../../components/Pagination.astro';
+import InfiniteScroll from '../../components/InfiniteScroll.astro';
 import ScrollReveal from '../../components/ScrollReveal.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
@@ -109,13 +110,13 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
     }
 
     {/* Post list */}
-    <div class="mt-10 space-y-8">
+    <div class="mt-10 space-y-8" data-post-list>
       {
         page.data.map((post) => {
           const words = post.body ? post.body.split(/\s+/).length : 0;
           const readingTime = Math.max(1, Math.ceil(words / 200));
           return (
-            <article>
+            <article data-post-item>
               <ScrollReveal>
                 <a
                   href={`/blog/${slug(post.id)}/`}
@@ -148,13 +149,20 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
       }
     </div>
 
-    <Pagination
-      currentPage={page.currentPage}
-      lastPage={page.lastPage}
-      prevUrl={prevUrl}
-      nextUrl={nextUrl}
-      basePath="/blog/"
-    />
+    {
+      isFirst ? (
+        <InfiniteScroll nextUrl={nextUrl} />
+      ) : (
+        <Pagination
+          currentPage={page.currentPage}
+          lastPage={page.lastPage}
+          prevUrl={prevUrl}
+          nextUrl={nextUrl}
+          basePath="/blog/"
+          numbers={false}
+        />
+      )
+    }
   </section>
 
   <script is:inline>
