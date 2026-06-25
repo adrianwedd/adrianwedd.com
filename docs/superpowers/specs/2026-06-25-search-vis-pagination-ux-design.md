@@ -1,7 +1,7 @@
 # Search, full-viewport background vis, and pagination UX — design
 
 **Date:** 2026-06-25
-**Status:** Approved-in-principle; spec written, QA pending, implementation plan next session
+**Status:** Spec revised after Codex + Hermes QA (Agy stalled and produced no usable output). Implementation plan next session.
 **Reference site:** `failurefirst.org` (local: `/Users/adrian/repos/failure-first/site`) — the background-canvas technique Adrian wants adrianwedd.com to match.
 
 ## Problem statement
@@ -15,20 +15,20 @@ Four UX issues Adrian raised in one pass:
 
 ## Decisions (confirmed defaults)
 
-- **Footer stays opaque.** The vis shows in the *gap above* the footer (transparent bottom scrim band + bottom padding on `<main>`), not through the footer itself. Matches "visible at the bottom of the pages" + "more space between the content and the footer."
-- **Numbered pagination is replaced entirely on page 1** by infinite scroll. The static paginated routes (`/blog/2/`, `/blog/3/`, … and tag equivalents) are retained as the no-JS fallback and as the data source for the scroll-fetcher. Pages 2+ keep a fallback "Newer / Older" pair for direct visitors.
+- **Footer stays opaque.** The vis shows in the *gap above* the footer (transparent bottom scrim band + bottom padding on `<main>`), not through the footer itself.
+- **Numbered pagination is replaced entirely on page 1** by infinite scroll, progressively enhanced from a visible "Older posts" link (the link is both the no-JS fallback and the JS-enabled fallback if IntersectionObserver/fetch fails). The static paginated routes (`/blog/2/`, … and tag equivalents) are retained as the data source. Pages 2+ get a stripped prev/next pair (no numbered window).
 
 ## Scope
 
-Three files change for the architectural work; the rest are contained:
-
-- `src/components/HeroCanvas.astro` — canvas positioning (absolute → fixed).
-- `src/styles/global.css` — content scrim, bottom band, footer spacing.
-- `src/layouts/BaseLayout.astro` — `?s=` redirect script; bottom padding on `<main>`.
-- `src/pages/search.astro` — compact header, autofocus, accept `?s=`.
+- `src/components/HeroCanvas.astro` — becomes a single body-level fixed canvas; lifecycle rewritten as one global controller; pointer/viewport fixes; overlay + stale class mutations removed.
+- `src/layouts/BaseLayout.astro` — renders the fixed canvas at body level; reads `data-hero-animation` from `<body>`; `?s=` redirect script in `<head>`; bottom padding on `<main>`.
+- `src/styles/global.css` — viewport-fixed content scrim on `<main>` (`background-attachment: fixed`) with `@supports` fallback for `color-mix`; footer spacing.
+- `src/pages/search.astro` — compact header, autofocus (guarded), accept `?s=` (canonical) with `?q=` fallback.
 - `src/pages/index.astro` — `SearchAction` schema `?q=` → `?s=`.
-- `src/pages/blog/[...page].astro` — replace `Pagination` on page 1 with infinite-scroll sentinel + fetcher.
-- `src/pages/blog/tag/[tag]/[...page].astro` — same infinite-scroll treatment.
+- All 16 pages calling `<HeroCanvas animation="…">` — replace with a `data-hero-animation="…"` attribute on `<body>` (prop through BaseLayout) so the body-level canvas knows which animation to run.
+- `src/components/ScrollReveal.astro` — expose the observer via a document event so infinite-scroll appends can be observed.
+- `src/pages/blog/[...page].astro` + `src/pages/blog/tag/[tag]/[...page].astro` — `data-post-list` / `data-post-item` selectors; visible "Older posts" fallback that the IO fetcher progressively enhances; stripped prev/next on pages 2+.
+- `src/components/Pagination.astro` — add a prop to suppress the numbered window (for pages 2+ direct-visitor fallback).
 
 No content-collection schema changes. No new dependencies. No worker changes.
 
@@ -38,7 +38,7 @@ No content-collection schema changes. No new dependencies. No worker changes.
 
 ### Current behaviour
 
-`HeroCanvas.astro` renders:
+`HeroCanvas.astro` renders (inside each page's hero `<section>`, which is inside `<main>`):
 
 ```html
 <div class="hero-canvas-wrap absolute inset-0 z-0" data-animation="…">
@@ -47,120 +47,111 @@ No content-collection schema changes. No new dependencies. No worker changes.
 </div>
 ```
 
-The wrap is `absolute inset-0` of the page's hero `<section>` (which is `min-h-[100dvh]` on home/blog/projects, `50dvh` on search/activity/analytics). The canvas only paints within that section. `.hero-canvas-overlay` is a vertical gradient fading `transparent → --color-surface`, so the vis fades out at the hero's bottom edge. Below the hero, the body's `--color-surface` background (set on `:root`/`body` in `global.css`) covers everything — no vis for the rest of the page.
+The wrap is `absolute inset-0` of the hero `<section>`. The canvas only paints within that section. `.hero-canvas-overlay` (a component-local `<style>`, lines 32–46) fades `transparent → --color-surface` so the vis fades out at the hero's bottom edge. Below the hero, the body's `--color-surface` background covers everything.
 
 ### Reference (failure-first)
 
 ```css
-#sensor-grid-bg {            /* <canvas> at body level, outside <main> */
+#sensor-grid-bg {            /* <canvas> at body level, sibling of <main> */
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   z-index: -1; pointer-events: none;
 }
 main {
   position: relative; z-index: 1;
-  /* transparent at top → opaque for content readability */
   background: linear-gradient(to bottom,
     rgba(5,8,16,0) 0px, rgba(5,8,16,0.55) 300px, rgba(5,8,16,0.88) 600px);
 }
 ```
 
-One fixed full-viewport canvas behind everything; `main` has a top-transparent gradient scrim so the vis bleeds through the hero and fades for content readability.
+One fixed full-viewport canvas at body level behind everything; `main` has a top-transparent gradient scrim so the vis bleeds through the hero and fades for content readability.
 
-### Target design
+### Target design (revised after QA)
 
-Match the reference, adapted to adrianwedd.com's card-heavy layout and the requirement that the vis also show at the *bottom*.
+**CRITICAL — canvas moves to body level.** CSS painting order within a stacking context paints an element's own background (step 1) *before* its descendants (step 6+). A canvas that is a DOM descendant of `<main>` paints **on top of** main's background — the scrim would sit behind the canvas and do nothing; the vis would show through everywhere. The reference works because its canvas is a **sibling** of `<main>` at body level, with `main { z-index: 1 }` above `z-index: -1` canvas. So:
 
-**`HeroCanvas.astro` — change the wrap from `absolute` to `fixed`:**
+- **`BaseLayout.astro`** renders the canvas once at body level, before `<Header>`:
+  ```html
+  <body data-hero-animation={props.heroAnimation || ''} class="flex min-h-screen flex-col">
+    <canvas id="hero-canvas" class="hero-canvas-bg" aria-hidden="true"></canvas>
+    <Header />
+    <main id="main-content" class="flex-1">…</main>
+    <Footer />
+  ```
+  ```css
+  .hero-canvas-bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  main { position: relative; z-index: 1; }
+  ```
+- **Pages pass the animation via BaseLayout prop**, not by rendering `<HeroCanvas>` inside the hero. Each of the 16 pages adds `heroAnimation="terrain"` (etc.) to its `<BaseLayout>` call and removes the `<HeroCanvas …/>` line from its hero `<section>`. The hero `<section>` keeps its `min-h-[100dvh]`/`50dvh` and `relative z-10` text — it now sits transparently over the fixed canvas.
+- **`HeroCanvas.astro` becomes a single global controller** (init script only; no markup of its own, since the canvas lives in BaseLayout). It reads `document.body.dataset.heroAnimation` to pick the animation. The 16 animation modules (flow/terrain/ink/…) are unchanged.
 
-```html
-<div class="hero-canvas-wrap fixed inset-0 z-0" data-animation="…">
-  <canvas id="hero-canvas" class="fixed inset-0 h-full w-full" aria-hidden="true"></canvas>
-</div>
+**CRITICAL — fix the pause-on-scroll bug.** `HeroCanvas.astro:3773–3781` creates an `IntersectionObserver` that observes the hero `section` (which scrolls away), setting `inViewport=false` when you scroll past the hero — freezing the vis exactly when the user scrolls down to see it at the bottom. Fix: with a body-level fixed canvas there is no section to observe. **Remove the IntersectionObserver entirely** and set `inViewport = true` unconditionally; reset `inViewport = true; isVisible = pageVisible` in `initCanvas()` so a stale `false` can't survive a VT swap. The loop pauses only on `document.visibilityState === 'hidden'` (tab backgrounded, lines 3883–3886) and `prefers-reduced-motion` (CSS `display:none` on the wrap, already in `global.css`).
+
+**MAJOR — fix pointer/touch tracking.** Mouse (lines 3825–3839) and touch (3842–3867) handlers normalize against `section.getBoundingClientRect()`. After scrolling past the hero, `rect.top` is negative so the hit-test fails and `mouseActive` stays false — mouse-reactive animations (flow vortex, terrain gravity, stream rock, …) stop responding at the bottom of the page, exactly where the vis is now visible. Fix: normalize against the viewport since the canvas is fixed and fills it:
+```js
+mouseRawX = e.clientX / window.innerWidth;
+mouseRawY = e.clientY / window.innerHeight;
+mouseActive = true;
 ```
+Drop the `canvas.closest('section')` lookup entirely from both handlers.
 
-- The canvas now fills the viewport behind all content on every page. Per-page `animation` prop unchanged — pages keep calling `<HeroCanvas animation="terrain" />` exactly as today.
-- **Remove `.hero-canvas-overlay`** (the hero-bottom fade). The content scrim (below) replaces it and applies globally. A light top-only fade may be kept purely for hero-text legibility, scoped to the hero section via the page, not the canvas component.
-- **Canvas sizing:** `sizeCanvas()` currently reads `section.clientWidth/clientHeight`. With `position: fixed`, switch to `window.innerWidth/innerHeight` (× dpr, capped at 2) and re-size on `resize` (already handled). The animation registry is unchanged — each animation already draws relative to `w`/`h`.
-- **Pause logic:** the IntersectionObserver that pauses the loop when the canvas is off-screen becomes a no-op (a fixed canvas is always in view). Keep the `document.visibilityState === 'hidden'` pause (tab backgrounded) and the `prefers-reduced-motion` gate (`display: none` on the wrap, already in `global.css`). This is the only real behavioural cost — see Tradeoffs.
+**MAJOR — viewport-relative scrim (fix `flex-1` short-page bug).** `<main class="flex-1">` (BaseLayout:83) expands to fill `100dvh − header` on short pages (privacy, colophon, 404). A gradient with `100%`-relative stops would anchor its bottom band to main's flex-expanded height, making the transparent bottom band consume most of a short page and destroying readability. Fix: **`background-attachment: fixed`** on the `<main>` gradient so the stops are viewport-relative regardless of page length — transparent at the top of the viewport, opaque through the readable middle, transparent at the bottom of the viewport. This matches the fixed-canvas concept and is stable on short and long pages.
 
-**`global.css` — content scrim on `<main>`:**
+**MINOR — `color-mix` fallback.** The scrim uses `color-mix()`. On browsers without it the whole `background` declaration is invalid → main transparent → vis shows through fully. Add a plain-gradient fallback first, then an `@supports (background: color-mix(in srgb, red 50%, blue))` override — mirroring the existing `.hero-canvas-overlay` pattern (lines 36–46).
 
-```css
-main {
-  position: relative; z-index: 1;
-  background:
-    linear-gradient(to bottom,
-      transparent 0px,
-      color-mix(in srgb, var(--color-surface) 92%, transparent) 320px,
-      var(--color-surface) clamp(420px, 45dvh, 720px),
-      var(--color-surface) calc(100% - clamp(320px, 40dvh, 640px)),
-      color-mix(in srgb, var(--color-surface) 92%, transparent) calc(100% - 160px),
-      transparent 100%);
-}
-```
+**MINOR — remove `.hero-canvas-overlay` and stale class mutations.** The overlay is component-local markup + style in `HeroCanvas.astro` (line 29 + lines 32–46); remove both, since the scrim now lives in `global.css` on `<main>`. `initCanvas()` (line 3732) removes `hero-glow` and adds `overflow-hidden` to the section; `destroyCanvas()` (3706) adds `hero-glow` back unconditionally — with a body-level canvas these are stale and `destroyCanvas`'s unconditional add can inject `hero-glow` onto pages that never had it. Remove these mutations.
 
-Concretely: `<main>` gets a vertical gradient with **pixel-based stops** so the transparent bands are a consistent size regardless of page length:
+**MAJOR — single-init lifecycle for VT.** There is a persistent `astro:after-swap` listener (3899) plus an unconditional `initCanvas()` (3906); with `is:inline` re-execution on swaps, old and new closures can both init loops. Fix: make HeroCanvas a single global controller guarded by a `documentElement.dataset.heroCanvasInit` sentinel for the swap listener, and have `initCanvas()` tear down the previous run (cancel raf, cleanup the prior animation module) before starting the new one. One init path per swap.
 
-- Top band: transparent for the first ~`60dvh`-equivalent (hero — vis fully visible). Implemented as a fixed pixel value (e.g. `0px` → transparent, fade to opaque by ~`clamp(280px, 40dvh, 520px)`).
-- Middle: opaque `--color-surface` (content readability; cards sit on this).
-- Bottom band: transparent again for the last ~`40dvh` so the vis shows through near the footer, with enough bottom padding on `<main>` (see below) that the band has real height.
+### Footer spacing — `BaseLayout.astro`
 
-The gradient is built with `color-mix` / the surface CSS variable so it tracks light/dark theme automatically. Because `<main>`'s height = content height (the gradient's `100%` is the full content scroll height), pixel stops keep the bands stable on short and long pages alike.
-
-**Footer spacing — `BaseLayout.astro`:**
-
-- Add bottom padding to `<main>` (e.g. `pb-[20dvh]` or a `min-h` bottom spacer) so the transparent bottom scrim band has room and the vis is clearly visible in the gap before the footer. This is the "more space between content and footer" fix.
-- `<Footer>` stays as-is (opaque `bg-surface-alt/50`). The vis shows in the gap above it, not through it.
-
-### Pages unaffected / no edits
-
-The 16 pages that call `<HeroCanvas>` do **not** change — the component's internal positioning change does the work. Hero `<section>`s keep their `min-h-[100dvh]` / `50dvh` and `relative z-10` text; the now-fixed canvas renders behind them as expected.
+- Add bottom padding to `<main>` (e.g. `pb-[20dvh]`) so the viewport-fixed transparent bottom band has room and the vis is clearly visible in the gap before the footer. This is the "more space between content and footer" fix.
+- `<Footer>` stays opaque (`bg-surface-alt/50`). The vis shows in the gap above it, not through it.
 
 ### Tradeoffs
 
-- **Animation loop never pauses via IntersectionObserver** (fixed canvas always in view). Mitigated by the existing tab-visibility pause and reduced-motion gate. GPU cost is roughly unchanged — the hero canvas was already near-viewport-sized.
-- **Card-heavy pages (projects, blog list) hide most of the vis** behind cards in the middle band. This is intended (readability) — the vis is the hero + bottom gap, not the whole page.
-- **Light mode:** the scrim must use `--color-surface` (light cream) so cards and text keep WCAG AA. The existing light-mode accent `#8a5e42` is unchanged.
+- **Animation loop never pauses via IntersectionObserver** (fixed canvas always in view). Mitigated by the tab-visibility pause and reduced-motion gate. GPU cost is roughly unchanged — the hero canvas was already near-viewport-sized.
+- **Card-heavy pages (projects, blog list) hide most of the vis** behind cards in the opaque middle band. Intended (readability) — the vis is the hero + bottom gap, not the whole page.
+- **Light mode:** the scrim uses `--color-surface` (light cream) so cards/text keep WCAG AA. The existing light-mode accent `#8a5e42` is unchanged.
 
 ---
 
 ## Workstream 2 — Search UX (`?s=` + focus + de-jank)
 
-### `?s=` redirect (BaseLayout)
+### `?s=` redirect (BaseLayout `<head>`)
 
-One small `is:inline` script in `BaseLayout.astro`, run before paint, registered once via a `documentElement.dataset` sentinel (consistent with the VT pattern in `CLAUDE.md`):
+A **bare** `is:inline` script in `<head>`, before `<ClientRouter />` (BaseLayout:71), **not sentinel-guarded** (it must run on every navigation, including VT swaps to `/?s=term`; a sentinel would suppress it after first load):
 
 ```js
-var p = new URLSearchParams(location.search);
-var s = p.get('s');
-if (s != null && location.pathname !== '/search/') {
-  location.replace('/search/?s=' + encodeURIComponent(s));
-}
+(function () {
+  var p = new URLSearchParams(location.search);
+  var s = p.get('s');
+  if (s != null && location.pathname !== '/search/') {
+    location.replace('/search/?s=' + encodeURIComponent(s));
+  }
+})();
 ```
 
-- Runs on every page. Any `?s=term` (e.g. the homepage URL Adrian pasted) immediately redirects to `/search/?s=term`.
-- Uses `location.replace` so the redirecting URL doesn't clutter history.
-- Only fires when not already on `/search/` (avoids a loop).
+- `location.replace` triggers a full load (not VT) and doesn't clutter history.
+- Only fires off-`/search/` (avoids a loop). On `/search/`, the page's own script reads `?s=`.
 
-### `/search/` — accept `?s=` and `?q=`, compact header, autofocus
+### `/search/` — accept `?s=` (canonical) + `?q=` (fallback), compact header, guarded autofocus
 
 `src/pages/search.astro`:
 
-- **Accept both params:** change the deep-link read from `q` only to `q || s`:
+- **Canonical param is `s`:** read `s` first, then `q` as fallback (the spec previously waffled between `q || s` and `s || q` — it is `s || q`):
   ```js
-  var q = new URLSearchParams(window.location.search).get('s')
-       || new URLSearchParams(window.location.search).get('q');
-  if (q && typeof ui.triggerSearch === 'function') ui.triggerSearch(q);
+  var term = new URLSearchParams(window.location.search).get('s')
+          || new URLSearchParams(window.location.search).get('q');
+  if (term && typeof ui.triggerSearch === 'function') ui.triggerSearch(term);
   ```
-  Keep `q` for back-compat (existing bookmarks, the old schema).
-- **Compact header:** replace the `min-h-[50dvh]` hero with a compact header (keep the radar `HeroCanvas` but small, e.g. `min-h-[28dvh]` or a slim band) so the search box sits near the top of the page.
-- **Autofocus:** after `mountUI()` and after `triggerSearch`, focus `.pagefind-ui__search-input`. Defer focus until the input exists (the UI mounts async).
-- **Skeleton flash:** the current skeleton shows until `PagefindUI` is defined and `mountUI` runs. Keep it, but ensure it's removed the instant `mountUI` succeeds (already done via `sk.remove()`). No change needed beyond the focus/param work.
-- **Focus across View Transitions:** the existing `astro:page-load` re-init stays; add focus restore so navigating away and back to `/search/` refocuses the input.
+- **Compact header:** replace the `min-h-[50dvh]` hero with a compact header (keep radar `HeroCanvas` small, e.g. `min-h-[28dvh]`) so the search box sits near the top of the page.
+- **Guarded autofocus:** `PagefindUI` constructs its DOM synchronously, so the input exists after `mountUI()`. But focusing on every `astro:page-load` steals focus from users navigating back or using assistive tech. Guard it: focus only when `/search/` is the entry navigation (not a back/forward), only when no element is meaningfully focused, defer until `.pagefind-ui__search-input` exists, and use `el.focus({ preventScroll: true })`.
+- **Skeleton flash:** the skeleton is removed the instant `mountUI()` succeeds (already done via `sk.remove()`). No change beyond the param/focus work.
+- **Focus across VT:** the existing `astro:page-load` re-init stays; the guard above handles focus restore correctly.
 
 ### Homepage SearchAction schema — `index.astro`
 
-Change `urlTemplate` from `https://adrianwedd.com/search/?q={search_term_string}` to `https://adrianwedd.com/search/?s={search_term_string}` so Google sitelinks search produces the `?s=` URL that now works.
+Change `urlTemplate` from `https://adrianwedd.com/search/?q={search_term_string}` to `https://adrianwedd.com/search/?s={search_term_string}`. Old `?q=` bookmarks keep working because `/search/` reads `q` as fallback, and the redirect only fires off-`/search/`.
 
 ---
 
@@ -168,43 +159,57 @@ Change `urlTemplate` from `https://adrianwedd.com/search/?q={search_term_string}
 
 ### Current behaviour
 
-`src/pages/blog/[...page].astro` uses Astro `paginate(posts, { pageSize: 12 })`, generating `/blog/`, `/blog/2/`, … The numbered `Pagination.astro` component renders prev/next + a numbered window. Tag pages (`/blog/tag/[tag]/[...page].astro`) do the same.
+`src/pages/blog/[...page].astro` uses Astro `paginate(posts, { pageSize: 12 })`, generating `/blog/`, `/blog/2/`, … with the numbered `Pagination.astro` component. Tag pages (`/blog/tag/[tag]/[...page].astro`) do the same. Blog articles are wrapped in `<ScrollReveal>` (`opacity:0` until revealed); tag articles are not (asymmetry noted).
 
 ### Target design
 
-Keep the static paginated routes as the data source and no-JS fallback. On **page 1 only**, replace the `Pagination` component with a sentinel + inline IntersectionObserver fetcher (progressive enhancement — Astro's recommended infinite-scroll pattern).
+Keep the static paginated routes as the data source and no-JS fallback. On **page 1 only**, replace the numbered `Pagination` with a visible **"Older posts" link** that the IntersectionObserver fetcher progressively enhances. The link is the no-JS fallback *and* the JS-enabled fallback if IO/fetch fails — a bare sentinel + `<noscript>` would strand JS users when IO is blocked.
 
+**Stable selectors (added first):** add `data-post-list` to the post-list `<div>` and `data-post-item` to each `<article>` in both `blog/[...page].astro` and `blog/tag/[tag]/[...page].astro`. The fetcher queries `[data-post-list] > [data-post-item]` from the fetched page.
+
+**Page 1 markup:**
 ```html
-{/* page 1 only */}
-<div id="infinite-sentinel" data-next-url="/blog/2/" aria-hidden="true"></div>
-<noscript>
-  <a href="/blog/2/" rel="next">Older posts →</a>
-</noscript>
+<a href="/blog/2/" rel="next" data-older-link data-next-url="/blog/2/">Older posts →</a>
+<noscript><!-- the link above is the no-JS fallback, always present --></noscript>
 ```
 
-Inline script (VT-safe: `documentElement.dataset` sentinel, event delegation, lazy DOM lookups, `astro:after-swap` re-init per `CLAUDE.md`):
+**Inline fetcher (VT-safe: `documentElement.dataset` sentinel, event delegation, lazy DOM lookups, `astro:after-swap` re-init):**
+- Observe `[data-older-link]` with an IntersectionObserver (rootMargin to pre-fetch before reaching it).
+- On intersect: read `data-next-url`; `fetch(url)`, parse `text/html`.
+- Extract `[data-post-list] > [data-post-item]` from the fetched doc; append to the page-1 `[data-post-list]`.
+- **Reveal appended nodes:** dispatch a `adrianwedd:content-appended` CustomEvent with the appended nodes (see ScrollReveal change below). For blog (ScrollReveal-wrapped) the observer reveals them; for tag (no wrapper) they're visible by default.
+- **Read the next next-URL** from the fetched page's `a[rel="next"]` (Pagination.astro:74–76 renders it; on the last page it's a disabled `<span>`, so absence = end). Update `[data-older-link]`'s `data-next-url` and `href`; if no next, hide the link and disconnect the observer.
+- **Do NOT use `history.pushState`.** Manually pushing state without coordinating with the ClientRouter breaks back/forward (a back-press would VT-swap to `/blog/2/` — a different layout from the infinite-scrolled page 1). Keep the URL at `/blog/`; scroll position is the implicit state. The "refresh lands on the right page" nicety isn't worth breaking VT.
 
-- Observe `#infinite-sentinel`. On intersect:
-  1. Read `data-next-url` from the sentinel.
-  2. `fetch(url)`, parse `text/html`, query for the page's post-list `<article>`s (same selector the blog list uses) and the *next* page's `data-next-url` (from the fetched page's sentinel, or the fetched page's next pagination link).
-  3. Append the articles to the post-list container. `ScrollReveal` re-observe the new nodes (the global ScrollReveal init already handles this via `astro:after-swap`; for appended nodes, call the reveal manually or add the `scroll-reveal` class + observe).
-  4. `history.pushState(null, '', url)` to the page just loaded (so a refresh lands on the right page, and the URL reflects scroll position).
-  5. Update the sentinel's `data-next-url`; if no next, disconnect the observer and remove the sentinel.
-- **Tag pages:** identical treatment, parameterised by the tag path. The sentinel carries the tag-specific next URL.
+**Tag pages:** identical treatment, parameterised by the tag path. The fetcher's extraction handles both DOM shapes (blog articles have an extra `.scroll-reveal` wrapper, tag articles don't) because it copies `[data-post-item]` outerHTML, preserving each structure.
 
-Pages 2+ keep a minimal "Newer / Older" pair (the existing `Pagination` component, or a stripped-down variant) so direct visitors and no-JS users can navigate.
+**Pages 2+:** pass a `numbers={false}` prop to `Pagination` (new prop) so direct visitors and no-JS users get a stripped "Newer / Older" pair without the numbered window.
+
+### ScrollReveal change — expose the observer
+
+`src/components/ScrollReveal.astro`: the IntersectionObserver is a private IIFE var (line 17); it only re-runs `querySelectorAll('.scroll-reveal:not(.revealed)')` on initial load and `astro:after-swap` (line 41), so dynamically appended nodes stay `opacity:0` forever. Fix: add a document listener that re-scans on demand:
+```js
+document.addEventListener('adrianwedd:content-appended', function (e) {
+  var nodes = (e.detail && e.detail.nodes) || [];
+  nodes.forEach(function (n) {
+    n.querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function (el) { observer.observe(el); });
+    if (n.classList && n.classList.contains('scroll-reveal') && !n.classList.contains('revealed')) observer.observe(n);
+  });
+});
+```
+Register this listener once (inside the existing sentinel guard). The infinite-scroll fetcher dispatches it after appending.
 
 ### Edge cases
 
-- **VT swap mid-fetch:** guard with the sentinel dataset; if the page changes, don't append stale HTML.
-- **Filter/tag toggle on blog page 1:** the blog tag chips are links (`/blog/tag/{tag}/`), so filtering navigates to a new page — infinite scroll re-inits cleanly. No interaction between the two.
-- **Pagefind:** Pagefind indexes the static pages, not the JS-appended content — search results still link to the canonical paginated URLs. Appended posts are duplicate DOM of already-indexed pages, which is fine (they're not separate URLs).
+- **VT swap mid-fetch:** guard with the sentinel dataset; if the page changes before the fetch resolves, drop the result (don't append stale HTML).
+- **Filter/tag toggle on blog page 1:** the blog tag chips are links (`/blog/tag/{tag}/`), so filtering navigates to a new page — infinite scroll re-inits cleanly. No interaction.
+- **Pagefind:** indexes the static pages, not JS-appended content — search results still link to canonical paginated URLs. Appended posts are duplicate DOM of already-indexed pages, not separate URLs. Fine.
 
 ---
 
 ## Workstream 4 — Footer spacing
 
-Folded into Workstream 1: the bottom padding on `<main>` + the transparent bottom scrim band produce the gap. No separate work.
+Folded into Workstream 1: bottom padding on `<main>` + the viewport-fixed transparent bottom scrim band produce the gap. No separate work.
 
 ---
 
@@ -212,16 +217,24 @@ Folded into Workstream 1: the bottom padding on `<main>` + the transparent botto
 
 No Astro test suite. Verification is manual + the existing CI gates:
 
-- `npm run dev` — eyeball each affected page: hero vis visible, vis visible in the bottom gap before footer, cards readable in the middle, footer spacing increased.
+- `npm run dev` — eyeball each affected page: hero vis visible, vis visible in the bottom gap before footer, cards readable in the middle, footer spacing increased. Scroll past the hero and confirm the vis keeps animating and mouse-reactive animations still respond at the bottom.
 - `npm run build` — build passes; Pagefind index still generated.
 - `npm run lint` / `npm run format:check` — pass.
-- `node scripts/validate-content.js` — unaffected, but run for safety.
+- `node scripts/validate-content.js` — unaffected, run for safety.
 - `npm run check:links` — internal-link check passes (infinite scroll doesn't add/remove URLs; paginated routes still exist).
-- Lighthouse (`npm run build && npm run lighthouse`) — CLS/Layout-shift within budget; the fixed canvas + scrim shouldn't shift content. Confirm no perf regression from the always-on canvas (the reduced-motion + tab-hidden pauses mitigate).
-- Browser manual: `/search/?s=make+search+work+like+this` runs the search and focuses the input; `/?s=…` redirects there; `/blog/` scrolls to load page 2, 3, …; URL updates; refresh lands on the right page; no-JS (`?s` test with JS disabled) shows the fallback Older link.
+- Lighthouse (`npm run build && npm run lighthouse`) — CLS within budget; the fixed canvas + viewport-fixed scrim shouldn't shift content. Confirm no perf regression from the always-on canvas.
+- Browser manual: `/search/?s=make+search+work+like+this` runs the search and focuses the input (guard honored); `/?s=…` redirects there; `/blog/` scrolls to load page 2, 3, …; URL stays at `/blog/`; appended posts fade in; back button returns to the previous page cleanly (no VT breakage); JS-disabled `/blog/` shows the "Older posts" link to `/blog/2/`.
+- `prefers-reduced-motion` — the canvas wrap is `display:none` (existing rule); confirm the page still reads correctly with no canvas.
+- Light mode — scrim uses `--color-surface` (cream); confirm WCAG AA preserved.
 
 ## Out of scope (next session)
 
 - Implementation plan (breakdown into commits, ordering, verification steps) — written via the `writing-plans` skill in the next session.
 - Any worker / CSP / deploy changes — none needed.
-- Renaming `?q=` → `?s=` on the `/search/` deep-link across other references (only the homepage schema and the `/search/` script reference `q`; both handled).
+- Renaming `?q=` → `?s=` on other references — only the homepage schema and the `/search/` script reference `q`; both handled.
+
+## QA provenance
+
+- **Codex** (security/correctness): 13 issues, all incorporated — VT double-init, stale class mutations, component-local overlay, `color-mix` fallback, redirect placement, `s || q`, autofocus guard, stable selectors, ScrollReveal exposure, pages-2+ stripped pagination, page-1 visible fallback.
+- **Hermes** (cross-referencing): 8 must-fixes, all incorporated — body-level canvas, IO observes section, viewport coords, `flex-1` gradient break, redirect not sentinel-guarded, private ScrollReveal observer, `pushState` breaks ClientRouter, stable selector.
+- **Agy** (design/accessibility): stalled — produced no usable output ("searching for the spec…"). Re-run next session if wanted; the Hermes + Codex coverage was thorough and overlapping.
