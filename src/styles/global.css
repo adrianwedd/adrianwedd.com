@@ -101,7 +101,7 @@
   }
 
   body {
-    @apply bg-surface font-sans text-base text-text;
+    @apply bg-surface text-text font-sans text-base;
     transition:
       background-color 0.2s ease,
       color 0.2s ease;
@@ -130,7 +130,7 @@
   }
 
   a {
-    @apply text-accent transition-colors hover:text-accent-hover;
+    @apply text-accent hover:text-accent-hover transition-colors;
   }
 
   code {
@@ -138,7 +138,7 @@
   }
 
   pre {
-    @apply overflow-x-auto rounded-lg bg-surface-alt p-4 font-mono text-sm;
+    @apply bg-surface-alt overflow-x-auto rounded-lg p-4 font-mono text-sm;
   }
 
   /* External link indicator in prose content */
@@ -155,7 +155,7 @@
   }
 
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-accent;
+    @apply outline-accent outline-2 outline-offset-2;
   }
 
   /* Fix mobile viewport height (browser chrome eats into 100vh) */
@@ -214,6 +214,53 @@
       transparent
     );
     opacity: 0.25;
+  }
+
+  /* Body-level fixed background canvas. z-index: -1 puts it behind all in-flow
+     content (Layer 3) — including the non-positioned <footer> — so the vis shows
+     only in the transparent hero + bottom-gap bands of the main scrim, never
+     through the opaque footer. The canvas paints above the body's background
+     (Layer 1) but below all in-flow content; the header (sticky z-50) and
+     main (position: relative; z-index: 1) both sit above it. This matches the
+     reference site's #sensor-grid-bg { z-index: -1 } technique. */
+  .hero-canvas-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    /* Viewport-fixed scrim: transparent over the hero + bottom gap, opaque over content.
+       background-attachment: fixed makes the stops viewport-relative regardless of page
+       length (avoids the flex-1 short-page bug where a 100%-relative gradient would
+       stretch the transparent band across a short page). */
+    background: linear-gradient(
+        to bottom,
+        transparent 0px,
+        var(--color-surface) 280px,
+        var(--color-surface) calc(100dvh - 220px),
+        transparent 100dvh
+      )
+      fixed;
+  }
+  @supports (background: color-mix(in srgb, red 50%, blue)) {
+    main {
+      background: linear-gradient(
+          to bottom,
+          transparent 0px,
+          color-mix(in srgb, var(--color-surface) 60%, transparent) 220px,
+          var(--color-surface) 360px,
+          var(--color-surface) calc(100dvh - 320px),
+          color-mix(in srgb, var(--color-surface) 60%, transparent) calc(100dvh - 180px),
+          transparent 100dvh
+        )
+        fixed;
+    }
   }
 
   @keyframes fade-up {
@@ -285,8 +332,8 @@
     .btn-secondary:active {
       transform: none;
     }
-    .hero-canvas-wrap,
-    .hero-canvas-switcher {
+    .hero-canvas-switcher,
+    .hero-canvas-bg {
       display: none !important;
     }
   }
@@ -328,7 +375,6 @@
   #kb-overlay,
   #reading-progress,
   #hero-canvas,
-  .hero-canvas-wrap,
   .hero-canvas-switcher,
   .mobile-menu,
   .mobile-menu-btn,
@@ -343,6 +389,7 @@
     max-width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
+    background: none !important;
   }
 
   article {
