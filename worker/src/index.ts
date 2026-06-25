@@ -452,7 +452,16 @@ app.post('/api/cron/publish', async (c) => {
     // `post:publishing:` orphan in place rather than risk double-publishing.
     let orphanedAfterSuccess = 0;
 
-    for (const { key, post } of processable.slice(0, 5)) {
+    // Batch cap per cron run. Sized for a multi-part series × 3 platforms (a
+    // 3-part series = 9 entries) with headroom, so a same-day-staggered series
+    // publishes in one ordered run instead of splintering across hours. The
+    // work is I/O-bound (CDN video fetch + platform upload; Bluesky polls up to
+    // 25s but that's fetch wait, not CPU), so a 12-post run stays well under
+    // the Workers Paid fetch CPU limit. The caller (social-cron.yml) sets
+    // --max-time to outlast a full batch so curl doesn't drop the connection
+    // and abort the run mid-publish.
+    const CRON_PUBLISH_BATCH_CAP = 12;
+    for (const { key, post } of processable.slice(0, CRON_PUBLISH_BATCH_CAP)) {
       // C1 — Per-post publish lock. The cron run and an ad-hoc /api/publish call
       // can race on the same post.id (e.g. a manual retry triggered while cron
       // is mid-run). /api/publish takes `publish:<idempotencyKey>` where the
@@ -579,7 +588,7 @@ app.post('/api/cron/publish', async (c) => {
       }
     }
 
-    const remaining = Math.max(0, processable.length - 5) + skippedBlocked.length;
+    const remaining = Math.max(0, processable.length - CRON_PUBLISH_BATCH_CAP) + skippedBlocked.length;
     if (remaining > 10) console.error(`Post queue backlog: ${remaining}`);
     else if (remaining > 0) console.warn(`${remaining} posts still queued`);
 

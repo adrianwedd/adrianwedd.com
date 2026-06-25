@@ -2,7 +2,7 @@ name: Social Cron
 
 on:
   schedule:
-    - cron: '15 * * * *'      # Publish: hourly at :15
+    - cron: '7,17,27,37,47,57 * * * *'  # Publish: every 10 min (offset avoids :00/:30 GH-Actions load; never lands on comments' :45)
     - cron: '45 */2 * * *'    # Comments: every 2 hours at :45
   workflow_dispatch:
     inputs:
@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   publish:
-    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.endpoint == 'publish') || github.event.schedule == '15 * * * *'
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.endpoint == 'publish') || github.event.schedule == '7,17,27,37,47,57 * * * *'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger publish cron
@@ -28,7 +28,7 @@ jobs:
             "${SOCIAL_WORKER_URL}/api/cron/publish" \
             -H "Authorization: Bearer ${SOCIAL_CRON_SECRET}" \
             -H "Content-Type: application/json" \
-            --max-time 30)
+            --max-time 300)
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | sed '$d')
           echo "HTTP status: $HTTP_CODE"
