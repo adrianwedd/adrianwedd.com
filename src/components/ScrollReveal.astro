@@ -39,6 +39,20 @@ const { class: className = '', as: Tag = 'div', stagger } = Astro.props as any;
     if (!root.dataset.scrollRevealInit) {
       root.dataset.scrollRevealInit = '1';
       document.addEventListener('astro:after-swap', initScrollReveal);
+
+      // Reveal dynamically appended nodes (infinite scroll). Registered once.
+      document.addEventListener('adrianwedd:content-appended', function (e) {
+        var nodes = (e && e.detail && e.detail.nodes) || [];
+        Array.prototype.forEach.call(nodes, function (n) {
+          if (!n || !n.querySelectorAll) return;
+          n.querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function (el) {
+            observer.observe(el);
+          });
+          if (n.classList && n.classList.contains('scroll-reveal') && !n.classList.contains('revealed')) {
+            observer.observe(n);
+          }
+        });
+      });
     }
   })();
 </script>

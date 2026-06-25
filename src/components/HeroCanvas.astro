@@ -1,56 +1,7 @@
----
-// HeroCanvas.astro — generative canvas animations behind page heroes.
-// If animation prop is set, locks to that animation. Otherwise auto-rotates.
-interface Props {
-  animation?:
-    | 'terrain'
-    | 'flow'
-    | 'soundwave'
-    | 'strata'
-    | 'forge'
-    | 'signal'
-    | 'ink'
-    | 'blueprint'
-    | 'radar'
-    | 'entropy'
-    | 'cipher'
-    | 'orbit'
-    | 'loom'
-    | 'pulse'
-    | 'stream'
-    | 'crystallise'
-    | 'dataflow';
-}
-const { animation } = Astro.props;
----
-
-<div class="hero-canvas-wrap absolute inset-0 z-0" data-animation={animation || ''}>
-  <canvas id="hero-canvas" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
-  <div class="hero-canvas-overlay pointer-events-none absolute inset-0 z-[1]"></div>
-</div>
-
-<style>
-  .hero-canvas-overlay {
-    background: linear-gradient(to bottom, transparent 0%, var(--color-surface) 100%);
-  }
-  @supports (background: color-mix(in srgb, red 50%, blue)) {
-    .hero-canvas-overlay {
-      background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        color-mix(in srgb, var(--color-surface) 25%, transparent) 40%,
-        color-mix(in srgb, var(--color-surface) 55%, transparent) 65%,
-        var(--color-surface) 100%
-      );
-    }
-  }
-</style>
-
 <script is:inline>
   (function () {
     // --- Shared state (persists across VT swaps within IIFE re-executions) ---
     var rafId = null;
-    var intersectionObs = null;
     var themeObs = null;
     var currentIndex = -1;
     // isVisible = on-screen AND tab-foregrounded; either being false pauses the loop + auto-rotate
@@ -241,10 +192,10 @@ const { animation } = Astro.props;
     }
 
     // --- Canvas sizing ---
-    function sizeCanvas(canvas, section) {
+    function sizeCanvas(canvas) {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvasW = section.clientWidth;
-      canvasH = section.clientHeight;
+      canvasW = window.innerWidth;
+      canvasH = window.innerHeight;
       canvas.width = canvasW * dpr;
       canvas.height = canvasH * dpr;
       canvas.style.width = canvasW + 'px';
@@ -3548,7 +3499,7 @@ const { animation } = Astro.props;
     }
 
     // --- Animation switching with fade ---
-    function switchAnimation(index, canvas, ctx, section) {
+    function switchAnimation(index, canvas, ctx) {
       if (index === currentIndex || index === pendingIndex) return;
       pendingIndex = index;
       var anim = getAnim(ANIM_KEYS[currentIndex]);
@@ -3654,7 +3605,7 @@ const { animation } = Astro.props;
           console.warn('HeroCanvas frame error on ' + ANIM_KEYS[currentIndex] + ':', e);
           // Skip to next animation on error
           var nextIdx = (currentIndex + 1) % ANIM_KEYS.length;
-          switchAnimation(nextIdx, canvas, ctx, canvas.closest('section'));
+          switchAnimation(nextIdx, canvas, ctx);
         }
         ctx.restore();
       }
@@ -3683,10 +3634,6 @@ const { animation } = Astro.props;
         cancelAnimationFrame(rafId);
         rafId = null;
       }
-      if (intersectionObs) {
-        intersectionObs.disconnect();
-        intersectionObs = null;
-      }
       if (themeObs) {
         themeObs.disconnect();
         themeObs = null;
@@ -3696,15 +3643,6 @@ const { animation } = Astro.props;
         try {
           anim.cleanup();
         } catch (e) {}
-      }
-      // Restore hero-glow and remove overflow-hidden if canvas is being destroyed
-      var canvas = document.getElementById('hero-canvas');
-      if (canvas) {
-        var section = canvas.closest('section');
-        if (section) {
-          section.classList.remove('overflow-hidden');
-          section.classList.add('hero-glow');
-        }
       }
       currentIndex = -1;
       // Reset pointer state to prevent stale attractor on re-init
@@ -3718,10 +3656,11 @@ const { animation } = Astro.props;
     }
 
     function initCanvas() {
+      // Single-init lifecycle: tear down any previous run before starting the new one.
+      destroyCanvas();
+
       var canvas = document.getElementById('hero-canvas');
       if (!canvas) return;
-      var section = canvas.closest('section');
-      if (!section) return;
 
       // Reduced motion check
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -3729,16 +3668,15 @@ const { animation } = Astro.props;
       var ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // Hero-glow swap + overflow-hidden
-      section.classList.remove('hero-glow');
-      section.classList.add('overflow-hidden');
+      // Reset viewport/pause state so a stale false can't survive a VT swap.
+      inViewport = true;
+      isVisible = pageVisible;
 
       readColors();
-      sizeCanvas(canvas, section);
+      sizeCanvas(canvas);
 
-      // Pick animation — fixed if data-animation is set, otherwise rotate
-      var wrap = canvas.closest('.hero-canvas-wrap');
-      var fixedAnim = wrap ? wrap.dataset.animation : '';
+      // Pick animation — fixed if body has data-hero-animation, otherwise rotate
+      var fixedAnim = document.body.dataset.heroAnimation || '';
       var fixedIndex = fixedAnim ? ANIM_KEYS.indexOf(fixedAnim) : -1;
       var startIndex;
       if (fixedIndex >= 0) {
@@ -3770,15 +3708,8 @@ const { animation } = Astro.props;
       });
       themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-      // IntersectionObserver — pause when not visible
-      intersectionObs = new IntersectionObserver(
-        function (entries) {
-          inViewport = entries[0].isIntersecting;
-          isVisible = inViewport && pageVisible;
-        },
-        { threshold: 0 },
-      );
-      intersectionObs.observe(section);
+      // No IntersectionObserver — the body-level fixed canvas is always in view.
+      // The loop pauses only on tab-hidden (visibilitychange) and prefers-reduced-motion.
 
       // Start render loop
       adaptiveQuality = 1.0;
@@ -3795,7 +3726,7 @@ const { animation } = Astro.props;
           if (!c) return;
           var x = c.getContext('2d');
           if (!x) return;
-          switchAnimation(nextIdx, c, x, c.closest('section'));
+          switchAnimation(nextIdx, c, x);
         }, 30000);
       }
     }
@@ -3811,9 +3742,7 @@ const { animation } = Astro.props;
           resizeTimeout = null;
           var canvas = document.getElementById('hero-canvas');
           if (!canvas) return;
-          var section = canvas.closest('section');
-          if (!section) return;
-          sizeCanvas(canvas, section);
+          sizeCanvas(canvas);
           var anim = getAnim(ANIM_KEYS[currentIndex]);
           try {
             anim.init(canvasW, canvasH, colors);
@@ -3821,47 +3750,24 @@ const { animation } = Astro.props;
         }, 200);
       });
 
-      // Mouse tracking (sentinel-guarded, document-level for event delegation)
+      // Mouse tracking — viewport-relative (canvas is fixed and fills the viewport)
       document.addEventListener('mousemove', function (e) {
-        var canvas = document.getElementById('hero-canvas');
-        if (!canvas) return;
-        var section = canvas.closest('section');
-        if (!section) return;
-        var rect = section.getBoundingClientRect();
-        if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
-          mouseRawX = (e.clientX - rect.left) / rect.width;
-          mouseRawY = (e.clientY - rect.top) / rect.height;
-          mouseActive = true;
-          mouseExitFrames = 0;
-        } else {
-          mouseActive = false;
-        }
+        mouseRawX = e.clientX / window.innerWidth;
+        mouseRawY = e.clientY / window.innerHeight;
+        mouseActive = true;
+        mouseExitFrames = 0;
       });
 
-      // Touch tracking (same normalization)
+      // Touch tracking — viewport-relative
       document.addEventListener(
         'touchmove',
         function (e) {
-          var canvas = document.getElementById('hero-canvas');
-          if (!canvas) return;
-          var section = canvas.closest('section');
-          if (!section) return;
-          var rect = section.getBoundingClientRect();
           var touch = e.touches[0];
-          if (
-            touch &&
-            touch.clientX >= rect.left &&
-            touch.clientX <= rect.right &&
-            touch.clientY >= rect.top &&
-            touch.clientY <= rect.bottom
-          ) {
-            mouseRawX = (touch.clientX - rect.left) / rect.width;
-            mouseRawY = (touch.clientY - rect.top) / rect.height;
-            mouseActive = true;
-            mouseExitFrames = 0;
-          } else {
-            mouseActive = false;
-          }
+          if (!touch) return;
+          mouseRawX = touch.clientX / window.innerWidth;
+          mouseRawY = touch.clientY / window.innerHeight;
+          mouseActive = true;
+          mouseExitFrames = 0;
         },
         { passive: true },
       );
@@ -3879,7 +3785,6 @@ const { animation } = Astro.props;
       });
 
       // Pause the render loop + auto-rotate when the tab is backgrounded (battery).
-      // IntersectionObserver only tracks scroll position, not tab visibility.
       document.addEventListener('visibilitychange', function () {
         pageVisible = !document.hidden;
         isVisible = inViewport && pageVisible;
@@ -3891,18 +3796,15 @@ const { animation } = Astro.props;
         if (e.matches) destroyCanvas();
         else initCanvas();
       };
-      // Safari <14 only has addListener
       if (motionQuery.addEventListener) motionQuery.addEventListener('change', motionHandler);
       else if (motionQuery.addListener) motionQuery.addListener(motionHandler);
 
-      // VT swap handler — teardown then re-init for the new page's animation
+      // VT swap handler — single init path per swap (initCanvas self-tears-down).
       document.addEventListener('astro:after-swap', function () {
-        destroyCanvas();
         initCanvas();
       });
-    }
 
-    // Unconditional init (runs on first load AND after VT swap re-execution)
-    initCanvas();
+      initCanvas(); // first load
+    }
   })();
 </script>

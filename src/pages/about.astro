@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroCanvas from '../components/HeroCanvas.astro';
 import Transparency from '../components/islands/Transparency.tsx';
 import { getCollection } from 'astro:content';
 import { slug } from '../lib/utils';
@@ -20,6 +19,7 @@ const recentPosts = (await getCollection('blog'))
 <BaseLayout
   title="About"
   description="Systems builder. AI safety, systems architecture, adversarial thinking. AuDHD. Formerly Greenpeace Actions unit. Based in Cygnet, Tasmania."
+  heroAnimation="strata"
 >
   <script
     is:inline
@@ -52,7 +52,6 @@ const recentPosts = (await getCollection('blog'))
         <span class="text-text-muted">Based in Tasmania.</span>
       </h1>
     </div>
-    <HeroCanvas animation="strata" />
   </section>
 
   <article class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8" aria-labelledby="about-heading">

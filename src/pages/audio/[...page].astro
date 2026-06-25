@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import HeroCanvas from '../../components/HeroCanvas.astro';
 import Pagination from '../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
@@ -28,6 +27,7 @@ const nextUrl = page.currentPage < page.lastPage ? `/audio/${page.currentPage + 
 <BaseLayout
   title={pageTitle}
   description="Conversations with AI tools about failure modes, risk frameworks, and ideas too raw for text. The workshop extended—thinking aloud."
+  heroAnimation="soundwave"
 >
   {
     isFirst && (
@@ -46,7 +46,6 @@ const nextUrl = page.currentPage < page.lastPage ? `/audio/${page.currentPage + 
             </a>
           </p>
         </div>
-        <HeroCanvas animation="soundwave" />
       </section>
     )
   }

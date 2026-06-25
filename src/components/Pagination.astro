@@ -18,9 +18,10 @@ interface Props {
   prevUrl?: string;
   nextUrl?: string;
   basePath: string;
+  numbers?: boolean;
 }
 
-const { currentPage, lastPage, prevUrl, nextUrl, basePath } = Astro.props;
+const { currentPage, lastPage, prevUrl, nextUrl, basePath, numbers = true } = Astro.props;
 
 const hrefFor = (n: number) => (n === 1 ? basePath : `${basePath}${n}/`);
 
@@ -57,19 +58,20 @@ const disabledClass = 'rounded-full px-3 py-1 text-xs text-text-muted opacity-40
         </span>
       )}
 
-      {items.map((n) =>
-        n === 0 ? (
-          <span class="px-2 py-1 text-xs text-text-muted">…</span>
-        ) : n === currentPage ? (
-          <a href={hrefFor(n)} aria-current="page" class={currentClass}>
-            {n}
-          </a>
-        ) : (
-          <a href={hrefFor(n)} class={linkClass}>
-            {n}
-          </a>
-        ),
-      )}
+      {numbers &&
+        items.map((n) =>
+          n === 0 ? (
+            <span class="text-text-muted px-2 py-1 text-xs">…</span>
+          ) : n === currentPage ? (
+            <a href={hrefFor(n)} aria-current="page" class={currentClass}>
+              {n}
+            </a>
+          ) : (
+            <a href={hrefFor(n)} class={linkClass}>
+              {n}
+            </a>
+          ),
+        )}
 
       {nextUrl ? (
         <a href={nextUrl} rel="next" class={linkClass}>

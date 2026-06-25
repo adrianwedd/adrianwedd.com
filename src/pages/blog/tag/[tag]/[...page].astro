@@ -2,6 +2,7 @@
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../../components/Breadcrumb.astro';
 import Pagination from '../../../../components/Pagination.astro';
+import InfiniteScroll from '../../../../components/InfiniteScroll.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { GetStaticPaths, Page } from 'astro';
@@ -71,10 +72,10 @@ const nextUrl = page.currentPage < page.lastPage ? `${basePath}${page.currentPag
       }
     </nav>
 
-    <div class="mt-10 space-y-8">
+    <div class="mt-10 space-y-8" data-post-list>
       {
         page.data.map((post) => (
-          <article>
+          <article data-post-item>
             <a
               href={`/blog/${slug(post.id)}/`}
               class="card-hover hover:border-accent/50 group block rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
@@ -96,12 +97,19 @@ const nextUrl = page.currentPage < page.lastPage ? `${basePath}${page.currentPag
       }
     </div>
 
-    <Pagination
-      currentPage={page.currentPage}
-      lastPage={page.lastPage}
-      prevUrl={prevUrl}
-      nextUrl={nextUrl}
-      basePath={basePath}
-    />
+    {
+      isFirst ? (
+        <InfiniteScroll nextUrl={nextUrl} />
+      ) : (
+        <Pagination
+          currentPage={page.currentPage}
+          lastPage={page.lastPage}
+          prevUrl={prevUrl}
+          nextUrl={nextUrl}
+          basePath={basePath}
+          numbers={false}
+        />
+      )
+    }
   </section>
 </BaseLayout>
