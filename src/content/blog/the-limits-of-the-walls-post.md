@@ -10,6 +10,7 @@ heroAlt: 'Dark botanical infographic: the division of labour and the limits of h
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-limits-of-the-walls/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-limits-of-the-walls/video.mp4'
 draft: false
+autopublish: true
 ---
 
 By the end there were six sessions behind me, spread across a handful of days, and a home network that bore almost no resemblance to the flat one I'd started with. Segmented, firewalled, filtered, watched. And the part that stayed with me wasn't any single configuration change. It was the working relationship — the strange, specific experience of handing an AI agent write-access to the place I actually live, and watching it become genuinely good at the job.
