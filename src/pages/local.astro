@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const paths = [
+  { title: 'Fix my existing site', desc: 'A rebuild or tune-up of a site that is embarrassing, broken, or losing you bookings.' },
+  { title: 'Make my enquiries work', desc: 'Booking and enquiry flows, forms, confirmations, and the follow-up that turns an enquiry into a job.' },
+  { title: 'Get found locally', desc: 'Google Business Profile and local visibility so the right nearby customers actually find you.' },
+];
+
+const addons = [
+  'Admin and follow-up automation',
+  'Ordering, menu, and availability',
+  'Making sure your emails do not land in spam, plus domain basics',
+];
+
+const pillars = [
+  { title: 'I finish things', desc: 'You will not be left with a half-built website and no reply. Clear scope, a deposit, and agreed prices for any changes.' },
+  { title: 'You own what I build', desc: 'No lock-in to a platform you cannot leave or edit. You own the code and your own accounts. I just build it.' },
+  { title: 'Local and plain-English', desc: 'I am in the Huon Valley. I work directly with you. No account manager, no mystery process, no package you do not need.' },
+];
+---
+
+<BaseLayout
+  title="Local businesses: the digital side, done properly"
+  description="Websites, bookings, and Google visibility for Huon Valley and southern Tasmania businesses. Plain pricing, agreed scope, and I finish the job."
+  heroAnimation="pulse"
+>
+  <section id="local-hero" aria-labelledby="local-hero-heading" class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
+    <div class="relative z-10 mx-auto max-w-3xl">
+      <h1 id="local-hero-heading" class="text-text">
+        Local businesses: the digital side,<br />
+        <span class="text-text-muted">done properly.</span>
+      </h1>
+      <p class="mt-6 max-w-prose text-base leading-relaxed text-text-muted">
+        If you run a cafe, clinic, shop, or service in the Huon Valley or southern Tasmania, I build and fix the website side so customers can find you, trust you, and book you. Plain pricing, agreed scope, and I finish the job.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="/contact/" class="btn-primary inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface no-underline hover:opacity-90">Tell me about your business</a>
+        <a href="#paths" class="btn-secondary inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text-muted no-underline hover:border-accent hover:text-accent">See what I help with</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+
+  <section id="paths" aria-labelledby="paths-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <h2 id="paths-heading" class="text-text">Three things I help with most</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      {paths.map(({ title, desc }) => (
+        <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
+          <h3 class="font-semibold text-text">{title}</h3>
+          <p class="mt-2 text-sm text-text-muted">{desc}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-6 text-sm text-text-muted">Also: {addons.join('; ')}.</p>
+  </section>
+
+  <section id="how" aria-labelledby="how-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <h2 id="how-heading" class="text-text">How I work</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      {pillars.map(({ title, desc }) => (
+        <div class="flex flex-col rounded-xl border border-border bg-surface-alt p-5">
+          <h3 class="font-semibold text-text">{title}</h3>
+          <p class="mt-2 text-sm text-text-muted">{desc}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-6 text-sm text-text-muted">Prices are final, with no GST to add, so there are no surprises.</p>
+  </section>
+
+  <section id="proof" aria-labelledby="proof-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <h2 id="proof-heading" class="text-text">See the work</h2>
+    <p class="mt-6 max-w-prose text-text-muted">Short, specific tune-ups of how local businesses show up online.</p>
+    <div class="mt-6"><a href="/fixes/" class="text-accent hover:underline">Browse the local website tune-ups &rarr;</a></div>
+  </section>
+</BaseLayout>
