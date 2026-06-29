@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { slug } from '../../lib/utils';
+
+const fixes = (await getCollection('fixes'))
+  .filter((f) => !f.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Local Website Tune-Ups" description="Short, specific tune-ups of local business websites: what works, and the easy fixes worth doing." heroAnimation="pulse">
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <h1 class="text-text">Local website tune-ups</h1>
+    <p class="mt-6 max-w-prose text-text-muted">Short, specific looks at how local businesses show up online. What's working, and the easy fixes worth doing, most of them free to sort yourself.</p>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      {fixes.map((f) => (
+        <div class="relative flex flex-col rounded-xl border border-border bg-surface-alt p-5 hover:border-accent">
+          <span class="text-xs font-medium text-accent">{f.data.category}</span>
+          <h2 class="mt-2 font-semibold text-text">
+            <a href={`/fixes/${slug(f.id)}/`} class="no-underline text-text after:absolute after:inset-0">{f.data.title}</a>
+          </h2>
+          <p class="mt-2 text-sm text-text-muted">{f.data.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

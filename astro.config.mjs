@@ -10,7 +10,7 @@ import path from 'node:path';
 // Build URL→lastmod map from content frontmatter
 function buildContentDateMap() {
   const map = new Map();
-  const dirs = ['blog', 'projects', 'gallery', 'audio'];
+  const dirs = ['blog', 'projects', 'gallery', 'audio', 'fixes'];
   for (const dir of dirs) {
     const dirPath = path.join(process.cwd(), 'src/content', dir);
     if (!fs.existsSync(dirPath)) continue;
@@ -45,7 +45,9 @@ function getSitemapMeta(pathname) {
   if (/^\/projects\/[^/]+\/$/.test(pathname)) return { priority: 0.8, changefreq: 'monthly' };
   if (/^\/audio\/(?!\d+\/)[^/]+\/$/.test(pathname)) return { priority: 0.7, changefreq: 'weekly' };
   if (/^\/gallery\//.test(pathname)) return { priority: 0.6, changefreq: 'monthly' };
-  if (['/services/', '/about/', '/contact/', '/new/', '/now/'].includes(pathname)) return { priority: 0.7, changefreq: 'monthly' };
+  if (pathname === '/fixes/') return { priority: 0.8, changefreq: 'weekly' };
+  if (/^\/fixes\/[^/]+\/$/.test(pathname)) return { priority: 0.7, changefreq: 'monthly' };
+  if (['/services/', '/local/', '/about/', '/contact/', '/new/', '/now/'].includes(pathname)) return { priority: 0.7, changefreq: 'monthly' };
   if (pathname === '/activity/') return { priority: 0.7, changefreq: 'weekly' };
   return { priority: 0.5, changefreq: 'monthly' };
 }
