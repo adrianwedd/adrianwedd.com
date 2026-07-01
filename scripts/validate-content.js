@@ -30,6 +30,10 @@ const COLLECTIONS = {
     checkDescription: false,
     checkImages: true,
   },
+  fixes: {
+    required: ['title', 'description', 'date', 'tags', 'category'],
+    checkDescription: true,
+  },
 };
 
 let errors = 0;

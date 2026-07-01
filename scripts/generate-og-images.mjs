@@ -14,6 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const PROJECTS_DIR = path.join(ROOT, 'src', 'content', 'projects');
 const BLOG_DIR = path.join(ROOT, 'src', 'content', 'blog');
+const FIXES_DIR = path.join(ROOT, 'src', 'content', 'fixes');
 const OG_DIR = path.join(ROOT, 'public', 'og');
 
 const WIDTH = 1200;
@@ -131,9 +132,10 @@ async function generateForDir(dir, outDir, label) {
 async function main() {
   const projects = await generateForDir(PROJECTS_DIR, path.join(OG_DIR, 'projects'), 'Project');
   const blog = await generateForDir(BLOG_DIR, path.join(OG_DIR, 'blog'), 'Blog');
+  const fixes = await generateForDir(FIXES_DIR, path.join(OG_DIR, 'fixes'), 'Fix');
 
-  const generated = projects.generated + blog.generated;
-  const skipped = projects.skipped + blog.skipped;
+  const generated = projects.generated + blog.generated + fixes.generated;
+  const skipped = projects.skipped + blog.skipped + fixes.skipped;
   console.log(`\nDone: ${generated} generated, ${skipped} skipped (already exist).`);
 }
 
