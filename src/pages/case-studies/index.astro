@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { slug } from '../../lib/utils';
+
+const caseStudies = (await getCollection('case-studies'))
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Case Studies" description="Bigger builds, looked back on: what worked, what mattered, and why it's relevant to local businesses." heroAnimation="pulse">
+  <section aria-labelledby="case-studies-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <h1 id="case-studies-heading" class="text-text">Case studies</h1>
+    <p class="mt-6 max-w-prose text-text-muted">Bigger builds, looked back on. Where the tune-ups are short and specific, these are full projects with real stakes — what worked, what mattered, and why it's relevant if you run a local business.</p>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      {caseStudies.map((c) => (
+        <div class="relative flex flex-col rounded-xl border border-border bg-surface-alt p-5 hover:border-accent">
+          <span class="text-xs font-medium text-accent">{c.data.category}</span>
+          <h2 class="mt-2 font-semibold text-text">
+            <a href={`/case-studies/${slug(c.id)}/`} class="no-underline text-text after:absolute after:inset-0">{c.data.title}</a>
+          </h2>
+          <p class="mt-2 text-sm text-text-muted">{c.data.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -108,4 +108,17 @@ const fixes = defineCollection({
   }),
 });
 
-export const collections = { blog, projects, gallery, audio, fixes };
+const caseStudies = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/case-studies' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    tags: z.array(z.string()).min(1),
+    category: z.string(),
+    url: z.string().url().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, projects, gallery, audio, fixes, 'case-studies': caseStudies };

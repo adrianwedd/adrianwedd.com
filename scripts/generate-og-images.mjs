@@ -15,6 +15,7 @@ const ROOT = path.resolve(__dirname, '..');
 const PROJECTS_DIR = path.join(ROOT, 'src', 'content', 'projects');
 const BLOG_DIR = path.join(ROOT, 'src', 'content', 'blog');
 const FIXES_DIR = path.join(ROOT, 'src', 'content', 'fixes');
+const CASE_STUDIES_DIR = path.join(ROOT, 'src', 'content', 'case-studies');
 const OG_DIR = path.join(ROOT, 'public', 'og');
 
 const WIDTH = 1200;
@@ -133,9 +134,10 @@ async function main() {
   const projects = await generateForDir(PROJECTS_DIR, path.join(OG_DIR, 'projects'), 'Project');
   const blog = await generateForDir(BLOG_DIR, path.join(OG_DIR, 'blog'), 'Blog');
   const fixes = await generateForDir(FIXES_DIR, path.join(OG_DIR, 'fixes'), 'Fix');
+  const caseStudies = await generateForDir(CASE_STUDIES_DIR, path.join(OG_DIR, 'case-studies'), 'CaseStudy');
 
-  const generated = projects.generated + blog.generated + fixes.generated;
-  const skipped = projects.skipped + blog.skipped + fixes.skipped;
+  const generated = projects.generated + blog.generated + fixes.generated + caseStudies.generated;
+  const skipped = projects.skipped + blog.skipped + fixes.skipped + caseStudies.skipped;
   console.log(`\nDone: ${generated} generated, ${skipped} skipped (already exist).`);
 }
 
