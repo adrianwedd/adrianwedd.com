@@ -7,6 +7,8 @@ category: 'Trade'
 draft: false
 ---
 
+*A composite example, drawn from patterns I see often across local trade businesses — not a write-up of one specific business.*
+
 Plenty of word-of-mouth, a real reputation, and a website that quietly dropped enquiries.
 
 ## What's working

@@ -7,6 +7,8 @@ category: 'Cafe'
 draft: false
 ---
 
+*A composite example, drawn from patterns I see often across Huon Valley cafes — not a write-up of one specific business.*
+
 A typical Huon cafe does the hard part well: good food, real personality, loyal regulars. Online is where the holiday walk-in quietly slips away.
 
 ## What's working
