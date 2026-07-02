@@ -34,6 +34,10 @@ const COLLECTIONS = {
     required: ['title', 'description', 'date', 'tags', 'category'],
     checkDescription: true,
   },
+  'case-studies': {
+    required: ['title', 'description', 'date', 'tags', 'category'],
+    checkDescription: true,
+  },
 };
 
 let errors = 0;
