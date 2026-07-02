@@ -2,6 +2,8 @@
 
 **Post-launch features.** Everything here was part of the original vision, reviewed by three models, and intentionally deferred — not forgotten.
 
+> **Current planning doc: [ROADMAP-2026-H2.md](./ROADMAP-2026-H2.md) (Sprints 36–47, written 2026-07-02).** This file is now largely historical: the Sprint 18–21 issues listed as open below have all since been closed.
+
 ---
 
 ## Sprint 1: Post-launch Maintenance ✅ (Completed Feb 15, 2026)
