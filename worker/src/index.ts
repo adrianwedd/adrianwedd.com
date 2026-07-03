@@ -61,7 +61,7 @@ export async function countKeysCapped(
 
 function validatePlatform(raw: string | undefined, fallback = 'facebook'): Platform | null {
   const name = raw ?? fallback;
-  return VALID_PLATFORMS.has(name) ? name as Platform : null;
+  return VALID_PLATFORMS.has(name) ? (name as Platform) : null;
 }
 
 // CronLock DO stub shape. The cast lived in three places before; extracted
@@ -93,12 +93,32 @@ function validateIdempotencyKey(key: unknown): string | null {
   return key;
 }
 
+// ── Rate limiting (#473, defense-in-depth) ────────────────────────────────────
+// 30 req/min per IP+path via the Workers ratelimit binding (wrangler.toml).
+// A zone-level WAF rule would drop abuse before worker code ran, but applying
+// one needs WAF-write access; the binding enforces the same budget from inside
+// the worker. Auth is the primary control — this only caps volumetric abuse
+// against it. Fails open when the binding is absent (tests, misconfig): losing
+// throttling must not take down publishing.
+
+app.use('/api/*', async (c, next) => {
+  const limiter = c.env.API_RATE_LIMITER;
+  if (limiter) {
+    const ip = c.req.header('CF-Connecting-IP') ?? 'unknown';
+    const path = new URL(c.req.url).pathname;
+    const { success } = await limiter.limit({ key: `${ip}:${path}` });
+    if (!success) return json({ error: 'rate_limited' }, 429);
+  }
+  await next();
+});
+
 // ── POST /api/publish ─────────────────────────────────────────────────────────
 
 app.post('/api/publish', async (c) => {
   const env = c.env;
-  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)
-    || await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET);
+  const authOk =
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)) ||
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET));
   if (!authOk) return unauthorized();
 
   const body = await c.req.json<{
@@ -201,9 +221,13 @@ app.post('/api/publish', async (c) => {
     const status = result.isAuthError ? 503 : result.isTransient ? 502 : 422;
     return json({ published: false, error: result.error, isTransient: result.isTransient }, status);
   } finally {
-    await publishLockStub.release(publishLockName, publishToken).catch(e =>
-      console.error(`Publish lock release failed for ${idempotencyKey}: ${e instanceof Error ? e.message : String(e)}`),
-    );
+    await publishLockStub
+      .release(publishLockName, publishToken)
+      .catch((e) =>
+        console.error(
+          `Publish lock release failed for ${idempotencyKey}: ${e instanceof Error ? e.message : String(e)}`,
+        ),
+      );
   }
 });
 
@@ -211,8 +235,9 @@ app.post('/api/publish', async (c) => {
 
 app.post('/api/queue', async (c) => {
   const env = c.env;
-  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)
-    || await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET);
+  const authOk =
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)) ||
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET));
   if (!authOk) return unauthorized();
 
   const body = await c.req.json<{
@@ -263,8 +288,9 @@ app.post('/api/queue', async (c) => {
 
 app.post('/api/queue/sync', async (c) => {
   const env = c.env;
-  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)
-    || await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET);
+  const authOk =
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)) ||
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET));
   if (!authOk) return unauthorized();
 
   const body = await c.req.json<{
@@ -277,7 +303,7 @@ app.post('/api/queue/sync', async (c) => {
       link?: string;
       imageUrl?: string;
       videoUrl?: string;
-    youtubeUrl?: string;
+      youtubeUrl?: string;
       scheduledAt: string;
       scheduledAtEpoch: number;
     }>;
@@ -296,7 +322,7 @@ app.post('/api/queue/sync', async (c) => {
   }
 
   // Build map of incoming posts by ID
-  const incomingById = new Map(body.posts.map(p => [p.id, p]));
+  const incomingById = new Map(body.posts.map((p) => [p.id, p]));
 
   // Scan all queued posts in KV
   const kvQueued = new Map<string, { key: string; post: SocialPost }>();
@@ -309,7 +335,9 @@ app.post('/api/queue/sync', async (c) => {
       try {
         const post: SocialPost = JSON.parse(raw);
         kvQueued.set(post.id, { key: key.name, post });
-      } catch { /* skip corrupt */ }
+      } catch {
+        /* skip corrupt */
+      }
     }
     cursor = list.list_complete ? undefined : list.cursor;
   } while (cursor);
@@ -428,7 +456,9 @@ app.post('/api/cron/publish', async (c) => {
           if (post.scheduledAtEpoch <= Date.now()) {
             duePosts.push({ key: key.name, post });
           }
-        } catch { continue; }
+        } catch {
+          continue;
+        }
       }
       cursor = list.list_complete ? undefined : list.cursor;
     } while (cursor);
@@ -477,7 +507,10 @@ app.post('/api/cron/publish', async (c) => {
       // the worst case and matches the cron-wide lock TTL.
       const perPostLockName = `publish:${post.id}`;
       const perPostLockStub = lockStubFor(env, perPostLockName);
-      const { acquired: perPostAcquired, token: perPostToken } = await perPostLockStub.tryAcquire(perPostLockName, 300_000);
+      const { acquired: perPostAcquired, token: perPostToken } = await perPostLockStub.tryAcquire(
+        perPostLockName,
+        300_000,
+      );
       if (!perPostAcquired || !perPostToken) {
         console.warn(`Skipping post ${post.id} — concurrent publisher holds per-post lock`);
         continue;
@@ -500,7 +533,10 @@ app.post('/api/cron/publish', async (c) => {
         }
 
         // Move to publishing state (optimistic lock)
-        await env.SOCIAL.put(`post:publishing:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify({ ...post, status: 'publishing' }));
+        await env.SOCIAL.put(
+          `post:publishing:${post.scheduledAtEpoch}:${post.id}`,
+          JSON.stringify({ ...post, status: 'publishing' }),
+        );
         await env.SOCIAL.delete(key);
 
         const postAdapter = createPlatform(post.platform, env);
@@ -511,22 +547,26 @@ app.post('/api/cron/publish', async (c) => {
           // Write the durable `idempotent:` record FIRST so that even if the
           // `post:published:` write or the `post:publishing:` cleanup throws,
           // any subsequent retry sees `alreadyPublished` and bails out.
-          await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
-            key: post.id, status: 'published',
-            platformPostId: result.platformPostId ?? null,
-            completedAt: new Date().toISOString(), error: null,
-          }), { expirationTtl: 30 * 24 * 60 * 60 });
+          await env.SOCIAL.put(
+            `idempotent:${post.id}`,
+            JSON.stringify({
+              key: post.id,
+              status: 'published',
+              platformPostId: result.platformPostId ?? null,
+              completedAt: new Date().toISOString(),
+              error: null,
+            }),
+            { expirationTtl: 30 * 24 * 60 * 60 },
+          );
           const publishedPost: SocialPost = {
             ...post,
             status: 'published',
             publishedId: result.platformPostId ?? null,
             publishedAt: new Date().toISOString(),
           };
-          await env.SOCIAL.put(
-            `post:published:${post.scheduledAtEpoch}:${post.id}`,
-            JSON.stringify(publishedPost),
-            { expirationTtl: 180 * 24 * 60 * 60 },
-          );
+          await env.SOCIAL.put(`post:published:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify(publishedPost), {
+            expirationTtl: 180 * 24 * 60 * 60,
+          });
           await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
           published++;
         } else if (result.isAuthError) {
@@ -549,11 +589,17 @@ app.post('/api/cron/publish', async (c) => {
           // worker treated a rate-limit-adjacent 422 as permanent) blocked any
           // re-publish for a month without forceRetry. 7d is long enough to
           // catch the obvious retry attempts but short enough to auto-expire.
-          await env.SOCIAL.put(`idempotent:${post.id}`, JSON.stringify({
-            key: post.id, status: 'failed',
-            platformPostId: null,
-            completedAt: new Date().toISOString(), error: result.error ?? 'Unknown',
-          }), { expirationTtl: 7 * 24 * 60 * 60 });
+          await env.SOCIAL.put(
+            `idempotent:${post.id}`,
+            JSON.stringify({
+              key: post.id,
+              status: 'failed',
+              platformPostId: null,
+              completedAt: new Date().toISOString(),
+              error: result.error ?? 'Unknown',
+            }),
+            { expirationTtl: 7 * 24 * 60 * 60 },
+          );
           await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
           failed++;
         }
@@ -568,7 +614,9 @@ app.post('/api/cron/publish', async (c) => {
           // Bumping `orphanedAfterSuccess` flips the response to 500 so this
           // doesn't silently look like a healthy cron run.
           orphanedAfterSuccess++;
-          console.error(`Post ${post.id} published externally but state persistence failed — leaving publishing key for manual reconciliation`);
+          console.error(
+            `Post ${post.id} published externally but state persistence failed — leaving publishing key for manual reconciliation`,
+          );
         } else {
           // Pre-publish failure — safe to restore queued state for retry.
           try {
@@ -576,15 +624,19 @@ app.post('/api/cron/publish', async (c) => {
             await env.SOCIAL.delete(`post:publishing:${post.scheduledAtEpoch}:${post.id}`);
           } catch (restoreErr) {
             restoreFailures++;
-            console.error(`Post-restore failed for ${post.id}: ${restoreErr instanceof Error ? restoreErr.message : String(restoreErr)}`);
+            console.error(
+              `Post-restore failed for ${post.id}: ${restoreErr instanceof Error ? restoreErr.message : String(restoreErr)}`,
+            );
           }
         }
         // Don't rethrow — let the loop continue with subsequent posts. The
         // outer try/finally will still release the cron-wide lock.
       } finally {
-        await perPostLockStub.release(perPostLockName, perPostToken).catch(e =>
-          console.error(`Per-post lock release failed for ${post.id}: ${e instanceof Error ? e.message : String(e)}`),
-        );
+        await perPostLockStub
+          .release(perPostLockName, perPostToken)
+          .catch((e) =>
+            console.error(`Per-post lock release failed for ${post.id}: ${e instanceof Error ? e.message : String(e)}`),
+          );
       }
     }
 
@@ -597,15 +649,22 @@ app.post('/api/cron/publish', async (c) => {
     // orphanedAfterSuccess = external publish succeeded but state persistence
     // failed (intentionally not retried to avoid double-publish; needs
     // manual reconciliation of the `post:publishing:` orphan).
-    const responseBody = { published, failed, remaining, tokenExpiresInDays: tokenExpiryByPlatform, restoreFailures, orphanedAfterSuccess };
+    const responseBody = {
+      published,
+      failed,
+      remaining,
+      tokenExpiresInDays: tokenExpiryByPlatform,
+      restoreFailures,
+      orphanedAfterSuccess,
+    };
     if (restoreFailures > 0 || orphanedAfterSuccess > 0) {
       return json(responseBody, 500);
     }
     return json(responseBody);
   } finally {
-    await lockStub.release('publish', lockToken).catch(e =>
-      console.error(`Cron publish lock release failed: ${e instanceof Error ? e.message : String(e)}`),
-    );
+    await lockStub
+      .release('publish', lockToken)
+      .catch((e) => console.error(`Cron publish lock release failed: ${e instanceof Error ? e.message : String(e)}`));
   }
 });
 
@@ -630,7 +689,10 @@ app.post('/api/cron/comments', async (c) => {
       if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
         // Mirror the publish-cron behaviour: skip the bad platform and continue with others.
         console.error(`${platformName} data access expired — skipping comments for this platform`);
-        platformResults[platformName] = { error: 'data access expired', tokenExpiresInDays: tokenHealth.daysUntilExpiry };
+        platformResults[platformName] = {
+          error: 'data access expired',
+          tokenExpiresInDays: tokenHealth.daysUntilExpiry,
+        };
         continue;
       }
 
@@ -642,9 +704,9 @@ app.post('/api/cron/comments', async (c) => {
     const fbResult = platformResults.facebook as Record<string, unknown> | undefined;
     return json({ ...fbResult, platforms: platformResults });
   } finally {
-    await commentsLockStub.release('comments', commentsToken).catch(e =>
-      console.error(`Cron comments lock release failed: ${e instanceof Error ? e.message : String(e)}`),
-    );
+    await commentsLockStub
+      .release('comments', commentsToken)
+      .catch((e) => console.error(`Cron comments lock release failed: ${e instanceof Error ? e.message : String(e)}`));
   }
 });
 
@@ -652,9 +714,10 @@ app.post('/api/cron/comments', async (c) => {
 
 app.get('/api/health', async (c) => {
   const env = c.env;
-  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET)
-    || await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)
-    || await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET);
+  const authOk =
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET)) ||
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)) ||
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET));
 
   if (!authOk) return json({ ok: true });
 
@@ -683,13 +746,14 @@ app.get('/api/health', async (c) => {
   const publishedResult = await countKeysCapped(env.SOCIAL, 'post:published:');
   const failedResult = await countKeysCapped(env.SOCIAL, 'post:failed:');
   const flaggedResult = await countKeysCapped(env.SOCIAL, 'fb-flag:');
-  truncated =
-    queuedResult.truncated || publishedResult.truncated || failedResult.truncated || flaggedResult.truncated;
+  truncated = queuedResult.truncated || publishedResult.truncated || failedResult.truncated || flaggedResult.truncated;
 
   if (firstQueuedKeyName) {
     const raw = await env.SOCIAL.get(firstQueuedKeyName);
     if (raw) {
-      try { nextScheduled = JSON.parse(raw).scheduledAt; } catch {}
+      try {
+        nextScheduled = JSON.parse(raw).scheduledAt;
+      } catch {}
     }
   }
 
