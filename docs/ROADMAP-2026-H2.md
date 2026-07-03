@@ -27,7 +27,7 @@ Goal: check every box in #473 that doesn't depend on external parties.
 
 - [ ] Cloudflare rate-limit rule on `social.adrianwedd.com/api/*` (per `worker/docs/rate-limiting.md`, #493) — apply in dashboard, verify with a burst test _(verified absent on the zone 2026-07-03; API token lacks WAF write, so dashboard it is)_
 - [x] First analysis of collected CSP Report-Only data (#497 collector); fix genuine violations; write the enforce-flip criteria — `worker-csp/docs/csp-report-analysis-2026-07-03.md`; two GA4 gaps fixed in `csp.ts`, live on next manual `wrangler deploy`
-- [ ] Meta-CSP fallback fix in `SEOHead.astro` (`'unsafe-inline'` on the worker-bypass path) — **needs Adrian's pick** of the three documented tradeoffs (hashes vs drop vs origin lock)
+- [x] Meta-CSP fallback fix in `SEOHead.astro` (`'unsafe-inline'` on the worker-bypass path) — resolved 2026-07-03: hashes rejected (Astro 6 `security.csp` documents ClientRouter + Shiki as unsupported — both load-bearing), drop is strictly worse, origin can't be locked (public GitHub Pages); fallback kept **risk-accepted** and synced with the worker policy (GA4 hosts + `upgrade-insecure-requests`)
 - [x] `/.well-known/security.txt` if absent (SECURITY.md exists; the machine-readable twin may not) — added, expires 2027-07-01
 
 **Exit:** #473 High section fully checked; CSP report pipeline observed with real traffic; enforce-flip date set.

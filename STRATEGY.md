@@ -90,8 +90,13 @@ Forbidden first. Each names the "helpful improvement" that violates it.
 Executors never relitigate these.
 
 - Static GitHub Pages + edge CSP worker, not SSR: `worker-csp` injects
-  per-request nonces. Rejected: meta-tag CSP hashing (deferred pending owner
-  decision; revisit only if the owner asks). OBSERVED (#497, worker-csp/).
+  per-request nonces. Rejected: meta-tag CSP hashing — decided 2026-07-03
+  (#473): Astro 6's `security.csp` documents ClientRouter (View Transitions)
+  and Shiki as unsupported, both load-bearing here. The `'unsafe-inline'`
+  meta fallback in `SEOHead.astro` is risk-accepted for the worker-bypass
+  path; keep its host lists in sync with `worker-csp/src/csp.ts`. Revisit
+  only if Astro's CSP gains ClientRouter support or the site drops VT.
+  OBSERVED (#497, worker-csp/, Astro config.d.ts).
 - Lighthouse CI is manual (`workflow_dispatch`) since #488; a PR showing
   Lighthouse "skipping" is CORRECT, not broken. Run locally via
   `npm run build && npm run lighthouse`. Rejected: per-PR runs (flaky/slow).
@@ -181,7 +186,7 @@ Executors never relitigate these.
    `npx wrangler deploy --dry-run` → succeeds (dry-run is allowed; actual
    deploy is not).
 8. If you touched `worker-csp/`: `cd worker-csp && npm test && npx tsc
-   --noEmit` → all pass.
+--noEmit` → all pass.
 9. `npm run format:check` → clean (or format only the files you changed).
 
 No automated check exists for social re-broadcast safety or media quality —
