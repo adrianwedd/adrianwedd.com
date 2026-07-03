@@ -1,9 +1,20 @@
+// Workers rate-limiting binding ([[unsafe.bindings]] type "ratelimit" in
+// wrangler.toml). Optional: absent in tests and any environment without the
+// binding configured, in which case the middleware fails open (auth remains
+// the primary control).
+export interface RateLimiter {
+  limit(options: { key: string }): Promise<{ success: boolean }>;
+}
+
 export interface Env {
   // KV
   SOCIAL: KVNamespace;
 
   // Durable Objects
   CRON_LOCK: DurableObjectNamespace;
+
+  // Rate limiting
+  API_RATE_LIMITER?: RateLimiter;
 
   // Vars
   FACEBOOK_PAGE_ID: string;
