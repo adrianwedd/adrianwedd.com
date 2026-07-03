@@ -1,0 +1,7 @@
+# Security policy for adrianwedd.com — machine-readable twin of SECURITY.md
+# https://github.com/adrianwedd/adrianwedd.com/blob/main/SECURITY.md
+Contact: mailto:adrian@adrianwedd.com
+Expires: 2027-07-01T00:00:00.000Z
+Policy: https://github.com/adrianwedd/adrianwedd.com/blob/main/SECURITY.md
+Canonical: https://adrianwedd.com/.well-known/security.txt
+Preferred-Languages: en

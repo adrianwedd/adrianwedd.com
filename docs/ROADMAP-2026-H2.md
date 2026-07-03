@@ -25,10 +25,10 @@ Goal: make `main`, the deployed workers, and the branch list agree with reality.
 
 Goal: check every box in #473 that doesn't depend on external parties.
 
-- [ ] Cloudflare rate-limit rule on `social.adrianwedd.com/api/*` (per `worker/docs/rate-limiting.md`, #493) — apply in dashboard, verify with a burst test
-- [ ] First analysis of collected CSP Report-Only data (#497 collector); fix genuine violations; write the enforce-flip criteria
+- [ ] Cloudflare rate-limit rule on `social.adrianwedd.com/api/*` (per `worker/docs/rate-limiting.md`, #493) — apply in dashboard, verify with a burst test _(verified absent on the zone 2026-07-03; API token lacks WAF write, so dashboard it is)_
+- [x] First analysis of collected CSP Report-Only data (#497 collector); fix genuine violations; write the enforce-flip criteria — `worker-csp/docs/csp-report-analysis-2026-07-03.md`; two GA4 gaps fixed in `csp.ts`, live on next manual `wrangler deploy`
 - [ ] Meta-CSP fallback fix in `SEOHead.astro` (`'unsafe-inline'` on the worker-bypass path) — **needs Adrian's pick** of the three documented tradeoffs (hashes vs drop vs origin lock)
-- [ ] `/.well-known/security.txt` if absent (SECURITY.md exists; the machine-readable twin may not)
+- [x] `/.well-known/security.txt` if absent (SECURITY.md exists; the machine-readable twin may not) — added, expires 2027-07-01
 
 **Exit:** #473 High section fully checked; CSP report pipeline observed with real traffic; enforce-flip date set.
 
@@ -86,7 +86,7 @@ Goal: full asset coverage and a one-command video path.
 - [ ] The 4 flagged sub-256k NLM-native audio takes — **needs Adrian's re-roll-or-accept call**, then action it
 - [ ] YouTube upload automation: script + checklist (3s signoff sting concat with `-c copy`, channel-identity verification step)
 - [ ] Audio RSS enclosure audit (enclosure URLs, durations, MIME types across the audio collection feed)
-- [ ] *(Gated on AI Studio credits)* Index suite render: apex track + the unpaired 06+02
+- [ ] _(Gated on AI Studio credits)_ Index suite render: apex track + the unpaired 06+02
 
 **Exit:** no published content missing its kit; YouTube publish is one command; index suite rendered or still explicitly credit-gated.
 
@@ -140,7 +140,7 @@ Goal: finish the 2026-06-15 email-security sweep's tail and close the H2 arc.
 
 - [ ] DS records at registrars for the 7 external domains (manual: GoDaddy/Porkbun/.ch)
 - [ ] MTA-STS `testing` → `enforce` flip (after a clean TLS-RPT window)
-- [ ] *(Gated on Google Workspace recovery)* rotate the 1024-bit Google DKIM key
+- [ ] _(Gated on Google Workspace recovery)_ rotate the 1024-bit Google DKIM key
 - [ ] Secret-rotation runbook: worker secrets, GH PATs, GA4 service-account key — schedule + procedure
 - [ ] Close #473; H2 retro; draft the next roadmap
 
@@ -150,13 +150,13 @@ Goal: finish the 2026-06-15 email-security sweep's tail and close the H2 arc.
 
 ## Decisions Adrian owes (blocking specific items, not sprints)
 
-| Decision | Blocks | Sprint |
-|----------|--------|--------|
-| Meta-CSP approach (hashes / drop / origin lock — 3 tradeoffs documented) | SEOHead fallback fix | S37 |
-| the-tell / the-recital: renumber or cut | Draft publication | S40 |
-| 4 sub-256k audio takes: re-roll or accept | Audio coverage closure | S42 |
-| FB token alert channel beyond GitHub issues | Alerting design | S39 |
-| Dependabot auto-merge policy sign-off | Auto-merge enablement | S36 |
+| Decision                                                                 | Blocks                 | Sprint |
+| ------------------------------------------------------------------------ | ---------------------- | ------ |
+| Meta-CSP approach (hashes / drop / origin lock — 3 tradeoffs documented) | SEOHead fallback fix   | S37    |
+| the-tell / the-recital: renumber or cut                                  | Draft publication      | S40    |
+| 4 sub-256k audio takes: re-roll or accept                                | Audio coverage closure | S42    |
+| FB token alert channel beyond GitHub issues                              | Alerting design        | S39    |
+| Dependabot auto-merge policy sign-off                                    | Auto-merge enablement  | S36    |
 
 ## Externally gated
 
