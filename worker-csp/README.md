@@ -4,7 +4,7 @@ Edge worker that injects per-request CSP nonces into HTML responses for `adrianw
 
 ## Why this exists
 
-The site's build-time meta CSP in `src/components/SEOHead.astro` carries `'unsafe-inline'`, which negates most of the XSS mitigation the rest of the policy buys. A previous attempt at hash-based CSP via Astro's `experimental.csp` (#222) broke the static build (#241).
+The site's build-time meta CSP in `src/components/SEOHead.astro` carries `'unsafe-inline'`, which negates most of the XSS mitigation the rest of the policy buys. A previous attempt at hash-based CSP via Astro's `experimental.csp` (#222) broke the static build (#241), and the now-stable Astro 6 `security.csp` documents ClientRouter (View Transitions) and Shiki as unsupported — both load-bearing on this site — so hashing stays off the table (#473, decided 2026-07-03). The meta CSP remains as a risk-accepted fallback for worker-bypass paths only; keep its host lists in sync with `src/csp.ts`.
 
 Nonces at the edge sidestep both problems: the worker generates a fresh random nonce per request, attaches it to every `<script>` and `<style>` tag via HTMLRewriter, and emits a real `Content-Security-Policy` response header (so `frame-ancestors` actually works).
 
