@@ -41,7 +41,8 @@
     "esbuild": "^0.28.1",
     "@grpc/grpc-js": "^1.14.4",
     "protobufjs": "^7.6.4",
-    "vite": "^7.3.5"
+    "vite": "^7.3.5",
+    "tmp": "^0.2.6"
   },
   "devDependencies": {
     "@lhci/cli": "^0.15.1",
