@@ -25,12 +25,12 @@ Goal: make `main`, the deployed workers, and the branch list agree with reality.
 
 Goal: check every box in #473 that doesn't depend on external parties.
 
-- [ ] Cloudflare rate-limit rule on `social.adrianwedd.com/api/*` (per `worker/docs/rate-limiting.md`, #493) — apply in dashboard, verify with a burst test _(verified absent on the zone 2026-07-03; API token lacks WAF write, so dashboard it is)_
+- [x] Cloudflare rate-limit rule on `social.adrianwedd.com/api/*` (per `worker/docs/rate-limiting.md`, #493) — shipped 2026-07-03 as a Workers `[[ratelimits]]` binding instead (PRs #525/#527; no credential has zone WAF write): 30 req/min per IP+path, deployed + burst-verified (saturated key → 429s, sibling path unaffected). Gotcha: legacy `[[unsafe.bindings]]` ratelimit shape is inert on wrangler 4.x
 - [x] First analysis of collected CSP Report-Only data (#497 collector); fix genuine violations; write the enforce-flip criteria — `worker-csp/docs/csp-report-analysis-2026-07-03.md`; two GA4 gaps fixed in `csp.ts`, live on next manual `wrangler deploy`
 - [x] Meta-CSP fallback fix in `SEOHead.astro` (`'unsafe-inline'` on the worker-bypass path) — resolved 2026-07-03: hashes rejected (Astro 6 `security.csp` documents ClientRouter + Shiki as unsupported — both load-bearing), drop is strictly worse, origin can't be locked (public GitHub Pages); fallback kept **risk-accepted** and synced with the worker policy (GA4 hosts + `upgrade-insecure-requests`)
 - [x] `/.well-known/security.txt` if absent (SECURITY.md exists; the machine-readable twin may not) — added, expires 2027-07-01
 
-**Exit:** #473 High section fully checked; CSP report pipeline observed with real traffic; enforce-flip date set.
+**Exit:** #473 High section fully checked; CSP report pipeline observed with real traffic; enforce-flip date set. ✅ Done 2026-07-03 — enforce-flip: after 14 clean Report-Only days from the worker-csp deploy (2026-07-03), move reporting onto the enforced policy and retire the RO mirror (criteria in `worker-csp/docs/csp-report-analysis-2026-07-03.md`).
 
 ## Sprint 38: Test Foundation for the Astro Site
 
