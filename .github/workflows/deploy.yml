@@ -171,6 +171,9 @@ jobs:
         with:
           path: dist
           retention-days: 1
+          # v5 defaults include-hidden-files to false, which silently drops
+          # dist/.well-known/ (security.txt) from the deployed artifact.
+          include-hidden-files: true
 
   worker-csp:
     runs-on: ubuntu-latest
