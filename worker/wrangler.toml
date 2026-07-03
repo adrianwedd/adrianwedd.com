@@ -20,3 +20,13 @@ FACEBOOK_PAGE_ID = "35753603727"
 GRAPH_API_VERSION = "v21.0"
 INSTAGRAM_BUSINESS_ACCOUNT_ID = ""
 BLUESKY_HANDLE = "adrianwedd.com"
+
+# Rate limiting binding (#473): 30 req/min per IP+path across /api/*.
+# A zone-level WAF rate-limiting rule would drop abuse before worker code,
+# but the Workers binding achieves the same budget without WAF-write access.
+# namespace_id is an arbitrary per-worker-unique numeric label, not a KV id.
+[[unsafe.bindings]]
+name = "API_RATE_LIMITER"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 30, period = 60 }
