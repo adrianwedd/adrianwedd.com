@@ -18,7 +18,7 @@
 - Accept-all button: `#consent-accept-all`. Banner: `#consent-banner`.
 - Theme: toggled via `.theme-toggle` button; `.light` class on `<html>`; localStorage key `theme`.
 - `PUBLIC_GA_MEASUREMENT_ID` is baked at build time (`Analytics.astro:16`); `loadGA4()` early-returns on empty. The e2e build MUST set it to `G-TESTE2E0000` or consent assertions can't pass.
-- Preview port is **4322** (never 4321 — avoids dev-server collision); `reuseExistingServer: false`.
+- Preview port is **4322** (never 4321 — avoids dev-server collision); `reuseExistingServer: false`. Port 4322 must be free when the suite starts — `astro preview` falls forward to the next port if it's taken, which would mismatch `baseURL` and hang until timeout. CI runners are clean; locally, kill any stray listener (`lsof -ti:4322 | xargs kill` ) if a run hangs on startup.
 - Smoke subset (`@smoke`) must stay <3 min wall-clock; PR gate = desktop Chromium only.
 - New `.ts` files must pass `npm run lint` (flat ESLint, astro plugin) and `npm run format:check` (Prettier).
 - Commit trailer on every commit: `Claude-Session: https://claude.ai/code/session_01Lm2dtTcKC99rCGfqj2bw95`
@@ -28,10 +28,10 @@
 ### Task 1: Install Playwright, config, scripts, gitignore
 
 **Files:**
-- Modify: `package.json` (devDependencies + scripts)
+- Modify: `package.json` (devDependencies + scripts, broaden format globs)
 - Create: `playwright.config.ts`
 - Modify: `.gitignore`
-- Modify: `eslint.config.js` (ignore Playwright output dirs)
+- Modify: `eslint.config.mjs` (ignore Playwright output dirs) — **the file is `.mjs`, not `.js`**
 
 **Interfaces:**
 - Produces: `playwright.config.ts` exporting a config with `testDir: 'e2e'`, `baseURL` from `E2E_BASE_URL ?? 'http://localhost:4322'`, `webServer` (CI-aware, port 4322, `reuseExistingServer: false`), projects `chromium` + `mobile-chromium`. npm scripts `test:e2e`, `test:e2e:smoke`, `test:e2e:full`.
@@ -85,13 +85,21 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 3: Add npm scripts to `package.json`**
+- [ ] **Step 3: Add npm scripts + broaden format globs in `package.json`**
 
 Add to `"scripts"`:
 ```json
 "test:e2e": "playwright test",
 "test:e2e:smoke": "playwright test --project=chromium --grep @smoke",
 "test:e2e:full": "playwright test --grep-invert @smoke"
+```
+
+Also broaden the existing `format` / `format:check` globs so they actually
+cover the new test files (currently they match `src/**` only, so
+`playwright.config.ts` and `e2e/` would be silently unchecked):
+```json
+"format": "prettier --write 'src/**/*.{astro,ts,tsx,css,md,mdx}' 'e2e/**/*.ts' 'playwright.config.ts'",
+"format:check": "prettier --check 'src/**/*.{astro,ts,tsx,css,md,mdx}' 'e2e/**/*.ts' 'playwright.config.ts'"
 ```
 
 - [ ] **Step 4: Update `.gitignore`**
@@ -106,7 +114,7 @@ Append:
 
 - [ ] **Step 5: Ignore Playwright output in ESLint**
 
-In `eslint.config.js`, add the report/results dirs to the existing `ignores` array:
+In `eslint.config.mjs`, add the report/results dirs to the existing `ignores` array:
 ```js
 ignores: ['dist/', '.astro/', 'public/pagefind/', 'scripts/notebooklm/', 'playwright-report/', 'test-results/'],
 ```
@@ -115,12 +123,12 @@ ignores: ['dist/', '.astro/', 'public/pagefind/', 'scripts/notebooklm/', 'playwr
 
 Run:
 ```bash
-npm run lint && npx prettier --check 'playwright.config.ts'
+npm run lint && npm run format:check
 ```
-Expected: no errors. If Prettier flags `playwright.config.ts`, run `npx prettier --write playwright.config.ts`.
+Expected: no errors. If Prettier flags `playwright.config.ts`, run `npm run format`.
 
 ```bash
-git add package.json package-lock.json playwright.config.ts .gitignore eslint.config.js
+git add package.json package-lock.json playwright.config.ts .gitignore eslint.config.mjs
 git commit -m "test(e2e): scaffold Playwright — config, scripts, gitignore
 
 Claude-Session: https://claude.ai/code/session_01Lm2dtTcKC99rCGfqj2bw95"
@@ -235,25 +243,28 @@ test('@smoke VT navigation preserves window + theme, no full reload', async ({ p
     document.documentElement.classList.add('light');
   });
 
-  // home -> blog index (VT swap, window state must survive)
+  // home -> blog index (VT swap, window state must survive).
+  // trailingSlash:'always' → the canonical link is exactly '/blog/'.
   await expectNoVtReload(page, async () => {
-    await page.locator('a[href$="/blog/"], a[href="/blog"]').first().click();
-    await page.waitForURL('**/blog/**');
+    await page.locator('a[href="/blog/"]').first().click();
+    await page.waitForURL('**/blog/');
   });
   await expect(page.locator('html')).toHaveClass(/light/);
 
-  // blog index -> first real post (discover slug dynamically — never hardcode)
-  const firstPost = page.locator('a[href*="/blog/"]').filter({ hasNot: page.locator('[href$="/blog/"]') }).first();
+  // blog index -> first real post. Scope to the post list container so we never
+  // grab a tag chip or breadcrumb. Markup: <div data-post-list><article
+  // data-post-item><a href="/blog/<slug>/">. Discover the slug dynamically.
+  const firstPost = page.locator('[data-post-list] article a[href*="/blog/"]').first();
   await expectNoVtReload(page, async () => {
     await firstPost.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForURL(/\/blog\/[^/]+\/$/);
   });
   await expect(page.locator('html')).toHaveClass(/light/);
 
   // back() -> still a VT restore, theme intact, header still interactive
   await expectNoVtReload(page, async () => {
     await page.goBack();
-    await page.waitForURL('**/blog/**');
+    await page.waitForURL('**/blog/');
   });
   await expect(page.locator('html')).toHaveClass(/light/);
   // Delegated theme-toggle listener survived the swaps (not duplicated/dead):
@@ -268,7 +279,7 @@ Run:
 ```bash
 npx playwright test e2e/vt-navigation.spec.ts --project=chromium
 ```
-Expected: PASS. (Playwright's `webServer` builds and serves on 4322 automatically. If the blog-post locator finds no element, inspect the built `dist/blog/index.html` for the real anchor shape and adjust the selector — the intent is "the first link into an individual post".)
+Expected: PASS. (Playwright's `webServer` builds and serves on 4322 automatically. The `[data-post-list] article a` selector matches the verified blog-index markup in `src/pages/blog/[...page].astro:113-119`.)
 
 - [ ] **Step 3: Commit**
 
@@ -365,8 +376,8 @@ test('@smoke theme toggle persists across VT swap and reload', async ({ page }) 
 
   // Persists across a VT swap.
   await expectNoVtReload(page, async () => {
-    await page.locator('a[href$="/blog/"], a[href="/blog"]').first().click();
-    await page.waitForURL('**/blog/**');
+    await page.locator('a[href="/blog/"]').first().click();
+    await page.waitForURL('**/blog/');
   });
   await expect(page.locator('html')).toHaveClass(/light/);
 
@@ -410,11 +421,14 @@ import { test, expect } from '@playwright/test';
 
 test('Pagefind search returns a result linking to a real page', async ({ page }) => {
   await page.goto('/search/');
-  const input = page.locator('input[type="search"], input[type="text"]').first();
+  // PagefindUI mounts into #search and loads its WASM index lazily. Its input
+  // is .pagefind-ui__search-input; results are .pagefind-ui__result-link.
+  const input = page.locator('.pagefind-ui__search-input');
+  await expect(input).toBeVisible({ timeout: 15_000 });
   await input.fill('astro');
-  // Pagefind loads its WASM index lazily; wait for a result anchor.
-  const result = page.locator('a[href^="/"]').filter({ hasText: /.+/ });
-  await expect(result.first()).toBeVisible({ timeout: 15_000 });
+  const result = page.locator('#search .pagefind-ui__result-link').first();
+  await expect(result).toBeVisible({ timeout: 15_000 });
+  await expect(result).toHaveAttribute('href', /^\//);
 });
 ```
 
@@ -423,16 +437,17 @@ test('Pagefind search returns a result linking to a real page', async ({ page })
 ```ts
 import { test, expect } from '@playwright/test';
 
-test('blog tag filter changes the visible post set', async ({ page }) => {
+// Tag chips navigate to a dedicated tag index (/blog/tag/<tag>/), they don't
+// filter in place. Assert the navigation lands on a tag page that still lists
+// posts from the verified [data-post-list] container.
+test('blog tag chip navigates to a tag index with posts', async ({ page }) => {
   await page.goto('/blog/');
-  const tag = page.locator('[data-tag], a[href*="/blog/tag/"]').first();
+  const tag = page.locator('a[href*="/blog/tag/"]').first();
   await expect(tag).toBeVisible();
-  const before = await page.locator('article, li a[href*="/blog/"]').count();
   await tag.click();
-  await page.waitForLoadState('networkidle');
-  const after = await page.locator('article, li a[href*="/blog/"]').count();
-  expect(after).toBeGreaterThan(0);
-  expect(after).toBeLessThanOrEqual(before);
+  await page.waitForURL('**/blog/tag/**');
+  const posts = page.locator('[data-post-list] article a[href*="/blog/"]');
+  await expect(posts.first()).toBeVisible();
 });
 ```
 
@@ -441,15 +456,22 @@ test('blog tag filter changes the visible post set', async ({ page }) => {
 ```ts
 import { test, expect } from '@playwright/test';
 
+// Compare the first POST link (scoped to [data-post-list]) — the nav/header
+// blog link is identical on every page and would never change.
 test('index pagination advances to a different listing', async ({ page }) => {
   await page.goto('/blog/');
-  const next = page.locator('a[rel="next"], a[href*="/2/"]').first();
-  const hasNext = await next.count();
-  test.skip(hasNext === 0, 'not enough content for a second page');
-  const firstBefore = await page.locator('a[href*="/blog/"]').first().getAttribute('href');
+  const next = page.locator('a[rel="next"]').first();
+  test.skip((await next.count()) === 0, 'not enough content for a second page');
+  const firstBefore = await page
+    .locator('[data-post-list] article a[href*="/blog/"]')
+    .first()
+    .getAttribute('href');
   await next.click();
-  await page.waitForLoadState('networkidle');
-  const firstAfter = await page.locator('a[href*="/blog/"]').first().getAttribute('href');
+  await page.waitForURL('**/2/');
+  const firstAfter = await page
+    .locator('[data-post-list] article a[href*="/blog/"]')
+    .first()
+    .getAttribute('href');
   expect(firstAfter).not.toBe(firstBefore);
 });
 ```
@@ -459,18 +481,19 @@ test('index pagination advances to a different listing', async ({ page }) => {
 ```ts
 import { test, expect } from '@playwright/test';
 
+// AudioPlayer is a Preact island; its single control is icon-only and swaps
+// aria-label between 'Play' and 'Pause' (AudioPlayer.tsx:96). Scope the episode
+// link to <article> so we don't click a tag chip. Don't wait for networkidle —
+// R2 media streaming may never settle; wait for the control instead.
 test('audio player toggles play/pause state', async ({ page }) => {
   await page.goto('/audio/');
-  const firstEpisode = page.locator('a[href*="/audio/"]').first();
-  await firstEpisode.click();
-  await page.waitForLoadState('networkidle');
-  const playBtn = page.locator('[aria-label*="Play" i], button:has-text("Play")').first();
+  await page.locator('article a[href*="/audio/"]').first().click();
+  await page.waitForURL(/\/audio\/[^/]+\/$/);
+  const playBtn = page.getByRole('button', { name: 'Play' });
   await expect(playBtn).toBeVisible({ timeout: 10_000 });
   await playBtn.click();
-  // After pressing play the control should offer pause (state changed).
-  await expect(
-    page.locator('[aria-label*="Pause" i], button:has-text("Pause")').first(),
-  ).toBeVisible({ timeout: 10_000 });
+  // State flipped: the same control now advertises Pause.
+  await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible({ timeout: 10_000 });
 });
 ```
 
@@ -478,9 +501,9 @@ test('audio player toggles play/pause state', async ({ page }) => {
 
 Run:
 ```bash
-npx playwright test --project=chromium --grep-invert @smoke
+PUBLIC_GA_MEASUREMENT_ID=G-TESTE2E0000 npx playwright test --project=chromium --grep-invert @smoke
 ```
-Expected: PASS, or a documented `test.skip` for pagination if content is thin. If a selector misses, open the built page in `dist/` and adjust to the real markup — the assertion intent per test is fixed; only selectors adapt. Audio may be slow due to R2 media; that's why it's nightly-only.
+Expected: PASS, or a documented `test.skip` for pagination if content is thin. Selectors are scoped to verified markup; if audio play/pause flakes on CI media, loosen to asserting the `audio` element's `paused` property instead. Audio is nightly-only precisely because R2 media is slow.
 
 - [ ] **Step 6: Commit**
 
@@ -595,9 +618,9 @@ Claude-Session: https://claude.ai/code/session_01Lm2dtTcKC99rCGfqj2bw95"
 
 - [ ] **Step 1: Time the smoke gate end to end**
 
-Run:
+Run (the dummy GA id must be exported so the `webServer`'s local build bakes it — the consent smoke spec depends on it):
 ```bash
-time npm run test:e2e:smoke
+time PUBLIC_GA_MEASUREMENT_ID=G-TESTE2E0000 npm run test:e2e:smoke
 ```
 Expected: PASS in well under 3 minutes (build + 3 smoke specs, Chromium only). Record the wall-clock. If it exceeds ~2.5 min, note which spec dominates for a later split.
 
@@ -617,7 +640,9 @@ Run:
 ```bash
 npm run lint && npm run format:check
 ```
-Expected: 0 errors. Prettier-write any flagged file, re-check.
+Expected: 0 errors. `format:check`'s globs were broadened in Task 1 Step 3 to
+include `e2e/**/*.ts` and `playwright.config.ts`, so this now actually checks the
+new files. Prettier-write any flagged file (`npm run format`), re-check.
 
 - [ ] **Step 4: Commit**
 
