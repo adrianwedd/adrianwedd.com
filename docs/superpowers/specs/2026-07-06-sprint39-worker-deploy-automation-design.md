@@ -52,6 +52,7 @@ on:
   workflow_dispatch:
     inputs:
       target: { type: choice, options: [all, social, csp, mta-sts] }
+      mode: { type: choice, options: [deploy, drift-only] }   # drift-only = read-only (plan-stage QA)
   schedule:
     - cron: '0 15 * * *'   # ~01:00 AEST, offset from the e2e nightly (14:00 UTC)
 
@@ -59,10 +60,7 @@ permissions:
   contents: read           # checkout only; never writes to the repo (QA M1)
 ```
 
-Concurrency is **per-job-class**, not global (QA M2), so a gated deploy waiting hours for approval never blocks the read-only nightly drift check:
-
-- Job B (deploy): `concurrency: { group: worker-deploy, cancel-in-progress: false }`
-- Job C (drift): no concurrency (read-only, independent).
+A dispatch chooses `mode`: `deploy` (deploy the `target`, gated) or `drift-only` (read-only check, no deploy) — so a manual drift check never mutates prod (plan-stage QA). Concurrency is **per-worker** on deploy (`group: worker-deploy-${{ matrix.worker.key }}`), so a CSP deploy waiting on approval doesn't block an mta-sts deploy; the drift job has no group. Every wrangler-running job first installs a **pinned** wrangler (`npm --prefix worker ci` → `WRANGLER_BIN`); a bare `npx wrangler` in CI would download an unpinned version and fails outright in `worker-mta-sts/` (no `node_modules`) — plan-stage QA.
 
 Three logical jobs:
 
@@ -100,24 +98,22 @@ Per-worker steps (all parameterized by the matrix entry):
 7. on verify failure → ROLLBACK (see rollback contract below), then exit 1
 ```
 
-**Rollback contract (revised per QA #2/C2/C3, #5/C5):**
+**Rollback contract (revised again after plan-stage QA — Codex/Hermes traced wrangler `cli.js`):**
+
+The earlier draft claimed a migration *pre-check* and a stderr grep for a migration/secret error string. Both QA engines showed that is unreliable: wrangler's rollback handler has no migration-tag comparison, code 10220 is a *changed-secret* case that CI auto-confirms internally (so it never surfaces as a fatal error), and there is no verified migration-block stderr string to grep. The honest, correct contract:
 
 ```
-- Pre-check: if this worker's wrangler.toml declares a migration tag NEWER than the
-  last-deployed tag (not merely "contains [[migrations]]" — QA L4), DO NOT auto-rollback.
-  Cloudflare disallows rollback across a Durable Object migration entirely (not "rolls
-  back code but leaves the migration" — QA #5). Print a LOUD "MANUAL INTERVENTION
-  REQUIRED" message with the failing version id and exit 1. No rollback attempt.
-- Otherwise:
+- Capture the currently-live version id BEFORE deploy (parse `deployments list --json`,
+  take the 100%-traffic version of the newest deployment). Roll back to THAT explicit id,
+  never wrangler's default heuristic (which can skip the immediate prior version — QA).
+- On verify failure:
     wrangler rollback "$prevVersionId" --yes --message "auto-rollback ${GITHUB_SHA}"
-    # --yes is REQUIRED: rollback is interactive; relying on CI=true auto-confirm is
-    # fragile (QA C2). --yes also covers the CANNOT_ROLLBACK_WITH_MODIFIED_SECRET (10220)
-    # confirmation when a secret changed between versions (QA C3) — log loudly if hit.
-  - Check the rollback command's OWN exit code. If rollback itself fails → exit 1
-    immediately; do NOT re-verify (QA C2).
-  - If rollback succeeded → re-run verify WITH THE SAME retry/backoff as step 6
-    (not a single shot — QA M4); log whether health was restored.
-  - exit 1 regardless (a rolled-back deploy is still a failed run).
+    # --yes is belt-and-suspenders; in CI wrangler already auto-confirms via ci-info.
+  - If rollback exits 0 → re-verify (the probe retries internally with backoff); exit 1.
+  - If rollback exits non-zero → print a LOUD "MANUAL INTERVENTION REQUIRED" naming a
+    Durable Object migration or a changed secret as the likely cause, leave the failed
+    version live, exit 1. We do NOT pretend to pre-detect the migration boundary.
+- If no previous version was captured → manual-intervention path (can't auto-rollback).
 ```
 
 ### Job C — `drift-check` (schedule + dispatch; ungated, read-only)
@@ -147,7 +143,7 @@ Each runs against the live edge post-deploy, with retry/backoff:
 | Worker | Verification |
 |---|---|
 | `adrianwedd-social` | `GET https://social.adrianwedd.com/api/health` → HTTP 200 + valid JSON. **This is a liveness/routing probe, not a health probe.** The unauthenticated response is exactly `{"ok":true}` (`worker/src/index.ts:715-723` returns `{ok:true}` when no `CRON_SECRET`/`PUBLISH_SECRET`/`CLI_SECRET` is supplied). It proves the worker booted and Hono routed the request; it does **not** and **cannot** (without a secret CI deliberately doesn't hold) assert upstream token health. Token expiry is owned separately by `social-token-alert.yml`. |
-| `adrianwedd-csp` | `GET https://adrianwedd.com/` → HTTP 200 **and** a `Content-Security-Policy` **response header** (not the origin's `<meta>` tag) matching `nonce-[A-Za-z0-9+/=]{20,}`. The non-empty ≥20-char base64 nonce (the worker emits 22-char nonces) proves the worker is actively generating and injecting a real nonce, not failing open to a pass-through or emitting a degenerate `nonce-` literal (QA #7/H4). |
+| `adrianwedd-csp` | `GET https://adrianwedd.com/` → HTTP 200 **and** a `Content-Security-Policy` **response header** (not the origin's `<meta>` tag) matching `nonce-([A-Za-z0-9+/=]{20,})` **and** that same nonce appears in the HTML **body**. Checking the body too proves the worker actually rewrote the page (injected the nonce into `<script>` tags), not merely set a header — a header-only check would miss a broken rewrite (plan-stage QA). |
 | `adrianwedd-mta-sts` | `GET https://mta-sts.adrianwedd.com/.well-known/mta-sts.txt` → HTTP 200 + body contains `version: STSv1`. |
 
 ## Secrets & setup (Adrian's action items)
