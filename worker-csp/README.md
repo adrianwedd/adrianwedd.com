@@ -17,7 +17,7 @@ Nonces at the edge sidestep both problems: the worker generates a fresh random n
 
 1. Review `src/csp.ts` — make sure every external origin currently used by the site is in the policy. Missing one will block its scripts/images/connects.
 2. `cd worker-csp && npm install && npm test` — all green.
-3. `npx wrangler deploy --dry-run`, then `npx wrangler deploy`.
+3. Deploy via `.github/workflows/worker-deploy.yml` (`docs/runbooks/worker-deploy.md`); `npx wrangler deploy --dry-run` remains useful for local validation.
 4. Watch the `/__csp-report` Report-Only stream (`wrangler tail`) for new violations after any policy change.
 
 Note: the build-time meta CSP in `src/components/SEOHead.astro` is retained as a risk-accepted fallback for worker-bypass paths (see Why this exists) — keep its host lists in sync with `src/csp.ts`.

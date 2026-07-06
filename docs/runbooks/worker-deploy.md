@@ -29,6 +29,14 @@ auto-rollback, and a nightly drift check.
 - **manual** → Actions → Worker Deploy → Run workflow → choose `mode`
   (`deploy` a `target`, or `drift-only` for a read-only check).
 
+## First run: seed deployment stamps
+
+Because the three workers were last deployed manually (deployment messages lack `gitsha:` stamps), the first nightly drift check will report every worker as DRIFT / "unstamped" until each has been deployed once through CI. Seed the stamps after merge+setup by running:
+
+**Actions → Worker Deploy → Run workflow → `target: all`, `mode: deploy`** (approve each worker when prompted).
+
+After these three deployments complete, future drift reports will accurately flag real divergence.
+
 ## Limitations
 
 - Rollback targets the explicit pre-deploy version. If wrangler refuses (a
