@@ -4,7 +4,7 @@
 # Object migration or a changed secret can block it), demand manual action.
 set -euo pipefail
 
-WRANGLER="${WRANGLER_BIN:-npx wrangler}"
+WRANGLER=(${WRANGLER_BIN:-npx wrangler})
 
 # Capture the currently-live version BEFORE deploying, so rollback targets the
 # exact known-good version rather than wrangler's default heuristic.
@@ -23,7 +23,7 @@ if [ -f package.json ]; then
 fi
 
 echo "::group::deploy ${WORKER_NAME}"
-"$WRANGLER" deploy --message "gitsha:${GIT_SHA}"
+"${WRANGLER[@]}" deploy --message "gitsha:${GIT_SHA}"
 echo "::endgroup::"
 
 if node "${GITHUB_WORKSPACE}/scripts/verify-worker.mjs" "$WORKER_KEY"; then
@@ -39,7 +39,7 @@ fi
 
 # --yes is belt-and-suspenders; in CI wrangler already auto-confirms (ci-info
 # detects CI). Rolling back to an explicit version id, not the default heuristic.
-if "$WRANGLER" rollback "$PREV_VERSION" --yes --message "auto-rollback ${GIT_SHA}"; then
+if "${WRANGLER[@]}" rollback "$PREV_VERSION" --yes --message "auto-rollback ${GIT_SHA}"; then
   echo "rolled ${WORKER_NAME} back to ${PREV_VERSION}; re-verifying (probe retries internally)"
   node "${GITHUB_WORKSPACE}/scripts/verify-worker.mjs" "$WORKER_KEY" \
     || echo "::error::post-rollback verify still failing for ${WORKER_NAME}"
