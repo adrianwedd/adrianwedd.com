@@ -58,7 +58,12 @@ export function getImageDimensions(publicPath: string): ImageDimensions | null {
   }
 }
 
-function parseDimensions(buf: Buffer): ImageDimensions | null {
+/**
+ * Parse pixel dimensions from an image file's leading bytes. Exported for unit
+ * testing; production callers should use {@link getImageDimensions}, which
+ * handles the file I/O and caching.
+ */
+export function parseDimensions(buf: Buffer): ImageDimensions | null {
   // PNG: signature, then 4-byte length, then "IHDR", then width/height (BE uint32).
   if (
     buf.length >= 24 &&
