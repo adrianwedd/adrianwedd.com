@@ -11,7 +11,7 @@ const ROOT = process.cwd();
 const CONTENT_DIR = join(ROOT, 'src/content');
 const PUBLIC_DIR = join(ROOT, 'public');
 
-const COLLECTIONS = {
+export const COLLECTIONS = {
   blog: {
     required: ['title', 'description', 'date', 'tags'],
     checkDescription: true,
@@ -40,8 +40,98 @@ const COLLECTIONS = {
   },
 };
 
-let errors = 0;
-let warnings = 0;
+export const MAX_DESCRIPTION_LENGTH = 160;
+
+/**
+ * Validate a single content entry's raw markdown (frontmatter + body) against
+ * a collection's rules. Pure — does no I/O and returns collected messages
+ * rather than printing, so it can be unit-tested and reused by the CLI below.
+ *
+ * @param {string} rawContent  Full file contents (with `---` frontmatter block).
+ * @param {object} rules       One collection's entry from COLLECTIONS.
+ * @param {object} [options]
+ * @param {(publicPath: string) => boolean} [options.imageExists]  Predicate for
+ *   the soft heroImage-existence check. Omit to skip that check entirely.
+ * @returns {{ errors: string[], warnings: string[] }}
+ */
+export function validateEntry(rawContent, rules, options = {}) {
+  const { imageExists } = options;
+  const errors = [];
+  const warnings = [];
+
+  // Duplicate YAML keys — must run BEFORE matter(), because the YAML parser
+  // throws on duplicate mapping keys. Scanning the raw text first lets us emit
+  // a clean error instead of crashing on the parser's exception.
+  const fmMatch = rawContent.match(/^---\n([\s\S]*?)\n---/);
+  if (fmMatch) {
+    const keys = [...fmMatch[1].matchAll(/^([a-zA-Z_][a-zA-Z0-9_]*):/gm)].map((m) => m[1]);
+    const seen = new Set();
+    for (const key of keys) {
+      if (seen.has(key)) errors.push(`duplicate frontmatter key '${key}'`);
+      seen.add(key);
+    }
+  }
+
+  let fm;
+  try {
+    fm = matter(rawContent).data;
+  } catch (err) {
+    // Malformed YAML (including duplicate keys already reported above). Surface
+    // a clean error rather than letting the exception crash the whole run.
+    errors.push(`invalid frontmatter: ${String(err.message).split('\n')[0]}`);
+    return { errors, warnings };
+  }
+
+  // Required fields.
+  for (const field of rules.required) {
+    const val = fm[field];
+    if (val === undefined || val === null || String(val).trim() === '') {
+      errors.push(`missing required field '${field}'`);
+    }
+  }
+
+  // Audio/video media URL — must have at least one of audioUrl or videoUrl.
+  if (rules.requireMediaUrl && !fm.audioUrl && !fm.videoUrl) {
+    errors.push(`missing required field 'audioUrl' or 'videoUrl'`);
+  }
+
+  // Description length.
+  if (rules.checkDescription && fm.description && fm.description.length > MAX_DESCRIPTION_LENGTH) {
+    errors.push(
+      `description is ${fm.description.length} chars (max ${MAX_DESCRIPTION_LENGTH}): "${fm.description.slice(0, 60)}..."`,
+    );
+  }
+
+  // heroImage path existence (warn only) — skipped unless an imageExists
+  // predicate is supplied (the CLI supplies one backed by the filesystem).
+  if (
+    imageExists &&
+    fm.heroImage &&
+    typeof fm.heroImage === 'string' &&
+    fm.heroImage.startsWith('/') &&
+    !fm.heroImage.startsWith('http')
+  ) {
+    if (!imageExists(fm.heroImage)) {
+      warnings.push(`heroImage not found in public/: ${fm.heroImage}`);
+    }
+  }
+
+  // Gallery images validation.
+  if (rules.checkImages) {
+    if (!fm.images || !Array.isArray(fm.images)) {
+      errors.push(`missing or invalid 'images' array`);
+    } else if (fm.images.length === 0) {
+      warnings.push(`images array is empty`);
+    } else {
+      fm.images.forEach((img, i) => {
+        if (!img.src) errors.push(`images[${i}] missing 'src'`);
+        if (!img.alt) warnings.push(`images[${i}] missing 'alt'`);
+      });
+    }
+  }
+
+  return { errors, warnings };
+}
 
 /** Recursively find all .md/.mdx files in a directory. */
 function findMarkdownFiles(dir) {
@@ -59,84 +149,36 @@ function findMarkdownFiles(dir) {
   return results;
 }
 
-for (const [collection, rules] of Object.entries(COLLECTIONS)) {
-  const dir = join(CONTENT_DIR, collection);
-  if (!existsSync(dir)) continue;
+function main() {
+  let errors = 0;
+  let warnings = 0;
+  const imageExists = (publicPath) => existsSync(join(PUBLIC_DIR, publicPath));
 
-  for (const filePath of findMarkdownFiles(dir)) {
-    const content = readFileSync(filePath, 'utf8');
-    const { data: fm } = matter(content);
-    const label = filePath.replace(CONTENT_DIR + '/', '');
+  for (const [collection, rules] of Object.entries(COLLECTIONS)) {
+    const dir = join(CONTENT_DIR, collection);
+    if (!existsSync(dir)) continue;
 
-    // Duplicate YAML keys — gray-matter silently deduplicates, so check raw text
-    const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    if (fmMatch) {
-      const keys = [...fmMatch[1].matchAll(/^([a-zA-Z_][a-zA-Z0-9_]*):/gm)].map((m) => m[1]);
-      const seen = new Set();
-      for (const key of keys) {
-        if (seen.has(key)) {
-          console.error(`ERROR [${label}]: duplicate frontmatter key '${key}'`);
-          errors++;
-        }
-        seen.add(key);
-      }
-    }
+    for (const filePath of findMarkdownFiles(dir)) {
+      const content = readFileSync(filePath, 'utf8');
+      const label = filePath.replace(CONTENT_DIR + '/', '');
+      const result = validateEntry(content, rules, { imageExists });
 
-    // Required fields
-    for (const field of rules.required) {
-      const val = fm[field];
-      if (val === undefined || val === null || String(val).trim() === '') {
-        console.error(`ERROR [${label}]: missing required field '${field}'`);
+      for (const msg of result.errors) {
+        console.error(`ERROR [${label}]: ${msg}`);
         errors++;
       }
-    }
-
-    // Audio/video media URL — must have at least one of audioUrl or videoUrl
-    if (rules.requireMediaUrl && !fm.audioUrl && !fm.videoUrl) {
-      console.error(`ERROR [${label}]: missing required field 'audioUrl' or 'videoUrl'`);
-      errors++;
-    }
-
-    // Description length
-    if (rules.checkDescription && fm.description && fm.description.length > 160) {
-      console.error(
-        `ERROR [${label}]: description is ${fm.description.length} chars (max 160): "${fm.description.slice(0, 60)}..."`
-      );
-      errors++;
-    }
-
-    // heroImage path existence (warn only)
-    if (fm.heroImage && typeof fm.heroImage === 'string' && fm.heroImage.startsWith('/') && !fm.heroImage.startsWith('http')) {
-      const imgPath = join(PUBLIC_DIR, fm.heroImage);
-      if (!existsSync(imgPath)) {
-        console.warn(`WARN [${label}]: heroImage not found in public/: ${fm.heroImage}`);
+      for (const msg of result.warnings) {
+        console.warn(`WARN [${label}]: ${msg}`);
         warnings++;
-      }
-    }
-
-    // Gallery images validation
-    if (rules.checkImages) {
-      if (!fm.images || !Array.isArray(fm.images)) {
-        console.error(`ERROR [${label}]: missing or invalid 'images' array`);
-        errors++;
-      } else if (fm.images.length === 0) {
-        console.warn(`WARN [${label}]: images array is empty`);
-        warnings++;
-      } else {
-        fm.images.forEach((img, i) => {
-          if (!img.src) {
-            console.error(`ERROR [${label}]: images[${i}] missing 'src'`);
-            errors++;
-          }
-          if (!img.alt) {
-            console.warn(`WARN [${label}]: images[${i}] missing 'alt'`);
-            warnings++;
-          }
-        });
       }
     }
   }
+
+  console.log(`\nValidation complete: ${errors} error(s), ${warnings} warning(s)`);
+  if (errors > 0) process.exit(1);
 }
 
-console.log(`\nValidation complete: ${errors} error(s), ${warnings} warning(s)`);
-if (errors > 0) process.exit(1);
+// Only run the CLI when invoked directly, not when imported by tests.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}
