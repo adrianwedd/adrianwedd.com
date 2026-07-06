@@ -30,6 +30,10 @@ export default defineConfig({
       },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    // Nightly-only (the @smoke PR gate runs chromium alone). NOTE: at the
+    // Pixel 5 viewport the header nav collapses behind a hamburger, so any
+    // nightly spec that clicks a header link (e.g. a[href="/blog/"]) will flake
+    // here only — navigate via page.goto() or in-content elements instead.
     { name: 'mobile-chromium', use: { ...devices['Pixel 5'] } },
   ],
 });
