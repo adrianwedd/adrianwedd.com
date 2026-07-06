@@ -16,11 +16,14 @@ npm run lint           # ESLint
 npm run format         # Prettier (write)
 npm run format:check   # Prettier (check only)
 npm run fetch-analytics  # manual GA4 data fetch
+npm run test:e2e         # full Playwright suite (build + preview on :4322)
+npm run test:e2e:smoke   # @smoke subset — the PR gate (<3 min, Chromium)
+npm run test:e2e:full    # nightly-only specs (search, filters, pagination, audio)
 ```
 
 Content validation: `node scripts/validate-content.js` (checks required fields, description ≤160 chars, heroImage paths).
 
-No test suite is configured for the Astro site. `worker/` and `worker-csp/` each have their own test suite (`cd worker && npm test`, `cd worker-csp && npm test`).
+The Astro site now has a Playwright E2E suite (`e2e/`), run in CI by `.github/workflows/e2e.yml` — smoke on PRs, full nightly. It serves the production build via `astro preview` on port 4322; the build must set `PUBLIC_GA_MEASUREMENT_ID` (CI uses a dummy `G-TESTE2E0000`) for the consent spec. `worker/` and `worker-csp/` each have their own test suite (`cd worker && npm test`, `cd worker-csp && npm test`).
 
 ## Stack
 
