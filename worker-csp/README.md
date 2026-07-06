@@ -10,7 +10,8 @@ Nonces at the edge sidestep both problems: the worker generates a fresh random n
 
 ## Status
 
-**Deployed and live.** Bound to `adrianwedd.com/*` (and `www.adrianwedd.com/*`, which it 301s to the apex) via the routes in `wrangler.toml`, with `STRICT_DYNAMIC=1`. Deploys are manual: `cd worker-csp && npx wrangler deploy`.
+**Deployed and live.** Bound to `adrianwedd.com/*` (and `www.adrianwedd.com/*`, which it 301s to the apex) via the routes in `wrangler.toml`, with `STRICT_DYNAMIC=1`. Deployed via
+`.github/workflows/worker-deploy.yml` — see `docs/runbooks/worker-deploy.md`.
 
 ## Deploy checklist
 
