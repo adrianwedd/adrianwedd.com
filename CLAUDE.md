@@ -16,6 +16,7 @@ npm run lint           # ESLint
 npm run format         # Prettier (write)
 npm run format:check   # Prettier (check only)
 npm run fetch-analytics  # manual GA4 data fetch
+npm run test:unit        # root unit tests (vitest) — test/unit/*.spec.ts, no build
 npm run test:e2e         # full Playwright suite (build + preview on :4322)
 npm run test:e2e:smoke   # @smoke subset — the PR gate (<3 min, Chromium)
 npm run test:e2e:full    # nightly-only specs (search, filters, pagination, audio)
@@ -23,7 +24,9 @@ npm run test:e2e:full    # nightly-only specs (search, filters, pagination, audi
 
 Content validation: `node scripts/validate-content.js` (checks required fields, description ≤160 chars, heroImage paths).
 
-The Astro site now has a Playwright E2E suite (`e2e/`), run in CI by `.github/workflows/e2e.yml` — smoke on PRs, full nightly. It serves the production build via `astro preview` on port 4322; the build must set `PUBLIC_GA_MEASUREMENT_ID` (CI uses a dummy `G-TESTE2E0000`) for the consent spec. `worker/` and `worker-csp/` each have their own test suite (`cd worker && npm test`, `cd worker-csp && npm test`).
+The Astro site has root unit tests (vitest, `test/unit/`) covering the pure lib helpers (`slug`/`imageSlug`/`youtubeId`/`ogSafeImage`/`heroAltText` in `src/lib/utils.ts`, the `parseDimensions` header parser in `src/lib/image-dimensions.ts`) and the `validateEntry` content-schema checks (`scripts/validate-content.js`). Config in `vitest.config.ts` is scoped to `test/unit/**` so it never picks up the Playwright specs or the `worker/` suites. Run with `npm run test:unit`; CI runs it as the `unit` job in `e2e.yml` on every PR.
+
+The Astro site also has a Playwright E2E suite (`e2e/`), run in CI by `.github/workflows/e2e.yml` — smoke on PRs, full nightly. It serves the production build via `astro preview` on port 4322; the build must set `PUBLIC_GA_MEASUREMENT_ID` (CI uses a dummy `G-TESTE2E0000`) for the consent spec. `worker/` and `worker-csp/` each have their own test suite (`cd worker && npm test`, `cd worker-csp && npm test`).
 
 ## Stack
 
