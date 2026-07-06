@@ -11,8 +11,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Runs on every trigger: PR (this is the gate), plus nightly/dispatch so the
+  # @smoke lifecycle checks aren't skipped there. The `full` job is non-PR only,
+  # so nothing runs twice on a PR.
   smoke:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
