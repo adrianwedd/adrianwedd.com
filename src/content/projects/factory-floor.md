@@ -12,7 +12,7 @@ featured: false
 date: 2026-07-17
 ---
 
-Most of my 3D-printing workflow used to live in my head: rough dimensions in a note, a slicer profile I vaguely remembered tuning, a print that came out fine but that I couldn't recreate if I had to. Factory Floor is the attempt to fix that — a private workshop for making printed things *properly*: measured, validated, sliced, reviewed, then printed, in that order, never skipped.
+Most of my 3D-printing workflow used to live in my head: rough dimensions in a note, a slicer profile I vaguely remembered tuning, a print that came out fine but that I couldn't recreate if I had to. Factory Floor is the attempt to fix that — a private workshop for making printed things _properly_: measured, validated, sliced, reviewed, then printed, in that order, never skipped.
 
 The point is reproducibility. Every project starts as a `project.yaml` — the single source of truth — and everything downstream is generated from it. Nothing reaches the printer without a human looking at the report first.
 
@@ -31,10 +31,10 @@ idea / photo / measurements
   → notes → revised version
 ```
 
-Parametric CAD means the geometry is code, not a mouse-dragged mesh — change a dimension in the YAML and the STEP and STL regenerate. Geometry validation checks the fundamentals that a bad export gets wrong — watertightness, positive volume, dimensions, and printer-bed fit — and a separate `forge` checker runs a heuristic thin-wall test to flag features the nozzle can't resolve. The BambuStudio CLI then does a dry-run slice so the toolpath is inspected *before* filament is committed, and the whole thing collapses into a Markdown report a human reads and signs off on.
+Parametric CAD means the geometry is code, not a mouse-dragged mesh — change a dimension in the YAML and the STEP and STL regenerate. Geometry validation checks the fundamentals that a bad export gets wrong — watertightness, positive volume, dimensions, and printer-bed fit — and a separate `forge` checker runs a heuristic thin-wall test to flag features the nozzle can't resolve. The BambuStudio CLI then does a dry-run slice so the toolpath is inspected _before_ filament is committed, and the whole thing collapses into a Markdown report a human reads and signs off on.
 
 ## Why gate on a human
 
 The temptation with a pipeline like this is to close the loop and let it print unattended. Factory Floor deliberately doesn't. The approval step is the point: automation does the tedious, error-prone, easy-to-forget work — measuring, validating, slicing, documenting — and a person makes the go/no-go call with a full report in front of them. It's the same instinct as gating a deploy: the machine prepares the change and proves it's sound; a human owns the decision to ship it.
 
-The next planning track is the workshop itself — Gridfinity storage, 19-inch rack infrastructure — brought under the same discipline: measured, modelled, validated, and printed from a source of truth rather than improvised.
+The workshop itself is now under the same discipline — a Gridfinity cable-storage bin and 19-inch rack cable management have each traversed the full pipeline to `ready_for_human_print_review`, modelled and validated from a source of truth rather than improvised, waiting on the human go.

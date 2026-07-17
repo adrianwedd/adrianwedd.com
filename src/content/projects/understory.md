@@ -1,6 +1,6 @@
 ---
 title: 'Understory'
-description: 'A proposal-rigor lab stress-testing stacked low-capital income streams on a Tasmanian conservation parcel. Every claim tagged, challenged, and gated.'
+description: 'A proposal-rigor lab stress-testing stacked low-capital income streams on a Tasmanian conservation parcel. Claims tagged, challenged, and gated.'
 tags: ['research', 'tasmania', 'land', 'methodology', 'sustainability']
 url: 'https://understory.wedd.au'
 heroImage: '/notebook-assets/understory/infographic.webp'
@@ -14,11 +14,11 @@ date: 2026-07-17
 
 Understory is a rigor lab, not a venture. It stress-tests whether a set of stacked, low-startup-capital income streams could work on a 69-hectare Landscape Conservation Zone parcel at Cygnet, in southern Tasmania. There is no business here and nothing is being offered — it's a workspace for thinking about an idea properly before anyone is asked to believe in it.
 
-The discipline is the deliverable. Decision-relevant claims are bucketed — **FACT / ASSUMPTION / CHOICE / RISK / TODO** — then stress-tested and gated before they're allowed to inform a decision. A claim scanner runs over the docs (`make check`), flagging risky promissory language and numeric assertions that carry no bucket tag, and a test suite backs the analysis (`make test`) — so the distinction between *what is known* and *what is merely hoped* doesn't quietly erode as the document grows. Consistency isn't truth, and the tagging is what keeps the two apart.
+The discipline is the deliverable. Decision-relevant claims are bucketed — **FACT / ASSUMPTION / CHOICE / RISK / TODO** — then stress-tested and gated before they're allowed to inform a decision. A claim scanner runs over the docs (`make check`), flagging risky promissory language and numeric assertions that carry no bucket tag, and a test suite backs the analysis (`make test`) — so the distinction between _what is known_ and _what is merely hoped_ doesn't quietly erode as the document grows. Consistency isn't truth, and the tagging is what keeps the two apart.
 
 ## The tracks
 
-The dossier explores six income streams that could share the same land and overheads rather than each carrying their own, plus a subdivision investigation that funds the rest:
+The original portfolio tracks six income streams that could share the same land and overheads rather than each carrying their own, plus a subdivision investigation that funds the rest (the public dossier set has since grown past these — filming and location hire and a carbon ACCU desk-check among the additions):
 
 - a native honey apiary;
 - ecological monitoring and field-training site licensing;
@@ -28,8 +28,8 @@ The dossier explores six income streams that could share the same land and overh
 - on-site earth harvested for off-site 3D-construction-print mix testing;
 - and — separately from the income tracks — a 3-lot subdivision investigation as a capital-unlock play.
 
-Cutting across five of the six income tracks is **Dossier 00, the dwelling keystone**: originally a sealed-plan building-area check, on the theory that a dwelling underwrote the residential-business, hosting, and hazard-buffer uses the other tracks lean on. That check resolved *negative* — the title is a cadastral diagram, not a sealed plan, and shows no building area, so a new dwelling defaults to the Discretionary planning pathway. The live gate is now council pre-application advice, and the subdivision has become the true capital-unlock keystone. It's a working example of the method paying off: the keystone was examined first and hardest, and the answer changed the shape of everything downstream.
+Cutting across the income tracks — tagged in the dossier itself as an ASSUMPTION, not a fact — is **Dossier 00, the dwelling keystone**: originally a sealed-plan building-area check, on the theory that a dwelling underwrote the residential-business, hosting, and hazard-buffer uses the other tracks lean on. That check resolved _negative_ — the title is a cadastral diagram, not a sealed plan, and shows no building area, so a new dwelling defaults to the Discretionary planning pathway. The next move is deliberately _not_ council contact: a planning consultant (and possibly legal advice) comes first, because the sequencing risk is itself documented. Meanwhile the subdivision has become the true capital-unlock keystone. It's a working example of the method paying off: the keystone was examined first and hardest, and the answer changed the shape of everything downstream.
 
 ## Sibling methodology
 
-Understory shares its method with [printworks-coop](https://github.com/adrianwedd/printworks-coop), a parallel lab asking whether a community-owned 3D-house-printing co-operative in southern Tasmania is worth pursuing. Same tagging discipline, same claim scanner, same refusal to let an attractive narrative outrun the evidence. Both exist to answer one question honestly — *is this worth doing?* — before any capital, land, or reputation is committed to the answer.
+Understory shares its method with [printworks-coop](https://github.com/adrianwedd/printworks-coop), a parallel lab asking whether a community-owned 3D-house-printing co-operative in southern Tasmania is worth pursuing. Same tagging discipline, same claim scanner, same refusal to let an attractive narrative outrun the evidence. Both exist to answer one question honestly — _is this worth doing?_ — before any capital, land, or reputation is committed to the answer.
