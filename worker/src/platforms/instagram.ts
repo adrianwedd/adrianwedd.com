@@ -6,6 +6,7 @@ import type {
   AuthStatus,
 } from './types';
 import { classifyGraphError, type GraphErrorBody } from './facebook';
+import { isAllowedMediaUrl } from './safe-fetch';
 
 export function createInstagramPlatform(
   igUserId: string,
@@ -19,6 +20,11 @@ export function createInstagramPlatform(
     // Instagram requires an image for ALL post types
     if (!post.imageUrl) {
       return { success: false, error: 'Instagram requires an image for all posts (imageUrl missing)', isTransient: false, isAuthError: false };
+    }
+    // Meta fetches the image_url server-side; enforce the same media host
+    // allowlist bluesky/twitter apply before handing the URL to the Graph API.
+    if (!isAllowedMediaUrl(post.imageUrl)) {
+      return { success: false, error: `imageUrl not on the media host allowlist: ${post.imageUrl}`, isTransient: false, isAuthError: false };
     }
 
     try {

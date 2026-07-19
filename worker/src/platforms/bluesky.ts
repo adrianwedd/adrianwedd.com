@@ -46,13 +46,18 @@ export function detectFacets(text: string): Array<{
   let match: RegExpExecArray | null;
 
   while ((match = urlRegex.exec(text)) !== null) {
+    // The regex greedily captures sentence punctuation glued to the URL
+    // ("see https://a.com." → "https://a.com."). Trim trailing punctuation
+    // from both the facet byte range and the link target.
+    const url = match[0].replace(/[.,!;:]+$/, '');
+    if (url.length === 0) continue;
     const beforeUrl = text.slice(0, match.index);
     const byteStart = encoder.encode(beforeUrl).byteLength;
-    const byteEnd = byteStart + encoder.encode(match[0]).byteLength;
+    const byteEnd = byteStart + encoder.encode(url).byteLength;
 
     facets.push({
       index: { byteStart, byteEnd },
-      features: [{ $type: 'app.bsky.richtext.facet#link', uri: match[0] }],
+      features: [{ $type: 'app.bsky.richtext.facet#link', uri: url }],
     });
   }
 

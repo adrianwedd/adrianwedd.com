@@ -89,14 +89,21 @@ export async function processComments(
           }
         }
       } else {
-        // Flag for review (includes message body)
-        await kv.put(`fb-flag:${comment.id}`, JSON.stringify({
+        // Flag for review (includes message body). Crisis-classified comments
+        // get their own key prefix and a 90-day TTL: a crisis flag silently
+        // expiring after 14 days unreviewed is the one flag class where
+        // "monitoring missed it" is unacceptable. /api/health counts the
+        // flag-crisis: prefix separately so alerting can key on it.
+        const isCrisis = classification === 'crisis';
+        const flagKey = isCrisis ? `flag-crisis:${comment.id}` : `fb-flag:${comment.id}`;
+        const flagTtl = (isCrisis ? 90 : 14) * 24 * 60 * 60;
+        await kv.put(flagKey, JSON.stringify({
           commentId: comment.id,
           postId: comment.postId,
           reason: classification,
           message: comment.message,
           flaggedAt: new Date().toISOString(),
-        }), { expirationTtl: 14 * 24 * 60 * 60 });
+        }), { expirationTtl: flagTtl });
         flagged++;
       }
     }

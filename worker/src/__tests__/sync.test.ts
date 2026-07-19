@@ -271,3 +271,43 @@ describe('POST /api/queue/sync', () => {
     expect(res.status).toBe(401);
   });
 });
+
+// Fix — /api/queue/sync built `post:queued:${epoch}:${id}` keys from
+// unvalidated scheduledAtEpoch values. A NaN epoch produced a key that is
+// never due (NaN <= Date.now() is false): a post stuck queued forever, plus
+// broken lexicographic key ordering. Validate exactly like /api/queue does.
+describe('POST /api/queue/sync — scheduledAtEpoch validation', () => {
+  it.each([
+    ['NaN',        NaN],
+    ['zero',       0],
+    ['negative',   -5],
+    ['Infinity',   Infinity],
+    ['string',     '1800000000000'],
+    ['missing',    undefined],
+  ])('rejects a post with %s scheduledAtEpoch with 400 listing the bad id', async (_label, epoch) => {
+    const kv = makeMockKV();
+    const env = makeEnv(kv);
+    const bad = { ...makeIncomingPost('bad-epoch'), scheduledAtEpoch: epoch };
+    const res = await callSync({ hash: 'h1', posts: [makeIncomingPost('good-1'), bad] }, env);
+    expect(res.status).toBe(400);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.error).toContain('scheduledAtEpoch');
+    expect(body.error).toContain('bad-epoch');
+    // Nothing was written — the sync is rejected wholesale.
+    expect(kv.put).not.toHaveBeenCalled();
+  });
+
+  it('lists every bad id when multiple posts are invalid', async () => {
+    const kv = makeMockKV();
+    const env = makeEnv(kv);
+    const posts = [
+      { ...makeIncomingPost('bad-a'), scheduledAtEpoch: NaN },
+      { ...makeIncomingPost('bad-b'), scheduledAtEpoch: -1 },
+    ];
+    const res = await callSync({ hash: 'h2', posts }, env);
+    expect(res.status).toBe(400);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.error).toContain('bad-a');
+    expect(body.error).toContain('bad-b');
+  });
+});

@@ -1,8 +1,8 @@
 # Cloudflare Worker that injects per-request CSP nonces into adrianwedd.com responses.
 #
 # Deploy: cd worker-csp && npx wrangler deploy
-# Routes are commented out — uncomment and bind once you've reviewed the policy
-# in src/index.ts. The worker is a no-op until a route binds it.
+# Routes below are LIVE — the worker is bound to production adrianwedd.com
+# traffic. Review src/index.ts and src/csp.ts before deploying changes.
 
 name = "adrianwedd-csp"
 main = "src/index.ts"
@@ -13,10 +13,18 @@ compatibility_flags = ["nodejs_compat"]
 pattern = "adrianwedd.com/*"
 zone_name = "adrianwedd.com"
 
+# www is bound so the worker can 301 it to the apex (see src/index.ts) instead
+# of serving duplicate content on both hostnames.
+[[routes]]
+pattern = "www.adrianwedd.com/*"
+zone_name = "adrianwedd.com"
+
 [vars]
 # When STRICT_DYNAMIC=1, script-src uses 'strict-dynamic' alongside the nonce.
-# Leave 0 until all dynamically-loaded scripts (Preact hydration, etc.) are
-# verified — strict-dynamic disables the host allowlist (the failure mode in #241).
+# It is ON in production: dynamically-loaded scripts (Preact hydration, GA4
+# via nonced trampoline, etc.) were verified before the flip. Note that
+# strict-dynamic disables the host allowlist (the failure mode in #241) —
+# any new external <script src> must load via a nonced loader.
 STRICT_DYNAMIC = "1"
 # Upstream origin. Decouples the upstream host from the inbound hostname so
 # the worker can't self-recurse when both apex and www routes are bound, and
@@ -30,3 +38,13 @@ ORIGIN_RESOLVE_HOSTNAME = "pages-origin.adrianwedd.com"
 
 [observability]
 enabled = true
+
+# Rate limiting for the unauthenticated /__csp-report collector: 30 req/min
+# per IP. GA [[ratelimits]] form (the legacy [[unsafe.bindings]] shape deploys
+# as inert metadata — see worker/wrangler.toml). namespace_id is an arbitrary
+# per-worker-unique numeric label; enforcement is per-colo and eventually
+# consistent. The worker fails open when the binding is absent (tests).
+[[ratelimits]]
+name = "CSP_REPORT_RATE_LIMITER"
+namespace_id = "1002"
+simple = { limit = 30, period = 60 }

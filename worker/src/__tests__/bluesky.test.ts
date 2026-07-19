@@ -247,3 +247,37 @@ describe('Bluesky getPageIdentity', () => {
     expect(bsky.getPageIdentity()).toBe('adrian.bsky.social');
   });
 });
+
+// Fix — the facet URL regex greedily captured sentence punctuation glued to
+// the URL ("see https://a.com." linked "https://a.com."), producing broken
+// links. Trailing . , ! ; : are trimmed from both the uri and the byte range.
+describe('detectFacets — trailing punctuation', () => {
+  const encoder = new TextEncoder();
+
+  it.each(['.', ',', '!', ';', ':', '...', '!;'])(
+    'trims trailing %s from the link and byte range',
+    (punct) => {
+      const text = `Read https://adrianwedd.com/blog/foo/${punct} today`;
+      const facets = detectFacets(text);
+      expect(facets).toHaveLength(1);
+      expect(facets[0].features[0].uri).toBe('https://adrianwedd.com/blog/foo/');
+      const byteStart = encoder.encode('Read ').byteLength;
+      expect(facets[0].index.byteStart).toBe(byteStart);
+      expect(facets[0].index.byteEnd).toBe(
+        byteStart + encoder.encode('https://adrianwedd.com/blog/foo/').byteLength,
+      );
+    },
+  );
+
+  it('trims punctuation at end-of-text', () => {
+    const facets = detectFacets('See https://adrianwedd.com.');
+    expect(facets).toHaveLength(1);
+    expect(facets[0].features[0].uri).toBe('https://adrianwedd.com');
+  });
+
+  it('keeps interior punctuation (paths, query strings) untouched', () => {
+    const url = 'https://adrianwedd.com/blog/a.b/?x=1,2';
+    const facets = detectFacets(`Go ${url} now`);
+    expect(facets[0].features[0].uri).toBe(url);
+  });
+});

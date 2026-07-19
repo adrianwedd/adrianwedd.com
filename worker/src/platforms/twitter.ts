@@ -112,13 +112,22 @@ export function createTwitterPlatform(creds: OAuth1Creds): SocialPlatform {
       }
 
       // Append the post's destination link if it's not already present in the message.
-      // Twitter shortens URLs to 23 chars via t.co — keep the link out of the truncation budget.
-      let message = post.message;
-      if (post.link && !message.includes(post.link)) {
-        message = `${message} ${post.link}`.trim();
+      // Twitter shortens URLs to 23 chars via t.co regardless of actual length,
+      // so when a link is appended the message alone gets a 280 − 24 budget
+      // (23 for the wrapped URL + 1 for the separating space). Truncate the
+      // MESSAGE only — never the link, which a combined slice would mangle.
+      let text: string;
+      if (post.link && !post.message.includes(post.link)) {
+        const budget = 280 - 24;
+        const graphemes = [...post.message];
+        const message = graphemes.length > budget
+          ? graphemes.slice(0, budget - 1).join('') + '…'
+          : post.message;
+        text = `${message} ${post.link}`.trim();
+      } else {
+        // Truncate to 280 graphemes (Twitter limit)
+        text = [...post.message].slice(0, 280).join('');
       }
-      // Truncate to 280 graphemes (Twitter limit)
-      const text = [...message].slice(0, 280).join('');
 
       const body: Record<string, unknown> = { text };
       if (mediaId) body.media = { media_ids: [mediaId] };
