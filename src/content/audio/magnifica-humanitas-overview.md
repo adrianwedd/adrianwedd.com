@@ -8,6 +8,6 @@ duration: '19:56'
 relatedPost: 'magnifica-humanitas-post'
 ---
 
-The Catholic Church's first formal magisterial document on AI landed on 25 May 2026 — and the press largely missed the contradiction at the launch event itself. This episode covers what *Magnifica Humanitas* actually demands from frontier labs, how Chris Olah's remarks on AI inner states sit against paragraph 99 of the encyclical, and why "alignment" doesn't satisfy the binding structural standards the document calls for.
+The Catholic Church's first formal magisterial document on AI landed on 25 May 2026 — and the press largely missed the contradiction at the launch event itself. This episode covers what _Magnifica Humanitas_ actually demands from frontier labs, how Chris Olah's remarks on AI inner states sit against paragraph 99 of the encyclical, and why "alignment" doesn't satisfy the binding structural standards the document calls for.
 
 [Read the full article →](/blog/magnifica-humanitas/)

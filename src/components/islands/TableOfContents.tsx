@@ -61,16 +61,16 @@ export default function TableOfContents({ contentSelector }: Props) {
   return (
     <>
       {/* Mobile: collapsible */}
-      <nav class="mb-8 rounded-lg border border-border lg:hidden" aria-label="Table of contents">
+      <nav class="border-border mb-8 rounded-lg border lg:hidden" aria-label="Table of contents">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          class="flex w-full items-center justify-between px-4 py-3 text-sm font-medium text-text"
+          class="text-text flex w-full items-center justify-between px-4 py-3 text-sm font-medium"
           aria-expanded={isOpen}
         >
           On this page
           <svg
-            class={`h-4 w-4 text-text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`}
+            class={`text-text-muted h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             stroke-width="2"
@@ -88,7 +88,7 @@ export default function TableOfContents({ contentSelector }: Props) {
                   href={`#${h.id}`}
                   onClick={() => setIsOpen(false)}
                   class={`flex min-h-11 items-center py-1 text-sm transition-colors ${
-                    activeId === h.id ? 'font-medium text-accent' : 'text-text-muted hover:text-text'
+                    activeId === h.id ? 'text-accent font-medium' : 'text-text-muted hover:text-text'
                   }`}
                 >
                   {h.text}
@@ -101,18 +101,18 @@ export default function TableOfContents({ contentSelector }: Props) {
 
       {/* Desktop: sticky sidebar */}
       <nav
-        class="fixed right-8 top-24 hidden max-h-[calc(100vh-8rem)] w-56 overflow-y-auto lg:block"
+        class="fixed top-24 right-8 hidden max-h-[calc(100vh-8rem)] w-56 overflow-y-auto lg:block"
         aria-label="Table of contents"
       >
-        <p class="mb-3 text-xs font-medium uppercase tracking-wider text-text-muted">On this page</p>
-        <ul class="space-y-1 border-l border-border">
+        <p class="text-text-muted mb-3 text-xs font-medium tracking-wider uppercase">On this page</p>
+        <ul class="border-border space-y-1 border-l">
           {headings.map((h) => (
             <li key={h.id}>
               <a
                 href={`#${h.id}`}
                 class={`block py-1 text-sm transition-colors ${
                   activeId === h.id
-                    ? 'border-l-2 border-accent font-medium text-accent'
+                    ? 'border-accent text-accent border-l-2 font-medium'
                     : 'text-text-muted hover:text-text'
                 }`}
                 style={{

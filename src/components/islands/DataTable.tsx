@@ -47,8 +47,8 @@ export default function DataTable({ src }: Props) {
       .catch(() => setError('Failed to load data.'));
   }, [src]);
 
-  if (error) return <p class="text-sm text-text-muted">{error}</p>;
-  if (!headers.length) return <p class="text-sm text-text-muted">Loading...</p>;
+  if (error) return <p class="text-text-muted text-sm">{error}</p>;
+  if (!headers.length) return <p class="text-text-muted text-sm">Loading...</p>;
 
   const sorted =
     sortCol !== null
@@ -72,9 +72,9 @@ export default function DataTable({ src }: Props) {
   };
 
   return (
-    <div class="max-h-[28rem] overflow-auto rounded-xl border border-border bg-surface-alt">
+    <div class="border-border bg-surface-alt max-h-[28rem] overflow-auto rounded-xl border">
       <table class="w-full text-sm">
-        <thead class="sticky top-0 bg-surface-alt">
+        <thead class="bg-surface-alt sticky top-0">
           <tr>
             {headers.map((h, i) => (
               <th
@@ -89,7 +89,7 @@ export default function DataTable({ src }: Props) {
                 tabIndex={0}
                 role="columnheader"
                 aria-sort={sortCol === i ? (sortAsc ? 'ascending' : 'descending') : 'none'}
-                class="cursor-pointer select-none border-b border-border px-3 py-2 text-left text-xs font-medium text-text-muted transition-colors hover:text-accent"
+                class="border-border text-text-muted hover:text-accent cursor-pointer border-b px-3 py-2 text-left text-xs font-medium transition-colors select-none"
               >
                 {h}
                 {sortCol === i && (
@@ -103,9 +103,9 @@ export default function DataTable({ src }: Props) {
         </thead>
         <tbody>
           {sorted.map((row, ri) => (
-            <tr key={ri} class="border-border/50 border-b transition-colors hover:bg-surface">
+            <tr key={ri} class="border-border/50 hover:bg-surface border-b transition-colors">
               {row.map((cell, ci) => (
-                <td key={ci} class="px-3 py-2 text-text">
+                <td key={ci} class="text-text px-3 py-2">
                   {cell}
                 </td>
               ))}

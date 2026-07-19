@@ -39,7 +39,8 @@ const carouselItems = isFirst
   : [];
 
 const pageTitle = isFirst ? 'Blog' : `Blog — Page ${page.currentPage}`;
-const prevUrl = page.currentPage > 1 ? (page.currentPage - 1 === 1 ? '/blog/' : `/blog/${page.currentPage - 1}/`) : undefined;
+const prevUrl =
+  page.currentPage > 1 ? (page.currentPage - 1 === 1 ? '/blog/' : `/blog/${page.currentPage - 1}/`) : undefined;
 const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1}/` : undefined;
 ---
 
@@ -57,7 +58,7 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
             <br />
             <span class="text-text-muted">Research notes, failure analysis, and ideas still taking shape.</span>
           </h1>
-          <p class="mt-6 max-w-prose text-text-muted">
+          <p class="text-text-muted mt-6 max-w-prose">
             What actually breaks, and why. Who knew about it before it broke. What the gap between demonstrated risk and
             organisational response looks like from the inside.
           </p>
@@ -66,7 +67,11 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
     )
   }
 
-  {isFirst && carouselItems.length > 0 && <ContentCarousel items={carouselItems} id="blog-carousel" label="Featured blog posts" />}
+  {
+    isFirst && carouselItems.length > 0 && (
+      <ContentCarousel items={carouselItems} id="blog-carousel" label="Featured blog posts" />
+    )
+  }
 
   <section class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
     {/* Tag filter */}
@@ -74,14 +79,14 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
       allTags.length > 0 && (
         <nav class="mt-8" aria-label="Filter by tag">
           <div class="flex flex-wrap gap-2" id="blog-tags">
-            <a href="/blog/" class="bg-accent/15 rounded-full px-3 py-1 text-xs font-medium text-accent no-underline">
+            <a href="/blog/" class="bg-accent/15 text-accent rounded-full px-3 py-1 text-xs font-medium no-underline">
               All
             </a>
             {allTags.map((tag, i) => (
               <a
                 href={`/blog/tag/${tag}/`}
                 class:list={[
-                  'hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent',
+                  'hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-3 py-1 text-xs no-underline transition-colors',
                   i >= 10 && 'blog-tag-overflow hidden',
                 ]}
               >
@@ -93,14 +98,14 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
                 type="button"
                 id="blog-tags-toggle"
                 aria-expanded="false"
-                class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
+                class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent cursor-pointer rounded-full px-3 py-1 text-xs transition-colors"
               >
                 +{allTags.length - 10} more
               </button>
             )}
             <a
               href="/blog/tags/"
-              class="hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent"
+              class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-3 py-1 text-xs no-underline transition-colors"
             >
               Browse all tags
             </a>
@@ -120,24 +125,24 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
               <ScrollReveal>
                 <a
                   href={`/blog/${slug(post.id)}/`}
-                  class="card-hover hover:border-accent/50 group block rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
+                  class="card-hover hover:border-accent/50 group border-border bg-surface-alt shadow-subtle hover:shadow-card block rounded-xl border p-6 no-underline transition-all"
                 >
                   <div class="flex items-start justify-between gap-4">
                     <div>
-                      <h2 class="text-xl font-semibold text-text transition-colors group-hover:text-accent">
+                      <h2 class="text-text group-hover:text-accent text-xl font-semibold transition-colors">
                         {post.data.title}
                       </h2>
-                      <p class="mt-1 text-sm leading-relaxed text-text-muted">{post.data.description}</p>
+                      <p class="text-text-muted mt-1 text-sm leading-relaxed">{post.data.description}</p>
                       <div class="mt-3 flex flex-wrap items-center gap-2">
                         {post.data.tags.map((tag: string) => (
-                          <span class="rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted">
+                          <span class="bg-surface-raised text-text-muted rounded-full px-2.5 py-0.5 text-xs">
                             {tag}
                           </span>
                         ))}
-                        <span class="text-xs text-text-muted">&middot; {readingTime} min read</span>
+                        <span class="text-text-muted text-xs">&middot; {readingTime} min read</span>
                       </div>
                     </div>
-                    <time class="whitespace-nowrap text-xs text-text-muted" datetime={post.data.date.toISOString()}>
+                    <time class="text-text-muted text-xs whitespace-nowrap" datetime={post.data.date.toISOString()}>
                       {post.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </time>
                   </div>

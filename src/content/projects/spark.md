@@ -15,7 +15,7 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=0RMULUlI4Dw'
 ---
 
-My son Obi and I built a robot together. The key word is *together* — not a tool built *for* a child, but a project built *with* one. That distinction shaped every decision that followed.
+My son Obi and I built a robot together. The key word is _together_ — not a tool built _for_ a child, but a project built _with_ one. That distinction shaped every decision that followed.
 
 Obi has an AuDHD profile — ADHD and autism together — with a PDA (Pathological Demand Avoidance) presentation. For a PDA brain, a command isn't an instruction. It's a neurological threat that triggers the same shutdown response as physical danger. Most AI systems operate on a master-servant hierarchy that makes this worse. SPARK was built to reject that entirely.
 

@@ -22,29 +22,29 @@ export default function Flashcards({ src }: Props) {
       .catch(() => setError('Failed to load flashcards.'));
   }, [src]);
 
-  if (error) return <p class="text-sm text-text-muted">{error}</p>;
-  if (!cards.length) return <p class="text-sm text-text-muted">Loading...</p>;
+  if (error) return <p class="text-text-muted text-sm">{error}</p>;
+  if (!cards.length) return <p class="text-text-muted text-sm">Loading...</p>;
 
   const card = cards[current];
 
   return (
-    <div class="rounded-xl border border-border bg-surface-alt p-6">
-      <p class="mb-3 text-xs text-text-muted">
+    <div class="border-border bg-surface-alt rounded-xl border p-6">
+      <p class="text-text-muted mb-3 text-xs">
         Card {current + 1} of {cards.length}
       </p>
 
       <button
         type="button"
         onClick={() => setFlipped(!flipped)}
-        class="hover:border-accent/50 flex min-h-[8rem] w-full cursor-pointer items-center justify-center rounded-lg border border-border p-6 transition-colors"
+        class="hover:border-accent/50 border-border flex min-h-[8rem] w-full cursor-pointer items-center justify-center rounded-lg border p-6 transition-colors"
         aria-label={flipped ? 'Click to show question' : 'Click to reveal answer'}
       >
-        <p class="text-center text-sm text-text" aria-live="polite">
+        <p class="text-text text-center text-sm" aria-live="polite">
           {flipped ? card.back : card.front}
         </p>
       </button>
 
-      <p class="mt-2 text-center text-xs text-text-muted" aria-live="polite">
+      <p class="text-text-muted mt-2 text-center text-xs" aria-live="polite">
         {flipped ? 'Answer' : 'Click to reveal'}
       </p>
 
@@ -56,7 +56,7 @@ export default function Flashcards({ src }: Props) {
             setCurrent((c) => c - 1);
             setFlipped(false);
           }}
-          class="hover:border-accent/50 rounded border border-border px-3 py-1 text-sm text-text-muted transition-colors hover:text-text disabled:opacity-30"
+          class="hover:border-accent/50 border-border text-text-muted hover:text-text rounded border px-3 py-1 text-sm transition-colors disabled:opacity-30"
         >
           Previous
         </button>
@@ -67,7 +67,7 @@ export default function Flashcards({ src }: Props) {
             setCurrent((c) => c + 1);
             setFlipped(false);
           }}
-          class="hover:border-accent/50 rounded border border-border px-3 py-1 text-sm text-text-muted transition-colors hover:text-text disabled:opacity-30"
+          class="hover:border-accent/50 border-border text-text-muted hover:text-text rounded border px-3 py-1 text-sm transition-colors disabled:opacity-30"
         >
           Next
         </button>

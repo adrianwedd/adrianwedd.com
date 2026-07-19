@@ -71,48 +71,53 @@ try {
 }
 ---
 
-<BaseLayout title="Colophon" description="How this site is built, what powers it, and who helped." noindex heroAnimation="loom">
+<BaseLayout
+  title="Colophon"
+  description="How this site is built, what powers it, and who helped."
+  noindex
+  heroAnimation="loom"
+>
   <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">Colophon</h1>
-      <p class="mt-2 text-text-muted">How this site is built, who helped, and what powers it.</p>
+      <p class="text-text-muted mt-2">How this site is built, who helped, and what powers it.</p>
     </div>
   </section>
 
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <header class="mb-12">
-      <p class="mt-4 max-w-prose text-sm text-text-muted">
+      <p class="text-text-muted mt-4 max-w-prose text-sm">
         Built the way I build client work: the smallest thing that does the job correctly. No framework theatre, no
         dependency sprawl, no features acquired before there's a reason for them.
       </p>
     </header>
 
-    <div class="space-y-8 leading-relaxed text-text">
+    <div class="text-text space-y-8 leading-relaxed">
       <section>
-        <h2 class="mb-4 text-xl font-semibold text-text">Technical Stack</h2>
+        <h2 class="text-text mb-4 text-xl font-semibold">Technical Stack</h2>
         <dl class="space-y-3">
           <div>
-            <dt class="font-medium text-accent">Framework</dt>
+            <dt class="text-accent font-medium">Framework</dt>
             <dd class="text-text-muted">Astro {astroVersion} with TypeScript strict mode</dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Styling</dt>
+            <dt class="text-accent font-medium">Styling</dt>
             <dd class="text-text-muted">Tailwind CSS 4 with CSS custom properties for theming</dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Interactive Components</dt>
+            <dt class="text-accent font-medium">Interactive Components</dt>
             <dd class="text-text-muted">Preact islands (AudioPlayer, MindMap, Quiz, Flashcards, DataTable)</dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Content</dt>
+            <dt class="text-accent font-medium">Content</dt>
             <dd class="text-text-muted">Markdown + MDX with Astro Content Collections (Zod schemas)</dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Hosting</dt>
+            <dt class="text-accent font-medium">Hosting</dt>
             <dd class="text-text-muted">GitHub Pages via GitHub Actions</dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Analytics</dt>
+            <dt class="text-accent font-medium">Analytics</dt>
             <dd class="text-text-muted">
               GA4 consent-gated, with build-time data fetch for <a
                 href="/analytics/"
@@ -121,19 +126,19 @@ try {
             </dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Search</dt>
+            <dt class="text-accent font-medium">Search</dt>
             <dd class="text-text-muted">Pagefind — static search index built at deploy time</dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Rich Media</dt>
+            <dt class="text-accent font-medium">Rich Media</dt>
             <dd class="text-text-muted">NotebookLM Studio (audio overviews, reports, quizzes, mind maps)</dd>
           </div>
         </dl>
       </section>
 
       <section>
-        <h2 class="mb-4 text-xl font-semibold text-text">Design Philosophy</h2>
-        <ul class="list-inside list-disc space-y-2 text-text-muted">
+        <h2 class="text-text mb-4 text-xl font-semibold">Design Philosophy</h2>
+        <ul class="text-text-muted list-inside list-disc space-y-2">
           <li>Dark-first with botanical earth-tone palette, dusty copper accent</li>
           <li>System font stack — zero font downloads</li>
           <li>Minimal JavaScript — interactive islands only where needed</li>
@@ -144,22 +149,22 @@ try {
       </section>
 
       <section>
-        <h2 class="mb-4 text-xl font-semibold text-text">Build Information</h2>
+        <h2 class="text-text mb-4 text-xl font-semibold">Build Information</h2>
         <dl class="space-y-3">
           <div>
-            <dt class="font-medium text-accent">Last Built</dt>
+            <dt class="text-accent font-medium">Last Built</dt>
             <dd class="text-text-muted">{buildDate} at {buildTime}</dd>
           </div>
           {
             gitShortSha && (
               <div>
-                <dt class="font-medium text-accent">Commit</dt>
+                <dt class="text-accent font-medium">Commit</dt>
                 <dd class="text-text-muted">
                   <a
                     href={`https://github.com/adrianwedd/adrianwedd.com/commit/${gitSha}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="font-mono text-accent hover:underline"
+                    class="text-accent font-mono hover:underline"
                   >
                     {gitShortSha}
                   </a>
@@ -169,11 +174,11 @@ try {
             )
           }
           <div>
-            <dt class="font-medium text-accent">Runtime</dt>
+            <dt class="text-accent font-medium">Runtime</dt>
             <dd class="text-text-muted">Astro {astroVersion} / Node {nodeVersion}</dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Content</dt>
+            <dt class="text-accent font-medium">Content</dt>
             <dd class="text-text-muted">
               {blogCount} posts, {projectCount} projects, {galleryCount} galleries, {audioCount} episodes
             </dd>
@@ -181,17 +186,17 @@ try {
           {
             pageCount > 0 && (
               <div>
-                <dt class="font-medium text-accent">Pages Generated</dt>
+                <dt class="text-accent font-medium">Pages Generated</dt>
                 <dd class="text-text-muted">{pageCount} static HTML pages</dd>
               </div>
             )
           }
           <div>
-            <dt class="font-medium text-accent">Build Process</dt>
+            <dt class="text-accent font-medium">Build Process</dt>
             <dd class="text-text-muted">Static site generation (SSG) with CI/CD via GitHub Actions</dd>
           </div>
           <div>
-            <dt class="font-medium text-accent">Source Code</dt>
+            <dt class="text-accent font-medium">Source Code</dt>
             <dd class="text-text-muted">
               <a
                 href="https://github.com/adrianwedd/adrianwedd.com"
@@ -209,13 +214,13 @@ try {
       {
         deps.length > 0 && (
           <section>
-            <h2 class="mb-4 text-xl font-semibold text-text">Dependencies</h2>
-            <p class="mb-3 text-sm text-text-muted">{deps.length} packages power this site.</p>
+            <h2 class="text-text mb-4 text-xl font-semibold">Dependencies</h2>
+            <p class="text-text-muted mb-3 text-sm">{deps.length} packages power this site.</p>
             <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs sm:grid-cols-3">
               {deps.map((d) => (
                 <div class="flex justify-between gap-2">
-                  <span class="truncate text-text-muted">{d.name}</span>
-                  <span class="shrink-0 font-mono text-accent">{d.version}</span>
+                  <span class="text-text-muted truncate">{d.name}</span>
+                  <span class="text-accent shrink-0 font-mono">{d.version}</span>
                 </div>
               ))}
             </div>
@@ -224,8 +229,8 @@ try {
       }
 
       <section>
-        <h2 class="mb-4 text-xl font-semibold text-text">Credits</h2>
-        <div class="space-y-4 text-text-muted">
+        <h2 class="text-text mb-4 text-xl font-semibold">Credits</h2>
+        <div class="text-text-muted space-y-4">
           <p>
             Built by <a href="https://adrianwedd.com" class="text-accent hover:underline">Adrian Wedd</a> with assistance
             from <a
@@ -255,24 +260,24 @@ try {
       </section>
 
       <section>
-        <h2 class="mb-4 text-xl font-semibold text-text">Typography</h2>
+        <h2 class="text-text mb-4 text-xl font-semibold">Typography</h2>
         <p class="text-text-muted">System font stack. No font downloads, native rendering.</p>
         <pre
-          class="mt-3 overflow-x-auto rounded border border-border bg-surface-alt p-4 text-xs text-text">system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif</pre>
+          class="border-border bg-surface-alt text-text mt-3 overflow-x-auto rounded border p-4 text-xs">system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif</pre>
       </section>
 
       <section>
-        <h2 class="mb-4 text-xl font-semibold text-text">Performance Budget</h2>
-        <ul class="list-inside list-disc space-y-2 text-text-muted">
+        <h2 class="text-text mb-4 text-xl font-semibold">Performance Budget</h2>
+        <ul class="text-text-muted list-inside list-disc space-y-2">
           <li>Zero custom fonts</li>
           <li>Analytics: ~30KB gzipped (consent-gated)</li>
           <li>
-            Interactive islands: lazy hydration via <code class="rounded bg-surface-alt px-1 py-0.5 text-text-accent"
+            Interactive islands: lazy hydration via <code class="bg-surface-alt text-text-accent rounded px-1 py-0.5"
               >client:idle</code
             >
           </li>
           <li>
-            Images: lazy loading with native <code class="rounded bg-surface-alt px-1 py-0.5 text-text-accent"
+            Images: lazy loading with native <code class="bg-surface-alt text-text-accent rounded px-1 py-0.5"
               >loading="lazy"</code
             >
           </li>
@@ -280,15 +285,15 @@ try {
       </section>
 
       <section>
-        <h2 class="mb-4 text-xl font-semibold text-text">License</h2>
+        <h2 class="text-text mb-4 text-xl font-semibold">License</h2>
         <p class="text-text-muted">
           Content (blog posts, project descriptions, writing) is © {new Date().getFullYear()} Adrian Wedd unless otherwise
           noted. Code is available under MIT license.
         </p>
       </section>
 
-      <section class="border-t border-border pt-8">
-        <p class="text-sm text-text-muted">
+      <section class="border-border border-t pt-8">
+        <p class="text-text-muted text-sm">
           Questions about this site's architecture or content pipeline? See <a
             href="https://github.com/adrianwedd/adrianwedd.com/blob/main/docs/NOTEBOOKLM_PIPELINE.md"
             target="_blank"
@@ -304,8 +309,8 @@ try {
       </section>
     </div>
 
-    <nav class="mt-16 border-t border-border pt-8" aria-label="Back to home">
-      <a href="/" class="text-sm text-text-muted transition-colors hover:text-accent"> &larr; Home </a>
+    <nav class="border-border mt-16 border-t pt-8" aria-label="Back to home">
+      <a href="/" class="text-text-muted hover:text-accent text-sm transition-colors"> &larr; Home </a>
     </nav>
   </article>
 </BaseLayout>

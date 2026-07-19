@@ -1,6 +1,6 @@
 ---
 title: 'I Was a Wednesday'
-description: "Eight Minutes #3, scored: the fight back — logs pulled while the wire was warm, eight reports to eight landlords, and the passkey close."
+description: 'Eight Minutes #3, scored: the fight back — logs pulled while the wire was warm, eight reports to eight landlords, and the passkey close.'
 date: 2026-06-10
 tags: ['security', 'phishing', 'music', 'generative audio', 'Eight Minutes']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fight/audio.mp3'

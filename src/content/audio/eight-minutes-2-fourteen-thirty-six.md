@@ -1,6 +1,6 @@
 ---
 title: 'Fourteen Thirty-Six'
-description: "Eight Minutes #2, scored: the freefall — a stranger typing my name a beat behind my hands, four doors holding, and the password change that ends it."
+description: 'Eight Minutes #2, scored: the freefall — a stranger typing my name a beat behind my hands, four doors holding, and the password change that ends it.'
 date: 2026-06-10
 tags: ['security', 'phishing', 'music', 'generative audio', 'Eight Minutes']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall/audio.mp3'

@@ -1,6 +1,6 @@
 ---
 title: 'Architectural Safety: The General Principle'
-description: "AI safety has to be a property of the system around the model, not a property of the model. The general principle, and why every safety conversation needs it."
+description: 'AI safety has to be a property of the system around the model, not a property of the model. The general principle, and why every safety conversation needs it.'
 date: 2026-04-28
 tags: ['ai-safety', 'research', 'engineering', 'policy']
 draft: false
@@ -13,7 +13,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=A4qC7N3mDrk'
 
 A throughline has been running through the work I've been doing for the last year, and I've never written it down in one place. So here it is.
 
-The argument: model-level safety is the wrong layer of the stack to load-bear on. Whatever else AI safety is, it has to be an *architectural* property — a property of the system *around* the model, not a property of the model itself. Behavioural alignment, alignment training, RLHF, Constitutional AI, the whole "make the model itself safer" research programme — these are useful, and none of them are sufficient. The frame they don't supply is the one I want to write down.
+The argument: model-level safety is the wrong layer of the stack to load-bear on. Whatever else AI safety is, it has to be an _architectural_ property — a property of the system _around_ the model, not a property of the model itself. Behavioural alignment, alignment training, RLHF, Constitutional AI, the whole "make the model itself safer" research programme — these are useful, and none of them are sufficient. The frame they don't supply is the one I want to write down.
 
 I've made this argument from five different angles across the corpus: jailbreak archaeology, the 120-model evaluation, multi-agent semantic worms, the cognitive cage for humanoid robotics, the three-layer architecture for therapeutic AI. Each post does part of the work. None of them extract the principle. This one does.
 
@@ -33,7 +33,7 @@ Take those two together and you have the problem. Behavioural training has funda
 
 So: architectural safety. What I mean by it, in one sentence.
 
-> A safe AI system is one whose *deployment architecture* — the deterministic code, runtime monitors, isolation boundaries, and policy gates around the model — refuses unsafe outcomes regardless of whether the model "decided" to refuse them.
+> A safe AI system is one whose _deployment architecture_ — the deterministic code, runtime monitors, isolation boundaries, and policy gates around the model — refuses unsafe outcomes regardless of whether the model "decided" to refuse them.
 
 A few things follow from that sentence.
 
@@ -73,7 +73,7 @@ What the architecture provides:
 
 ### Case 3: semantic firewalls for multi-agent systems
 
-[When AI Systems Talk to Each Other, Safety Breaks Down](/blog/when-ai-systems-talk-safety-breaks/) shows that single-agent safety doesn't compose. The fix isn't "make each agent safer". It's a layer between agents — a *semantic firewall* — that classifies, sanitises, and constrains agent-to-agent communications, treating every inter-agent message as untrusted by default.
+[When AI Systems Talk to Each Other, Safety Breaks Down](/blog/when-ai-systems-talk-safety-breaks/) shows that single-agent safety doesn't compose. The fix isn't "make each agent safer". It's a layer between agents — a _semantic firewall_ — that classifies, sanitises, and constrains agent-to-agent communications, treating every inter-agent message as untrusted by default.
 
 What the architecture provides:
 
@@ -86,7 +86,7 @@ What the architecture provides:
 Three different domains, three different architectures. Underneath, the same five moves.
 
 1. **The model is wrapped in deterministic code.** Not a wrapper that asks the model nicely — a wrapper whose decisions don't depend on the model's cooperation.
-2. **The action or output surface is enumerated and bounded.** What the system *can* do is fewer things than what the model *could* generate.
+2. **The action or output surface is enumerated and bounded.** What the system _can_ do is fewer things than what the model _could_ generate.
 3. **Adversarial inputs are the design baseline.** The architecture works when inputs are crafted to attack it, not just when inputs are well-behaved.
 4. **Failure modes are named in advance and gated explicitly.** The work of safety is moved from training-time hope to runtime specification.
 5. **The trust boundary is the architecture, not the model.** Whatever the model produces is best-effort; the architecture is authoritative.
@@ -121,7 +121,7 @@ If a proposal answers all five with concrete code and verifiable runtime behavio
 
 ## What this corpus has been arguing all along
 
-The five posts that share this throughline — [jailbreak archaeology](/blog/jailbreak-archaeology/), [120 models](/blog/120-models-18k-prompts/), [multi-agent semantic firewalls](/blog/when-ai-systems-talk-safety-breaks/), [the cognitive cage](/blog/the-cognitive-cage/), [therapeutic AI](/blog/safety-first-therapeutic-ai/) — were each making this argument from different sides. Two of them establish the *premise* (behavioural safety is structurally brittle). Three of them establish the *consequence* (here's what the architecture has to look like in this domain).
+The five posts that share this throughline — [jailbreak archaeology](/blog/jailbreak-archaeology/), [120 models](/blog/120-models-18k-prompts/), [multi-agent semantic firewalls](/blog/when-ai-systems-talk-safety-breaks/), [the cognitive cage](/blog/the-cognitive-cage/), [therapeutic AI](/blog/safety-first-therapeutic-ai/) — were each making this argument from different sides. Two of them establish the _premise_ (behavioural safety is structurally brittle). Three of them establish the _consequence_ (here's what the architecture has to look like in this domain).
 
 I should have stated the syllogism out loud sooner. So: model-level safety is structurally brittle, the deployment surface keeps growing past it, and the only path to safe AI deployment runs through architecture. Anything proposed at the model layer is improvement, not solution. The solution lives in the system around the model, or it doesn't live anywhere.
 

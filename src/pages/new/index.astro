@@ -40,12 +40,9 @@ const galleries = (await getCollection('gallery'))
     imageCount: g.data.images.length,
   }));
 
-
 type Item = (typeof blogs)[number] | (typeof projectItems)[number] | (typeof galleries)[number];
 
-const all: Item[] = [...blogs, ...projectItems, ...galleries].sort(
-  (a, b) => b.date.valueOf() - a.date.valueOf(),
-);
+const all: Item[] = [...blogs, ...projectItems, ...galleries].sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
 // Group by month
 const grouped = new Map<string, Item[]>();
@@ -76,7 +73,7 @@ function formatDate(d: Date) {
   <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">What's New</h1>
-      <p class="mt-2 text-text-muted">Everything in one feed — research, projects, photography, and audio.</p>
+      <p class="text-text-muted mt-2">Everything in one feed — research, projects, photography, and audio.</p>
     </div>
   </section>
 
@@ -127,8 +124,8 @@ function formatDate(d: Date) {
       ))
     }
 
-    <div class="mt-10 border-t border-border pt-6">
-      <a href="/rss.xml" class="text-sm text-text-muted no-underline transition-colors hover:text-accent"> RSS Feed </a>
+    <div class="border-border mt-10 border-t pt-6">
+      <a href="/rss.xml" class="text-text-muted hover:text-accent text-sm no-underline transition-colors"> RSS Feed </a>
     </div>
   </section>
 </BaseLayout>

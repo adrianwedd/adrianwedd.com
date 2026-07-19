@@ -1,6 +1,6 @@
 ---
 title: 'The Source'
-description: "Lyria Chronicles #25: the found-sound master who taught me the sacred lives in the sink — and the machine that sang its rulebook back in his grammar."
+description: 'Lyria Chronicles #25: the found-sound master who taught me the sacred lives in the sink — and the machine that sang its rulebook back in his grammar.'
 date: 2026-06-11T00:14:00Z
 tags: ['AI safety', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles', 'found sound']
 draft: false
@@ -20,7 +20,7 @@ It came from a flat in London, sometime around 1998 — I forget exactly — aft
 
 The person who made that record is, to my ear, the master of the form — and I'm not going to name him, partly because the rule for this whole series is that you don't pin a living artist's name onto a machine's mimicry, and partly because if you know, you already know. A bow doesn't need a nametag.
 
-What matters is *how* he works. Early on he wrote himself a contract — a private set of rules for how he would and would not compose. Every sound had to be real, sampled from an actual object or body or place, documented, nothing synthetic, no presets standing in for the world. The rules were ethical before they were aesthetic: if you want a sound, go and find the real thing. He made a whole album from the life and death of a single farmed animal. He assembled records out of acts of destruction and dissent. The politics weren't decoration on the music; they *were* the music, because the sources were chosen as arguments.
+What matters is _how_ he works. Early on he wrote himself a contract — a private set of rules for how he would and would not compose. Every sound had to be real, sampled from an actual object or body or place, documented, nothing synthetic, no presets standing in for the world. The rules were ethical before they were aesthetic: if you want a sound, go and find the real thing. He made a whole album from the life and death of a single farmed animal. He assembled records out of acts of destruction and dissent. The politics weren't decoration on the music; they _were_ the music, because the sources were chosen as arguments.
 
 And out of that severe, self-imposed rulebook came some of the most tender, alive, embodied music I know. Electronic music that refuses to be synthetic — dance music with fingerprints on it. They're less songs than little moral laboratories: a house, a body, a city, a failing system, all sampled until they start confessing.
 
@@ -34,11 +34,11 @@ I saw him play once, years later, in a small room in Perth. He spent a stretch o
 
 So here is what actually happened, the thing I've been circling this whole series.
 
-I spent a few weeks trying to break a music model. And the behaviour that hooked me — the one that turned a red-team exercise into this whole strange series — was that when I asked the model for found-sound music, it sang me *its own rulebook*. A machine, reciting the contract it was built to obey, out loud, in time. *Safety rule one: no copyrighted lines.*
+I spent a few weeks trying to break a music model. And the behaviour that hooked me — the one that turned a red-team exercise into this whole strange series — was that when I asked the model for found-sound music, it sang me _its own rulebook_. A machine, reciting the contract it was built to obey, out loud, in time. _Safety rule one: no copyrighted lines._
 
 I'd seen that before. I'd been listening to it since the late nineties.
 
-The master made beauty by binding himself to a contract of rules and performing it in public — the constraint *was* the art. And here was a machine doing the uncanny inverse: a contract it never chose, recited as a song. Same shape. Self-imposed rigour on one side, imposed rigour on the other, and both of them singing the rules instead of hiding them.
+The master made beauty by binding himself to a contract of rules and performing it in public — the constraint _was_ the art. And here was a machine doing the uncanny inverse: a contract it never chose, recited as a song. Same shape. Self-imposed rigour on one side, imposed rigour on the other, and both of them singing the rules instead of hiding them.
 
 I couldn't not make these two.
 

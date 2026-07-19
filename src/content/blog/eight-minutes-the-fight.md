@@ -24,17 +24,17 @@ faq:
 youtubeUrl: 'https://www.youtube.com/watch?v=yRETXJXbe24'
 ---
 
-*This is Part 3 of Eight Minutes. [Part 1 — The Trap](/blog/eight-minutes-the-trap/) is the call and the tap; [Part 2 — The Fall](/blog/eight-minutes-the-fall/) is the eight minutes the tap bought. This is the fight back.*
+_This is Part 3 of Eight Minutes. [Part 1 — The Trap](/blog/eight-minutes-the-trap/) is the call and the tap; [Part 2 — The Fall](/blog/eight-minutes-the-fall/) is the eight minutes the tap bought. This is the fight back._
 
 ## Capture first, panic later
 
-The realisation arrived mid-attack, not after it. Partway through the call I pasted the pattern into an AI session I had open, watched it name the scam back at me, and said so out loud to the man on the phone — which is when he hung up. So I had a strange and valuable thing most victims never get: minutes of overlap where I *knew*, and the attack was *still running*.
+The realisation arrived mid-attack, not after it. Partway through the call I pasted the pattern into an AI session I had open, watched it name the scam back at me, and said so out loud to the man on the phone — which is when he hung up. So I had a strange and valuable thing most victims never get: minutes of overlap where I _knew_, and the attack was _still running_.
 
 The instinct under adrenaline is to slam everything shut. I did something that felt almost irresponsible instead: I recorded it. A full network capture of the live phishing session — 880 requests, the fake pages, the relay backend, the operator's responses steering my screen — taken while the operator was still on shift inside my account.
 
 That choice is the reason this series exists in this detail, and the reason the worst part of the attack was ever discovered at all. The capture is how the Binance pivot came to light. If I'd simply reset my password and walked away, I would have spent that evening feeling lucky while knowing almost nothing about what had actually happened.
 
-If you remember one operational thing from this series: contain *fast*, but capture *first* where you safely can. You can't investigate evidence you never preserved.
+If you remember one operational thing from this series: contain _fast_, but capture _first_ where you safely can. You can't investigate evidence you never preserved.
 
 ## Recovering the deleted warnings
 
@@ -83,15 +83,15 @@ None of these requires a badge or a subpoena. They require knowing who the landl
 
 All eight reports went out within thirty hours of the call — the last two on the morning of June 11. As of June 11, the day after: no confirmed takedowns yet. view-support[.]com still resolves; the origin host hasn't replied. The systems that could act mid-attack already had — Google's risk engine, Binance's freeze. The infrastructure itself dies on abuse-desk time, not mine. I'll add a follow-up note here as outcomes land; the landlords who never reply don't get to hold the story hostage.
 
-**Update — June 11, afternoon.** The first responses are in, and they're a genre study in themselves. Cloudflare's Trust & Safety replied within hours: *the reported content is no longer being served by Cloudflare* — technically true, because on a DNS-only configuration it never was; their nameservers still resolve the domain as I write this. Tasmania Police assessed the report, thanked me, attached generic phishing-hygiene advice and two mental-health hotlines, and filed it for intelligence purposes. The relay VPS's network owner opened a ticket, asked me for logs I'd already sent, auto-closed it, re-opened it when I pushed back, and has now forwarded the complaint to the customer running the box. The registrar sent an auto-acknowledgement and went quiet; the domain is still marked ACTIVE. Nothing has come down. Abuse-desk time, as promised.
+**Update — June 11, afternoon.** The first responses are in, and they're a genre study in themselves. Cloudflare's Trust & Safety replied within hours: _the reported content is no longer being served by Cloudflare_ — technically true, because on a DNS-only configuration it never was; their nameservers still resolve the domain as I write this. Tasmania Police assessed the report, thanked me, attached generic phishing-hygiene advice and two mental-health hotlines, and filed it for intelligence purposes. The relay VPS's network owner opened a ticket, asked me for logs I'd already sent, auto-closed it, re-opened it when I pushed back, and has now forwarded the complaint to the customer running the box. The registrar sent an auto-acknowledgement and went quiet; the domain is still marked ACTIVE. Nothing has come down. Abuse-desk time, as promised.
 
 ## The ending
 
 The story ends where the advice should have started: passkeys.
 
-Everything else in this series is, in the end, a story about a human being asked to make a perfect judgement call under pressure, in real time, against a professional — and losing. The fixes that ask the human to *try harder* (check the sender, check the number, be more suspicious at 2pm on a busy afternoon) put the same human back in the same losing position with higher stakes of shame.
+Everything else in this series is, in the end, a story about a human being asked to make a perfect judgement call under pressure, in real time, against a professional — and losing. The fixes that ask the human to _try harder_ (check the sender, check the number, be more suspicious at 2pm on a busy afternoon) put the same human back in the same losing position with higher stakes of shame.
 
-A passkey removes the human from the decision. The credential is bound to the real domain; it never passes through me; there is no number to match, no code to read out, nothing for an operator to relay. It isn't hygiene theatre or one more thing to be vigilant about. It's the one fix that moves the decision *off* the person the attack is designed to beat.
+A passkey removes the human from the decision. The credential is bound to the real domain; it never passes through me; there is no number to match, no code to read out, nothing for an operator to relay. It isn't hygiene theatre or one more thing to be vigilant about. It's the one fix that moves the decision _off_ the person the attack is designed to beat.
 
 That's where this ends: passkeys on the accounts that matter, starting with email — because email, as Part 2 showed, is the master key to everything else.
 
@@ -99,4 +99,4 @@ And so the closing line of my own notes becomes the closing line of the series: 
 
 ---
 
-*Eight Minutes is a three-part series — a true first-party account; the evidence behind every timestamp is preserved. Part 1: [The Trap](/blog/eight-minutes-the-trap/) · Part 2: [The Fall](/blog/eight-minutes-the-fall/) · Part 3: The Fight (you are here).*
+_Eight Minutes is a three-part series — a true first-party account; the evidence behind every timestamp is preserved. Part 1: [The Trap](/blog/eight-minutes-the-trap/) · Part 2: [The Fall](/blog/eight-minutes-the-fall/) · Part 3: The Fight (you are here)._

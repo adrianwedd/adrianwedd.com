@@ -13,7 +13,7 @@ import GitHubActivity from '../../components/islands/GitHubActivity';
   <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">Activity</h1>
-      <p class="mt-2 text-text-muted">Live development activity from GitHub.</p>
+      <p class="text-text-muted mt-2">Live development activity from GitHub.</p>
     </div>
   </section>
 
@@ -24,10 +24,10 @@ import GitHubActivity from '../../components/islands/GitHubActivity';
       <GitHubActivity client:idle />
     </div>
 
-    <nav class="mt-16 border-t border-border pt-8" aria-label="Related pages">
+    <nav class="border-border mt-16 border-t pt-8" aria-label="Related pages">
       <div class="flex gap-6">
-        <a href="/now/" class="text-sm text-text-muted transition-colors hover:text-accent">&larr; Now</a>
-        <a href="/projects/" class="text-sm text-text-muted transition-colors hover:text-accent">Projects &rarr;</a>
+        <a href="/now/" class="text-text-muted hover:text-accent text-sm transition-colors">&larr; Now</a>
+        <a href="/projects/" class="text-text-muted hover:text-accent text-sm transition-colors">Projects &rarr;</a>
       </div>
     </nav>
   </section>

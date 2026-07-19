@@ -1,23 +1,23 @@
 ---
-title: "LeJEPA: Self-Supervised Learning Gets a Theoretical Foundation"
-description: "Balestriero and LeCun prove isotropic Gaussian embeddings are optimal, then build a 50-line self-supervised method eliminating stop-gradients and EMA teachers."
+title: 'LeJEPA: Self-Supervised Learning Gets a Theoretical Foundation'
+description: 'Balestriero and LeCun prove isotropic Gaussian embeddings are optimal, then build a 50-line self-supervised method eliminating stop-gradients and EMA teachers.'
 date: 2026-02-13
-heroImage: "/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/infographic.webp"
-audioUrl: "https://cdn.adrianwedd.com/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/audio.m4a"
+heroImage: '/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lejepa-self-supervised-learning-gets-a-theoretical-foundation/video.mp4'
-audioDuration: "21:16"
-tags: ["ai", "machine-learning", "research", "self-supervised-learning"]
+audioDuration: '21:16'
+tags: ['ai', 'machine-learning', 'research', 'self-supervised-learning']
 draft: false
 youtubeUrl: 'https://www.youtube.com/watch?v=E1UrwZfUeIk'
 ---
 
 **Balestriero & LeCun (2025)** — [arXiv:2511.08544](https://arxiv.org/abs/2511.08544)
 
-Self-supervised learning has powered much of the recent progress in computer vision, but the methods that work best — DINO, I-JEPA, data2vec — rely on a stack of heuristics: stop-gradients, exponential moving average teachers, asymmetric augmentation pipelines, and carefully scheduled hyperparameters. Remove any one piece and training collapses. Nobody has a satisfying explanation for *why* this particular combination works. Balestriero and LeCun's new paper, LeJEPA, offers one — and the answer is surprisingly clean.
+Self-supervised learning has powered much of the recent progress in computer vision, but the methods that work best — DINO, I-JEPA, data2vec — rely on a stack of heuristics: stop-gradients, exponential moving average teachers, asymmetric augmentation pipelines, and carefully scheduled hyperparameters. Remove any one piece and training collapses. Nobody has a satisfying explanation for _why_ this particular combination works. Balestriero and LeCun's new paper, LeJEPA, offers one — and the answer is surprisingly clean.
 
 ## The core insight
 
-The paper asks a fundamental question: what should the *distribution* of learned embeddings look like to minimise error on arbitrary downstream tasks? Their answer, backed by formal proofs covering both linear and nonlinear probing: an **isotropic Gaussian**.
+The paper asks a fundamental question: what should the _distribution_ of learned embeddings look like to minimise error on arbitrary downstream tasks? Their answer, backed by formal proofs covering both linear and nonlinear probing: an **isotropic Gaussian**.
 
 This isn't just an empirical observation. Theorem 1 proves that among all distributions with fixed variance, the isotropic Gaussian uniquely minimises integrated squared bias for k-NN and kernel-based methods. Two supporting lemmas show that anisotropic embeddings amplify both bias and variance in linear probes, regardless of downstream task structure. The implication is direct: if you can push your encoder's output distribution toward an isotropic Gaussian, you're provably minimising the worst-case downstream risk.
 
@@ -38,6 +38,7 @@ The theoretical guarantees are strong. The gradient magnitudes stay bounded at O
 The full method is the JEPA prediction loss plus SIGReg regularisation, weighted by a single hyperparameter lambda. That's it. No stop-gradient. No teacher-student network. No EMA schedule. No asymmetric augmentation. The implementation is roughly 50 lines of PyTorch.
 
 The training loop:
+
 1. Encode two views of an image
 2. Predict one embedding from the other
 3. Compute JEPA prediction loss
@@ -46,7 +47,7 @@ The training loop:
 
 ## Results
 
-**Architecture universality.** LeJEPA trained 50+ architectures from 8 different families (ResNets, ViTs, ConvNets, and others) with the *same hyperparameters*, achieving 91.5–95% accuracy on ImageNet-10 with a frozen backbone. No per-architecture tuning required.
+**Architecture universality.** LeJEPA trained 50+ architectures from 8 different families (ResNets, ViTs, ConvNets, and others) with the _same hyperparameters_, achieving 91.5–95% accuracy on ImageNet-10 with a frozen backbone. No per-architecture tuning required.
 
 **ImageNet-1K scale.** With ViT-H/14, LeJEPA reaches 79% linear probe accuracy. Performance is stable across batch sizes (128–1024), view counts (4–10), and lambda values (0.01–0.1).
 
@@ -58,7 +59,7 @@ The training loop:
 
 ## Why this matters
 
-The standard playbook for self-supervised learning is empirical: try combinations of tricks, ablate until something works, then justify it post-hoc. LeJEPA inverts this. Start from a theoretical result about optimal embedding geometry, derive a tractable regulariser, and show that the resulting method is simpler *and* more robust than the heuristic approaches.
+The standard playbook for self-supervised learning is empirical: try combinations of tricks, ablate until something works, then justify it post-hoc. LeJEPA inverts this. Start from a theoretical result about optimal embedding geometry, derive a tractable regulariser, and show that the resulting method is simpler _and_ more robust than the heuristic approaches.
 
 The practical implications are worth spelling out:
 

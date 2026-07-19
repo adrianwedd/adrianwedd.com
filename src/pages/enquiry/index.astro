@@ -8,13 +8,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   </Fragment>
 
   <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <a href="/contact/" class="text-sm text-text-muted transition-colors hover:text-accent">&larr; Back to contact</a>
+    <a href="/contact/" class="text-text-muted hover:text-accent text-sm transition-colors">&larr; Back to contact</a>
 
-    <h1 class="mt-6 text-2xl font-semibold text-text">Your enquiry</h1>
+    <h1 class="text-text mt-6 text-2xl font-semibold">Your enquiry</h1>
 
-    <div id="enquiry-error" class="mt-6 hidden rounded-lg border border-border bg-surface-alt p-6 text-center">
+    <div id="enquiry-error" class="border-border bg-surface-alt mt-6 hidden rounded-lg border p-6 text-center">
       <p class="text-text-muted">This enquiry could not be found or has expired.</p>
-      <a href="/contact/" class="mt-4 inline-block text-sm text-accent hover:underline">Start a new enquiry</a>
+      <a href="/contact/" class="text-accent mt-4 inline-block text-sm hover:underline">Start a new enquiry</a>
     </div>
 
     <div id="enquiry-chat" class="mt-6 hidden">
@@ -22,27 +22,27 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         id="chat-messages"
         role="log"
         aria-live="polite"
-        class="space-y-4 rounded-lg border border-border bg-surface-alt p-4"
+        class="border-border bg-surface-alt space-y-4 rounded-lg border p-4"
         style="min-height: 200px; max-height: 60vh; overflow-y: auto;"
       >
         <div class="flex justify-center">
-          <span class="rounded-full bg-surface px-3 py-1 text-xs text-text-muted">Message received</span>
+          <span class="bg-surface text-text-muted rounded-full px-3 py-1 text-xs">Message received</span>
         </div>
       </div>
 
       <div id="reply-section" class="mt-4 hidden">
-        <label for="reply-message" class="block text-xs text-text-muted">Reply</label>
+        <label for="reply-message" class="text-text-muted block text-xs">Reply</label>
         <textarea
           id="reply-message"
           rows="3"
           maxlength="2000"
-          class="mt-1 w-full resize-none rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+          class="border-border bg-surface text-text placeholder-text-muted focus:border-accent mt-1 w-full resize-none rounded border px-3 py-2 text-sm focus:outline-none"
           placeholder="Type your reply..."></textarea>
         <div class="mt-2 flex items-center gap-3">
           <button
             type="button"
             id="reply-submit"
-            class="btn-primary rounded-lg bg-accent px-5 py-2 text-sm font-medium text-surface hover:opacity-90 disabled:opacity-50"
+            class="btn-primary bg-accent text-surface rounded-lg px-5 py-2 text-sm font-medium hover:opacity-90 disabled:opacity-50"
           >
             Send reply
           </button>
@@ -50,18 +50,18 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
       </div>
 
-      <div id="readonly-notice" class="mt-4 hidden rounded border border-border bg-surface-alt px-4 py-3">
-        <p class="text-xs text-text-muted">Read-only view. To reply, use the original link from your submission.</p>
+      <div id="readonly-notice" class="border-border bg-surface-alt mt-4 hidden rounded border px-4 py-3">
+        <p class="text-text-muted text-xs">Read-only view. To reply, use the original link from your submission.</p>
       </div>
     </div>
 
     <div id="enquiry-loading" class="mt-6 text-center">
-      <p class="text-sm text-text-muted">Loading...</p>
+      <p class="text-text-muted text-sm">Loading...</p>
     </div>
 
     <div id="enquiry-no-token" class="mt-6 hidden text-center">
       <p class="text-text-muted">No enquiry token provided.</p>
-      <a href="/contact/" class="mt-4 inline-block text-sm text-accent hover:underline">Start a new enquiry</a>
+      <a href="/contact/" class="text-accent mt-4 inline-block text-sm hover:underline">Start a new enquiry</a>
     </div>
   </section>
 </BaseLayout>

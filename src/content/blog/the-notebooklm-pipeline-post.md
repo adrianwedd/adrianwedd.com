@@ -1,6 +1,6 @@
 ---
 title: 'The NotebookLM Pipeline'
-description: "How I automated audio overviews, quizzes, mind maps, and infographics for 32 projects via an unofficial NotebookLM CLI and a stack of shell scripts."
+description: 'How I automated audio overviews, quizzes, mind maps, and infographics for 32 projects via an unofficial NotebookLM CLI and a stack of shell scripts.'
 date: 2026-02-15
 tags: ['engineering', 'automation', 'ai', 'python']
 heroImage: '/notebook-assets/the-notebooklm-pipeline/infographic.webp'

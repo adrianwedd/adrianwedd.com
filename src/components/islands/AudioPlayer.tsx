@@ -91,14 +91,14 @@ export default function AudioPlayer({ src, title }: Props) {
   };
 
   return (
-    <div class="rounded-xl border border-border bg-surface-alt p-4">
+    <div class="border-border bg-surface-alt rounded-xl border p-4">
       <audio ref={audioRef} src={src} preload="metadata" />
 
       <div class="flex items-center gap-3">
         <button
           type="button"
           onClick={togglePlay}
-          class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-accent text-surface transition-colors hover:bg-accent-hover"
+          class="bg-accent text-surface hover:bg-accent-hover flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full transition-colors"
           aria-label={playing ? 'Pause' : 'Play'}
         >
           {playing ? (
@@ -116,7 +116,7 @@ export default function AudioPlayer({ src, title }: Props) {
         <button
           type="button"
           onClick={() => skip(-15)}
-          class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded text-text-muted transition-colors hover:text-text"
+          class="text-text-muted hover:text-text flex h-11 w-11 flex-shrink-0 items-center justify-center rounded transition-colors"
           aria-label="Skip back 15 seconds"
         >
           <svg
@@ -138,7 +138,7 @@ export default function AudioPlayer({ src, title }: Props) {
         <button
           type="button"
           onClick={() => skip(30)}
-          class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded text-text-muted transition-colors hover:text-text"
+          class="text-text-muted hover:text-text flex h-11 w-11 flex-shrink-0 items-center justify-center rounded transition-colors"
           aria-label="Skip forward 30 seconds"
         >
           <svg
@@ -158,9 +158,9 @@ export default function AudioPlayer({ src, title }: Props) {
         </button>
 
         <div class="min-w-0 flex-1">
-          <div class="truncate text-sm font-medium text-text">{title}</div>
+          <div class="text-text truncate text-sm font-medium">{title}</div>
           <div class="mt-1 flex items-center gap-2">
-            <span class="text-xs tabular-nums text-text-muted">{formatTime(currentTime)}</span>
+            <span class="text-text-muted text-xs tabular-nums">{formatTime(currentTime)}</span>
             <input
               type="range"
               min="0"
@@ -168,18 +168,18 @@ export default function AudioPlayer({ src, title }: Props) {
               step="5"
               value={currentTime}
               onInput={seek}
-              class="h-1 flex-1 cursor-pointer accent-accent"
+              class="accent-accent h-1 flex-1 cursor-pointer"
               aria-label="Seek"
               aria-valuetext={`${formatTime(currentTime)} of ${formatTime(duration)}`}
             />
-            <span class="text-xs tabular-nums text-text-muted">{formatTime(duration)}</span>
+            <span class="text-text-muted text-xs tabular-nums">{formatTime(duration)}</span>
           </div>
         </div>
 
         <button
           type="button"
           onClick={cycleRate}
-          class="min-h-11 rounded border border-border px-3 text-xs tabular-nums text-text-muted transition-colors hover:border-accent hover:text-text"
+          class="border-border text-text-muted hover:border-accent hover:text-text min-h-11 rounded border px-3 text-xs tabular-nums transition-colors"
           aria-label={`Playback speed: ${playbackRate}x`}
         >
           {playbackRate}x
@@ -187,9 +187,9 @@ export default function AudioPlayer({ src, title }: Props) {
       </div>
 
       {error && (
-        <p role="alert" class="mt-3 text-sm text-status-error">
+        <p role="alert" class="text-status-error mt-3 text-sm">
           Couldn't load this audio.{' '}
-          <a href={src} class="underline hover:text-text">
+          <a href={src} class="hover:text-text underline">
             Open it directly
           </a>
           .

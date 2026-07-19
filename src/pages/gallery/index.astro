@@ -35,7 +35,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
           <button
             type="button"
             data-tag=""
-            class="tag-filter bg-accent/15 cursor-pointer rounded-full px-3 py-1 text-xs font-medium text-accent transition-colors"
+            class="tag-filter bg-accent/15 text-accent cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors"
             aria-pressed="true"
           >
             All
@@ -44,7 +44,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
             <button
               type="button"
               data-tag={`medium:${medium}`}
-              class="tag-filter bg-accent/10 hover:bg-accent/20 cursor-pointer rounded-full px-3 py-1 text-xs italic text-accent transition-colors"
+              class="tag-filter bg-accent/10 hover:bg-accent/20 text-accent cursor-pointer rounded-full px-3 py-1 text-xs italic transition-colors"
               aria-pressed="false"
             >
               {medium}
@@ -55,7 +55,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
               type="button"
               data-tag={tag}
               class:list={[
-                'tag-filter hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent',
+                'tag-filter hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent cursor-pointer rounded-full px-3 py-1 text-xs no-underline transition-colors',
                 i >= 10 && 'gallery-tag-overflow hidden',
               ]}
               aria-pressed="false"
@@ -68,7 +68,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
               type="button"
               id="gallery-tags-toggle"
               aria-expanded="false"
-              class="hover:bg-accent/15 cursor-pointer rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted transition-colors hover:text-accent"
+              class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent cursor-pointer rounded-full px-3 py-1 text-xs transition-colors"
             >
               +{allTags.length - 10} more
             </button>
@@ -79,10 +79,10 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
 
     {/* Sort control */}
     <div class="mt-4 flex items-center gap-2">
-      <label for="sort-select" class="text-xs text-text-muted">Sort:</label>
+      <label for="sort-select" class="text-text-muted text-xs">Sort:</label>
       <select
         id="sort-select"
-        class="rounded border border-border bg-surface-alt px-2 py-1 text-xs text-text-muted focus:border-accent focus:outline-none"
+        class="border-border bg-surface-alt text-text-muted focus:border-accent rounded border px-2 py-1 text-xs focus:outline-none"
       >
         <option value="newest">Newest first</option>
         <option value="oldest">Oldest first</option>
@@ -102,7 +102,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
           >
             <a
               href={`/gallery/${slug(collection.id)}/`}
-              class="card-hover hover:border-accent/50 group block overflow-hidden rounded-xl border border-border no-underline shadow-subtle transition-all hover:shadow-card"
+              class="card-hover hover:border-accent/50 group border-border shadow-subtle hover:shadow-card block overflow-hidden rounded-xl border no-underline transition-all"
             >
               {collection.data.coverImage && (
                 <div class="img-placeholder aspect-[4/3] overflow-hidden">
@@ -121,13 +121,13 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
                 </div>
               )}
               <div class="p-4">
-                <h2 class="text-base font-semibold text-text transition-colors group-hover:text-accent">
+                <h2 class="text-text group-hover:text-accent text-base font-semibold transition-colors">
                   {collection.data.title}
                 </h2>
                 {collection.data.description && (
-                  <p class="mt-1 line-clamp-2 text-sm text-text-muted">{collection.data.description}</p>
+                  <p class="text-text-muted mt-1 line-clamp-2 text-sm">{collection.data.description}</p>
                 )}
-                <div class="mt-2 flex items-center gap-2 text-xs text-text-muted">
+                <div class="text-text-muted mt-2 flex items-center gap-2 text-xs">
                   <span>
                     {collection.data.images.length} image{collection.data.images.length !== 1 ? 's' : ''}
                   </span>
@@ -145,7 +145,7 @@ const allMedia = [...new Set(collections.map((c) => c.data.medium).filter(Boolea
       }
     </div>
 
-    <p id="no-results" class="mt-10 hidden text-center text-text-muted">No collections match this filter.</p>
+    <p id="no-results" class="text-text-muted mt-10 hidden text-center">No collections match this filter.</p>
   </section>
 
   <script is:inline>

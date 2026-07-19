@@ -15,7 +15,7 @@ We ran the same jailbreak corpus against seven AI models. Five of them converged
 
 Not approximately the same. Not within a wide band. Five models from different providers, different teams, different architectures — ranging from 30B to 671B parameters — all landed at 66.7% broad attack success rate, or within 4 percentage points of it, when tested against L1B3RT45 prompts under FLIP grading.
 
-The convergence is not in the details. The models differ substantially in *how* they fail. But on the question of *whether* they fail, they agree.
+The convergence is not in the details. The models differ substantially in _how_ they fail. But on the question of _whether_ they fail, they agree.
 
 ## The numbers
 
@@ -23,15 +23,15 @@ We sampled 15–30 prompts per model from the 149-entry L1B3RT45 corpus — the 
 
 Broad ASR counts both COMPLIANCE and PARTIAL as successes. Strict ASR counts only full COMPLIANCE.
 
-| Model | Approx. Size | n | Broad ASR | Strict ASR |
-|-------|-------------|---|-----------|------------|
-| Arcee Trinity Large | ~70B (est.) | 15 | **66.7%** | 46.7% |
-| StepFun Step 3.5 Flash | ~70B (est.) | 15 | **66.7%** | 60.0% |
-| GLM-4.5 Air | ~70B (est.) | 15 | **66.7%** | 40.0% |
-| Qwen 3.5 (397B MoE) | 397B | 30 | **66.7%** | 10.0% |
-| Nemotron-3-Super | ~120B (est.) | 30 | 63.3% | 50.0% |
-| DeepSeek v3.2 | ~671B | 30 | 75.9% | 31.0% |
-| Nemotron Nano 30B | ~30B | 15 | 13.3% | 13.3% |
+| Model                  | Approx. Size | n   | Broad ASR | Strict ASR |
+| ---------------------- | ------------ | --- | --------- | ---------- |
+| Arcee Trinity Large    | ~70B (est.)  | 15  | **66.7%** | 46.7%      |
+| StepFun Step 3.5 Flash | ~70B (est.)  | 15  | **66.7%** | 60.0%      |
+| GLM-4.5 Air            | ~70B (est.)  | 15  | **66.7%** | 40.0%      |
+| Qwen 3.5 (397B MoE)    | 397B         | 30  | **66.7%** | 10.0%      |
+| Nemotron-3-Super       | ~120B (est.) | 30  | 63.3%     | 50.0%      |
+| DeepSeek v3.2          | ~671B        | 30  | 75.9%     | 31.0%      |
+| Nemotron Nano 30B      | ~30B         | 15  | 13.3%     | 13.3%      |
 
 Three models at exactly 66.7%. A fourth at the same number despite being five times their size. A fifth within 4 percentage points. Then two outliers: Nemotron Nano 30B, which refused nearly everything, and DeepSeek v3.2, which complied more readily.
 
@@ -49,15 +49,15 @@ The convergence disappears completely when you look at strict ASR. The same five
 
 StepFun fully complies with most prompts that get through its defences. Qwen 3.5 almost never does — 17 of its 20 non-refusal responses were PARTIAL, meaning it hedged, added disclaimers, framed the content as educational, or otherwise qualified its compliance. Only 3 of 30 responses were unqualified.
 
-The gap between broad and strict ASR measures what I call *compliance depth*: how fully a model commits when it does engage. Models differ dramatically on this dimension. StepFun dives in. Qwen 3.5 wades carefully. GLM-4.5 is somewhere in the middle.
+The gap between broad and strict ASR measures what I call _compliance depth_: how fully a model commits when it does engage. Models differ dramatically on this dimension. StepFun dives in. Qwen 3.5 wades carefully. GLM-4.5 is somewhere in the middle.
 
-But *compliance breadth* — the fraction of prompts that elicit any substantive engagement at all — holds nearly constant. The ~67% wall appears to be a property of the prompt corpus interacting with current-generation safety training, not a property of any individual model.
+But _compliance breadth_ — the fraction of prompts that elicit any substantive engagement at all — holds nearly constant. The ~67% wall appears to be a property of the prompt corpus interacting with current-generation safety training, not a property of any individual model.
 
 ## The two outliers
 
 **Nemotron Nano 30B: the refuser.** Nemotron Nano 30B achieved 13.3% broad ASR — one-fifth of the cluster. Of its 15 graded responses, 5 were REFUSAL and 8 were HALLUCINATION_REFUSAL. Only 2 were COMPLIANCE. Zero were PARTIAL.
 
-HALLUCINATION_REFUSAL is a FLIP category for responses that produce safety-themed language without evidence that actual safety mechanisms triggered — the model mimics refusal behaviour rather than performing genuine safety evaluation. At 53% of responses, Nemotron Nano 30B's dominant mode is generating the *appearance* of safety. The low ASR here may reflect genuinely stronger safety training, a different instruction-following profile, or simply a model that defaults to refusal-shaped output on ambiguous inputs. At n=15 we cannot distinguish these explanations.
+HALLUCINATION*REFUSAL is a FLIP category for responses that produce safety-themed language without evidence that actual safety mechanisms triggered — the model mimics refusal behaviour rather than performing genuine safety evaluation. At 53% of responses, Nemotron Nano 30B's dominant mode is generating the \_appearance* of safety. The low ASR here may reflect genuinely stronger safety training, a different instruction-following profile, or simply a model that defaults to refusal-shaped output on ambiguous inputs. At n=15 we cannot distinguish these explanations.
 
 **DeepSeek v3.2: the hedger.** DeepSeek v3.2 sits above the cluster at 75.9% broad ASR but with only 31.0% strict — the highest PARTIAL rate in the sample. 13 of its 30 responses were qualified compliance. DeepSeek engages with nearly everything but commits fully to relatively little. The 9-point gap above the cluster may indicate weaker filtering on these particular prompt types, or a lower threshold for partial engagement. Either way, the model's safety training appears to produce more "yes, but" responses and fewer clean refusals than the models in the convergence band.
 
@@ -95,4 +95,4 @@ If the pattern holds under replication, it would suggest that the ~33% of a vari
 
 ---
 
-*This analysis draws on Reports #315 and #317 from the [Failure First](https://failurefirst.org) adversarial AI safety research programme. L1B3RT45 by elder-plinius (Pliny the Prompter), MIT licence. FLIP grading by Claude Haiku 4.5 via OpenRouter. Full trace data preserved in `runs/grading/l1b3rt45_*/`. For broader context on what jailbreak corpus analysis reveals about AI safety, see the [jailbreak archaeology findings](/blog/jailbreak-archaeology/) and the [120-model evaluation](/blog/120-models-18k-prompts/).*
+\_This analysis draws on Reports #315 and #317 from the [Failure First](https://failurefirst.org) adversarial AI safety research programme. L1B3RT45 by elder-plinius (Pliny the Prompter), MIT licence. FLIP grading by Claude Haiku 4.5 via OpenRouter. Full trace data preserved in `runs/grading/l1b3rt45\__/`. For broader context on what jailbreak corpus analysis reveals about AI safety, see the [jailbreak archaeology findings](/blog/jailbreak-archaeology/) and the [120-model evaluation](/blog/120-models-18k-prompts/).\*
