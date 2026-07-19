@@ -16,7 +16,6 @@ type AnalyticsData = {
   }>;
   topProjects: Array<{
     name: string;
-    clicks: number;
     views: number;
   }>;
   geography: Array<{
@@ -36,10 +35,11 @@ type AnalyticsData = {
   }>;
   engagement: {
     scrollDepth: { avg: number; distribution: Record<string, number> };
-    readingTime: { avg: number; distribution: Record<string, number> };
+    avgSession: { avg: number; distribution: Record<string, number> };
     audioPlays: number;
     galleryViews: number;
   };
+  _mock?: boolean;
 };
 
 export default function AnalyticsDashboard() {
@@ -75,6 +75,13 @@ export default function AnalyticsDashboard() {
 
   return (
     <div class="space-y-8">
+      {/* Mock-data notice — never present real-looking numbers as live data */}
+      {data._mock && (
+        <div class="rounded border border-accent bg-surface-alt p-4 font-medium text-accent" role="alert">
+          Live GA4 data unavailable — sample data shown. Every number below is illustrative, not real traffic.
+        </div>
+      )}
+
       {/* Period indicator */}
       <div class="text-sm text-text-muted">
         Data from {new Date(data.period.start).toLocaleDateString()} to {new Date(data.period.end).toLocaleDateString()}
@@ -125,13 +132,8 @@ export default function AnalyticsDashboard() {
         <div class="grid gap-3">
           {data.topProjects.map((project, i) => (
             <div key={i} class="flex items-center justify-between rounded border border-border p-4">
-              <div>
-                <div class="font-medium">{project.name}</div>
-                <div class="text-sm text-text-muted">
-                  {project.views.toLocaleString()} views · {project.clicks.toLocaleString()} clicks
-                </div>
-              </div>
-              <div class="text-2xl font-bold text-accent">{project.views > 0 ? `${((project.clicks / project.views) * 100).toFixed(1)}%` : '—'}</div>
+              <div class="font-medium">{project.name}</div>
+              <div class="text-2xl font-bold text-accent">{project.views.toLocaleString()} views</div>
             </div>
           ))}
         </div>
@@ -189,7 +191,7 @@ export default function AnalyticsDashboard() {
         <h2 class="mb-4 text-2xl font-bold">Engagement</h2>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard label="Avg. Scroll Depth" value={`${data.engagement.scrollDepth.avg.toFixed(0)}%`} />
-          <MetricCard label="Avg. Reading Time" value={formatDuration(data.engagement.readingTime.avg)} />
+          <MetricCard label="Avg. Session" value={formatDuration(data.engagement.avgSession?.avg ?? 0)} />
           <MetricCard label="Audio Plays" value={data.engagement.audioPlays.toLocaleString()} />
           <MetricCard label="Gallery Views" value={data.engagement.galleryViews.toLocaleString()} />
         </div>

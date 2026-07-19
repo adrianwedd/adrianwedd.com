@@ -741,9 +741,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         btn.disabled = !(nameVal && emailVal && messageVal && turnstileVerified);
       }
 
-      ['enquiry-name', 'enquiry-email', 'enquiry-message'].forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) el.addEventListener('input', updateEnquirySubmitBtn);
+      // Delegated on document so inputs replaced by a View Transition swap
+      // still re-enable the submit button (matches the submit delegation below).
+      document.addEventListener('input', function (e) {
+        var t = e.target;
+        if (!t || !t.id) return;
+        if (t.id === 'enquiry-name' || t.id === 'enquiry-email' || t.id === 'enquiry-message') {
+          updateEnquirySubmitBtn();
+        }
       });
 
       document.addEventListener('submit', function (e) {

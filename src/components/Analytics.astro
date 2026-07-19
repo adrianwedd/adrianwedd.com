@@ -16,7 +16,9 @@
   const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '';
   const LI_PARTNER_ID = '8890876';
 
-  type ConsentState = { analytics: boolean; personalisation: boolean; timestamp: number };
+  // advertising is optional: consents stored before the category existed lack it —
+  // treat missing as false (no ad scripts) rather than re-prompting.
+  type ConsentState = { analytics: boolean; advertising?: boolean; personalisation: boolean; timestamp: number };
 
   function getConsent(): ConsentState | null {
     try {
@@ -147,14 +149,14 @@
   function getContentType(path: string): string {
     if (path === '/') return 'home';
     if (path.startsWith('/blog/tag/')) return 'tag_page';
-    if (path.startsWith('/blog/')) return 'blog_post';
     if (path === '/blog/' || path === '/blog') return 'blog_index';
-    if (path.startsWith('/projects/')) return 'project';
+    if (path.startsWith('/blog/')) return 'blog_post';
     if (path === '/projects/' || path === '/projects') return 'project_index';
-    if (path.startsWith('/gallery/')) return 'gallery';
+    if (path.startsWith('/projects/')) return 'project';
     if (path === '/gallery/' || path === '/gallery') return 'gallery_index';
-    if (path.startsWith('/audio/')) return 'audio';
+    if (path.startsWith('/gallery/')) return 'gallery';
     if (path === '/audio/' || path === '/audio') return 'audio_index';
+    if (path.startsWith('/audio/')) return 'audio';
     if (path.startsWith('/about')) return 'about';
     return 'other';
   }
@@ -454,6 +456,8 @@
     const consent = getConsent();
     if (consent?.analytics) {
       loadGA4();
+    }
+    if (consent?.advertising) {
       loadLinkedInInsight();
       loadAdSense();
     }
@@ -469,11 +473,11 @@
     (document.documentElement as any).dataset.analyticsSwapInit = '1';
     document.addEventListener('astro:after-swap', () => {
       const consent = getConsent();
-      if (consent?.analytics && typeof (window as any).gtag === 'function') {
-        // AdSense might need to be notified of navigation, but gtag handles most of it
-        // If we haven't loaded it yet (e.g. consent just granted), load it
+      // Ad scripts are gated on advertising consent only — never on analytics.
+      if (consent?.advertising) {
         loadAdSense();
-
+      }
+      if (consent?.analytics && typeof (window as any).gtag === 'function') {
         // Flush reading time for previous page, start fresh for new page
         readingTimeSend();
         readingTimeStart();
@@ -493,6 +497,8 @@
   window.addEventListener('consent-updated', ((e: CustomEvent<ConsentState>) => {
     if (e.detail.analytics) {
       loadGA4();
+    }
+    if (e.detail.advertising) {
       loadLinkedInInsight();
       loadAdSense();
     }
