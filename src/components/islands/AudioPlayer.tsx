@@ -22,6 +22,8 @@ export default function AudioPlayer({ src, title }: Props) {
       setDuration(audio.duration);
       setError(false);
     };
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
     const onEnded = () => setPlaying(false);
     const onError = () => {
       setError(true);
@@ -30,12 +32,16 @@ export default function AudioPlayer({ src, title }: Props) {
 
     audio.addEventListener('timeupdate', onTimeUpdate);
     audio.addEventListener('loadedmetadata', onLoaded);
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
     audio.addEventListener('ended', onEnded);
     audio.addEventListener('error', onError);
 
     return () => {
       audio.removeEventListener('timeupdate', onTimeUpdate);
       audio.removeEventListener('loadedmetadata', onLoaded);
+      audio.removeEventListener('play', onPlay);
+      audio.removeEventListener('pause', onPause);
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('error', onError);
     };
