@@ -1,15 +1,15 @@
 ---
 title: 'The Ungovernable Body'
-description: 'An agent-operable film studio in a git repo — canon, claims, screenplay, and thousands of generated shots for a feminist techno-thriller short.'
+description: 'An agent-operable film studio in a git repo — canon, claims, screenplay, and over a thousand generated shots for a feminist techno-thriller short.'
 tags: ['ai', 'filmmaking', 'agents', 'storytelling', 'generative-video']
 status: 'active'
 featured: false
 date: 2026-07-20
 ---
 
-_The Ungovernable Body_ is a near-future feminist techno-thriller about biological governance, unreadability, grief, ageing, and the right to finitude. The current production target is a 12–18 minute proof-of-concept short, working title **The Right to Rot**: Elara Vance, architect of a biometric legibility system, has her own menopause classified as catastrophic asset depreciation — and must erase the compliant digital replica replacing her, becoming unreadable to survive.
+_The Ungovernable Body_ is a near-future feminist techno-thriller about biological governance, unreadability, grief, ageing, and the right to finitude. The current production target is a roughly 20–22 minute proof-of-concept short, working title **The Right to Rot**: Elara Vance, architect of a biometric legibility system, has her own menopause classified as catastrophic asset depreciation — and must erase the compliant digital replica replacing her, becoming unreadable to survive.
 
-But the project is also an experiment in *how* a film gets made. The entire production lives in a git repository designed to be operated by a team of AI agents under strict human-authored constraints — an attempt to answer whether serious dramatic work can survive an agentic pipeline without its politics flattened, its science falsified, or its drama replaced by visual-generation convenience.
+But the project is also an experiment in _how_ a film gets made. The production's source of truth lives in a git repository designed to be operated by a team of AI agents under strict human-authored constraints — an attempt to answer whether serious dramatic work can survive an agentic pipeline without its politics flattened, its science falsified, or its drama replaced by visual-generation convenience.
 
 ## The repo as studio
 
@@ -22,7 +22,7 @@ Everything a studio would hold in departments, this repo holds in files with sch
 
 ## Production at scale
 
-Three screenplay drafts in, the shot manifest covers 222 shots across the short's eight-movement structure. Generation runs through prompt packages compiled from the manifest — one clip, one visible action, one emotional vector, one explicit continuity state — and the output pile is real: thousands of generated video clips and stills, an ASR transcription pass over 649 clips to catch model-hallucinated speech, and swarm QA rounds where multiple agents audit assets for identity drift, teleportation, continuity breaks, and prompt mismatches, logging anomalies with visual evidence.
+Three screenplay drafts in, the shot manifest covers 111 shots across the short's eleven scenes. Generation runs through prompt packages compiled from the manifest — one clip, one visible action, one emotional vector, one explicit continuity state — and the output pile is real: well over a thousand generated video clips and stills, an ASR transcription pass over every generated clip (850+ transcripts and counting) to catch model-hallucinated speech, and swarm QA rounds where multiple agents audit assets for identity drift, teleportation, continuity breaks, and prompt mismatches, logging anomalies with visual evidence.
 
 Character consistency is treated as a locking problem: reference assets go through gated approval (`character-locks.yaml`), and the validator rejects any approved asset recorded while a character's gates are still open.
 
