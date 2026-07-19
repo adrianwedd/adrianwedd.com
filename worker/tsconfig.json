@@ -5,7 +5,9 @@
     "moduleResolution": "bundler",
     "strict": true,
     "skipLibCheck": true,
-    "types": ["@cloudflare/workers-types"],
+    // "node" types back the `node:crypto` imports (auth.ts, cron/comments.ts);
+    // the runtime side is provided by the nodejs_compat compatibility flag.
+    "types": ["@cloudflare/workers-types", "node"],
     "paths": { "~/*": ["./src/*"] }
   },
   "include": ["src/**/*.ts"]

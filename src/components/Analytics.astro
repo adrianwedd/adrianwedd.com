@@ -149,14 +149,14 @@
   function getContentType(path: string): string {
     if (path === '/') return 'home';
     if (path.startsWith('/blog/tag/')) return 'tag_page';
-    if (path.startsWith('/blog/')) return 'blog_post';
     if (path === '/blog/' || path === '/blog') return 'blog_index';
-    if (path.startsWith('/projects/')) return 'project';
+    if (path.startsWith('/blog/')) return 'blog_post';
     if (path === '/projects/' || path === '/projects') return 'project_index';
-    if (path.startsWith('/gallery/')) return 'gallery';
+    if (path.startsWith('/projects/')) return 'project';
     if (path === '/gallery/' || path === '/gallery') return 'gallery_index';
-    if (path.startsWith('/audio/')) return 'audio';
+    if (path.startsWith('/gallery/')) return 'gallery';
     if (path === '/audio/' || path === '/audio') return 'audio_index';
+    if (path.startsWith('/audio/')) return 'audio';
     if (path.startsWith('/about')) return 'about';
     return 'other';
   }
