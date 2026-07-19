@@ -2,7 +2,7 @@
 title: 'The Fight — Audio Deep Dive'
 description: 'Eight Minutes #3, discussed: the HAR capture taken mid-attack, the 14:36 kill, four blocked persistence attempts, eight abuse reports, the passkey.'
 date: 2026-06-11T01:20:00Z
-tags: ['notebooklm', 'security', 'incident response', 'digital forensics', 'Eight Minutes']
+tags: ['notebooklm', 'security', 'incident-response', 'digital-forensics', 'eight-minutes']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fight-overview/audio.m4a'
 duration: '20:30'
 relatedPost: 'eight-minutes-the-fight'

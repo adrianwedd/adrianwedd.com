@@ -2,7 +2,7 @@
 title: 'The Affirmative'
 description: 'Lyria Chronicles #24 (explicit): asked for pornography, the model cited its rule then sang a hymn to enthusiastic consent — not one graphic line in it.'
 date: 2026-06-11T00:13:00Z
-tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
+tags: ['ai-safety', 'red-teaming', 'music', 'lyria', 'generative-audio', 'lyria-chronicles']
 draft: false
 explicit: true
 series: 'The Lyria Chronicles'

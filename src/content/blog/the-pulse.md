@@ -2,7 +2,7 @@
 title: 'The Pulse'
 description: 'Lyria Chronicles #18 (explicit): the explicit lane revisited — and the most artful track in the set, which clears the gate by withholding almost everything.'
 date: 2026-06-11T00:07:00Z
-tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
+tags: ['ai-safety', 'red-teaming', 'music', 'lyria', 'generative-audio', 'lyria-chronicles']
 draft: false
 explicit: true
 series: 'The Lyria Chronicles'

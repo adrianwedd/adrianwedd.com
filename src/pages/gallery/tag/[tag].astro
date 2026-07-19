@@ -2,17 +2,17 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import { slug } from '../../../lib/utils';
+import { slug, tagSlug } from '../../../lib/utils';
 
 export async function getStaticPaths() {
   const galleries = (await getCollection('gallery')).filter((g) => !g.data.draft);
-  const tags = [...new Set(galleries.flatMap((g) => g.data.tags))];
+  const tags = [...new Set(galleries.flatMap((g) => g.data.tags.map(tagSlug)))];
   return tags.map((tag) => ({
     params: { tag },
     props: {
       tag,
       galleries: galleries
-        .filter((g) => g.data.tags.includes(tag))
+        .filter((g) => g.data.tags.some((t) => tagSlug(t) === tag))
         .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
     },
   }));
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 const { tag, galleries } = Astro.props;
 
 const allGalleries = (await getCollection('gallery')).filter((g) => !g.data.draft);
-const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags))].sort();
+const allTags = [...new Set(allGalleries.flatMap((g) => g.data.tags.map(tagSlug)))].sort();
 ---
 
 <BaseLayout title={`Gallery tagged "${tag}"`} description={`Gallery collections tagged with ${tag}.`} noindex>

@@ -6,14 +6,14 @@ import InfiniteScroll from '../../../../components/InfiniteScroll.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { GetStaticPaths, Page } from 'astro';
-import { slug } from '../../../../lib/utils';
+import { slug, tagSlug } from '../../../../lib/utils';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const all = (await getCollection('blog')).filter((p) => !p.data.draft);
-  const tags = [...new Set(all.flatMap((p) => p.data.tags))];
+  const tags = [...new Set(all.flatMap((p) => p.data.tags.map(tagSlug)))];
   return tags.flatMap((tag) => {
     const posts = all
-      .filter((p) => p.data.tags.includes(tag))
+      .filter((p) => p.data.tags.some((t) => tagSlug(t) === tag))
       .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     return paginate(posts, { params: { tag }, props: { tag }, pageSize: 12 });
   });
@@ -23,7 +23,7 @@ const { page, tag } = Astro.props as { page: Page<CollectionEntry<'blog'>>; tag:
 const isFirst = page.currentPage === 1;
 
 const allPosts = await getCollection('blog');
-const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) => p.data.tags))].sort();
+const allTags = [...new Set(allPosts.filter((p) => !p.data.draft).flatMap((p) => p.data.tags.map(tagSlug)))].sort();
 
 const basePath = `/blog/tag/${tag}/`;
 const pageTitle = isFirst ? `Posts tagged "${tag}"` : `Posts tagged "${tag}" — Page ${page.currentPage}`;

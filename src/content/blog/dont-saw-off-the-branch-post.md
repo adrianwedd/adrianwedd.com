@@ -2,7 +2,7 @@
 title: "Don't Saw Off the Branch"
 description: 'I let an AI agent rebuild my live home network over Starlink — no console, no documented API. Part 1: building three backout paths before a single write.'
 date: 2026-06-25T12:00:00+10:00
-tags: ['engineering', 'networking', 'security', 'homelab', 'AI agents', 'Claude Code']
+tags: ['engineering', 'networking', 'security', 'homelab', 'ai-agents', 'claude-code']
 series: 'An Agent in the Walls'
 seriesOrder: 1
 heroImage: '/notebook-assets/dont-saw-off-the-branch/infographic.webp'
