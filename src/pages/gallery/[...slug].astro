@@ -6,7 +6,7 @@ import RelatedContent from '../../components/RelatedContent.astro';
 import ShareButton from '../../components/islands/ShareButton';
 import Lightbox from '../../components/Lightbox.astro';
 import { getCollection, render } from 'astro:content';
-import { slug, imageSlug, ogSafeImage } from '../../lib/utils';
+import { slug, imageSlug, ogSafeImage, tagSlug } from '../../lib/utils';
 import { getImageDimensions } from '../../lib/image-dimensions';
 
 export async function getStaticPaths() {
@@ -82,7 +82,7 @@ const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
         {
           gallery.data.tags.map((tag: string) => (
             <a
-              href={`/gallery/tag/${tag}/`}
+              href={`/gallery/tag/${tagSlug(tag)}/`}
               class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-2.5 py-0.5 text-xs no-underline transition-colors"
             >
               {tag}

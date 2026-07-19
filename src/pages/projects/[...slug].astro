@@ -7,7 +7,7 @@ import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
-import { slug, youtubeId, ogSafeImage, heroAltText } from '../../lib/utils';
+import { slug, youtubeId, ogSafeImage, heroAltText, tagSlug } from '../../lib/utils';
 import { getImageDimensions } from '../../lib/image-dimensions';
 import { Picture } from 'astro:assets';
 
@@ -238,7 +238,7 @@ const allBlogPosts = project.data.series
         {
           project.data.tags.map((tag: string) => (
             <a
-              href={`/projects/tag/${tag}/`}
+              href={`/projects/tag/${tagSlug(tag)}/`}
               class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-2.5 py-0.5 text-xs no-underline transition-colors"
             >
               {tag}

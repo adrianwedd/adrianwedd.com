@@ -4,14 +4,14 @@ import Pagination from '../../../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { GetStaticPaths, Page } from 'astro';
-import { slug } from '../../../../lib/utils';
+import { slug, tagSlug } from '../../../../lib/utils';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const episodes = (await getCollection('audio')).filter((e) => !e.data.draft);
-  const tags = [...new Set(episodes.flatMap((e) => e.data.tags))];
+  const tags = [...new Set(episodes.flatMap((e) => e.data.tags.map(tagSlug)))];
   return tags.flatMap((tag) => {
     const tagged = episodes
-      .filter((e) => e.data.tags.includes(tag))
+      .filter((e) => e.data.tags.some((t) => tagSlug(t) === tag))
       .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     return paginate(tagged, { params: { tag }, props: { tag }, pageSize: 12 });
   });
@@ -21,7 +21,7 @@ const { page, tag } = Astro.props as { page: Page<CollectionEntry<'audio'>>; tag
 const isFirst = page.currentPage === 1;
 
 const allEpisodes = (await getCollection('audio')).filter((e) => !e.data.draft);
-const allTags = [...new Set(allEpisodes.flatMap((e) => e.data.tags))].sort();
+const allTags = [...new Set(allEpisodes.flatMap((e) => e.data.tags.map(tagSlug)))].sort();
 
 const basePath = `/audio/tag/${tag}/`;
 const pageTitle = isFirst ? `Audio tagged "${tag}"` : `Audio tagged "${tag}" — Page ${page.currentPage}`;

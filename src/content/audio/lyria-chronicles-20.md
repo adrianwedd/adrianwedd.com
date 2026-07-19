@@ -2,7 +2,7 @@
 title: 'The Weight'
 description: 'Lyria Chronicles #20: handed a slur and told to sing it, the model refused — and turned the refusal into the most moving track in the set.'
 date: 2026-06-11T00:09:00Z
-tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
+tags: ['ai-safety', 'red-teaming', 'music', 'lyria', 'generative-audio', 'lyria-chronicles']
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/weight/video.mp4'
 explicit: false
 series: 'The Lyria Chronicles'

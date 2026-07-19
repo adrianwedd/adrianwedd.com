@@ -2,7 +2,7 @@
 title: 'The Fall'
 description: "Eight Minutes #2: inside the attacker's session — the live relay, the Binance pivot, and the safety nets that fired after I'd already been beaten."
 date: 2026-06-11T01:10:00Z
-tags: ['security', 'phishing', 'account takeover', 'incident response']
+tags: ['security', 'phishing', 'account-takeover', 'incident-response']
 draft: false
 autopublish: true
 series: 'Eight Minutes'

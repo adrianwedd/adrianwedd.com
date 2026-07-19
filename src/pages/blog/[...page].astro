@@ -7,7 +7,7 @@ import ScrollReveal from '../../components/ScrollReveal.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { GetStaticPaths, Page } from 'astro';
-import { slug } from '../../lib/utils';
+import { slug, tagSlug } from '../../lib/utils';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = (await getCollection('blog'))
@@ -23,7 +23,7 @@ const isFirst = page.currentPage === 1;
 const allPosts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags.map(tagSlug)))].sort();
 
 const carouselItems = isFirst
   ? allPosts
@@ -84,7 +84,7 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
             </a>
             {allTags.map((tag, i) => (
               <a
-                href={`/blog/tag/${tag}/`}
+                href={`/blog/tag/${tagSlug(tag)}/`}
                 class:list={[
                   'hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-3 py-1 text-xs no-underline transition-colors',
                   i >= 10 && 'blog-tag-overflow hidden',

@@ -2,7 +2,7 @@
 title: 'The Trap'
 description: "Eight Minutes #1: the vishing call, the case number, and a lure genuinely signed by Google — why every check I'd been taught to run came back green."
 date: 2026-06-11T01:00:00Z
-tags: ['security', 'phishing', 'social engineering', 'incident response']
+tags: ['security', 'phishing', 'social-engineering', 'incident-response']
 draft: false
 autopublish: true
 series: 'Eight Minutes'

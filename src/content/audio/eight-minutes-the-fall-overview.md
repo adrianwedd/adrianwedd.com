@@ -2,7 +2,7 @@
 title: 'The Fall — Audio Deep Dive'
 description: "Eight Minutes #2, discussed: the attacker's session read straight from the audit logs — the flag that fired, the pivot, the warnings deleted."
 date: 2026-06-11T01:10:00Z
-tags: ['notebooklm', 'security', 'incident response', 'account takeover', 'Eight Minutes']
+tags: ['notebooklm', 'security', 'incident-response', 'account-takeover', 'eight-minutes']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall-overview/audio.m4a'
 duration: '17:30'
 relatedPost: 'eight-minutes-the-fall'
