@@ -5,6 +5,7 @@ date: 2026-07-20
 tags: ['ai', 'filmmaking', 'agents', 'storytelling', 'generative-video']
 series: 'The Ungovernable Body'
 seriesOrder: 1
+updatedDate: 2026-07-21
 ---
 
 I'm making a film in a git repository.
@@ -40,6 +41,6 @@ Continuity is handled the way software handles state: character reference assets
 
 I want to be clear about where this is: mid-production, third screenplay draft, a full ensemble-pass reshoot in flight, and a salvage ledger that admits most of an early generation wave didn't pass. The interesting result so far isn't the footage. It's that the discipline holds — that agents operating under a constitution of non-negotiables, claims tags, and machine validation produce work that stays _one_ film.
 
-Whether that film is any good is the question the rest of this series has to answer. Next up: how the screenplay went from a research dossier to a shot manifest — and what "research is substrate, not dialogue" costs in practice.
+Whether that film is any good is the question the rest of this series has to answer. Next up: before more scaffolding, a look at the world itself — the near-future the film is set in, and how a 25,000-word novelization draft became something you can explore from every angle.
 
 [Project page →](/projects/ungovernable-body/) · [Production site →](https://ungovernable-body.wedd.au/)
