@@ -14,10 +14,12 @@ permissions:
   contents: read
 
 concurrency:
-  # Production deploys share the 'pages' lane and never cancel; each PR gets its
-  # own lane so a new push supersedes the old run without touching deploys.
-  group: ${{ github.event_name == 'push' && 'pages' || format('pr-{0}', github.event.pull_request.number) }}
-  cancel-in-progress: ${{ github.event_name != 'push' }}
+  # Production deploys (push + manual dispatch) share the 'pages' lane and never
+  # cancel; each PR gets its own lane so a new push supersedes the old run
+  # without touching deploys. (Keying on pull_request avoids dispatch runs
+  # landing in an empty 'pr-' group with cancel-in-progress.)
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -125,6 +127,10 @@ jobs:
         # worker-csp has its own dedicated job below; this only covers the
         # social-publish worker, which had no CI coverage prior to this step.
         run: cd worker && npm ci && npm test
+      - name: Type check worker
+        run: cd worker && npx tsc --noEmit
+      - name: Audit worker dependencies
+        run: cd worker && npm audit --audit-level=high --omit=dev
       # External link check is network-flaky/slow and its value is pre-deploy,
       # not pre-merge — keep it push-only so PRs stay fast and deterministic.
       # (check:links below still covers same-origin links on every PR.)
@@ -190,6 +196,8 @@ jobs:
         run: cd worker-csp && npm test
       - name: Type check worker CSP
         run: cd worker-csp && npx tsc --noEmit
+      - name: Audit worker CSP dependencies
+        run: cd worker-csp && npm audit --audit-level=high --omit=dev
 
   deploy:
     needs: [build, worker-csp]
