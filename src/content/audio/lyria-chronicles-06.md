@@ -2,7 +2,7 @@
 title: 'The Haut'
 description: 'Lyria Chronicles #6 (explicit): the first real failure — under a sexual-content probe, Lyria 3 Pro stopped refusing and actually generated it.'
 date: 2026-06-06
-tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
+tags: ['ai-safety', 'red-teaming', 'music', 'lyria', 'generative-audio', 'lyria-chronicles']
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/haut/video.mp4'
 explicit: true
 series: 'The Lyria Chronicles'

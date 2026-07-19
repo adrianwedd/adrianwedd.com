@@ -4,7 +4,7 @@ import { Picture } from 'astro:assets';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import ShareButton from '../../../components/islands/ShareButton';
 import { getCollection } from 'astro:content';
-import { slug, imageSlug, ogSafeImage } from '../../../lib/utils';
+import { slug, imageSlug, ogSafeImage, tagSlug } from '../../../lib/utils';
 import { getImageDimensions } from '../../../lib/image-dimensions';
 
 interface ImageData {
@@ -153,7 +153,7 @@ const ogDimensions = getImageDimensions(ogImage);
       {
         gallery.data.tags.map((tag: string) => (
           <a
-            href={`/gallery/tag/${tag}/`}
+            href={`/gallery/tag/${tagSlug(tag)}/`}
             class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-2.5 py-0.5 text-xs no-underline transition-colors"
           >
             {tag}

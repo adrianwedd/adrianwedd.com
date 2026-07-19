@@ -1,18 +1,18 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { slug } from '../../../lib/utils';
+import { slug, tagSlug } from '../../../lib/utils';
 
 export async function getStaticPaths() {
   const allProjects = await getCollection('projects');
   const projects = allProjects.filter((p) => !p.data.draft);
-  const tags = [...new Set(projects.flatMap((p) => p.data.tags))];
+  const tags = [...new Set(projects.flatMap((p) => p.data.tags.map(tagSlug)))];
   return tags.map((tag) => ({
     params: { tag },
     props: {
       tag,
       projects: projects
-        .filter((p) => p.data.tags.includes(tag))
+        .filter((p) => p.data.tags.some((t) => tagSlug(t) === tag))
         .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
     },
   }));
@@ -21,7 +21,9 @@ export async function getStaticPaths() {
 const { tag, projects } = Astro.props;
 
 const allProjectsForTags = await getCollection('projects');
-const allTags = [...new Set(allProjectsForTags.filter((p) => !p.data.draft).flatMap((p) => p.data.tags))].sort();
+const allTags = [
+  ...new Set(allProjectsForTags.filter((p) => !p.data.draft).flatMap((p) => p.data.tags.map(tagSlug))),
+].sort();
 
 const statusColors: Record<string, string> = {
   active: 'text-status-active',
