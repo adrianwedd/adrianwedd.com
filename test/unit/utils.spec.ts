@@ -1,5 +1,21 @@
 import { describe, it, expect } from 'vitest';
-import { slug, imageSlug, youtubeId, ogSafeImage, heroAltText } from '../../src/lib/utils';
+import { slug, imageSlug, tagSlug, youtubeId, ogSafeImage, heroAltText } from '../../src/lib/utils';
+
+describe('tagSlug', () => {
+  it('lowercases and hyphenates spaces', () => {
+    expect(tagSlug('AI safety')).toBe('ai-safety');
+    expect(tagSlug('Lyria Chronicles')).toBe('lyria-chronicles');
+  });
+
+  it('is idempotent on canonical tags', () => {
+    expect(tagSlug('ai-safety')).toBe('ai-safety');
+    expect(tagSlug('red-teaming')).toBe('red-teaming');
+  });
+
+  it('collapses whitespace runs and trims hyphens', () => {
+    expect(tagSlug('  deep   learning ')).toBe('deep-learning');
+  });
+});
 
 describe('slug', () => {
   it('passes through an id with no extension or -post suffix', () => {

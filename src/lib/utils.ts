@@ -10,6 +10,16 @@ export function slug(id: string): string {
   return id.replace(/-post(\.mdx?)?$/, '').replace(/\.mdx?$/, '');
 }
 
+/** Canonical URL slug for a tag: lowercase, whitespace → hyphen. */
+export function tagSlug(tag: string): string {
+  return tag
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 /** Generate a URL-safe slug from image alt text. */
 export function imageSlug(alt: string): string {
   const result = alt
