@@ -4,6 +4,7 @@ import { verifyBearer } from './auth';
 import { createPlatform, getConfiguredPlatforms } from './platforms/factory';
 import type { SocialPost, IdempotencyRecord, Platform } from './platforms/types';
 import { processComments } from './cron/comments';
+import { sendCrisisAlert, sweepCrisisAlerts } from './email';
 import { CronLock } from './cron-lock';
 
 export { CronLock };
@@ -751,13 +752,18 @@ app.post('/api/cron/comments', async (c) => {
         continue;
       }
 
-      const result = await processComments(adapter, env.SOCIAL);
+      const result = await processComments(adapter, env.SOCIAL, (c) => sendCrisisAlert(env, c));
       platformResults[platformName] = { ...result, tokenExpiresInDays: tokenHealth.daysUntilExpiry };
     }
 
+    // Retry pass for crisis alerts whose email send failed transiently on a
+    // previous run (the comment is marked seen, so the inline alert path
+    // never re-fires for it).
+    const crisisAlertsRetried = await sweepCrisisAlerts(env);
+
     // For backward compatibility, spread Facebook results at the top level
     const fbResult = platformResults.facebook as Record<string, unknown> | undefined;
-    return json({ ...fbResult, platforms: platformResults });
+    return json({ ...fbResult, platforms: platformResults, crisisAlertsRetried });
   } finally {
     await commentsLockStub
       .release('comments', commentsToken)

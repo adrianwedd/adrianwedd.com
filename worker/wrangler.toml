@@ -15,7 +15,20 @@ class_name = "CronLock"
 tag = "v1"
 new_sqlite_classes = ["CronLock"]
 
+# Crisis-alert email (Cloudflare Email Sending). One-time setup before first
+# deploy: (1) onboard adrianwedd.com to Email Service so CRISIS_ALERT_FROM is
+# a verified sender, and (2) verify CRISIS_ALERT_TO as an Email Routing
+# destination address — otherwise sends are rejected (E_SENDER_NOT_VERIFIED).
+# destination_address below restricts the binding to that one recipient; if
+# CRISIS_ALERT_TO ever changes, change destination_address with it. Alerts
+# degrade to /api/health surfacing if the binding/vars are absent.
+[[send_email]]
+name = "CRISIS_EMAIL"
+destination_address = "adrian@adrianwedd.com"
+
 [vars]
+CRISIS_ALERT_FROM = "alerts@adrianwedd.com"
+CRISIS_ALERT_TO = "adrian@adrianwedd.com"
 FACEBOOK_PAGE_ID = "35753603727"
 GRAPH_API_VERSION = "v21.0"
 INSTAGRAM_BUSINESS_ACCOUNT_ID = ""

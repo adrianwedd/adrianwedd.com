@@ -83,6 +83,37 @@ export default {
       return Response.redirect(target, 301);
     }
 
+    // Canonicalise tag archive URLs: historic mixed-case / spaced tags
+    // (e.g. /blog/tag/AI%20safety/) 301 to the lowercase-hyphenated slug the
+    // site now generates. Permalinks must never 404 — see the 2026-07-19 spec.
+    const tagMatch = inboundUrl.pathname.match(/^\/(blog|projects|audio|gallery)\/tag\/([^/]+)(\/.*)?$/);
+    if (tagMatch) {
+      let raw: string | null;
+      try {
+        raw = decodeURIComponent(tagMatch[2]);
+      } catch {
+        // Malformed percent-encoding (e.g. /blog/tag/%ZZ/) — not a historic
+        // URL; skip canonicalisation and let the origin 404 it rather than
+        // 500 here or redirect to a mangled slug.
+        raw = null;
+      }
+      if (raw !== null) {
+        const canonical = raw
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/^-|-$/g, '');
+        if (canonical !== raw) {
+          const rest = tagMatch[3] ?? '/';
+          return Response.redirect(
+            `https://${CANONICAL_HOST}/${tagMatch[1]}/tag/${encodeURIComponent(canonical)}${rest}${inboundUrl.search}`,
+            301,
+          );
+        }
+      }
+    }
+
     if (inboundUrl.pathname === CSP_REPORT_PATH) {
       return handleCspReport(request, env);
     }

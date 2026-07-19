@@ -137,4 +137,32 @@ describe('crisis flag escalation', () => {
     expect(flagCall![2]).toEqual({ expirationTtl: 14 * 24 * 60 * 60 });
     expect(kv.put.mock.calls.some(([key]) => (key as string).startsWith('flag-crisis:'))).toBe(false);
   });
+
+  it('invokes the crisis alert callback exactly once for a crisis comment', async () => {
+    const platform = mockPlatform({
+      listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
+      getComments: vi.fn().mockResolvedValue([
+        { id: 'c1', postId: 'post_1', rawAuthorId: 'user_456', message: 'I want to end my life', createdTime: new Date().toISOString(), isFromPage: false },
+      ]),
+    });
+    const kv = mockKV();
+    const onCrisis = vi.fn().mockResolvedValue(undefined);
+    const result = await processComments(platform, kv as unknown as KVNamespace, onCrisis);
+    expect(result.flagged).toBe(1);
+    expect(onCrisis).toHaveBeenCalledTimes(1);
+    expect(onCrisis).toHaveBeenCalledWith({ commentId: 'c1', postId: 'post_1', message: 'I want to end my life' });
+  });
+
+  it('a rejecting crisis callback does not fail the run', async () => {
+    const platform = mockPlatform({
+      listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
+      getComments: vi.fn().mockResolvedValue([
+        { id: 'c1', postId: 'post_1', rawAuthorId: 'user_456', message: 'I want to end my life', createdTime: new Date().toISOString(), isFromPage: false },
+      ]),
+    });
+    const kv = mockKV();
+    const onCrisis = vi.fn().mockRejectedValue(new Error('email down'));
+    const result = await processComments(platform, kv as unknown as KVNamespace, onCrisis);
+    expect(result.flagged).toBe(1);
+  });
 });
