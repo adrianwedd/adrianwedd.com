@@ -285,6 +285,11 @@ const { items, id, label } = Astro.props;
     });
 
     document.addEventListener('astro:after-swap', function () {
+      // Clear every running interval BEFORE resetting state — otherwise the
+      // old timers leak and keep firing against detached DOM after each swap.
+      Object.keys(carousels).forEach(function (key) {
+        if (carousels[key].autoplay) clearInterval(carousels[key].autoplay);
+      });
       carousels = {};
       initAll();
     });

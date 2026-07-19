@@ -74,11 +74,14 @@ jobs:
               echo "=== ${PLATFORM}: daysUntilExpiry=${DAYS} (expires ${EXPIRES})"
 
               TITLE="🔑 ${PLATFORM} token data-access expiring"
-              # Existing open issue for this platform, if any.
+              # Existing open issue for this platform, if any. The worker's
+              # platform names are untrusted here, so never splice them into a
+              # jq program or search string — pass the title via `jq --arg` and
+              # filter the label-scoped listing client-side instead.
               EXISTING=$(gh issue list --repo "$REPO" --state open \
-                --label token-expiry --search "in:title ${PLATFORM}" \
-                --json number,title --jq \
-                ".[] | select(.title == \"${TITLE}\") | .number" | head -n1)
+                --label token-expiry --json number,title \
+                | jq -r --arg title "$TITLE" \
+                  '.[] | select(.title == $title) | .number' | head -n1)
 
               # Non-numeric / null days → can't reason about it; skip quietly.
               case "$DAYS" in

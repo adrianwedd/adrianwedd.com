@@ -5,6 +5,7 @@ interface Props {
   image?: string;
   imageWidth?: number;
   imageHeight?: number;
+  imageAlt?: string;
   type?: 'website' | 'article';
   publishedDate?: string;
   tags?: string[];
@@ -17,6 +18,7 @@ const {
   image = '/og-default.png',
   imageWidth = 1200,
   imageHeight = 630,
+  imageAlt,
   type = 'website',
   publishedDate,
   tags,
@@ -45,7 +47,8 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
   content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.googletagmanager.com https://www.google.com https://www.google-analytics.com https://snap.licdn.com https://*.ads.linkedin.com https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.adrianwedd.com https://www.google-analytics.com https://*.google-analytics.com https://*.ads.linkedin.com https://www.googletagmanager.com https://*.tile.openstreetmap.org https://tpc.googlesyndication.com https://*.g.doubleclick.net https://www.linkedin.com https://www.google.com.au https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google; connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://adservice.google.com https://www.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://*.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com; media-src 'self' https://cdn.adrianwedd.com; frame-src https://www.openstreetmap.org https://challenges.cloudflare.com https://www.google.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://api.book.adrianwedd.com; upgrade-insecure-requests;"
 />
 <meta name="author" content="Adrian Wedd" />
-<meta name="theme-color" content="#c48b6e" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#c48b6e" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#8a5e42" />
 {tags && <meta name="keywords" content={tags.join(', ')} />}
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 
@@ -72,7 +75,7 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 <link rel="dns-prefetch" href="https://api.github.com" />
 <link rel="dns-prefetch" href="https://snap.licdn.com" />
-<link rel="dns-prefetch" href="https://*.ads.linkedin.com" />
+<link rel="dns-prefetch" href="https://px.ads.linkedin.com" />
 <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
 <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 
@@ -85,7 +88,7 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <meta property="og:image" content={ogImageUrl} />
 <meta property="og:image:width" content={String(imageWidth)} />
 <meta property="og:image:height" content={String(imageHeight)} />
-<meta property="og:image:alt" content={title} />
+<meta property="og:image:alt" content={imageAlt || title} />
 <meta property="og:site_name" content="Adrian Wedd" />
 
 <!-- Twitter -->
@@ -99,7 +102,9 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 {publishedDate && <meta property="article:published_time" content={publishedDate} />}
 {tags && tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
-<!-- JSON-LD: generic WebSite schema for non-article, non-homepage pages (homepage provides its own richer WebSite schema) -->
+<!-- JSON-LD: generic WebPage schema for non-article, non-homepage pages. WebSite
+     belongs on the site root only (the homepage provides its own richer WebSite
+     schema); emitting WebSite with a subpage URL misidentifies the entity. -->
 {
   type !== 'article' && title !== 'Adrian Wedd' && (
     <script
@@ -107,12 +112,11 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
       type="application/ld+json"
       set:html={JSON.stringify({
         '@context': 'https://schema.org',
-        '@type': 'WebSite',
+        '@type': 'WebPage',
         name: 'Adrian Wedd',
         description,
         url: canonicalUrl.href,
         image: ogImageUrl.href,
-        mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl.href },
         ...(tags ? { keywords: tags.join(', ') } : {}),
         author: {
           '@type': 'Person',

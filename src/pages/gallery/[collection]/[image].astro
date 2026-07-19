@@ -4,7 +4,8 @@ import { Picture } from 'astro:assets';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import ShareButton from '../../../components/islands/ShareButton';
 import { getCollection } from 'astro:content';
-import { slug, imageSlug } from '../../../lib/utils';
+import { slug, imageSlug, ogSafeImage } from '../../../lib/utils';
+import { getImageDimensions } from '../../../lib/image-dimensions';
 
 interface ImageData {
   src: string;
@@ -54,12 +55,26 @@ export async function getStaticPaths() {
 
 const { gallery, image, imageIndex, total, prevSlug, nextSlug } = Astro.props;
 const collectionSlug = slug(gallery.id);
+
+// Real intrinsic dimensions for the displayed image (gallery images live in
+// public/, so read the file header) — hardcoding 1200x900 mis-sized anything
+// that isn't 4:3 and caused layout shift. Fall back if the file is unreadable.
+const imageDimensions = getImageDimensions(image.src);
+const imageWidth = imageDimensions?.width ?? 1200;
+const imageHeight = imageDimensions?.height ?? 900;
+
+// OG image: swap .webp -> .jpg for scraper compatibility.
+const ogImage = ogSafeImage(image.src);
+const ogDimensions = getImageDimensions(ogImage);
 ---
 
 <BaseLayout
   title={`${image.alt} — ${gallery.data.title}`}
   description={image.caption || image.alt}
-  image={image.src}
+  image={ogImage}
+  imageWidth={ogDimensions?.width}
+  imageHeight={ogDimensions?.height}
+  imageAlt={image.alt}
   type="article"
   tags={gallery.data.tags}
 >
@@ -84,7 +99,7 @@ const collectionSlug = slug(gallery.id);
       },
     })}
   />
-  <article class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+  <article class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <Breadcrumb
       crumbs={[
         { label: 'Home', href: '/' },
@@ -96,11 +111,11 @@ const collectionSlug = slug(gallery.id);
 
     {/* Image */}
     <figure class="mb-8">
-      <div class="overflow-hidden rounded-lg border border-border bg-surface-alt">
+      <div class="border-border bg-surface-alt overflow-hidden rounded-lg border">
         <Picture
           src={image.src}
-          width={1200}
-          height={900}
+          width={imageWidth}
+          height={imageHeight}
           widths={[640, 1200, 1920]}
           formats={['avif', 'webp']}
           alt={image.alt}
@@ -109,11 +124,11 @@ const collectionSlug = slug(gallery.id);
           fetchpriority="high"
         />
       </div>
-      {image.caption && <figcaption class="mt-3 text-sm text-text-muted">{image.caption}</figcaption>}
+      {image.caption && <figcaption class="text-text-muted mt-3 text-sm">{image.caption}</figcaption>}
     </figure>
 
     {/* Metadata */}
-    <div class="mb-8 flex flex-wrap items-center gap-3 text-sm text-text-muted">
+    <div class="text-text-muted mb-8 flex flex-wrap items-center gap-3 text-sm">
       <span>{imageIndex + 1} of {total}</span>
       <span aria-hidden="true">&middot;</span>
       <span
@@ -139,7 +154,7 @@ const collectionSlug = slug(gallery.id);
         gallery.data.tags.map((tag: string) => (
           <a
             href={`/gallery/tag/${tag}/`}
-            class="hover:bg-accent/15 rounded-full bg-surface-raised px-2.5 py-0.5 text-xs text-text-muted no-underline transition-colors hover:text-accent"
+            class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-2.5 py-0.5 text-xs no-underline transition-colors"
           >
             {tag}
           </a>
@@ -148,15 +163,15 @@ const collectionSlug = slug(gallery.id);
     </div>
 
     {/* Prev/Next navigation */}
-    <nav class="grid gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="Previous and next images">
+    <nav class="border-border grid gap-4 border-t pt-8 sm:grid-cols-2" aria-label="Previous and next images">
       {
         prevSlug ? (
           <a
             href={`/gallery/${collectionSlug}/${prevSlug}/`}
-            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors"
+            class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors"
           >
-            <span class="text-xs text-text-muted">&larr; Previous</span>
-            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+            <span class="text-text-muted text-xs">&larr; Previous</span>
+            <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {gallery.data.images[imageIndex - 1].alt}
             </span>
           </a>
@@ -168,10 +183,10 @@ const collectionSlug = slug(gallery.id);
         nextSlug && (
           <a
             href={`/gallery/${collectionSlug}/${nextSlug}/`}
-            class="hover:border-accent/50 group rounded-lg border border-border p-4 no-underline transition-colors sm:text-right"
+            class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors sm:text-right"
           >
-            <span class="text-xs text-text-muted">Next &rarr;</span>
-            <span class="mt-1 block text-sm font-medium text-text transition-colors group-hover:text-accent">
+            <span class="text-text-muted text-xs">Next &rarr;</span>
+            <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {gallery.data.images[imageIndex + 1].alt}
             </span>
           </a>
