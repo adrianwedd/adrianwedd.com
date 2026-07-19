@@ -330,6 +330,29 @@ describe('worker fetch handler', () => {
     expect(res.headers.get('location')).toBe('https://adrianwedd.com/about/?utm_source=x');
   });
 
+  it('301-redirects non-canonical tag URLs to the lowercase slug, preserving page + query', async () => {
+    // No mockOrigin: the redirect must fire before any origin fetch.
+    const res = await SELF.fetch('https://adrianwedd.com/blog/tag/AI%20safety/2/?x=1', { redirect: 'manual' });
+    expect(res.status).toBe(301);
+    expect(res.headers.get('location')).toBe('https://adrianwedd.com/blog/tag/ai-safety/2/?x=1');
+  });
+
+  it('301-redirects mixed-case project tag URLs', async () => {
+    const res = await SELF.fetch('https://adrianwedd.com/projects/tag/Python/', { redirect: 'manual' });
+    expect(res.status).toBe(301);
+    expect(res.headers.get('location')).toBe('https://adrianwedd.com/projects/tag/python/');
+  });
+
+  it('does not redirect canonical tag URLs', async () => {
+    mockOrigin({
+      path: '/blog/tag/ai-safety/',
+      body: htmlBody('<p>ok</p>'),
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
+    const res = await SELF.fetch('https://adrianwedd.com/blog/tag/ai-safety/', { redirect: 'manual' });
+    expect(res.status).toBe(200);
+  });
+
   it('returns a clean 502 when the origin fetch throws (not an unhandled 1101)', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('connect reset'));
     const res = await SELF.fetch('https://adrianwedd.com/');

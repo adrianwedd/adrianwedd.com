@@ -10,6 +10,9 @@ export default defineConfig({
       'cloudflare:workers': fileURLToPath(
         new URL('./test-shims/cloudflare-workers.ts', import.meta.url),
       ),
+      'cloudflare:email': fileURLToPath(
+        new URL('./test-shims/cloudflare-email.ts', import.meta.url),
+      ),
     },
   },
 });

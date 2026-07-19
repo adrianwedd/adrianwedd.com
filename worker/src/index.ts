@@ -4,6 +4,7 @@ import { verifyBearer } from './auth';
 import { createPlatform, getConfiguredPlatforms } from './platforms/factory';
 import type { SocialPost, IdempotencyRecord, Platform } from './platforms/types';
 import { processComments } from './cron/comments';
+import { sendCrisisAlert } from './email';
 import { CronLock } from './cron-lock';
 
 export { CronLock };
@@ -751,7 +752,7 @@ app.post('/api/cron/comments', async (c) => {
         continue;
       }
 
-      const result = await processComments(adapter, env.SOCIAL);
+      const result = await processComments(adapter, env.SOCIAL, (c) => sendCrisisAlert(env, c));
       platformResults[platformName] = { ...result, tokenExpiresInDays: tokenHealth.daysUntilExpiry };
     }
 

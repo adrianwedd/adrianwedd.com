@@ -16,6 +16,15 @@ export interface Env {
   // Rate limiting
   API_RATE_LIMITER?: RateLimiter;
 
+  // Email ([[send_email]] binding; optional — crisis alerts degrade to
+  // /api/health surfacing when absent)
+  CRISIS_EMAIL?: import('./email').EmailSender;
+
+  // Crisis alert addresses (vars). TO must be a verified Email Routing
+  // destination address on the zone.
+  CRISIS_ALERT_FROM?: string;
+  CRISIS_ALERT_TO?: string;
+
   // Vars
   FACEBOOK_PAGE_ID: string;
   GRAPH_API_VERSION: string;
