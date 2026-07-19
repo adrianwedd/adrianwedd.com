@@ -343,6 +343,16 @@ describe('worker fetch handler', () => {
     expect(res.headers.get('location')).toBe('https://adrianwedd.com/projects/tag/python/');
   });
 
+  it('passes malformed percent-encoding through to the origin instead of throwing', async () => {
+    mockOrigin({
+      path: '/blog/tag/%ZZ/',
+      body: htmlBody('<p>404 page</p>'),
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
+    const res = await SELF.fetch('https://adrianwedd.com/blog/tag/%ZZ/', { redirect: 'manual' });
+    expect(res.status).toBe(200);
+  });
+
   it('does not redirect canonical tag URLs', async () => {
     mockOrigin({
       path: '/blog/tag/ai-safety/',
