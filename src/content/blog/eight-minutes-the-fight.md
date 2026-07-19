@@ -2,7 +2,7 @@
 title: 'The Fight'
 description: "Eight Minutes #3: a packet capture taken mid-attack, Google's own audit logs, eight abuse reports, and the passkey that ends the story."
 date: 2026-06-11T01:20:00Z
-tags: ['security', 'phishing', 'digital forensics', 'incident response']
+tags: ['security', 'phishing', 'digital-forensics', 'incident-response']
 draft: false
 autopublish: true
 series: 'Eight Minutes'

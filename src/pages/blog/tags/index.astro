@@ -2,13 +2,15 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import { getCollection } from 'astro:content';
+import { tagSlug } from '../../../lib/utils';
 
 const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
 
 const tagCounts = new Map<string, number>();
 posts.forEach((p) => {
   p.data.tags.forEach((tag: string) => {
-    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+    const t = tagSlug(tag);
+    tagCounts.set(t, (tagCounts.get(t) || 0) + 1);
   });
 });
 

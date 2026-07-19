@@ -2,7 +2,7 @@
 title: 'Beyond Optimisation: The Emergence of Learning Mechanics as a Formal Science'
 description: 'A new paper argues that a scientific theory of deep learning is forming — one that makes falsifiable predictions about training dynamics, not just bounds.'
 date: 2026-05-03
-tags: ['AI', 'deep learning', 'theory', 'research']
+tags: ['ai', 'deep-learning', 'theory', 'research']
 draft: false
 heroImage: '/notebook-assets/learning-mechanics-deep-learning-theory/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/learning-mechanics-deep-learning-theory/audio.m4a'

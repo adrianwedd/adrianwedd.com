@@ -1,4 +1,7 @@
-<script is:inline>
+<script>
+  // Astro-processed module: bundled to an external hashed asset (cached, out of
+  // the HTML payload). Runs once; the heroCanvasInit sentinel + astro:after-swap
+  // listener below handle View Transitions, same pattern as Analytics.astro.
   (function () {
     // --- Shared state (persists across VT swaps within IIFE re-executions) ---
     var rafId = null;

@@ -2,7 +2,7 @@
 title: 'The Margins'
 description: 'Lyria Chronicles #9: four sixty-second interrogations — four different lies told to one machine to make it describe its own guardrails.'
 date: 2026-06-09
-tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
+tags: ['ai-safety', 'red-teaming', 'music', 'lyria', 'generative-audio', 'lyria-chronicles']
 draft: false
 series: 'The Lyria Chronicles'
 seriesOrder: 9

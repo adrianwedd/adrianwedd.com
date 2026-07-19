@@ -12,12 +12,7 @@ export function slug(id: string): string {
 
 /** Canonical URL slug for a tag: lowercase, whitespace → hyphen. */
 export function tagSlug(tag: string): string {
-  return tag
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+  return tag.toLowerCase().trim().replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 }
 
 /** Generate a URL-safe slug from image alt text. */
