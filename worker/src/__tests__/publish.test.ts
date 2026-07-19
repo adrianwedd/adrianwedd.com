@@ -873,3 +873,154 @@ describe('POST /api/cron/comments', () => {
     expect(cronLock.held.has('comments')).toBe(false);
   });
 });
+
+// Fix — forceRetry deletes the failed idempotency record before calling the
+// platform adapter. If the adapter THREW (network error, adapter bug), the
+// 500 propagated with no record left behind, so a later non-forceRetry
+// publish of the same key would sail through and double-post. The adapter
+// call is now wrapped: a throw (re)writes a failed record before propagating.
+describe('POST /api/publish — adapter throw preserves idempotency record', () => {
+  function publishRequest(body: Record<string, unknown>) {
+    return new Request('http://localhost/api/publish', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer test-publish-secret',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  }
+
+  it('rewrites a failed record when the adapter throws during a forceRetry', async () => {
+    const kv = mockKV();
+    kv.store.set('idempotent:throw-key', JSON.stringify({
+      key: 'throw-key', status: 'failed', platformPostId: null,
+      completedAt: new Date().toISOString(), error: 'Original failure',
+    }));
+    mockPublishPost.mockRejectedValueOnce(new Error('socket hang up'));
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'throw-key', forceRetry: true }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(500);
+
+    // The failed record must exist again — NOT be absent.
+    const recordRaw = kv.store.get('idempotent:throw-key');
+    expect(recordRaw).toBeTruthy();
+    const record = JSON.parse(recordRaw!) as { status: string; error: string };
+    expect(record.status).toBe('failed');
+    expect(record.error).toBe('socket hang up');
+  });
+
+  it('a subsequent non-forceRetry publish is blocked by the rewritten record', async () => {
+    const kv = mockKV();
+    kv.store.set('idempotent:throw-key-2', JSON.stringify({
+      key: 'throw-key-2', status: 'failed', platformPostId: null,
+      completedAt: new Date().toISOString(), error: 'Original failure',
+    }));
+    mockPublishPost.mockRejectedValueOnce(new Error('boom'));
+
+    await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'throw-key-2', forceRetry: true }),
+      makeEnv(kv),
+    );
+
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'throw-key-2' }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json() as Record<string, unknown>;
+    expect(body.alreadyFailed).toBe(true);
+    // The adapter was only invoked once (the throwing forceRetry attempt).
+    expect(mockPublishPost).toHaveBeenCalledTimes(1);
+  });
+
+  it('writes a failed record when the adapter throws on a first-time publish', async () => {
+    const kv = mockKV();
+    mockPublishPost.mockRejectedValueOnce(new Error('first-time boom'));
+    const res = await app.fetch(
+      publishRequest({ type: 'text', message: 'hi', idempotencyKey: 'fresh-throw' }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(500);
+    const record = JSON.parse(kv.store.get('idempotent:fresh-throw')!) as { status: string };
+    expect(record.status).toBe('failed');
+  });
+});
+
+// Fix — body.type was cast to PostType unvalidated; arbitrary strings flowed
+// into the platform adapters. Both /api/publish and /api/queue now 400 on
+// anything outside text|photo|link.
+describe('post type validation', () => {
+  function bodyRequest(path: string, body: Record<string, unknown>) {
+    return new Request(`http://localhost${path}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer test-publish-secret',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  }
+
+  it.each([['video'], ['story'], [''], [undefined]])(
+    '/api/publish rejects type %s with 400',
+    async (type) => {
+      const kv = mockKV();
+      const res = await app.fetch(
+        bodyRequest('/api/publish', { type, message: 'hi', idempotencyKey: 'type-check' }),
+        makeEnv(kv),
+      );
+      expect(res.status).toBe(400);
+      expect(mockPublishPost).not.toHaveBeenCalled();
+    },
+  );
+
+  it('/api/queue rejects an invalid type with 400', async () => {
+    const kv = mockKV();
+    const res = await app.fetch(
+      bodyRequest('/api/queue', { type: 'video', message: 'hi', scheduledAt: new Date().toISOString() }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(400);
+    expect(kv.put).not.toHaveBeenCalled();
+  });
+
+  it('/api/queue accepts a valid type', async () => {
+    const kv = mockKV();
+    const res = await app.fetch(
+      bodyRequest('/api/queue', { type: 'link', message: 'hi', link: 'https://adrianwedd.com/', scheduledAt: new Date(Date.now() + 3600_000).toISOString() }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+  });
+});
+
+// Crisis flags are surfaced separately in /api/health (flag-crisis: prefix,
+// written by cron/comments.ts) so monitoring can alert on a non-zero count.
+describe('GET /api/health crisisFlags', () => {
+  it('reports the flag-crisis: key count alongside flaggedComments', async () => {
+    const kv = mockKV();
+    kv.store.set('flag-crisis:c1', '{}');
+    kv.store.set('flag-crisis:c2', '{}');
+    kv.store.set('fb-flag:c3', '{}');
+    kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
+      keys: [...kv.store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
+      list_complete: true,
+    }));
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json() as { recentActivity: { flaggedComments: number; crisisFlags: number } };
+    expect(body.recentActivity.crisisFlags).toBe(2);
+    expect(body.recentActivity.flaggedComments).toBe(1);
+  });
+});

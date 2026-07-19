@@ -5,6 +5,7 @@ import type {
   Comment,
   AuthStatus,
 } from './types';
+import { isAllowedMediaUrl } from './safe-fetch';
 
 export interface GraphErrorBody {
   code: number;
@@ -32,6 +33,12 @@ export function createFacebookPlatform(
   async function publishPost(post: SocialPost): Promise<PublishResult> {
     if (post.type === 'photo' && !post.imageUrl) {
       return { success: false, error: 'Photo post requires imageUrl', isTransient: false, isAuthError: false };
+    }
+    // Meta fetches the imageUrl server-side; run it through the same media
+    // allowlist bluesky/twitter apply so an arbitrary caller-supplied URL
+    // can't be laundered through the page.
+    if (post.type === 'photo' && post.imageUrl && !isAllowedMediaUrl(post.imageUrl)) {
+      return { success: false, error: `imageUrl not on the media host allowlist: ${post.imageUrl}`, isTransient: false, isAuthError: false };
     }
 
     const endpoint = post.type === 'photo'

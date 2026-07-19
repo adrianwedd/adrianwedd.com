@@ -28,6 +28,15 @@ function json(body: Record<string, unknown>, status = 200): Response {
 
 const VALID_PLATFORMS = new Set<string>(['facebook', 'instagram', 'bluesky', 'twitter']);
 
+// `body.type` was previously cast straight to PostType — an arbitrary string
+// (e.g. "video") would flow into the platform adapters and hit whichever
+// default branch each one happens to have. Validate at the boundary instead.
+const VALID_POST_TYPES = new Set<string>(['text', 'photo', 'link']);
+
+function validatePostType(raw: string | undefined): SocialPost['type'] | null {
+  return raw !== undefined && VALID_POST_TYPES.has(raw) ? (raw as SocialPost['type']) : null;
+}
+
 // ── Bounded KV counting (DoS guard for /api/health) ────────────────────────────
 // /api/health counts queue/flag keys by paginating KV. Without a ceiling a
 // pathologically large prefix (runaway queue, stuck cron) would make a single
@@ -138,6 +147,9 @@ app.post('/api/publish', async (c) => {
   const platform = validatePlatform(body.platform);
   if (!platform) return json({ error: `Unsupported platform: ${body.platform}` }, 400);
 
+  const postType = validatePostType(body.type);
+  if (!postType) return json({ error: `Unsupported post type: ${body.type} (must be text|photo|link)` }, 400);
+
   const idempotencyKey = validateIdempotencyKey(body.idempotencyKey);
   if (!idempotencyKey) {
     return json({ error: 'idempotencyKey must be a non-empty string under 256 chars, URL-safe alphabet' }, 400);
@@ -181,7 +193,7 @@ app.post('/api/publish', async (c) => {
     const post: SocialPost = {
       id: idempotencyKey,
       platform,
-      type: body.type as SocialPost['type'],
+      type: postType,
       message: body.message,
       link: body.link,
       imageUrl: body.imageUrl,
@@ -196,9 +208,35 @@ app.post('/api/publish', async (c) => {
       error: null,
     };
 
-    const result = body.replyTo
-      ? await adapter.replyToComment(body.replyTo, body.message)
-      : await adapter.publishPost(post);
+    // The adapter call is wrapped so a throw can't lose the idempotency
+    // record. forceRetry deletes the failed record above; if the platform
+    // call then throws (network error, adapter bug), an unguarded 500 would
+    // leave NO record behind — a subsequent non-forceRetry publish of the
+    // same key would sail through and double-post. Re-write a failed record
+    // before letting the error propagate.
+    let result;
+    try {
+      result = body.replyTo
+        ? await adapter.replyToComment(body.replyTo, body.message)
+        : await adapter.publishPost(post);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      const failedRecord: IdempotencyRecord = {
+        key: idempotencyKey,
+        status: 'failed',
+        platformPostId: null,
+        completedAt: new Date().toISOString(),
+        error: message,
+      };
+      await env.SOCIAL.put(`idempotent:${idempotencyKey}`, JSON.stringify(failedRecord), {
+        expirationTtl: 7 * 24 * 60 * 60,
+      }).catch((kvErr) =>
+        console.error(
+          `Failed to persist failed idempotency record for ${idempotencyKey}: ${kvErr instanceof Error ? kvErr.message : String(kvErr)}`,
+        ),
+      );
+      throw err;
+    }
 
     // Write durable idempotency record. H5: failed records carry a shorter
     // (7d) TTL than published (30d) so a misclassified transient error
@@ -254,6 +292,9 @@ app.post('/api/queue', async (c) => {
   const platform = validatePlatform(body.platform);
   if (!platform) return json({ error: `Unsupported platform: ${body.platform}` }, 400);
 
+  const queuedType = validatePostType(body.type);
+  if (!queuedType) return json({ error: `Unsupported post type: ${body.type} (must be text|photo|link)` }, 400);
+
   const epoch = new Date(body.scheduledAt).getTime();
   if (!Number.isFinite(epoch) || epoch <= 0) {
     return json({ error: 'Invalid scheduledAt — must be valid ISO 8601 datetime' }, 400);
@@ -264,7 +305,7 @@ app.post('/api/queue', async (c) => {
   const post: SocialPost = {
     id,
     platform,
-    type: body.type as SocialPost['type'],
+    type: queuedType,
     message: body.message,
     link: body.link,
     imageUrl: body.imageUrl,
@@ -314,6 +355,20 @@ app.post('/api/queue/sync', async (c) => {
     if (p.platform && !validatePlatform(p.platform)) {
       return json({ error: `Unsupported platform: ${p.platform}` }, 400);
     }
+  }
+
+  // Validate scheduledAtEpoch exactly like /api/queue validates scheduledAt.
+  // A NaN/zero/negative epoch would build a `post:queued:NaN:${id}` key —
+  // never due (NaN <= Date.now() is false), so the post is stuck queued
+  // forever, and non-numeric segments break lexicographic key ordering.
+  const invalidEpochIds = body.posts
+    .filter((p) => typeof p.scheduledAtEpoch !== 'number' || !Number.isFinite(p.scheduledAtEpoch) || p.scheduledAtEpoch <= 0)
+    .map((p) => p.id);
+  if (invalidEpochIds.length > 0) {
+    return json(
+      { error: `Invalid scheduledAtEpoch — must be a positive epoch-ms number. Bad ids: ${invalidEpochIds.join(', ')}` },
+      400,
+    );
   }
 
   const existingHash = await env.SOCIAL.get('queue-hash');
@@ -746,7 +801,16 @@ app.get('/api/health', async (c) => {
   const publishedResult = await countKeysCapped(env.SOCIAL, 'post:published:');
   const failedResult = await countKeysCapped(env.SOCIAL, 'post:failed:');
   const flaggedResult = await countKeysCapped(env.SOCIAL, 'fb-flag:');
-  truncated = queuedResult.truncated || publishedResult.truncated || failedResult.truncated || flaggedResult.truncated;
+  // Crisis-classified comments live under their own prefix with a 90-day TTL
+  // (see cron/comments.ts) — surface them separately so monitoring can alert
+  // on a non-zero count instead of losing them in the generic flag pool.
+  const crisisResult = await countKeysCapped(env.SOCIAL, 'flag-crisis:');
+  truncated =
+    queuedResult.truncated ||
+    publishedResult.truncated ||
+    failedResult.truncated ||
+    flaggedResult.truncated ||
+    crisisResult.truncated;
 
   if (firstQueuedKeyName) {
     const raw = await env.SOCIAL.get(firstQueuedKeyName);
@@ -767,7 +831,7 @@ app.get('/api/health', async (c) => {
         nextScheduled,
       },
     },
-    recentActivity: { flaggedComments: flaggedResult.count },
+    recentActivity: { flaggedComments: flaggedResult.count, crisisFlags: crisisResult.count },
     // Honest signal that a count is a floor, not silently truncated.
     ...(truncated ? { countsTruncated: true } : {}),
   });

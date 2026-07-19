@@ -10,27 +10,25 @@ Nonces at the edge sidestep both problems: the worker generates a fresh random n
 
 ## Status
 
-**Not deployed.** Routes are commented out in `wrangler.toml`. The worker passes its tests but needs a soak window in staging before being bound to the production hostname.
+**Deployed and live.** Bound to `adrianwedd.com/*` (and `www.adrianwedd.com/*`, which it 301s to the apex) via the routes in `wrangler.toml`, with `STRICT_DYNAMIC=1`. Deploys are manual: `cd worker-csp && npx wrangler deploy`.
 
-## Deploy plan (when ready)
+## Deploy checklist
 
 1. Review `src/csp.ts` — make sure every external origin currently used by the site is in the policy. Missing one will block its scripts/images/connects.
 2. `cd worker-csp && npm install && npm test` — all green.
-3. Pick a staging hostname (or use a query-param header bypass) for soak testing. Bind the worker. Confirm:
-   - Preact hydration works (no console CSP violation reports)
-   - Theme toggle, hero canvas, code-copy, ConsentBanner, GA4, LinkedIn Insight all functional
-   - `securityheaders.com` scan goes B → A or A+
-4. Once stable on staging, uncomment the production routes in `wrangler.toml` and deploy.
-5. Remove the build-time meta CSP from `src/components/SEOHead.astro` (worker will strip it anyway, but cleaner).
+3. `npx wrangler deploy --dry-run`, then `npx wrangler deploy`.
+4. Watch the `/__csp-report` Report-Only stream (`wrangler tail`) for new violations after any policy change.
 
-## When to flip `STRICT_DYNAMIC=1`
+Note: the build-time meta CSP in `src/components/SEOHead.astro` is retained as a risk-accepted fallback for worker-bypass paths (see Why this exists) — keep its host lists in sync with `src/csp.ts`.
 
-Default is `0`. Setting it to `1` adds `'strict-dynamic'` to `script-src`, which:
+## `STRICT_DYNAMIC`
+
+It is `"1"` in production. Setting it to `1` adds `'strict-dynamic'` to `script-src`, which:
 
 - Lets the nonce-loaded scripts grant transitive trust (cleaner policy).
 - **Disables the host allowlist** in `script-src` — every external script then has to be loaded via a nonced inline trampoline, not via `<script src="…">`.
 
-This is the failure mode that broke #241. Don't flip it until every external script (`googletagmanager`, `licdn`, `cloudflare/turnstile`, etc.) is verified to load via a nonced loader, not a host-allowlisted `<script src>`.
+This is the failure mode that broke #241. It was flipped only after every external script (`googletagmanager`, `licdn`, `cloudflare/turnstile`, etc.) was verified to load via a nonced loader, not a host-allowlisted `<script src>` — any newly added external script must follow the same pattern.
 
 ## Why a separate worker (not folded into `worker/`)
 
@@ -46,6 +44,6 @@ The existing `worker/` runs `social.adrianwedd.com` (Facebook automation). This 
 - **Real-build integration coverage** — `scripts/integration-test.sh` replaces the vitest-pool-workers approach that miniflare couldn't host (cross-package `?raw` imports).
 - **`style-src` split** — `style-src-elem` requires the nonce; `style-src-attr` keeps `'unsafe-inline'` for Astro's dynamic `style="…"` attrs; legacy `style-src` remains as a fallback for browsers that don't honour the split.
 
-## Open work before deploy
+## Ongoing care
 
-- **Soak the production binding** — bind `worker-csp` to a staging hostname (or use a header bypass), verify Preact hydration, theme toggle, hero canvas, ConsentBanner, GA4, and LinkedIn Insight all run with no CSP violations. Once stable, uncomment the apex/www routes in `wrangler.toml`.
+- **Watch the Report-Only stream** — the `/__csp-report` collector logs violations from the parallel Report-Only header; check it after adding any external script/style/connect origin.

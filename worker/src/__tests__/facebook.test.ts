@@ -93,7 +93,7 @@ describe('publishPost', () => {
       json: async () => ({ id: 'photo_123', post_id: '35753603727_789' }),
     });
 
-    const photoPost: SocialPost = { ...basePost, type: 'photo', imageUrl: 'https://example.com/img.png' };
+    const photoPost: SocialPost = { ...basePost, type: 'photo', imageUrl: 'https://cdn.adrianwedd.com/img.png' };
     const result = await fb.publishPost(photoPost);
     expect(result.success).toBe(true);
 
@@ -107,6 +107,21 @@ describe('publishPost', () => {
     const result = await fb.publishPost(photoPost);
     expect(result.success).toBe(false);
     expect(result.error).toContain('imageUrl');
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  // Meta fetches the imageUrl server-side — caller-supplied URLs must pass the
+  // same media allowlist bluesky/twitter enforce, before any Graph API call.
+  it.each([
+    ['non-allowlisted host', 'https://evil.example/img.png'],
+    ['http scheme',          'http://cdn.adrianwedd.com/img.png'],
+    ['IP literal',           'https://169.254.169.254/img.png'],
+  ])('rejects photo post whose imageUrl is %s without calling the Graph API', async (_label, imageUrl) => {
+    const photoPost: SocialPost = { ...basePost, type: 'photo', imageUrl };
+    const result = await fb.publishPost(photoPost);
+    expect(result.success).toBe(false);
+    expect(result.isTransient).toBe(false);
+    expect(result.error).toContain('allowlist');
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
