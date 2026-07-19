@@ -24,7 +24,7 @@ function hashAuthorId(rawId: string): string {
 export async function processComments(
   platform: SocialPlatform,
   kv: KVNamespace,
-  onCrisis?: (comment: { commentId: string; postId: string; message: string }) => Promise<void>,
+  onCrisis?: (comment: { commentId: string; postId: string; message: string }) => Promise<unknown>,
 ): Promise<CommentProcessResult> {
   const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const staleThreshold = Date.now() - STALE_HOURS * 60 * 60 * 1000;

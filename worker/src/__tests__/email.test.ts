@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { sendCrisisAlert, buildCrisisAlertRaw } from '../email';
+import { sendCrisisAlert, sweepCrisisAlerts, buildCrisisAlertRaw } from '../email';
 
 function mockKV() {
   return {
@@ -58,13 +58,13 @@ describe('sendCrisisAlert', () => {
         },
         comment,
       ),
-    ).resolves.toBeUndefined();
+    ).resolves.toBe(false);
     expect(kv.put).not.toHaveBeenCalled();
   });
 
   it('degrades silently when the binding or vars are missing', async () => {
     const kv = mockKV();
-    await expect(sendCrisisAlert({ SOCIAL: kv as unknown as KVNamespace }, comment)).resolves.toBeUndefined();
+    await expect(sendCrisisAlert({ SOCIAL: kv as unknown as KVNamespace }, comment)).resolves.toBe(false);
     expect(kv.put).not.toHaveBeenCalled();
   });
 });
@@ -80,5 +80,51 @@ describe('buildCrisisAlertRaw', () => {
     expect(raw).toContain('Post ID:    p9');
     expect(raw).toContain('…');
     expect(raw).not.toContain('x'.repeat(501));
+  });
+});
+
+describe('sweepCrisisAlerts', () => {
+  const envFor = (kv: ReturnType<typeof mockKV>, send = vi.fn().mockResolvedValue(undefined)) => ({
+    SOCIAL: kv as unknown as KVNamespace,
+    CRISIS_EMAIL: { send },
+    CRISIS_ALERT_FROM: 'a@x.com',
+    CRISIS_ALERT_TO: 'b@x.com',
+    send,
+  });
+
+  it('re-sends for a flag with no crisis-emailed marker', async () => {
+    const kv = mockKV();
+    kv.list.mockResolvedValue({ keys: [{ name: 'flag-crisis:c1' }], list_complete: true });
+    kv.get.mockImplementation(async (key: string) =>
+      key === 'flag-crisis:c1' ? JSON.stringify({ commentId: 'c1', postId: 'p1', message: 'help' }) : null,
+    );
+    const env = envFor(kv);
+    await expect(sweepCrisisAlerts(env)).resolves.toBe(1);
+    expect(env.send).toHaveBeenCalledTimes(1);
+  });
+
+  it('skips flags already emailed', async () => {
+    const kv = mockKV();
+    kv.list.mockResolvedValue({ keys: [{ name: 'flag-crisis:c1' }], list_complete: true });
+    kv.get.mockImplementation(async (key: string) => (key === 'crisis-emailed:c1' ? 'sent' : null));
+    const env = envFor(kv);
+    await expect(sweepCrisisAlerts(env)).resolves.toBe(0);
+    expect(env.send).not.toHaveBeenCalled();
+  });
+
+  it('never throws when KV list fails', async () => {
+    const kv = mockKV();
+    kv.list.mockRejectedValue(new Error('kv down'));
+    await expect(sweepCrisisAlerts(envFor(kv))).resolves.toBe(0);
+  });
+
+  it('CRLF in comment id cannot inject MIME headers', () => {
+    const raw = buildCrisisAlertRaw('a@x.com', 'b@x.com', {
+      commentId: 'c1\r\nBcc: evil@x.com',
+      postId: 'p1',
+      message: 'hi',
+    });
+    expect(raw).not.toContain('\r\nBcc');
+    expect(raw).toContain('Subject: [CRISIS] Flagged comment c1Bcc: evil@x.com');
   });
 });
