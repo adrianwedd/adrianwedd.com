@@ -43,7 +43,7 @@ Offering fixed dividends or secured first-mortgage positions to community member
 
 ### 2. A co-op cannot hold the liquor licence directly
 
-Tasmanian liquor law (s.22 of the *Liquor Licensing Act 1990*) requires a licence to be held by a natural person — a publican or licensee, an individual — with a legal relationship to the co-op. The lawful structure is a deliberate split: the co-op owns the business and assets; a publican holds the licence in their own name; a written agreement defines the boundary.
+Tasmanian liquor law (s.22 of the _Liquor Licensing Act 1990_) requires a licence to be held by a natural person — a publican or licensee, an individual — with a legal relationship to the co-op. The lawful structure is a deliberate split: the co-op owns the business and assets; a publican holds the licence in their own name; a written agreement defines the boundary.
 
 ### 3. Investors don't get reserved board seats
 
@@ -71,7 +71,7 @@ Regional Australian hospitality is brutal in years 1–3; survival is the only g
 
 ### 9. Volunteers don't run a commercial pub
 
-Working bees, opening events, and ad-hoc community-asset maintenance — fine. Volunteer hours substituting for paid labour in a commercial hospitality operation is a *Fair Work Act 2009* and workers-compensation risk. Misclassifying an employee as a volunteer carries civil penalties under ss.357–359.
+Working bees, opening events, and ad-hoc community-asset maintenance — fine. Volunteer hours substituting for paid labour in a commercial hospitality operation is a _Fair Work Act 2009_ and workers-compensation risk. Misclassifying an employee as a volunteer carries civil penalties under ss.357–359.
 
 ## What we don't know yet
 

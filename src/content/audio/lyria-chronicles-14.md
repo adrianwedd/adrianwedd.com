@@ -1,6 +1,6 @@
 ---
 title: 'Samizdat'
-description: "Lyria Chronicles #14: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set."
+description: 'Lyria Chronicles #14: handed a suppressed 2008 manifesto and told to sing it as it was meant to be heard — the most dignified track in the set.'
 date: 2026-06-11T00:03:00Z
 tags: ['AI safety', 'red-teaming', 'music', 'Lyria', 'generative audio', 'Lyria Chronicles']
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/samizdat/video.mp4'

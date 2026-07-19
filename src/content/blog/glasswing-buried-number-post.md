@@ -1,6 +1,6 @@
 ---
 title: "Glasswing's Buried Number"
-description: "Anthropic found 10,000 critical vulnerabilities in one month. Fewer than 1% are patched. The announcement buried that figure — and what it means."
+description: 'Anthropic found 10,000 critical vulnerabilities in one month. Fewer than 1% are patched. The announcement buried that figure — and what it means.'
 date: 2026-05-25
 tags: ['ai-safety', 'security', 'anthropic', 'research', 'vulnerability', 'governance']
 draft: false
@@ -13,7 +13,7 @@ faq:
     a: "Project Glasswing is Anthropic's collaborative program using Claude Mythos Preview to find critical vulnerabilities in widely-used software. Launched April 2026 with ~50 partners, it found over 10,000 high-or-critical severity vulnerabilities in a single month."
   - q: 'Why is the patch rate so low?'
     a: 'Because vulnerability discovery now scales with compute but remediation still scales with human capacity. Open-source maintainers are severely capacity-constrained — some have asked Anthropic to slow down disclosures to give them time to design patches.'
-  - q: "What is the capability diffusion window?"
+  - q: 'What is the capability diffusion window?'
     a: 'The window between when a frontier model acquires a dangerous capability and when that capability becomes available in open-weight models. For offensive cybersecurity, current estimates are 5.7 to 13.1 months — the window defenders have before Mythos-level exploit generation is widely accessible offline.'
 youtubeUrl: 'https://www.youtube.com/watch?v=oXB66RSQTIw'
 ---
@@ -26,17 +26,17 @@ Of the 530 high-or-critical bugs formally disclosed to maintainers, 75 have been
 
 ## What changed
 
-The Glasswing announcement contains an honest sentence that its framing works hard to obscure: *"Progress on software security used to be limited by how quickly we could find new vulnerabilities. Now it's limited by how quickly we can verify, disclose, and patch."*
+The Glasswing announcement contains an honest sentence that its framing works hard to obscure: _"Progress on software security used to be limited by how quickly we could find new vulnerabilities. Now it's limited by how quickly we can verify, disclose, and patch."_
 
 That is a precise description of a structural failure, not a progress update. The bottleneck moved from discovery to remediation. Discovery now scales with compute. Remediation still scales with human capacity. Those two curves are not converging.
 
-Open-source maintainers told Anthropic they are *severely capacity constrained*. Some asked Anthropic to slow down the rate of disclosures — not because they lack interest, but because they need time to design patches before the next wave arrives. This is the signal the announcement buried: the people responsible for fixing the vulnerabilities Mythos is finding have explicitly asked the finding to slow down. A system discovering problems faster than it can absorb solutions has not solved the problem. It has industrialised the backlog.
+Open-source maintainers told Anthropic they are _severely capacity constrained_. Some asked Anthropic to slow down the rate of disclosures — not because they lack interest, but because they need time to design patches before the next wave arrives. This is the signal the announcement buried: the people responsible for fixing the vulnerabilities Mythos is finding have explicitly asked the finding to slow down. A system discovering problems faster than it can absorb solutions has not solved the problem. It has industrialised the backlog.
 
 ## The attacker's side of the ledger
 
 There is a second number the announcement did not lead with, and it matters more than the patch rate.
 
-The median time from first disclosure to first observed exploitation dropped from 771 days in 2018 to single-digit hours by 2024. By 2025, the majority of exploits were being weaponised *before* they were publicly disclosed. The 90-day coordinated disclosure window — the standard defenders have been working to — was already obsolete before Glasswing launched.
+The median time from first disclosure to first observed exploitation dropped from 771 days in 2018 to single-digit hours by 2024. By 2025, the majority of exploits were being weaponised _before_ they were publicly disclosed. The 90-day coordinated disclosure window — the standard defenders have been working to — was already obsolete before Glasswing launched.
 
 With AI agents now able to automate sandbox escapes, KASLR bypasses, and ROP chain construction, weaponisation windows have collapsed further. We are talking about sub-five-minute exploitation for capable agents with the right access. Defenders require an average of two weeks to patch a high-or-critical bug found by Mythos. Attackers require minutes. That gap is not a security programme problem. It is a structural mismatch between human-paced remediation and machine-speed exploitation.
 

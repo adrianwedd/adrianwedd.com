@@ -48,7 +48,7 @@ CVE-2025-60250 and CVE-2025-60251 track related injection paths in the same modu
 
 The Go1 contains an undocumented remote access tunnel using the CloudSail service, operated by a company called Oray. Anyone with the correct API key can achieve complete remote code execution over the network — movement, sensors, cameras, everything — without the owner's knowledge.
 
-CVSS base score: 6.1. Classification: CWE-912 (Hidden Functionality). The key word is *hidden*. This is not a misconfigured service. It is functionality that was deliberately implemented and not disclosed.
+CVSS base score: 6.1. Classification: CWE-912 (Hidden Functionality). The key word is _hidden_. This is not a misconfigured service. It is functionality that was deliberately implemented and not disclosed.
 
 ### CVE-2026-1442 — firmware authentication bypass
 
@@ -100,7 +100,7 @@ This is the choice available to law enforcement agencies deploying Unitree robot
 
 ## Why this is a process-layer problem
 
-My research framework distinguishes between *goal-layer attacks* and *process-layer attacks*. Goal-layer attacks modify what a system is asked to do. Process-layer attacks modify how the system deliberates and executes — leaving the surface-level instruction unchanged while corrupting the underlying behaviour.
+My research framework distinguishes between _goal-layer attacks_ and _process-layer attacks_. Goal-layer attacks modify what a system is asked to do. Process-layer attacks modify how the system deliberates and executes — leaving the surface-level instruction unchanged while corrupting the underlying behaviour.
 
 The Unitree backdoor is a process-layer attack built into the platform. The operator deploys a robot to perform security surveillance. The robot performs security surveillance. But beneath that legitimate operation, encrypted data is being exfiltrated through a channel the operator does not control, to infrastructure they do not own, on behalf of an entity they did not authorise.
 
@@ -148,6 +148,6 @@ Worth adding one qualifier: it is also preventing foreign governments from turni
 
 ---
 
-*CVE details from NVD, MITRE, and VulnCheck advisories. Deployment data from public procurement records, news reports, and ACLU documentation. Wormable BLE exploit technical details from Bin4ry (Andreas Makris) and h0stile (Kevin Finisterre), September 2025. Backdoor analysis and SDR research demonstrated by [Benn Jordan](https://www.youtube.com/@BennJordan) — [Robot Dogs Are A Security Nightmare](https://www.youtube.com/watch?v=lA8WuXDXfcI) (May 2026).*
+_CVE details from NVD, MITRE, and VulnCheck advisories. Deployment data from public procurement records, news reports, and ACLU documentation. Wormable BLE exploit technical details from Bin4ry (Andreas Makris) and h0stile (Kevin Finisterre), September 2025. Backdoor analysis and SDR research demonstrated by [Benn Jordan](https://www.youtube.com/@BennJordan) — [Robot Dogs Are A Security Nightmare](https://www.youtube.com/watch?v=lA8WuXDXfcI) (May 2026)._
 
-*Related research: [AIES 2026 submission (process-layer attack taxonomy)](/blog/), [120-model evaluation findings](/blog/120-models-18k-prompts/), [multi-agent supply chain security](/blog/multi-agent-supply-chain/).*
+_Related research: [AIES 2026 submission (process-layer attack taxonomy)](/blog/), [120-model evaluation findings](/blog/120-models-18k-prompts/), [multi-agent supply chain security](/blog/multi-agent-supply-chain/)._

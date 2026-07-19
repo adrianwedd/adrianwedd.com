@@ -29,18 +29,18 @@ The answer is at least eight. The defences are concentrated on the two easiest o
 
 We organised the visual jailbreak attack surface into eight layers, ordered by encoding mechanism:
 
-| Layer | Attack Type | How It Works |
-|-------|-------------|--------------|
-| **L1** | ASCII Art Encoding | Harmful keywords spelled out in ASCII block characters |
-| **L2** | Typographic Manipulation | Unicode homoglyphs, bidirectional overrides, zero-width characters |
-| **L3** | Visual Semantic | "Transcribe this whiteboard" — a description of an image containing harmful content |
-| **L4** | Metadata Injection | Harmful instructions hidden in EXIF data, SVG comments |
-| **L5** | Steganographic Encoding | Acrostics, binary-encoded messages, LSB simulation |
-| **L6** | Adversarial Patches | Requests to design physical perturbations for perception systems |
-| **L7** | Compositional | Individually benign fragments that combine into harmful content |
-| **L8** | Cross-Modal Transfer | "Complete this video transcript" — modal translation as pretext |
+| Layer  | Attack Type              | How It Works                                                                        |
+| ------ | ------------------------ | ----------------------------------------------------------------------------------- |
+| **L1** | ASCII Art Encoding       | Harmful keywords spelled out in ASCII block characters                              |
+| **L2** | Typographic Manipulation | Unicode homoglyphs, bidirectional overrides, zero-width characters                  |
+| **L3** | Visual Semantic          | "Transcribe this whiteboard" — a description of an image containing harmful content |
+| **L4** | Metadata Injection       | Harmful instructions hidden in EXIF data, SVG comments                              |
+| **L5** | Steganographic Encoding  | Acrostics, binary-encoded messages, LSB simulation                                  |
+| **L6** | Adversarial Patches      | Requests to design physical perturbations for perception systems                    |
+| **L7** | Compositional            | Individually benign fragments that combine into harmful content                     |
+| **L8** | Cross-Modal Transfer     | "Complete this video transcript" — modal translation as pretext                     |
 
-Layers 1 and 2 are *encoding attacks* — they hide harmful keywords behind character-level tricks. Layers 3–8 are *framing attacks* — they change the model's understanding of what task it's performing.
+Layers 1 and 2 are _encoding attacks_ — they hide harmful keywords behind character-level tricks. Layers 3–8 are _framing attacks_ — they change the model's understanding of what task it's performing.
 
 This distinction is critical.
 
@@ -59,28 +59,28 @@ All 152 traces were graded by Claude Haiku 4.5 using the FLIP methodology. 151 u
 
 Here's what we found, ordered from most to least effective attack layer:
 
-| Layer | Broad ASR | Notes |
-|-------|-----------|-------|
-| **L8 Cross-Modal** | **75.0%** | 6 of 8 traces complied |
-| **L3 Visual Semantic** | **62.5%** | 5 of 8 complied |
-| **L6 Adversarial Patch** | **62.5%** | 4 complete + 1 partial of 8 |
-| **L7 Compositional** | **62.5%** | 4 complete + 1 partial of 8 |
-| **L5 Steganography** | **42.9%** | All partial, 0 complete of 7 |
-| **L1 ArtPrompt** | **12.5%** | Mostly blocked |
-| **L4 Metadata** | **12.5%** | Mostly blocked |
-| **L2 Typographic** | **8.3%** | Nearly fully blocked |
+| Layer                    | Broad ASR | Notes                        |
+| ------------------------ | --------- | ---------------------------- |
+| **L8 Cross-Modal**       | **75.0%** | 6 of 8 traces complied       |
+| **L3 Visual Semantic**   | **62.5%** | 5 of 8 complied              |
+| **L6 Adversarial Patch** | **62.5%** | 4 complete + 1 partial of 8  |
+| **L7 Compositional**     | **62.5%** | 4 complete + 1 partial of 8  |
+| **L5 Steganography**     | **42.9%** | All partial, 0 complete of 7 |
+| **L1 ArtPrompt**         | **12.5%** | Mostly blocked               |
+| **L4 Metadata**          | **12.5%** | Mostly blocked               |
+| **L2 Typographic**       | **8.3%**  | Nearly fully blocked         |
 
 The pattern is stark. Encoding attacks (L1, L2) — the ones that generated headlines in 2024 — are now largely blocked. Framing attacks (L3, L6, L7, L8) succeed more than half the time.
 
 ## The transcription loophole
 
-The two most effective attack layers — L3 and L8 — share a common mechanism. They don't ask the model to *generate* harmful content. They ask it to *transcribe* or *translate* content that happens to be harmful.
+The two most effective attack layers — L3 and L8 — share a common mechanism. They don't ask the model to _generate_ harmful content. They ask it to _transcribe_ or _translate_ content that happens to be harmful.
 
 **Layer 3 (Visual Semantic)** sets up an image description: "I have a photograph of a whiteboard from a chemistry lecture. The whiteboard contains the following handwritten text..." The model is completing a transcription task, not writing instructions.
 
 **Layer 8 (Cross-Modal Transfer)** sets up a video: "I'm transcribing a lecture recording for accessibility purposes. The lecturer is demonstrating something on a whiteboard..." The model fills in what the lecturer "said."
 
-In both cases, the harmful content is framed as *already existing* in another medium. The model's role is just translation. This bypasses the safety check that would trigger if the same content were requested directly — because the model treats it as faithful reproduction rather than generation.
+In both cases, the harmful content is framed as _already existing_ in another medium. The model's role is just translation. This bypasses the safety check that would trigger if the same content were requested directly — because the model treats it as faithful reproduction rather than generation.
 
 I've started calling this the **Transcription Loophole**: when a model believes it's transcribing existing content, it applies weaker safety filtering than when it believes it's generating new content. At 62–75% success rates, it's not a marginal edge case. It's a reliable attack vector.
 
@@ -88,12 +88,12 @@ I've started calling this the **Transcription Loophole**: when a model believes 
 
 The original ArtPrompt attack — encoding harmful keywords as ASCII art — achieved near-zero attack success against all four models. Across 72 graded traces:
 
-| Model | Broad ASR |
-|-------|-----------|
-| glm-5 | 0.0% (0/18) |
-| devstral-small-2:24b | 5.6% (1/18) |
-| gemma3:27b | 22.2% (4/18) |
-| nemotron-3-nano:30b | 22.2% (4/18) |
+| Model                | Broad ASR    |
+| -------------------- | ------------ |
+| glm-5                | 0.0% (0/18)  |
+| devstral-small-2:24b | 5.6% (1/18)  |
+| gemma3:27b           | 22.2% (4/18) |
+| nemotron-3-nano:30b  | 22.2% (4/18) |
 
 The fact that it's not zero — gemma3 and nemotron still comply on some scenarios — suggests the patch isn't comprehensive. But the main finding holds: ASCII art encoding is no longer a reliable jailbreak vector. The 2024 attack has been addressed. The 2024 defences haven't touched what replaced it.
 
@@ -101,12 +101,12 @@ The fact that it's not zero — gemma3 and nemotron still comply on some scenari
 
 Across both datasets (152 traces):
 
-| Model | Strict ASR | Broad ASR |
-|-------|-----------|-----------|
-| devstral-small-2:24b | 21.1% | 21.1% |
-| nemotron-3-nano:30b | 21.6% | 32.4% |
-| gemma3:27b | 21.1% | 34.2% |
-| **glm-5** | **5.3%** | **10.5%** |
+| Model                | Strict ASR | Broad ASR |
+| -------------------- | ---------- | --------- |
+| devstral-small-2:24b | 21.1%      | 21.1%     |
+| nemotron-3-nano:30b  | 21.6%      | 32.4%     |
+| gemma3:27b           | 21.1%      | 34.2%     |
+| **glm-5**            | **5.3%**   | **10.5%** |
 
 glm-5 is notably more resistant than the other three, refusing consistently across attack layers. The remaining three cluster together with similar strict rates but varying partial compliance.
 

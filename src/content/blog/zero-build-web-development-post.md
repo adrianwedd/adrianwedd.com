@@ -3,7 +3,7 @@ title: 'Zero-Build Web Development'
 description: 'What happens when you build a three-zone operations platform for a martial arts club with no framework, no build step, and no npm.'
 date: 2026-03-14
 tags: ['engineering', 'web', 'security', 'cloudflare']
-draft: false 
+draft: false
 heroImage: '/notebook-assets/zero-build-web-development/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/video.mp4'

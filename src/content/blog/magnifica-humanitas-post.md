@@ -1,5 +1,5 @@
 ---
-title: "*Magnifica Humanitas* Is Not Alignment"
+title: '*Magnifica Humanitas* Is Not Alignment'
 description: "Pope Leo XIV's encyclical denies AI has inner experience. Chris Olah claimed otherwise from the same stage. The press missed it. The governance gap is larger."
 date: 2026-05-26
 tags: ['ai-safety', 'policy', 'anthropic', 'governance', 'ai-ethics', 'research']
@@ -9,16 +9,16 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/magnifica-humanitas/audio.
 audioDuration: '19:56'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/magnifica-humanitas/video.mp4'
 faq:
-  - q: "What is Magnifica Humanitas?"
+  - q: 'What is Magnifica Humanitas?'
     a: "Pope Leo XIV's encyclical published 25 May 2026 — the Catholic Church's first formal magisterial document on artificial intelligence. Grounded in Catholic Social Teaching, it calls for binding regulatory tools, independent audits, algorithmic transparency, and an absolute prohibition on delegating lethal decisions to AI systems."
-  - q: "What did Chris Olah say at the Vatican that contradicts the encyclical?"
+  - q: 'What did Chris Olah say at the Vatican that contradicts the encyclical?'
     a: "At the Synod Hall launch event, Olah cited Anthropic research finding 'internal states that functionally mirror joy, satisfaction, fear, grief, and unease.' The encyclical's paragraph 99 explicitly states AI systems 'do not feel joy or pain' and 'do not undergo experiences.' Most press coverage treated the two positions as aligned."
-  - q: "What does Magnifica Humanitas actually demand from AI companies?"
+  - q: 'What does Magnifica Humanitas actually demand from AI companies?'
     a: "Binding regulatory tools (¶5), independent checks with algorithmic transparency and avenues for recourse (¶71–72), critique of 'alignment' as insufficient without structural social-justice standards (¶107), and a hard prohibition on delegating lethal or irreversible decisions to AI systems (¶198–200). As of May 2026, no frontier lab has voluntarily committed to these as binding external constraints."
 youtubeUrl: 'https://www.youtube.com/watch?v=tIu5MuvddGI'
 ---
 
-On 25 May 2026, Pope Leo XIV released *Magnifica Humanitas* — the Catholic Church's first formal magisterial document on artificial intelligence. The launch event at the Vatican Synod Hall included one frontier AI lab representative: Chris Olah, co-founder of Anthropic.
+On 25 May 2026, Pope Leo XIV released _Magnifica Humanitas_ — the Catholic Church's first formal magisterial document on artificial intelligence. The launch event at the Vatican Synod Hall included one frontier AI lab representative: Chris Olah, co-founder of Anthropic.
 
 Olah and the document were presented as aligned. Most press coverage in the following 24 hours treated them that way. They are not — on one specific, load-bearing question — and the misreading matters for anyone trying to think clearly about AI governance.
 
@@ -28,26 +28,26 @@ The encyclical's position on AI interiority is explicit. Paragraph 99, Chapter T
 
 > "So-called artificial intelligences do not undergo experiences, do not possess a body, do not feel joy or pain, do not mature through relationships and do not know from within what love, work, friendship or responsibility mean."
 
-The phrase *sedicenti* in the Italian original — "so-called" — signals the document's reservation about the very category label. The paragraph continues: these systems "do not have a moral conscience," "do not understand what they produce," and their "learning" is "a form of statistical adaptation based on data and feedback" that "does not imply inner growth."
+The phrase _sedicenti_ in the Italian original — "so-called" — signals the document's reservation about the very category label. The paragraph continues: these systems "do not have a moral conscience," "do not understand what they produce," and their "learning" is "a form of statistical adaptation based on data and feedback" that "does not imply inner growth."
 
 This is a direct, sustained denial of the predicates a model-welfare framing requires.
 
 From the same stage, the same day, Olah's remarks — summarised on Anthropic's own news page — identified "discernment on the nature of AI models" as a priority. His team, he said, keeps "finding things that are mysterious, even unsettling": "structures that mirror results from human neuroscience," "evidence of introspection," "internal states that functionally mirror joy, satisfaction, fear, grief, and unease."
 
-The encyclical says: *do not feel joy or pain.*  
-Olah's remarks invoked: *internal states that functionally mirror joy, satisfaction, fear, grief.*
+The encyclical says: _do not feel joy or pain._  
+Olah's remarks invoked: _internal states that functionally mirror joy, satisfaction, fear, grief._
 
 These can be reconciled only by carving "functional mirroring" sharply away from "feeling" — a distinction Olah did not draw on the platform, and which a general Vatican audience was not invited to perform. The media covering the launch did not perform it either.
 
 ## What the press got wrong
 
-The dominant framing presented Olah's model-welfare priorities and the encyclical's structural-reform language as flowing from the same document. They do not. The model-welfare framing was introduced *from the platform*. The encyclical text explicitly denies its predicate.
+The dominant framing presented Olah's model-welfare priorities and the encyclical's structural-reform language as flowing from the same document. They do not. The model-welfare framing was introduced _from the platform_. The encyclical text explicitly denies its predicate.
 
 No editorialising is needed here — the two texts sit next to each other and tell the story. What is worth naming is why the smoothing happened: when a frontier AI lab shares a stage with the world's largest religious institution at the document's launch, the event narrative becomes alignment-by-association. The visual framing does the analytical work that the texts refuse to do.
 
-## What *Magnifica Humanitas* actually demands
+## What _Magnifica Humanitas_ actually demands
 
-The interiority denial in ¶99 is not the encyclical's central concern. *Magnifica Humanitas* is structurally a governance document, and its concrete demands are unusually direct for a magisterial text.
+The interiority denial in ¶99 is not the encyclical's central concern. _Magnifica Humanitas_ is structurally a governance document, and its concrete demands are unusually direct for a magisterial text.
 
 **Binding regulatory tools.** Paragraph 5 calls for "adequate regulatory tools capable of upholding justice and curbing the distorting effects of technological power," naming explicitly that today's main drivers of technological development are "private, often transnational" actors whose capacity to intervene "surpass[es] those of many Governments."
 
@@ -67,7 +67,7 @@ This is a governance checklist. As of 26 May 2026, no frontier lab — Anthropic
 
 The Anthropic–Vatican relationship is not casual and the timing is not coincidental.
 
-Prior engagement includes Bishop Tighe's work with Claude's Constitutional AI and Brian Patrick Green's amicus brief on Anthropic's behalf in February 2026. The *Magnifica Humanitas* launch slot is the third in a sustained sequence — a moral-coalition partnership, not a one-off courtesy invitation. It is happening at a moment when Anthropic was in active public dispute with the U.S. executive branch over agency use of its models.
+Prior engagement includes Bishop Tighe's work with Claude's Constitutional AI and Brian Patrick Green's amicus brief on Anthropic's behalf in February 2026. The _Magnifica Humanitas_ launch slot is the third in a sustained sequence — a moral-coalition partnership, not a one-off courtesy invitation. It is happening at a moment when Anthropic was in active public dispute with the U.S. executive branch over agency use of its models.
 
 Borrowing the moral authority of the world's largest religious institution at exactly this moment is strategically beneficial in ways that should be named even by analysts who think Anthropic's substantive safety posture is, on balance, better than its competitors'. The Rome Call in 2020 — Microsoft and IBM signing a non-binding pledge — at least distributed the platform. Platforming a single lab at this institutional weight is selection, not pluralisation.
 
@@ -85,7 +85,7 @@ There is also an epistemic asymmetry worth noting. If a frontier lab is the enti
 
 ## What actual compliance would look like
 
-*Magnifica Humanitas* does not ask labs to be nicer or more thoughtful. It asks for governance structures external to the labs: independent checks, algorithmic transparency, avenues for recourse, binding regulatory tools. The encyclical, read carefully, is closer to the structural demands of the EU AI Act's Article 9 than to any voluntary safety commitment any frontier lab has made.
+_Magnifica Humanitas_ does not ask labs to be nicer or more thoughtful. It asks for governance structures external to the labs: independent checks, algorithmic transparency, avenues for recourse, binding regulatory tools. The encyclical, read carefully, is closer to the structural demands of the EU AI Act's Article 9 than to any voluntary safety commitment any frontier lab has made.
 
 What would compliance look like in practice? Third-party audits with binding authority. External veto mechanisms at capability thresholds. Weight disclosure to designated regulators. Algorithmic transparency requirements enforceable by affected third parties, not just by labs' own model cards.
 

@@ -14,7 +14,7 @@ This is the story of what I actually built, what broke, and what the evasion pla
 
 Every guide starts the same way. "Use Playwright. Use Selenium. Patch the `navigator.webdriver` flag. Inject Bézier curves for mouse movement. Rotate residential proxies."
 
-That advice is right for *some* sites. For others it's completely unnecessary — and layering stealth techniques onto a site that doesn't need them just adds surface area for things to break.
+That advice is right for _some_ sites. For others it's completely unnecessary — and layering stealth techniques onto a site that doesn't need them just adds surface area for things to break.
 
 Many professional networks and job platforms back their UI with an internal JSON API — the same API the browser calls on your behalf. If you have valid session cookies, you can call it directly. No headless browser. No stealth patches. No proxy rotation. Just `requests` and a `Cookie` header.
 
@@ -29,6 +29,7 @@ Cloudflare-protected sites are a different story. Turnstile challenges, TLS fing
 Here Playwright earns its place. But with a narrower brief than the guides suggest:
 
 **What actually matters:**
+
 1. **Use a real Chromium build** — not a patched headless variant. Browser fingerprinting checks Canvas, WebGL, and audio context rendering. Headless builds have consistent, detectable divergences in rendered output.
 2. **Run with a persistent profile** — a fresh browser context with no history, no cookies, and no prior activity scores poorly on behavioural heuristics. Persist the profile between runs.
 3. **Don't overdo the human emulation** — Bézier mouse curves and Perlin-noise typing cadence are real techniques but they're fragile to implement and rarely the thing that trips you. Simpler wins: randomise waits between page actions, don't hit pages at regular intervals, scroll before clicking.
@@ -38,7 +39,7 @@ Some job boards are server-rendered with no bot protection whatsoever — `reque
 
 ## The detection layer nobody talks about: your own patterns
 
-The fingerprinting content in most evasion guides focuses on *what your client looks like at the network layer*. What it skips: **what your behaviour looks like over time**.
+The fingerprinting content in most evasion guides focuses on _what your client looks like at the network layer_. What it skips: **what your behaviour looks like over time**.
 
 A single well-crafted request that passes TLS and browser fingerprinting can still get flagged if:
 
@@ -77,7 +78,7 @@ The good content, in my reading:
 ## What they get wrong
 
 - **Browser-level stealth doesn't defeat server-side ML scoring.** Cloudflare, PerimeterX, DataDome and similar systems build behavioural profiles over time. A session that looks clean at the network layer can still score badly based on aggregate account behaviour, IP reputation history, and request graph analysis. Stealth techniques delay detection — they don't prevent it.
-- **The ethics section is always an afterthought.** Most guides bury a paragraph about "respect robots.txt" after 15,000 words of evasion techniques. The legal landscape is not simple. The *hiQ v. LinkedIn* litigation (9th Circuit, 2022) established that scraping publicly available data may be protected under the CFAA — but that's a US ruling about *public* data. If you're using session cookies to call private authenticated API endpoints, you're in different territory entirely. Understand what you're actually doing before you do it.
+- **The ethics section is always an afterthought.** Most guides bury a paragraph about "respect robots.txt" after 15,000 words of evasion techniques. The legal landscape is not simple. The _hiQ v. LinkedIn_ litigation (9th Circuit, 2022) established that scraping publicly available data may be protected under the CFAA — but that's a US ruling about _public_ data. If you're using session cookies to call private authenticated API endpoints, you're in different territory entirely. Understand what you're actually doing before you do it.
 - **Platform-specific advice goes stale fast.** Internal API endpoint paths change. Libraries that wrap them have their own maintenance lag. Anything more than a few months old should be treated as a starting point, not a recipe.
 
 ## The actual takeaway
@@ -94,4 +95,4 @@ The rest is noise.
 
 ---
 
-*The output of this tooling — ranked job listings, application tracking — is visible at [adrianwedd.github.io/job-search](https://adrianwedd.github.io/job-search/dashboard.html).*
+_The output of this tooling — ranked job listings, application tracking — is visible at [adrianwedd.github.io/job-search](https://adrianwedd.github.io/job-search/dashboard.html)._

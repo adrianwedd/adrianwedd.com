@@ -1,5 +1,5 @@
 ---
-title: "Compute Is Not Governance"
+title: 'Compute Is Not Governance'
 description: "Anthropic's 2028 scenarios document three policy asks. Two are about maintaining compute advantage. That is not a governance strategy."
 date: 2026-05-25
 tags: ['ai-safety', 'policy', 'anthropic', 'governance', 'research', 'geopolitics']
@@ -10,11 +10,11 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/compute-is-not-governance/
 audioDuration: '21:29'
 faq:
   - q: "What is Anthropic's 2028 document?"
-    a: "\"2028: Two Scenarios for Global AI Leadership\" is Anthropic's May 14, 2026 policy brief. It argues the U.S. can maintain AI leadership through compute export controls, disrupting capability distillation from frontier models, and championing American AI exports — and that leadership matters for democratic AI governance."
-  - q: "What is the CAISI evaluation?"
+    a: '"2028: Two Scenarios for Global AI Leadership" is Anthropic''s May 14, 2026 policy brief. It argues the U.S. can maintain AI leadership through compute export controls, disrupting capability distillation from frontier models, and championing American AI exports — and that leadership matters for democratic AI governance.'
+  - q: 'What is the CAISI evaluation?'
     a: "The Chinese AI Safety Index — a benchmarking comparison that found DeepSeek at 94% attack success rate versus 8% for leading U.S. models. Failure-First's critique: the methodology conflates deployment configuration with model safety, reports maximum-case numbers, and selects U.S. models advantageously."
-  - q: "What would actual AI governance require?"
-    a: "Independent evaluation infrastructure that governments can trust, binding legal requirements with liability (not voluntary commitments), participation in international standards bodies (NIST, ISO/IEC JTC1/SC42), and a settled legal framework for distillation licensing. Chip geography produces none of these."
+  - q: 'What would actual AI governance require?'
+    a: 'Independent evaluation infrastructure that governments can trust, binding legal requirements with liability (not voluntary commitments), participation in international standards bodies (NIST, ISO/IEC JTC1/SC42), and a settled legal framework for distillation licensing. Chip geography produces none of these.'
 youtubeUrl: 'https://www.youtube.com/watch?v=onmsXrkuspM'
 ---
 

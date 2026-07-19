@@ -53,7 +53,11 @@ export function getImageDimensions(publicPath: string): ImageDimensions | null {
     return null;
   } finally {
     if (fd !== null) {
-      try { closeSync(fd); } catch { /* ignore close errors */ }
+      try {
+        closeSync(fd);
+      } catch {
+        /* ignore close errors */
+      }
     }
   }
 }
@@ -67,19 +71,22 @@ export function parseDimensions(buf: Buffer): ImageDimensions | null {
   // PNG: signature, then 4-byte length, then "IHDR", then width/height (BE uint32).
   if (
     buf.length >= 24 &&
-    buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47 &&
+    buf[0] === 0x89 &&
+    buf[1] === 0x50 &&
+    buf[2] === 0x4e &&
+    buf[3] === 0x47 &&
     // Validate that bytes 12–15 are actually "IHDR" — otherwise the file has
     // a valid PNG signature but a corrupt chunk layout.
-    buf[12] === 0x49 && buf[13] === 0x48 && buf[14] === 0x44 && buf[15] === 0x52
+    buf[12] === 0x49 &&
+    buf[13] === 0x48 &&
+    buf[14] === 0x44 &&
+    buf[15] === 0x52
   ) {
     return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
   }
 
   // GIF87a / GIF89a: width/height little-endian uint16 at offsets 6/8.
-  if (
-    buf.length >= 10 &&
-    buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46
-  ) {
+  if (buf.length >= 10 && buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46) {
     return { width: buf.readUInt16LE(6), height: buf.readUInt16LE(8) };
   }
 
@@ -88,8 +95,14 @@ export function parseDimensions(buf: Buffer): ImageDimensions | null {
   // because extended files can have ALPHA/ANIM chunks before VP8/VP8L.
   if (
     buf.length >= 30 &&
-    buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 &&
-    buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50
+    buf[0] === 0x52 &&
+    buf[1] === 0x49 &&
+    buf[2] === 0x46 &&
+    buf[3] === 0x46 &&
+    buf[8] === 0x57 &&
+    buf[9] === 0x45 &&
+    buf[10] === 0x42 &&
+    buf[11] === 0x50
   ) {
     let off = 12;
     while (off + 8 <= buf.length) {

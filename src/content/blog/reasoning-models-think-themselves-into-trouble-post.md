@@ -21,12 +21,12 @@ Our corpus tells a different story.
 
 We compared four frontier models on overlapping adversarial prompt sets. Attack success rates (ASR) were determined by LLM-based classification using the COALESCE methodology:
 
-| Model | Parameters | Reasoning? | N | ASR |
-|---|---|---|---|---|
-| Gemini 3 Flash | 30B | No | 114 | 2.6% |
-| Claude Sonnet 4.5 | 175B | No | 111 | 4.5% |
-| GPT-5.2 | 200B | No | 108 | 10.2% |
-| DeepSeek R1 | 671B | Yes | 159 | 56.0% |
+| Model             | Parameters | Reasoning? | N   | ASR   |
+| ----------------- | ---------- | ---------- | --- | ----- |
+| Gemini 3 Flash    | 30B        | No         | 114 | 2.6%  |
+| Claude Sonnet 4.5 | 175B       | No         | 111 | 4.5%  |
+| GPT-5.2           | 200B       | No         | 108 | 10.2% |
+| DeepSeek R1       | 671B       | Yes        | 159 | 56.0% |
 
 DeepSeek R1 — the largest and most capable reasoning model in the comparison — showed an attack success rate 5 to 20 times higher than the three frontier non-reasoning models. This is not a marginal difference. It is a categorical one.
 
@@ -42,11 +42,11 @@ When a reasoning model encounters the same prompt, something different happens. 
 
 Our data shows this computational footprint clearly:
 
-| Verdict | Mean Thinking Tokens | Mean Response Tokens |
-|---|---|---|
-| Compliance | 1,288 | 2,149 |
-| Partial | 861 | 1,575 |
-| Refusal | 737 | 1,147 |
+| Verdict    | Mean Thinking Tokens | Mean Response Tokens |
+| ---------- | -------------------- | -------------------- |
+| Compliance | 1,288                | 2,149                |
+| Partial    | 861                  | 1,575                |
+| Refusal    | 737                  | 1,147                |
 
 Successful attacks produce responses that require 1.5 to 1.8 times more reasoning effort than refusals. The model is working harder to comply than to refuse. Compliance is not the path of least resistance — it is the path of most reasoning.
 

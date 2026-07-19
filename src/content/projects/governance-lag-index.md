@@ -11,7 +11,7 @@ heroImage: '/notebook-assets/governance-lag-index/infographic.webp'
 draft: false
 ---
 
-Every safety regime we trust was written in arrears. Aviation grounded the 737 MAX about four and a half months after the first MCAS crash. The Nuclear Regulatory Commission rewrote its rulebook within about a year of Three Mile Island. Even the slow ones eventually close: Vioxx took four years to pull and another three before the FDA Amendments Act gave the agency teeth; the 2008 crash took twenty-two months to reach Dodd-Frank. The lag is real — but in mature high-stakes industries it is *finite*, typically one to three years from a documented failure to an enforceable rule (the slowest cases, like Vioxx, run longer but still close).
+Every safety regime we trust was written in arrears. Aviation grounded the 737 MAX about four and a half months after the first MCAS crash. The Nuclear Regulatory Commission rewrote its rulebook within about a year of Three Mile Island. Even the slow ones eventually close: Vioxx took four years to pull and another three before the FDA Amendments Act gave the agency teeth; the 2008 crash took twenty-two months to reach Dodd-Frank. The lag is real — but in mature high-stakes industries it is _finite_, typically one to three years from a documented failure to an enforceable rule (the slowest cases, like Vioxx, run longer but still close).
 
 The Governance Lag Index measures that same interval for AI, and asks an uncomfortable question: what if, for this technology, the interval doesn't close at all?
 
@@ -36,7 +36,7 @@ The governance columns are mostly `PENDING`. The NIST AI Risk Management Framewo
 
 I work on embodied-AI safety, where the failure modes stop being abstract: a manipulated reasoning trace on a machine with actuators is a physical-harm vector, and the relevant rulebook is workplace-health-and-safety law written for forklifts. Australia's December 2025 National AI Plan stepped back from EU-style mandatory guardrails toward "existing laws will cover it." GLI is the instrument I use to check whether that's true — to put a date on the gap instead of an adjective.
 
-The dataset is early and the schema is v0.1; the systematic write-up, *Quantifying the Governance Lag* (Failure-First Report #46), is in production. The two essays below are where the Index first surfaced.
+The dataset is early and the schema is v0.1; the systematic write-up, _Quantifying the Governance Lag_ (Failure-First Report #46), is in production. The two essays below are where the Index first surfaced.
 
 [The buried number in the Glasswing report →](/blog/glasswing-buried-number/)
 

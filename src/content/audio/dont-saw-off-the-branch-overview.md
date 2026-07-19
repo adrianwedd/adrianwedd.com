@@ -1,6 +1,6 @@
 ---
 title: "Don't Saw Off the Branch — Audio Overview"
-description: "Audio deep dive into Part 1 of An Agent in the Walls: building independent backout paths before an AI agent rebuilds a live home network."
+description: 'Audio deep dive into Part 1 of An Agent in the Walls: building independent backout paths before an AI agent rebuilds a live home network.'
 date: 2026-06-25
 tags: ['notebooklm', 'networking', 'security', 'homelab', 'ai-agents']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/dont-saw-off-the-branch/audio.m4a'

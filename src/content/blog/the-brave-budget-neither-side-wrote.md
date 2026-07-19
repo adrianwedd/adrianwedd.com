@@ -19,11 +19,11 @@ faq:
 youtubeUrl: 'https://www.youtube.com/watch?v=AhIJk5PQ_ps'
 ---
 
-Open the glossy *Budget Paper Overview Book* — the document the Tasmanian Government actually wants you to read — and search it for the word "stadium." You won't find it. Not once. The most expensive, most contested, most legally entangled commitment in the state's finances has been scrubbed from the highlight reel. In its place, under "Delivering for Clark," sits a single tidy line: **$75.6 million for a Macquarie Point Northern Access Road.**
+Open the glossy _Budget Paper Overview Book_ — the document the Tasmanian Government actually wants you to read — and search it for the word "stadium." You won't find it. Not once. The most expensive, most contested, most legally entangled commitment in the state's finances has been scrubbed from the highlight reel. In its place, under "Delivering for Clark," sits a single tidy line: **$75.6 million for a Macquarie Point Northern Access Road.**
 
 A road to a stadium that the document refuses to name.
 
-That omission is the whole budget in miniature. The 2026-27 Tasmanian Budget and the Greens' [Alternative Budget](https://tasgreensmps.org/) are, on the surface, two opposed documents — one Liberal, one Green, one austere, one expansive. But spend a few days inside the numbers, as I just did, and the surprising thing is how *much* they agree on. They start from the same baseline. They reach the same surplus. They even invoke the same independent expert.
+That omission is the whole budget in miniature. The 2026-27 Tasmanian Budget and the Greens' [Alternative Budget](https://tasgreensmps.org/) are, on the surface, two opposed documents — one Liberal, one Green, one austere, one expansive. But spend a few days inside the numbers, as I just did, and the surprising thing is how _much_ they agree on. They start from the same baseline. They reach the same surplus. They even invoke the same independent expert.
 
 What they disagree about is not arithmetic. It's **who pays, and what Tasmania is for.** And on that question, neither side was brave enough.
 
@@ -40,22 +40,22 @@ Hold those up to both budgets and the verdict isn't tribal. It's more uncomforta
 
 ## The agreement nobody mentions
 
-Here is what both sides accept without argument. Tasmania has a structural problem. [Saul Eslake's 2024 independent review](https://www.sauleslake.info/independent-review-of-tasmanias-state-finances/) found that on a no-policy-change path, net debt heads past **$16 billion — more than a quarter of the entire state economy — by 2034-35**, with interest payments tripling. Treasury's own February 2026 *Fiscal Sustainability Report* warned that interest could swallow 10% of revenue by 2030, and 20% within fifteen years. That is the genuinely frightening number: a state slowly borrowing to pay the interest on its borrowing.
+Here is what both sides accept without argument. Tasmania has a structural problem. [Saul Eslake's 2024 independent review](https://www.sauleslake.info/independent-review-of-tasmanias-state-finances/) found that on a no-policy-change path, net debt heads past **$16 billion — more than a quarter of the entire state economy — by 2034-35**, with interest payments tripling. Treasury's own February 2026 _Fiscal Sustainability Report_ warned that interest could swallow 10% of revenue by 2030, and 20% within fifteen years. That is the genuinely frightening number: a state slowly borrowing to pay the interest on its borrowing.
 
-Against that backdrop, both budgets do something similar. They start from the *identical* set of official forecasts, and they both claw back to an operating surplus by 2027-28:
+Against that backdrop, both budgets do something similar. They start from the _identical_ set of official forecasts, and they both claw back to an operating surplus by 2027-28:
 
-| Measure ($m) | 2026-27 | 2027-28 | 2028-29 | 2029-30 |
-|---|---|---|---|---|
-| Net operating balance (official) | −596.7 | +192.8 | +436 | +622 |
-| Net operating balance (Greens) | −596.7 | +207.8 | +395 | +587 |
-| Net debt — general government (official) | 8,440 | 9,377 | **9,983** | 9,466 |
-| Net debt — general government (Greens) | 8,139 | 9,104 | 9,666 | **9,479** |
+| Measure ($m)                             | 2026-27 | 2027-28 | 2028-29   | 2029-30   |
+| ---------------------------------------- | ------- | ------- | --------- | --------- |
+| Net operating balance (official)         | −596.7  | +192.8  | +436      | +622      |
+| Net operating balance (Greens)           | −596.7  | +207.8  | +395      | +587      |
+| Net debt — general government (official) | 8,440   | 9,377   | **9,983** | 9,466     |
+| Net debt — general government (Greens)   | 8,139   | 9,104   | 9,666     | **9,479** |
 
 Same destination. The argument is entirely about the vehicle.
 
 ## Two roads to the same surplus
 
-The Liberal road is **repair by subtraction.** The budget books "Operational Efficiencies" worth **$1.467 billion** across the forward estimates — and I want to be precise here, because this is the most contested figure in Tasmanian politics right now. I cross-checked it against the official Budget Paper No. 4, Table 19.1, line by line. The Greens claim the Liberals are "cutting $1.463 billion." The Government calls them "efficiencies… achieved through natural attrition." **They are the same line items.** Health alone absorbs $702.6 million of it; the official paper and the Greens' "restore the cuts" table match almost to the dollar, department by department. The Government's own paper concedes the cumulative effect is "equivalent to approximately 1,700 full-time roles." Whether you can remove $700 million from Health "without frontline impact" is an assertion, not a fact — and the budget itself lists *deliverability* of those efficiencies as a formal risk.
+The Liberal road is **repair by subtraction.** The budget books "Operational Efficiencies" worth **$1.467 billion** across the forward estimates — and I want to be precise here, because this is the most contested figure in Tasmanian politics right now. I cross-checked it against the official Budget Paper No. 4, Table 19.1, line by line. The Greens claim the Liberals are "cutting $1.463 billion." The Government calls them "efficiencies… achieved through natural attrition." **They are the same line items.** Health alone absorbs $702.6 million of it; the official paper and the Greens' "restore the cuts" table match almost to the dollar, department by department. The Government's own paper concedes the cumulative effect is "equivalent to approximately 1,700 full-time roles." Whether you can remove $700 million from Health "without frontline impact" is an assertion, not a fact — and the budget itself lists _deliverability_ of those efficiencies as a formal risk.
 
 The Greens road is **repair by revenue.** Rather than shrink the state, they raise roughly **$930 million** in new revenue over four years — and here is where they are genuinely brave:
 
@@ -93,7 +93,7 @@ They tax the salmon industry, which currently pays close to nothing on a farmgat
 
 Here's the detail that should end the "Greens are economically illiterate" line of attack. Both budgets cite Saul Eslake. But Eslake's review explicitly **warned against** crude efficiency dividends and vacancy controls — exactly the lever the Liberals are pulling — and recommended the state **raise more revenue**, including by broadening the payroll tax base. Treasury's own report concluded that "spreading budget repair across lower operating expenditure, higher State taxation and lower infrastructure expenditure delivers stronger economic outcomes than reducing operating expenditure alone."
 
-Read plainly: the independent advice points toward the *Greens'* mix of levers, not the Government's. And Eslake's verdict on the Liberal budget itself was pointed. He called it the first "somewhat better picture" in a decade — then noted that the improvement is driven mostly by a **GST and federal-grants windfall** (~$605 million), and that this government "has historically failed to deliver" the very efficiency savings it's now banking on.
+Read plainly: the independent advice points toward the _Greens'_ mix of levers, not the Government's. And Eslake's verdict on the Liberal budget itself was pointed. He called it the first "somewhat better picture" in a decade — then noted that the improvement is driven mostly by a **GST and federal-grants windfall** (~$605 million), and that this government "has historically failed to deliver" the very efficiency savings it's now banking on.
 
 So on three of my four tests — resilience, custodianship, and the basic honesty of the diagnosis — the Greens' framework is the stronger one. If the post ended here, it would be an endorsement.
 
@@ -101,15 +101,15 @@ It doesn't end here.
 
 ## Where the Greens aren't brave enough
 
-Because I ran *their* numbers too, and three of them don't survive contact.
+Because I ran _their_ numbers too, and three of them don't survive contact.
 
-**The debt headline is overclaimed.** The Greens say their plan delivers lower debt than the Liberals'. On total state-sector debt, that's true in all four years. But on general-government net debt — the number everyone actually quotes — their own table shows them **$13 million *higher* than the Liberals in 2029-30**. The reason is an accounting boundary worth understanding: the stadium's debt sits inside a public corporation — the Macquarie Point Development Corporation — not the general-government books. So cancelling it scrubs *total-state-sector* debt but barely moves the net-debt headline, while the health and education funding the Greens restore lands squarely on the general-government ledger. It's a footnote-sized miss, but it's the kind of thing that lets an opponent wave away the entire document.
+**The debt headline is overclaimed.** The Greens say their plan delivers lower debt than the Liberals'. On total state-sector debt, that's true in all four years. But on general-government net debt — the number everyone actually quotes — their own table shows them **$13 million _higher_ than the Liberals in 2029-30**. The reason is an accounting boundary worth understanding: the stadium's debt sits inside a public corporation — the Macquarie Point Development Corporation — not the general-government books. So cancelling it scrubs _total-state-sector_ debt but barely moves the net-debt headline, while the health and education funding the Greens restore lands squarely on the general-government ledger. It's a footnote-sized miss, but it's the kind of thing that lets an opponent wave away the entire document.
 
-**Two-thirds of the new revenue rests on the two shakiest lines.** The $434.8 million salmon royalty and the $186.9 million rezoning levy together are $621 million of the $930 million. The arithmetic is defensible — the salmon base is, if anything, *conservative*. But a 10% salmon royalty has no Tasmanian precedent — it's close to unprecedented anywhere — the industry is ~2% of the state economy and thousands of north-west jobs, and is fiercely protected by *both* major parties; and a 75% windfall levy sits above Victoria's 50% ceiling. A royalty that large could reshape investment and employment in the regions that host the farms — a real cost the line item doesn't carry. These aren't numbers you switch on in July. They're multi-year legislative and legal fights, and the budget treats them as banked from day one.
+**Two-thirds of the new revenue rests on the two shakiest lines.** The $434.8 million salmon royalty and the $186.9 million rezoning levy together are $621 million of the $930 million. The arithmetic is defensible — the salmon base is, if anything, _conservative_. But a 10% salmon royalty has no Tasmanian precedent — it's close to unprecedented anywhere — the industry is ~2% of the state economy and thousands of north-west jobs, and is fiercely protected by _both_ major parties; and a 75% windfall levy sits above Victoria's 50% ceiling. A royalty that large could reshape investment and employment in the regions that host the farms — a real cost the line item doesn't carry. These aren't numbers you switch on in July. They're multi-year legislative and legal fights, and the budget treats them as banked from day one.
 
-**The Marinus saving is inflated.** The Greens book $311 million from cancelling Marinus Link. But the state's actual exposure has already been negotiated *down* to a roughly 17.7% stake, capped at $103.5 million, with no further equity required and an option to sell to the Commonwealth. The $311 million figure appears to conflate equity, transmission works, and contingent liabilities. It's their weakest line.
+**The Marinus saving is inflated.** The Greens book $311 million from cancelling Marinus Link. But the state's actual exposure has already been negotiated _down_ to a roughly 17.7% stake, capped at $103.5 million, with no further equity required and an option to sell to the Commonwealth. The $311 million figure appears to conflate equity, transmission works, and contingent liabilities. It's their weakest line.
 
-And the honest tension: restoring $1.463 billion of services only balances if that new revenue actually shows up. The Greens land the *same* operating balance as the Government in year one, and a better headline fiscal balance — the books do add up. But by the end of the forward estimates they're running a **smaller** operating surplus than the Liberals ($587 million versus $622 million in 2029-30), precisely because they've chosen to keep spending on services. That's a defensible choice. It also leaves a thinner buffer than the rhetoric implies — resting on the same "hold the line while revenue grows" assumption the official budget makes, now stacked on top of those two contested revenue lines.
+And the honest tension: restoring $1.463 billion of services only balances if that new revenue actually shows up. The Greens land the _same_ operating balance as the Government in year one, and a better headline fiscal balance — the books do add up. But by the end of the forward estimates they're running a **smaller** operating surplus than the Liberals ($587 million versus $622 million in 2029-30), precisely because they've chosen to keep spending on services. That's a defensible choice. It also leaves a thinner buffer than the rhetoric implies — resting on the same "hold the line while revenue grows" assumption the official budget makes, now stacked on top of those two contested revenue lines.
 
 ## Where the Liberals aren't honest
 
@@ -131,7 +131,7 @@ What does $567.8 million in a single year actually buy, set against the entire s
 </div>
 </figure>
 
-Fifty to one — $567.8 million against roughly $11.4 million for the entire package. The stadium isn't being funded *instead* of these things in a strict accounting sense — but a budget that can find $567.8 million for an arena its own planners condemned, while asking nurses and teachers to absorb $1.4 billion in "efficiencies" and funding perinatal mental health at $120,000, has made a values choice. It just won't say so out loud. That's the failure of the fourth test, honesty, and it's the one I find least forgivable, because it's the one most within a government's power to fix. You can lose the argument about a stadium. Refusing to *have* the argument — hiding it behind an access road — is contempt for the people paying the bill.
+Fifty to one — $567.8 million against roughly $11.4 million for the entire package. The stadium isn't being funded _instead_ of these things in a strict accounting sense — but a budget that can find $567.8 million for an arena its own planners condemned, while asking nurses and teachers to absorb $1.4 billion in "efficiencies" and funding perinatal mental health at $120,000, has made a values choice. It just won't say so out loud. That's the failure of the fourth test, honesty, and it's the one I find least forgivable, because it's the one most within a government's power to fix. You can lose the argument about a stadium. Refusing to _have_ the argument — hiding it behind an access road — is contempt for the people paying the bill.
 
 "No new taxes," the Treasurer says proudly. Translated: salmon, gaming, mining and racing keep their settings untouched, and the gap is closed by shrinking the public workforce instead. That is a choice about who has leverage and who doesn't.
 
@@ -145,7 +145,7 @@ So who delivers the Tasmania I described at the top? Neither, fully. But they fa
 
 It would take the **Greens' diagnosis**, because it's the correct one and the independent reviews say so: Tasmania cannot cut its way to resilience while taxing its resources less than any state but the Territory. It would make the salmon farms, the pokies venues, the miners and the property speculators pay something closer to what they pay everywhere else.
 
-But it would cost those revenue lines **honestly** — as multi-year reforms with real legislative runways and conservative ramp-ups, not switches flipped on budget night and banked at full value. It would drop the inflated Marinus saving and fix the $13-million debt overclaim, because a plan that's *mostly* rigorous gets killed on the one line that isn't.
+But it would cost those revenue lines **honestly** — as multi-year reforms with real legislative runways and conservative ramp-ups, not switches flipped on budget night and banked at full value. It would drop the inflated Marinus saving and fix the $13-million debt overclaim, because a plan that's _mostly_ rigorous gets killed on the one line that isn't.
 
 And it would do the thing the Liberals can't bring themselves to do: **name the trade-off.** Put the stadium on the page. Put the 1,700 jobs on the page. Let Tasmanians decide whether a roofed arena in Hobart is worth more than the salmon industry's fair share — in daylight, with the real numbers, not an access road standing in for the truth.
 
@@ -155,4 +155,4 @@ It's nerve.
 
 ---
 
-*A note on method, in the spirit of [building in public](/blog/why-i-build-in-public/): this analysis is built from the seven 2026-27 Tasmanian Budget Papers and the Greens' Alternative Budget, read in full and cross-checked figure-by-figure against Budget Paper No. 4's efficiencies table, the Eslake review, the Treasury Fiscal Sustainability Report, and the Tasmanian Planning Commission's stadium assessment. Where the official papers couldn't confirm a number, the interactive table above says so plainly. If you find an error in my reconciliation, the [repo issues](https://github.com/adrianwedd/adrianwedd.com/issues) are open — corrections welcome.*
+_A note on method, in the spirit of [building in public](/blog/why-i-build-in-public/): this analysis is built from the seven 2026-27 Tasmanian Budget Papers and the Greens' Alternative Budget, read in full and cross-checked figure-by-figure against Budget Paper No. 4's efficiencies table, the Eslake review, the Treasury Fiscal Sustainability Report, and the Tasmanian Planning Commission's stadium assessment. Where the official papers couldn't confirm a number, the interactive table above says so plainly. If you find an error in my reconciliation, the [repo issues](https://github.com/adrianwedd/adrianwedd.com/issues) are open — corrections welcome._

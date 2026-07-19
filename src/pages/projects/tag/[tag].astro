@@ -34,12 +34,12 @@ const statusColors: Record<string, string> = {
 <BaseLayout title={`Projects tagged "${tag}"`} description={`Projects tagged with ${tag}.`} noindex>
   <section class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
     <h1 class="text-text">Tag: {tag}</h1>
-    <p class="mt-2 text-text-muted">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
+    <p class="text-text-muted mt-2">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
 
     <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by tag">
       <a
         href="/projects/"
-        class="hover:bg-accent/15 rounded-full bg-surface-raised px-3 py-1 text-xs text-text-muted no-underline transition-colors hover:text-accent"
+        class="hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent rounded-full px-3 py-1 text-xs no-underline transition-colors"
       >
         All
       </a>
@@ -50,8 +50,8 @@ const statusColors: Record<string, string> = {
             class:list={[
               'rounded-full px-3 py-1 text-xs no-underline',
               t === tag
-                ? 'bg-accent/15 font-medium text-accent'
-                : 'hover:bg-accent/15 bg-surface-raised text-text-muted transition-colors hover:text-accent',
+                ? 'bg-accent/15 text-accent font-medium'
+                : 'hover:bg-accent/15 bg-surface-raised text-text-muted hover:text-accent transition-colors',
             ]}
           >
             {t}
@@ -66,17 +66,17 @@ const statusColors: Record<string, string> = {
           <article>
             <a
               href={`/projects/${slug(project.id)}/`}
-              class="card-hover hover:border-accent/50 group block rounded-xl border border-border bg-surface-alt p-6 no-underline shadow-subtle transition-all hover:shadow-card"
+              class="card-hover hover:border-accent/50 group border-border bg-surface-alt shadow-subtle hover:shadow-card block rounded-xl border p-6 no-underline transition-all"
             >
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <h2 class="text-xl font-semibold text-text transition-colors group-hover:text-accent">
+                  <h2 class="text-text group-hover:text-accent text-xl font-semibold transition-colors">
                     {project.data.title}
                   </h2>
-                  <p class="mt-1 text-sm leading-relaxed text-text-muted">{project.data.description}</p>
+                  <p class="text-text-muted mt-1 text-sm leading-relaxed">{project.data.description}</p>
                 </div>
                 <div class="flex flex-col items-end gap-1">
-                  <time class="whitespace-nowrap text-xs text-text-muted" datetime={project.data.date.toISOString()}>
+                  <time class="text-text-muted text-xs whitespace-nowrap" datetime={project.data.date.toISOString()}>
                     {project.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </time>
                   {project.data.status && (

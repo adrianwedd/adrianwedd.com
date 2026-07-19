@@ -14,7 +14,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=9Mp-HZZDEo4'
 
 For a long time, the honest answer to "why does this neural network work?" has been some version of: we're not entirely sure. The results speak for themselves, but the internal logic — the actual mechanism by which a model moves from random noise to something useful — has felt more like craft than science. We have recipes. We lack laws.
 
-That framing may be changing. A new paper by Jamie Simon, Daniel Kunin, and twelve co-authors — *There Will Be a Scientific Theory of Deep Learning* — argues not just that such a theory is possible, but that it's already forming. The term they use is **Learning Mechanics**: the study of the dynamics of training as a formal discipline in its own right.
+That framing may be changing. A new paper by Jamie Simon, Daniel Kunin, and twelve co-authors — _There Will Be a Scientific Theory of Deep Learning_ — argues not just that such a theory is possible, but that it's already forming. The term they use is **Learning Mechanics**: the study of the dynamics of training as a formal discipline in its own right.
 
 ---
 
@@ -22,7 +22,7 @@ That framing may be changing. A new paper by Jamie Simon, Daniel Kunin, and twel
 
 The framing matters. Previous theoretical approaches to deep learning have mostly operated from two positions: statistical bounds ("here's the worst-case generalisation guarantee") and information-theoretic perspectives ("here's a measure of what the model could, in principle, learn"). Both are useful. Neither explains what's actually happening during training.
 
-Learning Mechanics takes a different angle. It's concerned with the *process* — the trajectory from initialisation to convergence — rather than the endpoints. And it operates at what the authors call *coarse aggregate statistics*: the high-level, macroscopic properties of training that you can measure without needing to interpret every individual weight. Think loss curves, scaling relationships, the statistical structure of representations across layers. Not neurons. Patterns.
+Learning Mechanics takes a different angle. It's concerned with the _process_ — the trajectory from initialisation to convergence — rather than the endpoints. And it operates at what the authors call _coarse aggregate statistics_: the high-level, macroscopic properties of training that you can measure without needing to interpret every individual weight. Think loss curves, scaling relationships, the statistical structure of representations across layers. Not neurons. Patterns.
 
 The third defining trait is the one that marks this as genuinely scientific rather than just descriptive: **falsifiable quantitative predictions**. A theory of learning mechanics isn't valuable if it only explains the results after the fact. The test is whether it can tell you what will happen before training begins.
 
@@ -52,13 +52,13 @@ Mechanistic interpretability works bottom-up — it starts with a trained model 
 
 Learning Mechanics works top-down — it starts with the training process and asks: what forces shaped the model into this state? How did the representations evolve? What structure did the loss landscape impose?
 
-The connection is genuine. Understanding *why* certain representations tend to form during training — why induction heads emerge when they do, why certain features cluster — is exactly the kind of question that a mechanics perspective should eventually answer. The interpretability researchers asking "what is this circuit doing?" and the theorists asking "why does this circuit exist at all?" are working on the same object from different ends.
+The connection is genuine. Understanding _why_ certain representations tend to form during training — why induction heads emerge when they do, why certain features cluster — is exactly the kind of question that a mechanics perspective should eventually answer. The interpretability researchers asking "what is this circuit doing?" and the theorists asking "why does this circuit exist at all?" are working on the same object from different ends.
 
 ---
 
 ## Why now?
 
-The timing isn't accidental. The infrastructure for this kind of theory has been building for years: better tools for large-scale experimentation, cleaner mathematical results in the tractable limits literature, the scaling law observations that forced the question of *why* power laws at all. The authors are also explicit that this paper isn't just a review — it's a case for the discipline. They address common arguments against the possibility of a fundamental theory, and they end with introductory materials and open questions, which reads as an invitation.
+The timing isn't accidental. The infrastructure for this kind of theory has been building for years: better tools for large-scale experimentation, cleaner mathematical results in the tractable limits literature, the scaling law observations that forced the question of _why_ power laws at all. The authors are also explicit that this paper isn't just a review — it's a case for the discipline. They address common arguments against the possibility of a fundamental theory, and they end with introductory materials and open questions, which reads as an invitation.
 
 The honest position is that Learning Mechanics is still a nascent field. The five strands are converging, not converged. The macroscopic laws are partial. The theory doesn't yet tell you, before you start training, exactly what your model will learn to represent. But the trajectory is clearer than it's been, and the shift from "we observe this" to "we predicted this" is happening in enough corners of the field to make the broader claim credible.
 
@@ -68,4 +68,4 @@ The question I keep returning to: what changes in practice when we can predict t
 
 ---
 
-*The paper is [arXiv:2604.21691](https://arxiv.org/abs/2604.21691). The authors have also launched a companion hub at [learningmechanics.pub](https://learningmechanics.pub), with introductory materials and a curated open questions list.*
+_The paper is [arXiv:2604.21691](https://arxiv.org/abs/2604.21691). The authors have also launched a companion hub at [learningmechanics.pub](https://learningmechanics.pub), with introductory materials and a curated open questions list._

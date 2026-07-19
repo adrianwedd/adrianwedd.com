@@ -14,13 +14,13 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall-ove
 audioDuration: '17:30'
 ---
 
-*This is Part 2 of Eight Minutes. [Part 1 — The Trap](/blog/eight-minutes-the-trap/) ends with a tap on a phone prompt. This is what the tap bought.*
+_This is Part 2 of Eight Minutes. [Part 1 — The Trap](/blog/eight-minutes-the-trap/) ends with a tap on a phone prompt. This is what the tap bought._
 
 ## The other side of the glass
 
 While I was typing into the lookalike page — `view-support[.]com`, defanged here so you can search it without visiting it — a human operator was retyping everything into the real Google sign-in, a beat behind me. Not a script. Not malware. A person, on shift, watching my keystrokes land in their panel and relaying them into the genuine login flow as fast as they arrived.
 
-That's the shape of the whole attack, and it's worth holding onto: **my keystrokes, their session.** Every page I saw was a pane of glass with someone working on the other side of it. When Google challenged their login attempt, the kit relayed the challenge to me; when I answered it, the answer went back through them. The fake page even polled its backend every second and a half so the operator could steer which screen I saw next. I wasn't filling in a form. I was being *driven*.
+That's the shape of the whole attack, and it's worth holding onto: **my keystrokes, their session.** Every page I saw was a pane of glass with someone working on the other side of it. When Google challenged their login attempt, the kit relayed the challenge to me; when I answered it, the answer went back through them. The fake page even polled its backend every second and a half so the operator could steer which screen I saw next. I wasn't filling in a form. I was being _driven_.
 
 ## They're in
 
@@ -28,7 +28,7 @@ That's the shape of the whole attack, and it's worth holding onto: **my keystrok
 
 The session arrived in costume, too: it introduced itself to Google as a Pixel 10 phone, and later surfaced in my device list as a Windows desktop with a machine-generated name. Neither device exists.
 
-The log line carries one more detail that still stings: `is_suspicious=True`. Google's risk engine *saw it*. It flagged the login as suspicious in the same breath as it let it through — because the password was right and the device prompt had been approved. By me. The flag lives in the log, not in my afternoon; no one shows you the machine's raised eyebrow in real time.
+The log line carries one more detail that still stings: `is_suspicious=True`. Google's risk engine _saw it_. It flagged the login as suspicious in the same breath as it let it through — because the password was right and the device prompt had been approved. By me. The flag lives in the log, not in my afternoon; no one shows you the machine's raised eyebrow in real time.
 
 ## The pivot
 
@@ -52,7 +52,7 @@ Google had been sending me genuine security alerts as the attack unfolded — ne
 
 While the operator was binning alerts and resetting passwords, two automated systems were quietly fighting for me — and it matters enormously that neither of them was me.
 
-The first was Google's risk engine. Read access wasn't enough for the operator; they wanted *persistence* — their own permanent sign-in method on my account, something that would survive any password change I made. They tried to add one. Blocked. They tried again. Blocked. Four attempts in under four minutes, and the per-action re-authentication held every single time. The session I'd granted them could read and delete, but the moment they reached for the account's locks, Google demanded proof they couldn't relay.
+The first was Google's risk engine. Read access wasn't enough for the operator; they wanted _persistence_ — their own permanent sign-in method on my account, something that would survive any password change I made. They tried to add one. Blocked. They tried again. Blocked. Four attempts in under four minutes, and the per-action re-authentication held every single time. The session I'd granted them could read and delete, but the moment they reached for the account's locks, Google demanded proof they couldn't relay.
 
 The second was Binance. The moment the password reset landed, it auto-froze withdrawals for 24 hours. No judgement call, no support ticket — a built-in cool-down, dropped like a portcullis between the attacker and the only thing they'd actually come for.
 
@@ -60,7 +60,7 @@ Two nets. Both automatic. Both built by people who assumed someone like me would
 
 ## The reset
 
-By 14:24 I'd said it out loud to him — that this had the shape of a well-documented account-takeover scam — and the line went dead. He hung up; the coaching was over. The access wasn't. The most dangerous minutes of the whole attack came *after* the call, while the operator worked my account alone and unhurried.
+By 14:24 I'd said it out loud to him — that this had the shape of a well-documented account-takeover scam — and the line went dead. He hung up; the coaching was over. The access wasn't. The most dangerous minutes of the whole attack came _after_ the call, while the operator worked my account alone and unhurried.
 
 At 14:36 (04:36:09 UTC) I changed my Google password, and that single act killed their session. Everything they held evaporated: the web session, the mailbox access, the half-finished Binance takeover behind its frozen withdrawals.
 
@@ -72,7 +72,7 @@ Count it honestly, because the logs do: from `login_success` to session kill, th
 
 Strictly, this wasn't the cookie-stealing adversary-in-the-middle of the textbooks: nothing was stolen from my session, because there was no session to steal. They minted their own — I granted it. That's also why a simple password reset could end it.
 
-That distinction sounds academic and isn't. A stolen session cookie can outlive a password change. A *granted* session, built on a relayed password and a relayed prompt, dies the moment the password does. The mechanics of how they got in are exactly the mechanics of how I got them out.
+That distinction sounds academic and isn't. A stolen session cookie can outlive a password change. A _granted_ session, built on a relayed password and a relayed prompt, dies the moment the password does. The mechanics of how they got in are exactly the mechanics of how I got them out.
 
 ## The score
 
@@ -84,4 +84,4 @@ What I did with the rescue — the capture taken while the attack was still live
 
 ---
 
-*Eight Minutes is a three-part series — a true first-party account; the evidence behind every timestamp is preserved. Part 1: [The Trap](/blog/eight-minutes-the-trap/) · Part 2: The Fall (you are here) · Part 3: [The Fight](/blog/eight-minutes-the-fight/).*
+_Eight Minutes is a three-part series — a true first-party account; the evidence behind every timestamp is preserved. Part 1: [The Trap](/blog/eight-minutes-the-trap/) · Part 2: The Fall (you are here) · Part 3: [The Fight](/blog/eight-minutes-the-fight/)._

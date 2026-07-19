@@ -82,5 +82,5 @@ export default function Personalisation() {
 
   if (!greeting) return null;
 
-  return <div class="text-sm italic text-text-muted">{greeting}</div>;
+  return <div class="text-text-muted text-sm italic">{greeting}</div>;
 }

@@ -8,7 +8,7 @@ duration: '21:16'
 relatedPost: 'lejepa-self-supervised-learning-gets-a-theoretical-foundation'
 ---
 
-Self-supervised learning has worked remarkably well in practice, with methods like DINO and I-JEPA pushing the frontier. The problem: nobody fully understood *why* the specific combination of stop-gradients, EMA teachers, and asymmetric augmentation was necessary. Remove one piece and training collapses.
+Self-supervised learning has worked remarkably well in practice, with methods like DINO and I-JEPA pushing the frontier. The problem: nobody fully understood _why_ the specific combination of stop-gradients, EMA teachers, and asymmetric augmentation was necessary. Remove one piece and training collapses.
 
 This episode covers LeJEPA, Balestriero and LeCun's paper that provides a theoretical answer. The core result: isotropic Gaussian embeddings are provably optimal for downstream tasks. From that, they derive SIGReg — a differentiable Gaussian regulariser using the Epps-Pulley characteristic function test — and build a full self-supervised method in roughly 50 lines of PyTorch. No stop-gradient. No teacher network. No EMA schedule.
 
