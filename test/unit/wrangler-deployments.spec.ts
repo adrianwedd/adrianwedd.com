@@ -27,7 +27,16 @@ describe('currentVersionId', () => {
     expect(currentVersionId(sample)).toBe('v-new');
   });
   it('falls back to the last version when none is at 100%', () => {
-    expect(currentVersionId([{ versions: [{ version_id: 'a', percentage: 50 }, { version_id: 'b', percentage: 50 }] }])).toBe('b');
+    expect(
+      currentVersionId([
+        {
+          versions: [
+            { version_id: 'a', percentage: 50 },
+            { version_id: 'b', percentage: 50 },
+          ],
+        },
+      ]),
+    ).toBe('b');
   });
   it('returns null when there are no versions', () => {
     expect(currentVersionId([{ versions: [] }])).toBeNull();

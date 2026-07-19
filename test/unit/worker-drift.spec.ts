@@ -25,9 +25,7 @@ describe('classifyDrift', () => {
     expect(classifyDrift({ sha: 'abc', shaExists: true, isAncestor: false }).drift).toBe(true);
   });
   it('undeployed commits touch the worker → drift', () => {
-    expect(
-      classifyDrift({ sha: 'abc', shaExists: true, isAncestor: true, undeployedCount: 2 }).drift,
-    ).toBe(true);
+    expect(classifyDrift({ sha: 'abc', shaExists: true, isAncestor: true, undeployedCount: 2 }).drift).toBe(true);
   });
   it('in sync → no drift', () => {
     const r = classifyDrift({ sha: 'abc', shaExists: true, isAncestor: true, undeployedCount: 0 });
