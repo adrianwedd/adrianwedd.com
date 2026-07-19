@@ -7,32 +7,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="Get in touch with Adrian Wedd — consulting, research collaboration, advisory, or a conversation about a real problem."
   heroAnimation="signal"
 >
-  <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8">
+  <section class="relative flex min-h-[100dvh] items-center px-4 sm:px-6 lg:px-8" data-pagefind-body>
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">
         Let's talk.<br />
         <span class="text-text-muted">30 minutes. No pitch. Just the problem.</span>
       </h1>
-      <p class="mt-6 max-w-prose text-text-muted">
+      <p class="text-text-muted mt-6 max-w-prose">
         Most of the conversations worth having start with a problem that hasn't been fully named yet.
       </p>
-      <p class="mt-2 text-sm text-text-muted">
+      <p class="text-text-muted mt-2 text-sm">
         Based in Cygnet, Tasmania. Best reached by email — or book a call directly below.
       </p>
     </div>
   </section>
 
-  <section class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-    <div class="mt-8 rounded-lg border border-border bg-surface-alt p-5">
-      <h2 class="text-base font-semibold text-text">I'm available for</h2>
-      <ul class="mt-3 space-y-2 text-sm text-text-muted">
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8" data-pagefind-body>
+    <div class="border-border bg-surface-alt mt-8 rounded-lg border p-5">
+      <h2 class="text-text text-base font-semibold">I'm available for</h2>
+      <ul class="text-text-muted mt-3 space-y-2 text-sm">
         <li>Client projects — AI integration, automation, systems architecture, infrastructure</li>
         <li>Consulting engagements where the problem is real and the approach needs to be honest</li>
         <li>Research collaboration on AI safety, multi-agent systems, and adversarial evaluation</li>
         <li>Technical advisory on AI risk, governance, and responsible deployment</li>
         <li>Speaking or writing on demonstrated risk, failure analysis, and what actually works</li>
       </ul>
-      <p class="mt-4 text-sm text-text-muted">
+      <p class="text-text-muted mt-4 text-sm">
         See the full <a href="/services/" class="text-accent hover:underline">services overview →</a> for domains, case studies,
         and pricing.
       </p>
@@ -40,55 +40,55 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     {/* Enquiry form */}
     <div class="mt-12">
-      <h2 class="text-xl font-semibold text-text">Start a project</h2>
-      <p class="mt-1 text-sm text-text-muted">
+      <h2 class="text-text text-xl font-semibold">Start a project</h2>
+      <p class="text-text-muted mt-1 text-sm">
         Tell me what you need. All work begins with a written scope and quote — nothing starts until we've agreed on
         both, and a deposit is required before work proceeds.
       </p>
       <form id="enquiry-form" class="mt-6 space-y-4" novalidate>
         <div>
-          <label for="enquiry-name" class="block text-xs text-text-muted">Name</label>
+          <label for="enquiry-name" class="text-text-muted block text-xs">Name</label>
           <input
             id="enquiry-name"
             name="name"
             type="text"
             required
             autocomplete="name"
-            class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+            class="border-border bg-surface text-text placeholder-text-muted focus:border-accent mt-1 w-full rounded border px-3 py-2 text-sm focus:outline-none"
             placeholder="Your name"
           />
         </div>
         <div>
-          <label for="enquiry-email" class="block text-xs text-text-muted">Email</label>
+          <label for="enquiry-email" class="text-text-muted block text-xs">Email</label>
           <input
             id="enquiry-email"
             name="email"
             type="email"
             required
             autocomplete="email"
-            class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+            class="border-border bg-surface text-text placeholder-text-muted focus:border-accent mt-1 w-full rounded border px-3 py-2 text-sm focus:outline-none"
             placeholder="you@example.com"
           />
         </div>
         <div>
-          <label for="enquiry-message" class="block text-xs text-text-muted">What do you need?</label>
+          <label for="enquiry-message" class="text-text-muted block text-xs">What do you need?</label>
           <textarea
             id="enquiry-message"
             name="message"
             rows="4"
             required
             maxlength="5000"
-            class="mt-1 w-full resize-none rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+            class="border-border bg-surface text-text placeholder-text-muted focus:border-accent mt-1 w-full resize-none rounded border px-3 py-2 text-sm focus:outline-none"
             placeholder="Describe your project or problem."></textarea>
         </div>
         <div>
-          <label for="enquiry-budget" class="block text-xs text-text-muted"
+          <label for="enquiry-budget" class="text-text-muted block text-xs"
             >Budget range <span class="text-text-muted">(optional)</span></label
           >
           <select
             id="enquiry-budget"
             name="budget"
-            class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none"
+            class="border-border bg-surface text-text focus:border-accent mt-1 w-full rounded border px-3 py-2 text-sm focus:outline-none"
           >
             <option value="">Not sure</option>
             <option value="Under $1k">Under $1k</option>
@@ -98,13 +98,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </select>
         </div>
         <div>
-          <label for="enquiry-type" class="block text-xs text-text-muted"
+          <label for="enquiry-type" class="text-text-muted block text-xs"
             >Project type <span class="text-text-muted">(optional)</span></label
           >
           <select
             id="enquiry-type"
             name="project_type"
-            class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none"
+            class="border-border bg-surface text-text focus:border-accent mt-1 w-full rounded border px-3 py-2 text-sm focus:outline-none"
           >
             <option value="">Select...</option>
             <option value="New website">New website</option>
@@ -128,7 +128,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           type="submit"
           id="enquiry-submit"
           disabled
-          class="btn-primary rounded-lg bg-accent px-5 py-2 text-sm font-medium text-surface hover:opacity-90 disabled:opacity-50"
+          class="btn-primary bg-accent text-surface rounded-lg px-5 py-2 text-sm font-medium hover:opacity-90 disabled:opacity-50"
         >
           Send enquiry
         </button>
@@ -140,9 +140,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     {/* Booking widget */}
     <div class="mt-12">
-      <h2 class="text-xl font-semibold text-text">Book a call</h2>
-      <p class="mt-1 text-sm text-text-muted">Pick a time that works. Hobart time (AEST/AEDT). 30 minutes.</p>
-      <p class="mt-1 text-xs text-text-muted">
+      <h2 class="text-text text-xl font-semibold">Book a call</h2>
+      <p class="text-text-muted mt-1 text-sm">Pick a time that works. Hobart time (AEST/AEDT). 30 minutes.</p>
+      <p class="text-text-muted mt-1 text-xs">
         Prefer email? <a href="mailto:adrian@adrianwedd.com" class="text-accent hover:underline"
           >adrian@adrianwedd.com</a
         >
@@ -155,14 +155,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <button
               id="cal-prev"
               type="button"
-              class="rounded border border-border px-3 py-1 text-sm text-text-muted transition-colors hover:border-accent hover:text-accent"
+              class="border-border text-text-muted hover:border-accent hover:text-accent rounded border px-3 py-1 text-sm transition-colors"
               aria-label="Previous week">&larr;</button
             >
-            <span id="cal-week-label" class="text-sm font-medium text-text"></span>
+            <span id="cal-week-label" class="text-text text-sm font-medium"></span>
             <button
               id="cal-next"
               type="button"
-              class="rounded border border-border px-3 py-1 text-sm text-text-muted transition-colors hover:border-accent hover:text-accent"
+              class="border-border text-text-muted hover:border-accent hover:text-accent rounded border px-3 py-1 text-sm transition-colors"
               aria-label="Next week">&rarr;</button
             >
           </div>
@@ -172,14 +172,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         {/* Slot picker */}
         <div id="booking-step-slots" class="mt-6 hidden">
           <div class="flex items-center gap-3">
-            <button id="slots-back" type="button" class="text-sm text-text-muted transition-colors hover:text-accent"
+            <button id="slots-back" type="button" class="text-text-muted hover:text-accent text-sm transition-colors"
               >&larr; Back</button
             >
-            <span id="slots-date-label" class="text-sm font-medium text-text"></span>
+            <span id="slots-date-label" class="text-text text-sm font-medium"></span>
           </div>
           <div id="slots-grid" class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4"></div>
-          <p id="slots-empty" class="mt-4 hidden text-sm text-text-muted">No slots available on this day.</p>
-          <p id="slots-error" role="alert" class="mt-4 hidden text-sm text-status-error">
+          <p id="slots-empty" class="text-text-muted mt-4 hidden text-sm">No slots available on this day.</p>
+          <p id="slots-error" role="alert" class="text-status-error mt-4 hidden text-sm">
             Couldn't load slots. Try again.
           </p>
         </div>
@@ -187,52 +187,52 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         {/* Booking form */}
         <div id="booking-step-form" class="mt-6 hidden">
           <div class="flex items-center gap-3">
-            <button id="form-back" type="button" class="text-sm text-text-muted transition-colors hover:text-accent"
+            <button id="form-back" type="button" class="text-text-muted hover:text-accent text-sm transition-colors"
               >&larr; Back</button
             >
-            <span id="form-slot-label" class="text-sm font-medium text-text"></span>
+            <span id="form-slot-label" class="text-text text-sm font-medium"></span>
           </div>
           <form id="booking-form" class="mt-4 space-y-4" novalidate>
             <div>
-              <label for="book-name" class="block text-xs text-text-muted">Name</label>
+              <label for="book-name" class="text-text-muted block text-xs">Name</label>
               <input
                 id="book-name"
                 name="name"
                 type="text"
                 required
                 autocomplete="name"
-                class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+                class="border-border bg-surface text-text placeholder-text-muted focus:border-accent mt-1 w-full rounded border px-3 py-2 text-sm focus:outline-none"
                 placeholder="Your name"
               />
             </div>
             <div>
-              <label for="book-email" class="block text-xs text-text-muted">Email</label>
+              <label for="book-email" class="text-text-muted block text-xs">Email</label>
               <input
                 id="book-email"
                 name="email"
                 type="email"
                 required
                 autocomplete="email"
-                class="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+                class="border-border bg-surface text-text placeholder-text-muted focus:border-accent mt-1 w-full rounded border px-3 py-2 text-sm focus:outline-none"
                 placeholder="you@example.com"
               />
             </div>
             <div>
-              <label for="book-note" class="block text-xs text-text-muted"
+              <label for="book-note" class="text-text-muted block text-xs"
                 >What's it about? <span class="text-text-muted">(optional)</span></label
               >
               <textarea
                 id="book-note"
                 name="note"
                 rows="3"
-                class="mt-1 w-full resize-none rounded border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-muted focus:border-accent focus:outline-none"
+                class="border-border bg-surface text-text placeholder-text-muted focus:border-accent mt-1 w-full resize-none rounded border px-3 py-2 text-sm focus:outline-none"
                 placeholder="A sentence or two about what you'd like to talk through."></textarea>
             </div>
-            <p id="form-error" role="alert" class="hidden text-sm text-status-error"></p>
+            <p id="form-error" role="alert" class="text-status-error hidden text-sm"></p>
             <button
               type="submit"
               id="book-submit"
-              class="btn-primary rounded-lg bg-accent px-5 py-2 text-sm font-medium text-surface hover:opacity-90 disabled:opacity-50"
+              class="btn-primary bg-accent text-surface rounded-lg px-5 py-2 text-sm font-medium hover:opacity-90 disabled:opacity-50"
             >
               Confirm booking
             </button>
@@ -241,9 +241,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         {/* Confirmation */}
         <div id="booking-step-confirm" class="border-accent/30 bg-accent/10 mt-6 hidden rounded-lg border p-5">
-          <p class="font-medium text-accent">You're booked.</p>
-          <p id="confirm-detail" class="mt-1 text-sm text-text-muted"></p>
-          <p class="mt-2 text-sm text-text-muted">A calendar invite will arrive shortly.</p>
+          <p class="text-accent font-medium">You're booked.</p>
+          <p id="confirm-detail" class="text-text-muted mt-1 text-sm"></p>
+          <p class="text-text-muted mt-2 text-sm">A calendar invite will arrive shortly.</p>
         </div>
       </div>
     </div>
@@ -254,10 +254,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="mt-10 space-y-6">
       <div class="flex items-center gap-4">
         <div
-          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-border bg-surface-alt"
+          class="border-border bg-surface-alt flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border"
         >
           <svg
-            class="h-5 w-5 text-accent"
+            class="text-accent h-5 w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -272,8 +272,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </svg>
         </div>
         <div>
-          <p class="mb-1 text-xs text-text-muted">Email</p>
-          <a href="mailto:adrian@adrianwedd.com" class="text-sm text-text transition-colors hover:text-accent"
+          <p class="text-text-muted mb-1 text-xs">Email</p>
+          <a href="mailto:adrian@adrianwedd.com" class="text-text hover:text-accent text-sm transition-colors"
             >adrian@adrianwedd.com</a
           >
         </div>
@@ -281,10 +281,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <div class="flex items-center gap-4">
         <div
-          class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-border bg-surface-alt"
+          class="border-border bg-surface-alt flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border"
         >
           <svg
-            class="h-5 w-5 text-accent"
+            class="text-accent h-5 w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -299,8 +299,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </svg>
         </div>
         <div>
-          <p class="mb-1 text-xs text-text-muted">Call</p>
-          <a href="#booking-widget" class="text-sm text-accent transition-colors hover:underline">Book a call &darr;</a>
+          <p class="text-text-muted mb-1 text-xs">Call</p>
+          <a href="#booking-widget" class="text-accent text-sm transition-colors hover:underline">Book a call &darr;</a>
         </div>
       </div>
     </div>
@@ -308,85 +308,85 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="section-divider my-12 max-w-full"></div>
 
     {/* Social links */}
-    <h2 class="text-xl font-semibold text-text">Elsewhere</h2>
+    <h2 class="text-text text-xl font-semibold">Elsewhere</h2>
     <div class="mt-6 flex flex-wrap gap-4">
       <a
         href="https://github.com/adrianwedd"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:border-accent/50 card-hover inline-flex items-center gap-3 rounded-xl border border-border bg-surface-alt px-5 py-3 no-underline transition-all hover:shadow-card"
+        class="hover:border-accent/50 card-hover border-border bg-surface-alt hover:shadow-card inline-flex items-center gap-3 rounded-xl border px-5 py-3 no-underline transition-all"
       >
-        <svg class="h-5 w-5 text-text" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="text-text h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
           ></path>
         </svg>
-        <span class="text-sm text-text-muted">GitHub</span>
+        <span class="text-text-muted text-sm">GitHub</span>
       </a>
 
       <a
         href="https://linkedin.com/in/adrianwedd"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:border-accent/50 card-hover inline-flex items-center gap-3 rounded-xl border border-border bg-surface-alt px-5 py-3 no-underline transition-all hover:shadow-card"
+        class="hover:border-accent/50 card-hover border-border bg-surface-alt hover:shadow-card inline-flex items-center gap-3 rounded-xl border px-5 py-3 no-underline transition-all"
       >
-        <svg class="h-5 w-5 text-text" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="text-text h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
           ></path>
         </svg>
-        <span class="text-sm text-text-muted">LinkedIn</span>
+        <span class="text-text-muted text-sm">LinkedIn</span>
       </a>
 
       <a
         href="https://x.com/adrianwedd"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:border-accent/50 card-hover inline-flex items-center gap-3 rounded-xl border border-border bg-surface-alt px-5 py-3 no-underline transition-all hover:shadow-card"
+        class="hover:border-accent/50 card-hover border-border bg-surface-alt hover:shadow-card inline-flex items-center gap-3 rounded-xl border px-5 py-3 no-underline transition-all"
       >
-        <svg class="h-5 w-5 text-text" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="text-text h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
           ></path>
         </svg>
-        <span class="text-sm text-text-muted">X / Twitter</span>
+        <span class="text-text-muted text-sm">X / Twitter</span>
       </a>
 
       <a
         href="https://www.facebook.com/AdrianWeddDotCom"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:border-accent/50 card-hover inline-flex items-center gap-3 rounded-xl border border-border bg-surface-alt px-5 py-3 no-underline transition-all hover:shadow-card"
+        class="hover:border-accent/50 card-hover border-border bg-surface-alt hover:shadow-card inline-flex items-center gap-3 rounded-xl border px-5 py-3 no-underline transition-all"
       >
-        <svg class="h-5 w-5 text-text" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="text-text h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
           ></path>
         </svg>
-        <span class="text-sm text-text-muted">Facebook</span>
+        <span class="text-text-muted text-sm">Facebook</span>
       </a>
 
       <a
         href="https://www.instagram.com/adrianwedd/"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:border-accent/50 card-hover inline-flex items-center gap-3 rounded-xl border border-border bg-surface-alt px-5 py-3 no-underline transition-all hover:shadow-card"
+        class="hover:border-accent/50 card-hover border-border bg-surface-alt hover:shadow-card inline-flex items-center gap-3 rounded-xl border px-5 py-3 no-underline transition-all"
       >
-        <svg class="h-5 w-5 text-text" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="text-text h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
           ></path>
         </svg>
-        <span class="text-sm text-text-muted">Instagram</span>
+        <span class="text-text-muted text-sm">Instagram</span>
       </a>
     </div>
 
     <div class="section-divider my-12 max-w-full"></div>
 
     {/* Map */}
-    <h2 class="text-xl font-semibold text-text">Location</h2>
-    <p class="mt-2 text-sm text-text-muted">Cygnet, Tasmania, Australia</p>
-    <div class="mt-6 overflow-hidden rounded-xl border border-border shadow-subtle">
+    <h2 class="text-text text-xl font-semibold">Location</h2>
+    <p class="text-text-muted mt-2 text-sm">Cygnet, Tasmania, Australia</p>
+    <div class="border-border shadow-subtle mt-6 overflow-hidden rounded-xl border">
       <iframe
         title="Map showing Cygnet, Tasmania"
         width="100%"
@@ -397,12 +397,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         src="https://www.openstreetmap.org/export/embed.html?bbox=147.05%2C-43.17%2C147.19%2C-43.10&layer=mapnik&marker=-43.135932%2C147.120761"
       ></iframe>
     </div>
-    <p class="mt-2 text-xs text-text-muted">
+    <p class="text-text-muted mt-2 text-xs">
       <a
         href="https://www.openstreetmap.org/?mlat=-43.135932&mlon=147.120761#map=14/-43.1359/147.1208"
         target="_blank"
         rel="noopener noreferrer"
-        class="transition-colors hover:text-accent"
+        class="hover:text-accent transition-colors"
       >
         View larger map &nearr;
       </a>
@@ -869,15 +869,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         var container = document.querySelector('.cf-turnstile');
         if (container && typeof turnstile !== 'undefined') {
           if (window.__turnstileWidgetId) {
-            try { turnstile.remove(window.__turnstileWidgetId); } catch (e) {}
+            try {
+              turnstile.remove(window.__turnstileWidgetId);
+            } catch (e) {}
             window.__turnstileWidgetId = null;
           }
           while (container.firstChild) container.removeChild(container.firstChild);
           window.__turnstileWidgetId = turnstile.render(container, {
             sitekey: '0x4AAAAAAABtkfyqFbFmIaPO',
             theme: 'dark',
-            callback: function () { window.onTurnstileSuccess(); },
-            'error-callback': function () { window.onTurnstileError(); },
+            callback: function () {
+              window.onTurnstileSuccess();
+            },
+            'error-callback': function () {
+              window.onTurnstileError();
+            },
           });
         }
       });

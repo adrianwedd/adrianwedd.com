@@ -72,6 +72,20 @@ const ogDimensions = getImageDimensions(ogImage);
 const ogImageWidth = ogDimensions?.width ?? 1200;
 const ogImageHeight = ogDimensions?.height ?? 630;
 
+// Hero <Picture> intrinsic dimensions: read the real file so the browser
+// reserves the correct aspect ratio (infographic heroes are portrait
+// 1536x2752 — hardcoding 1200x630 caused layout shift once the image loaded).
+const heroDimensions = post.data.heroImage ? getImageDimensions(post.data.heroImage) : null;
+const heroWidth = heroDimensions?.width ?? 1200;
+const heroHeight = heroDimensions?.height ?? 630;
+
+const heroAlt = heroAltText({
+  heroAlt: post.data.heroAlt,
+  heroImage: post.data.heroImage,
+  title: post.data.title,
+  kind: 'article',
+});
+
 // Projects in the same series
 const allProjects = await getCollection('projects');
 const seriesProjectsList = post.data.series
@@ -91,6 +105,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
   image={ogImage}
   imageWidth={ogImageWidth}
   imageHeight={ogImageHeight}
+  imageAlt={heroAlt || undefined}
   type="article"
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
@@ -190,7 +205,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
   >
   </div>
 
-  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <Breadcrumb
       crumbs={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog/' }, { label: post.data.title }]}
     />
@@ -308,16 +323,11 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
         ) : post.data.heroImage ? (
           <Picture
             src={post.data.heroImage}
-            width={1200}
-            height={630}
+            width={heroWidth}
+            height={heroHeight}
             widths={[640, 1200, 1920]}
             formats={['avif', 'webp']}
-            alt={heroAltText({
-              heroAlt: post.data.heroAlt,
-              heroImage: post.data.heroImage,
-              title: post.data.title,
-              kind: 'article',
-            })}
+            alt={heroAlt}
             class="border-border mt-8 w-full rounded-lg border"
             loading="eager"
             fetchpriority="high"
@@ -411,7 +421,9 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             href={`/blog/${slug(prevPost.id)}/`}
             class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors"
           >
-            <span class="text-text-muted text-xs"><span aria-hidden="true">&larr;</span> {inSeries ? 'Previous in series' : 'Previous'}</span>
+            <span class="text-text-muted text-xs">
+              <span aria-hidden="true">&larr;</span> {inSeries ? 'Previous in series' : 'Previous'}
+            </span>
             <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {prevPost.data.title}
             </span>
@@ -426,7 +438,9 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             href={`/blog/${slug(nextPost.id)}/`}
             class="hover:border-accent/50 group border-border rounded-lg border p-4 no-underline transition-colors sm:text-right"
           >
-            <span class="text-text-muted text-xs">{inSeries ? 'Next in series' : 'Next'} <span aria-hidden="true">&rarr;</span></span>
+            <span class="text-text-muted text-xs">
+              {inSeries ? 'Next in series' : 'Next'} <span aria-hidden="true">&rarr;</span>
+            </span>
             <span class="text-text group-hover:text-accent mt-1 block text-sm font-medium transition-colors">
               {nextPost.data.title}
             </span>
