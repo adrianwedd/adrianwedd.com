@@ -32,8 +32,8 @@ The Astro site also has a Playwright E2E suite (`e2e/`), run in CI by `.github/w
 
 - **Framework:** Astro 6 with TypeScript strict
 - **Styling:** Tailwind CSS 4 with CSS custom properties for theming
-- **Islands:** Preact for interactive components (13 islands in `src/components/islands/`)
-- **Content:** Astro Content Collections (blog, projects, gallery, audio) in `src/content/`
+- **Islands:** Preact for interactive components (12 islands in `src/components/islands/`)
+- **Content:** Astro Content Collections (blog, projects, gallery, audio, fixes, case-studies) in `src/content/`
 - **Search:** Pagefind (client-side WASM, indexed at build time)
 - **Hosting:** GitHub Pages via GitHub Actions (fully static output)
 - **DNS:** Cloudflare
@@ -50,20 +50,21 @@ CSS custom properties define all colors in `src/styles/global.css` (`:root` = da
 **Never use Tailwind's `dark:` prefix** — theming is driven by CSS custom properties, not Tailwind dark mode classes.
 
 ### Content collections
-Defined in `src/content.config.ts` with four collections. Key fields beyond the obvious:
+Defined in `src/content.config.ts` with six collections (blog, projects, gallery, audio, fixes, case-studies). Key fields beyond the obvious:
 
 - **blog:** title, description, date, tags (required), draft, heroImage, updatedDate, `faq` (optional `[{q, a}]` for FAQ schema), `series`/`seriesOrder` (multi-part posts), plus `notebookAssets` (audioUrl, videoUrl, infographic, etc.)
 - **projects:** title, description, date, tags, status (`active|complete|archived|experiment`), featured, url, repo, heroImage, updatedDate, `series`/`seriesOrder`, plus `notebookAssets`
 - **gallery:** title, date, tags, images array (`{src, alt, caption?}`), medium, collection, coverImage
-- **audio:** title, description, date, tags, `audioUrl` (required), duration, transcript, heroImage, `relatedProject`, `relatedPost`
+- **audio:** title, description, date, tags, `audioUrl` (optional in the schema — the validator requires audioUrl OR videoUrl), duration, transcript, heroImage, `relatedProject`, `relatedPost`
+- **fixes / case-studies:** title, description, date, tags, `category` (required)
 
 `notebookAssets` is a shared schema across blog/projects providing: audioUrl, videoUrl, infographic, mindmap, quiz, flashcards, dataTable, slides. Note: `audioDuration` is a separate top-level field in blog/projects, not part of `notebookAssets`.
 
 ### Routing
-File-based in `src/pages/`. Dynamic routes use `[...slug].astro` for blog, projects, gallery, audio detail pages. Blog has a tag index at `blog/tag/[tag].astro`. Two legacy redirects in `astro.config.mjs` (`/projects/ticketsmith/` → `/projects/`, `/2023/03/paperclip-maximizer/` → `/`).
+File-based in `src/pages/`. Dynamic routes use `[...slug].astro` for blog, projects, gallery, audio detail pages. Blog has a paginated tag index at `blog/tag/[tag]/[...page].astro`. Two legacy redirects in `astro.config.mjs` (`/projects/ticketsmith/` → `/projects/`, `/2023/03/paperclip-maximizer/` → `/`).
 
 ### Islands architecture
-Preact islands in `src/components/islands/` are client-hydrated interactive components. All other components are Astro (server-rendered, zero JS). Current islands include: AudioPlayer, Personalisation, Transparency, Flashcards, ActivityDashboard, MindMap, DataTable, ShareButton, AnalyticsDashboard, Quiz, TableOfContents, TerminalEasterEgg, GitHubActivity.
+Preact islands in `src/components/islands/` are client-hydrated interactive components. All other components are Astro (server-rendered, zero JS). Current islands include: AudioPlayer, Personalisation, Transparency, Flashcards, MindMap, DataTable, ShareButton, AnalyticsDashboard, Quiz, TableOfContents, TerminalEasterEgg, GitHubActivity.
 
 ### View Transitions compatibility
 All interactive scripts must follow this pattern for Astro View Transitions:
@@ -101,8 +102,8 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 
 ### Other workflows
 - **lighthouse.yml:** PR checks — builds + runs Lighthouse on 7 pages (90% thresholds)
-- **social-autopublish.yml:** Detects newly added content files via git diff, extracts frontmatter, posts to Facebook via worker (skips drafts, commit-based idempotency keys)
-- **social-cron.yml:** Hourly scheduled publish from queue + 2-hourly comment monitor
+- **social-autopublish.yml:** Queue sync on push to main — regenerates the date-scheduled queue from content (`scripts/generate-social-queue.mjs`) and syncs it to the worker's KV; broadcasting itself is date-triggered via the cron, not fire-on-commit
+- **social-cron.yml:** Scheduled publish from queue every 10 min + comment monitor every 2 hours
 - **content-pipeline.yml:** Weekly discovery of academic papers for blog draft PRs
 
 ## Worker (Cloudflare)
@@ -112,7 +113,7 @@ Located in `worker/`. Hono framework, TypeScript. State lives in KV (`SOCIAL`) p
 **Endpoints:**
 - `POST /api/publish` — immediate multi-platform publish (`platform` ∈ `facebook|instagram|bluesky|twitter`). Optional `forceRetry: true` bypasses a `failed` idempotency record but never a `published` one. Returns `409` if another publish for the same `idempotencyKey` holds the per-key lock.
 - `POST /api/queue` + `POST /api/queue/sync` — scheduled post queue (JSON seed in `social/facebook-posts.json`, KV is authoritative)
-- `POST /api/cron/publish` — hourly publish from queue
+- `POST /api/cron/publish` — scheduled publish from queue (cron fires every 10 min)
 - `POST /api/cron/comments` — comment monitor with classification (crisis detection, auto-reply)
 - `GET /api/health` — token health + queue status
 
@@ -168,7 +169,6 @@ scripts/import-audio.sh file.mp3  # import audio as episode
 - `scripts/validate-content.js` — validates all content (required fields, description ≤160 chars)
 - `scripts/generate-og-images.mjs` — generates 1200×630 OG text-card PNGs to `public/og/{blog,projects}/{slug}.png` via sharp+SVG. Skips drafts, existing files, and **posts with a `heroImage`** (those use the heroImage as og:image per `[...slug].astro`, so a text card would be dead weight). `public/og/blog/` is committed — it holds cards for heroImage-less posts
 - `scripts/fetch-ga4-data.mjs` — pulls analytics from GA4 service account (falls back to mock data)
-- `scripts/extract-frontmatter.mjs` — extracts YAML frontmatter as JSON (used by autopublish workflow)
 - `scripts/fb-post.sh` — CLI for Facebook posting (immediate, scheduled, backdated)
 
 ## NotebookLM Automation

@@ -29,6 +29,7 @@ const blog = defineCollection({
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
     faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
+    audioDuration: z.string().optional(),
     ...notebookAssets,
   }),
 });
@@ -50,6 +51,7 @@ const projects = defineCollection({
     date: z.coerce.date(),
     series: z.string().optional(),
     seriesOrder: z.number().optional(),
+    audioDuration: z.string().optional(),
     ...notebookAssets,
   }),
 });
@@ -84,7 +86,6 @@ const audio = defineCollection({
     tags: z.array(z.string()).min(1),
     draft: z.boolean().default(false),
     ...notebookAssets,
-    audioUrl: z.string().optional(),
     duration: z.string().optional(),
     transcript: z.string().optional(),
     heroImage: z.string().optional(),

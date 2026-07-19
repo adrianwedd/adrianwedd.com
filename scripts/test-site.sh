@@ -11,19 +11,27 @@ pass() { echo "  ✓ $1"; }
 fail() { echo "  ✗ $1"; ERRORS=$((ERRORS + 1)); }
 warn() { echo "  ⚠ $1"; WARNINGS=$((WARNINGS + 1)); }
 
+# Print only the frontmatter block (between the first pair of --- fences) of a
+# content file, so greps for fields like `draft: true` can't match body text.
+frontmatter() { awk '/^---\r?$/ { c++; next } c == 1' "$1"; }
+
 echo "=== Site Tests ==="
 echo ""
 
 # --- 3.1 CDN Health Check (soft fail) ---
 echo "CDN Health Check..."
-CDN_URLS=(
-  "https://cdn.adrianwedd.com/notebook-assets/spark/audio.mp3"
-  "https://cdn.adrianwedd.com/notebook-assets/the-cognitive-cage/audio.mp3"
-  "https://cdn.adrianwedd.com/notebook-assets/adhdo/video.mp4"
-  "https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.mp3"
-  "https://cdn.adrianwedd.com/notebook-assets/hello-world/audio.mp3"
-)
-for url in "${CDN_URLS[@]}"; do
+# Sample real audioUrl values from content frontmatter (not a hardcoded list,
+# which went stale as assets were renamed/re-encoded).
+CDN_URLS=()
+while IFS= read -r url; do
+  CDN_URLS+=("$url")
+done < <(grep -rhoE "audioUrl: *['\"]?https://cdn\.adrianwedd\.com/[^'\"[:space:]]+" src/content \
+  --include='*.md' --include='*.mdx' 2>/dev/null \
+  | sed -E "s/^audioUrl: *['\"]?//" | sort -u | head -5)
+if [ "${#CDN_URLS[@]}" -eq 0 ]; then
+  warn "No CDN audioUrl values found in content frontmatter (soft fail)"
+fi
+for url in "${CDN_URLS[@]+"${CDN_URLS[@]}"}"; do
   status=$(curl -sI -o /dev/null -w "%{http_code}" --max-time 10 "$url" 2>/dev/null || echo "000")
   if [ "$status" = "200" ]; then
     pass "CDN $status: $(basename "$(dirname "$url")")/$(basename "$url")"
@@ -90,16 +98,34 @@ done
 # --- 3.4 Draft Exclusion ---
 echo ""
 echo "Draft Exclusion..."
-DRAFT_SLUGS=("the-great-fracture" "welcome")
-for slug in "${DRAFT_SLUGS[@]}"; do
-  if [ -d "$DIST/blog/$slug" ] || [ -d "$DIST/audio/$slug" ]; then
-    fail "Draft '$slug' found in build output"
+# Derive draft slugs from frontmatter across all collections (no hardcoded list).
+DRAFT_FOUND=0
+for f in src/content/*/*.md src/content/*/*.mdx; do
+  [ -f "$f" ] || continue
+  frontmatter "$f" | grep -q '^draft: true' || continue
+  DRAFT_FOUND=$((DRAFT_FOUND + 1))
+  collection=$(basename "$(dirname "$f")")
+  slug=$(basename "$f")
+  slug="${slug%.mdx}"
+  slug="${slug%.md}"
+  # Blog routes strip a trailing -post (see slug() in src/lib/utils.ts).
+  [ "$collection" = "blog" ] && slug="${slug%-post}"
+  if [ -d "$DIST/$collection/$slug" ]; then
+    fail "Draft '$collection/$slug' found in build output"
   else
-    pass "Draft '$slug' correctly excluded"
+    pass "Draft '$collection/$slug' correctly excluded"
   fi
 done
+if [ "$DRAFT_FOUND" -eq 0 ]; then
+  pass "No draft content found in src/content"
+fi
 
-SRC_POSTS=$(find src/content/blog -name '*.md' -exec grep -L 'draft: true' {} \; | wc -l | tr -d ' ')
+# Count non-draft blog posts, anchoring the draft grep to the frontmatter block.
+SRC_POSTS=0
+for f in src/content/blog/*.md src/content/blog/*.mdx; do
+  [ -f "$f" ] || continue
+  frontmatter "$f" | grep -q '^draft: true' || SRC_POSTS=$((SRC_POSTS + 1))
+done
 DIST_POSTS=$(find "$DIST/blog" -maxdepth 2 -name 'index.html' -not -path '*/tag/*' -not -path '*/tags/*' | grep -vE '/blog/[0-9]+/index\.html$' | wc -l | tr -d ' ')
 # Subtract 1 for the blog listing page (dist/blog/index.html)
 DIST_POSTS=$((DIST_POSTS - 1))

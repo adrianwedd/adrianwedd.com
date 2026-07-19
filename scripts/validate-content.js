@@ -62,7 +62,10 @@ export function validateEntry(rawContent, rules, options = {}) {
   // Duplicate YAML keys — must run BEFORE matter(), because the YAML parser
   // throws on duplicate mapping keys. Scanning the raw text first lets us emit
   // a clean error instead of crashing on the parser's exception.
-  const fmMatch = rawContent.match(/^---\n([\s\S]*?)\n---/);
+  // NOTE: this scan is top-level only — keys nested under objects (e.g. inside
+  // notebookAssets) are matched at column 0 only, so nested duplicates are not
+  // detected here (the YAML parser still rejects them).
+  const fmMatch = rawContent.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (fmMatch) {
     const keys = [...fmMatch[1].matchAll(/^([a-zA-Z_][a-zA-Z0-9_]*):/gm)].map((m) => m[1]);
     const seen = new Set();
@@ -126,6 +129,17 @@ export function validateEntry(rawContent, rules, options = {}) {
       fm.images.forEach((img, i) => {
         if (!img.src) errors.push(`images[${i}] missing 'src'`);
         if (!img.alt) warnings.push(`images[${i}] missing 'alt'`);
+        // Same existence check as heroImage (warn only, local paths).
+        if (
+          imageExists &&
+          img.src &&
+          typeof img.src === 'string' &&
+          img.src.startsWith('/') &&
+          !img.src.startsWith('http') &&
+          !imageExists(img.src)
+        ) {
+          warnings.push(`images[${i}] not found in public/: ${img.src}`);
+        }
       });
     }
   }

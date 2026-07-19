@@ -44,6 +44,10 @@ export function isAllowedMediaUrl(url: string): boolean {
 // Callers that pass attacker-controlled hostnames here must additionally pin
 // the destination or use a maintained allowlist — see bluesky.ts where the
 // federated PDS endpoint is intentionally pinned to bsky.social.
+//
+// Currently has no production callers (bluesky.ts pins its PDS instead of
+// validating dynamically) — kept as the documented `validator` option for
+// safeFetch on non-media URLs, and covered by unit tests.
 export function isSafeHttpsUrl(url: string): boolean {
   let parsed: URL;
   try {
