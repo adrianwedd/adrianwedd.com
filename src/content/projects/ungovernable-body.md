@@ -17,7 +17,7 @@ Everything a studio would hold in departments, this repo holds in files with sch
 
 - **Canon and claims.** Story facts live in structured YAML (`canon.yaml`, `claims.yaml`). Every technical or social mechanism is tagged `existing`, `plausible_extrapolation`, `speculative`, or `poetic_nonliteral` — the film may not present speculation as fact, and a validator enforces the discipline.
 - **Non-negotiables as source of truth.** A short document of thematic, dramatic, visual, and accuracy red lines sits at the top of the authority hierarchy. Agents resolve conflicts by logging open questions or proposing decision records, never by silently choosing.
-- **Decision records.** Thirty-one ADRs and counting govern material choices — screenplay revisions, character lock gates, structured dialogue — the way software teams govern architecture.
+- **Decision records.** Twenty-three ADRs (numbered through 031) and counting govern material choices — screenplay revisions, character lock gates, structured dialogue — the way software teams govern architecture.
 - **Machine-validated screenplay-to-shot fidelity.** All dialogue shots carry structured speaker/cue/line records, and `make validate` machine-checks them against the screenplay: verbatim token fidelity, scene-scoped speech runs, spoken-word budgets, marked elisions. An empty dialogue block is a compile error, not silence.
 
 ## Production at scale

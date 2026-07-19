@@ -27,7 +27,7 @@ The repository is designed so that any agent — or any human — can pick up a 
 
 - **Non-negotiables at the top of the authority stack.** A single short document of thematic, dramatic, visual, and accuracy red lines. "The body is not a faulty copy of its data." "No generic neon cyberpunk." "Aging is neither punishment nor magical enlightenment." When sources conflict, agents must log the conflict or propose a decision — never silently pick a side.
 - **Claims discipline.** Every technical or social mechanism in the story is registered and tagged: `existing`, `plausible_extrapolation`, `speculative`, or `poetic_nonliteral`. The film about surveillance doesn't get to lie about how surveillance works. A prohibited-language scanner backs this up — the script may not claim, for instance, that coordinated inactivity literally overheats servers.
-- **Decision records.** Thirty-one ADRs so far, run exactly like architecture decision records: character lock gates, structured dialogue, screenplay revisions, reshoot designs. The decision log is the memory that keeps every agent session from quietly making a different film.
+- **Decision records.** Twenty-three ADRs so far, run exactly like architecture decision records: character lock gates, structured dialogue, screenplay revisions, reshoot designs. The decision log is the memory that keeps every agent session from quietly making a different film.
 - **A screenplay the machine can check.** Every dialogue shot carries structured speaker/cue/line records, and the validator checks them against the screenplay draft: verbatim token fidelity, speech runs scoped to their scenes, marked elisions in order, a spoken-word budget per second of footage. An empty dialogue block is a compile error.
 
 ## One clip, one action
