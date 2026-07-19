@@ -43,7 +43,20 @@ export interface Env {
   // this Worker. Production: "pages-origin.adrianwedd.com" (CNAME to
   // adrianwedd.github.io). Local test: unset.
   ORIGIN_RESOLVE_HOSTNAME?: string;
+  // Workers rate-limiting binding ([[ratelimits]] in wrangler.toml) guarding
+  // the unauthenticated /__csp-report collector. Optional: absent in tests
+  // and any environment without the binding, in which case the collector
+  // fails open (mirrors the social worker's API_RATE_LIMITER pattern).
+  CSP_REPORT_RATE_LIMITER?: {
+    limit(options: { key: string }): Promise<{ success: boolean }>;
+  };
 }
+
+// The apex is canonical. Requests arriving on www 301 there, preserving path
+// and query, before any origin fetch (the ORIGIN_HOST design already assumed
+// a www route would be bound — see wrangler.toml).
+const WWW_HOST = 'www.adrianwedd.com';
+const CANONICAL_HOST = 'adrianwedd.com';
 
 const HTML_CONTENT_TYPE = /^text\/html\b/i;
 
@@ -63,15 +76,41 @@ export default {
     // Handle violation reports before proxying — this path doesn't exist at the
     // GitHub Pages origin, so it must terminate here.
     const inboundUrl = new URL(request.url);
+
+    // Canonicalise www → apex before anything else touches the origin.
+    if (inboundUrl.hostname === WWW_HOST) {
+      const target = `https://${CANONICAL_HOST}${inboundUrl.pathname}${inboundUrl.search}`;
+      return Response.redirect(target, 301);
+    }
+
     if (inboundUrl.pathname === CSP_REPORT_PATH) {
-      return handleCspReport(request);
+      return handleCspReport(request, env);
     }
 
     const fetchInit: RequestInit & { cf?: { resolveOverride?: string } } = {};
     if (env.ORIGIN_RESOLVE_HOSTNAME) fetchInit.cf = { resolveOverride: env.ORIGIN_RESOLVE_HOSTNAME };
-    const upstream = await fetch(originRequest(request, env), fetchInit);
+    // A failed origin fetch (DNS, connect reset, GitHub Pages outage) would
+    // otherwise surface as an unhandled exception — Cloudflare error 1101 —
+    // instead of an honest gateway error.
+    let upstream: Response;
+    try {
+      upstream = await fetch(originRequest(request, env), fetchInit);
+    } catch (err) {
+      console.error(`Origin fetch failed: ${err instanceof Error ? err.message : String(err)}`);
+      return new Response('Bad Gateway', { status: 502, headers: { 'Content-Type': 'text/plain' } });
+    }
     const contentType = upstream.headers.get('content-type') ?? '';
-    if (!HTML_CONTENT_TYPE.test(contentType)) return upstream;
+    if (!HTML_CONTENT_TYPE.test(contentType)) {
+      // Pass-through, but with nosniff so assets can't be MIME-confused.
+      // Clone headers and keep the (possibly streamed) body untouched.
+      const passHeaders = new Headers(upstream.headers);
+      passHeaders.set('X-Content-Type-Options', 'nosniff');
+      return new Response(upstream.body, {
+        status: upstream.status,
+        statusText: upstream.statusText,
+        headers: passHeaders,
+      });
+    }
 
     const nonce = generateNonce();
     const strictDynamic = env.STRICT_DYNAMIC === '1';
@@ -166,9 +205,17 @@ function originRequest(request: Request, env: Env): Request {
 // Collect a CSP violation report and log it for Workers observability
 // (wrangler tail + dashboard Logs, since [observability] is enabled). The
 // endpoint never stores anything, so it can't amplify load against KV/origin.
-async function handleCspReport(request: Request): Promise<Response> {
+async function handleCspReport(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') {
     return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'POST' } });
+  }
+  // The collector is unauthenticated by necessity (browsers POST here
+  // out-of-band), so cap it per IP via the ratelimits binding. Fails open
+  // when the binding is absent — losing reports must not break the site.
+  if (env.CSP_REPORT_RATE_LIMITER) {
+    const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown';
+    const { success } = await env.CSP_REPORT_RATE_LIMITER.limit({ key: ip });
+    if (!success) return new Response(null, { status: 429 });
   }
   // Reject oversized bodies up front when the length is declared.
   const declaredLen = Number(request.headers.get('content-length') ?? '0');

@@ -17,7 +17,7 @@ describe('Instagram publishPost', () => {
     platform: 'instagram',
     type: 'photo',
     message: 'Hello Instagram',
-    imageUrl: 'https://example.com/img.png',
+    imageUrl: 'https://cdn.adrianwedd.com/img.png',
     scheduledAt: '2026-03-28T09:00:00+10:00',
     scheduledAtEpoch: 1774850400000,
     status: 'queued',
@@ -64,6 +64,21 @@ describe('Instagram publishPost', () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
+  // Meta fetches the image_url server-side — caller-supplied URLs must pass
+  // the same media allowlist bluesky/twitter enforce, before any Graph API call.
+  it.each([
+    ['non-allowlisted host', 'https://evil.example/img.png'],
+    ['http scheme',          'http://cdn.adrianwedd.com/img.png'],
+    ['IP literal',           'https://169.254.169.254/img.png'],
+  ])('rejects a post whose imageUrl is %s without calling the Graph API', async (_label, imageUrl) => {
+    const badPost: SocialPost = { ...basePost, imageUrl };
+    const result = await ig.publishPost(badPost);
+    expect(result.success).toBe(false);
+    expect(result.isTransient).toBe(false);
+    expect(result.error).toContain('allowlist');
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
   it('rejects link-only posts without imageUrl', async () => {
     const linkPost: SocialPost = { ...basePost, type: 'link', link: 'https://adrianwedd.com/', imageUrl: undefined };
     const result = await ig.publishPost(linkPost);
@@ -86,7 +101,7 @@ describe('Instagram publishPost', () => {
       ...basePost,
       type: 'link',
       link: 'https://adrianwedd.com/blog/test/',
-      imageUrl: 'https://example.com/img.png',
+      imageUrl: 'https://cdn.adrianwedd.com/img.png',
     };
     const result = await ig.publishPost(linkPost);
     expect(result.success).toBe(true);

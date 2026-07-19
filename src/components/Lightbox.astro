@@ -78,11 +78,21 @@ const imagesWithDims = images.map((img) => {
 
 <script is:inline>
   (function () {
-    // Read images from data attribute — re-reads on each VT swap
-    var lightboxEl = document.getElementById('lightbox');
-    if (!lightboxEl) return;
-    var images = JSON.parse(lightboxEl.dataset.images || '[]');
-    window.__lightboxImages = images;
+    // NOTE: this script is byte-identical across gallery pages, so Astro does
+    // NOT re-execute it on a VT swap — never cache page data at execute time.
+    // Read images lazily from the current DOM's data attribute instead.
+    if (!document.getElementById('lightbox')) return;
+    function getImages() {
+      var el = document.getElementById('lightbox');
+      return el ? JSON.parse(el.dataset.images || '[]') : [];
+    }
+    function getHrefs() {
+      var hrefs = [];
+      document.querySelectorAll('.gallery-trigger').forEach(function (btn) {
+        hrefs.push(btn.getAttribute('href') || '#');
+      });
+      return hrefs;
+    }
     var currentIndex = 0;
     var triggerElement = null;
 
@@ -108,7 +118,8 @@ const imagesWithDims = images.map((img) => {
     function show(index, trigger) {
       currentIndex = index;
       triggerElement = trigger || document.activeElement;
-      var image = window.__lightboxImages[index];
+      var image = getImages()[index];
+      if (!image) return;
       var img = getImg();
       var caption = getCaption();
       var lightbox = getLightbox();
@@ -132,8 +143,9 @@ const imagesWithDims = images.map((img) => {
         caption.textContent = image.caption || '';
       }
       var detailLink = document.getElementById('lightbox-detail');
-      if (detailLink && window.__lightboxHrefs && window.__lightboxHrefs[index]) {
-        detailLink.href = window.__lightboxHrefs[index];
+      var hrefs = getHrefs();
+      if (detailLink && hrefs[index]) {
+        detailLink.href = hrefs[index];
       }
       if (lightbox) {
         lightbox.classList.remove('hidden');
@@ -151,17 +163,13 @@ const imagesWithDims = images.map((img) => {
     }
 
     function prev() {
-      show((currentIndex - 1 + window.__lightboxImages.length) % window.__lightboxImages.length);
+      var total = getImages().length;
+      if (total) show((currentIndex - 1 + total) % total);
     }
     function next() {
-      show((currentIndex + 1) % window.__lightboxImages.length);
+      var total = getImages().length;
+      if (total) show((currentIndex + 1) % total);
     }
-
-    // Build trigger hrefs from current DOM (refreshed on each VT swap)
-    window.__lightboxHrefs = [];
-    document.querySelectorAll('.gallery-trigger').forEach(function (btn) {
-      window.__lightboxHrefs.push(btn.getAttribute('href') || '#');
-    });
 
     // Event delegation for all lightbox interactions — guarded to avoid accumulation
     var root = document.documentElement;

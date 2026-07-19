@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 
-type ConsentState = { analytics: boolean; personalisation: boolean; timestamp: number };
+type ConsentState = { analytics: boolean; advertising?: boolean; personalisation: boolean; timestamp: number };
 type VisitorMemory = {
   visits: number;
   lastVisit: number;
@@ -81,6 +81,7 @@ export default function Transparency() {
             <h4 class="mb-1 font-medium text-text">Consent</h4>
             <ul class="space-y-1 text-text-muted">
               <li>Analytics: {consent.analytics ? 'Allowed' : 'Denied'}</li>
+              <li>Advertising: {consent.advertising ? 'Allowed' : 'Denied'}</li>
               <li>Personalisation: {consent.personalisation ? 'Allowed' : 'Denied'}</li>
               <li>
                 Set:{' '}

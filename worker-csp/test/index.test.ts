@@ -1,5 +1,6 @@
 import { SELF } from 'cloudflare:test';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import worker, { type Env } from '../src/index.js';
 import { buildCsp } from '../src/csp.js';
 import { generateNonce } from '../src/nonce.js';
 
@@ -321,18 +322,65 @@ describe('worker fetch handler', () => {
     expect(res.status).toBe(413);
   });
 
-  it('uses ORIGIN_HOST for the upstream fetch regardless of inbound hostname', async () => {
-    // ORIGIN_HOST="adrianwedd.com". Even if the inbound arrives on www, the
-    // worker rewrites to the configured origin. The interceptor is on
-    // adrianwedd.com; an unmatched call to www would make the fetch mock throw.
-    mockOrigin({
-      path: '/about/',
-      body: htmlBody('<script>x</script>'),
-      headers: { 'content-type': 'text/html; charset=utf-8' },
-    });
+  it('301-redirects www to the apex preserving path and query, without touching origin', async () => {
+    // No mockOrigin: the redirect must fire before any origin fetch — an
+    // unmatched upstream call would make the fetch mock throw.
+    const res = await SELF.fetch('https://www.adrianwedd.com/about/?utm_source=x', { redirect: 'manual' });
+    expect(res.status).toBe(301);
+    expect(res.headers.get('location')).toBe('https://adrianwedd.com/about/?utm_source=x');
+  });
 
-    const res = await SELF.fetch('https://www.adrianwedd.com/about/');
-    expect(res.status).toBe(200);
-    expect(res.headers.get('content-security-policy')).toBeTruthy();
+  it('returns a clean 502 when the origin fetch throws (not an unhandled 1101)', async () => {
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('connect reset'));
+    const res = await SELF.fetch('https://adrianwedd.com/');
+    expect(res.status).toBe(502);
+    expect(await res.text()).toBe('Bad Gateway');
+  });
+
+  it('adds nosniff to non-HTML pass-through responses', async () => {
+    mockOrigin({
+      path: '/_astro/style.css',
+      body: 'body{}',
+      headers: { 'content-type': 'text/css' },
+    });
+    const res = await SELF.fetch('https://adrianwedd.com/_astro/style.css');
+    expect(res.headers.get('x-content-type-options')).toBe('nosniff');
+    // Still a pass-through otherwise: no CSP, body untouched.
+    expect(res.headers.get('content-security-policy')).toBeNull();
+    expect(await res.text()).toBe('body{}');
+  });
+});
+
+// Rate limiting of the unauthenticated collector. SELF runs with whatever
+// bindings miniflare materialises; the limiter contract itself is unit-tested
+// by invoking the handler directly with an injected fake binding.
+describe('/__csp-report rate limiting', () => {
+  const baseEnv = { STRICT_DYNAMIC: '0', ORIGIN_HOST: 'adrianwedd.com' };
+
+  function reportRequest() {
+    return new Request('https://adrianwedd.com/__csp-report', {
+      method: 'POST',
+      headers: { 'content-type': 'application/csp-report', 'CF-Connecting-IP': '203.0.113.9' },
+      body: JSON.stringify({ 'csp-report': { 'violated-directive': 'script-src' } }),
+    });
+  }
+
+  it('returns 429 when the limiter denies the request', async () => {
+    const limit = vi.fn(async () => ({ success: false }));
+    const env = { ...baseEnv, CSP_REPORT_RATE_LIMITER: { limit } } as Env;
+    const res = await worker.fetch(reportRequest(), env);
+    expect(res.status).toBe(429);
+    expect(limit).toHaveBeenCalledWith({ key: '203.0.113.9' });
+  });
+
+  it('returns 204 when the limiter allows the request', async () => {
+    const env = { ...baseEnv, CSP_REPORT_RATE_LIMITER: { limit: async () => ({ success: true }) } } as Env;
+    const res = await worker.fetch(reportRequest(), env);
+    expect(res.status).toBe(204);
+  });
+
+  it('fails open (204) when the binding is absent', async () => {
+    const res = await worker.fetch(reportRequest(), baseEnv as Env);
+    expect(res.status).toBe(204);
   });
 });

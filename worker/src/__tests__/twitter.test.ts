@@ -111,3 +111,61 @@ describe('Twitter debugAuth', () => {
     expect(status.valid).toBe(false);
   });
 });
+
+// Fix — the old code appended the link and then sliced message+link to 280
+// together, which mangled the URL near the limit despite the comment claiming
+// otherwise. t.co wraps any URL to 23 chars, so the message alone gets a
+// 280 − 24 grapheme budget when a link is appended; the link is never cut.
+describe('Twitter publishPost — link-aware truncation', () => {
+  function capturedTweetText(): string {
+    const call = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls.find(
+      ([url]) => String(url).includes('/2/tweets'),
+    )!;
+    return (JSON.parse(call[1].body as string) as { text: string }).text;
+  }
+
+  function okTweetResponse() {
+    return new Response(JSON.stringify({ data: { id: 't1' } }), {
+      status: 201, headers: { 'content-type': 'application/json' },
+    });
+  }
+
+  it('keeps the full link intact when a long message forces truncation', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(okTweetResponse());
+    const link = 'https://adrianwedd.com/blog/a-fairly-long-slug-for-testing/';
+    const post = { ...makePost(), type: 'link' as const, message: 'x'.repeat(400), link };
+    const result = await createTwitterPlatform(creds).publishPost(post);
+    expect(result.success).toBe(true);
+
+    const text = capturedTweetText();
+    // The link is present, whole, at the end — never truncated.
+    expect(text.endsWith(` ${link}`)).toBe(true);
+    // The message part is trimmed to the 280−24 budget with an ellipsis.
+    const messagePart = text.slice(0, -(link.length + 1));
+    expect([...messagePart].length).toBe(280 - 24);
+    expect(messagePart.endsWith('…')).toBe(true);
+  });
+
+  it('does not touch a message that fits within the budget', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(okTweetResponse());
+    const link = 'https://adrianwedd.com/blog/foo/';
+    const post = { ...makePost(), type: 'link' as const, message: 'Short and sweet', link };
+    await createTwitterPlatform(creds).publishPost(post);
+    expect(capturedTweetText()).toBe(`Short and sweet ${link}`);
+  });
+
+  it('still truncates a link-less message to 280 graphemes', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(okTweetResponse());
+    const post = { ...makePost(), message: 'y'.repeat(300) };
+    await createTwitterPlatform(creds).publishPost(post);
+    expect([...capturedTweetText()].length).toBe(280);
+  });
+
+  it('does not re-append a link already present in the message', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(okTweetResponse());
+    const link = 'https://adrianwedd.com/blog/foo/';
+    const post = { ...makePost(), type: 'link' as const, message: `Read ${link} now`, link };
+    await createTwitterPlatform(creds).publishPost(post);
+    expect(capturedTweetText()).toBe(`Read ${link} now`);
+  });
+});

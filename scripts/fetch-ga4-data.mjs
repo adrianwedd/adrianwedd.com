@@ -150,7 +150,6 @@ async function fetchGA4Data(credentials, propertyId) {
     if (path.startsWith('/projects/') && path !== '/projects/' && topProjects.length < 5) {
       topProjects.push({
         name: cleanTitle(title),
-        clicks: Math.round(views * 0.23), // Approximate CTR — GA4 doesn't track "clicks" natively
         views,
       });
     }
@@ -210,7 +209,7 @@ async function fetchGA4Data(credentials, propertyId) {
     referrers: referrerData,
     engagement: {
       scrollDepth: { avg: 0, distribution: {} },
-      readingTime: { avg: Math.round(avgSessionDuration), distribution: {} },
+      avgSession: { avg: Math.round(avgSessionDuration), distribution: {} },
       audioPlays: 0,
       galleryViews: 0,
     },
@@ -255,11 +254,11 @@ function getMockData() {
       { path: '/about/', title: 'About', views: 743, avgTimeOnPage: 91 },
     ],
     topProjects: [
-      { name: 'ADHDo', clicks: 427, views: 1847 },
-      { name: "This Wasn't in the Brochure", clicks: 312, views: 982 },
-      { name: 'failure-first', clicks: 198, views: 671 },
-      { name: 'Afterglow Engine', clicks: 143, views: 524 },
-      { name: 'ordr.fm', clicks: 89, views: 412 },
+      { name: 'ADHDo', views: 1847 },
+      { name: "This Wasn't in the Brochure", views: 982 },
+      { name: 'failure-first', views: 671 },
+      { name: 'Afterglow Engine', views: 524 },
+      { name: 'ordr.fm', views: 412 },
     ],
     geography: [
       { country: 'United States', users: 1284, percentage: 29.9 },
@@ -279,7 +278,7 @@ function getMockData() {
     ],
     engagement: {
       scrollDepth: { avg: 67.3, distribution: { '25': 89, '50': 72, '75': 54, '100': 38 } },
-      readingTime: { avg: 142, distribution: { '30s': 23, '1m': 41, '2m': 28, '5m': 8 } },
+      avgSession: { avg: 142, distribution: { '30s': 23, '1m': 41, '2m': 28, '5m': 8 } },
       audioPlays: 147,
       galleryViews: 284,
     },

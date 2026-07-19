@@ -98,3 +98,43 @@ describe('processComments', () => {
     expect(result.replied).toBe(0);
   });
 });
+
+// Crisis-classified comments get a distinct `flag-crisis:` key with a 90-day
+// TTL — a crisis flag silently expiring after the generic 14 days unreviewed
+// is unacceptable. Other classifications keep the fb-flag: prefix and 14d TTL.
+describe('crisis flag escalation', () => {
+  function commentWith(message: string): Comment {
+    return { id: 'c1', postId: 'post_1', rawAuthorId: 'user_456', message, createdTime: new Date().toISOString(), isFromPage: false };
+  }
+
+  it('stores crisis comments under flag-crisis: with a 90-day TTL', async () => {
+    const platform = mockPlatform({
+      listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
+      getComments: vi.fn().mockResolvedValue([commentWith("I can't go on anymore")]),
+    });
+    const kv = mockKV();
+    const result = await processComments(platform, kv as unknown as KVNamespace);
+    expect(result.flagged).toBe(1);
+
+    const flagCall = kv.put.mock.calls.find(([key]) => (key as string).startsWith('flag-crisis:'));
+    expect(flagCall).toBeDefined();
+    expect(flagCall![0]).toBe('flag-crisis:c1');
+    expect(flagCall![2]).toEqual({ expirationTtl: 90 * 24 * 60 * 60 });
+    expect(JSON.parse(flagCall![1] as string).reason).toBe('crisis');
+    // No generic flag key written for the same comment
+    expect(kv.put.mock.calls.some(([key]) => (key as string).startsWith('fb-flag:'))).toBe(false);
+  });
+
+  it('keeps non-crisis flags on fb-flag: with the 14-day TTL', async () => {
+    const platform = mockPlatform({
+      listRecentPosts: vi.fn().mockResolvedValue([{ id: 'post_1', createdTime: new Date().toISOString() }]),
+      getComments: vi.fn().mockResolvedValue([commentWith('this is rubbish')]),
+    });
+    const kv = mockKV();
+    await processComments(platform, kv as unknown as KVNamespace);
+    const flagCall = kv.put.mock.calls.find(([key]) => (key as string).startsWith('fb-flag:'));
+    expect(flagCall).toBeDefined();
+    expect(flagCall![2]).toEqual({ expirationTtl: 14 * 24 * 60 * 60 });
+    expect(kv.put.mock.calls.some(([key]) => (key as string).startsWith('flag-crisis:'))).toBe(false);
+  });
+});

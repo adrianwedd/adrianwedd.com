@@ -6,30 +6,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">Privacy</h1>
-      <p class="mt-2 text-text-muted">How this site handles your data.</p>
+      <p class="text-text-muted mt-2">How this site handles your data.</p>
     </div>
   </section>
 
-  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <div class="space-y-6 leading-relaxed text-text">
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
+    <div class="text-text space-y-6 leading-relaxed">
       <h2>Data Collection</h2>
       <p class="text-text-muted">
-        This site uses <strong>Google Analytics 4</strong> and the <strong>LinkedIn Insight Tag</strong>, both gated
-        behind a consent banner. No tracking occurs before you grant consent. When analytics is enabled, aggregate
-        traffic data (page views, scroll depth, reading time) and basic device context (language, timezone, screen size)
-        are collected. No data is sold. Data is shared only with Google (GA4) and LinkedIn (Insight Tag) for analytics
-        purposes.
+        This site uses <strong>Google Analytics 4</strong>, gated behind a consent banner. No tracking occurs before you
+        grant consent. When analytics is enabled, aggregate traffic data (page views, scroll depth, reading time) and
+        basic device context (language, timezone, screen size) are collected. No data is sold.
+      </p>
+      <h2>Advertising</h2>
+      <p class="text-text-muted">
+        If you grant <strong>advertising</strong> consent (a separate toggle in the banner), two ad scripts load:
+        <strong>Google AdSense</strong> (publisher ID <code>ca-pub-6275306310835906</code>) and the
+        <strong>LinkedIn Insight Tag</strong>. Both set third-party cookies managed by Google and LinkedIn respectively
+        and are used for ads and ad measurement. Declining advertising keeps both scripts off entirely.
       </p>
       <h2>Local Storage &amp; Cookies</h2>
       <p class="text-text-muted">
-        Two items are stored in your browser's <strong>localStorage</strong> (not cookies): a theme preference (<code
-          >theme</code
-        >) and a visit counter (<code>adrianwedd_visits</code>). Your analytics consent choice is also stored in
-        localStorage (<code>adrianwedd_consent</code>). These persist until you clear your browser data.
+        Three items are stored in your browser's <strong>localStorage</strong>: a theme preference (<code>theme</code>),
+        your consent choices (<code>adrianwedd_consent</code>), and — only if you enable personalisation — a visitor
+        memory (<code>adrianwedd_visitor</code>) holding a visit count, a last-visit timestamp, up to 50 recently
+        viewed page paths, and the hostname of the site that referred you. It never leaves your device. All of these
+        persist until you clear your browser data.
       </p>
       <p class="text-text-muted">
-        If you grant consent, GA4 and LinkedIn set their own cookies for analytics tracking. These are third-party
-        cookies managed by Google and LinkedIn respectively.
+        The consent banner also sets one first-party cookie (<code>consent</code>, 1-year expiry) recording which
+        categories you enabled. If you grant consent, GA4 (analytics) and AdSense/LinkedIn (advertising) set their own
+        third-party cookies.
       </p>
       <h2>Contact</h2>
       <p class="text-text-muted">
