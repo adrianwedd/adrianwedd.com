@@ -128,7 +128,9 @@ KV-based locks have a TOCTOU window between `get` and `put`; the DO closes that.
 
 **Tests:** Vitest with a per-platform mock registry (`getPlatformMocks(name)`) — each platform has independent `publishPost`/`debugAuth` mocks so multi-platform scenarios (e.g. one healthy + one expired) can be tested in a single run. `cloudflare:workers` is aliased to `worker/test-shims/cloudflare-workers.ts` for vitest.
 
-**Deploy:** `cd worker && npx wrangler deploy`. CLI posting: `scripts/fb-post.sh`. Validate locally with `npx wrangler deploy --dry-run` before pushing.
+**Deploy:** automated via `.github/workflows/worker-deploy.yml` (gated approval +
+edge verify + auto-rollback + nightly drift check). See
+`docs/runbooks/worker-deploy.md`. Manual fallback: `cd <worker> && npx wrangler deploy`.
 
 ## Key patterns
 
