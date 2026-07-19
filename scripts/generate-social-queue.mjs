@@ -36,19 +36,35 @@ import matter from 'gray-matter';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://adrianwedd.com';
 const PLATFORMS = ['facebook', 'bluesky', 'twitter'];
-// Fallback broadcast slot for date-only posts (no explicit time-of-day).
-// AEST (Tasmania, no DST in June). Posts with an explicit time in their
-// `date` fire at that UTC instant instead, so staggered timestamps drip in order.
-const BROADCAST_TIME = 'T09:00:00+10:00';
+// Broadcast timezone (Tasmania). DST-aware via Intl: +10:00 (AEST) in winter,
+// +11:00 (AEDT) roughly Oct–Apr. Posts with an explicit time in their `date`
+// fire at that UTC instant instead, so staggered timestamps drip in order.
+const BROADCAST_TZ = 'Australia/Hobart';
+const BROADCAST_HOUR = 'T09:00:00';
 const QUEUE_FILE = join(ROOT, 'social/facebook-posts.json');
 
 const dryRun = process.argv.includes('--dry-run');
 
-// Past-date guard boundary: "today" in the broadcast timezone (+10:00).
-// Compare date-parts, not epochs — the 09:00 AEST slot is 23:00Z the previous
-// day, so an epoch-vs-UTC-midnight comparison silently drops same-day posts
-// (this stranded Eight Minutes Part 1 on 2026-06-11).
-const todayAEST = new Date(Date.now() + 10 * 3600 * 1000).toISOString().slice(0, 10);
+/** UTC-offset suffix (e.g. '+10:00' or '+11:00') for a YYYY-MM-DD date in the broadcast timezone. */
+function broadcastOffset(datePart) {
+  const parts = new Intl.DateTimeFormat('en-AU', {
+    timeZone: BROADCAST_TZ,
+    timeZoneName: 'longOffset',
+  }).formatToParts(new Date(`${datePart}T00:00:00Z`));
+  const name = parts.find((p) => p.type === 'timeZoneName')?.value ?? 'GMT+10:00';
+  return name === 'GMT' ? '+00:00' : name.replace('GMT', '');
+}
+
+// Past-date guard boundary: "today" in the broadcast timezone (DST-aware).
+// Compare date-parts, not epochs — the 09:00 local slot is 22:00Z/23:00Z the
+// previous day, so an epoch-vs-UTC-midnight comparison silently drops same-day
+// posts (this stranded Eight Minutes Part 1 on 2026-06-11).
+const todayLocal = new Intl.DateTimeFormat('en-CA', {
+  timeZone: BROADCAST_TZ,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+}).format(new Date());
 
 /** Collect candidate posts from a content collection. */
 function collect(dir, kind) {
@@ -73,7 +89,10 @@ const posts = [];
 const skipped = [];
 
 for (const { file, kind, fm } of [...collect('blog', 'blog'), ...collect('projects', 'projects')]) {
-  const slug = kind === 'blog' ? basename(file, '.md').replace(/-post$/, '') : basename(file, '.md');
+  // Same extension handling as slug() in src/lib/utils.ts — strip .md OR .mdx.
+  const slug = kind === 'blog'
+    ? basename(file).replace(/-post(\.mdx?)?$/, '').replace(/\.mdx?$/, '')
+    : basename(file).replace(/\.mdx?$/, '');
 
   if (fm.draft === true) { skipped.push([slug, 'draft']); continue; }
   if (fm.autopublish !== true) { skipped.push([slug, 'no autopublish opt-in']); continue; }
@@ -87,17 +106,17 @@ for (const { file, kind, fm } of [...collect('blog', 'blog'), ...collect('projec
   // Honour an explicit time-of-day in the frontmatter `date` so same-day posts
   // don't all collapse to one slot — they drip at their stamped times, in
   // order. Date-only posts (no T..:.. in the value, or midnight UTC) fall back
-  // to the 09:00 AEST broadcast slot. The UTC instant is used as-is; a post
+  // to the 09:00 local (Hobart) broadcast slot. The UTC instant is used as-is; a post
   // stamped 12:00Z fires at 12:00Z (22:00 AEST), not reinterpreted as AEST.
   const hasExplicitTime = dateIsObj
     ? Boolean(fm.date.getUTCHours() || fm.date.getUTCMinutes() || fm.date.getUTCSeconds())
     : /T\d{2}:\d{2}/.test(String(fm.date));
   const scheduledAt = hasExplicitTime
     ? (dateIsObj ? fm.date.toISOString() : String(fm.date))
-    : `${datePart}${BROADCAST_TIME}`;
+    : `${datePart}${BROADCAST_HOUR}${broadcastOffset(datePart)}`;
   const epoch = new Date(scheduledAt).getTime();
   if (!Number.isFinite(epoch)) { skipped.push([slug, 'bad date']); continue; }
-  if (datePart < todayAEST) { skipped.push([slug, 'past date (assumed already broadcast)']); continue; }
+  if (datePart < todayLocal) { skipped.push([slug, 'past date (assumed already broadcast)']); continue; }
 
   const url = `${SITE}/${kind}/${slug}/`;
   const message = kind === 'projects'

@@ -86,6 +86,26 @@ describe('validateEntry — gallery images', () => {
     const { errors } = validateEntry(raw, galleryRules);
     expect(errors).toContain("images[0] missing 'src'");
   });
+
+  it('warns when an image src fails the existence predicate', () => {
+    const raw = `---\ntitle: G\ndate: 2026-01-01\ntags: [a]\nimages:\n  - src: /img/gone.webp\n    alt: a\n---\n\nBody.\n`;
+    const { warnings } = validateEntry(raw, galleryRules, { imageExists: () => false });
+    expect(warnings).toContain('images[0] not found in public/: /img/gone.webp');
+  });
+
+  it('does not run the existence check on remote image srcs or without a predicate', () => {
+    const raw = `---\ntitle: G\ndate: 2026-01-01\ntags: [a]\nimages:\n  - src: https://cdn/x.webp\n    alt: a\n---\n\nBody.\n`;
+    expect(validateEntry(raw, galleryRules, { imageExists: () => false }).warnings).toEqual([]);
+    expect(validateEntry(raw, galleryRules).warnings).toEqual([]);
+  });
+});
+
+describe('validateEntry — CRLF frontmatter', () => {
+  it('detects duplicate keys in a CRLF-delimited frontmatter block', () => {
+    const raw = `---\r\ntitle: One\r\ndescription: d\r\ndate: 2026-01-01\r\ntags: [a]\r\ntitle: Two\r\n---\r\n\r\nBody.\r\n`;
+    const { errors } = validateEntry(raw, blogRules);
+    expect(errors).toContain("duplicate frontmatter key 'title'");
+  });
 });
 
 describe('validateEntry — heroImage existence predicate', () => {

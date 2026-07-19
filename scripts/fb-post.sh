@@ -13,8 +13,9 @@ if [ -f "$REPO_DIR/.env" ]; then
     # Skip comments and blank lines
     [[ "$key" =~ ^[[:space:]]*# ]] && continue
     [[ -z "$key" ]] && continue
-    # Strip inline comments from value
-    value="${value%%#*}"
+    # Strip inline comments only when the # starts a new field (preceded by
+    # whitespace) — a bare '#' inside a value (e.g. a token) must survive.
+    value="$(printf '%s' "$value" | sed -E 's/[[:space:]]+#.*$//')"
     # Strip surrounding whitespace and quotes
     key="${key// /}"
     value="${value#"${value%%[![:space:]]*}"}"
