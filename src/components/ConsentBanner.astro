@@ -15,7 +15,7 @@
     <!-- Compact bar -->
     <div id="consent-compact" class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
       <p class="text-xs text-text-muted">
-        This site uses cookies for analytics (Google Analytics, LinkedIn Insight), advertising (Google AdSense), and
+        This site uses cookies for analytics (Google Analytics), advertising (Google AdSense, LinkedIn Insight), and
         personalisation (visit count, stored locally). No tracking before consent. <a
           href="/privacy/"
           class="underline transition-colors hover:text-accent">Full privacy details</a
@@ -53,6 +53,8 @@
       <p class="mb-3 max-w-2xl text-xs text-text-muted">
         <strong class="text-text">Analytics:</strong> Google Analytics 4 tracks aggregate traffic—what gets read, where readers
         come from. No individual session reconstruction.
+        <strong class="ml-3 text-text">Advertising:</strong> Loads Google AdSense and the LinkedIn Insight Tag—both set
+        third-party cookies used for ads and ad measurement.
         <strong class="ml-3 text-text">Personalisation:</strong> Visit counter stored in your browser's localStorage. Never
         leaves your device.
       </p>
@@ -60,6 +62,10 @@
         <label class="flex cursor-pointer items-center gap-2">
           <input type="checkbox" id="consent-analytics" class="h-3.5 w-3.5 accent-accent" />
           <span class="text-text-muted">Analytics</span>
+        </label>
+        <label class="flex cursor-pointer items-center gap-2">
+          <input type="checkbox" id="consent-advertising" class="h-3.5 w-3.5 accent-accent" />
+          <span class="text-text-muted">Advertising</span>
         </label>
         <label class="flex cursor-pointer items-center gap-2">
           <input type="checkbox" id="consent-personalisation" class="h-3.5 w-3.5 accent-accent" />
@@ -95,13 +101,19 @@
       document.cookie =
         'consent=' +
         (state.analytics ? 'a' : '') +
+        (state.advertising ? 'd' : '') +
         (state.personalisation ? 'p' : '') +
         '; path=/; max-age=31536000; SameSite=Lax';
       window.dispatchEvent(new CustomEvent('consent-updated', { detail: state }));
     }
 
-    function save(analytics, personalisation) {
-      setConsent({ analytics: analytics, personalisation: personalisation, timestamp: Date.now() });
+    function save(analytics, advertising, personalisation) {
+      setConsent({
+        analytics: analytics,
+        advertising: advertising,
+        personalisation: personalisation,
+        timestamp: Date.now(),
+      });
       var banner = document.getElementById('consent-banner');
       if (banner) banner.classList.add('hidden');
     }
@@ -113,7 +125,7 @@
       var existing = getConsent();
       if (!existing) {
         if (navigator.doNotTrack === '1' || window.doNotTrack === '1') {
-          save(false, false);
+          save(false, false, false);
         } else {
           banner.classList.remove('hidden');
         }
@@ -129,9 +141,9 @@
         if (!target) return;
         var id = target.id;
         if (id === 'consent-accept-all') {
-          save(true, true);
+          save(true, true, true);
         } else if (id === 'consent-reject') {
-          save(false, false);
+          save(false, false, false);
         } else if (id === 'consent-manage') {
           var expanded = document.getElementById('consent-expanded');
           if (expanded) {
@@ -140,8 +152,13 @@
           }
         } else if (id === 'consent-accept-selected') {
           var analytics = document.getElementById('consent-analytics');
+          var advertising = document.getElementById('consent-advertising');
           var personalisation = document.getElementById('consent-personalisation');
-          save(analytics ? analytics.checked : false, personalisation ? personalisation.checked : false);
+          save(
+            analytics ? analytics.checked : false,
+            advertising ? advertising.checked : false,
+            personalisation ? personalisation.checked : false,
+          );
         }
       });
     }
