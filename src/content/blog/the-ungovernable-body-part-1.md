@@ -42,4 +42,4 @@ I want to be clear about where this is: mid-production, third screenplay draft, 
 
 Whether that film is any good is the question the rest of this series has to answer. Next up: how the screenplay went from a research dossier to a shot manifest — and what "research is substrate, not dialogue" costs in practice.
 
-[Project page →](/projects/ungovernable-body/)
+[Project page →](/projects/ungovernable-body/) · [Production site →](https://ungovernable-body.wedd.au/)

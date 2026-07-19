@@ -4,6 +4,7 @@ description: 'An agent-operable film studio in a git repo — canon, claims, scr
 tags: ['ai', 'filmmaking', 'agents', 'storytelling', 'generative-video']
 status: 'active'
 featured: false
+url: 'https://ungovernable-body.wedd.au/'
 date: 2026-07-20
 ---
 
@@ -30,4 +31,4 @@ Character consistency is treated as a locking problem: reference assets go throu
 
 Generative video makes it trivially easy to produce footage and very hard to produce drama. This project bets that the answer is the same one software found: constraints as code, decisions as records, validation as a gate, and QA as an adversarial process. The research is substrate, not dialogue. Every scene must cause a change.
 
-It's early days — the short is mid-production, with a full ensemble-pass reshoot underway. A blog series documenting the build starts with [the first post](/blog/the-ungovernable-body-part-1/).
+It's early days — the short is mid-production, with a full ensemble-pass reshoot underway. The production has a public face at [ungovernable-body.wedd.au](https://ungovernable-body.wedd.au/) — itself a compiled artefact of the data spine, where the artefact gallery, process notes, canon, and the labelled first-pass reel live. A blog series documenting the build starts with [the first post](/blog/the-ungovernable-body-part-1/).
