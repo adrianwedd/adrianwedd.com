@@ -1,0 +1,107 @@
+name: Worker Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker/**'
+      - 'worker-csp/**'
+      - 'worker-mta-sts/**'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Which worker(s) to deploy
+        type: choice
+        default: all
+        options: [all, social, csp, mta-sts]
+      mode:
+        description: deploy the target, or run a read-only drift check
+        type: choice
+        default: deploy
+        options: [deploy, drift-only]
+  schedule:
+    - cron: '0 15 * * *' # ~01:00 AEST, offset from the e2e nightly
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'deploy') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+      any: ${{ steps.select.outputs.any }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+      - id: select
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          DISPATCH_TARGET: ${{ github.event.inputs.target }}
+        run: node scripts/worker-targets.mjs >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: detect
+    if: ${{ needs.detect.outputs.any == 'true' }}
+    environment: worker-production
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        worker: ${{ fromJSON(needs.detect.outputs.matrix) }}
+    concurrency:
+      group: worker-deploy-${{ matrix.worker.key }}
+      cancel-in-progress: false
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+      - name: Install pinned wrangler toolchain
+        run: |
+          npm --prefix worker ci
+          echo "WRANGLER_BIN=${GITHUB_WORKSPACE}/worker/node_modules/.bin/wrangler" >> "$GITHUB_ENV"
+      - name: Deploy, verify, rollback
+        env:
+          WORKER_KEY: ${{ matrix.worker.key }}
+          WORKER_DIR: ${{ matrix.worker.dir }}
+          WORKER_NAME: ${{ matrix.worker.name }}
+          GIT_SHA: ${{ github.sha }}
+        run: bash scripts/worker-deploy-step.sh
+
+  drift-check:
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'drift-only') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_READONLY }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+      - name: Install pinned wrangler toolchain
+        run: |
+          npm --prefix worker ci
+          echo "WRANGLER_BIN=${GITHUB_WORKSPACE}/worker/node_modules/.bin/wrangler" >> "$GITHUB_ENV"
+      - run: node scripts/worker-drift.mjs
