@@ -5,6 +5,10 @@ tags: ['ai', 'filmmaking', 'agents', 'storytelling', 'generative-video']
 status: 'active'
 featured: false
 url: 'https://ungovernable-body.wedd.au/'
+heroImage: '/notebook-assets/ungovernable-body/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ungovernable-body/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/ungovernable-body/video.mp4'
+audioDuration: '20:02'
 date: 2026-07-20
 ---
 
