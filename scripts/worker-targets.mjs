@@ -8,6 +8,9 @@ export const WORKERS = {
   'mta-sts': { key: 'mta-sts', dir: 'worker-mta-sts', name: 'adrianwedd-mta-sts', hasPkg: false },
 };
 
+/**
+ * @param {{ changedFiles?: string[], dispatchTarget?: string | null }} [opts]
+ */
 export function selectTargets({ changedFiles = [], dispatchTarget = null } = {}) {
   if (dispatchTarget === 'all') return Object.values(WORKERS);
   if (dispatchTarget) return WORKERS[dispatchTarget] ? [WORKERS[dispatchTarget]] : [];
