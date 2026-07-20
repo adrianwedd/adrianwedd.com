@@ -25,7 +25,11 @@ async function getFileSize(audioUrl: string): Promise<number> {
 export async function GET(context: APIContext) {
   const [episodes, blogs, projects] = await Promise.all([
     getCollection('audio').then((all) =>
-      all.filter((e) => !e.data.draft).sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+      all
+        // Podcast directories (Spotify, Apple) reject feeds containing video
+        // enclosures. Video-only entries live on the site, not in the feed.
+        .filter((e) => !e.data.draft && !!e.data.audioUrl)
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
     ),
     getCollection('blog'),
     getCollection('projects'),
@@ -43,10 +47,11 @@ export async function GET(context: APIContext) {
 
   const items = await Promise.all(
     episodes.map(async (ep) => {
-      const mediaUrl = ep.data.audioUrl ?? ep.data.videoUrl ?? '';
-      const isVideo = !ep.data.audioUrl && !!ep.data.videoUrl;
+      const mediaUrl = ep.data.audioUrl!;
       const enclosureUrl = mediaUrl.startsWith('http') ? mediaUrl : `${site}${mediaUrl}`;
-      const enclosureType = isVideo ? 'video/mp4' : 'audio/mpeg';
+      // .m4a is AAC in an MP4 container — mislabelling it audio/mpeg trips
+      // strict directory validators.
+      const enclosureType = /\.m4a(\?|$)/i.test(mediaUrl) ? 'audio/mp4' : 'audio/mpeg';
       const fileSize = await getFileSize(mediaUrl);
       // keep legacy binding for existing references below
       const audioUrl = enclosureUrl;
