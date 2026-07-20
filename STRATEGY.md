@@ -1,7 +1,14 @@
 # STRATEGY.md
 
-Read this before any task. It overrides your judgment. Entries are labeled
-OBSERVED (explicit in code/history) or INFERRED (probable; evidence stated).
+Repo-specific context for work in `adrianwedd.com`, maintained by the repo
+owner. Read it before any task here: it records constraints that aren't
+derivable from the code, and it takes precedence over general instincts about
+how a site "should" be built. It does not override the user's instructions, and
+it does not extend to other repositories. Entries are labeled OBSERVED
+(explicit in code/history) or INFERRED (probable; evidence stated).
+
+If something here conflicts with what you observe in the code, report the drift
+rather than following it blindly — parts go stale (see Section 4).
 
 ## 1. INTENT
 

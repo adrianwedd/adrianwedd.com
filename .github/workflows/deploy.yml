@@ -37,14 +37,18 @@ jobs:
         run: node scripts/validate-content.js
       - name: Audit dependencies
         run: npm audit --audit-level=high --omit=dev
-      # Deploy-only: needs repo secrets (absent on fork PRs) and is deploy input,
-      # not validation. PR builds fall back to default analytics + CV data.
+      # Runs on PRs too. public/api/analytics.json is gitignored, so skipping this
+      # left PR builds with no file at all and an analytics page that 404s on
+      # fetch. Without secrets the script writes mock data flagged `_mock: true`,
+      # which the dashboard labels as illustrative.
       - name: Fetch GA4 analytics data
-        if: github.event_name != 'pull_request'
         run: node scripts/fetch-ga4-data.mjs
         env:
-          GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
-          GA4_SERVICE_ACCOUNT_KEY: ${{ secrets.GA4_SERVICE_ACCOUNT_KEY }}
+          # Credentials are withheld on pull requests, so PR builds always take
+          # the mock path. The step still runs, so the file exists and the page
+          # renders; only main-branch deploys carry real traffic figures.
+          GA4_PROPERTY_ID: ${{ github.event_name != 'pull_request' && vars.GA4_PROPERTY_ID || '' }}
+          GA4_SERVICE_ACCOUNT_KEY: ${{ github.event_name != 'pull_request' && secrets.GA4_SERVICE_ACCOUNT_KEY || '' }}
       - name: Checkout CV data
         if: github.event_name != 'pull_request'
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0

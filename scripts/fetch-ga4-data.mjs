@@ -62,8 +62,12 @@ async function fetchGA4Data(credentials, propertyId) {
   const startDate = thirtyDaysAgo.toISOString().split('T')[0];
   const endDate = now.toISOString().split('T')[0];
 
+  // Trend charts need a longer window than the 30-day snapshot metrics.
+  const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+  const trendStartDate = ninetyDaysAgo.toISOString().split('T')[0];
+
   // Run all reports in parallel
-  const [overview, topPages, geography, devices, referrers] = await Promise.all([
+  const [overview, topPages, geography, devices, referrers, trend] = await Promise.all([
     // Overview metrics
     client.runReport({
       property,
@@ -117,6 +121,21 @@ async function fetchGA4Data(credentials, propertyId) {
       metrics: [{ name: 'totalUsers' }],
       orderBys: [{ metric: { metricName: 'totalUsers' }, desc: true }],
       limit: 5,
+    }),
+
+    // Daily time series — the only query with a date dimension, and the sole
+    // source for the trend charts. Ascending so the series plots left-to-right.
+    client.runReport({
+      property,
+      dateRanges: [{ startDate: trendStartDate, endDate }],
+      dimensions: [{ name: 'date' }],
+      metrics: [{ name: 'screenPageViews' }, { name: 'totalUsers' }, { name: 'engagedSessions' }],
+      orderBys: [{ dimension: { dimensionName: 'date' } }],
+      // Without this, GA4 drops rows whose metrics are all zero. The chart plots
+      // rows as consecutive days, so a zero-traffic day would silently close the
+      // gap and inflate the daily average.
+      keepEmptyRows: true,
+      limit: 100,
     }),
   ]);
 
@@ -194,8 +213,39 @@ async function fetchGA4Data(credentials, propertyId) {
   const eventCount = parseInt(overviewRow?.metricValues?.[5]?.value || '0');
   const engagedSessions = parseInt(overviewRow?.metricValues?.[4]?.value || '0');
 
+  // --- Parse daily trend ---
+  // GA4 returns the date dimension as YYYYMMDD; normalise to ISO so the client
+  // never has to parse a bare 8-digit string.
+  const returnedByDate = new Map(
+    (trend[0]?.rows || []).map((row) => {
+      const raw = row.dimensionValues?.[0]?.value || '';
+      const date = `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
+      return [
+        date,
+        {
+          date,
+          pageviews: parseInt(row.metricValues?.[0]?.value || '0'),
+          users: parseInt(row.metricValues?.[1]?.value || '0'),
+          engagedSessions: parseInt(row.metricValues?.[2]?.value || '0'),
+        },
+      ];
+    }),
+  );
+
+  // Zero-fill every calendar day in the range. keepEmptyRows keeps all-zero rows
+  // but cannot invent a row for a date GA4 never recorded, and the chart spaces
+  // points by array index — so a missing day would silently close the gap, shift
+  // its neighbours together and shrink the daily-average denominator.
+  const trendSeries = [];
+  for (let d = new Date(`${trendStartDate}T00:00:00Z`); ; d.setUTCDate(d.getUTCDate() + 1)) {
+    const date = d.toISOString().split('T')[0];
+    trendSeries.push(returnedByDate.get(date) ?? { date, pageviews: 0, users: 0, engagedSessions: 0 });
+    if (date >= endDate) break;
+  }
+
   return {
     period: { start: startDate, end: endDate },
+    trend: { start: trendStartDate, end: endDate, series: trendSeries },
     overview: {
       totalPageviews,
       totalUsers,
@@ -208,10 +258,13 @@ async function fetchGA4Data(credentials, propertyId) {
     devices: deviceMap,
     referrers: referrerData,
     engagement: {
-      scrollDepth: { avg: 0, distribution: {} },
+      // The site emits scroll_depth, audio_play and gallery_view events, but this
+      // script does not query them yet. Emitting 0 published a false measurement
+      // as fact; null means "not measured" and the dashboard renders it as such.
+      scrollDepth: { avg: null, distribution: {} },
       avgSession: { avg: Math.round(avgSessionDuration), distribution: {} },
-      audioPlays: 0,
-      galleryViews: 0,
+      audioPlays: null,
+      galleryViews: null,
     },
   };
 }
@@ -234,11 +287,34 @@ function classifyReferrer(source) {
 function getMockData() {
   const now = new Date();
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+
+  // Deterministic (no Math.random) so repeated builds don't churn the committed
+  // file. Shaped, not realistic — the dashboard flags the whole payload as mock.
+  // 91 points: the range is inclusive of both today and the day 90 days back,
+  // so a 90-length series stopped at yesterday while declaring `end: today`.
+  const mockSeries = Array.from({ length: 91 }, (_, i) => {
+    const day = new Date(ninetyDaysAgo.getTime() + i * 24 * 60 * 60 * 1000);
+    const weekly = Math.sin((i / 7) * Math.PI * 2) * 18;
+    const growth = i * 1.4;
+    const pageviews = Math.max(12, Math.round(90 + growth + weekly));
+    return {
+      date: day.toISOString().split('T')[0],
+      pageviews,
+      users: Math.round(pageviews * 0.42),
+      engagedSessions: Math.round(pageviews * 0.31),
+    };
+  });
 
   return {
     period: {
       start: thirtyDaysAgo.toISOString().split('T')[0],
       end: now.toISOString().split('T')[0],
+    },
+    trend: {
+      start: ninetyDaysAgo.toISOString().split('T')[0],
+      end: now.toISOString().split('T')[0],
+      series: mockSeries,
     },
     overview: {
       totalPageviews: 12847,
@@ -277,10 +353,13 @@ function getMockData() {
       { source: 'linkedin.com', type: 'social', users: 295 },
     ],
     engagement: {
-      scrollDepth: { avg: 67.3, distribution: { '25': 89, '50': 72, '75': 54, '100': 38 } },
+      // null here too, matching the live path — these three aren't queried from
+      // GA4 at all, so inventing figures for them would misrepresent what the
+      // page can actually report, mock banner or not.
+      scrollDepth: { avg: null, distribution: {} },
       avgSession: { avg: 142, distribution: { '30s': 23, '1m': 41, '2m': 28, '5m': 8 } },
-      audioPlays: 147,
-      galleryViews: 284,
+      audioPlays: null,
+      galleryViews: null,
     },
     _mock: true,
   };

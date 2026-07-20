@@ -60,6 +60,10 @@ export default defineConfig({
     sitemap({
       // Tag pages (blog/audio/gallery/projects + their /N/ children) are all
       // noindex; keeping them out of the sitemap removes a conflicting signal.
+      // Paginated indexes (/blog/2/, ...) deliberately stay IN. They're
+      // indexable and self-canonical, and Google advises against noindexing
+      // pagination — so excluding them from the sitemap while serving them as
+      // indexable would send two contradictory signals.
       filter: (page) => !new URL(page).pathname.includes('/tag/'),
       serialize(item) {
         const pathname = new URL(item.url).pathname;

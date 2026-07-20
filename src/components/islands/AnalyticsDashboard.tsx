@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'preact/hooks';
+import TrendChart, { type TrendPoint } from './TrendChart';
 
 type AnalyticsData = {
   period: { start: string; end: string };
+  /** Optional: absent from payloads written before the trend query existed. */
+  trend?: { start: string; end: string; series: TrendPoint[] };
   overview: {
     totalPageviews: number;
     totalUsers: number;
@@ -34,10 +37,12 @@ type AnalyticsData = {
     users: number;
   }>;
   engagement: {
-    scrollDepth: { avg: number; distribution: Record<string, number> };
+    // null means the metric isn't queried from GA4 yet — rendered as "Not
+    // measured" rather than a zero that would read as a real measurement.
+    scrollDepth: { avg: number | null; distribution: Record<string, number> };
     avgSession: { avg: number; distribution: Record<string, number> };
-    audioPlays: number;
-    galleryViews: number;
+    audioPlays: number | null;
+    galleryViews: number | null;
   };
   _mock?: boolean;
 };
@@ -84,7 +89,10 @@ export default function AnalyticsDashboard() {
 
       {/* Period indicator */}
       <div class="text-text-muted text-sm">
-        Data from {new Date(data.period.start).toLocaleDateString()} to {new Date(data.period.end).toLocaleDateString()}
+        {/* Append local midnight — bare 'YYYY-MM-DD' parses as UTC and renders a
+            day early for viewers in negative offsets. */}
+        Data from {new Date(`${data.period.start}T00:00:00`).toLocaleDateString()} to{' '}
+        {new Date(`${data.period.end}T00:00:00`).toLocaleDateString()}
       </div>
 
       {/* Overview metrics */}
@@ -97,6 +105,18 @@ export default function AnalyticsDashboard() {
           <MetricCard label="Bounce Rate" value={`${data.overview.bounceRate.toFixed(1)}%`} />
         </div>
       </section>
+
+      {/* Historical trend — only rendered when the payload carries a series */}
+      {data.trend && data.trend.series.length > 1 && (
+        <section>
+          <h2 class="mb-1 text-2xl font-bold">Trend</h2>
+          <p class="text-text-muted mb-4 text-sm">
+            Daily traffic over the last {data.trend.series.length} days. The heavier line is a 7-day moving average; the
+            lighter one is the raw daily count.
+          </p>
+          <TrendChart series={data.trend.series} />
+        </section>
+      )}
 
       {/* Top content */}
       <section>
@@ -190,21 +210,28 @@ export default function AnalyticsDashboard() {
       <section>
         <h2 class="mb-4 text-2xl font-bold">Engagement</h2>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Avg. Scroll Depth" value={`${data.engagement.scrollDepth.avg.toFixed(0)}%`} />
+          <MetricCard
+            label="Avg. Scroll Depth"
+            value={data.engagement.scrollDepth.avg == null ? null : `${data.engagement.scrollDepth.avg.toFixed(0)}%`}
+          />
           <MetricCard label="Avg. Session" value={formatDuration(data.engagement.avgSession?.avg ?? 0)} />
-          <MetricCard label="Audio Plays" value={data.engagement.audioPlays.toLocaleString()} />
-          <MetricCard label="Gallery Views" value={data.engagement.galleryViews.toLocaleString()} />
+          <MetricCard label="Audio Plays" value={data.engagement.audioPlays?.toLocaleString() ?? null} />
+          <MetricCard label="Gallery Views" value={data.engagement.galleryViews?.toLocaleString() ?? null} />
         </div>
       </section>
     </div>
   );
 }
 
-function MetricCard({ label, value }: { label: string; value: string }) {
+function MetricCard({ label, value }: { label: string; value: string | null }) {
   return (
     <div class="border-border bg-surface-alt rounded border p-4">
       <div class="text-text-muted mb-1 text-sm">{label}</div>
-      <div class="text-accent text-3xl font-bold">{value}</div>
+      {value == null ? (
+        <div class="text-text-muted text-lg">Not measured</div>
+      ) : (
+        <div class="text-accent text-3xl font-bold">{value}</div>
+      )}
     </div>
   );
 }
@@ -224,8 +251,9 @@ function DeviceBar({ label, value }: { label: string; value: number }) {
 }
 
 function formatDuration(seconds: number): string {
-  if (seconds < 60) return `${Math.round(seconds)}s`;
-  const minutes = Math.floor(seconds / 60);
-  const secs = Math.round(seconds % 60);
-  return `${minutes}m ${secs}s`;
+  // Round once, up front. Rounding minutes and seconds separately produced
+  // "1m 60s" for 119.6 — floor() took the minute before round() carried it.
+  const rounded = Math.round(seconds);
+  if (rounded < 60) return `${rounded}s`;
+  return `${Math.floor(rounded / 60)}m ${rounded % 60}s`;
 }

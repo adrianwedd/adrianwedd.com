@@ -10,8 +10,6 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-r
 youtubeUrl: 'https://www.youtube.com/watch?v=dVD75vZg7fw'
 ---
 
-# Footnotes at the Edge of Reality
-
 A dialogue between physics, language, and what we claim to know.
 
 ## The Poem

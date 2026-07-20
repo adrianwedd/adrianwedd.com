@@ -12,11 +12,11 @@ const totalWords = blogPosts.reduce((sum, p) => sum + (p.body ? p.body.split(/\s
 const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
 ---
 
-<BaseLayout title="Now" description="What I'm focused on right now. Updated May 2026." heroAnimation="orbit">
+<BaseLayout title="Now" description="What I'm focused on right now. Updated July 2026." heroAnimation="orbit">
   <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
     <div class="relative z-10 mx-auto max-w-3xl">
       <h1 class="text-text">Now</h1>
-      <p class="text-text-muted mt-2">What I'm focused on right now. Updated May 2026.</p>
+      <p class="text-text-muted mt-2">What I'm focused on right now. Updated July 2026.</p>
     </div>
   </section>
 
@@ -38,11 +38,12 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
         <h2 class="text-text">Focus</h2>
         <p>
           Multi-agent AI safety and adversarial evaluation. The <a href="/projects/failure-first/">Failure First</a> research
-          — 257 models, 142k prompts, 346 attack techniques as of May 2026 — keeps expanding. Recent writing covers
-          <a href="/blog/compute-is-not-governance/">why compute scaling isn't a governance substitute</a>,
-          <a href="/blog/moral-formation-isnt-enough/">why moral formation alone can't align AI</a>,
-          <a href="/blog/robot-dogs-security-nightmare/">robot dogs as a live security vulnerability</a>, and
-          <a href="/blog/glasswing-buried-number/">what safety benchmarks are actually measuring</a>.
+          keeps expanding; the last figures I published for it — 257 models, 142k prompts, 346 attack techniques — were current
+          as of May 2026 and the recount is overdue. Alongside it, a run of work on what happens when you hand agents a whole
+          production pipeline rather than a single task:
+          <a href="/projects/ungovernable-body/">The Ungovernable Body</a> is an agent-operable film studio in a git repo,
+          written up as a two-part production diary starting with
+          <a href="/blog/the-ungovernable-body-part-1/">whether that can work without flattening the politics</a>.
         </p>
       </section>
 
@@ -69,6 +70,18 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
           </li>
           <li>
             <a href="/projects/personal-agentic-operating-system/">PAOS</a> — a local-first agentic OS that runs on your hardware
+          </li>
+          <li>
+            <a href="/projects/dead-air/">Dead Air</a> — a voice-agent failure eval harness that models endpointing, barge-in,
+            latency and mishearing before production does
+          </li>
+          <li>
+            <a href="/projects/clawdcraft/">ClawdCraft</a> — Claude Code living in a Minecraft server as a crab-skinned allay
+            kids talk to in chat, with the boundaries that matter enforced in code
+          </li>
+          <li>
+            <a href="/projects/understory/">Understory</a> — a proposal-rigor lab stress-testing stacked low-capital income
+            streams on a Tasmanian conservation parcel
           </li>
           <li>
             Homelab — Frigate NVR with Hailo-8L AI detection on a Pi 5, Home Assistant automations, self-hosted
