@@ -99,3 +99,23 @@ export function heroAltText(opts: {
   // (alt="") so it's skipped rather than announced redundantly.
   return '';
 }
+
+/**
+ * True when `src` is an image astro:assets cannot process — a path into
+ * `public/`, or a remote URL.
+ *
+ * `astro:assets` only resizes/reformats images it imports at build time. For
+ * anything else it emits the original file verbatim — but still honours a
+ * declared `widths`/`formats`, producing a `<source type="image/avif">` that
+ * actually serves WebP bytes and a srcset whose candidates are all the same
+ * file. Callers use this to omit those props so the markup stays truthful.
+ *
+ * Remote URLs count for the same reason public/ paths do: they are equally
+ * unprocessable, so declaring formats for them would be equally dishonest. The
+ * content schema does not currently allow a remote `heroImage`, but treating it
+ * correctly costs nothing and avoids a silent regression if that changes.
+ */
+export function isPublicPath(src: string | undefined): boolean {
+  if (typeof src !== 'string') return false;
+  return src.startsWith('/') || /^https?:\/\//i.test(src);
+}

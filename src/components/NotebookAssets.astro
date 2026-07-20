@@ -2,6 +2,7 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { Picture } from 'astro:assets';
+import { isPublicPath } from '../lib/utils';
 import MindMap from './islands/MindMap.tsx';
 import Quiz from './islands/Quiz.tsx';
 import Flashcards from './islands/Flashcards.tsx';
@@ -72,8 +73,7 @@ const captionsUrl = captionsTrack(videoUrl);
               src={infographic}
               width={768}
               height={1376}
-              widths={[384, 768, 1152]}
-              formats={['avif', 'webp']}
+              {...(isPublicPath(infographic) ? {} : { widths: [384, 768, 1152], formats: ['avif', 'webp'] as const })}
               alt={`Infographic for ${title}`}
               class="hover:border-accent/50 border-border w-full cursor-zoom-in rounded-lg border transition-colors"
               loading="lazy"

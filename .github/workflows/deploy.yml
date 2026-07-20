@@ -169,6 +169,9 @@ jobs:
         # Catches same-origin 404s that Lychee skips (it excludes our own
         # domain to avoid pre-deploy 404s on not-yet-published pages).
         run: npm run check:links
+
+      - name: Check og:image references resolve
+        run: npm run check:og
       - name: Run site tests
         run: bash scripts/test-site.sh
       - name: Upload Pages artifact
