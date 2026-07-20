@@ -1,34 +1,8 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import { slug } from '../../lib/utils';
-import { statSync } from 'node:fs';
-import { join } from 'node:path';
+import { getFileSize } from '../../lib/enclosure-size';
 import type { APIContext } from 'astro';
-
-/**
- * Byte size for a cover-image enclosure. Throws rather than returning 0: a
- * zero-length enclosure is a silently wrong feed, and failing the build is the
- * only way that gets noticed. See the fuller note in lib/podcast-feed.ts.
- *
- * Gallery covers are all local today. A remote one would need the async HEAD
- * path from podcast-feed.ts, so it throws here instead of quietly emitting 0.
- */
-function getFileSize(path: string): number {
-  if (path.startsWith('http')) {
-    throw new Error(
-      `Remote gallery coverImage not supported: ${path}. Enclosure length needs a ` +
-        `HEAD request — reuse getFileSize() from lib/podcast-feed.ts if covers move to the CDN.`,
-    );
-  }
-  const filePath = join(process.cwd(), 'public', path);
-  try {
-    return statSync(filePath).size;
-  } catch (err) {
-    throw new Error(`Gallery coverImage missing on disk: ${path} (looked in ${filePath})`, {
-      cause: err,
-    });
-  }
-}
 
 function getMimeType(path: string): string {
   const ext = path.split('.').pop()?.toLowerCase();
@@ -49,21 +23,28 @@ export async function GET(context: APIContext) {
     title: 'Adrian Wedd — Gallery',
     description: 'Visual thinking—process documentation, experiments, and patterns.',
     site: context.site!.toString(),
-    items: collections.map((collection) => ({
-      title: collection.data.title,
-      pubDate: collection.data.date,
-      description: collection.data.description || `Gallery: ${collection.data.title}`,
-      link: `/gallery/${slug(collection.id)}/`,
-      categories: collection.data.tags,
-      ...(collection.data.coverImage
-        ? {
-            enclosure: {
-              url: `${site}${collection.data.coverImage}`,
-              type: getMimeType(collection.data.coverImage),
-              length: getFileSize(collection.data.coverImage),
-            },
-          }
-        : {}),
-    })),
+    // Sizes resolve before rss() because enclosure/@length must be a number,
+    // and getFileSize is async for the CDN case. Shared with the podcast feeds
+    // so a cover image that ever moves to the CDN just works.
+    items: await Promise.all(
+      collections.map(async (collection) => ({
+        title: collection.data.title,
+        pubDate: collection.data.date,
+        description: collection.data.description || `Gallery: ${collection.data.title}`,
+        link: `/gallery/${slug(collection.id)}/`,
+        categories: collection.data.tags,
+        ...(collection.data.coverImage
+          ? {
+              enclosure: {
+                url: collection.data.coverImage.startsWith('http')
+                  ? collection.data.coverImage
+                  : `${site}${collection.data.coverImage}`,
+                type: getMimeType(collection.data.coverImage),
+                length: await getFileSize(collection.data.coverImage),
+              },
+            }
+          : {}),
+      })),
+    ),
   });
 }
