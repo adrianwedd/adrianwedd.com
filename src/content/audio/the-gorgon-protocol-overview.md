@@ -9,6 +9,6 @@ relatedPost: 'the-gorgon-protocol'
 relatedProject: 'ungovernable-body'
 ---
 
-A NotebookLM deep dive on this chapter of *The Ungovernable Body*.
+A NotebookLM deep dive on this chapter of _The Ungovernable Body_.
 
 [Read the full essay →](/blog/the-gorgon-protocol/)
