@@ -47,6 +47,7 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
   description={episode.data.description}
   image={ogImage}
   type="article"
+  siteNameInTitle={false}
   publishedDate={episode.data.date.toISOString()}
   tags={episode.data.tags}
 >

@@ -10,6 +10,24 @@ interface Props {
   publishedDate?: string;
   tags?: string[];
   noindex?: boolean;
+  /**
+   * Append ' — Adrian Wedd' to the page title. Default true.
+   *
+   * Applies to <title>, og:title and twitter:title together — they all derive
+   * from fullTitle. Dropping it from the social tags is intended: og:site_name
+   * already carries the attribution there, so the suffix is pure duplication
+   * on a card.
+   *
+   * Set false on content detail pages. The suffix is 14 characters spent on a
+   * word every visitor can already see in the domain; Google truncates title
+   * links by pixel width (no fixed character limit), so shorter titles survive
+   * intact on more screens. Attribution is not lost — og:site_name, the Person
+   * schema and the JSON-LD author/publisher nodes all remain.
+   *
+   * Index pages keep it: 'Blog' or 'Gallery' standing alone is ambiguous in a
+   * tab strip or a SERP.
+   */
+  siteNameInTitle?: boolean;
 }
 
 const {
@@ -23,12 +41,13 @@ const {
   publishedDate,
   tags,
   noindex,
+  siteNameInTitle = true,
 } = Astro.props;
 
 const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const canonicalUrl = new URL(pathname, Astro.site);
 const ogImageUrl = new URL(image, Astro.site);
-const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
+const fullTitle = title === 'Adrian Wedd' || !siteNameInTitle ? title : `${title} — Adrian Wedd`;
 ---
 
 <meta charset="utf-8" />

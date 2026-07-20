@@ -20,6 +20,8 @@ interface Props {
   publishedDate?: string;
   tags?: string[];
   noindex?: boolean;
+  /** See SEOHead — omit the ' — Adrian Wedd' title suffix on detail pages. */
+  siteNameInTitle?: boolean;
   preloadImage?: string;
   heroAnimation?: string;
 }
