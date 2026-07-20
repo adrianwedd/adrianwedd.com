@@ -10,6 +10,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ungovernable-body/audio.m4
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/ungovernable-body/video.mp4'
 audioDuration: '20:02'
 date: 2026-07-20
+youtubeUrl: 'https://www.youtube.com/watch?v=CuGisuOgcaE'
 ---
 
 _The Ungovernable Body_ is a near-future feminist techno-thriller about biological governance, unreadability, grief, ageing, and the right to finitude. The current production target is a roughly 20–22 minute proof-of-concept short, working title **The Right to Rot**: Elara Vance, architect of a biometric legibility system, has her own menopause classified as catastrophic asset depreciation — and must erase the compliant digital replica replacing her, becoming unreadable to survive.

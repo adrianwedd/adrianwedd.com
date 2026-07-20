@@ -134,6 +134,14 @@ export async function buildPodcastFeed(context: APIContext, options: FeedOptions
     <itunes:explicit>false</itunes:explicit>
     <itunes:image href="${podcastCover}" />
     <podcast:locked>no</podcast:locked>
+    <!-- One podcast, two feeds: /audio/feed.xml (full, incl. video enclosures)
+         and /audio/podcast.xml (audio-only, for Spotify, which rejects any feed
+         carrying a video enclosure). Per the podcast-namespace spec a guid is
+         assigned to a PODCAST once and follows it for life regardless of feed
+         URL — so both feeds legitimately share this one, which is what tells
+         directories they're the same show rather than a duplicate.
+         UUIDv5(ns=ead4c236-bf58-58c6-a2c6-a6b28d128cb6, "adrianwedd.com/audio/feed.xml"). -->
+    <podcast:guid>a1c0ff75-75ba-500a-8a4c-af2a0b427239</podcast:guid>
     ${itemsXml}
   </channel>
 </rss>`;

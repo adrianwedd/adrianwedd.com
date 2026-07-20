@@ -209,6 +209,20 @@ describe('worker fetch handler', () => {
     const enforcedNonce = enforced.match(/'nonce-([^']+)'/)![1];
     const reportNonce = reportOnly!.match(/'nonce-([^']+)'/)![1];
     expect(reportNonce).toBe(enforcedNonce);
+
+    // upgrade-insecure-requests is ignored in a report-only policy and makes
+    // browsers log a console error on every response — enforced only.
+    expect(enforced).toMatch(/upgrade-insecure-requests/);
+    expect(reportOnly).not.toMatch(/upgrade-insecure-requests/);
+
+    // ...but the mirror must still match on every fetch directive, or it stops
+    // reporting what the enforced policy actually blocks.
+    const fetchDirectives = (policy: string) =>
+      policy
+        .split('; ')
+        .filter((d) => !/^(upgrade-insecure-requests|report-to|report-uri)\b/.test(d))
+        .sort();
+    expect(fetchDirectives(reportOnly!)).toEqual(fetchDirectives(enforced));
   });
 
   it("replaces any existing nonce so all scripts share this request's nonce", async () => {

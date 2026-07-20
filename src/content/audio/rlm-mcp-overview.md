@@ -1,5 +1,5 @@
 ---
-title: 'Beyond Context Windows'
+title: 'Inside rlm-mcp: Searching Million-Character Documents'
 description: 'Audio overview of rlm-mcp — an MCP server for processing million-character documents with BM25 search and provenance.'
 date: 2025-11-01
 tags: ['notebooklm', 'ai', 'mcp', 'tools']

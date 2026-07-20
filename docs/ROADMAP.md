@@ -196,7 +196,7 @@ All 6 issues closed. [Milestone](https://github.com/adrianwedd/adrianwedd.com/mi
 
 - ✅ [#116](https://github.com/adrianwedd/adrianwedd.com/issues/116) Web app manifest and PWA metadata
 - ✅ [#117](https://github.com/adrianwedd/adrianwedd.com/issues/117) Favicon variants: apple-touch-icon and PNG sizes
-- ✅ [#118](https://github.com/adrianwedd/adrianwedd.com/issues/118) Security headers via _headers file
+- ✅ [#118](https://github.com/adrianwedd/adrianwedd.com/issues/118) Security headers — originally a `_headers` file; that file used Cloudflare Pages syntax and was inert on GitHub Pages, so it was removed in favour of `worker-csp/`, which sets the live headers at the edge
 - ✅ [#119](https://github.com/adrianwedd/adrianwedd.com/issues/119) Projects RSS feed
 - ✅ [#120](https://github.com/adrianwedd/adrianwedd.com/issues/120) Gallery RSS feed
 - ✅ [#121](https://github.com/adrianwedd/adrianwedd.com/issues/121) Combined RSS feed aggregating all content types

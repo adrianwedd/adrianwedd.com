@@ -10,6 +10,7 @@ audioDuration: '19:29'
 status: 'experiment'
 featured: false
 date: 2026-07-17
+youtubeUrl: 'https://www.youtube.com/watch?v=VaCL_kUzrsA'
 ---
 
 Understory is a rigor lab, not a venture. It stress-tests whether a set of stacked, low-startup-capital income streams could work on a 69-hectare Landscape Conservation Zone parcel at Cygnet, in southern Tasmania. There is no business here and nothing is being offered — it's a workspace for thinking about an idea properly before anyone is asked to believe in it.

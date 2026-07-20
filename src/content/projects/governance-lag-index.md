@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/governance-lag-index/audio
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/governance-lag-index/video.mp4'
 heroImage: '/notebook-assets/governance-lag-index/infographic.webp'
 draft: false
+youtubeUrl: 'https://www.youtube.com/watch?v=HiY8aPw8WLw'
 ---
 
 Every safety regime we trust was written in arrears. Aviation grounded the 737 MAX about four and a half months after the first MCAS crash. The Nuclear Regulatory Commission rewrote its rulebook within about a year of Three Mile Island. Even the slow ones eventually close: Vioxx took four years to pull and another three before the FDA Amendments Act gave the agency teeth; the 2008 crash took twenty-two months to reach Dodd-Frank. The lag is real — but in mature high-stakes industries it is _finite_, typically one to three years from a documented failure to an enforceable rule (the slowest cases, like Vioxx, run longer but still close).
