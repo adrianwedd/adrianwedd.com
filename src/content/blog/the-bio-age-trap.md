@@ -5,6 +5,7 @@ date: 2026-07-24
 tags: ['biopolitics', 'insurance', 'algorithms', 'surveillance', 'ethics']
 heroImage: '/notebook-assets/the-bio-age-trap/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bio-age-trap/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bio-age-trap/video.mp4'
 audioDuration: '21:25'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 2

@@ -1,6 +1,6 @@
 ---
 title: 'The Data Pyre — Audio Overview'
-description: 'Audio overview of The Data Pyre.'
+description: 'Deletion as ritual rather than accident. On ceremonial erasure, controlled burns, and what it would mean to grieve data properly.'
 date: 2026-08-02
 tags: ['notebooklm', 'deletion', 'ritual', 'data', 'mortality', 'ethics']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-data-pyre/audio.m4a'

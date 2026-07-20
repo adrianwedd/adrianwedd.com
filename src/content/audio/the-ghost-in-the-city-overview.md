@@ -1,6 +1,6 @@
 ---
 title: 'The Ghost in the City — Audio Overview'
-description: 'Audio overview of The Ghost in the City.'
+description: 'Moving through urban space that is always counting you. On transit, sensors, and the vanishing possibility of being an anonymous body in public.'
 date: 2026-07-26
 tags: ['notebooklm', 'surveillance', 'cities', 'biopolitics', 'ai', 'autonomy']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ghost-in-the-city/audio.m4a'

@@ -5,6 +5,7 @@ date: 2026-07-23
 tags: ['surveillance', 'biopolitics', 'privacy', 'autonomy', 'technology']
 heroImage: '/notebook-assets/the-glass-cage/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-glass-cage/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-glass-cage/video.mp4'
 audioDuration: '20:32'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 1

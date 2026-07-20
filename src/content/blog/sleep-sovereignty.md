@@ -5,6 +5,7 @@ date: 2026-07-29
 tags: ['sleep', 'biopolitics', 'wearables', 'autonomy', 'technology']
 heroImage: '/notebook-assets/sleep-sovereignty/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/sleep-sovereignty/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/sleep-sovereignty/video.mp4'
 audioDuration: '23:46'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 7

@@ -40,14 +40,18 @@ for slug in "${SLUGS[@]}"; do
       read -r ch br <<<"$(ffprobe -v error -select_streams a:0 \
         -show_entries stream=channels:format=bit_rate -of csv=p=0 "$a" 2>/dev/null | tr '\n' ' ')"
       if [[ -z "${br:-}" || -z "${ch:-}" ]]; then
+        # Fall through rather than `continue` — skipping to the next slug would
+        # abandon this one's video and infographic checks and drop its row from
+        # the table, hiding two unverified assets behind one unreadable probe.
         astat="UNMEASURABLE"; FAIL=1
-        printf '%-36s %-22s %-22s %s\n' "$slug" "$astat" "-" "-"; continue
-      fi
-      kbps=$(( br / 1000 ))
-      if (( kbps < 200 )) || [[ "${ch:-0}" != "2" ]]; then
-        astat="LOW ${kbps}k/${ch:-?}ch"; FAIL=1  # 96k mono = wrong length setting
+        kbps=0
       else
-        astat="ok ${kbps}k/${ch}ch"
+        kbps=$(( br / 1000 ))
+        if (( kbps < 200 )) || [[ "${ch:-0}" != "2" ]]; then
+          astat="LOW ${kbps}k/${ch:-?}ch"; FAIL=1  # 96k mono = wrong length setting
+        else
+          astat="ok ${kbps}k/${ch}ch"
+        fi
       fi
     fi
   fi

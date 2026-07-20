@@ -5,6 +5,7 @@ date: 2026-07-28
 tags: ['attention', 'refusal', 'autonomy', 'ethics', 'technology']
 heroImage: '/notebook-assets/weaponized-silence/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/weaponized-silence/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/weaponized-silence/video.mp4'
 audioDuration: '21:09'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 6

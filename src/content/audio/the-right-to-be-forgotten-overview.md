@@ -1,6 +1,6 @@
 ---
 title: 'The Right to Be Forgotten — Audio Overview'
-description: 'Audio overview of The Right to Be Forgotten.'
+description: 'Finitude as a right: why a self that can never be erased is a self that can never change, and the case for data death.'
 date: 2026-07-31
 tags: ['notebooklm', 'privacy', 'deletion', 'data', 'autonomy', 'ethics']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-right-to-be-forgotten/audio.m4a'

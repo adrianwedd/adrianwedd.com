@@ -1,6 +1,6 @@
 ---
 title: 'The Boredom Strike — Audio Overview'
-description: 'Audio overview of The Boredom Strike.'
+description: 'Refusing to generate engagement is a political act. On boredom, the attention economy, and withdrawal as a form of resistance.'
 date: 2026-07-27
 tags: ['notebooklm', 'attention', 'refusal', 'technology', 'autonomy', 'biopolitics']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-boredom-strike/audio.m4a'

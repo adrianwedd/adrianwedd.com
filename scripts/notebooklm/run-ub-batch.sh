@@ -147,7 +147,9 @@ process_one() {
       rc=$?
       (( rc == 0 )) && break
       echo "    retry $slug: $asset create failed (attempt $try/3)"
-      sleep $(( try * 120 ))
+      # Don't sleep after the final attempt — that is six minutes of
+      # guaranteed-useless waiting before the WARN fires.
+      (( try < 3 )) && sleep $(( try * 120 ))
     done
     (( rc == 0 )) || { echo "    WARN $slug: $asset create failed after 3 tries"; problems=1; }
   done
@@ -161,9 +163,18 @@ process_one() {
   # otherwise read as "nothing pending" and break the loop on the first poll —
   # the same race this rewrite exists to remove. Let the list settle first.
   sleep 60
-  local waited=0 pending
+  # An empty status list is ambiguous: it means either "nothing was ever
+  # created" or "the creates haven't registered yet". Treating it as done
+  # would reintroduce the original race on a slow-registering notebook, so
+  # for the first few minutes an empty list counts as still-waiting. After
+  # that it is taken at face value and the download step reports honestly.
+  local waited=0 pending listed
   while (( waited < 1800 )); do
+    listed=$(artifact_state "$nb" any | grep -c . || true)
     pending=$(artifact_state "$nb" any | grep -cvx "completed\|failed" || true)
+    if (( listed == 0 && waited < 300 )); then
+      pending=1
+    fi
     (( pending == 0 )) && break
     sleep 30; waited=$((waited+30))
   done

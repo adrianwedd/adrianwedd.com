@@ -5,6 +5,7 @@ date: 2026-07-26
 tags: ['surveillance', 'cities', 'biopolitics', 'ai', 'autonomy']
 heroImage: '/notebook-assets/the-ghost-in-the-city/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ghost-in-the-city/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ghost-in-the-city/video.mp4'
 audioDuration: '12:40'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 4

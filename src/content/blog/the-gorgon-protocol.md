@@ -5,6 +5,7 @@ date: 2026-07-25
 tags: ['surveillance', 'biopolitics', 'adversarial', 'autonomy', 'ai']
 heroImage: '/notebook-assets/the-gorgon-protocol/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-gorgon-protocol/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-gorgon-protocol/video.mp4'
 audioDuration: '22:44'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 3
