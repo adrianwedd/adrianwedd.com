@@ -11,6 +11,7 @@ import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
 import { slug, tagSlug, youtubeId, ogSafeImage, heroAltText, isPublicPath } from '../../lib/utils';
 import { getImageDimensions } from '../../lib/image-dimensions';
+import ProjectCTA from '../../components/ProjectCTA.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -109,7 +110,9 @@ const seriesProjectsList = post.data.series
   : [];
 
 // Match to a project by slug (blog slug minus trailing "-post")
-const candidateProjectSlug = postSlug.replace(/-post$/, '');
+// Explicit `relatedProject` wins; slug equality is the legacy fallback for the
+// posts named after their project.
+const candidateProjectSlug = post.data.relatedProject ?? postSlug.replace(/-post$/, '');
 const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === candidateProjectSlug);
 ---
 
@@ -281,38 +284,10 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
           )
         }
         {
-          matchedProject?.data.url && (
-            <>
-              <span aria-hidden="true">&middot;</span>
-              <a
-                href={matchedProject.data.url}
-                class="text-text-muted hover:text-accent text-xs transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Visit site &nearr;
-              </a>
-            </>
-          )
-        }
-        {
-          matchedProject?.data.repo && (
-            <>
-              <span aria-hidden="true">&middot;</span>
-              <a
-                href={
-                  matchedProject.data.repo.startsWith('http')
-                    ? matchedProject.data.repo
-                    : `https://github.com/adrianwedd/${matchedProject.data.repo}`
-                }
-                class="text-text-muted hover:text-accent text-xs transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Source &nearr;
-              </a>
-            </>
-          )
+          /* The project's url/repo used to appear here as 12px muted text.
+            They now render as buttons below the post via <ProjectCTA>, the
+            same component the project page uses — duplicating them in the
+            metabar would give the same destination two competing weights. */
         }
       </div>
       <h1 class="text-text">{post.data.title}</h1>
@@ -434,6 +409,21 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
     >
       <Content />
     </div>
+
+    {
+      /* Same CTA the project page uses — the external site is the primary
+        action, our own project page a tertiary one. Previously a post's only
+        outbound link was 12px muted text in the metabar above. */
+    }
+    {
+      matchedProject && (
+        <ProjectCTA
+          url={matchedProject.data.url}
+          repo={matchedProject.data.repo}
+          projectHref={`/projects/${slug(matchedProject.id)}/`}
+        />
+      )
+    }
 
     <NotebookAssets
       videoUrl={post.data.series === 'The Lyria Chronicles' && !post.data.explicit ? undefined : post.data.videoUrl}

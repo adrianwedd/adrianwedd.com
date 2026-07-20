@@ -5,6 +5,7 @@ date: 2026-07-26
 tags: ['surveillance', 'cities', 'biopolitics', 'ai', 'autonomy']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 4
+relatedProject: 'ungovernable-body'
 ---
 
 Go and look at your nearest bus stop. If it was refurbished in the last decade, there is a decent chance the seat is gone and something else is in its place: a narrow rail at hip height, angled slightly, polished stainless. It is called a leaning bar. The trade name is ischiatic support, which means it holds your sit bones and nothing else.
@@ -69,4 +70,4 @@ And there is the fix, which is not complicated. Put the benches back, with backs
 
 A city that only works for people who never need to stop is not efficient. It is broken, and it has simply arranged not to see who is missing.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/1-3-the-ghost-in-the-city/)

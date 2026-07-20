@@ -5,6 +5,7 @@ date: 2026-08-03
 tags: ['hauntology', 'memory', 'time', 'technology', 'ethics']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 12
+relatedProject: 'ungovernable-body'
 ---
 
 Pick up a colour photograph from the seventies and you read a date before you read a face. The dye has shifted. The paper has gone warm at the edges. Nothing is printed on it that tells you when it was taken; the object has simply aged, in the same direction you have, and that ageing is legible at a glance.
@@ -77,4 +78,4 @@ So I'd rather build the opposite. Systems where expiry is the default and perman
 
 The archive was meant to be a sanctuary. It has become a place nothing is permitted to leave. If we want the future to arrive, we have to make room for it, and making room means letting things go.
 
-The full chapter, with the sources and the longer argument, is at [the research archive](https://ungovernable-body.wedd.au/research/).
+The full chapter, with the sources and the longer argument, is at [The Hauntology of the Infinite Now →](https://ungovernable-body.wedd.au/research/4-1-the-hauntology-of-the-infinite/).

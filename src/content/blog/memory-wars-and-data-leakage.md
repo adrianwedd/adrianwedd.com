@@ -5,6 +5,7 @@ date: 2026-08-01
 tags: ['memory', 'data', 'privacy', 'identity', 'autonomy']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 10
+relatedProject: 'ungovernable-body'
 ---
 
 An iris scanner fails on an eighty-year-old with a cataract. A fingerprint reader can't find the ridges on a hand that has lost collagen. A face-matching model looks at a woman in her seventies and does not see the woman in her fifties whose photo is on file.
@@ -89,4 +90,4 @@ The world we're building is one where you're required to be a perfect machine, a
 
 I'd rather be an error.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/3-3-memory-wars-data-leakage-the/)

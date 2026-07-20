@@ -75,3 +75,6 @@ __pycache__/
 /playwright-report/
 /test-results/
 /playwright/.cache/
+
+# NotebookLM batch run logs (transient); notebooks.tsv is tracked state
+scripts/notebooklm/logs/**/*.log

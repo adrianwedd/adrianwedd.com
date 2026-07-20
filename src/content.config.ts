@@ -30,6 +30,13 @@ const blog = defineCollection({
     explicit: z.boolean().default(false),
     series: z.string().optional(),
     seriesOrder: z.number().optional(),
+    // Explicit project link, mirroring the audio collection's field. The blog
+    // template otherwise infers a project by slug equality, which silently
+    // finds nothing whenever a post isn't named after its project — e.g. the
+    // twelve Ungovernable Body essays, which matched neither by slug nor by
+    // series ('The Ungovernable Body: Essays' vs the project's 'The
+    // Ungovernable Body') and so rendered no project CTA at all.
+    relatedProject: z.string().optional(),
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
     faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),

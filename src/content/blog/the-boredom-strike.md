@@ -5,6 +5,7 @@ date: 2026-07-27
 tags: ['attention', 'refusal', 'technology', 'autonomy', 'biopolitics']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 5
+relatedProject: 'ungovernable-body'
 ---
 
 We call it the attention economy, and that's the wrong name. Attention is just the delivery pipe. The thing being mined at the other end is **arousal** — how hard your nervous system spikes, in which direction, and how reliably it does it again tomorrow.
@@ -41,7 +42,7 @@ And boredom does something anger can't. Anger implies a villain and a plot, whic
 
 If your attention is labour — and it is, since it's the input someone else sells — then withdrawing it is an industrial action. Which means the tactics already exist, worked out by people with far more at stake than us.
 
-In 1899 the Glasgow dockers wanted a ten percent rise. The employers refused and brought in farm labourers as scabs, who were slow and clumsy and dropped things. The union didn't call a walkout. It told the members to go back to work and work exactly as badly as the scabs had. Every safety rule followed to the letter, every knot checked, everything moving at an agonising crawl. Within days the contractors were begging them to speed up, and the rise was granted.
+In 1889 the Glasgow dockers wanted a ten percent rise. The employers refused and brought in farm labourers as scabs, who were slow and clumsy and dropped things. The union didn't call a walkout. It told the members to go back to work and work exactly as badly as the scabs had. Every safety rule followed to the letter, every knot checked, everything moving at an agonising crawl. Within days the contractors were begging them to speed up, and the rise was granted.
 
 That's the shape. Not deletion — deletion is a walkout, and it mostly isolates you while the machine carries on. Instead: stay, and be conscientiously useless.
 
@@ -57,7 +58,7 @@ There's a physical analogue, and I've written before about how [hostile architec
 
 I've been writing as though attention is extracted evenly. It isn't, and leaving that out would gut the argument.
 
-The economy doesn't just want responsiveness in general. It capitalises on a specific socialisation — the training of women to be responsive, empathic and available. Deborah Tannen's sociolinguistics describes the phatic work that keeps a conversation frictionless: the nods, the "uh-huhs", the smiles, what gets called **audio lubrication**, whose function is to manage the emotional comfort of whoever else is talking. It translates onto a feed almost without modification. The expectation is that women will manage the emotional tone of the thing — soften, affirm, respond, keep it pleasant.
+The economy doesn't just want responsiveness in general. It capitalises on a specific socialisation — the training of women to be responsive, empathic and available. Deborah Tannen's sociolinguistics describes the phatic work that keeps a conversation frictionless: the nods, the "uh-huhs", the smiles — what this project calls **audio lubrication** — whose function is to manage the emotional comfort of whoever else is talking. It translates onto a feed almost without modification. The expectation is that women will manage the emotional tone of the thing — soften, affirm, respond, keep it pleasant.
 
 So the demand for arousal arrives already gendered, and it arrives as a double bind. Too much of it and she's hysterical. Too little and she's cold, or a bitch. What the algorithm wants is a Goldilocks band in the middle: high enough to generate data, modulated enough to stay consumable. There is no setting on that dial that isn't work, because the work _is_ the dial-watching.
 
@@ -87,4 +88,4 @@ Boredom is not an absence of content. It's the presence of the self, arriving on
 
 Earlier in this series I was writing about the body's visibility — [who gets seen, and what the seeing costs](/blog/the-ghost-in-the-city/). This is the other axis: the body's tempo. To be ungovernable is to move at a speed the machine can't track. Rot, in the sense of being permitted to go unoptimised. The revolutionary subject here isn't someone shouting from a barricade with their phone out. It's someone on a park bench watching birds, paying attention to nothing but the world.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/2-1-the-boredom-strike/)

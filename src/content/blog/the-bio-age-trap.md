@@ -5,6 +5,7 @@ date: 2026-07-24
 tags: ['biopolitics', 'insurance', 'algorithms', 'surveillance', 'ethics']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 2
+relatedProject: 'ungovernable-body'
 ---
 
 Your birth date has one great virtue as a number: nobody can argue with it. It is fixed, it is on a document, and it is the same for everyone born on the same day. For two centuries the insurance industry built its entire mathematics on that fact. Chronological age was a bad proxy for health and everyone knew it — a fifty-year-old smoker and a fifty-year-old marathon runner are not the same risk — but it was verifiable, immutable, and defensible in court.
@@ -77,4 +78,4 @@ Bio-age is not a fact of nature. It is a construct, built by identifiable firms,
 
 This is a compressed version of an argument I make at length, with the sources and the actuarial detail intact, in the research corpus behind _The Ungovernable Body_.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/1-1-the-bio-age-trap-the/)

@@ -5,6 +5,7 @@ date: 2026-07-30
 tags: ['analog', 'refusal', 'privacy', 'autonomy', 'technology']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 8
+relatedProject: 'ungovernable-body'
 ---
 
 For twenty years the problem was getting people online. The digital divide was a gap in access, and closing it was straightforwardly good: connect the disconnected, and they get jobs, services, a vote that counts.
@@ -69,4 +70,4 @@ But the direction is worth naming clearly. The coming fight is not over who can 
 
 The body that refuses to be a data point is the one this whole project is about. Right now, that refusal costs money.
 
-The full chapter, with the research and sources behind it, is here: [The Analog Insurrection →](https://ungovernable-body.wedd.au/research/)
+The full chapter, with the research and sources behind it, is here: [The Analog Insurrection →](https://ungovernable-body.wedd.au/research/3-1-the-analog-insurrection/)

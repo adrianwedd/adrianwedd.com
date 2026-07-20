@@ -5,6 +5,7 @@ date: 2026-08-02
 tags: ['deletion', 'ritual', 'data', 'mortality', 'ethics']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 11
+relatedProject: 'ungovernable-body'
 ---
 
 Someone dies, and their phone keeps talking.
@@ -81,4 +82,4 @@ The screen goes dark. The mind clears. The body is still here.
 
 What all of this is finally for — why an archive that cannot end is a problem for the living and not just for the dead — is [the last thing I want to write about](/blog/the-hauntology-of-the-infinite-now/).
 
-The full chapter, with the research it's built on, is at [ungovernable-body.wedd.au/research](https://ungovernable-body.wedd.au/research/).
+The full chapter, with the research it's built on, is at [The Data Pyre →](https://ungovernable-body.wedd.au/research/3-4-the-data-pyre-ritualizing-deletion/).

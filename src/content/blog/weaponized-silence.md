@@ -5,13 +5,14 @@ date: 2026-07-28
 tags: ['attention', 'refusal', 'autonomy', 'ethics', 'technology']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 6
+relatedProject: 'ungovernable-body'
 ---
 
 Watch a conversation between a man who is holding forth and a woman who is listening, and count the sounds she makes. The "mm." The "right." The half-laugh at the joke that didn't land. The small "yeah, no, totally" she slots into his pause so the pause never becomes a gap.
 
 None of that carries information. Strip every one of those tokens out and the content of the exchange is unchanged. They aren't there to say anything. They're there to keep the thing moving.
 
-Deborah Tannen's sociolinguistics has a name for the general phenomenon — **audio lubrication**, the phatic noise that keeps a conversation flowing and its participants comfortable. Set it beside Arlie Hochschild's account of the managed heart, the paid smile of the flight attendant, and what it is becomes obvious. It is work. Somebody is doing it, it costs something to do, and nobody is paying for it.
+Deborah Tannen's sociolinguistics describes the general phenomenon: the phatic noise that keeps a conversation flowing and its participants comfortable. This project calls it **audio lubrication**. Set it beside Arlie Hochschild's account of the managed heart, the paid smile of the flight attendant, and what it is becomes obvious. It is work. Somebody is doing it, it costs something to do, and nobody is paying for it.
 
 ## What the noise is actually for
 
@@ -77,4 +78,4 @@ That's the whole claim, and it's smaller and harder than it sounds. Your attenti
 
 Let the air stay dead. Watch what comes to fill it. That's the shape of what you were carrying.
 
-[The full chapter →](https://ungovernable-body.wedd.au/research/)
+[The full chapter →](https://ungovernable-body.wedd.au/research/2-2-weaponized-silence/)

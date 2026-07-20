@@ -5,6 +5,7 @@ date: 2026-07-25
 tags: ['surveillance', 'biopolitics', 'adversarial', 'autonomy', 'ai']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 3
+relatedProject: 'ungovernable-body'
 ---
 
 A camera on a light pole does not see your face. It measures gradients.
@@ -65,4 +66,4 @@ The durable claim is narrower and, I think, harder to argue with. Encryption pro
 
 Stop asking to be seen properly. Take the failure mode and put it on your face.
 
-The full chapter — the landmark mechanics, the specific protocols, the fashion theory and the sources behind all of it — is at [the research archive for The Ungovernable Body](https://ungovernable-body.wedd.au/research/).
+The full chapter — the landmark mechanics, the specific protocols, the fashion theory and the sources behind all of it — is at [The Gorgon Protocol →](https://ungovernable-body.wedd.au/research/1-2-the-gorgon-protocol-adversarial-aesthetics/).
