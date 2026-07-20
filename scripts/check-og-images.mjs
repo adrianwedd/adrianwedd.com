@@ -37,6 +37,23 @@ if (!fs.existsSync(DIST)) {
   process.exit(1);
 }
 
+/**
+ * Pathname of `raw` if it points at this site, else null.
+ *
+ * Compares parsed origins rather than string prefixes: `startsWith(SITE_ORIGIN)`
+ * also matches https://adrianwedd.com.example.test/x.png, which would then be
+ * resolved against dist/ and reported as a missing local asset.
+ */
+function sameOriginPathname(raw) {
+  let url;
+  try {
+    url = new URL(raw, SITE_ORIGIN);
+  } catch {
+    return null;
+  }
+  return url.origin === SITE_ORIGIN ? url.pathname : null;
+}
+
 const OG_IMAGE_RE = /<meta\s+property="og:image"\s+content="([^"]+)"/gi;
 const failures = [];
 let checked = 0;
@@ -44,9 +61,8 @@ let checked = 0;
 for (const file of walk(DIST)) {
   const html = fs.readFileSync(file, 'utf-8');
   for (const match of html.matchAll(OG_IMAGE_RE)) {
-    const raw = match[1];
-    if (!raw.startsWith(SITE_ORIGIN) && /^https?:\/\//i.test(raw)) continue;
-    const pathname = raw.startsWith(SITE_ORIGIN) ? raw.slice(SITE_ORIGIN.length) : raw;
+    const pathname = sameOriginPathname(match[1]);
+    if (pathname === null) continue;
     checked++;
     const asset = path.join(DIST, decodeURIComponent(pathname).replace(/^\//, ''));
     if (!fs.existsSync(asset)) {
