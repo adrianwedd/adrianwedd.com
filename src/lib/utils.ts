@@ -119,3 +119,29 @@ export function isPublicPath(src: string | undefined): boolean {
   if (typeof src !== 'string') return false;
   return src.startsWith('/') || /^https?:\/\//i.test(src);
 }
+
+/**
+ * MIME type for a media URL, derived from its file extension.
+ *
+ * The NotebookLM takes are AAC in an MP4 container — delivered as `.m4a` even
+ * though the pipeline names some of them `.mp3`. Labelling those `audio/mpeg`
+ * is a false claim about the bytes, and it is one strict podcast-directory
+ * validators and schema.org consumers both check. Extension is the only signal
+ * available at build time (the files live on the CDN), so callers must keep
+ * the extension honest.
+ *
+ * Falls back to `audio/mpeg` for unknown audio and `video/mp4` for unknown
+ * video, matching the historical default rather than emitting nothing.
+ */
+export function mediaMimeType(url: string, kind: 'audio' | 'video'): string {
+  const ext = url.split('?')[0].split('#')[0].split('.').pop()?.toLowerCase();
+  if (kind === 'video') {
+    if (ext === 'webm') return 'video/webm';
+    if (ext === 'mov') return 'video/quicktime';
+    return 'video/mp4';
+  }
+  if (ext === 'm4a' || ext === 'mp4' || ext === 'aac') return 'audio/mp4';
+  if (ext === 'wav') return 'audio/wav';
+  if (ext === 'ogg' || ext === 'oga') return 'audio/ogg';
+  return 'audio/mpeg';
+}

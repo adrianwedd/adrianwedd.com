@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { slug, imageSlug, tagSlug, youtubeId, ogSafeImage, heroAltText } from '../../src/lib/utils';
+import { slug, imageSlug, tagSlug, youtubeId, ogSafeImage, heroAltText, mediaMimeType } from '../../src/lib/utils';
 
 describe('tagSlug', () => {
   it('lowercases and hyphenates spaces', () => {
@@ -133,5 +133,34 @@ describe('heroAltText', () => {
   it('returns empty (decorative) alt for a non-infographic hero with no authored alt', () => {
     expect(heroAltText({ heroImage: '/photos/beach.jpg', title: 'Beach', kind: 'article' })).toBe('');
     expect(heroAltText({ title: 'No hero', kind: 'article' })).toBe('');
+  });
+});
+
+describe('mediaMimeType', () => {
+  it('labels .m4a as audio/mp4, not audio/mpeg', () => {
+    expect(mediaMimeType('https://cdn.adrianwedd.com/a/audio.m4a', 'audio')).toBe('audio/mp4');
+  });
+
+  it('labels .mp3 as audio/mpeg', () => {
+    expect(mediaMimeType('/notebook-assets/x/audio.mp3', 'audio')).toBe('audio/mpeg');
+  });
+
+  it('ignores query strings and fragments when reading the extension', () => {
+    expect(mediaMimeType('https://cdn.example.com/a.m4a?v=2', 'audio')).toBe('audio/mp4');
+    expect(mediaMimeType('https://cdn.example.com/a.m4a#t=10', 'audio')).toBe('audio/mp4');
+  });
+
+  it('is case-insensitive', () => {
+    expect(mediaMimeType('/a/AUDIO.M4A', 'audio')).toBe('audio/mp4');
+  });
+
+  it('defaults unknown audio extensions to audio/mpeg', () => {
+    expect(mediaMimeType('/a/audio.weird', 'audio')).toBe('audio/mpeg');
+  });
+
+  it('handles video containers', () => {
+    expect(mediaMimeType('/a/v.mp4', 'video')).toBe('video/mp4');
+    expect(mediaMimeType('/a/v.webm', 'video')).toBe('video/webm');
+    expect(mediaMimeType('/a/v.mov', 'video')).toBe('video/quicktime');
   });
 });
