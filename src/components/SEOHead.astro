@@ -10,6 +10,16 @@ interface Props {
   publishedDate?: string;
   tags?: string[];
   noindex?: boolean;
+  /**
+   * Append ' — Adrian Wedd' to the <title>. Default true.
+   *
+   * Set false on content detail pages: the suffix costs 15 chars of the ~60
+   * Google renders before truncating, and it's redundant on a personal domain
+   * where og:site_name and the Person schema already carry the attribution.
+   * Index pages keep it — 'Blog' or 'Gallery' alone is ambiguous in a tab
+   * strip or a SERP.
+   */
+  siteNameInTitle?: boolean;
 }
 
 const {
@@ -23,12 +33,14 @@ const {
   publishedDate,
   tags,
   noindex,
+  siteNameInTitle = true,
 } = Astro.props;
 
 const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const canonicalUrl = new URL(pathname, Astro.site);
 const ogImageUrl = new URL(image, Astro.site);
-const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
+const fullTitle =
+  title === 'Adrian Wedd' || !siteNameInTitle ? title : `${title} — Adrian Wedd`;
 ---
 
 <meta charset="utf-8" />

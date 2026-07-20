@@ -121,6 +121,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
   imageHeight={ogImageHeight}
   imageAlt={(ogImage === ogTextCard ? `${post.data.title} — adrianwedd.com` : heroAlt) || undefined}
   type="article"
+  siteNameInTitle={false}
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
   preloadImage={typeof post.data.heroImage === 'string' ? post.data.heroImage : undefined}

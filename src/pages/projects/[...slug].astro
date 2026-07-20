@@ -119,6 +119,7 @@ const allBlogPosts = project.data.series
   imageHeight={ogImageHeight}
   imageAlt={(ogImage === ogTextCard ? `${project.data.title} — adrianwedd.com` : heroAlt) || undefined}
   type="website"
+  siteNameInTitle={false}
   tags={project.data.tags}
   preloadImage={typeof project.data.heroImage === 'string' ? project.data.heroImage : undefined}
 >
