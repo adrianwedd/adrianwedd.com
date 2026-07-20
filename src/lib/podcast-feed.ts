@@ -1,27 +1,8 @@
 import { getCollection } from 'astro:content';
 import { slug, mediaMimeType } from './utils';
 import { containerOverride } from './media-facts';
-import { statSync } from 'node:fs';
-import { join } from 'node:path';
+import { getFileSize } from './enclosure-size';
 import type { APIContext } from 'astro';
-
-async function getFileSize(audioUrl: string): Promise<number> {
-  if (audioUrl.startsWith('http')) {
-    try {
-      const res = await fetch(audioUrl, { method: 'HEAD' });
-      const len = res.headers.get('content-length');
-      return len ? parseInt(len, 10) : 0;
-    } catch {
-      return 0;
-    }
-  }
-  try {
-    const filePath = join(process.cwd(), 'public', audioUrl);
-    return statSync(filePath).size;
-  } catch {
-    return 0;
-  }
-}
 
 export interface FeedOptions {
   /**

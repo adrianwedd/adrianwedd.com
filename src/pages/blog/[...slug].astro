@@ -191,8 +191,22 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
         set:html={JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
-          mainEntity: post.data.faq.map((item) => ({
+          // Kept deliberately after Google retired FAQ rich results (7 May 2026,
+          // docs removed 15 June 2026): it earns nothing in Google SERPs now but
+          // is still valid schema.org, still read by Bing, and is the cleanest
+          // machine-readable Q&A signal for answer engines and LLM crawlers.
+          //
+          // Identified and bound to the article rather than floating free — an
+          // unlinked FAQPage node on a URL that also declares an Article reads
+          // as two competing claims about the same page. The #faq fragment lets
+          // a consumer merge them instead of guessing.
+          '@id': `${new URL(Astro.url.pathname, Astro.site).href}#faq`,
+          url: new URL(Astro.url.pathname, Astro.site).href,
+          inLanguage: 'en-AU',
+          isPartOf: { '@id': new URL(Astro.url.pathname, Astro.site).href },
+          mainEntity: post.data.faq.map((item, i) => ({
             '@type': 'Question',
+            '@id': `${new URL(Astro.url.pathname, Astro.site).href}#faq-${i + 1}`,
             name: item.q,
             acceptedAnswer: {
               '@type': 'Answer',

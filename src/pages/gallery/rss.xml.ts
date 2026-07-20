@@ -5,12 +5,28 @@ import { statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { APIContext } from 'astro';
 
+/**
+ * Byte size for a cover-image enclosure. Throws rather than returning 0: a
+ * zero-length enclosure is a silently wrong feed, and failing the build is the
+ * only way that gets noticed. See the fuller note in lib/podcast-feed.ts.
+ *
+ * Gallery covers are all local today. A remote one would need the async HEAD
+ * path from podcast-feed.ts, so it throws here instead of quietly emitting 0.
+ */
 function getFileSize(path: string): number {
-  if (path.startsWith('http')) return 0;
+  if (path.startsWith('http')) {
+    throw new Error(
+      `Remote gallery coverImage not supported: ${path}. Enclosure length needs a ` +
+        `HEAD request — reuse getFileSize() from lib/podcast-feed.ts if covers move to the CDN.`,
+    );
+  }
+  const filePath = join(process.cwd(), 'public', path);
   try {
-    return statSync(join(process.cwd(), 'public', path)).size;
-  } catch {
-    return 0;
+    return statSync(filePath).size;
+  } catch (err) {
+    throw new Error(`Gallery coverImage missing on disk: ${path} (looked in ${filePath})`, {
+      cause: err,
+    });
   }
 }
 
