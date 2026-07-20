@@ -3,6 +3,9 @@ title: 'The Gorgon Protocol'
 description: 'Facial recognition fails unevenly, and hardest on the people it was never built for. That failure is a vulnerability you can put on your face.'
 date: 2026-07-25
 tags: ['surveillance', 'biopolitics', 'adversarial', 'autonomy', 'ai']
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-gorgon-protocol/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-gorgon-protocol/video.mp4'
+audioDuration: '22:44'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 3
 relatedProject: 'ungovernable-body'

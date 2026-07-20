@@ -3,6 +3,8 @@ title: 'The Hauntology of the Infinite Now'
 description: 'Digital media carries no visible wear, so the past never reads as over. On hauntology, retromania, and a culture that struggles to finish anything.'
 date: 2026-08-03
 tags: ['hauntology', 'memory', 'time', 'technology', 'ethics']
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-hauntology-of-the-infinite-now/audio.m4a'
+audioDuration: '24:22'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 12
 relatedProject: 'ungovernable-body'

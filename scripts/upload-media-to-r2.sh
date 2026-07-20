@@ -121,29 +121,50 @@ else
   echo "=== Uploading audio + video to R2: $BUCKET ==="
   echo ""
 
-  # Get list of already-uploaded keys
+  # Get list of already-uploaded keys.
+  #
+  # This MUST be paginated. The endpoint defaults to a small page (20 keys
+  # observed against a 321-object bucket), and every key missing from this
+  # list is treated as "not uploaded" — so an unpaginated call silently
+  # re-uploads hundreds of files that are already live, turning a few-minute
+  # sync into hours of redundant transfer. Page until the cursor runs out.
   EXISTING_KEYS="/tmp/r2-existing-keys.txt"
-  curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/r2/buckets/${BUCKET}/objects" \
-    -H "@${AUTH_HEADER_FILE}" | python3 -c "
+  : > "$EXISTING_KEYS"
+  cursor=""
+  while :; do
+    url="https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/r2/buckets/${BUCKET}/objects?per_page=1000"
+    [ -n "$cursor" ] && url="${url}&cursor=${cursor}"
+    page=$(curl -s "$url" -H "@${AUTH_HEADER_FILE}")
+    printf '%s' "$page" | python3 -c "
 import sys, json
 d = json.load(sys.stdin)
-for o in d.get('result', []):
-    print(o['key'])" > "$EXISTING_KEYS" 2>/dev/null
+for o in d.get('result', []) or []:
+    print(o['key'])" >> "$EXISTING_KEYS" 2>/dev/null
+    cursor=$(printf '%s' "$page" | python3 -c "
+import sys, json
+try: print(json.load(sys.stdin).get('result_info', {}).get('cursor') or '')
+except Exception: print('')" 2>/dev/null)
+    [ -z "$cursor" ] && break
+  done
+  echo "  (known remote keys: $(wc -l < "$EXISTING_KEYS" | tr -d ' '))"
 
   for file in $(find "$ASSETS_DIR" -type f \( -name "audio.mp3" -o -name "audio.m4a" -o -name "video.mp4" \) | sort); do
     key="${file#public/}"
+
+    # Skip if already uploaded. This is checked BEFORE the dry-run branch so
+    # that --dry-run reports what would actually happen; checking after made it
+    # report every file as an upload, which is exactly the wrong signal when the
+    # question being asked is "how much is left to transfer?"
+    if grep -q "^${key}$" "$EXISTING_KEYS" 2>/dev/null; then
+      echo "  ⊘ skip (exists): $key"
+      SKIPPED=$((SKIPPED + 1))
+      continue
+    fi
 
     if [ "$DRY_RUN" = true ]; then
       size=$(du -h "$file" | cut -f1)
       echo "[DRY] $key ($size)"
       UPLOADED=$((UPLOADED + 1))
-      continue
-    fi
-
-    # Skip if already uploaded
-    if grep -q "^${key}$" "$EXISTING_KEYS" 2>/dev/null; then
-      echo "  ⊘ skip (exists): $key"
-      SKIPPED=$((SKIPPED + 1))
       continue
     fi
 

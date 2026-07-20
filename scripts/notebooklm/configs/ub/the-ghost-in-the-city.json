@@ -1,0 +1,19 @@
+{
+  "title": "The Ghost in the City - Audio Overview",
+  "sources": [
+    "textfile:/Users/adrian/repos/ungovernable-body/research/markdown/Chapter 1.3_ The Ghost in the City.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "infographic"
+    },
+    {
+      "type": "video",
+      "video_format": "cinematic",
+      "video_style_prompt": "Dark botanical aesthetic. Deep plum-tinted backgrounds (#1a181c to #2e2a34). Warm cream text (#e2ddd8) with dusty copper accents (#c48b6e). Moody earth tones, no bright or neon colours. Elegant editorial layout with strong typographic hierarchy. Muted, saturated palette. WCAG AA contrast. Minimal, sophisticated, Australian dark-mode design. No stock footage, only original abstract animation. No human figures, no faces, no bodies. Abstract geometry, botanical forms, grain, drift and decay motifs only. Empty transit architecture, bench slats, wayfinding arrows, long shadows, absence of people. Beat structure: open on the concrete image, name the mechanism, show what it does to a person, turn to the counter-claim, close on the ethical stake. Slow deliberate pacing, long holds, no rapid cutting."
+    }
+  ]
+}
