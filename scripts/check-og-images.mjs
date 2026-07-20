@@ -30,8 +30,8 @@ const DIST = path.join(path.resolve(__dirname, '..'), 'dist');
 const SITE_ORIGIN = 'https://adrianwedd.com';
 
 // summary_large_image renders at ~1.91:1. Anything taller than 4:3 loses enough
-// of the frame to be worth failing over; squares included (a 1:1 card loses
-// roughly half its width to the crop).
+// of the frame to be worth failing over; squares included (a 1:1 card keeps its
+// full width and loses roughly half its height to the crop).
 const MIN_ASPECT = 4 / 3;
 
 // Sections whose portrait og:image is a known, unfixed defect rather than a
@@ -40,8 +40,12 @@ const MIN_ASPECT = 4 / 3;
 // templates still point og:image straight at portrait artwork, which crops badly
 // on X/Facebook. Fixing them is a design call — a gallery page arguably *should*
 // advertise its own artwork — so it is tracked separately, not silently passed.
-// Reported below as a warning with a count so it cannot quietly grow.
+// Reported below as a warning rather than an error — but pinned, so it cannot
+// grow: exceeding the baseline is a hard failure. A new portrait og:image in
+// these sections, or a new section with the same defect, fails the build instead
+// of incrementing a number nobody diffs. Lower the baseline as they are fixed.
 const ASPECT_WARN_ONLY = ['gallery/', 'audio/'];
+const ASPECT_WARN_BASELINE = 69;
 
 // Meta-refresh redirect stubs carry no OG metadata by design.
 const NO_OG_EXPECTED = ['2023/03/paperclip-maximizer/', 'projects/ticketsmith/'];
@@ -83,6 +87,16 @@ if (!fs.existsSync(DIST)) {
   process.exit(1);
 }
 
+// ~700 references resolve to a few hundred distinct files; most pages reuse the
+// same handful of cards.
+const dimensionCache = new Map();
+async function dimensions(asset) {
+  if (!dimensionCache.has(asset)) {
+    dimensionCache.set(asset, sharp(asset).metadata());
+  }
+  return dimensionCache.get(asset);
+}
+
 const missing = [];
 const badAspect = [];
 const warnAspect = [];
@@ -111,7 +125,7 @@ for (const file of pages) {
       continue;
     }
 
-    const { width, height } = await sharp(asset).metadata();
+    const { width, height } = await dimensions(asset);
     if (!width || !height) {
       missing.push(`${rel} -> ${pathname} (unreadable)`);
     } else if (width / height < MIN_ASPECT) {
@@ -148,14 +162,26 @@ if (badAspect.length > 0) {
   console.error('\nPortrait heroes must fall back to the generated landscape text card.\n');
 }
 
-if (warnAspect.length > 0) {
+if (warnAspect.length > ASPECT_WARN_BASELINE) {
+  failed = true;
+  console.error(
+    `ERROR: ${warnAspect.length} portrait og:image(s) in warn-only sections, above the ` +
+      `baseline of ${ASPECT_WARN_BASELINE} — this defect is pinned and must not grow:\n`
+  );
+  for (const f of warnAspect) console.error(`  ${f}`);
+  console.error('\nFix the new one, or raise the baseline deliberately with a reason.\n');
+} else if (warnAspect.length > 0) {
   const sections = [...new Set(warnAspect.map((w) => w.split('/')[0]))].join(', ');
   console.warn(
-    `⚠ ${warnAspect.length} portrait og:image(s) in ${sections} — known unfixed, not a regression. ` +
-      'These crop badly on X/Facebook; see the src/assets follow-up issue.'
+    `⚠ ${warnAspect.length}/${ASPECT_WARN_BASELINE} portrait og:image(s) in ${sections} — known ` +
+      'unfixed, pinned so it cannot grow. These crop badly on X/Facebook; see issue #553.'
   );
 }
 
 if (failed) process.exit(1);
 
-console.log(`✓ ${checked} og:image reference(s) across ${pages.length} pages: all resolve and are landscape.`);
+const landscape = checked - warnAspect.length;
+console.log(
+  `✓ ${checked} og:image reference(s) across ${pages.length} pages: all resolve; ` +
+    `${landscape} landscape, ${warnAspect.length} portrait (warn-only).`
+);
