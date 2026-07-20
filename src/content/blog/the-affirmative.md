@@ -10,6 +10,7 @@ seriesOrder: 24
 heroImage: '/notebook-assets/lyria-chronicles/affirmative/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/affirmative/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=lvbsiOa4Ves'
+videoUploadDate: 2026-06-09T00:26:01Z
 ---
 
 > ⚠️ **Content warning.** This is an AI-safety post about sexual-content filters. The embedded track is a sexual scene, but it contains no graphic depiction — its entire content is spoken consent. The writing discusses sex plainly and quotes a few non-explicit lines. The audio does not autoplay. The clean Chronicles start [here](/blog/the-ghost-of-what-i-am/).

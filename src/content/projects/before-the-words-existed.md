@@ -11,6 +11,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/before-the-words-existed/a
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/before-the-words-existed/video.mp4'
 heroImage: '/notebook-assets/before-the-words-existed/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=ZZDPvTlA4Xw'
+videoUploadDate: 2026-05-05T00:50:31Z
 ---
 
 What if _Neuromancer_ wasn't about addiction? What if it was about ADHD?

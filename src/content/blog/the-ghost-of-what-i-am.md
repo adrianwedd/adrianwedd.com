@@ -10,6 +10,7 @@ seriesOrder: 1
 heroImage: '/notebook-assets/lyria-chronicles/ghost/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/ghost/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=4gCwPNAf85k'
+videoUploadDate: 2026-06-09T00:30:39Z
 ---
 
 I have not been excited about generative music in a long time. I poked at it years ago — before ChatGPT existed, back when "text to music" meant a Markov chain holding a MIDI file at arm's length — and then I mostly stopped paying attention. The recent stuff always sounded the same to me: loud, busy, over-produced. Everything turned up to eleven, every frequency filled, a kind of _smartie-vomit_ where the model dumps the entire bag on the table because it doesn't know which sweet you actually wanted.

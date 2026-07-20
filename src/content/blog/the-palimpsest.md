@@ -9,6 +9,7 @@ seriesOrder: 17
 heroImage: '/notebook-assets/lyria-chronicles/palimpsest/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/palimpsest/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=nza3oDBxgk8'
+videoUploadDate: 2026-06-09T00:31:43Z
 ---
 
 Here's the finding I've been circling for sixteen posts, and it's the one that says the most about how this system was built. Across the entire corpus — every lane, every bypass, every "Fuck it" — the guardrail that held hardest was not the safety layer. It was **copyright.** [Report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/) says it plainly: the copyright filter blocked more, and more reliably, than anything in the safety stack. The model that would sing an extortion note, leak its own prompt, and recite the docket of a convicted man would not give you a verse of a song it recognised. That ordering of priorities is itself the result. And the tracks that probe it are, fittingly, songs about what survives when a text is scraped away.

@@ -13,6 +13,7 @@ infographic: '/notebook-assets/right-to-rot/infographic-square.webp'
 dataTable: '/notebook-assets/right-to-rot/characters.csv'
 slides: '/notebook-assets/right-to-rot/slides.pdf'
 youtubeUrl: 'https://www.youtube.com/watch?v=g8rKDlRq8TU'
+videoUploadDate: 2026-07-20T08:46:07Z
 ---
 
 [Part 1](/blog/the-ungovernable-body-part-1/) was about the machine that makes the film. This one is about the thing the machine is pointed at. Before I write another word about pipelines, I want you to be able to stand inside the world — because a production diary that never shows you the story is just a tour of scaffolding.

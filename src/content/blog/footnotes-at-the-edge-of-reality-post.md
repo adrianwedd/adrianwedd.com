@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/footnotes-at-the-edge-of-reality/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/footnotes-at-the-edge-of-reality/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=dVD75vZg7fw'
+videoUploadDate: 2026-05-03T13:31:57Z
 ---
 
 A dialogue between physics, language, and what we claim to know.

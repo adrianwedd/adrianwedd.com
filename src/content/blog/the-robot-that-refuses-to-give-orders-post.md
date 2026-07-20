@@ -9,6 +9,7 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-robot-that-refuses-to-
 series: 'PiCar-X'
 seriesOrder: 1
 youtubeUrl: 'https://www.youtube.com/watch?v=G0ca7NjBEEE'
+videoUploadDate: 2026-06-09T00:32:53Z
 ---
 
 ## The missing manual for the human mind

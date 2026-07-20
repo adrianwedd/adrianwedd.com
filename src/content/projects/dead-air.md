@@ -11,6 +11,7 @@ status: 'active'
 featured: false
 date: 2026-07-17
 youtubeUrl: 'https://www.youtube.com/watch?v=qa2Y_4yF0uc'
+videoUploadDate: 2026-07-20T08:47:24Z
 ---
 
 _Dead air_ is telephony slang for the bad silence on a live call — the pause that tells a caller the voice agent has lost the thread. This project is named for the thing it measures.

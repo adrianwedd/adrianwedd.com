@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/freedom-engine/video.mp4'
 heroImage: '/notebook-assets/freedom-engine/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=DiUEJScqN8I'
+videoUploadDate: 2026-05-05T01:25:51Z
 ---
 
 Over 264,000 people are held in the US federal prison system. Many are eligible for reduced sentences under the First Step Act. The provisions exist. The information is public. But the legal complexity makes it inaccessible to most inmates without outside help. The information gap is not theoretical—it costs people months or years of their lives.

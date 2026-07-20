@@ -10,6 +10,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/agentic-index/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/agentic-index/video.mp4'
 heroImage: '/notebook-assets/agentic-index/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=_ZkMEVAcEe4'
+videoUploadDate: 2026-05-04T08:55:19Z
 ---
 
 The AI agent ecosystem has a curation problem. New frameworks appear weekly, each claiming autonomy, each backed by a README full of superlatives and a demo that works exactly once. If you're trying to choose tooling for real work—multi-agent orchestration, RAG pipelines, dev tooling—the landscape is a fog of marketing copy and GitHub stars that measure hype, not quality.

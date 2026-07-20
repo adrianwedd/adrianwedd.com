@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/moral-formation-isnt-enoug
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/moral-formation-isnt-enough/video.mp4'
 audioDuration: '20:13'
 youtubeUrl: 'https://www.youtube.com/watch?v=laBVYz6_ARs'
+videoUploadDate: 2026-06-09T00:24:01Z
 ---
 
 Anthropic published something important this week. In _Widening the Conversation on Frontier AI_, they describe an initiative to bring religious scholars, ethicists, and philosophers into structured dialogue about how AI systems develop character — how values get _in_. They even ran a concrete experiment: giving Claude access to an "ethical reminder tool" during decision-making, which measurably reduced misaligned behaviour in internal evaluations.

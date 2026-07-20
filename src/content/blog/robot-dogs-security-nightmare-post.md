@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/robot-dogs-security-nightm
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/robot-dogs-security-nightmare/video.mp4'
 audioDuration: '22:30'
 youtubeUrl: 'https://www.youtube.com/watch?v=OfPnbV56FOE'
+videoUploadDate: 2026-06-09T00:25:10Z
 ---
 
 There is a robot dog patrolling the parking lot of a low-income housing complex in Atlanta right now. A different one is helping the Port St. Lucie Police Department search buildings before officers enter. The U.S. Marines have shown the media theirs. Somewhere in Ukraine, they are finding unexploded ordnance.

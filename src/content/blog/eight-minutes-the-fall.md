@@ -10,6 +10,7 @@ seriesOrder: 2
 heroImage: '/notebook-assets/eight-minutes-the-fall/infographic.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=k9ArBHsduQU'
+videoUploadDate: 2026-06-11T01:35:43Z
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall-overview/audio.m4a'
 audioDuration: '17:30'
 ---

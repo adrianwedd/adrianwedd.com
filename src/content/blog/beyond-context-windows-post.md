@@ -17,6 +17,7 @@ faq:
   - q: 'What are the benefits of querying documents instead of reading them?'
     a: 'The model can search for what it needs, read specific sections at full resolution, and revisit earlier passages — similar to how a researcher actually works through a paper, rather than reading the entire thing at once.'
 youtubeUrl: 'https://www.youtube.com/watch?v=BlMCBFzIly0'
+videoUploadDate: 2026-05-03T13:28:53Z
 ---
 
 Every LLM has a context window. Even the largest ones — a million tokens, two million — are finite. And documents aren't. A regulatory corpus, a research archive, a novel-length manuscript: these routinely exceed what any model can process in a single pass.

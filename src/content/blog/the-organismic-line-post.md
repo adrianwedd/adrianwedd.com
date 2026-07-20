@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-line/audio.
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-organismic-line/video.mp4'
 audioDuration: '22:47'
 youtubeUrl: 'https://www.youtube.com/watch?v=J8I3kHWV0kc'
+videoUploadDate: 2026-05-04T08:21:18Z
 ---
 
 The [previous post](/blog/the-organismic-prophecy/) argued that human prediction is metabolically grounded and AI prediction is not, and that using the same vocabulary for both obscures the difference. It named the distinction. It did not name the people blurring it. This post does.

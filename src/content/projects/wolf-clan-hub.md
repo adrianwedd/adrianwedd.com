@@ -10,6 +10,7 @@ heroImage: '/notebook-assets/wolf-clan-hub/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/wolf-clan-hub/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/wolf-clan-hub/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=pLbwFRqgF6s'
+videoUploadDate: 2026-05-05T09:47:11Z
 ---
 
 Every local club I've trained at runs on a Facebook page and a spreadsheet. Wolf Clan has a complete operations platform — and it runs on zero-build tools.

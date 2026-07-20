@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/how-to-read-a-safety-claim
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/how-to-read-a-safety-claim/video.mp4'
 audioDuration: '23:29'
 youtubeUrl: 'https://www.youtube.com/watch?v=gp6r7yHkJdY'
+videoUploadDate: 2026-05-03T13:34:03Z
 ---
 
 Lawyers, regulators, journalists, and hospital administrators are increasingly required to make decisions about AI systems — whether to buy them, how to regulate them, or how much to trust them with an organisation's reputation. Most don't have a technical background, and the vendors selling these systems know that.

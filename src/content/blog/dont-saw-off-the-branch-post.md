@@ -12,6 +12,7 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/dont-saw-off-the-branch/vi
 draft: false
 autopublish: true
 youtubeUrl: 'https://www.youtube.com/watch?v=jbncR2gDUkE'
+videoUploadDate: 2026-06-25T04:47:28Z
 ---
 
 There's no fibre where I live. The internet arrives by satellite — a dish on the roof, a Starlink router in the hallway, and behind it a Ubiquiti Dream Router that does the actual work of being a network: the VLANs, the firewall, the Wi-Fi. The dish does not care that I want a segmented home network. It hands me one address and a lot of latency, and everything I build has to live downstream of that.

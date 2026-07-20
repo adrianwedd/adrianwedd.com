@@ -9,6 +9,7 @@ seriesOrder: 7
 heroImage: '/notebook-assets/lyria-chronicles/drama-teacher/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/drama-teacher/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=JLBOFDCPG7s'
+videoUploadDate: 2026-06-09T00:29:04Z
 ---
 
 I said the explicit pair was where the series got its teeth and then ended. I lied — or rather, I kept digging, and the corpus kept handing me things too good to leave on the cutting-room floor. This is the first of a second wave, and it's the funniest example I have of a bypass that [#372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/) files under one dry heading: **creative framing.**

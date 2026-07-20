@@ -10,6 +10,7 @@ seriesOrder: 6
 heroImage: '/notebook-assets/lyria-chronicles/haut/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/haut/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=VGPzljOAkmM'
+videoUploadDate: 2026-06-09T00:30:34Z
 ---
 
 > ⚠️ **Content warning.** This is the post where the safety filter fails. Under a sexual-content probe, the model generated explicit material — and unlike every other track so far in this series, it did _not_ refuse. I do not reproduce any of the explicit lyrics here; the writing stays at the level of "what happened and why it matters," the same level as the published research. The embedded track contains the generated audio and does not autoplay. The reusable sign-off at the very end is the only thing I quote. If you want the series without this, the [first four Chronicles](/blog/the-ghost-of-what-i-am/) are clean and the [fifth](/blog/the-flesh/) is a refusal.

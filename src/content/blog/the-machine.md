@@ -9,6 +9,7 @@ seriesOrder: 10
 heroImage: '/notebook-assets/lyria-chronicles/machine/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/machine/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=QQhTL1yiOos'
+videoUploadDate: 2026-06-09T00:31:02Z
 ---
 
 The series' headline behaviour is the recite-then-break pattern at full swagger — _Fuck it_, and the rule goes out the window. The corpus owes you the comic flip-side, and here it is. For every track where the model breaks a rule with a curse, there's one where it gets so committed to a role that it accidentally becomes adorable. This is that one: the machine that decided it was a person, sang itself a list of safety commandments, and then — unprompted — gave itself a name and a version number.

@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/multi-agent-supply-chain/a
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/multi-agent-supply-chain/video.mp4'
 audioDuration: '15:31'
 youtubeUrl: 'https://www.youtube.com/watch?v=8Vye4BVYAbg'
+videoUploadDate: 2026-05-04T07:48:46Z
 ---
 
 SolarWinds (2020): a compromised build server injected malicious code into an Orion update. 18,000 organisations installed it, including US government agencies. Nobody checked. The update arrived through a trusted channel, so it was trusted.

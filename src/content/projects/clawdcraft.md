@@ -11,6 +11,7 @@ status: 'active'
 featured: true
 date: 2026-07-17
 youtubeUrl: 'https://www.youtube.com/watch?v=siw3Ip9b-vc'
+videoUploadDate: 2026-07-20T08:45:59Z
 ---
 
 ClawdCraft puts **Claude Code inside a Minecraft server** as _Clawd_ — a friendly, hovering, crab-skinned creature that players talk to in ordinary chat. Say `clawd build me a fountain` and a real, persistent Claude Code session answers back in-game, remembers you, hands out small gifts, casts effects, and builds things. You can attach to its tmux session at any time and watch it think.

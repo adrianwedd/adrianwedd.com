@@ -12,6 +12,7 @@ featured: false
 date: 2026-07-12
 updatedDate: 2026-07-17
 youtubeUrl: 'https://www.youtube.com/watch?v=t2tp6IPb1L8'
+videoUploadDate: 2026-07-20T08:48:50Z
 ---
 
 My son Obi is the Product Manager on this one. He's seven. The full spec started as his idea, and every design decision — how far a chicken should glide, what the training loop feels like, whether the chickens look eager enough — got run past the person who commissioned it.

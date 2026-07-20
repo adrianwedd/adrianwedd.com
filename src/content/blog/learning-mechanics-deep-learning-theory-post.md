@@ -10,6 +10,7 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/learning-mechanics-deep-le
 audioDuration: '23:03'
 slides: '/notebook-assets/learning-mechanics-deep-learning-theory/slides.pdf'
 youtubeUrl: 'https://www.youtube.com/watch?v=9Mp-HZZDEo4'
+videoUploadDate: 2026-05-04T07:44:35Z
 ---
 
 For a long time, the honest answer to "why does this neural network work?" has been some version of: we're not entirely sure. The results speak for themselves, but the internal logic — the actual mechanism by which a model moves from random noise to something useful — has felt more like craft than science. We have recipes. We lack laws.

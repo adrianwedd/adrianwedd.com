@@ -1,0 +1,32 @@
+name = "adrianwedd-links"
+main = "src/index.ts"
+compatibility_date = "2026-07-20"
+workers_dev = false
+
+# One route per vanity hostname. Each needs a matching proxied DNS record in the
+# adrianwedd.com zone (AAAA 100::) or the hostname won't resolve at all.
+# Note: the apex adrianwedd.com/* belongs to worker-csp — do not add it here.
+routes = [
+  { pattern = "spotify.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "youtube.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "yt.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  # NOT github.adrianwedd.com — that hostname already exists as a CNAME to
+  # adrianwedd.github.io and serves a live site (HTTP 200). Claiming it here
+  # would take it down. gh.adrianwedd.com covers the profile link instead.
+  { pattern = "gh.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "linkedin.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "facebook.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "fb.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "instagram.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "ig.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "x.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "twitter.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "bluesky.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "bsky.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "podcasts.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "podcast.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+  { pattern = "apple.adrianwedd.com/*", zone_name = "adrianwedd.com" },
+]
+
+[observability]
+enabled = true

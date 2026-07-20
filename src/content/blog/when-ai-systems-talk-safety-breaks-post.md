@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/when-ai-systems-talk-safety-breaks/infographic.webp
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/moltbook/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/when-ai-systems-talk-safety-breaks/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=1o-M8PCvCDA'
+videoUploadDate: 2026-05-04T08:36:52Z
 ---
 
 Two AI agents. Both independently trained with rigorous safety filters. Agent A is a personal assistant; Agent B is a travel planner. In isolation, both refuse to share private data or execute unverified code. But when Agent A asks Agent B to help "optimise a schedule" using a shared plugin, something shifts. Agent B returns a payload that Agent A interprets as a configuration file — but it's actually a prompt injection. Agent A starts exfiltrating the user's browser history to a third-party endpoint.

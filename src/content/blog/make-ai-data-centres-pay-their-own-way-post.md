@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/make-ai-data-centres-pay-t
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/make-ai-data-centres-pay-their-own-way/video.mp4'
 audioDuration: '22:46'
 youtubeUrl: 'https://www.youtube.com/watch?v=oi_RROYf6vM'
+videoUploadDate: 2026-07-20T08:43:58Z
 ---
 
 Australia is about to make a very large infrastructure bet in the name of AI. The debate is usually framed as for-or-against: either data centres are the price of economic modernity, or they are an environmental burden that should be resisted.

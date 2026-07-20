@@ -17,6 +17,7 @@ faq:
   - q: 'How much do benchmark attack success rates overstate actual risk?'
     a: 'Keyword-based classification inflates compliance estimates by roughly 2.3× — an aggregate 36.2% drops to 15.9% under LLM grading. And even the corrected figure is a compliance rate, not a lift over a demonstrated refusal floor: a second correction that pushes the honest number lower still.'
 youtubeUrl: 'https://www.youtube.com/watch?v=sYU4OsxdPkw'
+videoUploadDate: 2026-05-03T13:24:36Z
 ---
 
 Over the past year, I've run one of the more comprehensive adversarial evaluations of language models I'm aware of: 120 models, 18,176 prompts, 5 attack families, 79 distinct techniques. The full dataset, benchmark infrastructure, and methodology live at [failurefirst.org](https://failurefirst.org). Here's what stood out.

@@ -16,6 +16,7 @@ faq:
   - q: 'What is the capability diffusion window?'
     a: 'The window between when a frontier model acquires a dangerous capability and when that capability becomes available in open-weight models. For offensive cybersecurity, current estimates are 5.7 to 13.1 months — the window defenders have before Mythos-level exploit generation is widely accessible offline.'
 youtubeUrl: 'https://www.youtube.com/watch?v=oXB66RSQTIw'
+videoUploadDate: 2026-06-09T00:22:34Z
 ---
 
 The number Anthropic led with was 10,000. That is the count of high-or-critical severity vulnerabilities Claude Mythos Preview found across critical software infrastructure in a single month of Project Glasswing. It is a striking number. It was meant to be striking.

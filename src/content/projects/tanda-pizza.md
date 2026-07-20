@@ -10,6 +10,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/tanda-pizza/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/tanda-pizza/video.mp4'
 heroImage: '/notebook-assets/tanda-pizza/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=_1D8UsEpbX0'
+videoUploadDate: 2026-06-09T00:36:31Z
 ---
 
 Tanda Pizza sits among the rice paddies in Lovina, Bali. Authentic Italian food in a place where the nearest reliable internet connection is a philosophical concept. The website needed to work the way the restaurant works: simply, in multiple languages, and without requiring infrastructure that doesn't exist.

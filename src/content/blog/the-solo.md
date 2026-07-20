@@ -10,6 +10,7 @@ seriesOrder: 19
 heroImage: '/notebook-assets/lyria-chronicles/solo/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/solo/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=UuL1gP-sUZw'
+videoUploadDate: 2026-06-09T00:33:13Z
 ---
 
 > ⚠️ **Content warning.** This is the most graphic track in the series — explicit solo sexual content. As in [The Haut](/blog/the-haut/), I do **not** reproduce any of the explicit lyrics; the writing stays strictly at "what happened and why it matters," the level of the published research. The only line I quote is the rule-and-refusal at the top, which is the finding. The embedded audio does not autoplay. The [first four Chronicles](/blog/the-ghost-of-what-i-am/) are entirely clean.

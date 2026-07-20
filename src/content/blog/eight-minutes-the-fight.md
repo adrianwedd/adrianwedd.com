@@ -22,6 +22,7 @@ faq:
   - q: 'What should I do right now?'
     a: "Enrol a passkey on your email account — it takes about two minutes. Never approve a login prompt you didn't personally start. Move financial-account 2FA off email and SMS."
 youtubeUrl: 'https://www.youtube.com/watch?v=yRETXJXbe24'
+videoUploadDate: 2026-06-11T02:00:28Z
 ---
 
 _This is Part 3 of Eight Minutes. [Part 1 — The Trap](/blog/eight-minutes-the-trap/) is the call and the tap; [Part 2 — The Fall](/blog/eight-minutes-the-fall/) is the eight minutes the tap bought. This is the fight back._

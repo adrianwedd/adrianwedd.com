@@ -9,6 +9,7 @@ audioDuration: '21:16'
 tags: ['ai', 'machine-learning', 'research', 'self-supervised-learning']
 draft: false
 youtubeUrl: 'https://www.youtube.com/watch?v=E1UrwZfUeIk'
+videoUploadDate: 2026-06-09T00:23:04Z
 ---
 
 **Balestriero & LeCun (2025)** — [arXiv:2511.08544](https://arxiv.org/abs/2511.08544)

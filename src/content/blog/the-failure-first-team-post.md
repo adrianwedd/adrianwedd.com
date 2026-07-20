@@ -17,6 +17,7 @@ faq:
   - q: 'Why split AI research into different agent roles?'
     a: "Splitting research into specialized agent roles means each session operates within a constrained domain where it performs well. It also makes the work auditable since each agent's brief is explicit and version-controlled."
 youtubeUrl: 'https://www.youtube.com/watch?v=J1X_DqtKVkM'
+videoUploadDate: 2026-05-04T08:10:42Z
 ---
 
 Research doesn't scale by working harder. It scales by splitting the problem into roles that each see what the others miss.

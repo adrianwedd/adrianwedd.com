@@ -10,6 +10,7 @@ heroImage: '/notebook-assets/orbitr/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/orbitr/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/orbitr/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=8TwAvE9Sl-0'
+videoUploadDate: 2026-05-05T08:47:16Z
 ---
 
 Traditional sequencers are grids. Rows and columns. Time moves left to right. It works, but it enforces a particular relationship with rhythm—one that privileges linearity and makes polyrhythm feel like a special case rather than the natural state of things.

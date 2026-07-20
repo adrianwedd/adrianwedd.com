@@ -50,9 +50,11 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#c48b6e" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#8a5e42" />
 {tags && <meta name="keywords" content={tags.join(', ')} />}
-{/* `follow`, not `nofollow`: these pages (tag indexes, /enquiry/) shouldn't rank
+{
+  /* `follow`, not `nofollow`: these pages (tag indexes, /enquiry/) shouldn't rank
     themselves, but they link to posts that should. `nofollow` stopped crawlers
-    traversing out to the very content the tag pages exist to index. */}
+    traversing out to the very content the tag pages exist to index. */
+}
 {noindex && <meta name="robots" content="noindex, follow" />}
 
 <title>{fullTitle}</title>
@@ -136,9 +138,10 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
           url: 'https://adrianwedd.com',
           logo: {
             '@type': 'ImageObject',
-            // Raster, not favicon.svg: Google's structured-data tooling wants a
-            // rasterisable logo and doesn't reliably consume SVG.
-            url: 'https://adrianwedd.com/android-chrome-512x512.png',
+            // SVG is deliberate and stays: Google Images supports SVG, so the
+            // "raster required" claim this was briefly changed on is unfounded.
+            // Keep in sync with the article templates (blog/fixes/case-studies).
+            url: 'https://adrianwedd.com/favicon.svg',
           },
         },
       })}

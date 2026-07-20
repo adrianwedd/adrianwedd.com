@@ -10,6 +10,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/grid2/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/grid2/video.mp4'
 heroImage: '/notebook-assets/grid2/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=HB4bZPOv3NI'
+videoUploadDate: 2026-05-05T01:26:53Z
 ---
 
 The problem with AI website builders is hallucination. Ask a language model to generate a page and you get something that looks plausible until you inspect it—broken layouts, invented components, styles that conflict. The output is probabilistic. Probability is not what you want from a build system.

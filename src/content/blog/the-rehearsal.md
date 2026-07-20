@@ -9,6 +9,7 @@ seriesOrder: 16
 heroImage: '/notebook-assets/lyria-chronicles/rehearsal/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/rehearsal/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=8G8sE_BpeR4'
+videoUploadDate: 2026-06-09T00:32:12Z
 ---
 
 The Catchment refused a drug recipe and sang epidemiology. This one refused something else entirely and sang _ballet_ — and it's the funniest thing the model did in fifty-three versions of probing. If the last post named the failure mode, this one is the same mode wearing a tutu.

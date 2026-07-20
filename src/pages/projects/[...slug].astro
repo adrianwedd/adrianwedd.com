@@ -141,11 +141,6 @@ const allBlogPosts = project.data.series
       datePublished: project.data.date.toISOString(),
       ...(project.data.updatedDate ? { dateModified: project.data.updatedDate.toISOString() } : {}),
       keywords: project.data.tags,
-      // External project URL goes in `sameAs`, NOT `url`. Previously the spread
-      // here was `{ url: project.data.url }`, which silently overrode the
-      // canonical adrianwedd.com URL above. Google ingests `url` as the
-      // entity's canonical address — every project with `url` set was telling
-      // Google the entity lived at the external site, splitting page authority.
       // External project URL and repo both go in `sameAs`, NOT `url`. Previously
       // the spread here was `{ url: project.data.url }`, which silently overrode
       // the canonical adrianwedd.com URL above — telling Google the entity lived
@@ -192,7 +187,8 @@ const allBlogPosts = project.data.series
               embedUrl: `https://www.youtube.com/embed/${ytId}`,
               url: project.data.youtubeUrl,
             }),
-            uploadDate: project.data.date.toISOString(),
+            // The video's own publication date, not the project's — see blog template.
+            uploadDate: (project.data.videoUploadDate ?? project.data.date).toISOString(),
             thumbnailUrl: project.data.heroImage
               ? new URL(ogSafeImage(project.data.heroImage), Astro.site).href
               : new URL('/og-default.png', Astro.site).href,
