@@ -95,6 +95,28 @@ function buildSvg(title, description, tags) {
 }
 
 /** Generate OG images for all .md files in a directory, skipping existing. */
+// Mirror of ogSafeImage() in src/lib/utils.ts — the templates point og:image at
+// the .jpg twin, so the aspect check must read that same file, not the .webp.
+function ogSafePath(heroImage) {
+  return heroImage.replace(/\.webp$/i, '.jpg');
+}
+
+// True unless we can *confirm* the hero is landscape. The templates use the hero
+// only when its dimensions are known and landscape, and fall back to the text
+// card otherwise — so an unreadable or missing twin must generate a card here,
+// or the template would point at a file that does not exist. Both sides read the
+// same path and default the same way; see the matching comment in the templates.
+async function needsTextCard(heroImage) {
+  try {
+    const abs = path.join(ROOT, 'public', ogSafePath(heroImage).replace(/^\//, ''));
+    const { width, height } = await sharp(abs).metadata();
+    if (!width || !height) return true;
+    return height > width;
+  } catch {
+    return true;
+  }
+}
+
 async function generateForDir(dir, outDir, label) {
   fs.mkdirSync(outDir, { recursive: true });
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'));
@@ -115,10 +137,12 @@ async function generateForDir(dir, outDir, label) {
     const { data } = matter(raw);
 
     if (data.draft) continue;
-    // Skip when a heroImage is set — the page template uses heroImage (with
-    // .webp -> .jpg swap) as og:image, so the auto-generated text-card PNG
-    // would be dead weight.
-    if (data.heroImage) continue;
+    // Skip when a *landscape* heroImage is set — the page template uses it
+    // (with .webp -> .jpg swap) as og:image, so a text card would be dead
+    // weight. Portrait heroes (the NotebookLM infographics are 1536x2752) are
+    // unusable at summary_large_image's ~1.91:1, so the template falls back to
+    // this card and we must actually generate it.
+    if (data.heroImage && !(await needsTextCard(data.heroImage))) continue;
 
     const svg = buildSvg(data.title || slug, data.description || '', data.tags || []);
 

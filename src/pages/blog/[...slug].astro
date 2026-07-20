@@ -9,7 +9,7 @@ import NotebookAssets from '../../components/NotebookAssets.astro';
 import SeriesCTA from '../../components/SeriesCTA.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
-import { slug, tagSlug, youtubeId, ogSafeImage, heroAltText } from '../../lib/utils';
+import { slug, tagSlug, youtubeId, ogSafeImage, heroAltText, isPublicPath } from '../../lib/utils';
 import { getImageDimensions } from '../../lib/image-dimensions';
 
 export async function getStaticPaths() {
@@ -64,7 +64,19 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
 // scrapes. The .jpg twin is generated alongside the .webp at build/asset
 // time. Fall back to the auto-generated text-card OG PNG when no heroImage.
 const postSlug = slug(post.id);
-const ogImage = post.data.heroImage ? ogSafeImage(post.data.heroImage) : `/og/blog/${postSlug}.png`;
+// A portrait hero (our NotebookLM infographics are 1536x2752) is unusable as an
+// OG image: twitter:card=summary_large_image wants ~1.91:1 and centre-crops the
+// rest into mush. Prefer the generated landscape text card in that case.
+const ogTextCard = `/og/blog/${postSlug}.png`;
+const heroOg = post.data.heroImage ? ogSafeImage(post.data.heroImage) : null;
+const heroOgDimensions = heroOg ? getImageDimensions(heroOg) : null;
+// Use the hero only when its dimensions are *known* and landscape. Unknown
+// dimensions (missing .jpg twin, unreadable header) fall back to the text card,
+// matching scripts/generate-og-images.mjs, which generates a card in exactly the
+// same cases. Both sides read the same ogSafeImage() path and both default to
+// the card on uncertainty, so they cannot disagree about which file exists.
+const heroOgIsLandscape = !!heroOgDimensions && heroOgDimensions.width >= heroOgDimensions.height;
+const ogImage = heroOg && heroOgIsLandscape ? heroOg : ogTextCard;
 // Read the actual image dimensions at build time (covers infographics, text
 // cards, and any future OG image shape without filename-based heuristics).
 // Falls back to standard 1200x630 if the file is missing or unreadable.
@@ -105,7 +117,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
   image={ogImage}
   imageWidth={ogImageWidth}
   imageHeight={ogImageHeight}
-  imageAlt={heroAlt || undefined}
+  imageAlt={(ogImage === ogTextCard ? `${post.data.title} — adrianwedd.com` : heroAlt) || undefined}
   type="article"
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
@@ -327,8 +339,9 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             src={post.data.heroImage}
             width={heroWidth}
             height={heroHeight}
-            widths={[640, 1200, 1920]}
-            formats={['avif', 'webp']}
+            {...(isPublicPath(post.data.heroImage)
+              ? {}
+              : { widths: [640, 1200, 1920], formats: ['avif', 'webp'] as const })}
             alt={heroAlt}
             class="border-border mt-8 w-full rounded-lg border"
             loading="eager"

@@ -7,7 +7,7 @@ import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
-import { slug, youtubeId, ogSafeImage, heroAltText, tagSlug } from '../../lib/utils';
+import { slug, youtubeId, ogSafeImage, heroAltText, tagSlug, isPublicPath } from '../../lib/utils';
 import { getImageDimensions } from '../../lib/image-dimensions';
 import { Picture } from 'astro:assets';
 
@@ -28,7 +28,19 @@ const projectSlug = slug(project.id);
 // OG image: prefer the project's hero infographic, swap .webp -> .jpg
 // (FB / X / LinkedIn / iMessage don't reliably render WebP og:image).
 // The .jpg twin is generated alongside the .webp.
-const ogImage = project.data.heroImage ? ogSafeImage(project.data.heroImage) : `/og/projects/${projectSlug}.png`;
+// A portrait hero (the NotebookLM infographics are 1536x2752) is unusable as an
+// OG image: twitter:card=summary_large_image wants ~1.91:1 and centre-crops the
+// rest into mush. Prefer the generated landscape text card in that case.
+const ogTextCard = `/og/projects/${projectSlug}.png`;
+const heroOg = project.data.heroImage ? ogSafeImage(project.data.heroImage) : null;
+const heroOgDimensions = heroOg ? getImageDimensions(heroOg) : null;
+// Use the hero only when its dimensions are *known* and landscape. Unknown
+// dimensions (missing .jpg twin, unreadable header) fall back to the text card,
+// matching scripts/generate-og-images.mjs, which generates a card in exactly the
+// same cases. Both sides read the same ogSafeImage() path and both default to
+// the card on uncertainty, so they cannot disagree about which file exists.
+const heroOgIsLandscape = !!heroOgDimensions && heroOgDimensions.width >= heroOgDimensions.height;
+const ogImage = heroOg && heroOgIsLandscape ? heroOg : ogTextCard;
 // Read actual image dimensions at build time — covers infographics, text
 // cards, and any future OG image shape without filename-based heuristics.
 const ogDimensions = getImageDimensions(ogImage);
@@ -103,7 +115,7 @@ const allBlogPosts = project.data.series
   image={ogImage}
   imageWidth={ogImageWidth}
   imageHeight={ogImageHeight}
-  imageAlt={heroAlt || undefined}
+  imageAlt={(ogImage === ogTextCard ? `${project.data.title} — adrianwedd.com` : heroAlt) || undefined}
   type="website"
   tags={project.data.tags}
   preloadImage={typeof project.data.heroImage === 'string' ? project.data.heroImage : undefined}
@@ -265,8 +277,9 @@ const allBlogPosts = project.data.series
             src={project.data.heroImage}
             width={heroWidth}
             height={heroHeight}
-            widths={[640, 1200, 1920]}
-            formats={['avif', 'webp']}
+            {...(isPublicPath(project.data.heroImage)
+              ? {}
+              : { widths: [640, 1200, 1920], formats: ['avif', 'webp'] as const })}
             alt={heroAlt}
             class="border-border mb-10 w-full rounded-lg border"
             loading="eager"

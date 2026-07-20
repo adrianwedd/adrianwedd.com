@@ -99,3 +99,16 @@ export function heroAltText(opts: {
   // (alt="") so it's skipped rather than announced redundantly.
   return '';
 }
+
+/**
+ * True when `src` is a path into `public/` rather than an `src/assets` import.
+ *
+ * `astro:assets` can only resize/reformat images it processes at build time.
+ * For a `public/` path it emits the original file verbatim — but still honours
+ * a declared `widths`/`formats`, producing a `<source type="image/avif">` that
+ * actually serves WebP bytes and a srcset whose candidates are all the same
+ * file. Callers use this to omit those props so the markup stays truthful.
+ */
+export function isPublicPath(src: string | undefined): boolean {
+  return typeof src === 'string' && src.startsWith('/');
+}
