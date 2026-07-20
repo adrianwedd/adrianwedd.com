@@ -3,7 +3,6 @@ title: 'The Boredom Strike'
 description: "The attention economy doesn't want your attention. It wants your arousal. Boredom is the one state it can't sell, which makes it a labour tactic."
 date: 2026-07-27
 tags: ['attention', 'refusal', 'technology', 'autonomy', 'biopolitics']
-heroImage: '/notebook-assets/the-boredom-strike/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-boredom-strike/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-boredom-strike/video.mp4'
 audioDuration: '22:01'

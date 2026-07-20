@@ -17,6 +17,7 @@ set -uo pipefail
 cd "$(dirname "$0")"
 
 CONCURRENCY=3
+PIDS=""   # must exist before the launch loop: the script runs under `set -u`
 STAGGER=25
 DRY_RUN=0
 ONLY=""
@@ -90,7 +91,7 @@ process_one() {
   local slug="$1" chapter="$2" motif="$3"
   local out="$EXPORT_ROOT/$slug"
   local src="$CHAPTER_DIR/$chapter"
-  mkdir -p "$out"
+  mkdir -p "$out/studio/audio" "$out/studio/video" "$out/studio/infographic"
 
   [[ -f "$src" ]] || { echo "    FAIL $slug: source missing: $src"; return 1; }
 
@@ -129,7 +130,11 @@ process_one() {
   # any type that already has a completed or in-flight artifact.
   local asset
   for asset in audio video infographic; do
-    if artifact_state "$nb" "$asset" | grep -qx "completed\|generating\|pending"; then
+    # ANY listed artifact of this type means one was already requested —
+    # including `unknown`, which is what this CLI actually reports for an
+    # in-flight generation (34 such entries across the first batch's logs).
+    # Omitting it here is how a rerun produced 2-3 duplicate copies.
+    if artifact_state "$nb" "$asset" | grep -q .; then
       echo "    skip $slug: $asset already exists"
       continue
     fi
@@ -163,19 +168,27 @@ process_one() {
   # otherwise read as "nothing pending" and break the loop on the first poll —
   # the same race this rewrite exists to remove. Let the list settle first.
   sleep 60
-  # An empty status list is ambiguous: it means either "nothing was ever
-  # created" or "the creates haven't registered yet". Treating it as done
-  # would reintroduce the original race on a slow-registering notebook, so
-  # for the first few minutes an empty list counts as still-waiting. After
-  # that it is taken at face value and the download step reports honestly.
-  local waited=0 pending listed
+  # Wait on the THREE KINDS WE WANT, not on the notebook's whole artifact list.
+  # Watching the list means an unrelated historical artifact stuck at `unknown`
+  # — notebooks reused across runs accumulate them — blocks for the full
+  # timeout even though everything needed is already downloadable. Asking "is
+  # there a completed audio/video/infographic yet?" is the actual question.
+  #
+  # An empty list early on still counts as waiting: a just-issued create may
+  # not have registered, and calling that "done" is the original race.
+  local waited=0 ready listed
   while (( waited < 1800 )); do
+    ready=0
+    for asset in audio video infographic; do
+      artifact_state "$nb" "$asset" | grep -qx completed && ready=$((ready+1))
+    done
+    (( ready == 3 )) && break
     listed=$(artifact_state "$nb" any | grep -c . || true)
-    pending=$(artifact_state "$nb" any | grep -cvx "completed\|failed" || true)
-    if (( listed == 0 && waited < 300 )); then
-      pending=1
+    if (( listed > 0 && waited >= 300 )); then
+      # Everything listed has settled and nothing more is coming — stop early
+      # rather than idling to the timeout. Missing kinds are reported below.
+      artifact_state "$nb" any | grep -qvx "completed\|failed" || break
     fi
-    (( pending == 0 )) && break
     sleep 30; waited=$((waited+30))
   done
   (( waited >= 1800 )) && { echo "    WARN $slug: still generating after 30m"; problems=1; }
@@ -183,9 +196,12 @@ process_one() {
   local kind out_file
   for kind in audio video infographic; do
     case "$kind" in
-      audio) out_file="$out/audio.m4a" ;;
-      video) out_file="$out/video.mp4" ;;
-      infographic) out_file="$out/infographic.png" ;;
+      # These paths must match what verify-ub-batch.sh globs (studio/<kind>/),
+      # or the verifier reports every asset MISSING for assets that downloaded
+      # fine — a false alarm indistinguishable from a genuinely empty run.
+      audio) out_file="$out/studio/audio/overview.m4a" ;;
+      video) out_file="$out/studio/video/overview.mp4" ;;
+      infographic) out_file="$out/studio/infographic/overview.png" ;;
     esac
     artifact_state "$nb" "$kind" | grep -qx completed || {
       echo "    WARN $slug: no completed $kind to download"; problems=1; continue; }
@@ -209,9 +225,19 @@ while IFS='|' read -r slug chapter motif; do
 
   echo "--> launching $slug"
   process_one "$slug" "$chapter" "$motif" >>"$LOG_DIR/$slug.log" 2>&1 &
+  PIDS="$PIDS $!"
   (( DRY_RUN )) || sleep "$STAGGER"
 done <<< "$ROWS"
 
-wait
+# Bare `wait` returns 0 once all jobs finish, even when children failed — so a
+# batch where every slug came back PARTIAL still exits success and any caller
+# or CI step sees a green run. Wait per-PID and keep the worst status.
+RC=0
+for pid in $PIDS; do
+  wait "$pid" || RC=1
+done
+
 echo "==> launches finished. Nothing is trustworthy until:"
 echo "    ./verify-ub-batch.sh"
+(( RC )) && echo "==> at least one slug was PARTIAL — see logs/ub/*.log"
+exit $RC

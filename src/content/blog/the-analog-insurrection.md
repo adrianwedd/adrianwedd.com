@@ -3,7 +3,6 @@ title: 'The Analog Insurrection'
 description: 'Disconnection used to be the default. Now it is a luxury good, and the price of staying unreadable is quietly sorting us into two classes.'
 date: 2026-07-30
 tags: ['analog', 'refusal', 'privacy', 'autonomy', 'technology']
-heroImage: '/notebook-assets/the-analog-insurrection/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-analog-insurrection/audio.m4a'
 audioDuration: '29:26'
 series: 'The Ungovernable Body: Essays'
