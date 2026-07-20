@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'preact/hooks';
+import { useState, useMemo, useRef, useId } from 'preact/hooks';
 
 export type TrendPoint = {
   date: string;
@@ -42,6 +42,9 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
   const [metric, setMetric] = useState<MetricKey>('pageviews');
   const [hover, setHover] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  // Unique per instance: a hardcoded gradient id would collide if two charts
+  // ever shared a page, and the first definition would silently win.
+  const gradientId = `trend-fill-${useId()}`;
 
   const model = useMemo(() => {
     const values = series.map((p) => p[metric]);
@@ -86,6 +89,26 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
     setHover(Math.min(series.length - 1, Math.max(0, idx)));
   }
 
+  // Keyboard equivalent for the pointer scrub, so the per-day values aren't
+  // reachable by mouse alone (WCAG 2.2 §2.1.1).
+  function onKeyDown(e: KeyboardEvent) {
+    const last = series.length - 1;
+    const { key } = e;
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Escape'].includes(key)) return;
+    e.preventDefault();
+    // Functional form: reading `hover` from the closure made held/repeated keys
+    // collapse to a single step, since every press in a batch saw the same
+    // stale value.
+    setHover((prev) => {
+      const from = prev ?? last;
+      if (key === 'ArrowLeft') return Math.max(0, from - 1);
+      if (key === 'ArrowRight') return Math.min(last, from + 1);
+      if (key === 'Home') return 0;
+      if (key === 'End') return last;
+      return null;
+    });
+  }
+
   const fmtDate = (iso: string) =>
     new Date(`${iso}T00:00:00`).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
 
@@ -110,30 +133,36 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
         ))}
       </div>
 
-      {/* Readout — reflects the hovered day, or the latest when not hovering */}
-      <div class="mb-2 flex items-baseline gap-3">
+      {/* Readout — reflects the hovered/focused day, or the latest otherwise.
+          aria-live so keyboard scrubbing is announced, not just drawn. */}
+      <div class="mb-2 flex items-baseline gap-3" aria-live="polite" aria-atomic="true">
         <span class="text-accent text-3xl font-semibold tabular-nums">{activePoint[metric].toLocaleString()}</span>
         <span class="text-text-muted font-mono text-xs">{fmtDate(activePoint.date)}</span>
       </div>
 
+      {/* No touch-action:none on the SVG — it blocked page scroll for any
+          gesture starting over the chart. */}
       <svg
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
-        class="h-auto w-full touch-none"
+        class="focus-visible:outline-accent h-auto w-full focus-visible:outline-2"
         role="img"
-        aria-label={`${METRICS.find((m) => m.key === metric)?.label} per day from ${fmtDate(series[0].date)} to ${fmtDate(series[series.length - 1].date)}`}
+        tabIndex={0}
+        aria-label={`${METRICS.find((m) => m.key === metric)?.label} per day from ${fmtDate(series[0].date)} to ${fmtDate(series[series.length - 1].date)}. Use arrow keys to read individual days.`}
         onPointerMove={onMove}
         onPointerLeave={() => setHover(null)}
+        onKeyDown={onKeyDown}
+        onBlur={() => setHover(null)}
       >
         <defs>
-          <linearGradient id="trend-fill" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.28" />
             <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.02" />
           </linearGradient>
         </defs>
 
         {/* Horizontal gridlines + y labels */}
-        {[0, 0.5, 1].map((f) => {
+        {[0, 0.25, 0.5, 0.75, 1].map((f) => {
           const v = model.yMax * f;
           const yy = model.y(v);
           return (
@@ -173,7 +202,7 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
           </g>
         ))}
 
-        <path d={model.area} fill="url(#trend-fill)" />
+        <path d={model.area} fill={`url(#${gradientId})`} />
         <path
           d={model.line}
           fill="none"

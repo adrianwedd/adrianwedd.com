@@ -131,6 +131,10 @@ async function fetchGA4Data(credentials, propertyId) {
       dimensions: [{ name: 'date' }],
       metrics: [{ name: 'screenPageViews' }, { name: 'totalUsers' }, { name: 'engagedSessions' }],
       orderBys: [{ dimension: { dimensionName: 'date' } }],
+      // Without this, GA4 drops rows whose metrics are all zero. The chart plots
+      // rows as consecutive days, so a zero-traffic day would silently close the
+      // gap and inflate the daily average.
+      keepEmptyRows: true,
       limit: 100,
     }),
   ]);
@@ -237,10 +241,13 @@ async function fetchGA4Data(credentials, propertyId) {
     devices: deviceMap,
     referrers: referrerData,
     engagement: {
-      scrollDepth: { avg: 0, distribution: {} },
+      // The site emits scroll_depth, audio_play and gallery_view events, but this
+      // script does not query them yet. Emitting 0 published a false measurement
+      // as fact; null means "not measured" and the dashboard renders it as such.
+      scrollDepth: { avg: null, distribution: {} },
       avgSession: { avg: Math.round(avgSessionDuration), distribution: {} },
-      audioPlays: 0,
-      galleryViews: 0,
+      audioPlays: null,
+      galleryViews: null,
     },
   };
 }
@@ -267,7 +274,9 @@ function getMockData() {
 
   // Deterministic (no Math.random) so repeated builds don't churn the committed
   // file. Shaped, not realistic — the dashboard flags the whole payload as mock.
-  const mockSeries = Array.from({ length: 90 }, (_, i) => {
+  // 91 points: the range is inclusive of both today and the day 90 days back,
+  // so a 90-length series stopped at yesterday while declaring `end: today`.
+  const mockSeries = Array.from({ length: 91 }, (_, i) => {
     const day = new Date(ninetyDaysAgo.getTime() + i * 24 * 60 * 60 * 1000);
     const weekly = Math.sin((i / 7) * Math.PI * 2) * 18;
     const growth = i * 1.4;

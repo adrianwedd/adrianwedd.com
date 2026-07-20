@@ -5,14 +5,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 // truth — the page and the file can't drift apart.
 import { compiledContent } from '../../CHANGELOG.md';
 
-// The file opens with its own H1 and intro paragraph so it stands alone when
-// read in the repository. Both duplicate this page's hero, so strip them from
-// the HTML rather than hiding them in CSS — a display:none H1 is still a second
-// H1 in the document.
-const html = (await compiledContent())
-  .replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>/, '')
-  .replace(/^\s*<p>[\s\S]*?<\/p>/, '')
-  .replace(/^\s*<hr\s*\/?>/, '');
+// The file opens with its own H1 and intro so it stands alone when read in the
+// repository. Both duplicate this page's hero, so drop everything before the
+// first entry heading — stripping tags in sequence would silently swallow a real
+// entry if the preamble ever gained another paragraph. Removing the H1 matters:
+// a display:none H1 is still a second H1 in the document.
+const rendered = await compiledContent();
+const firstEntry = rendered.indexOf('<h2');
+if (firstEntry === -1) {
+  throw new Error('CHANGELOG.md has no <h2> entry heading — the changelog page would render empty.');
+}
+const html = rendered.slice(firstEntry);
 ---
 
 <BaseLayout

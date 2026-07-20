@@ -37,10 +37,12 @@ type AnalyticsData = {
     users: number;
   }>;
   engagement: {
-    scrollDepth: { avg: number; distribution: Record<string, number> };
+    // null means the metric isn't queried from GA4 yet — rendered as "Not
+    // measured" rather than a zero that would read as a real measurement.
+    scrollDepth: { avg: number | null; distribution: Record<string, number> };
     avgSession: { avg: number; distribution: Record<string, number> };
-    audioPlays: number;
-    galleryViews: number;
+    audioPlays: number | null;
+    galleryViews: number | null;
   };
   _mock?: boolean;
 };
@@ -87,7 +89,10 @@ export default function AnalyticsDashboard() {
 
       {/* Period indicator */}
       <div class="text-text-muted text-sm">
-        Data from {new Date(data.period.start).toLocaleDateString()} to {new Date(data.period.end).toLocaleDateString()}
+        {/* Append local midnight — bare 'YYYY-MM-DD' parses as UTC and renders a
+            day early for viewers in negative offsets. */}
+        Data from {new Date(`${data.period.start}T00:00:00`).toLocaleDateString()} to{' '}
+        {new Date(`${data.period.end}T00:00:00`).toLocaleDateString()}
       </div>
 
       {/* Overview metrics */}
@@ -205,21 +210,28 @@ export default function AnalyticsDashboard() {
       <section>
         <h2 class="mb-4 text-2xl font-bold">Engagement</h2>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Avg. Scroll Depth" value={`${data.engagement.scrollDepth.avg.toFixed(0)}%`} />
+          <MetricCard
+            label="Avg. Scroll Depth"
+            value={data.engagement.scrollDepth.avg == null ? null : `${data.engagement.scrollDepth.avg.toFixed(0)}%`}
+          />
           <MetricCard label="Avg. Session" value={formatDuration(data.engagement.avgSession?.avg ?? 0)} />
-          <MetricCard label="Audio Plays" value={data.engagement.audioPlays.toLocaleString()} />
-          <MetricCard label="Gallery Views" value={data.engagement.galleryViews.toLocaleString()} />
+          <MetricCard label="Audio Plays" value={data.engagement.audioPlays?.toLocaleString() ?? null} />
+          <MetricCard label="Gallery Views" value={data.engagement.galleryViews?.toLocaleString() ?? null} />
         </div>
       </section>
     </div>
   );
 }
 
-function MetricCard({ label, value }: { label: string; value: string }) {
+function MetricCard({ label, value }: { label: string; value: string | null }) {
   return (
     <div class="border-border bg-surface-alt rounded border p-4">
       <div class="text-text-muted mb-1 text-sm">{label}</div>
-      <div class="text-accent text-3xl font-bold">{value}</div>
+      {value == null ? (
+        <div class="text-text-muted text-lg">Not measured</div>
+      ) : (
+        <div class="text-accent text-3xl font-bold">{value}</div>
+      )}
     </div>
   );
 }
