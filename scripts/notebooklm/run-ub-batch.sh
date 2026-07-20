@@ -63,6 +63,29 @@ EOF
 grep -q "^the-gorgon-protocol	" "$STATE" 2>/dev/null || \
   printf 'the-gorgon-protocol\t790c9527-5ef0-4c36-93c5-22107803ef7a\n' >> "$STATE"
 
+# artifact_state <notebook> <type|any> -> one status per matching artifact.
+#
+# `nlm studio status` returns a JSON array of {type,status}. On any failure —
+# auth expired, rate limit, malformed body — this prints "unknown", which is
+# deliberately not a terminal state: the poll loop keeps waiting instead of
+# racing ahead to download nothing.
+artifact_state() {
+  local nb="$1" want="$2" raw
+  raw=$(nlm studio status "$nb" 2>/dev/null) || { echo unknown; return 0; }
+  printf '%s' "$raw" | python3 -c '
+import sys, json
+want = sys.argv[1]
+try:
+    items = json.load(sys.stdin)
+    if not isinstance(items, list): raise ValueError
+except Exception:
+    print("unknown"); sys.exit(0)
+for a in items:
+    if want == "any" or a.get("type") == want:
+        print(a.get("status") or "unknown")
+' "$want" 2>/dev/null || echo unknown
+}
+
 process_one() {
   local slug="$1" chapter="$2" motif="$3"
   local out="$EXPORT_ROOT/$slug"
@@ -95,29 +118,56 @@ process_one() {
   fi
 
   local focus="$PALETTE $RULES $motif $BEATS"
+  local problems=0
 
   # deep_dive at default length = 256k stereo. Never --length long (96k mono).
   # Non-fatal by design (one asset failing shouldn't sink the slug) but the
   # failure is recorded, not discarded.
+  #
+  # Creation is NOT idempotent: re-running a slug adds another copy rather than
+  # replacing. Two slugs ended up with 2-3 audios/videos each that way. So skip
+  # any type that already has a completed or in-flight artifact.
   local asset
   for asset in audio video infographic; do
-    case "$asset" in
-      audio) nlm audio create "$nb" --format deep_dive --confirm ;;
-      video) nlm video create "$nb" --format cinematic --style-prompt "$focus" --confirm ;;
-      infographic) nlm infographic create "$nb" --orientation landscape --style editorial \
-                     --focus "$PALETTE $RULES $motif" --confirm ;;
-    esac
-    (( $? == 0 )) || echo "    WARN $slug: $asset create failed (see logs/ub/$slug.log)"
+    if artifact_state "$nb" "$asset" | grep -qx "completed\|generating\|pending"; then
+      echo "    skip $slug: $asset already exists"
+      continue
+    fi
+
+    # Video is the rate-limited one (RESOURCE_EXHAUSTED killed five slugs in the
+    # first batch). Retry with backoff rather than losing the asset.
+    local try rc
+    for try in 1 2 3; do
+      case "$asset" in
+        audio) nlm audio create "$nb" --format deep_dive --confirm ;;
+        video) nlm video create "$nb" --format cinematic --style-prompt "$focus" --confirm ;;
+        infographic) nlm infographic create "$nb" --orientation landscape --style editorial \
+                       --focus "$PALETTE $RULES $motif" --confirm ;;
+      esac
+      rc=$?
+      (( rc == 0 )) && break
+      echo "    retry $slug: $asset create failed (attempt $try/3)"
+      sleep $(( try * 120 ))
+    done
+    (( rc == 0 )) || { echo "    WARN $slug: $asset create failed after 3 tries"; problems=1; }
   done
 
-  # Generation is async; poll then pull. Downloads are the step that silently
-  # fetches a thumbnail on stale auth, so verify-ub-batch.sh checks the bytes.
-  local waited=0
-  while (( waited < 900 )); do
+  # Generation is async; poll then pull. `nlm studio status` emits JSON, so the
+  # old text grep for "generating|pending" matched nothing and broke on the very
+  # first poll — every download then ran before the media URL existed and the
+  # whole batch "succeeded" with zero files. Wait on parsed state instead, and
+  # treat an unparseable/errored status as "keep waiting", never as "done".
+  # A create that was just issued may not be listed yet; an empty array would
+  # otherwise read as "nothing pending" and break the loop on the first poll —
+  # the same race this rewrite exists to remove. Let the list settle first.
+  sleep 60
+  local waited=0 pending
+  while (( waited < 1800 )); do
+    pending=$(artifact_state "$nb" any | grep -cvx "completed\|failed" || true)
+    (( pending == 0 )) && break
     sleep 30; waited=$((waited+30))
-    nlm studio status "$nb"
-    nlm studio status "$nb" 2>/dev/null | grep -qi "generating\|pending" || break
   done
+  (( waited >= 1800 )) && { echo "    WARN $slug: still generating after 30m"; problems=1; }
 
   local kind out_file
   for kind in audio video infographic; do
@@ -126,10 +176,15 @@ process_one() {
       video) out_file="$out/video.mp4" ;;
       infographic) out_file="$out/infographic.png" ;;
     esac
+    artifact_state "$nb" "$kind" | grep -qx completed || {
+      echo "    WARN $slug: no completed $kind to download"; problems=1; continue; }
     nlm download "$kind" "$nb" --output "$out_file" \
-      || echo "    WARN $slug: $kind download failed (see logs/ub/$slug.log)"
+      || { echo "    WARN $slug: $kind download failed (see logs/ub/$slug.log)"; problems=1; }
   done
 
+  # Don't print "ok" over the top of warnings — that is how the first batch
+  # reported twelve successes while writing nothing to disk.
+  (( problems )) && { echo "    PARTIAL $slug (nb=$nb) — see warnings above"; return 1; }
   echo "    ok   $slug (nb=$nb)"
 }
 

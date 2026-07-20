@@ -32,9 +32,18 @@ for slug in "${SLUGS[@]}"; do
     if (( bytes < 1000000 )); then
       astat="TOO SMALL (${bytes}B)"; FAIL=1   # thumbnail-instead-of-asset tell
     else
-      read -r br ch <<<"$(ffprobe -v error -select_streams a:0 \
-        -show_entries stream=bit_rate,channels -of csv=p=0:s=' ' "$a" 2>/dev/null)"
-      kbps=$(( ${br:-0} / 1000 ))
+      # Bitrate comes from the FORMAT, not the stream: NLM's AAC-in-MP4 leaves
+      # stream=bit_rate empty, so the old stream-only probe reported 0k for
+      # every file. That produced a false "96k mono, needs a re-roll" call on
+      # audio that was in fact 257k stereo. Probe format, and treat an empty
+      # read as "could not measure" rather than as a failing bitrate.
+      read -r ch br <<<"$(ffprobe -v error -select_streams a:0 \
+        -show_entries stream=channels:format=bit_rate -of csv=p=0 "$a" 2>/dev/null | tr '\n' ' ')"
+      if [[ -z "${br:-}" || -z "${ch:-}" ]]; then
+        astat="UNMEASURABLE"; FAIL=1
+        printf '%-36s %-22s %-22s %s\n' "$slug" "$astat" "-" "-"; continue
+      fi
+      kbps=$(( br / 1000 ))
       if (( kbps < 200 )) || [[ "${ch:-0}" != "2" ]]; then
         astat="LOW ${kbps}k/${ch:-?}ch"; FAIL=1  # 96k mono = wrong length setting
       else
