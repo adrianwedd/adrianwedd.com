@@ -39,6 +39,17 @@ try {
   /* fallback */
 }
 
+// Derived from the directory rather than hand-listed — the previous prose named
+// five islands and had drifted well out of date.
+const islandNames = Object.keys(import.meta.glob('../components/islands/*.tsx'))
+  .map((p) =>
+    p
+      .split('/')
+      .pop()!
+      .replace(/\.tsx$/, ''),
+  )
+  .sort();
+
 // Count generated pages (from last build if available)
 let pageCount = 0;
 try {
@@ -106,7 +117,9 @@ try {
           </div>
           <div>
             <dt class="text-accent font-medium">Interactive Components</dt>
-            <dd class="text-text-muted">Preact islands (AudioPlayer, MindMap, Quiz, Flashcards, DataTable)</dd>
+            <dd class="text-text-muted">
+              {islandNames.length} Preact islands ({islandNames.join(', ')})
+            </dd>
           </div>
           <div>
             <dt class="text-accent font-medium">Content</dt>
@@ -238,7 +251,7 @@ try {
               target="_blank"
               rel="noopener noreferrer"
               class="text-accent hover:underline">Claude Code</a
-            > (Opus 4.6).
+            >, across whichever Claude model was current at the time — the site has outlived several.
           </p>
           <p>
             NotebookLM automation toolkit: <a
