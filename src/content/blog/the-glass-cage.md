@@ -3,6 +3,9 @@ title: 'The Glass Cage'
 description: 'The demand that you be readable is the demand that you be governable. On legibility, the trap of visibility, and why opacity is the freedom left.'
 date: 2026-07-23
 tags: ['surveillance', 'biopolitics', 'privacy', 'autonomy', 'technology']
+heroImage: '/notebook-assets/the-glass-cage/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-glass-cage/audio.m4a'
+audioDuration: '20:32'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 1
 relatedProject: 'ungovernable-body'

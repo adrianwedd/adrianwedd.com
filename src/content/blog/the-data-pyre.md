@@ -3,6 +3,9 @@ title: 'The Data Pyre'
 description: 'We built a civilisation whose every system defaults to save. The archive is perfect and the liturgy of erasure is gone. Deletion has to become a ritual.'
 date: 2026-08-02
 tags: ['deletion', 'ritual', 'data', 'mortality', 'ethics']
+heroImage: '/notebook-assets/the-data-pyre/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-data-pyre/audio.m4a'
+audioDuration: '23:04'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 11
 relatedProject: 'ungovernable-body'
