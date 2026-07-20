@@ -80,6 +80,9 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
   const activePoint = series[active];
 
   function onMove(e: PointerEvent) {
+    // Touch gestures scroll the page; scrubbing on touch made a reader dragging
+    // past the chart also drive the readout.
+    if (e.pointerType === 'touch') return;
     const svg = svgRef.current;
     if (!svg) return;
     const rect = svg.getBoundingClientRect();
@@ -87,26 +90,6 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
     const plotRatio = (ratio * W - PAD.left) / (W - PAD.left - PAD.right);
     const idx = Math.round(plotRatio * (series.length - 1));
     setHover(Math.min(series.length - 1, Math.max(0, idx)));
-  }
-
-  // Keyboard equivalent for the pointer scrub, so the per-day values aren't
-  // reachable by mouse alone (WCAG 2.2 §2.1.1).
-  function onKeyDown(e: KeyboardEvent) {
-    const last = series.length - 1;
-    const { key } = e;
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Escape'].includes(key)) return;
-    e.preventDefault();
-    // Functional form: reading `hover` from the closure made held/repeated keys
-    // collapse to a single step, since every press in a batch saw the same
-    // stale value.
-    setHover((prev) => {
-      const from = prev ?? last;
-      if (key === 'ArrowLeft') return Math.max(0, from - 1);
-      if (key === 'ArrowRight') return Math.min(last, from + 1);
-      if (key === 'Home') return 0;
-      if (key === 'End') return last;
-      return null;
-    });
   }
 
   const fmtDate = (iso: string) =>
@@ -141,18 +124,18 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
       </div>
 
       {/* No touch-action:none on the SVG — it blocked page scroll for any
-          gesture starting over the chart. */}
+          gesture starting over the chart. The SVG stays role="img" and is NOT
+          focusable: assistive tech intercepts arrow keys on an image, so
+          keyboard scrubbing lives on the range input below, which gets native
+          slider semantics and announcement for free. */}
       <svg
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
-        class="focus-visible:outline-accent h-auto w-full focus-visible:outline-2"
+        class="h-auto w-full"
         role="img"
-        tabIndex={0}
-        aria-label={`${METRICS.find((m) => m.key === metric)?.label} per day from ${fmtDate(series[0].date)} to ${fmtDate(series[series.length - 1].date)}. Use arrow keys to read individual days.`}
+        aria-label={`${METRICS.find((m) => m.key === metric)?.label} per day from ${fmtDate(series[0].date)} to ${fmtDate(series[series.length - 1].date)}`}
         onPointerMove={onMove}
         onPointerLeave={() => setHover(null)}
-        onKeyDown={onKeyDown}
-        onBlur={() => setHover(null)}
       >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
@@ -177,7 +160,9 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
                 vector-effect="non-scaling-stroke"
               />
               <text x={PAD.left - 8} y={yy + 4} text-anchor="end" font-size="10" fill="var(--color-text-muted)">
-                {v >= 1000 ? `${(v / 1000).toFixed(v % 1000 ? 1 : 0)}k` : v}
+                {/* All three metrics are counts, so fractional ticks (0, 22.5,
+                    45…) would be nonsense. */}
+                {v >= 1000 ? `${(v / 1000).toFixed(v % 1000 ? 1 : 0)}k` : Math.round(v)}
               </text>
             </g>
           );
@@ -221,35 +206,58 @@ export default function TrendChart({ series }: { series: TrendPoint[] }) {
           vector-effect="non-scaling-stroke"
         />
 
-        {/* Hover crosshair */}
-        {hover !== null && (
-          <g>
-            <line
-              x1={model.x(hover)}
-              y1={PAD.top}
-              x2={model.x(hover)}
-              y2={PAD.top + model.plotH}
-              stroke="var(--color-accent)"
-              stroke-width="1"
-              stroke-opacity="0.5"
-              vector-effect="non-scaling-stroke"
-            />
-            <circle
-              cx={model.x(hover)}
-              cy={model.y(model.values[hover])}
-              r="3.5"
-              fill="var(--color-accent)"
-              stroke="var(--color-surface)"
-              stroke-width="1.5"
-            />
-          </g>
-        )}
+        {/* Marker tracks `active`, not `hover`, so it's visible on load and
+            while scrubbing by keyboard — previously it stayed invisible until
+            the first arrow press. */}
+        <g>
+          <line
+            x1={model.x(active)}
+            y1={PAD.top}
+            x2={model.x(active)}
+            y2={PAD.top + model.plotH}
+            stroke="var(--color-accent)"
+            stroke-width="1"
+            stroke-opacity={hover === null ? 0.25 : 0.5}
+            vector-effect="non-scaling-stroke"
+          />
+          <circle
+            cx={model.x(active)}
+            cy={model.y(model.values[active])}
+            r="3.5"
+            fill="var(--color-accent)"
+            stroke="var(--color-surface)"
+            stroke-width="1.5"
+          />
+        </g>
       </svg>
+
+      {/* The keyboard/screen-reader path. A native range input carries slider
+          semantics and arrow-key handling that AT won't swallow, and its
+          aria-valuetext announces the day and its value. */}
+      <label class="sr-only" for={`${gradientId}-scrub`}>
+        Scrub {METRICS.find((m) => m.key === metric)?.label.toLowerCase()} by day
+      </label>
+      <input
+        id={`${gradientId}-scrub`}
+        type="range"
+        // accent-color tints the native track and thumb, so the control reads as
+        // part of the chart instead of a default blue browser slider.
+        class="mt-1 h-1 w-full cursor-pointer"
+        style={{ accentColor: 'var(--color-accent)' }}
+        min={0}
+        max={series.length - 1}
+        step={1}
+        value={active}
+        aria-valuetext={`${fmtDate(activePoint.date)}: ${activePoint[metric].toLocaleString()} ${METRICS.find((m) => m.key === metric)?.label.toLowerCase()}`}
+        onInput={(e) => setHover(Number((e.currentTarget as HTMLInputElement).value))}
+      />
 
       {/* Summary strip */}
       <dl class="border-border mt-4 grid grid-cols-3 gap-4 border-t pt-4">
         <div>
-          <dt class="text-text-muted text-xs">Total</dt>
+          {/* Summing per-day distinct users counts a returning visitor once per
+              day, so for Visitors this is visitor-days, not distinct people. */}
+          <dt class="text-text-muted text-xs">{metric === 'users' ? 'Visitor-days' : 'Total'}</dt>
           <dd class="text-text font-semibold tabular-nums">{model.total.toLocaleString()}</dd>
         </div>
         <div>

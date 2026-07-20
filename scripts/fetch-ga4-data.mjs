@@ -216,15 +216,32 @@ async function fetchGA4Data(credentials, propertyId) {
   // --- Parse daily trend ---
   // GA4 returns the date dimension as YYYYMMDD; normalise to ISO so the client
   // never has to parse a bare 8-digit string.
-  const trendSeries = (trend[0]?.rows || []).map((row) => {
-    const raw = row.dimensionValues?.[0]?.value || '';
-    return {
-      date: `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`,
-      pageviews: parseInt(row.metricValues?.[0]?.value || '0'),
-      users: parseInt(row.metricValues?.[1]?.value || '0'),
-      engagedSessions: parseInt(row.metricValues?.[2]?.value || '0'),
-    };
-  });
+  const returnedByDate = new Map(
+    (trend[0]?.rows || []).map((row) => {
+      const raw = row.dimensionValues?.[0]?.value || '';
+      const date = `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
+      return [
+        date,
+        {
+          date,
+          pageviews: parseInt(row.metricValues?.[0]?.value || '0'),
+          users: parseInt(row.metricValues?.[1]?.value || '0'),
+          engagedSessions: parseInt(row.metricValues?.[2]?.value || '0'),
+        },
+      ];
+    }),
+  );
+
+  // Zero-fill every calendar day in the range. keepEmptyRows keeps all-zero rows
+  // but cannot invent a row for a date GA4 never recorded, and the chart spaces
+  // points by array index — so a missing day would silently close the gap, shift
+  // its neighbours together and shrink the daily-average denominator.
+  const trendSeries = [];
+  for (let d = new Date(`${trendStartDate}T00:00:00Z`); ; d.setUTCDate(d.getUTCDate() + 1)) {
+    const date = d.toISOString().split('T')[0];
+    trendSeries.push(returnedByDate.get(date) ?? { date, pageviews: 0, users: 0, engagedSessions: 0 });
+    if (date >= endDate) break;
+  }
 
   return {
     period: { start: startDate, end: endDate },
@@ -336,10 +353,13 @@ function getMockData() {
       { source: 'linkedin.com', type: 'social', users: 295 },
     ],
     engagement: {
-      scrollDepth: { avg: 67.3, distribution: { '25': 89, '50': 72, '75': 54, '100': 38 } },
+      // null here too, matching the live path — these three aren't queried from
+      // GA4 at all, so inventing figures for them would misrepresent what the
+      // page can actually report, mock banner or not.
+      scrollDepth: { avg: null, distribution: {} },
       avgSession: { avg: 142, distribution: { '30s': 23, '1m': 41, '2m': 28, '5m': 8 } },
-      audioPlays: 147,
-      galleryViews: 284,
+      audioPlays: null,
+      galleryViews: null,
     },
     _mock: true,
   };

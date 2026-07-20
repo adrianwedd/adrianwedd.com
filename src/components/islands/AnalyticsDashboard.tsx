@@ -251,8 +251,9 @@ function DeviceBar({ label, value }: { label: string; value: number }) {
 }
 
 function formatDuration(seconds: number): string {
-  if (seconds < 60) return `${Math.round(seconds)}s`;
-  const minutes = Math.floor(seconds / 60);
-  const secs = Math.round(seconds % 60);
-  return `${minutes}m ${secs}s`;
+  // Round once, up front. Rounding minutes and seconds separately produced
+  // "1m 60s" for 119.6 — floor() took the minute before round() carried it.
+  const rounded = Math.round(seconds);
+  if (rounded < 60) return `${rounded}s`;
+  return `${Math.floor(rounded / 60)}m ${rounded % 60}s`;
 }

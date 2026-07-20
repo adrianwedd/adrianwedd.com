@@ -40,7 +40,9 @@ try {
 }
 
 // Derived from the directory rather than hand-listed — the previous prose named
-// five islands and had drifted well out of date.
+// five and had drifted well out of date. Note this counts component files, not
+// hydrated islands: TrendChart is a child import of AnalyticsDashboard and never
+// gets its own client:* directive, so the label says "components", not "islands".
 const islandNames = Object.keys(import.meta.glob('../components/islands/*.tsx'))
   .map((p) =>
     p
@@ -118,7 +120,7 @@ try {
           <div>
             <dt class="text-accent font-medium">Interactive Components</dt>
             <dd class="text-text-muted">
-              {islandNames.length} Preact islands ({islandNames.join(', ')})
+              {islandNames.length} Preact components ({islandNames.join(', ')})
             </dd>
           </div>
           <div>
