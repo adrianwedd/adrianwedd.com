@@ -69,4 +69,4 @@ And there is the fix, which is not complicated. Put the benches back, with backs
 
 A city that only works for people who never need to stop is not efficient. It is broken, and it has simply arranged not to see who is missing.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/1-3-the-ghost-in-the-city/)

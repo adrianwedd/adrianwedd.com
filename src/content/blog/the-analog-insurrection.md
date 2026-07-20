@@ -69,4 +69,4 @@ But the direction is worth naming clearly. The coming fight is not over who can 
 
 The body that refuses to be a data point is the one this whole project is about. Right now, that refusal costs money.
 
-The full chapter, with the research and sources behind it, is here: [The Analog Insurrection →](https://ungovernable-body.wedd.au/research/)
+The full chapter, with the research and sources behind it, is here: [The Analog Insurrection →](https://ungovernable-body.wedd.au/research/3-1-the-analog-insurrection/)

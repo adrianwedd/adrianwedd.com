@@ -83,4 +83,4 @@ None of this is a demand for destruction. It's the opposite. Meaning comes from 
 
 We should be building infrastructure capable of silence.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/3-2-the-right-to-be-forgotten/)

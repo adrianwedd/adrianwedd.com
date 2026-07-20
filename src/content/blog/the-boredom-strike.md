@@ -87,4 +87,4 @@ Boredom is not an absence of content. It's the presence of the self, arriving on
 
 Earlier in this series I was writing about the body's visibility — [who gets seen, and what the seeing costs](/blog/the-ghost-in-the-city/). This is the other axis: the body's tempo. To be ungovernable is to move at a speed the machine can't track. Rot, in the sense of being permitted to go unoptimised. The revolutionary subject here isn't someone shouting from a barricade with their phone out. It's someone on a park bench watching birds, paying attention to nothing but the world.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/2-1-the-boredom-strike/)

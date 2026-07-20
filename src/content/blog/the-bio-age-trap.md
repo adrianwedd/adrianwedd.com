@@ -77,4 +77,4 @@ Bio-age is not a fact of nature. It is a construct, built by identifiable firms,
 
 This is a compressed version of an argument I make at length, with the sources and the actuarial detail intact, in the research corpus behind _The Ungovernable Body_.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/1-1-the-bio-age-trap-the/)

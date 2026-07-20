@@ -75,4 +75,4 @@ The readable subject is the governable subject. To stay free you have to remain,
 
 That's the argument the whole project is built on, and the film I'm making is one long attempt to dramatise it: a woman whose own body gets reclassified as a fault, who has to become unreadable to survive it.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/) · [Project page →](/projects/ungovernable-body/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/0-1-the-glass-cage-the-biopolitics/) · [Project page →](/projects/ungovernable-body/)

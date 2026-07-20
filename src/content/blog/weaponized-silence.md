@@ -77,4 +77,4 @@ That's the whole claim, and it's smaller and harder than it sounds. Your attenti
 
 Let the air stay dead. Watch what comes to fill it. That's the shape of what you were carrying.
 
-[The full chapter →](https://ungovernable-body.wedd.au/research/)
+[The full chapter →](https://ungovernable-body.wedd.au/research/2-2-weaponized-silence/)

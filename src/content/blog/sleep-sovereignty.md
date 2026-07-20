@@ -59,4 +59,4 @@ So the position I'd defend is narrow and stubborn. Sleep sovereignty is not eigh
 
 I still wear the thing. I like the data — I like it more than I'm comfortable admitting. That's the part worth sitting with: the argument above isn't a description of someone who has opted out. It's what it looks like to hand over a third of your life to a company that profits from it, understand exactly how that could come back to haunt you, and keep the watch on anyway.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/2-3-sleep-sovereignty-the-colonization-of/)

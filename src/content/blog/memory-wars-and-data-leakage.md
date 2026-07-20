@@ -89,4 +89,4 @@ The world we're building is one where you're required to be a perfect machine, a
 
 I'd rather be an error.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/3-3-memory-wars-data-leakage-the/)
