@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'preact/hooks';
+import TrendChart, { type TrendPoint } from './TrendChart';
 
 type AnalyticsData = {
   period: { start: string; end: string };
+  /** Optional: absent from payloads written before the trend query existed. */
+  trend?: { start: string; end: string; series: TrendPoint[] };
   overview: {
     totalPageviews: number;
     totalUsers: number;
@@ -97,6 +100,18 @@ export default function AnalyticsDashboard() {
           <MetricCard label="Bounce Rate" value={`${data.overview.bounceRate.toFixed(1)}%`} />
         </div>
       </section>
+
+      {/* Historical trend — only rendered when the payload carries a series */}
+      {data.trend && data.trend.series.length > 1 && (
+        <section>
+          <h2 class="mb-1 text-2xl font-bold">Trend</h2>
+          <p class="text-text-muted mb-4 text-sm">
+            Daily traffic over the last {data.trend.series.length} days. The heavier line is a 7-day moving average; the
+            lighter one is the raw daily count.
+          </p>
+          <TrendChart series={data.trend.series} />
+        </section>
+      )}
 
       {/* Top content */}
       <section>

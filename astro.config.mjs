@@ -60,7 +60,13 @@ export default defineConfig({
     sitemap({
       // Tag pages (blog/audio/gallery/projects + their /N/ children) are all
       // noindex; keeping them out of the sitemap removes a conflicting signal.
-      filter: (page) => !new URL(page).pathname.includes('/tag/'),
+      // Paginated indexes (/blog/2/, /audio/3/, ...) stay crawlable and
+      // indexable — Google advises against noindexing pagination — but they're
+      // low-value listing URLs, so they don't belong in the sitemap either.
+      filter: (page) => {
+        const { pathname } = new URL(page);
+        return !pathname.includes('/tag/') && !/\/\d+\/$/.test(pathname);
+      },
       serialize(item) {
         const pathname = new URL(item.url).pathname;
         const date = contentDates.get(pathname);

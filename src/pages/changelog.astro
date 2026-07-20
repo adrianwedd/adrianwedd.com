@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+// The narrative changelog lives at the repo root so it's the first thing anyone
+// browsing the repository finds. Rendering it here keeps a single source of
+// truth — the page and the file can't drift apart.
+import { compiledContent } from '../../CHANGELOG.md';
+
+// The file opens with its own H1 and intro paragraph so it stands alone when
+// read in the repository. Both duplicate this page's hero, so strip them from
+// the HTML rather than hiding them in CSS — a display:none H1 is still a second
+// H1 in the document.
+const html = (await compiledContent())
+  .replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>/, '')
+  .replace(/^\s*<p>[\s\S]*?<\/p>/, '')
+  .replace(/^\s*<hr\s*\/?>/, '');
+---
+
+<BaseLayout
+  title="Changelog"
+  description="A running account of how this site has grown — what was built, why it was built, and what was learned along the way."
+  heroAnimation="stream"
+>
+  <section class="relative flex min-h-[50dvh] items-center px-4 sm:px-6 lg:px-8">
+    <div class="relative z-10 mx-auto max-w-3xl">
+      <h1 class="text-text">Changelog</h1>
+      <p class="text-text-muted mt-2">What was built, why, and what it taught.</p>
+    </div>
+  </section>
+
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
+    <div class="changelog-prose text-text leading-relaxed" set:html={html} />
+
+    <nav class="border-border mt-16 border-t pt-8" aria-label="Related pages">
+      <div class="flex gap-6">
+        <a href="/colophon/" class="text-text-muted hover:text-accent text-sm transition-colors">&larr; Colophon</a>
+        <a href="/new/" class="text-text-muted hover:text-accent text-sm transition-colors">What's New &rarr;</a>
+      </div>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .changelog-prose :global(h2) {
+    font-size: var(--text-xl);
+    line-height: 1.4;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .changelog-prose :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: 3rem 0;
+  }
+
+  .changelog-prose :global(p) {
+    color: var(--color-text-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  /* The Added/Fixed/Changed summary lines lead each entry — set them apart
+     from the prose that follows. */
+  .changelog-prose :global(p > strong:first-child) {
+    color: var(--color-text);
+  }
+
+  .changelog-prose :global(a) {
+    color: var(--color-accent);
+  }
+
+  .changelog-prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+</style>

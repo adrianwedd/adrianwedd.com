@@ -113,7 +113,9 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
       set:html={JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        name: 'Adrian Wedd',
+        // The page's own title — not the site owner's name. Emitting 'Adrian Wedd'
+        // here told search engines every subpage was named after the person.
+        name: title,
         description,
         url: canonicalUrl.href,
         image: ogImageUrl.href,

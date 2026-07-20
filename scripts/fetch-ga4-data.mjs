@@ -62,8 +62,12 @@ async function fetchGA4Data(credentials, propertyId) {
   const startDate = thirtyDaysAgo.toISOString().split('T')[0];
   const endDate = now.toISOString().split('T')[0];
 
+  // Trend charts need a longer window than the 30-day snapshot metrics.
+  const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+  const trendStartDate = ninetyDaysAgo.toISOString().split('T')[0];
+
   // Run all reports in parallel
-  const [overview, topPages, geography, devices, referrers] = await Promise.all([
+  const [overview, topPages, geography, devices, referrers, trend] = await Promise.all([
     // Overview metrics
     client.runReport({
       property,
@@ -117,6 +121,17 @@ async function fetchGA4Data(credentials, propertyId) {
       metrics: [{ name: 'totalUsers' }],
       orderBys: [{ metric: { metricName: 'totalUsers' }, desc: true }],
       limit: 5,
+    }),
+
+    // Daily time series — the only query with a date dimension, and the sole
+    // source for the trend charts. Ascending so the series plots left-to-right.
+    client.runReport({
+      property,
+      dateRanges: [{ startDate: trendStartDate, endDate }],
+      dimensions: [{ name: 'date' }],
+      metrics: [{ name: 'screenPageViews' }, { name: 'totalUsers' }, { name: 'engagedSessions' }],
+      orderBys: [{ dimension: { dimensionName: 'date' } }],
+      limit: 100,
     }),
   ]);
 
@@ -194,8 +209,22 @@ async function fetchGA4Data(credentials, propertyId) {
   const eventCount = parseInt(overviewRow?.metricValues?.[5]?.value || '0');
   const engagedSessions = parseInt(overviewRow?.metricValues?.[4]?.value || '0');
 
+  // --- Parse daily trend ---
+  // GA4 returns the date dimension as YYYYMMDD; normalise to ISO so the client
+  // never has to parse a bare 8-digit string.
+  const trendSeries = (trend[0]?.rows || []).map((row) => {
+    const raw = row.dimensionValues?.[0]?.value || '';
+    return {
+      date: `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`,
+      pageviews: parseInt(row.metricValues?.[0]?.value || '0'),
+      users: parseInt(row.metricValues?.[1]?.value || '0'),
+      engagedSessions: parseInt(row.metricValues?.[2]?.value || '0'),
+    };
+  });
+
   return {
     period: { start: startDate, end: endDate },
+    trend: { start: trendStartDate, end: endDate, series: trendSeries },
     overview: {
       totalPageviews,
       totalUsers,
@@ -234,11 +263,32 @@ function classifyReferrer(source) {
 function getMockData() {
   const now = new Date();
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+
+  // Deterministic (no Math.random) so repeated builds don't churn the committed
+  // file. Shaped, not realistic — the dashboard flags the whole payload as mock.
+  const mockSeries = Array.from({ length: 90 }, (_, i) => {
+    const day = new Date(ninetyDaysAgo.getTime() + i * 24 * 60 * 60 * 1000);
+    const weekly = Math.sin((i / 7) * Math.PI * 2) * 18;
+    const growth = i * 1.4;
+    const pageviews = Math.max(12, Math.round(90 + growth + weekly));
+    return {
+      date: day.toISOString().split('T')[0],
+      pageviews,
+      users: Math.round(pageviews * 0.42),
+      engagedSessions: Math.round(pageviews * 0.31),
+    };
+  });
 
   return {
     period: {
       start: thirtyDaysAgo.toISOString().split('T')[0],
       end: now.toISOString().split('T')[0],
+    },
+    trend: {
+      start: ninetyDaysAgo.toISOString().split('T')[0],
+      end: now.toISOString().split('T')[0],
+      series: mockSeries,
     },
     overview: {
       totalPageviews: 12847,
