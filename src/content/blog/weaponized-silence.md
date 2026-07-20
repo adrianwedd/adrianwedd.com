@@ -5,6 +5,7 @@ date: 2026-07-28
 tags: ['attention', 'refusal', 'autonomy', 'ethics', 'technology']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 6
+relatedProject: 'ungovernable-body'
 ---
 
 Watch a conversation between a man who is holding forth and a woman who is listening, and count the sounds she makes. The "mm." The "right." The half-laugh at the joke that didn't land. The small "yeah, no, totally" she slots into his pause so the pause never becomes a gap.

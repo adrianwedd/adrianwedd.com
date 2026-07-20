@@ -5,6 +5,7 @@ date: 2026-08-01
 tags: ['memory', 'data', 'privacy', 'identity', 'autonomy']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 10
+relatedProject: 'ungovernable-body'
 ---
 
 An iris scanner fails on an eighty-year-old with a cataract. A fingerprint reader can't find the ridges on a hand that has lost collagen. A face-matching model looks at a woman in her seventies and does not see the woman in her fifties whose photo is on file.

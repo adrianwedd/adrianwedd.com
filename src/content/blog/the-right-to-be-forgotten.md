@@ -5,6 +5,7 @@ date: 2026-07-31
 tags: ['privacy', 'deletion', 'data', 'autonomy', 'ethics']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 9
+relatedProject: 'ungovernable-body'
 ---
 
 In the analogue arrangement, the dead went quiet. Letters yellowed in a box. Photographs faded on a mantle. Withdrawal from the world was slow, and the slowness did work: it gave the people left behind time to move from _she is here_ to _she was here_.

@@ -5,6 +5,7 @@ date: 2026-07-30
 tags: ['analog', 'refusal', 'privacy', 'autonomy', 'technology']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 8
+relatedProject: 'ungovernable-body'
 ---
 
 For twenty years the problem was getting people online. The digital divide was a gap in access, and closing it was straightforwardly good: connect the disconnected, and they get jobs, services, a vote that counts.

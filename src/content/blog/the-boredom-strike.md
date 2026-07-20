@@ -5,6 +5,7 @@ date: 2026-07-27
 tags: ['attention', 'refusal', 'technology', 'autonomy', 'biopolitics']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 5
+relatedProject: 'ungovernable-body'
 ---
 
 We call it the attention economy, and that's the wrong name. Attention is just the delivery pipe. The thing being mined at the other end is **arousal** — how hard your nervous system spikes, in which direction, and how reliably it does it again tomorrow.

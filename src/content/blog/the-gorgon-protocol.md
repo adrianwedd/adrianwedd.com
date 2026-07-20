@@ -5,6 +5,7 @@ date: 2026-07-25
 tags: ['surveillance', 'biopolitics', 'adversarial', 'autonomy', 'ai']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 3
+relatedProject: 'ungovernable-body'
 ---
 
 A camera on a light pole does not see your face. It measures gradients.

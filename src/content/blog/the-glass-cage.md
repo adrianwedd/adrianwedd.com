@@ -5,6 +5,7 @@ date: 2026-07-23
 tags: ['surveillance', 'biopolitics', 'privacy', 'autonomy', 'technology']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 1
+relatedProject: 'ungovernable-body'
 ---
 
 In the late eighteenth century the Prussian state had a problem with its forests. A forest, to the people living beside it, was firewood and fodder and berries and game and mushrooms and a place to hide. To a tax assessor it was noise. You cannot levy a berry. You cannot forecast a mushroom.
@@ -75,4 +76,4 @@ The readable subject is the governable subject. To stay free you have to remain,
 
 That's the argument the whole project is built on, and the film I'm making is one long attempt to dramatise it: a woman whose own body gets reclassified as a fault, who has to become unreadable to survive it.
 
-[Read the full chapter →](https://ungovernable-body.wedd.au/research/0-1-the-glass-cage-the-biopolitics/) · [Project page →](/projects/ungovernable-body/)
+[Read the full chapter →](https://ungovernable-body.wedd.au/research/0-1-the-glass-cage-the-biopolitics/)

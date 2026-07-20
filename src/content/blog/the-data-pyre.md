@@ -5,6 +5,7 @@ date: 2026-08-02
 tags: ['deletion', 'ritual', 'data', 'mortality', 'ethics']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 11
+relatedProject: 'ungovernable-body'
 ---
 
 Someone dies, and their phone keeps talking.

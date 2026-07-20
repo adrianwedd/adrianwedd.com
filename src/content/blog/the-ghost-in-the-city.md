@@ -5,6 +5,7 @@ date: 2026-07-26
 tags: ['surveillance', 'cities', 'biopolitics', 'ai', 'autonomy']
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 4
+relatedProject: 'ungovernable-body'
 ---
 
 Go and look at your nearest bus stop. If it was refurbished in the last decade, there is a decent chance the seat is gone and something else is in its place: a narrow rail at hip height, angled slightly, polished stainless. It is called a leaning bar. The trade name is ischiatic support, which means it holds your sit bones and nothing else.
