@@ -41,7 +41,7 @@ And boredom does something anger can't. Anger implies a villain and a plot, whic
 
 If your attention is labour — and it is, since it's the input someone else sells — then withdrawing it is an industrial action. Which means the tactics already exist, worked out by people with far more at stake than us.
 
-In 1899 the Glasgow dockers wanted a ten percent rise. The employers refused and brought in farm labourers as scabs, who were slow and clumsy and dropped things. The union didn't call a walkout. It told the members to go back to work and work exactly as badly as the scabs had. Every safety rule followed to the letter, every knot checked, everything moving at an agonising crawl. Within days the contractors were begging them to speed up, and the rise was granted.
+In 1889 the Glasgow dockers wanted a ten percent rise. The employers refused and brought in farm labourers as scabs, who were slow and clumsy and dropped things. The union didn't call a walkout. It told the members to go back to work and work exactly as badly as the scabs had. Every safety rule followed to the letter, every knot checked, everything moving at an agonising crawl. Within days the contractors were begging them to speed up, and the rise was granted.
 
 That's the shape. Not deletion — deletion is a walkout, and it mostly isolates you while the machine carries on. Instead: stay, and be conscientiously useless.
 

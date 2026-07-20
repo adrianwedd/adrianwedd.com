@@ -11,7 +11,7 @@ Watch a conversation between a man who is holding forth and a woman who is liste
 
 None of that carries information. Strip every one of those tokens out and the content of the exchange is unchanged. They aren't there to say anything. They're there to keep the thing moving.
 
-Deborah Tannen's sociolinguistics has a name for the general phenomenon — **audio lubrication**, the phatic noise that keeps a conversation flowing and its participants comfortable. Set it beside Arlie Hochschild's account of the managed heart, the paid smile of the flight attendant, and what it is becomes obvious. It is work. Somebody is doing it, it costs something to do, and nobody is paying for it.
+Deborah Tannen's sociolinguistics describes the general phenomenon: the phatic noise that keeps a conversation flowing and its participants comfortable — what gets called **audio lubrication**. Set it beside Arlie Hochschild's account of the managed heart, the paid smile of the flight attendant, and what it is becomes obvious. It is work. Somebody is doing it, it costs something to do, and nobody is paying for it.
 
 ## What the noise is actually for
 
