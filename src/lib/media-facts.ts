@@ -21,7 +21,10 @@ import { join } from 'node:path';
  */
 export function episodeCover(mediaUrl: string | undefined): string | undefined {
   if (!mediaUrl || !mediaUrl.includes('/notebook-assets/')) return undefined;
-  const dir = mediaUrl.split('/notebook-assets/')[1]?.split('?')[0].replace(/\/[^/]*$/, '');
+  const dir = mediaUrl
+    .split('/notebook-assets/')[1]
+    ?.split('?')[0]
+    .replace(/\/[^/]*$/, '');
   if (!dir) return undefined;
   for (const ext of ['jpg', 'png', 'webp']) {
     const rel = `/notebook-assets/${dir}/cover.${ext}`;

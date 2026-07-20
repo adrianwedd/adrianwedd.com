@@ -64,8 +64,7 @@ export async function buildPodcastFeed(context: APIContext, options: FeedOptions
       // Extension-derived, with an override for the files whose extension
       // contradicts their actual container. Directories validate the enclosure
       // type against the bytes they fetch.
-      const enclosureType =
-        containerOverride(mediaUrl) ?? mediaMimeType(mediaUrl, isVideo ? 'video' : 'audio');
+      const enclosureType = containerOverride(mediaUrl) ?? mediaMimeType(mediaUrl, isVideo ? 'video' : 'audio');
       const fileSize = await getFileSize(mediaUrl);
       // keep legacy binding for existing references below
       const audioUrl = enclosureUrl;
