@@ -13,6 +13,7 @@ videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure
 series: "This Wasn't in the Brochure"
 seriesOrder: 1
 youtubeUrl: 'https://www.youtube.com/watch?v=uHWSOTDXNbA'
+videoUploadDate: 2026-05-05T09:41:19Z
 ---
 
 If your child is neurodivergent, the heritability data — 74–90% for ADHD, comparable for autism — means you probably are too. Most co-parenting guides were written for someone else's family. This is the one that wasn't.

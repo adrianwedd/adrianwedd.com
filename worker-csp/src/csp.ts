@@ -19,6 +19,9 @@ export function buildCsp(opts: {
   // browsers); `report-uri` is the legacy fallback (older browsers that don't
   // implement the Reporting API). Both point at the same collector URL.
   reporting?: { group: string; uri: string };
+  // Set when the result is served as Content-Security-Policy-Report-Only.
+  // Report-only policies must omit upgrade-insecure-requests (see below).
+  reportOnly?: boolean;
 }): string {
   const { nonce, strictDynamic } = opts;
 
@@ -73,8 +76,12 @@ export function buildCsp(opts: {
     // api.book.adrianwedd.com handles booking form submissions.
     "form-action 'self' https://api.book.adrianwedd.com",
     "frame-ancestors 'none'", // only enforceable via header, not meta
-    'upgrade-insecure-requests',
   ];
+
+  // Per CSP3, upgrade-insecure-requests is meaningless in a report-only policy:
+  // browsers ignore it and log a console error on every response. Only the
+  // enforced policy carries it — that's where it does the upgrading anyway.
+  if (!opts.reportOnly) directives.push('upgrade-insecure-requests');
 
   if (opts.reporting) {
     directives.push(`report-to ${opts.reporting.group}`);

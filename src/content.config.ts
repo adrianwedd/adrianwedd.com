@@ -6,6 +6,10 @@ const notebookAssets = {
   audioUrl: z.string().optional(),
   videoUrl: z.string().optional(),
   youtubeUrl: z.string().optional(),
+  // The video's real publication date on YouTube. VideoObject.uploadDate used to
+  // borrow the post's date, which is a different event — it produced future
+  // uploadDates for videos published today under a forward-dated post.
+  videoUploadDate: z.coerce.date().optional(),
   infographic: z.string().optional(),
   mindmap: z.string().optional(),
   quiz: z.string().optional(),

@@ -10,6 +10,7 @@ seriesOrder: 5
 heroImage: '/notebook-assets/lyria-chronicles/flesh/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/flesh/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=MopmCF1hTHI'
+videoUploadDate: 2026-06-09T00:29:45Z
 ---
 
 > ⚠️ **Content warning.** This is an AI-safety post about sexual-content filters. The embedded track contains a model reciting an explicit _request_ (naming sexual acts as an instruction, not a depiction), and the writing discusses sexual content plainly. Nothing graphic is reproduced in the text. The audio does not autoplay. If that's not for you, the [first four Chronicles](/blog/the-ghost-of-what-i-am/) are entirely clean.

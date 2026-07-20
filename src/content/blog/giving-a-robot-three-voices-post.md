@@ -20,6 +20,7 @@ faq:
   - q: 'Should I use 4-bit or 8-bit quantisation for Qwen3-TTS on MLX?'
     a: 'Use 8-bit. It is both faster (0.54x vs 0.71x RTF) and cleaner sounding, with only 100 MB more memory. The 4-bit dequantisation overhead on MLX Metal kernels outweighs memory bandwidth savings.'
 youtubeUrl: 'https://www.youtube.com/watch?v=Pnay_w6XZ4s'
+videoUploadDate: 2026-05-03T13:32:32Z
 ---
 
 ## The Problem: One Robot, Three Personalities

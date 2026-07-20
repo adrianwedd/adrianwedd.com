@@ -16,6 +16,7 @@ faq:
   - q: 'What would actual AI governance require?'
     a: 'Independent evaluation infrastructure that governments can trust, binding legal requirements with liability (not voluntary commitments), participation in international standards bodies (NIST, ISO/IEC JTC1/SC42), and a settled legal framework for distillation licensing. Chip geography produces none of these.'
 youtubeUrl: 'https://www.youtube.com/watch?v=onmsXrkuspM'
+videoUploadDate: 2026-06-09T00:21:07Z
 ---
 
 Anthropic published "2028: Two Scenarios for Global AI Leadership" on May 14. It is a serious document with a serious argument, and it deserves serious engagement rather than reflexive dismissal.

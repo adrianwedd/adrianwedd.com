@@ -13,6 +13,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterwords/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/afterwords/video.mp4'
 heroImage: '/notebook-assets/afterwords/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=iawRevXb9i4'
+videoUploadDate: 2026-05-04T08:52:19Z
 ---
 
 Afterwords clones a voice from a fifteen-second clip and runs it on your own machine. It began as a way to give [SPARK](/projects/spark/) a voice and to [complete the voice loop in Claude Code](/blog/afterwords/) — local TTS, zero cloud dependency. It is now three pieces, each holding to the same principle: **clone once, own forever, use anywhere.** (The full thinking is in [Own Your Voice](/blog/own-your-voice/).)

@@ -7,6 +7,7 @@ heroImage: '/notebook-assets/why-i-build-in-public/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-i-build-in-public/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-i-build-in-public/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=RxsTVm4l55A'
+videoUploadDate: 2026-05-04T08:40:43Z
 ---
 
 Every project on this site has a source link. Most of them link to messy repositories with commit messages like "fix the thing" and half-finished branches named `experiment-3`. This is deliberate.

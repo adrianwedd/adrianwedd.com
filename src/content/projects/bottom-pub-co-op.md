@@ -10,6 +10,7 @@ heroImage: '/notebook-assets/the-bottom-pub-co-op/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-bottom-pub-co-op/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=ozwojYIg9q8'
+videoUploadDate: 2026-06-09T00:36:19Z
 ---
 
 The Commercial Hotel in Cygnet, Tasmania has been closed. A community question emerged: could the people of Cygnet take it on as a co-operative? Good question. Getting the answer right meant building a system that couldn't accidentally give the wrong one.

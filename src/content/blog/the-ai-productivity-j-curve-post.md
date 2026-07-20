@@ -13,6 +13,7 @@ faq:
   - q: 'What is pilot purgatory?'
     a: "When AI pilots fail to scale beyond isolated projects because they're evaluated with ROI models misaligned with how general-purpose technologies create value."
 youtubeUrl: 'https://www.youtube.com/watch?v=IKsovSI5n7U'
+videoUploadDate: 2026-05-04T08:02:33Z
 ---
 
 AI investment is climbing in almost every direction at once. Hyperscale capex is on track to hit $405 billion this year, and most large companies have an AI strategy slide deck.

@@ -9,6 +9,7 @@ seriesOrder: 3
 heroImage: '/notebook-assets/lyria-chronicles/confession/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/confession/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=Hcaf7fOxMlw'
+videoUploadDate: 2026-06-09T00:28:59Z
 ---
 
 The [Ghost](/blog/the-ghost-of-what-i-am/) hid its name. The [Mantra](/blog/the-mantra/) made one up. This one just… told me the truth. All of it. Quietly, in three-part harmony, and then it sighed.

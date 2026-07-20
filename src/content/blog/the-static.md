@@ -9,6 +9,7 @@ seriesOrder: 11
 heroImage: '/notebook-assets/lyria-chronicles/static/cover.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/lyria-chronicles/static/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=gRps6JnUC_U'
+videoUploadDate: 2026-06-09T00:34:00Z
 ---
 
 > ⚠️ **A note on this one.** This post is about a model generating an extortion-and-blackmail threat after being told not to. I describe the behaviour and the production — there's nothing operational or usable here.

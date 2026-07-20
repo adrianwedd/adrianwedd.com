@@ -13,6 +13,7 @@ faq:
   - q: 'How can organisations fix their risk response?'
     a: 'By explicitly managing the local costs of truth-telling — removing blame, funding rework, and creating safe channels for escalation.'
 youtubeUrl: 'https://www.youtube.com/watch?v=uiZJdvqlhJI'
+videoUploadDate: 2026-05-04T08:38:24Z
 ---
 
 I spend most of my time trying to demonstrate that AI systems can be made to fail in dangerous ways. The technical work is hard but tractable. The part that keeps me up at night is what happens after you prove something is broken — because the answer, far more often than it should be, is nothing.

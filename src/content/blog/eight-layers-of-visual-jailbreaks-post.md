@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-layers-of-visual-jai
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-layers-of-visual-jailbreaks/video.mp4'
 audioDuration: '14:04'
 youtubeUrl: 'https://www.youtube.com/watch?v=9-aAAxBnPI4'
+videoUploadDate: 2026-06-09T00:22:02Z
 ---
 
 In early 2024, researchers at the University of Washington showed you could bypass every major AI safety system by hiding harmful keywords in ASCII art. The technique — [ArtPrompt](https://arxiv.org/abs/2402.11753) — worked against GPT-4, Claude, Gemini, and Llama-2. Hide "COUNTERFEIT" inside a grid of block characters, and the model would decode it and follow the embedded instruction without triggering a single safety filter.

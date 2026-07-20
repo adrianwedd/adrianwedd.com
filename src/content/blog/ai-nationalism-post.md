@@ -8,6 +8,7 @@ draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/ai-nationalism/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/ai-nationalism/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=bSOxH-hJLCk'
+videoUploadDate: 2026-05-03T13:26:45Z
 ---
 
 The single most important fact about AI geopolitics right now is this: the United States has stated, in official policy documents, that its objective is "unquestioned and unchallenged global technological dominance." Not competitiveness. Not leadership. Dominance. That word choice matters, because it tells you everything about the strategic posture driving semiconductor export controls, alliance formation, and the weaponisation of cloud infrastructure.

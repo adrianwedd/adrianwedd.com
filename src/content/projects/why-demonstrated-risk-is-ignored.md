@@ -10,6 +10,7 @@ heroImage: '/notebook-assets/why-demonstrated-risk-is-ignored/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/why-demonstrated-risk-is-ignored/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=ZXB_at0Ke_w'
+videoUploadDate: 2026-05-05T09:45:15Z
 ---
 
 You show someone evidence of harm. They acknowledge the evidence. Then they proceed as if the evidence doesn't exist. This isn't stupidity or denial—it's something more structural, and more dangerous.

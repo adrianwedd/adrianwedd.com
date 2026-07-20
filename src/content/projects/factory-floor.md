@@ -10,6 +10,8 @@ audioDuration: '21:34'
 status: 'experiment'
 featured: false
 date: 2026-07-17
+youtubeUrl: 'https://www.youtube.com/watch?v=0cP0UrHr3u0'
+videoUploadDate: 2026-07-20T08:49:29Z
 ---
 
 Most of my 3D-printing workflow used to live in my head: rough dimensions in a note, a slicer profile I vaguely remembered tuning, a print that came out fine but that I couldn't recreate if I had to. Factory Floor is the attempt to fix that — a private workshop for making printed things _properly_: measured, validated, sliced, reviewed, then printed, in that order, never skipped.

@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/non-coercive-design/audio.
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/non-coercive-design/video.mp4'
 audioDuration: '21:01'
 youtubeUrl: 'https://www.youtube.com/watch?v=1l5vQ79JMdE'
+videoUploadDate: 2026-05-04T07:51:04Z
 ---
 
 The shoes are by the door.

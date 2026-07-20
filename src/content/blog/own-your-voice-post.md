@@ -7,6 +7,8 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/own-your-voice/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/own-your-voice/video.mp4'
 heroImage: '/notebook-assets/own-your-voice/infographic.webp'
 draft: false
+youtubeUrl: 'https://www.youtube.com/watch?v=x-7YwTGlTds'
+videoUploadDate: 2026-07-20T08:45:09Z
 ---
 
 The big text-to-speech services will clone your voice in about thirty seconds. Upload a sample, and you can have your own voice — or anyone's — reading text on demand. It is genuinely impressive technology.

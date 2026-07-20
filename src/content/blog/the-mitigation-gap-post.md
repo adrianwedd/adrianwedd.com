@@ -17,6 +17,7 @@ faq:
   - q: 'Has AI already crossed the virologist-level capability threshold?'
     a: 'The post argues yes — and that this milestone, which experts in the same study expected post-2030, has already arrived. That collapses the timeline embedded in the safeguard estimates.'
 youtubeUrl: 'https://www.youtube.com/watch?v=tw5yxXycQdw'
+videoUploadDate: 2026-05-04T08:16:48Z
 ---
 
 Biosecurity experts believe current safeguards reduce AI-enabled catastrophic biorisk by over 70%. They are wrong.

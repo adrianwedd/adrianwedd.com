@@ -171,7 +171,9 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
               embedUrl: `https://www.youtube.com/embed/${ytId}`,
               url: post.data.youtubeUrl,
             }),
-            uploadDate: post.data.date.toISOString(),
+            // The video's own publication date, not the post's — a drip-scheduled
+            // post dated ahead of its upload used to emit a FUTURE uploadDate.
+            uploadDate: (post.data.videoUploadDate ?? post.data.date).toISOString(),
             thumbnailUrl: post.data.heroImage
               ? new URL(ogSafeImage(post.data.heroImage), Astro.site).href
               : new URL('/og-default.png', Astro.site).href,

@@ -10,6 +10,7 @@ heroImage: '/notebook-assets/tel3sis/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/tel3sis/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/tel3sis/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=EVBHvgyH3D4'
+videoUploadDate: 2026-05-05T09:39:41Z
 ---
 
 The phone call is the oldest real-time interface we have. It's also the one AI handles worst. Chat is easy—latency is invisible, you can take a few seconds to think, the user stares at a typing indicator and waits. On a phone call, three seconds of silence is an eternity. It's the gap where the caller decides the system is broken, or stupid, or both.

@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/zero-build-web-development/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/zero-build-web-development/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=j2b3-7Y3rWU'
+videoUploadDate: 2026-05-04T08:43:08Z
 ---
 
 I built a complete operations platform for my Zen Do Kai club. Public marketing site, password-gated ops hub, JWT-authenticated member portal with attendance tracking, grading administration, lesson plans, and Stripe billing. Three zones, 20+ API endpoints, a D1 database, and security-hardened middleware.

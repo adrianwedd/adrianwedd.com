@@ -127,28 +127,39 @@ const allBlogPosts = project.data.series
     type="application/ld+json"
     set:html={JSON.stringify({
       '@context': 'https://schema.org',
-      '@type': project.data.repo || project.data.url ? 'SoftwareApplication' : 'CreativeWork',
+      // Always CreativeWork. These pages are write-ups ABOUT projects, not
+      // listings for distributed applications. SoftwareApplication requires
+      // `offers.price` plus one of `aggregateRating`/`review` (verified against
+      // Google's software-app doc, 2026-07-20) — and the honest fix is not to
+      // invent a rating for a personal site, it's to stop claiming to be an app.
+      // The old type-by-field-presence rule also mislabelled any project whose
+      // `url` pointed at an external *article* as a DeveloperApplication.
+      '@type': 'CreativeWork',
       name: project.data.title,
       description: project.data.description,
       url: new URL(Astro.url.pathname, Astro.site).href,
       datePublished: project.data.date.toISOString(),
       ...(project.data.updatedDate ? { dateModified: project.data.updatedDate.toISOString() } : {}),
       keywords: project.data.tags,
-      ...(project.data.repo || project.data.url ? { applicationCategory: 'DeveloperApplication' } : {}),
-      ...(project.data.repo ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
-      // External project URL goes in `sameAs`, NOT `url`. Previously the spread
-      // here was `{ url: project.data.url }`, which silently overrode the
-      // canonical adrianwedd.com URL above. Google ingests `url` as the
-      // entity's canonical address — every project with `url` set was telling
-      // Google the entity lived at the external site, splitting page authority.
-      ...(project.data.url ? { sameAs: [project.data.url] } : {}),
-      ...(project.data.repo
-        ? {
-            codeRepository: project.data.repo.startsWith('http')
-              ? project.data.repo
-              : `https://github.com/adrianwedd/${project.data.repo}`,
-          }
-        : {}),
+      // External project URL and repo both go in `sameAs`, NOT `url`. Previously
+      // the spread here was `{ url: project.data.url }`, which silently overrode
+      // the canonical adrianwedd.com URL above — telling Google the entity lived
+      // at the external site and splitting page authority.
+      // `codeRepository` is a SoftwareSourceCode property and isn't defined on
+      // CreativeWork, so the repo link belongs in sameAs too.
+      ...(() => {
+        const sameAs = [
+          ...(project.data.url ? [project.data.url] : []),
+          ...(project.data.repo
+            ? [
+                project.data.repo.startsWith('http')
+                  ? project.data.repo
+                  : `https://github.com/adrianwedd/${project.data.repo}`,
+              ]
+            : []),
+        ];
+        return sameAs.length ? { sameAs } : {};
+      })(),
       ...(project.data.heroImage ? { image: new URL(ogSafeImage(project.data.heroImage), Astro.site).href } : {}),
       author: {
         '@type': 'Person',
@@ -176,7 +187,8 @@ const allBlogPosts = project.data.series
               embedUrl: `https://www.youtube.com/embed/${ytId}`,
               url: project.data.youtubeUrl,
             }),
-            uploadDate: project.data.date.toISOString(),
+            // The video's own publication date, not the project's — see blog template.
+            uploadDate: (project.data.videoUploadDate ?? project.data.date).toISOString(),
             thumbnailUrl: project.data.heroImage
               ? new URL(ogSafeImage(project.data.heroImage), Astro.site).href
               : new URL('/og-default.png', Astro.site).href,

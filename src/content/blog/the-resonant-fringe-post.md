@@ -7,6 +7,7 @@ heroImage: '/notebook-assets/the-resonant-fringe/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-resonant-fringe/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-resonant-fringe/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=AB0XPhgLY8w'
+videoUploadDate: 2026-05-04T08:27:44Z
 ---
 
 In the early 1990s, if you wanted to hear Detroit techno in Perth, you had two options: find someone who'd imported the vinyl, or stay up past midnight on a Sunday and tune your FM dial to 92.1.

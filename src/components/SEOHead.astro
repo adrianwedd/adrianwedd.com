@@ -50,7 +50,12 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#c48b6e" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#8a5e42" />
 {tags && <meta name="keywords" content={tags.join(', ')} />}
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+{
+  /* `follow`, not `nofollow`: these pages (tag indexes, /enquiry/) shouldn't rank
+    themselves, but they link to posts that should. `nofollow` stopped crawlers
+    traversing out to the very content the tag pages exist to index. */
+}
+{noindex && <meta name="robots" content="noindex, follow" />}
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
@@ -67,6 +72,7 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
 <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — All Content" href="/rss.xml" />
 <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Blog" href="/blog/rss.xml" />
 <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Audio" href="/audio/feed.xml" />
+<link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Audio (audio-only)" href="/audio/podcast.xml" />
 <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Projects" href="/projects/rss.xml" />
 <link rel="alternate" type="application/rss+xml" title="Adrian Wedd — Gallery" href="/gallery/rss.xml" />
 
@@ -132,6 +138,9 @@ const fullTitle = title === 'Adrian Wedd' ? title : `${title} — Adrian Wedd`;
           url: 'https://adrianwedd.com',
           logo: {
             '@type': 'ImageObject',
+            // SVG is deliberate and stays: Google Images supports SVG, so the
+            // "raster required" claim this was briefly changed on is unfounded.
+            // Keep in sync with the article templates (blog/fixes/case-studies).
             url: 'https://adrianwedd.com/favicon.svg',
           },
         },

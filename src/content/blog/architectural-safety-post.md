@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/audio
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/architectural-safety/video.mp4'
 audioDuration: '22:01'
 youtubeUrl: 'https://www.youtube.com/watch?v=A4qC7N3mDrk'
+videoUploadDate: 2026-05-03T13:28:21Z
 ---
 
 A throughline has been running through the work I've been doing for the last year, and I've never written it down in one place. So here it is.

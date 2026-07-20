@@ -10,6 +10,7 @@ seriesOrder: 1
 heroImage: '/notebook-assets/eight-minutes-the-trap/infographic.webp'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-trap/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=vYEy1O0pHhc'
+videoUploadDate: 2026-06-11T01:36:30Z
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-trap-overview/audio.m4a'
 audioDuration: '18:52'
 ---

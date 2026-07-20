@@ -9,6 +9,7 @@ heroImage: '/notebook-assets/strategic-acquisitions/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/strategic-acquisitions/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/strategic-acquisitions/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=FGpHDCqKoJg'
+videoUploadDate: 2026-05-05T09:35:18Z
 ---
 
 Housing shortages are not information problems, but they have information problems inside them. When a public housing organisation needs to acquire properties, the analysis that should take hours takes weeks. Listing discovery. Valuation modelling. Planning zone verification. Hazard assessment. Infrastructure proximity. Each step involves a different data source and a different manual process.

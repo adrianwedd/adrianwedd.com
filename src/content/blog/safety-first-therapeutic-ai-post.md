@@ -17,6 +17,7 @@ faq:
   - q: 'Is AI-assisted EMDR a replacement for professional therapy?'
     a: 'No. EMDR Agent is a research and education project, not a clinical tool. It exists to explore what responsible AI-assisted therapeutic architecture looks like, not to replace professional mental health treatment.'
 youtubeUrl: 'https://www.youtube.com/watch?v=c0zCJjQ1iMs'
+videoUploadDate: 2026-05-04T07:59:33Z
 ---
 
 EMDR — Eye Movement Desensitization and Reprocessing — is one of the most evidence-based trauma therapies available. Its protocols are precise. Its failure modes are serious. Push too quickly through a traumatic memory, miss a dissociative response, or get the bilateral stimulation timing wrong, and you've done harm.

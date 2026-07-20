@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/reconciling-the-great-divergence/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/reconciling-the-great-divergence/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/reconciling-the-great-divergence/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=E4XGmIPM09g'
+videoUploadDate: 2026-05-04T07:56:18Z
 ---
 
 Goldman Sachs says AI could add $7 trillion to global GDP. MIT economist Daron Acemoglu says the near-term impact is closer to 0.5%. PwC projects $15.7 trillion in additional economic value by 2030. McKinsey puts annual productivity gains at $2.6–4.4 trillion.

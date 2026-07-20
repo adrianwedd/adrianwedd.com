@@ -16,6 +16,7 @@ faq:
   - q: 'What does Magnifica Humanitas actually demand from AI companies?'
     a: "Binding regulatory tools (¶5), independent checks with algorithmic transparency and avenues for recourse (¶71–72), critique of 'alignment' as insufficient without structural social-justice standards (¶107), and a hard prohibition on delegating lethal or irreversible decisions to AI systems (¶198–200). As of May 2026, no frontier lab has voluntarily committed to these as binding external constraints."
 youtubeUrl: 'https://www.youtube.com/watch?v=tIu5MuvddGI'
+videoUploadDate: 2026-06-09T00:23:30Z
 ---
 
 On 25 May 2026, Pope Leo XIV released _Magnifica Humanitas_ — the Catholic Church's first formal magisterial document on artificial intelligence. The launch event at the Vatican Synod Hall included one frontier AI lab representative: Chris Olah, co-founder of Anthropic.

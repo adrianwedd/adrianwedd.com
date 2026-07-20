@@ -8,6 +8,7 @@ heroImage: '/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/infogr
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/getting-google-nest-cameras-into-frigate-nvr/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=o8XvfpCJwFc'
+videoUploadDate: 2026-05-03T13:31:48Z
 ---
 
 I've tried this at least three times before. Each time I hit a wall, gave up, and went back to watching my Nest cameras through the Google Home app like a normal person. This time I finally cracked it — and the solution turned out to be genuinely weird in ways I want to document properly, because the information online is either outdated, incomplete, or glosses over the exact failure modes that will destroy your afternoon.

@@ -13,6 +13,7 @@ faq:
   - q: 'What is the efficiency-trust deficit in legal AI?'
     a: "An overwhelming demand for automation and efficiency held in check by deep-seated skepticism about AI reliability, creating a market where most practitioners want AI but don't trust it enough to use it."
 youtubeUrl: 'https://www.youtube.com/watch?v=7IqUQ9Iv3FU'
+videoUploadDate: 2026-05-04T08:12:53Z
 ---
 
 Three quarters of lawyers say accuracy is their top concern with AI tools. Not cost, not complexity, not privacy — accuracy. That single statistic tells you almost everything you need to know about why legal AI adoption looks nothing like AI adoption in other industries.

@@ -10,6 +10,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/personal-agentic-operating
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/personal-agentic-operating-system/video.mp4'
 heroImage: '/notebook-assets/personal-agentic-operating-system/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=O1Q8Kf_LxmM'
+videoUploadDate: 2026-05-05T09:05:49Z
 ---
 
 Most agentic systems assume the cloud. I built this one to assume your machine.

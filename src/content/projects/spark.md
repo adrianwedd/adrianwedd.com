@@ -13,6 +13,7 @@ heroImage: '/notebook-assets/spark/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/audio.mp3'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/spark/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=0RMULUlI4Dw'
+videoUploadDate: 2026-05-05T09:30:04Z
 ---
 
 My son Obi and I built a robot together. The key word is _together_ — not a tool built _for_ a child, but a project built _with_ one. That distinction shaped every decision that followed.

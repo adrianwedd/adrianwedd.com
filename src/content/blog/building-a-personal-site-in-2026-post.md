@@ -16,6 +16,7 @@ faq:
   - q: 'How does Astro handle interactive components?'
     a: 'Astro uses Preact islands marked with client directives like client:idle or client:load. Each island hydrates independently while the rest of the page remains static HTML that works without JavaScript.'
 youtubeUrl: 'https://www.youtube.com/watch?v=JbfC2FjH6vw'
+videoUploadDate: 2026-05-03T13:29:21Z
 ---
 
 This site is built with Astro. It started life as 65 static HTML pages and is now a few hundred (the corpus keeps growing); it serves from GitHub Pages, loads zero custom fonts, and the entire JavaScript budget is a handful of Preact islands that hydrate on idle. The rest is HTML and CSS.

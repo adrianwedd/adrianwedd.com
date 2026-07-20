@@ -9,6 +9,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/economics-of-inadequate-sa
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/economics-of-inadequate-safety/video.mp4'
 audioDuration: '22:29'
 youtubeUrl: 'https://www.youtube.com/watch?v=bfgT4qRJ5GQ'
+videoUploadDate: 2026-05-03T13:30:29Z
 ---
 
 Most organisations are still in the trough of the AI productivity J-curve. They are buying models, running pilots, and discovering that the productivity dividend has not arrived on schedule.

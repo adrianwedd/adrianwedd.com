@@ -7,6 +7,7 @@ heroImage: '/notebook-assets/this-wasnt-in-the-brochure/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/this-wasnt-in-the-brochure/video.mp4'
 youtubeUrl: 'https://www.youtube.com/watch?v=pPqwP8v3tks'
+videoUploadDate: 2026-05-04T08:31:40Z
 ---
 
 You packed for a picnic. You ended up in the Drake Passage.

@@ -24,6 +24,7 @@ faq:
   - q: 'Why not just use ElevenLabs or another cloud TTS service?'
     a: "Privacy and latency. Cloud services send your text (and potentially voice data) to third-party servers. This runs entirely on your machine — nothing leaves your local network. It also means no API key, no rate limits, no monthly bill, and no dependency on someone else's uptime."
 youtubeUrl: 'https://www.youtube.com/watch?v=PBClZsW-W4U'
+videoUploadDate: 2026-05-04T08:34:28Z
 ---
 
 I needed to give a robot a voice. Not a generic one — a specific voice, cloned from a 15-second recording, running entirely on a Mac sitting next to the robot. No cloud API. No subscription. No data leaving the room.

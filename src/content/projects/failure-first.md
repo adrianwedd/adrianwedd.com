@@ -11,6 +11,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/video.mp4'
 heroImage: '/notebook-assets/failure-first/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=9x-C9-wMKQo'
+videoUploadDate: 2026-05-05T08:29:26Z
 ---
 
 Failure First is an adversarial AI evaluation research programme. The methodology didn't come from the field.

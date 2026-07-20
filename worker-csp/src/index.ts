@@ -150,14 +150,17 @@ export default {
     // validated in production without any risk to the live, enforcing policy.
     const csp = buildCsp({ nonce, strictDynamic });
     // Report-Only mirror of the SAME policy (same nonce, same allowlist) with
-    // reporting wired in. Because it mirrors the enforced policy exactly, it
-    // surfaces precisely what the enforced policy is (silently) blocking in
+    // reporting wired in. It mirrors every fetch directive of the enforced
+    // policy — the sole exception is upgrade-insecure-requests, which CSP3
+    // ignores in report-only mode — so it still surfaces precisely what the
+    // enforced policy is (silently) blocking in
     // production — without itself blocking anything. Collector is same-origin so
     // it works on both the apex and www routes the worker is bound to.
     const reportUri = `${inboundUrl.origin}${CSP_REPORT_PATH}`;
     const cspReportOnly = buildCsp({
       nonce,
       strictDynamic,
+      reportOnly: true,
       reporting: { group: CSP_REPORT_GROUP, uri: reportUri },
     });
 

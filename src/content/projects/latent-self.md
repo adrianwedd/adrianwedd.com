@@ -10,6 +10,7 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/latent-self/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/latent-self/video.mp4'
 heroImage: '/notebook-assets/latent-self/infographic.webp'
 youtubeUrl: 'https://www.youtube.com/watch?v=03vYwCXjckQ'
+videoUploadDate: 2026-05-05T01:29:33Z
 ---
 
 A mirror shows you what you are. This installation shows you what you almost are.
