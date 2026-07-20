@@ -7,6 +7,7 @@ import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
 import { slug, ogSafeImage, mediaMimeType } from '../../lib/utils';
+import { episodeCover, containerOverride } from '../../lib/media-facts';
 
 export async function getStaticPaths() {
   const episodes = (await getCollection('audio')).filter((e) => !e.data.draft);
@@ -22,7 +23,11 @@ const { Content } = await render(episode);
 // FB / X / LinkedIn / iMessage don't reliably render WebP og:image scrapes;
 // the .jpg twin is generated alongside the .webp at content-build time. Fall
 // back to the site-wide default OG card when the episode has no heroImage.
-const ogImage = episode.data.heroImage ? ogSafeImage(episode.data.heroImage) : '/og-default.png';
+// Prefer the episode's own committed cover art over the heroImage, and the
+// generic card only as a last resort — Google requires a video's thumbnail be
+// unique to that video, so og-default.png does not qualify.
+const cover = episodeCover(episode.data.audioUrl ?? episode.data.videoUrl);
+const ogImage = cover ?? (episode.data.heroImage ? ogSafeImage(episode.data.heroImage) : '/og-default.png');
 
 // Resolved once: the schema allows an entry with neither URL, and several
 // JSON-LD properties below must be omitted entirely in that case.
@@ -70,7 +75,8 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
       // the property instead of claiming something false.
       ...(mediaUrl && { contentUrl: new URL(mediaUrl, Astro.site).href }),
       ...(mediaUrl && {
-        encodingFormat: mediaMimeType(mediaUrl, episode.data.audioUrl ? 'audio' : 'video'),
+        encodingFormat:
+          containerOverride(mediaUrl) ?? mediaMimeType(mediaUrl, episode.data.audioUrl ? 'audio' : 'video'),
       }),
       // Google requires `name`, `thumbnailUrl` and `uploadDate` on VideoObject
       // — `datePublished` is not an accepted substitute. Without these the

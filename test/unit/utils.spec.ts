@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { slug, imageSlug, tagSlug, youtubeId, ogSafeImage, heroAltText, mediaMimeType } from '../../src/lib/utils';
+import { containerOverride } from '../../src/lib/media-facts';
 
 describe('tagSlug', () => {
   it('lowercases and hyphenates spaces', () => {
@@ -162,5 +163,28 @@ describe('mediaMimeType', () => {
     expect(mediaMimeType('/a/v.mp4', 'video')).toBe('video/mp4');
     expect(mediaMimeType('/a/v.webm', 'video')).toBe('video/webm');
     expect(mediaMimeType('/a/v.mov', 'video')).toBe('video/quicktime');
+  });
+});
+
+describe('containerOverride', () => {
+  it('corrects the three published .mp3 files that are really MP4/AAC', () => {
+    // Verified from the CDN: these lead with `ftypdash`, not `ID3`.
+    expect(containerOverride('https://cdn.adrianwedd.com/notebook-assets/tanda-pizza/audio.mp3')).toBe('audio/mp4');
+    expect(
+      containerOverride('https://cdn.adrianwedd.com/notebook-assets/failure-first/jailbreak-archaeology/audio.mp3'),
+    ).toBe('audio/mp4');
+    expect(containerOverride('https://cdn.adrianwedd.com/notebook-assets/failure-first/moltbook/audio.mp3')).toBe(
+      'audio/mp4',
+    );
+  });
+
+  it('leaves genuine MP3s alone', () => {
+    expect(containerOverride('https://cdn.adrianwedd.com/notebook-assets/eight-minutes-the-fall/audio.mp3')).toBe(
+      undefined,
+    );
+  });
+
+  it('matches regardless of host and ignores query strings', () => {
+    expect(containerOverride('/notebook-assets/tanda-pizza/audio.mp3?v=2')).toBe('audio/mp4');
   });
 });

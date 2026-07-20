@@ -1,5 +1,6 @@
 import { getCollection } from 'astro:content';
-import { slug } from './utils';
+import { slug, mediaMimeType } from './utils';
+import { containerOverride } from './media-facts';
 import { statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { APIContext } from 'astro';
@@ -60,13 +61,11 @@ export async function buildPodcastFeed(context: APIContext, options: FeedOptions
       const mediaUrl = ep.data.audioUrl ?? ep.data.videoUrl ?? '';
       const isVideo = !ep.data.audioUrl && !!ep.data.videoUrl;
       const enclosureUrl = mediaUrl.startsWith('http') ? mediaUrl : `${site}${mediaUrl}`;
-      // .m4a is AAC in an MP4 container — mislabelling it audio/mpeg trips
-      // strict directory validators.
-      const enclosureType = isVideo
-        ? 'video/mp4'
-        : /\.m4a(\?|$)/i.test(mediaUrl)
-          ? 'audio/mp4'
-          : 'audio/mpeg';
+      // Extension-derived, with an override for the files whose extension
+      // contradicts their actual container. Directories validate the enclosure
+      // type against the bytes they fetch.
+      const enclosureType =
+        containerOverride(mediaUrl) ?? mediaMimeType(mediaUrl, isVideo ? 'video' : 'audio');
       const fileSize = await getFileSize(mediaUrl);
       // keep legacy binding for existing references below
       const audioUrl = enclosureUrl;

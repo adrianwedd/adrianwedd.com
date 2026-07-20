@@ -132,6 +132,10 @@ export function isPublicPath(src: string | undefined): boolean {
  *
  * Falls back to `audio/mpeg` for unknown audio and `video/mp4` for unknown
  * video, matching the historical default rather than emitting nothing.
+ *
+ * NOTE: extension is a claim, not a fact. Files whose extension contradicts
+ * their actual container are corrected via `containerOverride()` in
+ * `media-facts.ts`; callers that emit a MIME type must consult it first.
  */
 export function mediaMimeType(url: string, kind: 'audio' | 'video'): string {
   const ext = url.split('?')[0].split('#')[0].split('.').pop()?.toLowerCase();
