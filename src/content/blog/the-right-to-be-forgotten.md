@@ -5,6 +5,7 @@ date: 2026-07-31
 heroImage: '/notebook-assets/the-right-to-be-forgotten/infographic.webp'
 tags: ['privacy', 'deletion', 'data', 'autonomy', 'ethics']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-right-to-be-forgotten/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-right-to-be-forgotten/video.mp4'
 audioDuration: '23:04'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 9
