@@ -5,6 +5,7 @@ date: 2026-08-03
 heroImage: '/notebook-assets/the-hauntology-of-the-infinite-now/infographic.webp'
 tags: ['hauntology', 'memory', 'time', 'technology', 'ethics']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-hauntology-of-the-infinite-now/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-hauntology-of-the-infinite-now/video.mp4'
 audioDuration: '24:22'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 12

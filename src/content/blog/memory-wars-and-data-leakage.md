@@ -5,6 +5,7 @@ date: 2026-08-01
 heroImage: '/notebook-assets/memory-wars-and-data-leakage/infographic.webp'
 tags: ['memory', 'data', 'privacy', 'identity', 'autonomy']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/memory-wars-and-data-leakage/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/memory-wars-and-data-leakage/video.mp4'
 audioDuration: '19:30'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 10

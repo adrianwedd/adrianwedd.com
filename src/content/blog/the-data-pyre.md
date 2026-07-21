@@ -5,6 +5,7 @@ date: 2026-08-02
 heroImage: '/notebook-assets/the-data-pyre/infographic.webp'
 tags: ['deletion', 'ritual', 'data', 'mortality', 'ethics']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-data-pyre/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-data-pyre/video.mp4'
 audioDuration: '23:04'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 11

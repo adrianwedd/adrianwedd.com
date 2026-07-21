@@ -5,6 +5,7 @@ date: 2026-07-30
 heroImage: '/notebook-assets/the-analog-insurrection/infographic.webp'
 tags: ['analog', 'refusal', 'privacy', 'autonomy', 'technology']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-analog-insurrection/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-analog-insurrection/video.mp4'
 audioDuration: '29:26'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 8
