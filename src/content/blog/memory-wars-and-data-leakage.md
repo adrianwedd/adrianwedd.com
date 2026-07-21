@@ -2,6 +2,7 @@
 title: 'Memory Wars and Data Leakage'
 description: 'The state wants a self that remembers everything and contradicts nothing. A body that forgets is not a broken citizen but one the file can no longer hold.'
 date: 2026-08-01
+autopublish: true
 heroImage: '/notebook-assets/memory-wars-and-data-leakage/infographic.webp'
 tags: ['memory', 'data', 'privacy', 'identity', 'autonomy']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/memory-wars-and-data-leakage/audio.m4a'

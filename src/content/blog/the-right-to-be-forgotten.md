@@ -2,6 +2,7 @@
 title: 'The Right to Be Forgotten'
 description: 'The digital afterlife industry sells immortality and delivers undeadness. Finitude is not a defect in a person, and deletion should be the default.'
 date: 2026-07-31
+autopublish: true
 heroImage: '/notebook-assets/the-right-to-be-forgotten/infographic.webp'
 tags: ['privacy', 'deletion', 'data', 'autonomy', 'ethics']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-right-to-be-forgotten/audio.m4a'

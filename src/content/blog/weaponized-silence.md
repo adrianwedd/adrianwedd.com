@@ -2,6 +2,7 @@
 title: 'Weaponized Silence'
 description: 'Silence is not an absence. It is the withdrawal of unpaid labour, and the reaction it provokes shows you exactly who was being subsidised.'
 date: 2026-07-28
+autopublish: true
 heroImage: '/notebook-assets/weaponized-silence/infographic.webp'
 tags: ['attention', 'refusal', 'autonomy', 'ethics', 'technology']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/weaponized-silence/audio.m4a'

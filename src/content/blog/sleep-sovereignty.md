@@ -2,6 +2,7 @@
 title: 'Sleep Sovereignty'
 description: 'Sleep is the last stretch of a life the market cannot easily harvest. The 24/7 economy, the wearable and the industrial clock have all gone after it anyway.'
 date: 2026-07-29
+autopublish: true
 heroImage: '/notebook-assets/sleep-sovereignty/infographic.webp'
 tags: ['sleep', 'biopolitics', 'wearables', 'autonomy', 'technology']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/sleep-sovereignty/audio.m4a'

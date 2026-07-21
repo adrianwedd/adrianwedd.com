@@ -4,85 +4,328 @@
   "pageId": "35753603727",
   "posts": [
     {
-      "id": "drip-facebook-dont-saw-off-the-branch",
+      "id": "drip-facebook-the-glass-cage",
       "platform": "facebook",
       "type": "text",
-      "message": "Don't Saw Off the Branch\n\nI let an AI agent rebuild my live home network over Starlink — no console, no documented API. Part 1: building three backout paths before a single write.\n\nhttps://adrianwedd.com/blog/dont-saw-off-the-branch/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/dont-saw-off-the-branch/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:00:00.000Z",
-      "scheduledAtEpoch": 1782352800000
+      "message": "The Glass Cage\n\nThe demand that you be readable is the demand that you be governable. On legibility, the trap of visibility, and why opacity is the freedom left.\n\nhttps://adrianwedd.com/blog/the-glass-cage/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-glass-cage/infographic.jpg",
+      "scheduledAt": "2026-07-23T09:00:00+10:00",
+      "scheduledAtEpoch": 1784761200000
     },
     {
-      "id": "drip-bluesky-dont-saw-off-the-branch",
+      "id": "drip-bluesky-the-glass-cage",
       "platform": "bluesky",
       "type": "text",
-      "message": "Don't Saw Off the Branch\n\nI let an AI agent rebuild my live home network over Starlink — no console, no documented API. Part 1: building three backout paths before a single write.\n\nhttps://adrianwedd.com/blog/dont-saw-off-the-branch/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/dont-saw-off-the-branch/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:00:00.000Z",
-      "scheduledAtEpoch": 1782352800000
+      "message": "The Glass Cage\n\nThe demand that you be readable is the demand that you be governable. On legibility, the trap of visibility, and why opacity is the freedom left.\n\nhttps://adrianwedd.com/blog/the-glass-cage/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-glass-cage/infographic.jpg",
+      "scheduledAt": "2026-07-23T09:00:00+10:00",
+      "scheduledAtEpoch": 1784761200000
     },
     {
-      "id": "drip-twitter-dont-saw-off-the-branch",
+      "id": "drip-twitter-the-glass-cage",
       "platform": "twitter",
       "type": "text",
-      "message": "Don't Saw Off the Branch\n\nI let an AI agent rebuild my live home network over Starlink — no console, no documented API. Part 1: building three backout paths before a single write.\n\nhttps://adrianwedd.com/blog/dont-saw-off-the-branch/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/dont-saw-off-the-branch/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:00:00.000Z",
-      "scheduledAtEpoch": 1782352800000
+      "message": "The Glass Cage\n\nThe demand that you be readable is the demand that you be governable. On legibility, the trap of visibility, and why opacity is the freedom left.\n\nhttps://adrianwedd.com/blog/the-glass-cage/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-glass-cage/infographic.jpg",
+      "scheduledAt": "2026-07-23T09:00:00+10:00",
+      "scheduledAtEpoch": 1784761200000
     },
     {
-      "id": "drip-facebook-there-is-no-api",
+      "id": "drip-facebook-the-bio-age-trap",
       "platform": "facebook",
       "type": "text",
-      "message": "There Is No API\n\nThe router I was reconfiguring has no public API. Part 2: driving the private endpoints the web UI calls — and the wall the agent could not script past.\n\nhttps://adrianwedd.com/blog/there-is-no-api/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/there-is-no-api/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:05:00.000Z",
-      "scheduledAtEpoch": 1782353100000
+      "message": "The Bio-Age Trap\n\nInsurers are swapping your birthday for a biological age score. The markers it reads are gendered, so menopause gets priced as accelerated decay.\n\nhttps://adrianwedd.com/blog/the-bio-age-trap/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-bio-age-trap/infographic.jpg",
+      "scheduledAt": "2026-07-24T09:00:00+10:00",
+      "scheduledAtEpoch": 1784847600000
     },
     {
-      "id": "drip-bluesky-there-is-no-api",
+      "id": "drip-bluesky-the-bio-age-trap",
       "platform": "bluesky",
       "type": "text",
-      "message": "There Is No API\n\nThe router I was reconfiguring has no public API. Part 2: driving the private endpoints the web UI calls — and the wall the agent could not script past.\n\nhttps://adrianwedd.com/blog/there-is-no-api/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/there-is-no-api/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:05:00.000Z",
-      "scheduledAtEpoch": 1782353100000
+      "message": "The Bio-Age Trap\n\nInsurers are swapping your birthday for a biological age score. The markers it reads are gendered, so menopause gets priced as accelerated decay.\n\nhttps://adrianwedd.com/blog/the-bio-age-trap/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-bio-age-trap/infographic.jpg",
+      "scheduledAt": "2026-07-24T09:00:00+10:00",
+      "scheduledAtEpoch": 1784847600000
     },
     {
-      "id": "drip-twitter-there-is-no-api",
+      "id": "drip-twitter-the-bio-age-trap",
       "platform": "twitter",
       "type": "text",
-      "message": "There Is No API\n\nThe router I was reconfiguring has no public API. Part 2: driving the private endpoints the web UI calls — and the wall the agent could not script past.\n\nhttps://adrianwedd.com/blog/there-is-no-api/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/there-is-no-api/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:05:00.000Z",
-      "scheduledAtEpoch": 1782353100000
+      "message": "The Bio-Age Trap\n\nInsurers are swapping your birthday for a biological age score. The markers it reads are gendered, so menopause gets priced as accelerated decay.\n\nhttps://adrianwedd.com/blog/the-bio-age-trap/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-bio-age-trap/infographic.jpg",
+      "scheduledAt": "2026-07-24T09:00:00+10:00",
+      "scheduledAtEpoch": 1784847600000
     },
     {
-      "id": "drip-facebook-the-limits-of-the-walls",
+      "id": "drip-facebook-the-gorgon-protocol",
       "platform": "facebook",
       "type": "text",
-      "message": "The Limits of the Walls\n\nSix sessions handing a live home network to an AI agent. Part 3: the memory that made it work, the division of labour, and what I'd never let it touch.\n\nhttps://adrianwedd.com/blog/the-limits-of-the-walls/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/the-limits-of-the-walls/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:10:00.000Z",
-      "scheduledAtEpoch": 1782353400000
+      "message": "The Gorgon Protocol\n\nFacial recognition fails unevenly, and hardest on the people it was never built for. That failure is a vulnerability you can put on your face.\n\nhttps://adrianwedd.com/blog/the-gorgon-protocol/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-gorgon-protocol/infographic.jpg",
+      "scheduledAt": "2026-07-25T09:00:00+10:00",
+      "scheduledAtEpoch": 1784934000000
     },
     {
-      "id": "drip-bluesky-the-limits-of-the-walls",
+      "id": "drip-bluesky-the-gorgon-protocol",
       "platform": "bluesky",
       "type": "text",
-      "message": "The Limits of the Walls\n\nSix sessions handing a live home network to an AI agent. Part 3: the memory that made it work, the division of labour, and what I'd never let it touch.\n\nhttps://adrianwedd.com/blog/the-limits-of-the-walls/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/the-limits-of-the-walls/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:10:00.000Z",
-      "scheduledAtEpoch": 1782353400000
+      "message": "The Gorgon Protocol\n\nFacial recognition fails unevenly, and hardest on the people it was never built for. That failure is a vulnerability you can put on your face.\n\nhttps://adrianwedd.com/blog/the-gorgon-protocol/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-gorgon-protocol/infographic.jpg",
+      "scheduledAt": "2026-07-25T09:00:00+10:00",
+      "scheduledAtEpoch": 1784934000000
     },
     {
-      "id": "drip-twitter-the-limits-of-the-walls",
+      "id": "drip-twitter-the-gorgon-protocol",
       "platform": "twitter",
       "type": "text",
-      "message": "The Limits of the Walls\n\nSix sessions handing a live home network to an AI agent. Part 3: the memory that made it work, the division of labour, and what I'd never let it touch.\n\nhttps://adrianwedd.com/blog/the-limits-of-the-walls/",
-      "imageUrl": "https://adrianwedd.com/notebook-assets/the-limits-of-the-walls/infographic.jpg",
-      "scheduledAt": "2026-06-25T02:10:00.000Z",
-      "scheduledAtEpoch": 1782353400000
+      "message": "The Gorgon Protocol\n\nFacial recognition fails unevenly, and hardest on the people it was never built for. That failure is a vulnerability you can put on your face.\n\nhttps://adrianwedd.com/blog/the-gorgon-protocol/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-gorgon-protocol/infographic.jpg",
+      "scheduledAt": "2026-07-25T09:00:00+10:00",
+      "scheduledAtEpoch": 1784934000000
+    },
+    {
+      "id": "drip-facebook-the-ghost-in-the-city",
+      "platform": "facebook",
+      "type": "text",
+      "message": "The Ghost in the City\n\nA city redesigned so that pausing reads as a fault condition, and what that costs the people whose bodies need to stop.\n\nhttps://adrianwedd.com/blog/the-ghost-in-the-city/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-ghost-in-the-city/infographic.jpg",
+      "scheduledAt": "2026-07-26T09:00:00+10:00",
+      "scheduledAtEpoch": 1785020400000
+    },
+    {
+      "id": "drip-bluesky-the-ghost-in-the-city",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "The Ghost in the City\n\nA city redesigned so that pausing reads as a fault condition, and what that costs the people whose bodies need to stop.\n\nhttps://adrianwedd.com/blog/the-ghost-in-the-city/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-ghost-in-the-city/infographic.jpg",
+      "scheduledAt": "2026-07-26T09:00:00+10:00",
+      "scheduledAtEpoch": 1785020400000
+    },
+    {
+      "id": "drip-twitter-the-ghost-in-the-city",
+      "platform": "twitter",
+      "type": "text",
+      "message": "The Ghost in the City\n\nA city redesigned so that pausing reads as a fault condition, and what that costs the people whose bodies need to stop.\n\nhttps://adrianwedd.com/blog/the-ghost-in-the-city/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-ghost-in-the-city/infographic.jpg",
+      "scheduledAt": "2026-07-26T09:00:00+10:00",
+      "scheduledAtEpoch": 1785020400000
+    },
+    {
+      "id": "drip-facebook-the-boredom-strike",
+      "platform": "facebook",
+      "type": "text",
+      "message": "The Boredom Strike\n\nThe attention economy doesn't want your attention. It wants your arousal. Boredom is the one state it can't sell, which makes it a labour tactic.\n\nhttps://adrianwedd.com/blog/the-boredom-strike/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-boredom-strike/infographic.jpg",
+      "scheduledAt": "2026-07-27T09:00:00+10:00",
+      "scheduledAtEpoch": 1785106800000
+    },
+    {
+      "id": "drip-bluesky-the-boredom-strike",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "The Boredom Strike\n\nThe attention economy doesn't want your attention. It wants your arousal. Boredom is the one state it can't sell, which makes it a labour tactic.\n\nhttps://adrianwedd.com/blog/the-boredom-strike/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-boredom-strike/infographic.jpg",
+      "scheduledAt": "2026-07-27T09:00:00+10:00",
+      "scheduledAtEpoch": 1785106800000
+    },
+    {
+      "id": "drip-twitter-the-boredom-strike",
+      "platform": "twitter",
+      "type": "text",
+      "message": "The Boredom Strike\n\nThe attention economy doesn't want your attention. It wants your arousal. Boredom is the one state it can't sell, which makes it a labour tactic.\n\nhttps://adrianwedd.com/blog/the-boredom-strike/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-boredom-strike/infographic.jpg",
+      "scheduledAt": "2026-07-27T09:00:00+10:00",
+      "scheduledAtEpoch": 1785106800000
+    },
+    {
+      "id": "drip-facebook-weaponized-silence",
+      "platform": "facebook",
+      "type": "text",
+      "message": "Weaponized Silence\n\nSilence is not an absence. It is the withdrawal of unpaid labour, and the reaction it provokes shows you exactly who was being subsidised.\n\nhttps://adrianwedd.com/blog/weaponized-silence/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/weaponized-silence/infographic.jpg",
+      "scheduledAt": "2026-07-28T09:00:00+10:00",
+      "scheduledAtEpoch": 1785193200000
+    },
+    {
+      "id": "drip-bluesky-weaponized-silence",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "Weaponized Silence\n\nSilence is not an absence. It is the withdrawal of unpaid labour, and the reaction it provokes shows you exactly who was being subsidised.\n\nhttps://adrianwedd.com/blog/weaponized-silence/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/weaponized-silence/infographic.jpg",
+      "scheduledAt": "2026-07-28T09:00:00+10:00",
+      "scheduledAtEpoch": 1785193200000
+    },
+    {
+      "id": "drip-twitter-weaponized-silence",
+      "platform": "twitter",
+      "type": "text",
+      "message": "Weaponized Silence\n\nSilence is not an absence. It is the withdrawal of unpaid labour, and the reaction it provokes shows you exactly who was being subsidised.\n\nhttps://adrianwedd.com/blog/weaponized-silence/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/weaponized-silence/infographic.jpg",
+      "scheduledAt": "2026-07-28T09:00:00+10:00",
+      "scheduledAtEpoch": 1785193200000
+    },
+    {
+      "id": "drip-facebook-sleep-sovereignty",
+      "platform": "facebook",
+      "type": "text",
+      "message": "Sleep Sovereignty\n\nSleep is the last stretch of a life the market cannot easily harvest. The 24/7 economy, the wearable and the industrial clock have all gone after it anyway.\n\nhttps://adrianwedd.com/blog/sleep-sovereignty/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/sleep-sovereignty/infographic.jpg",
+      "scheduledAt": "2026-07-29T09:00:00+10:00",
+      "scheduledAtEpoch": 1785279600000
+    },
+    {
+      "id": "drip-bluesky-sleep-sovereignty",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "Sleep Sovereignty\n\nSleep is the last stretch of a life the market cannot easily harvest. The 24/7 economy, the wearable and the industrial clock have all gone after it anyway.\n\nhttps://adrianwedd.com/blog/sleep-sovereignty/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/sleep-sovereignty/infographic.jpg",
+      "scheduledAt": "2026-07-29T09:00:00+10:00",
+      "scheduledAtEpoch": 1785279600000
+    },
+    {
+      "id": "drip-twitter-sleep-sovereignty",
+      "platform": "twitter",
+      "type": "text",
+      "message": "Sleep Sovereignty\n\nSleep is the last stretch of a life the market cannot easily harvest. The 24/7 economy, the wearable and the industrial clock have all gone after it anyway.\n\nhttps://adrianwedd.com/blog/sleep-sovereignty/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/sleep-sovereignty/infographic.jpg",
+      "scheduledAt": "2026-07-29T09:00:00+10:00",
+      "scheduledAtEpoch": 1785279600000
+    },
+    {
+      "id": "drip-facebook-the-analog-insurrection",
+      "platform": "facebook",
+      "type": "text",
+      "message": "The Analog Insurrection\n\nDisconnection used to be the default. Now it is a luxury good, and the price of staying unreadable is quietly sorting us into two classes.\n\nhttps://adrianwedd.com/blog/the-analog-insurrection/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-analog-insurrection/infographic.jpg",
+      "scheduledAt": "2026-07-30T09:00:00+10:00",
+      "scheduledAtEpoch": 1785366000000
+    },
+    {
+      "id": "drip-bluesky-the-analog-insurrection",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "The Analog Insurrection\n\nDisconnection used to be the default. Now it is a luxury good, and the price of staying unreadable is quietly sorting us into two classes.\n\nhttps://adrianwedd.com/blog/the-analog-insurrection/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-analog-insurrection/infographic.jpg",
+      "scheduledAt": "2026-07-30T09:00:00+10:00",
+      "scheduledAtEpoch": 1785366000000
+    },
+    {
+      "id": "drip-twitter-the-analog-insurrection",
+      "platform": "twitter",
+      "type": "text",
+      "message": "The Analog Insurrection\n\nDisconnection used to be the default. Now it is a luxury good, and the price of staying unreadable is quietly sorting us into two classes.\n\nhttps://adrianwedd.com/blog/the-analog-insurrection/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-analog-insurrection/infographic.jpg",
+      "scheduledAt": "2026-07-30T09:00:00+10:00",
+      "scheduledAtEpoch": 1785366000000
+    },
+    {
+      "id": "drip-facebook-the-right-to-be-forgotten",
+      "platform": "facebook",
+      "type": "text",
+      "message": "The Right to Be Forgotten\n\nThe digital afterlife industry sells immortality and delivers undeadness. Finitude is not a defect in a person, and deletion should be the default.\n\nhttps://adrianwedd.com/blog/the-right-to-be-forgotten/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-right-to-be-forgotten/infographic.jpg",
+      "scheduledAt": "2026-07-31T09:00:00+10:00",
+      "scheduledAtEpoch": 1785452400000
+    },
+    {
+      "id": "drip-bluesky-the-right-to-be-forgotten",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "The Right to Be Forgotten\n\nThe digital afterlife industry sells immortality and delivers undeadness. Finitude is not a defect in a person, and deletion should be the default.\n\nhttps://adrianwedd.com/blog/the-right-to-be-forgotten/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-right-to-be-forgotten/infographic.jpg",
+      "scheduledAt": "2026-07-31T09:00:00+10:00",
+      "scheduledAtEpoch": 1785452400000
+    },
+    {
+      "id": "drip-twitter-the-right-to-be-forgotten",
+      "platform": "twitter",
+      "type": "text",
+      "message": "The Right to Be Forgotten\n\nThe digital afterlife industry sells immortality and delivers undeadness. Finitude is not a defect in a person, and deletion should be the default.\n\nhttps://adrianwedd.com/blog/the-right-to-be-forgotten/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-right-to-be-forgotten/infographic.jpg",
+      "scheduledAt": "2026-07-31T09:00:00+10:00",
+      "scheduledAtEpoch": 1785452400000
+    },
+    {
+      "id": "drip-facebook-memory-wars-and-data-leakage",
+      "platform": "facebook",
+      "type": "text",
+      "message": "Memory Wars and Data Leakage\n\nThe state wants a self that remembers everything and contradicts nothing. A body that forgets is not a broken citizen but one the file can no longer hold.\n\nhttps://adrianwedd.com/blog/memory-wars-and-data-leakage/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/memory-wars-and-data-leakage/infographic.jpg",
+      "scheduledAt": "2026-08-01T09:00:00+10:00",
+      "scheduledAtEpoch": 1785538800000
+    },
+    {
+      "id": "drip-bluesky-memory-wars-and-data-leakage",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "Memory Wars and Data Leakage\n\nThe state wants a self that remembers everything and contradicts nothing. A body that forgets is not a broken citizen but one the file can no longer hold.\n\nhttps://adrianwedd.com/blog/memory-wars-and-data-leakage/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/memory-wars-and-data-leakage/infographic.jpg",
+      "scheduledAt": "2026-08-01T09:00:00+10:00",
+      "scheduledAtEpoch": 1785538800000
+    },
+    {
+      "id": "drip-twitter-memory-wars-and-data-leakage",
+      "platform": "twitter",
+      "type": "text",
+      "message": "Memory Wars and Data Leakage\n\nThe state wants a self that remembers everything and contradicts nothing. A body that forgets is not a broken citizen but one the file can no longer hold.\n\nhttps://adrianwedd.com/blog/memory-wars-and-data-leakage/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/memory-wars-and-data-leakage/infographic.jpg",
+      "scheduledAt": "2026-08-01T09:00:00+10:00",
+      "scheduledAtEpoch": 1785538800000
+    },
+    {
+      "id": "drip-facebook-the-data-pyre",
+      "platform": "facebook",
+      "type": "text",
+      "message": "The Data Pyre\n\nWe built a civilisation whose every system defaults to save. The archive is perfect and the liturgy of erasure is gone. Deletion has to become a ritual.\n\nhttps://adrianwedd.com/blog/the-data-pyre/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-data-pyre/infographic.jpg",
+      "scheduledAt": "2026-08-02T09:00:00+10:00",
+      "scheduledAtEpoch": 1785625200000
+    },
+    {
+      "id": "drip-bluesky-the-data-pyre",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "The Data Pyre\n\nWe built a civilisation whose every system defaults to save. The archive is perfect and the liturgy of erasure is gone. Deletion has to become a ritual.\n\nhttps://adrianwedd.com/blog/the-data-pyre/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-data-pyre/infographic.jpg",
+      "scheduledAt": "2026-08-02T09:00:00+10:00",
+      "scheduledAtEpoch": 1785625200000
+    },
+    {
+      "id": "drip-twitter-the-data-pyre",
+      "platform": "twitter",
+      "type": "text",
+      "message": "The Data Pyre\n\nWe built a civilisation whose every system defaults to save. The archive is perfect and the liturgy of erasure is gone. Deletion has to become a ritual.\n\nhttps://adrianwedd.com/blog/the-data-pyre/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-data-pyre/infographic.jpg",
+      "scheduledAt": "2026-08-02T09:00:00+10:00",
+      "scheduledAtEpoch": 1785625200000
+    },
+    {
+      "id": "drip-facebook-the-hauntology-of-the-infinite-now",
+      "platform": "facebook",
+      "type": "text",
+      "message": "The Hauntology of the Infinite Now\n\nDigital media carries no visible wear, so the past never reads as over. On hauntology, retromania, and a culture that struggles to finish anything.\n\nhttps://adrianwedd.com/blog/the-hauntology-of-the-infinite-now/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-hauntology-of-the-infinite-now/infographic.jpg",
+      "scheduledAt": "2026-08-03T09:00:00+10:00",
+      "scheduledAtEpoch": 1785711600000
+    },
+    {
+      "id": "drip-bluesky-the-hauntology-of-the-infinite-now",
+      "platform": "bluesky",
+      "type": "text",
+      "message": "The Hauntology of the Infinite Now\n\nDigital media carries no visible wear, so the past never reads as over. On hauntology, retromania, and a culture that struggles to finish anything.\n\nhttps://adrianwedd.com/blog/the-hauntology-of-the-infinite-now/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-hauntology-of-the-infinite-now/infographic.jpg",
+      "scheduledAt": "2026-08-03T09:00:00+10:00",
+      "scheduledAtEpoch": 1785711600000
+    },
+    {
+      "id": "drip-twitter-the-hauntology-of-the-infinite-now",
+      "platform": "twitter",
+      "type": "text",
+      "message": "The Hauntology of the Infinite Now\n\nDigital media carries no visible wear, so the past never reads as over. On hauntology, retromania, and a culture that struggles to finish anything.\n\nhttps://adrianwedd.com/blog/the-hauntology-of-the-infinite-now/",
+      "imageUrl": "https://adrianwedd.com/notebook-assets/the-hauntology-of-the-infinite-now/infographic.jpg",
+      "scheduledAt": "2026-08-03T09:00:00+10:00",
+      "scheduledAtEpoch": 1785711600000
     }
   ]
 }
