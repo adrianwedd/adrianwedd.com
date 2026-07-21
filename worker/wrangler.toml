@@ -15,20 +15,23 @@ class_name = "CronLock"
 tag = "v1"
 new_sqlite_classes = ["CronLock"]
 
-# Crisis-alert email (Cloudflare Email Sending). One-time setup before first
-# deploy: (1) onboard adrianwedd.com to Email Service so CRISIS_ALERT_FROM is
-# a verified sender, and (2) verify CRISIS_ALERT_TO as an Email Routing
-# destination address — otherwise sends are rejected (E_SENDER_NOT_VERIFIED).
+# Crisis-alert email (Cloudflare Email Sending), sent to a verified destination
+# address — free on any plan, no sending-domain onboarding required. Two rules:
+#   1. CRISIS_ALERT_FROM must be on a domain with Email Routing enabled on the
+#      account (wedd.au is; adrianwedd.com is NOT — Google Workspace holds its
+#      MX, and onboarding it to Email Routing would break inbound mail).
+#   2. CRISIS_ALERT_TO must be a verified Email Routing destination address
+#      (adrianwedd@gmail.com was verified 2023) — otherwise E_SENDER_NOT_VERIFIED.
 # destination_address below restricts the binding to that one recipient; if
 # CRISIS_ALERT_TO ever changes, change destination_address with it. Alerts
 # degrade to /api/health surfacing if the binding/vars are absent.
 [[send_email]]
 name = "CRISIS_EMAIL"
-destination_address = "adrian@adrianwedd.com"
+destination_address = "adrianwedd@gmail.com"
 
 [vars]
-CRISIS_ALERT_FROM = "alerts@adrianwedd.com"
-CRISIS_ALERT_TO = "adrian@adrianwedd.com"
+CRISIS_ALERT_FROM = "alerts@wedd.au"
+CRISIS_ALERT_TO = "adrianwedd@gmail.com"
 FACEBOOK_PAGE_ID = "35753603727"
 GRAPH_API_VERSION = "v21.0"
 INSTAGRAM_BUSINESS_ACCOUNT_ID = ""
