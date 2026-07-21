@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ContentCarousel from '../../components/ContentCarousel.astro';
 import Pagination from '../../components/Pagination.astro';
 import InfiniteScroll from '../../components/InfiniteScroll.astro';
 import ScrollReveal from '../../components/ScrollReveal.astro';
@@ -19,24 +18,11 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props as { page: Page<CollectionEntry<'blog'>> };
 const isFirst = page.currentPage === 1;
 
-// Tag chips (and the page-1 carousel) need the full post set, not this page's slice.
+// Tag chips need the full post set, not this page's slice.
 const allPosts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags.map(tagSlug)))].sort();
-
-const carouselItems = isFirst
-  ? allPosts
-      .filter((p) => p.data.heroImage)
-      .map((p) => ({
-        href: `/blog/${slug(p.id)}/`,
-        title: p.data.title,
-        description: p.data.description,
-        heroImage: p.data.heroImage as string,
-        date: p.data.date,
-        tags: p.data.tags,
-      }))
-  : [];
 
 const pageTitle = isFirst ? 'Blog' : `Blog — Page ${page.currentPage}`;
 const prevUrl =
@@ -79,12 +65,6 @@ const nextUrl = page.currentPage < page.lastPage ? `/blog/${page.currentPage + 1
           </span>
         </h1>
       </section>
-    )
-  }
-
-  {
-    isFirst && carouselItems.length > 0 && (
-      <ContentCarousel items={carouselItems} id="blog-carousel" label="Featured blog posts" />
     )
   }
 
