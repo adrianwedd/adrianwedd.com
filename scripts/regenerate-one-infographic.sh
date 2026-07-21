@@ -61,6 +61,7 @@ echo "Generating branded portrait infographic..."
 # Create infographic
 create_output=$(nlm infographic create "$notebook_id" \
     --orientation portrait \
+    --detail concise \
     --focus "$FOCUS" \
     -y 2>&1 || true)
 
