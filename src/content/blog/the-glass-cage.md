@@ -1,7 +1,7 @@
 ---
 title: 'The Glass Cage'
 description: 'The demand that you be readable is the demand that you be governable. On legibility, the trap of visibility, and why opacity is the freedom left.'
-date: 2026-07-23
+date: 2026-07-22T11:00:00+10:00
 autopublish: true
 heroImage: '/notebook-assets/the-glass-cage/infographic.webp'
 tags: ['surveillance', 'biopolitics', 'privacy', 'autonomy', 'technology']
