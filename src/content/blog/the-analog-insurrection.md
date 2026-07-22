@@ -1,7 +1,7 @@
 ---
 title: 'The Analog Insurrection'
 description: 'Disconnection used to be the default. Now it is a luxury good, and the price of staying unreadable is quietly sorting us into two classes.'
-date: 2026-07-30
+date: 2026-07-22T18:00:00+10:00
 autopublish: true
 heroImage: '/notebook-assets/the-analog-insurrection/infographic.webp'
 tags: ['analog', 'refusal', 'privacy', 'autonomy', 'technology']

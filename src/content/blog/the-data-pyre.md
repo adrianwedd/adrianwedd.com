@@ -1,7 +1,7 @@
 ---
 title: 'The Data Pyre'
 description: 'We built a civilisation whose every system defaults to save. The archive is perfect and the liturgy of erasure is gone. Deletion has to become a ritual.'
-date: 2026-08-02
+date: 2026-07-22T21:00:00+10:00
 autopublish: true
 heroImage: '/notebook-assets/the-data-pyre/infographic.webp'
 tags: ['deletion', 'ritual', 'data', 'mortality', 'ethics']
