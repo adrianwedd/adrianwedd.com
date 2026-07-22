@@ -1,7 +1,7 @@
 ---
 title: 'The Gorgon Protocol'
 description: 'Facial recognition fails unevenly, and hardest on the people it was never built for. That failure is a vulnerability you can put on your face.'
-date: 2026-07-22T13:00:00+10:00
+date: 2026-07-02
 autopublish: true
 heroImage: '/notebook-assets/the-gorgon-protocol/infographic.webp'
 tags: ['surveillance', 'biopolitics', 'adversarial', 'autonomy', 'ai']

@@ -1,7 +1,7 @@
 ---
 title: 'The Bio-Age Trap'
 description: 'Insurers are swapping your birthday for a biological age score. The markers it reads are gendered, so menopause gets priced as accelerated decay.'
-date: 2026-07-22T12:00:00+10:00
+date: 2026-06-30
 autopublish: true
 heroImage: '/notebook-assets/the-bio-age-trap/infographic.webp'
 tags: ['biopolitics', 'insurance', 'algorithms', 'surveillance', 'ethics']

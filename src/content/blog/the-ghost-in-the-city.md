@@ -1,7 +1,7 @@
 ---
 title: 'The Ghost in the City'
 description: 'A city redesigned so that pausing reads as a fault condition, and what that costs the people whose bodies need to stop.'
-date: 2026-07-22T14:00:00+10:00
+date: 2026-07-04
 autopublish: true
 heroImage: '/notebook-assets/the-ghost-in-the-city/infographic.webp'
 tags: ['surveillance', 'cities', 'biopolitics', 'ai', 'autonomy']

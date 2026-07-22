@@ -1,7 +1,7 @@
 ---
 title: 'The Hauntology of the Infinite Now'
 description: 'Digital media carries no visible wear, so the past never reads as over. On hauntology, retromania, and a culture that struggles to finish anything.'
-date: 2026-07-22T22:00:00+10:00
+date: 2026-07-19
 autopublish: true
 heroImage: '/notebook-assets/the-hauntology-of-the-infinite-now/infographic.webp'
 tags: ['hauntology', 'memory', 'time', 'technology', 'ethics']
