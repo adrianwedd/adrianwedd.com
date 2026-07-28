@@ -17,7 +17,7 @@ Regulated health practitioners in Australia can't publish patient testimonials o
 
 ## What I built
 
-Two public sites sharing one visual design system, so they read as connected without reading as identical, plus a private, password-gated hub so the practice owner could manage day-to-day requests herself: a kanban board of open items, a simple form to raise a new one, and an internal booking assistant for schedule and appointment lookups.
+Two public sites sharing one visual design system, so they read as connected without reading as identical, plus a private hub so the practice owner could manage day-to-day requests herself: a kanban board of open items, a simple form to raise a new one, and an internal assistant for day-to-day practice admin.
 
 ## Best parts
 
