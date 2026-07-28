@@ -31,7 +31,6 @@
     "@astrojs/preact": "^5.1.4",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
-    "@google-analytics/data": "^6.1.0",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.2",
     "preact": "^10.29.2",
@@ -65,6 +64,7 @@
     "js-yaml@4": "^4.3.0"
   },
   "devDependencies": {
+    "@google-analytics/data": "^6.1.0",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "1.55.1",
     "@tailwindcss/typography": "^0.5.20",

@@ -3,23 +3,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const paths = [
   {
-    title: 'Fix my existing site',
-    desc: 'A rebuild or tune-up of a site that is embarrassing, broken, or losing you bookings.',
+    title: 'A conversation first',
+    desc: 'Tell me how your business actually runs and where the friction is. If I am not useful to you, I will say so — and the free guides below cover the fixes most businesses can do themselves.',
   },
   {
-    title: 'Make my enquiries work',
-    desc: 'Booking and enquiry flows, forms, confirmations, and the follow-up that turns an enquiry into a job.',
+    title: 'A paid diagnostic',
+    desc: 'A fixed-price look at how your operation works: a focused workshop and short written findings — the key frictions and the one change worth making first. Sometimes the map is all you need, and that is a good outcome.',
   },
   {
-    title: 'Get found locally',
-    desc: 'Google Business Profile and local visibility so the right nearby customers actually find you.',
+    title: 'A build, if it is warranted',
+    desc: 'Websites, bookings, admin automation, ordering — scoped in writing from the diagnostic, with a named endpoint. You own everything I build.',
   },
-];
-
-const addons = [
-  'Admin and follow-up automation',
-  'Ordering, menu, and availability',
-  'Making sure your emails do not land in spam, plus domain basics',
 ];
 
 const pillars = [
@@ -40,7 +34,7 @@ const pillars = [
 
 <BaseLayout
   title="Local businesses: the digital side, done properly"
-  description="Websites, bookings, and Google visibility for Huon Valley and southern Tasmania businesses. Plain pricing, agreed scope, and I finish the job."
+  description="Websites, bookings, and admin systems for Huon Valley and southern Tasmania businesses. A paid diagnostic first, plain pricing, agreed scope, and I finish the job."
   heroAnimation="pulse"
 >
   <section
@@ -54,8 +48,9 @@ const pillars = [
         <span class="text-text-muted">done properly.</span>
       </h1>
       <p class="text-text-muted mt-6 max-w-prose text-base leading-relaxed">
-        If you run a cafe, clinic, shop, or service in the Huon Valley or southern Tasmania, I build and fix the website
-        side so customers can find you, trust you, and book you. Plain pricing, agreed scope, and I finish the job.
+        If you run a cafe, farm, shop, or service business in the Huon Valley or southern Tasmania, I build the systems
+        side — websites, bookings, and the repetitive admin — so it fits how you actually work. Plain pricing, agreed
+        scope, and I finish the job.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a
@@ -75,7 +70,7 @@ const pillars = [
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
 
   <section id="paths" aria-labelledby="paths-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <h2 id="paths-heading" class="text-text">Three things I help with most</h2>
+    <h2 id="paths-heading" class="text-text">How working together goes</h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
       {
         paths.map(({ title, desc }) => (
@@ -86,7 +81,6 @@ const pillars = [
         ))
       }
     </div>
-    <p class="text-text-muted mt-6 text-sm">Also: {addons.join('; ')}.</p>
   </section>
 
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
@@ -111,12 +105,13 @@ const pillars = [
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
 
   <section id="proof" aria-labelledby="proof-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <h2 id="proof-heading" class="text-text">See the work</h2>
+    <h2 id="proof-heading" class="text-text">Free guidance</h2>
     <p class="text-text-muted mt-6 max-w-prose">
-      Composite examples of the tune-ups I do for local businesses — common patterns, not write-ups of specific clients.
+      Common website problems local businesses can fix themselves, written up as composite examples — general guidance,
+      free. Analysis of your specific operation is what the paid diagnostic is for.
     </p>
     <div class="mt-6">
-      <a href="/fixes/" class="text-accent hover:underline">Browse the local website tune-ups &rarr;</a>
+      <a href="/fixes/" class="text-accent hover:underline">Browse the free guides &rarr;</a>
     </div>
   </section>
 

@@ -51,7 +51,7 @@ const capabilities = [
 const domains = [
   {
     title: 'Healthcare AI',
-    desc: 'AHPRA-compliant digital presence. Cliniko API integration. NDIS-aware tooling. Clinical decision support systems tested against real case datasets. I understand the regulatory surface and build inside it — not around it.',
+    desc: 'Digital presence engineered around documented AHPRA advertising constraints. Integrated practice-management workflows. NDIS-aware tooling. Clinical decision support systems tested against real case datasets. I understand the regulatory surface and build inside it — not around it.',
   },
   {
     title: 'Legal intelligence',
@@ -87,8 +87,8 @@ const caseStudies = [
   {
     name: 'Evolve Evolution',
     url: 'https://evolvechiropractictas.com',
-    desc: 'Four-part ecosystem built for a healthcare practice: chiropractic site, personal coaching brand, author hub, and a private operations dashboard. Shared brand system across all four. AHPRA-compliant content. Password-gated hub for internal docs, kanban, and GitHub issues.',
-    tags: ['Healthcare', 'Multi-site', 'Ops hub', 'AHPRA'],
+    desc: 'Four-part ecosystem built for a healthcare practice: chiropractic site, personal coaching brand, author hub, and a private operations dashboard. Shared brand system across all four. Content engineered around documented AHPRA advertising constraints. Private operations hub for day-to-day practice admin.',
+    tags: ['Healthcare', 'Multi-site', 'Ops hub', 'Regulatory-aware'],
   },
   {
     name: 'Tanda Pizza',
@@ -108,26 +108,37 @@ const steps = [
   {
     n: '1',
     title: 'Talk',
-    desc: "Tell me what you're trying to solve. No forms, no pitch deck. I'll tell you honestly if I can help and what I'd do.",
+    desc: "A short call to work out whether I'm useful to you. No forms, no pitch deck. If I'm not the right fit, I'll say so and point you somewhere better.",
   },
   {
     n: '2',
-    title: 'Build',
-    desc: 'I move fast. Iterative, visible progress. You stay in the loop at every stage. Scope and deposit are agreed before work starts. If scope changes, extra work gets a written estimate before it begins — no bill shock.',
+    title: 'Discover',
+    desc: 'Paid, fixed-price, with a named endpoint. I embed in how your work actually runs and map where the friction and risk really are. Three outcomes, all of them successes: you needed the map and the judgment; one small, high-value fix; or a larger build, separately scoped. The discovery fee is never credited against a build — the thinking is the product.',
   },
   {
     n: '3',
-    title: 'Stay',
-    desc: 'Most clients keep me on. Monthly retainer: reserved capacity for scoped improvements, support, and new work. No open tab, no surprise invoice.',
+    title: 'Build',
+    desc: 'Scoped from discovery output, in writing, before work starts — with a deposit and a named endpoint. Iterative, visible progress; you stay in the loop at every stage. If scope changes, extra work gets a written estimate before it begins — no bill shock.',
+  },
+  {
+    n: '4',
+    title: 'Hand over',
+    desc: 'You own what I build. Handover documentation, credentials moved, and explicit re-engagement terms. Bounded support retainers if you want me to stay on — reserved capacity, no open tab, no surprise invoice.',
   },
 ];
 
 const pricing = [
   {
+    title: 'Discovery',
+    cadence: 'Fixed price',
+    typical: '$1,500 or $4,500',
+    desc: 'Compact diagnostic ($1,500): a focused workshop plus short written findings — key frictions and the recommended next step. Full operational deep-dive ($4,500): interviews, systems and workflow inventory, friction and technical/operational risk map (never regulatory advice), recommended intervention, and implementation options. Never credited against a build.',
+  },
+  {
     title: 'Project',
     cadence: 'Fixed scope',
     typical: 'Typically $3K–$25K',
-    desc: 'Scoped, priced, and agreed upfront. No surprises. 2–8 weeks depending on complexity. Right for a defined build with a clear outcome.',
+    desc: 'Scoped, priced, and agreed upfront. No surprises. 2–8 weeks depending on complexity. Right for a defined build with a clear outcome — usually scoped from discovery output.',
   },
   {
     title: 'Retainer',
@@ -145,8 +156,8 @@ const pricing = [
 ---
 
 <BaseLayout
-  title="Services — AI Consulting & Development"
-  description="AI integration, security evaluation, voice agents, agentic systems, and web development. Tasmania-based, working globally."
+  title="Services — Discovery, Systems & AI Engineering"
+  description="Paid operational discovery, bounded system builds, AI integration, and security evaluation. Tasmania-based, working globally."
   image="/og/services.png"
   heroAnimation="pulse"
 >
@@ -156,7 +167,7 @@ const pricing = [
     set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'ProfessionalService',
-      name: 'Adrian Wedd — AI Consulting & Development',
+      name: 'Adrian Wedd — Discovery, Systems & AI Engineering',
       url: 'https://adrianwedd.com/services/',
       provider: {
         '@type': 'Person',
@@ -165,10 +176,11 @@ const pricing = [
       },
       areaServed: ['Australia', 'Worldwide'],
       serviceType: [
+        'Operational Discovery',
         'AI Integration',
         'Security Evaluation',
         'Voice AI',
-        'Web Development',
+        'Systems Engineering',
         'AI Governance',
         'Agentic Systems',
       ],
@@ -188,9 +200,10 @@ const pricing = [
         <span class="text-text-muted">I'll tell you honestly if I can help.</span>
       </h1>
       <p class="text-text-muted mt-6 max-w-prose text-base leading-relaxed">
-        Practical digital systems and AI/security judgement, delivered directly by the operator doing the work. From
-        local business infrastructure to production-critical AI evaluation, work is scoped, priced, and agreed before
-        anything starts — from Greenpeace operations to
+        I embed with people who know their work deeply, map how it really operates, and build dependable systems that
+        remove the friction between their ideas and reality — engineered with regulatory awareness, delivered in focused
+        increments, handed over clean. Engagements start with a paid, fixed-price discovery, and the work is scoped,
+        priced, and agreed in writing before anything is built — from Greenpeace operations to
         <a href="/blog/120-models-18k-prompts/" class="text-accent hover:underline">18,000 adversarial prompts</a>
         to the thing you need built next.
       </p>
@@ -199,7 +212,7 @@ const pricing = [
           href="/contact/"
           class="btn-primary bg-accent text-surface inline-block rounded-lg px-6 py-3 text-sm font-semibold no-underline hover:opacity-90"
         >
-          Book a free call
+          Book an intro call
         </a>
         <a
           href="#what-i-do"
@@ -435,7 +448,7 @@ const pricing = [
     data-pagefind-body
   >
     <h2 id="pricing-heading" class="text-text">Pricing</h2>
-    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
       {
         pricing.map(({ title, cadence, typical, desc }) => (
           <div class="border-border bg-surface-alt rounded-xl border p-6">
@@ -472,7 +485,7 @@ const pricing = [
         href="/contact/"
         class="btn-primary bg-accent text-surface inline-block rounded-lg px-6 py-3 text-sm font-semibold no-underline hover:opacity-90"
       >
-        Book a free consult
+        Book an intro call
       </a>
       <a
         href="mailto:adrian@adrianwedd.com?subject=Services%20enquiry"

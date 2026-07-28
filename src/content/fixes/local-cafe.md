@@ -1,32 +1,32 @@
 ---
-title: 'Tune-up: a Huon Valley cafe losing the holiday walk-in'
-description: 'Three easy fixes that stop a great local cafe losing summer bookings, no rebuild required.'
+title: 'Five online details worth checking before the holiday season'
+description: 'Small, mostly free checks that help a local cafe make the most of holiday visitors — no rebuild required.'
 date: 2026-06-29
 tags: ['local', 'cafe', 'google-business']
 category: 'Cafe'
 draft: false
 ---
 
-_A composite example, drawn from patterns I see often across Huon Valley cafes — not a write-up of one specific business._
+_General guidance drawn from patterns common across Huon Valley cafes — not a write-up of any specific business._
 
-A typical Huon cafe does the hard part well: good food, real personality, loyal regulars. Online is where the holiday walk-in quietly slips away.
+A typical Huon cafe does the hard part well: good food, real personality, loyal regulars. The online details are worth a check before the busy season, because that's where planning visitors look first.
 
-## What's working
+## What's usually working
 
 Strong photos and a clear sense of the place. Real reviews, recently.
 
-## What's probably costing bookings
+## Where friction can creep in
 
-Google shows the wrong holiday hours, and the menu online is a year out of date. A planning tourist checks both before they drive out.
+Google can show outdated holiday hours, and an online menu can drift a year behind the one on the wall. A planning tourist checks both before they drive out.
 
-## What you can fix yourself
+## What you can check yourself
 
-Set your Google hours for the holiday period, public holidays included. This is the single biggest walk-in leak, and it is free to fix.
+Set your Google hours for the holiday period, public holidays included. It's free, takes minutes, and is the highest-value check on this list.
 
 ## What to ask your provider for
 
 Make the basics clear in five seconds on a phone: town, what you serve, and open-now all visible without scrolling.
 
-## What I'd build on first
+## If you want to go further
 
-Get the online menu matching the menu on the wall, then keep one source of truth so it never drifts again. None of this needs a rebuild. The point of the tune-up is to find the cheapest fixes first.
+Get the online menu matching the menu on the wall, then keep one source of truth so it never drifts again. None of this needs a rebuild — the cheapest checks come first. Analysis of your specific operation is what the paid diagnostic is for.
