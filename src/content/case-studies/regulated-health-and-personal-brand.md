@@ -7,7 +7,7 @@ category: 'Multi-site build'
 draft: false
 ---
 
-_Generalised to protect client confidentiality — this describes a pattern from the work, not an identifiable business._
+_Generalised from client work described elsewhere on this site — this focuses on the pattern, not the particulars._
 
 A health practice and a personal brand needed to sit side by side online without confusing either audience. One of them operates under advertising rules strict enough that a single wrong sentence — a testimonial, an outcome claim — can carry a serious fine. The other had no such restriction and needed to sound completely different.
 
@@ -21,7 +21,7 @@ Two public sites sharing one visual design system, so they read as connected wit
 
 ## Best parts
 
-The compliance boundary got built into the system, not just written into a style guide. The internal booking assistant (staff-only, full access) and anything patient-facing run on separate tool sets with separate guardrails baked into their instructions, so the regulated behaviour can't leak across by a copy-paste mistake or a rushed feature request.
+The regulatory boundary got built into the system, not just written into a style guide. Internal tooling and anything patient-facing run on separate tool sets with separate guardrails baked into their instructions, so the regulated behaviour can't leak across by a copy-paste mistake or a rushed feature request.
 
 ## Why it matters for local businesses
 
