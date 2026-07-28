@@ -1,25 +1,25 @@
 ---
-title: 'Tune-up: a local tradie nobody could contact'
-description: 'A solid local trade business losing enquiries to a phone link that did not work on mobile.'
+title: 'Making it easier for customers to contact a local trade business'
+description: 'Simple contact-path checks for a local trade business — phone links, form confirmations, and a clearly named service area.'
 date: 2026-06-29
 tags: ['local', 'tradie', 'enquiries']
 category: 'Trade'
 draft: false
 ---
 
-_A composite example, drawn from patterns I see often across local trade businesses — not a write-up of one specific business._
+_General guidance drawn from patterns common across local trade businesses — not a write-up of any specific business._
 
-Plenty of word-of-mouth, a real reputation, and a website that quietly dropped enquiries.
+Plenty of local trade businesses run on word-of-mouth and a real reputation. The website's job is simply to make contact easy — and a few small details decide whether it does.
 
-## What's working
+## What's usually working
 
 A clear list of services and a genuine local story.
 
-## What's probably costing enquiries
+## Where friction can creep in
 
-The phone number looked fine on a desktop and did nothing on a phone, which is where the customers were. The contact form sent nothing back, so a customer never knew it arrived.
+A phone number can look fine on a desktop and do nothing on a phone, which is where the customers are. A contact form that sends no confirmation leaves a customer unsure it arrived.
 
-## What you can fix yourself
+## What you can check yourself
 
 Make the phone number tap-to-call on mobile. Test it from your own phone.
 
@@ -27,6 +27,6 @@ Make the phone number tap-to-call on mobile. Test it from your own phone.
 
 Set the contact form to send a confirmation, so the customer knows it arrived and you know to reply.
 
-## What I'd build on first
+## If you want to go further
 
-Name the service area plainly, so someone two towns over knows straight away whether they are covered. Three small fixes, no redesign. That is the whole idea.
+Name the service area plainly, so someone two towns over knows straight away whether they are covered. Three small checks, no redesign. Analysis of your specific operation is what the paid diagnostic is for.
