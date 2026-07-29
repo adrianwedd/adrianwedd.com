@@ -827,20 +827,29 @@ app.get('/api/health', async (c) => {
     }
   }
 
-  return json({
-    platforms: platformsHealth,
-    queue: {
-      facebook: {
-        queued: queuedResult.count,
-        published: publishedResult.count,
-        failed: failedResult.count,
-        nextScheduled,
+  // An invalid token is a 503 so uptime monitors alert on status code alone;
+  // consumers parsing the body (social-token-alert.yml) accept 200 and 503.
+  const anyTokenInvalid = Object.values(platformsHealth).some(
+    (p) => (p as { tokenValid: boolean }).tokenValid === false,
+  );
+
+  return json(
+    {
+      platforms: platformsHealth,
+      queue: {
+        facebook: {
+          queued: queuedResult.count,
+          published: publishedResult.count,
+          failed: failedResult.count,
+          nextScheduled,
+        },
       },
+      recentActivity: { flaggedComments: flaggedResult.count, crisisFlags: crisisResult.count },
+      // Honest signal that a count is a floor, not silently truncated.
+      ...(truncated ? { countsTruncated: true } : {}),
     },
-    recentActivity: { flaggedComments: flaggedResult.count, crisisFlags: crisisResult.count },
-    // Honest signal that a count is a floor, not silently truncated.
-    ...(truncated ? { countsTruncated: true } : {}),
-  });
+    anyTokenInvalid ? 503 : 200,
+  );
 });
 
 export default app;

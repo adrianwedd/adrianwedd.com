@@ -998,6 +998,34 @@ describe('post type validation', () => {
   });
 });
 
+// An invalid platform token must surface as a 503 on the authenticated
+// /api/health so uptime monitoring alerts on it (body unchanged).
+describe('GET /api/health token status', () => {
+  it('returns 503 when any configured platform reports an invalid token', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValue({ ...healthyToken, valid: false });
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(503);
+    const body = (await res.json()) as { platforms: Record<string, { tokenValid: boolean }> };
+    expect(body.platforms.facebook.tokenValid).toBe(false);
+  });
+
+  it('still returns 200 unauthenticated regardless of token state', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValue({ ...healthyToken, valid: false });
+
+    const res = await app.fetch(new Request('http://localhost/api/health'), makeEnv(kv));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true });
+  });
+});
+
 // Crisis flags are surfaced separately in /api/health (flag-crisis: prefix,
 // written by cron/comments.ts) so monitoring can alert on a non-zero count.
 describe('GET /api/health crisisFlags', () => {
