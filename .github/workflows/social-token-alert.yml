@@ -40,6 +40,8 @@ jobs:
       - name: Fetch token health
         id: health
         run: |
+          # NOTE: no -f/--fail on this curl — a 503 is a VALID response here
+          # (worker up, token invalid) and must reach the parsing below.
           RESPONSE=$(curl -s -w "\n%{http_code}" \
             "${SOCIAL_WORKER_URL}/api/health" \
             -H "Authorization: Bearer ${SOCIAL_CRON_SECRET}" \
@@ -47,7 +49,9 @@ jobs:
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | sed '$d')
           echo "HTTP status: $HTTP_CODE"
-          if [ "$HTTP_CODE" != "200" ]; then
+          # 503 = worker up but a platform token is invalid — the body still
+          # carries the platforms block this job exists to act on.
+          if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "503" ]; then
             echo "::error::Health check returned HTTP $HTTP_CODE"
             echo "$BODY"
             exit 1
