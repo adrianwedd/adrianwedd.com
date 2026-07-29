@@ -227,6 +227,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 class="border-border bg-surface text-text placeholder-text-muted focus:border-accent mt-1 w-full resize-none rounded border px-3 py-2 text-sm focus:outline-none"
                 placeholder="A sentence or two about what you'd like to talk through."></textarea>
             </div>
+            <div id="book-turnstile"></div>
             <p id="form-error" role="alert" class="text-status-error hidden text-sm"></p>
             <button
               type="submit"
@@ -568,6 +569,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         });
     }
 
+    // The booking Turnstile widget is rendered explicitly (not via the
+    // implicit .cf-turnstile scan) so the enquiry form's no-arg
+    // turnstile.getResponse()/reset() calls keep targeting their own widget.
+    function ensureBookTurnstile() {
+      var container = el('book-turnstile');
+      if (!container || typeof turnstile === 'undefined') return;
+      if (container.firstChild) {
+        // Already rendered in this DOM — reset for a fresh token.
+        if (window.__bookTurnstileId != null) {
+          try {
+            turnstile.reset(window.__bookTurnstileId);
+          } catch (e) {}
+        }
+        return;
+      }
+      try {
+        window.__bookTurnstileId = turnstile.render(container, {
+          sitekey: '0x4AAAAAAABtkfyqFbFmIaPO',
+          theme: 'dark',
+        });
+      } catch (e) {
+        window.__bookTurnstileId = null;
+      }
+    }
+
     function selectSlot(iso, label) {
       selectedSlot = iso;
       var formSlotLabel = el('form-slot-label');
@@ -576,6 +602,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       if (formSlotLabel) formSlotLabel.textContent = label;
       if (stepSlots) stepSlots.classList.add('hidden');
       if (stepForm) stepForm.classList.remove('hidden');
+      ensureBookTurnstile();
     }
 
     function initBooking() {
@@ -646,6 +673,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           }
           return;
         }
+        var tsToken = '';
+        if (typeof turnstile !== 'undefined' && window.__bookTurnstileId != null) {
+          try {
+            tsToken = turnstile.getResponse(window.__bookTurnstileId) || '';
+          } catch (err) {}
+        }
+        if (!tsToken) {
+          // Widget may not have rendered yet (script still loading when the
+          // form step appeared) \u2014 render it now and ask the user to complete it.
+          ensureBookTurnstile();
+          if (formError) {
+            formError.textContent = 'Please complete the verification challenge.';
+            formError.classList.remove('hidden');
+          }
+          return;
+        }
         if (bookSubmit) {
           bookSubmit.disabled = true;
           bookSubmit.textContent = 'Booking\u2026';
@@ -653,7 +696,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         fetch(API + '/book', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name, email: email, slot: selectedSlot, note: note }),
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            slot: selectedSlot,
+            note: note,
+            turnstileToken: tsToken,
+          }),
         })
           .then(function (res) {
             if (!res.ok) throw new Error();
@@ -678,6 +727,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               bookSubmit.disabled = false;
               bookSubmit.textContent = 'Confirm booking';
             }
+            // Turnstile tokens are single-use — mint a fresh one for the retry.
+            ensureBookTurnstile();
           });
       });
 
