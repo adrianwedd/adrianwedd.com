@@ -40,6 +40,8 @@ jobs:
       - name: Fetch token health
         id: health
         run: |
+          # NOTE: no -f/--fail on this curl — a 503 is a VALID response here
+          # (worker up, token invalid) and must reach the parsing below.
           RESPONSE=$(curl -s -w "\n%{http_code}" \
             "${SOCIAL_WORKER_URL}/api/health" \
             -H "Authorization: Bearer ${SOCIAL_CRON_SECRET}" \
