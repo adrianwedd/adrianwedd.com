@@ -1361,6 +1361,27 @@ describe('GET /api/health stuck queue', () => {
     expect(body.queue.facebook.oldestDueMinutes).toBeNull();
   });
 
+  // One root cause, one fix, one alert. The publish cron skips platforms whose
+  // token is invalid, so their posts sit and age forever — reporting both the
+  // token and the stall would double-page for a single problem, and the token is
+  // the actionable half.
+  it('suppresses the stall reason when a platform token is invalid, keeping it in the body', async () => {
+    const kv = queuedKeysKV([Date.now() - STUCK_QUEUE_GRACE_MS - 60_000]);
+    mockDebugAuth.mockResolvedValue({ ...healthyToken, valid: false });
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as {
+      queue: { facebook: { stalled: boolean } };
+      degraded: string[];
+    };
+    expect(body.degraded).toContain('invalid platform token: facebook');
+    expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(false);
+    // Still reported as state — suppressed as a REASON, not hidden.
+    expect(body.queue.facebook.stalled).toBe(true);
+  });
+
   // The regression the drain allowance exists to prevent: a legitimate burst
   // larger than the batch cap must not page anyone while it is still draining.
   it('stays 200 for a large burst that is still draining', async () => {

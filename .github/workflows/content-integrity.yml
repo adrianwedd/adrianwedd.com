@@ -59,7 +59,23 @@ jobs:
       - name: Check content integrity
         id: check
         run: |
-          set -uo pipefail
+          set +e -u +o pipefail
+          # `set +e` and `+o pipefail` are deliberate and load-bearing, NOT sloppy.
+          #
+          # GitHub Actions runs `run:` blocks as `bash -e {0}`, so -e is already on
+          # before this script starts. These scripts are ACCUMULATORS: they probe
+          # many things, record findings, and report at the end. Under -e with
+          # pipefail, any failing pipeline aborts the whole script — and the
+          # pipelines that fail are precisely the ones detecting a problem.
+          # `grep -o` exits 1 when it finds no matches, so an empty feed (the
+          # thing being checked for) killed the script instead of reporting it:
+          # verified against the real scripts on ubuntu:24.04, where the integrity
+          # check aborted after 2 findings out of 5 and exited 1. The workflow then
+          # reports "failed" with no issue and no detail, which is strictly worse
+          # than the failure it was built to catch.
+          #
+          # Every command whose failure matters is checked explicitly by value
+          # (`if [ -z "${VAR:-}" ]`) or by `if ! cmd`. -u stays on to catch typos.
           : > findings.txt
           finding() { echo "- $1" >> findings.txt; }
 
@@ -145,13 +161,18 @@ jobs:
           cat findings.txt || true
 
       - name: Open / update / close the integrity issue
-        if: always() && steps.check.outcome != 'skipped'
+        # `success()`, not `always()`: on a crashed check step the `count` output is
+        # never set, so COUNT would default to 0, the step would see "no findings"
+        # and CHEERFULLY CLOSE an open issue — at the exact moment the checking
+        # stopped working. The withheld information is the alert; a failed run is
+        # visible, and for monitor-watchdog the skipped check-in also escalates.
+        if: success()
         env:
           FINDING_COUNT: ${{ steps.check.outputs.count }}
         run: |
-          set -uo pipefail
+          set +e -u +o pipefail  # see the note on the first step
           TITLE="🔎 Content integrity: the site is up but something is broken"
-          EXISTING=$(gh issue list --repo "$REPO" --state open --label monitoring \
+          EXISTING=$(gh issue list --repo "$REPO" --state open --label integrity \
             --json number,title \
             | jq -r --arg t "$TITLE" '.[] | select(.title == $t) | .number' | head -n1)
 
@@ -162,10 +183,10 @@ jobs:
             if [ -n "$EXISTING" ]; then
               gh issue comment "$EXISTING" --repo "$REPO" --body "$(printf 'Still broken — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"
             else
-              gh label create monitoring --repo "$REPO" \
-                --description "Faults in the monitoring itself (watchdog findings)" \
-                --color 0E8A16 2>/dev/null || true
-              gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label monitoring
+              gh label create integrity --repo "$REPO" \
+                --description "Site is up but something it does is broken (search, analytics, feeds)" \
+                --color 1D76DB 2>/dev/null || true
+              gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label integrity
             fi
           elif [ -n "$EXISTING" ]; then
             gh issue close "$EXISTING" --repo "$REPO" \

@@ -735,7 +735,16 @@ app.post('/api/cron/publish', async (c) => {
           break; // Spec: skip remaining posts on transient error
         } else {
           const failedPost: SocialPost = { ...post, status: 'failed', error: result.error ?? 'Unknown' };
-          await env.SOCIAL.put(`post:failed:${post.id}`, JSON.stringify(failedPost));
+          // TTL matches published records (180d). Previously these were written
+          // with NO expiry while every other record type expired, so they
+          // accumulated forever — and /api/health counts this prefix on every
+          // probe, so years of dead records would eventually make each Upptime
+          // ping walk 25 pages of KV list just to count them. Nothing reads these
+          // for logic (only the health count), so expiring them is safe; 180 days
+          // is a generous forensic window.
+          await env.SOCIAL.put(`post:failed:${post.id}`, JSON.stringify(failedPost), {
+            expirationTtl: 180 * 24 * 60 * 60,
+          });
           // H5 — Failed records previously held the queue for 30 days (same TTL
           // as published records). A misclassified transient error (e.g.
           // worker treated a rate-limit-adjacent 422 as permanent) blocked any
@@ -995,9 +1004,16 @@ app.get('/api/health', async (c) => {
   // The queue has stopped draining even though the cron is alive. Measured
   // against grace + the drain time the backlog implies, so a large legitimate
   // burst doesn't page anyone (see isQueueStalled).
+  //
+  // Suppressed when a platform token is invalid, because then the queue IS stuck
+  // but the token is the whole reason: the publish cron skips blocked platforms,
+  // so their posts sit and age forever. Reporting both would mean two alerts for
+  // one root cause and one fix, and the token reason is the actionable one. The
+  // stall is still visible as `queue.facebook.stalled` in the body.
+  const stalled = isQueueStalled(dueState, healthNow);
   const oldestDueMinutes =
     dueState.oldestDueEpoch === null ? null : Math.round((healthNow - dueState.oldestDueEpoch) / 60_000);
-  if (isQueueStalled(dueState, healthNow)) {
+  if (stalled && invalidPlatforms.length === 0) {
     degraded.push(`queue stalled: ${dueState.due} post(s) due, oldest ${oldestDueMinutes}m overdue`);
   }
 
@@ -1018,7 +1034,7 @@ app.get('/api/health', async (c) => {
           // alert on them would never clear.
           due: dueState.due,
           oldestDueMinutes,
-          stalled: isQueueStalled(dueState, healthNow),
+          stalled,
         },
       },
       recentActivity: {

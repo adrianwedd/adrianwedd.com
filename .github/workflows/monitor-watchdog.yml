@@ -74,7 +74,23 @@ jobs:
       - name: Check monitoring liveness
         id: check
         run: |
-          set -uo pipefail
+          set +e -u +o pipefail
+          # `set +e` and `+o pipefail` are deliberate and load-bearing, NOT sloppy.
+          #
+          # GitHub Actions runs `run:` blocks as `bash -e {0}`, so -e is already on
+          # before this script starts. These scripts are ACCUMULATORS: they probe
+          # many things, record findings, and report at the end. Under -e with
+          # pipefail, any failing pipeline aborts the whole script — and the
+          # pipelines that fail are precisely the ones detecting a problem.
+          # `grep -o` exits 1 when it finds no matches, so an empty feed (the
+          # thing being checked for) killed the script instead of reporting it:
+          # verified against the real scripts on ubuntu:24.04, where the integrity
+          # check aborted after 2 findings out of 5 and exited 1. The workflow then
+          # reports "failed" with no issue and no detail, which is strictly worse
+          # than the failure it was built to catch.
+          #
+          # Every command whose failure matters is checked explicitly by value
+          # (`if [ -z "${VAR:-}" ]`) or by `if ! cmd`. -u stays on to catch typos.
           : > findings.txt
           NOW=$(date -u +%s)
 
@@ -87,15 +103,29 @@ jobs:
           "
 
           # repo|workflow file|max hours since last run.
-          # Thresholds are ~3-4x the nominal cadence: the failure being caught
-          # (a schedule that has stopped entirely) does not fix itself, so
-          # catching it hours late costs nothing, while a tight threshold
-          # guarantees false alarms from GitHub's best-effort scheduler.
+          #
+          # These are COARSE deliberately — they catch "the workflow is disabled or
+          # deleted", not "a run was late". For the social crons the tight
+          # threshold already exists elsewhere and is better: the worker's own
+          # heartbeats flag the publish cron at 35 minutes (worker/src/heartbeat.ts).
+          # So 2h here is ~12x the 10-minute cadence, not 3-4x, and that is the
+          # intended division of labour rather than a slack threshold. The failure
+          # this list catches does not fix itself, so finding it hours late costs
+          # nothing, while a tight threshold would just generate false alarms from
+          # GitHub's best-effort scheduler.
           #
           # NOTE on e2e.yml: it also runs on pull requests, so a busy PR week
           # satisfies this check without the nightly having fired. It is a
           # weaker signal than the others by design — the nightly's own failures
           # are already visible as failed runs.
+          #
+          # This list includes the two new weekly sweeps and monitor-watchdog
+          # ITSELF. The sweeps are on GitHub Actions with no Cloudflare check-in
+          # of their own, so without an entry here they'd be the only unwatched
+          # monitoring in the estate. Self-listing is not circular: a dead
+          # watchdog can't report itself, but the withheld check-in makes the
+          # Cloudflare cron email — this entry catches the narrower case where
+          # the schedule is dropped while manual dispatches keep passing.
           FRESHNESS="
           adrianwedd/upptime|uptime.yml|2
           adrianwedd/twitb-status|uptime.yml|2
@@ -105,6 +135,9 @@ jobs:
           adrianwedd/adrianwedd.com|e2e.yml|30
           adrianwedd/adrianwedd.com|social-token-alert.yml|200
           adrianwedd/adrianwedd.com|content-pipeline.yml|200
+          adrianwedd/adrianwedd.com|expiry-sweep.yml|200
+          adrianwedd/adrianwedd.com|content-integrity.yml|200
+          adrianwedd/adrianwedd.com|monitor-watchdog.yml|4
           "
 
           finding() { echo "- $1" >> findings.txt; }
@@ -229,12 +262,19 @@ jobs:
           echo "=== ${COUNT} finding(s)"
           cat findings.txt || true
 
-      # Check in BEFORE the issue step: the check-in attests that this workflow
-      # ran, which is true regardless of what it found. Putting it after issue
-      # management would let a gh-issue API failure masquerade as a dead
-      # watchdog and trigger an email about the wrong thing.
+      # Check in BEFORE the issue step: the check-in attests that the CHECK ran,
+      # which is true regardless of what it found. Putting it after issue
+      # management would let a gh-issue API failure masquerade as a dead watchdog
+      # and trigger an email about the wrong thing.
+      #
+      # `if: success()`, NOT `always()`. A crashed check step must NOT check in.
+      # With always(), a check that died — Actions API outage, runner failure,
+      # anything — still sent a fresh heartbeat reporting zero findings, so the
+      # Cloudflare watchdog stayed silent and the outage was invisible from both
+      # sides. That is the watchdog actively defeating its own escalation path.
+      # Withholding the check-in is what makes the Cloudflare email fire.
       - name: Check in to the Cloudflare watchdog
-        if: always() && steps.check.outcome != 'skipped'
+        if: success()
         env:
           # Passed through env rather than spliced into the script body: step
           # outputs are interpolated by the YAML templater before the shell sees
@@ -243,7 +283,7 @@ jobs:
           FINDING_COUNT: ${{ steps.check.outputs.count }}
           UPPTIME_FRESH: ${{ steps.check.outputs.upptime_fresh }}
         run: |
-          set -uo pipefail
+          set +e -u +o pipefail  # see the note on the first step
           if [ -z "${SOCIAL_WORKER_URL:-}" ] || [ -z "${SOCIAL_CRON_SECRET:-}" ]; then
             echo "::warning::SOCIAL_WORKER_URL / SOCIAL_CRON_SECRET unset — cannot check in"
             exit 0
@@ -278,12 +318,16 @@ jobs:
             echo "::warning::Upptime has not run recently — withholding its check-in so the worker escalates by email"
           fi
 
+      # Also `success()`: on a crashed check, findings.txt is partial and the
+      # `count` output is missing entirely, which would read as 0 and AUTO-CLOSE a
+      # legitimately open monitoring issue. A failed run plus the withheld
+      # check-in above are the signals in that case.
       - name: Open / update / close the watchdog issue
-        if: always() && steps.check.outcome != 'skipped'
+        if: success()
         env:
           FINDING_COUNT: ${{ steps.check.outputs.count }}
         run: |
-          set -uo pipefail
+          set +e -u +o pipefail  # see the note on the first step
           TITLE="🐕 Monitoring watchdog: monitoring is degraded"
           EXISTING=$(gh issue list --repo "$HOME_REPO" --state open \
             --label monitoring --json number,title \

@@ -63,7 +63,23 @@ jobs:
       - name: Sweep expiry clocks
         id: sweep
         run: |
-          set -uo pipefail
+          set +e -u +o pipefail
+          # `set +e` and `+o pipefail` are deliberate and load-bearing, NOT sloppy.
+          #
+          # GitHub Actions runs `run:` blocks as `bash -e {0}`, so -e is already on
+          # before this script starts. These scripts are ACCUMULATORS: they probe
+          # many things, record findings, and report at the end. Under -e with
+          # pipefail, any failing pipeline aborts the whole script — and the
+          # pipelines that fail are precisely the ones detecting a problem.
+          # `grep -o` exits 1 when it finds no matches, so an empty feed (the
+          # thing being checked for) killed the script instead of reporting it:
+          # verified against the real scripts on ubuntu:24.04, where the integrity
+          # check aborted after 2 findings out of 5 and exited 1. The workflow then
+          # reports "failed" with no issue and no detail, which is strictly worse
+          # than the failure it was built to catch.
+          #
+          # Every command whose failure matters is checked explicitly by value
+          # (`if [ -z "${VAR:-}" ]`) or by `if ! cmd`. -u stays on to catch typos.
           : > findings.txt
           NOW=$(date -u +%s)
           finding() { echo "- $1" >> findings.txt; }
@@ -217,7 +233,17 @@ jobs:
           # ── 3. DNSSEC DS records published at the registrar ─────────────────
           MISSING_DS=""
           for DOMAIN in $DNSSEC_DOMAINS; do
+            # Two resolvers, second only consulted if the first returns nothing.
+            # A single hardcoded resolver is a single point of failure that fails
+            # in the worst direction: if 1.1.1.1 were rate-limiting DS queries,
+            # every domain would report MISSING and the weekly issue would fill
+            # with false DNSSEC findings — which is how you learn to ignore it.
+            # Requiring both to return nothing makes a resolver problem look like
+            # a resolver problem, not like 29 broken zones.
             DS=$(dig +short DS "$DOMAIN" @1.1.1.1 2>/dev/null | head -n1)
+            if [ -z "${DS:-}" ]; then
+              DS=$(dig +short DS "$DOMAIN" @8.8.8.8 2>/dev/null | head -n1)
+            fi
             if [ -z "${DS:-}" ]; then
               MISSING_DS="${MISSING_DS} ${DOMAIN}"
               echo "DS ${DOMAIN}: MISSING"
@@ -238,11 +264,16 @@ jobs:
           cat findings.txt || true
 
       - name: Open / update / close the expiry issue
-        if: always() && steps.sweep.outcome != 'skipped'
+        # `success()`, not `always()`: on a crashed check step the `count` output is
+        # never set, so COUNT would default to 0, the step would see "no findings"
+        # and CHEERFULLY CLOSE an open issue — at the exact moment the checking
+        # stopped working. The withheld information is the alert; a failed run is
+        # visible, and for monitor-watchdog the skipped check-in also escalates.
+        if: success()
         env:
           FINDING_COUNT: ${{ steps.sweep.outputs.count }}
         run: |
-          set -uo pipefail
+          set +e -u +o pipefail  # see the note on the first step
           TITLE="⏳ Expiry sweep: something is running out"
           EXISTING=$(gh issue list --repo "$REPO" --state open --label expiry \
             --json number,title \
