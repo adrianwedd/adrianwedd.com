@@ -169,25 +169,53 @@ export async function sweepCrisisAlerts(env: CrisisAlertEnv): Promise<number> {
  * failed (no email binding configured, send errors, or the retry sweep also
  * failing). Crisis alerting is best-effort by design — email.ts swallows send
  * failures so they cannot fail the comments cron — so this count is the only
- * backstop, and Upptime can only see status codes. It self-clears as soon as
- * the sweep gets an email out, so it cannot go permanently red.
+ * backstop, and Upptime can only see status codes.
  *
- * Bounded by `limit` list keys and one get each: crisis flags are rare, and an
- * unbounded fan-out would make a single health probe expensive. `truncated`
- * reports that the count is a floor.
+ * It self-clears as soon as the retry sweep gets an email out. The one case where
+ * it CANNOT is when no email binding is configured at all: nothing can ever mark
+ * those flags notified, so the count stands for the flag's full 90-day TTL.
+ * /api/health reports that case as a distinct reason ("no alerting channel
+ * configured") because the fix is different — configure the binding, rather than
+ * investigate a send failure.
+ *
+ * PAGINATES rather than reading a single page. A single unpaginated page would
+ * make this silently miss exactly the flag it exists to find: KV lists
+ * lexicographically, platform comment IDs are broadly chronological, so once
+ * more flags exist than fit one page the NEWEST are the ones cut off — and the
+ * newest unnotified crisis is the one that still needs a human. Capped at
+ * UNNOTIFIED_MAX_PAGES so a runaway prefix can't make one health probe fan out
+ * without limit; `truncated` then reports the count as a floor.
+ *
+ * Marker lookups within a page are issued concurrently. Sequentially they would
+ * add one KV round-trip of latency each to a monitoring endpoint polled every
+ * few minutes; in the expected steady state (no live crisis flags) this loop
+ * costs nothing at all.
  */
+export const UNNOTIFIED_MAX_PAGES = 10;
+
 export async function countUnnotifiedCrisisFlags(
   kv: KVNamespace,
   limit = CRISIS_SWEEP_LIMIT,
 ): Promise<{ count: number; truncated: boolean }> {
   try {
-    const list = await kv.list({ prefix: 'flag-crisis:', limit });
     let count = 0;
-    for (const key of list.keys) {
-      const commentId = key.name.slice('flag-crisis:'.length);
-      if (!(await kv.get(`crisis-emailed:${commentId}`))) count++;
-    }
-    return { count, truncated: !list.list_complete };
+    let cursor: string | undefined;
+    let pages = 0;
+
+    do {
+      const list = await kv.list({ prefix: 'flag-crisis:', limit, ...(cursor ? { cursor } : {}) });
+      const flags = await Promise.all(
+        list.keys.map(async (key) => {
+          const commentId = key.name.slice('flag-crisis:'.length);
+          return (await kv.get(`crisis-emailed:${commentId}`)) === null;
+        }),
+      );
+      count += flags.filter(Boolean).length;
+      pages += 1;
+      cursor = list.list_complete ? undefined : list.cursor;
+    } while (cursor && pages < UNNOTIFIED_MAX_PAGES);
+
+    return { count, truncated: cursor !== undefined };
   } catch (e) {
     // A KV failure must not 500 the health endpoint — reporting 0-but-truncated
     // says "unknown floor" rather than fabricating an all-clear.

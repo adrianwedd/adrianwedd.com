@@ -15,13 +15,21 @@
 // Cloudflare Email Sending (not GitHub notifications). The two platforms watch
 // each other:
 //
-//   GitHub → Cloudflare: monitor-watchdog.yml probes /api/health, so a dead
-//                        worker surfaces as a failed workflow and an issue.
-//   Cloudflare → GitHub: this scheduled handler alerts when the watchdog
-//                        workflow stops checking in, so a dead GitHub scheduler
-//                        surfaces as an email.
+//   Cloudflare → GitHub: this scheduled handler alerts by email when the
+//                        watchdog workflow stops checking in, so a dead GitHub
+//                        scheduler is reported by something that doesn't run on
+//                        GitHub.
+//   GitHub → Cloudflare: Upptime checks GET /api/health and GET
+//                        /api/watchdog/status (both 503 on degradation), so a
+//                        dead worker — or a worker whose watchdog state has gone
+//                        stale — surfaces as a red check and an issue.
 //
-// Neither platform can fail silently by taking its own monitor down with it.
+// HONEST LIMIT, worth knowing before trusting this: the worker is a shared
+// dependency of the Cloudflare→GitHub direction. If the worker itself is down,
+// its cron doesn't run, the check-in POST fails, and no email goes out. What
+// catches that is the GitHub direction (Upptime's Social Worker check going red)
+// plus the fact that a dead worker also stops social publishing. Two platforms
+// is the most independence available here; it is not three.
 //
 // It also sends a weekly proof-of-life email. That inverts the failure mode for
 // the alerting channel itself: if the crisis/alert email path breaks — a

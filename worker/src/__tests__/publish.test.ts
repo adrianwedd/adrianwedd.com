@@ -3,6 +3,7 @@ import app from '../index';
 import type { SocialPost, AuthStatus } from '../platforms/types';
 import { CRON_SPECS, HEARTBEAT_PREFIX, HEARTBEAT_GRACE_MS } from '../heartbeat';
 import { STUCK_QUEUE_GRACE_MS } from '../index';
+import { EXTERNAL_HEARTBEAT_PREFIX, EXTERNAL_SOURCES } from '../watchdog';
 
 // ── Mock createPlatform factory ──────────────────────────────────────────────
 //
@@ -1252,7 +1253,14 @@ describe('GET /api/health crisisFlags', () => {
     listFromStore(kv);
     mockDebugAuth.mockResolvedValue(healthyToken);
 
-    const res = await app.fetch(healthRequest(), makeEnv(kv));
+    // Email IS configured here, so this is the send-failure case, not the
+    // no-channel-at-all case (covered separately below).
+    const res = await app.fetch(healthRequest(), {
+      ...makeEnv(kv),
+      CRISIS_EMAIL: { send: vi.fn(async () => {}) },
+      CRISIS_ALERT_FROM: 'alerts@wedd.au',
+      CRISIS_ALERT_TO: 'adrianwedd@gmail.com',
+    });
 
     expect(res.status).toBe(503);
     const body = await res.json() as {
@@ -1307,7 +1315,7 @@ describe('GET /api/health stuck queue', () => {
     });
   }
 
-  it('returns 503 when a post is overdue beyond the grace window', async () => {
+  it('returns 503 when the oldest due post exceeds grace plus drain time', async () => {
     const kv = queuedKeysKV([Date.now() - STUCK_QUEUE_GRACE_MS - 60_000]);
     mockDebugAuth.mockResolvedValue(healthyToken);
 
@@ -1315,15 +1323,17 @@ describe('GET /api/health stuck queue', () => {
 
     expect(res.status).toBe(503);
     const body = await res.json() as {
-      queue: { facebook: { overdue: number } };
+      queue: { facebook: { due: number; stalled: boolean; oldestDueMinutes: number } };
       degraded: string[];
     };
-    expect(body.queue.facebook.overdue).toBe(1);
-    expect(body.degraded.some((d) => d.startsWith('posts overdue by'))).toBe(true);
+    expect(body.queue.facebook.due).toBe(1);
+    expect(body.queue.facebook.stalled).toBe(true);
+    expect(body.queue.facebook.oldestDueMinutes).toBeGreaterThanOrEqual(46);
+    expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(true);
   });
 
   // Between a post falling due and the next cron tick it is legitimately
-  // overdue. Alerting there would flap every ten minutes.
+  // waiting. Alerting there would flap every ten minutes.
   it('stays 200 for a post that is due but inside the grace window', async () => {
     const kv = queuedKeysKV([Date.now() - 60_000]);
     mockDebugAuth.mockResolvedValue(healthyToken);
@@ -1331,8 +1341,9 @@ describe('GET /api/health stuck queue', () => {
     const res = await app.fetch(healthRequest(), makeEnv(kv));
 
     expect(res.status).toBe(200);
-    const body = await res.json() as { queue: { facebook: { overdue: number } } };
-    expect(body.queue.facebook.overdue).toBe(0);
+    const body = await res.json() as { queue: { facebook: { due: number; stalled: boolean } } };
+    expect(body.queue.facebook.due).toBe(1);
+    expect(body.queue.facebook.stalled).toBe(false);
   });
 
   it('stays 200 for posts scheduled in the future', async () => {
@@ -1342,8 +1353,164 @@ describe('GET /api/health stuck queue', () => {
     const res = await app.fetch(healthRequest(), makeEnv(kv));
 
     expect(res.status).toBe(200);
-    const body = await res.json() as { queue: { facebook: { queued: number; overdue: number } } };
+    const body = await res.json() as {
+      queue: { facebook: { queued: number; due: number; oldestDueMinutes: number | null } };
+    };
     expect(body.queue.facebook.queued).toBe(2);
-    expect(body.queue.facebook.overdue).toBe(0);
+    expect(body.queue.facebook.due).toBe(0);
+    expect(body.queue.facebook.oldestDueMinutes).toBeNull();
+  });
+
+  // The regression the drain allowance exists to prevent: a legitimate burst
+  // larger than the batch cap must not page anyone while it is still draining.
+  it('stays 200 for a large burst that is still draining', async () => {
+    const age = STUCK_QUEUE_GRACE_MS + 20 * 60_000;
+    const kv = queuedKeysKV(Array.from({ length: 120 }, (_, i) => Date.now() - age + i * 100));
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as { queue: { facebook: { due: number; stalled: boolean } } };
+    expect(body.queue.facebook.due).toBe(120);
+    expect(body.queue.facebook.stalled).toBe(false);
+  });
+});
+
+// Two distinct causes of an un-notified crisis need two distinct fixes, so the
+// reason string has to tell them apart.
+describe('GET /api/health with no alerting channel configured', () => {
+  it('names the missing binding rather than implying a send failure', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
+      keys: [...kv.store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
+      list_complete: true,
+    }));
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    // makeEnv provides no CRISIS_EMAIL binding.
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', { headers: { Authorization: 'Bearer test-cron-secret' } }),
+      makeEnv(kv),
+    );
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as { degraded: string[] };
+    expect(body.degraded.some((d) => d.includes('NO alerting channel configured'))).toBe(true);
+  });
+});
+
+// ── Watchdog HTTP surface ─────────────────────────────────────────────────────
+//
+// The unit tests in watchdog.test.ts cover the sweep logic; these cover the
+// route wiring — auth, validation, and the status codes Upptime keys on.
+describe('POST /api/watchdog/heartbeat', () => {
+  function checkInRequest(body: unknown, token = 'test-cron-secret') {
+    return new Request('http://localhost/api/watchdog/heartbeat', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: typeof body === 'string' ? body : JSON.stringify(body),
+    });
+  }
+
+  it('records a check-in for a known source', async () => {
+    const kv = mockKV();
+
+    const res = await app.fetch(checkInRequest({ name: 'monitor-watchdog' }), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true, name: 'monitor-watchdog' });
+    expect(kv.store.has(`${EXTERNAL_HEARTBEAT_PREFIX}monitor-watchdog`)).toBe(true);
+  });
+
+  it('rejects a bad bearer token with 401 and writes nothing', async () => {
+    const kv = mockKV();
+
+    const res = await app.fetch(checkInRequest({ name: 'monitor-watchdog' }, 'wrong'), makeEnv(kv));
+
+    expect(res.status).toBe(401);
+    expect(kv.store.size).toBe(0);
+  });
+
+  it('rejects invalid JSON with 400', async () => {
+    const res = await app.fetch(checkInRequest('{not json'), makeEnv(mockKV()));
+    expect(res.status).toBe(400);
+  });
+
+  it.each([[{}], [{ name: '' }], [{ name: 42 }]])('rejects a missing or empty name with 400 (%j)', async (body) => {
+    const res = await app.fetch(checkInRequest(body), makeEnv(mockKV()));
+    expect(res.status).toBe(400);
+  });
+
+  // A typo'd name must not be accepted: the source it was meant to cover would
+  // look like it had never checked in, with no visible cause on either side.
+  it('rejects an unknown source name with 400 and a pointer to the fix', async () => {
+    const kv = mockKV();
+
+    const res = await app.fetch(checkInRequest({ name: 'moniter-watchdog' }), makeEnv(kv));
+
+    expect(res.status).toBe(400);
+    expect((await res.json() as { error: string }).error).toContain('EXTERNAL_SOURCES');
+    expect(kv.store.size).toBe(0);
+  });
+
+  it('truncates an oversized detail rather than storing it whole', async () => {
+    const kv = mockKV();
+
+    const res = await app.fetch(
+      checkInRequest({ name: 'monitor-watchdog', detail: 'x'.repeat(5000) }),
+      makeEnv(kv),
+    );
+
+    expect(res.status).toBe(200);
+    const record = JSON.parse(kv.store.get(`${EXTERNAL_HEARTBEAT_PREFIX}monitor-watchdog`)!);
+    expect(record.detail).toHaveLength(500);
+  });
+});
+
+describe('GET /api/watchdog/status', () => {
+  function statusRequest(authed = true) {
+    return new Request(
+      'http://localhost/api/watchdog/status',
+      authed ? { headers: { Authorization: 'Bearer test-cron-secret' } } : undefined,
+    );
+  }
+
+  it('returns 200 {ok:true} unauthenticated, leaking no state', async () => {
+    const res = await app.fetch(statusRequest(false), makeEnv(mockKV()));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true });
+  });
+
+  it('returns 503 when a source has gone stale', async () => {
+    const kv = mockKV(); // nothing has ever checked in
+
+    const res = await app.fetch(statusRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as { sources: { name: string; stale: boolean }[]; stale: string[] };
+    expect(body.stale.length).toBeGreaterThan(0);
+    expect(body.sources.every((s) => s.stale)).toBe(true);
+  });
+
+  it('returns 200 once every source has checked in', async () => {
+    const kv = mockKV();
+    const now = Date.now();
+    for (const source of EXTERNAL_SOURCES) {
+      kv.store.set(
+        `${EXTERNAL_HEARTBEAT_PREFIX}${source.name}`,
+        JSON.stringify({ at: new Date(now).toISOString(), atEpoch: now }),
+      );
+    }
+
+    const res = await app.fetch(statusRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as { sources: { stale: boolean }[]; stale?: string[] };
+    expect(body.stale).toBeUndefined();
+    expect(body.sources.every((s) => !s.stale)).toBe(true);
   });
 });

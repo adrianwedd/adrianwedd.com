@@ -123,6 +123,14 @@ jobs:
               continue
             fi
             echo "$WORKFLOWS"
+            # An empty-but-successful response is a silent pass: the `while read`
+            # below simply wouldn't run and no disabled workflow would be found.
+            # Every one of these repos has workflows, so empty means the response
+            # shape changed under us.
+            if [ -z "$WORKFLOWS" ]; then
+              finding "\`${REPO}\` returned NO workflows — the API response shape may have changed. Monitoring for this repo is UNVERIFIED."
+              continue
+            fi
             while IFS=$'\t' read -r WF STATE; do
               [ -z "${WF:-}" ] && continue
               case "$STATE" in
@@ -164,10 +172,17 @@ jobs:
           # ── 3. Runs stuck pending or hung ────────────────────────────────────
           # This is the 2026-07-21 trap: a run in `waiting` holds its concurrency
           # group indefinitely, so every later run of that group never starts.
+          # NOTE on error handling here: an unreadable runs endpoint is REPORTED,
+          # not skipped. `actions/workflows` and `actions/runs` are separate REST
+          # endpoints, so a fine-grained PAT can grant one and not the other — in
+          # which case the disabled-workflow check above would pass while this
+          # check silently covered nothing. Silence is the failure mode this
+          # entire workflow exists to eliminate; it must not have its own.
           for REPO in $REPOS; do
             for STATUS in waiting queued; do
               if ! RUNS=$(gh api "repos/${REPO}/actions/runs?status=${STATUS}&per_page=50" \
-                   --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)"' 2>/dev/null); then
+                   --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)"' 2>err.txt); then
+                finding "Could not list \`${STATUS}\` runs for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Stuck-run detection for this repo is UNVERIFIED (the token may have workflow read but not run read)."
                 continue
               fi
               while IFS=$'\t' read -r CREATED NAME URL; do
@@ -180,8 +195,10 @@ jobs:
               done <<< "$RUNS"
             done
 
-            if RUNS=$(gh api "repos/${REPO}/actions/runs?status=in_progress&per_page=50" \
-                 --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)"' 2>/dev/null); then
+            if ! RUNS=$(gh api "repos/${REPO}/actions/runs?status=in_progress&per_page=50" \
+                 --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)"' 2>err.txt); then
+              finding "Could not list \`in_progress\` runs for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Hung-run detection for this repo is UNVERIFIED."
+            else
               while IFS=$'\t' read -r CREATED NAME URL; do
                 [ -z "${CREATED:-}" ] && continue
                 START=$(date -u -d "$CREATED" +%s 2>/dev/null || echo "$NOW")
@@ -280,8 +297,14 @@ jobs:
             if [ -n "$EXISTING" ]; then
               gh issue comment "$EXISTING" --repo "$HOME_REPO" --body "$(printf 'Still degraded — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"
             else
-              gh issue create --repo "$HOME_REPO" --title "$TITLE" --body "$BODY" --label monitoring \
-                || gh issue create --repo "$HOME_REPO" --title "$TITLE" --body "$BODY"
+              # Ensure the label exists, then create WITH it and no unlabeled
+              # fallback. An unlabeled issue would be invisible to the
+              # --label-scoped lookup above, so the next hourly run would open
+              # another one — an unlabeled duplicate every hour, forever.
+              gh label create monitoring --repo "$HOME_REPO" \
+                --description "Faults in the monitoring itself (watchdog findings)" \
+                --color 0E8A16 2>/dev/null || true
+              gh issue create --repo "$HOME_REPO" --title "$TITLE" --body "$BODY" --label monitoring
             fi
           elif [ -n "$EXISTING" ]; then
             gh issue close "$EXISTING" --repo "$HOME_REPO" \
