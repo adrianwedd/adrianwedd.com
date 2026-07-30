@@ -109,3 +109,43 @@ export async function sweepCrisisAlerts(env: CrisisAlertEnv): Promise<number> {
   }
   return sent;
 }
+
+/**
+ * Count crisis flags that have never been successfully emailed.
+ *
+ * This is the signal /api/health alerts on, and the choice of signal matters.
+ * Alerting on the raw `flag-crisis:` count would hold the Social Worker check
+ * red for the flag's full 90-day TTL after a single crisis comment — nothing
+ * deletes a flag on acknowledgement — which trains the operator to ignore red.
+ *
+ * A flag with no `crisis-emailed:` marker means something narrower and strictly
+ * worth paging on: a crisis was detected AND every attempt to notify a human
+ * failed (no email binding configured, send errors, or the retry sweep also
+ * failing). Crisis alerting is best-effort by design — email.ts swallows send
+ * failures so they cannot fail the comments cron — so this count is the only
+ * backstop, and Upptime can only see status codes. It self-clears as soon as
+ * the sweep gets an email out, so it cannot go permanently red.
+ *
+ * Bounded by `limit` list keys and one get each: crisis flags are rare, and an
+ * unbounded fan-out would make a single health probe expensive. `truncated`
+ * reports that the count is a floor.
+ */
+export async function countUnnotifiedCrisisFlags(
+  kv: KVNamespace,
+  limit = CRISIS_SWEEP_LIMIT,
+): Promise<{ count: number; truncated: boolean }> {
+  try {
+    const list = await kv.list({ prefix: 'flag-crisis:', limit });
+    let count = 0;
+    for (const key of list.keys) {
+      const commentId = key.name.slice('flag-crisis:'.length);
+      if (!(await kv.get(`crisis-emailed:${commentId}`))) count++;
+    }
+    return { count, truncated: !list.list_complete };
+  } catch (e) {
+    // A KV failure must not 500 the health endpoint — reporting 0-but-truncated
+    // says "unknown floor" rather than fabricating an all-clear.
+    console.error(`Unnotified crisis count failed: ${e instanceof Error ? e.message : String(e)}`);
+    return { count: 0, truncated: true };
+  }
+}

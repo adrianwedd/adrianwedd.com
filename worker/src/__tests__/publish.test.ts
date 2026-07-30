@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from '../index';
 import type { SocialPost, AuthStatus } from '../platforms/types';
 import { CRON_SPECS, HEARTBEAT_PREFIX, HEARTBEAT_GRACE_MS } from '../heartbeat';
+import { STUCK_QUEUE_GRACE_MS } from '../index';
 
 // ── Mock createPlatform factory ──────────────────────────────────────────────
 //
@@ -1174,27 +1175,148 @@ describe('cron heartbeat writes', () => {
 });
 
 describe('GET /api/health crisisFlags', () => {
+  /** Make kv.list serve from the store so prefix counting works. */
+  function listFromStore(kv: ReturnType<typeof mockKV>) {
+    kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
+      keys: [...kv.store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
+      list_complete: true,
+    }));
+  }
+
+  function healthRequest() {
+    return new Request('http://localhost/api/health', {
+      headers: { Authorization: 'Bearer test-cron-secret' },
+    });
+  }
+
   it('reports the flag-crisis: key count alongside flaggedComments', async () => {
     const kv = mockKV();
     seedHeartbeats(kv);
     kv.store.set('flag-crisis:c1', '{}');
     kv.store.set('flag-crisis:c2', '{}');
     kv.store.set('fb-flag:c3', '{}');
+    // Both crisis comments were successfully emailed, so the operator has
+    // already been told — counts are informational, not a degradation.
+    kv.store.set('crisis-emailed:c1', 'ts');
+    kv.store.set('crisis-emailed:c2', 'ts');
+    listFromStore(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as {
+      recentActivity: { flaggedComments: number; crisisFlags: number; crisisFlagsUnnotified: number };
+    };
+    expect(body.recentActivity.crisisFlags).toBe(2);
+    expect(body.recentActivity.flaggedComments).toBe(1);
+    expect(body.recentActivity.crisisFlagsUnnotified).toBe(0);
+  });
+
+  // The gap this closes: crisis email is best-effort (email.ts swallows send
+  // failures so they can't fail the comments cron), so a crisis nobody could be
+  // told about has to surface as a status code — Upptime cannot read the body.
+  it('returns 503 when a crisis flag has never been emailed', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    kv.store.set('flag-crisis:c2', '{}');
+    kv.store.set('crisis-emailed:c1', 'ts'); // c2 never reached anyone
+    listFromStore(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as {
+      recentActivity: { crisisFlags: number; crisisFlagsUnnotified: number };
+      degraded: string[];
+    };
+    expect(body.recentActivity.crisisFlags).toBe(2);
+    expect(body.recentActivity.crisisFlagsUnnotified).toBe(1);
+    expect(body.degraded).toContain('unnotified crisis flags: 1');
+  });
+
+  // Nothing deletes a crisis flag on acknowledgement (90-day TTL), so alerting
+  // on the raw count would hold the check red for three months and train the
+  // operator to ignore it. Emailing must clear the alert.
+  it('clears the 503 once the flag has been emailed, without deleting the flag', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    listFromStore(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const before = await app.fetch(healthRequest(), makeEnv(kv));
+    expect(before.status).toBe(503);
+
+    kv.store.set('crisis-emailed:c1', 'ts');
+
+    const after = await app.fetch(healthRequest(), makeEnv(kv));
+    expect(after.status).toBe(200);
+    const body = await after.json() as { recentActivity: { crisisFlags: number } };
+    expect(body.recentActivity.crisisFlags).toBe(1); // flag still there for review
+  });
+});
+
+// A cron that runs, returns 2xx and beats its heartbeat can still be failing to
+// drain the queue (stuck per-post lock, posts failing back to queued, blocked
+// platform). Overdue-by-more-than-grace is the signal for that.
+describe('GET /api/health stuck queue', () => {
+  function queuedKeysKV(epochs: number[]) {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    epochs.forEach((e, i) => kv.store.set(`post:queued:${e}:p${i}`, JSON.stringify(makePost(`p${i}`))));
     kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
       keys: [...kv.store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
       list_complete: true,
     }));
+    return kv;
+  }
+
+  function healthRequest() {
+    return new Request('http://localhost/api/health', {
+      headers: { Authorization: 'Bearer test-cron-secret' },
+    });
+  }
+
+  it('returns 503 when a post is overdue beyond the grace window', async () => {
+    const kv = queuedKeysKV([Date.now() - STUCK_QUEUE_GRACE_MS - 60_000]);
     mockDebugAuth.mockResolvedValue(healthyToken);
 
-    const res = await app.fetch(
-      new Request('http://localhost/api/health', {
-        headers: { Authorization: 'Bearer test-cron-secret' },
-      }),
-      makeEnv(kv),
-    );
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as {
+      queue: { facebook: { overdue: number } };
+      degraded: string[];
+    };
+    expect(body.queue.facebook.overdue).toBe(1);
+    expect(body.degraded.some((d) => d.startsWith('posts overdue by'))).toBe(true);
+  });
+
+  // Between a post falling due and the next cron tick it is legitimately
+  // overdue. Alerting there would flap every ten minutes.
+  it('stays 200 for a post that is due but inside the grace window', async () => {
+    const kv = queuedKeysKV([Date.now() - 60_000]);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
     expect(res.status).toBe(200);
-    const body = await res.json() as { recentActivity: { flaggedComments: number; crisisFlags: number } };
-    expect(body.recentActivity.crisisFlags).toBe(2);
-    expect(body.recentActivity.flaggedComments).toBe(1);
+    const body = await res.json() as { queue: { facebook: { overdue: number } } };
+    expect(body.queue.facebook.overdue).toBe(0);
+  });
+
+  it('stays 200 for posts scheduled in the future', async () => {
+    const kv = queuedKeysKV([Date.now() + 3_600_000, Date.now() + 86_400_000]);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as { queue: { facebook: { queued: number; overdue: number } } };
+    expect(body.queue.facebook.queued).toBe(2);
+    expect(body.queue.facebook.overdue).toBe(0);
   });
 });

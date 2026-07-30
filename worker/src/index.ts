@@ -4,7 +4,7 @@ import { verifyBearer } from './auth';
 import { createPlatform, getConfiguredPlatforms } from './platforms/factory';
 import type { SocialPost, IdempotencyRecord, Platform } from './platforms/types';
 import { processComments } from './cron/comments';
-import { sendCrisisAlert, sweepCrisisAlerts } from './email';
+import { sendCrisisAlert, sweepCrisisAlerts, countUnnotifiedCrisisFlags } from './email';
 import { CronLock } from './cron-lock';
 import { recordHeartbeat, readHeartbeats } from './heartbeat';
 
@@ -51,7 +51,7 @@ export const HEALTH_MAX_LIST_PAGES = 25;
 export async function countKeysCapped(
   kv: KVNamespace,
   prefix: string,
-  onFirstPage?: (keys: { name: string }[]) => void,
+  onPage?: (keys: { name: string }[], pageIndex: number) => void,
 ): Promise<{ count: number; truncated: boolean }> {
   let count = 0;
   let cursor: string | undefined;
@@ -62,12 +62,56 @@ export async function countKeysCapped(
       limit: HEALTH_LIST_LIMIT,
       ...(cursor ? { cursor } : {}),
     });
-    if (pages === 0) onFirstPage?.(list.keys);
+    onPage?.(list.keys, pages);
     count += list.keys.length;
     pages += 1;
     cursor = list.list_complete ? undefined : list.cursor;
   } while (cursor && pages < HEALTH_MAX_LIST_PAGES);
   return { count, truncated: cursor !== undefined };
+}
+
+// ── Stuck-queue detection ─────────────────────────────────────────────────────
+//
+// A publish cron can run successfully — 2xx, fresh heartbeat — and still not be
+// draining the queue: a per-post lock stuck held, posts failing back to
+// `queued` every tick, or a platform blocked on auth. Liveness cannot see that;
+// the queue count alone cannot either, because posts scheduled for the future
+// are supposed to be sitting there.
+//
+// So measure the thing that is actually wrong: posts whose scheduled time has
+// passed and which are STILL queued well after the cron should have taken them.
+//
+// Grace is deliberately generous. Between a post falling due and the next cron
+// tick it is legitimately overdue by up to one interval, GitHub's scheduler
+// drifts by minutes more, and a burst larger than the batch cap (12/run) takes
+// several ticks to drain. 45 minutes clears all three while still catching a
+// genuinely stalled queue within the hour.
+export const STUCK_QUEUE_GRACE_MS = 45 * 60_000;
+
+/**
+ * Count queued keys whose scheduled epoch is older than `cutoffEpoch`.
+ *
+ * Reads the epoch out of the key name (`post:queued:<epoch>:<id>`) rather than
+ * fetching each value, so this costs nothing beyond the list pages /api/health
+ * already walks. Keys whose epoch segment is not a positive run of digits are
+ * skipped: a malformed key is a bug to investigate, not evidence of a stuck
+ * post, and counting it would page the operator with an unactionable alert.
+ *
+ * The digits-only test is load-bearing rather than defensive typing — `Number('')`
+ * is 0, so a truncated key like `post:queued::id` would otherwise read as
+ * "scheduled at the epoch" and be counted overdue forever.
+ */
+const QUEUED_EPOCH_SEGMENT = /^[0-9]+$/;
+
+export function countOverdueQueuedKeys(keys: { name: string }[], cutoffEpoch: number): number {
+  let overdue = 0;
+  for (const { name } of keys) {
+    const segment = name.split(':')[2];
+    if (segment === undefined || !QUEUED_EPOCH_SEGMENT.test(segment)) continue;
+    const epoch = Number(segment);
+    if (epoch > 0 && epoch <= cutoffEpoch) overdue++;
+  }
+  return overdue;
 }
 
 function validatePlatform(raw: string | undefined, fallback = 'facebook'): Platform | null {
@@ -807,8 +851,17 @@ app.get('/api/health', async (c) => {
   let truncated = false;
   let firstQueuedKeyName: string | null = null;
 
-  const queuedResult = await countKeysCapped(env.SOCIAL, 'post:queued:', (keys) => {
-    if (keys.length > 0) firstQueuedKeyName = keys[0].name; // keys are time-ordered
+  // Count overdue posts while walking the queued pages we already have to
+  // paginate — the scheduled epoch is in the key name, so this needs no extra
+  // reads. KV lists lexicographically and epoch-ms is a fixed 13 digits until
+  // the year 2286, so byte order is time order (the same property the
+  // next-scheduled lookup below already relies on).
+  const overdueCutoff = Date.now() - STUCK_QUEUE_GRACE_MS;
+  let overdueQueued = 0;
+
+  const queuedResult = await countKeysCapped(env.SOCIAL, 'post:queued:', (keys, pageIndex) => {
+    if (pageIndex === 0 && keys.length > 0) firstQueuedKeyName = keys[0].name; // keys are time-ordered
+    overdueQueued += countOverdueQueuedKeys(keys, overdueCutoff);
   });
   const publishedResult = await countKeysCapped(env.SOCIAL, 'post:published:');
   const failedResult = await countKeysCapped(env.SOCIAL, 'post:failed:');
@@ -817,12 +870,16 @@ app.get('/api/health', async (c) => {
   // (see cron/comments.ts) — surface them separately so monitoring can alert
   // on a non-zero count instead of losing them in the generic flag pool.
   const crisisResult = await countKeysCapped(env.SOCIAL, 'flag-crisis:');
+  // …but alert on the unnotified subset, not the raw count: see
+  // countUnnotifiedCrisisFlags for why the raw count would sit red for 90 days.
+  const unnotifiedCrisis = await countUnnotifiedCrisisFlags(env.SOCIAL);
   truncated =
     queuedResult.truncated ||
     publishedResult.truncated ||
     failedResult.truncated ||
     flaggedResult.truncated ||
-    crisisResult.truncated;
+    crisisResult.truncated ||
+    unnotifiedCrisis.truncated;
 
   if (firstQueuedKeyName) {
     const raw = await env.SOCIAL.get(firstQueuedKeyName);
@@ -852,6 +909,19 @@ app.get('/api/health', async (c) => {
     .map(([name]) => name);
   if (staleCrons.length > 0) degraded.push(`stale cron heartbeat: ${staleCrons.join(', ')}`);
 
+  // A crisis comment nobody could be told about. Crisis email is best-effort by
+  // design (email.ts swallows send failures so they can't fail the comments
+  // cron), which leaves this endpoint as the only backstop — and Upptime only
+  // reads status codes, so it has to be a 503 rather than a number in the body.
+  if (unnotifiedCrisis.count > 0) {
+    degraded.push(`unnotified crisis flags: ${unnotifiedCrisis.count}`);
+  }
+
+  // The queue has stopped draining even though the cron is alive.
+  if (overdueQueued > 0) {
+    degraded.push(`posts overdue by >${Math.round(STUCK_QUEUE_GRACE_MS / 60_000)}m: ${overdueQueued}`);
+  }
+
   return json(
     {
       platforms: platformsHealth,
@@ -863,9 +933,17 @@ app.get('/api/health', async (c) => {
           published: publishedResult.count,
           failed: failedResult.count,
           nextScheduled,
+          // Queued past their scheduled time by more than the grace window.
+          // `failed` is deliberately NOT a degradation reason: those records
+          // accumulate as history, so alerting on them would never clear.
+          overdue: overdueQueued,
         },
       },
-      recentActivity: { flaggedComments: flaggedResult.count, crisisFlags: crisisResult.count },
+      recentActivity: {
+        flaggedComments: flaggedResult.count,
+        crisisFlags: crisisResult.count,
+        crisisFlagsUnnotified: unnotifiedCrisis.count,
+      },
       // Honest signal that a count is a floor, not silently truncated.
       ...(truncated ? { countsTruncated: true } : {}),
     },
