@@ -999,6 +999,11 @@ app.get('/api/health', async (c) => {
         ? `unnotified crisis flags: ${unnotifiedCrisis.count}`
         : `crisis flags with NO alerting channel configured: ${unnotifiedCrisis.count} (set the CRISIS_EMAIL binding)`,
     );
+  } else if (unnotifiedCrisis.unverifiable) {
+    // The count came back 0 because the KV read threw, not because there is
+    // nothing there. Same reasoning as the unverifiable cron heartbeats above:
+    // "could not measure" alerts, and says so, rather than reading as all-clear.
+    degraded.push('unverifiable crisis flag count (KV read failed)');
   }
 
   // The queue has stopped draining even though the cron is alive. Measured

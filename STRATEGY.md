@@ -100,6 +100,19 @@ Forbidden first. Each names the "helpful improvement" that violates it.
   cause emit two alerts. A check that is always red and a check that cries wolf
   both end up ignored, which is the same as not existing. OBSERVED
   (worker/src/heartbeat.ts, watchdog.ts, docs/runbooks/monitoring.md).
+- Staleness thresholds for anything on GitHub's scheduler must be sized from the
+  MEASURED gap distribution, never from the cron expression. Measured 2026-07-30:
+  the nominally-10-minute social-cron gaps ran median 26.9 min / max 72.9, and
+  the nominally-5-minute Upptime run gaps median 26.6 / max 60.1. The first-cut
+  thresholds, written from the cron lines with "a few minutes" of grace, would
+  have false-alarmed on 31% and ~50% of probes. Re-measure before tightening.
+  OBSERVED (worker/src/heartbeat.ts, .github/workflows/monitor-watchdog.yml).
+- An authenticated monitoring check needs a body assertion, not just a status
+  code. `/api/health` answers `200 {"ok":true}` to an unauthenticated caller, so
+  a status-code-only Upptime check would go permanently green if `$SECRET_SITE`
+  were ever unset or rotated — failing silently, in the one direction that
+  cannot be noticed. OBSERVED (adrianwedd/upptime `.upptimerc.yml`, verified
+  live 2026-07-30).
 - The three monitoring sweeps must keep `set +e -u +o pipefail`. GitHub Actions
   invokes `run:` as `bash -e {0}`, so restoring `-e`/pipefail makes the scripts
   abort on the very pipelines that detect problems — verified: the integrity

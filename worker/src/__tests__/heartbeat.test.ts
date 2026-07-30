@@ -106,8 +106,8 @@ describe('readHeartbeats', () => {
   });
 
   // Staleness threshold is 2x interval + grace. Note the flat grace dominates
-  // for short intervals — the 10-minute cron trips at 35 min, so it absorbs
-  // three missed runs, not one. Assert the boundary itself, not a run count.
+  // for short intervals — the 10-minute cron trips at 80 min, so it absorbs
+  // seven missed runs, not one. Assert the boundary itself, not a run count.
   it('flags only once the age passes 2x interval + grace', async () => {
     const spec = CRON_SPECS.find((s) => s.name === 'publish')!;
     const limitMs = spec.intervalMs * 2 + HEARTBEAT_GRACE_MS;
@@ -130,16 +130,16 @@ describe('readHeartbeats', () => {
   // Each cron carries its own cadence: the 2-hourly comments cron must not be
   // judged against the 10-minute publish threshold.
   it('applies each cron its own interval', async () => {
-    const oneHourAgo = NOW - 60 * 60_000;
+    const threeHoursAgo = NOW - 3 * 60 * 60_000;
     const kv = mockKV({
-      [`${HEARTBEAT_PREFIX}publish`]: heartbeatAt(oneHourAgo),
-      [`${HEARTBEAT_PREFIX}comments`]: heartbeatAt(oneHourAgo),
+      [`${HEARTBEAT_PREFIX}publish`]: heartbeatAt(threeHoursAgo),
+      [`${HEARTBEAT_PREFIX}comments`]: heartbeatAt(threeHoursAgo),
     });
 
     const { crons } = await readHeartbeats(kv, NOW);
 
-    expect(crons.publish.stale).toBe(true); // 60 min >> 35 min threshold
-    expect(crons.comments.stale).toBe(false); // 60 min << 4h15m threshold
+    expect(crons.publish.stale).toBe(true); // 3h >> 80 min threshold
+    expect(crons.comments.stale).toBe(false); // 3h << 5h threshold
   });
 
   it('clamps a future-dated heartbeat to age 0 rather than reporting negative age', async () => {

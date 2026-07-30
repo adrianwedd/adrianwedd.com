@@ -1292,6 +1292,35 @@ describe('GET /api/health crisisFlags', () => {
     const body = await after.json() as { recentActivity: { crisisFlags: number } };
     expect(body.recentActivity.crisisFlags).toBe(1); // flag still there for review
   });
+
+  // countUnnotifiedCrisisFlags catches KV errors so a KV incident can't 500 the
+  // health endpoint. The trap is that its fallback is `count: 0`, which reads as
+  // "nothing unnotified" — and `countsTruncated` in the body is invisible to
+  // Upptime, which only sees status codes. A transient failure on the
+  // `crisis-emailed:` marker reads would have turned a live crisis green.
+  it('returns 503 when the unnotified-crisis count could not be measured', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    kv.store.set('crisis-emailed:c1', 'ts'); // would count as 0 unnotified if readable
+    listFromStore(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    // Fail ONLY the marker reads: heartbeats and the queued-key lookup still
+    // work, so this is the narrow partial-KV case, not a total outage (which
+    // surfaces as a 500 from countKeysCapped and needs no special handling).
+    kv.get.mockImplementation(async (key: string) => {
+      if (key.startsWith('crisis-emailed:')) throw new Error('KV read failed');
+      return kv.store.get(key) ?? null;
+    });
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as { degraded: string[]; countsTruncated?: boolean };
+    expect(body.degraded).toContain('unverifiable crisis flag count (KV read failed)');
+    expect(body.countsTruncated).toBe(true);
+  });
 });
 
 // A cron that runs, returns 2xx and beats its heartbeat can still be failing to

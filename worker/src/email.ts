@@ -196,7 +196,7 @@ export const UNNOTIFIED_MAX_PAGES = 10;
 export async function countUnnotifiedCrisisFlags(
   kv: KVNamespace,
   limit = CRISIS_SWEEP_LIMIT,
-): Promise<{ count: number; truncated: boolean }> {
+): Promise<{ count: number; truncated: boolean; unverifiable?: boolean }> {
   try {
     let count = 0;
     let cursor: string | undefined;
@@ -217,9 +217,15 @@ export async function countUnnotifiedCrisisFlags(
 
     return { count, truncated: cursor !== undefined };
   } catch (e) {
-    // A KV failure must not 500 the health endpoint — reporting 0-but-truncated
-    // says "unknown floor" rather than fabricating an all-clear.
+    // A KV failure must not 500 the health endpoint — but it must not return a
+    // quiet 200 either. `truncated: true` alone only sets `countsTruncated` in
+    // the body, and Upptime reads status codes, not bodies: a transient failure
+    // on the `crisis-emailed:` marker reads as count 0, no degradation, green.
+    // That is the "a KV failure must not fabricate an all-clear" invariant
+    // failing in exactly the place it matters most. `unverifiable` is what the
+    // health endpoint turns into a 503, mirroring how readHeartbeats separates
+    // "measured bad" from "could not measure".
     console.error(`Unnotified crisis count failed: ${e instanceof Error ? e.message : String(e)}`);
-    return { count: 0, truncated: true };
+    return { count: 0, truncated: true, unverifiable: true };
   }
 }

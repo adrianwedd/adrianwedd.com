@@ -57,12 +57,22 @@ Break these and the monitoring gets worse, not better.
 4. **Model the system's real timing.** The stuck-queue threshold is grace + the
    drain time the backlog implies, because the cron only takes 12 posts per tick;
    a flat grace flagged any legitimate burst over 60 posts.
-5. **One root cause, one alert.** The queue-stall reason is suppressed when a
+5. **Calibrate against the measured distribution, never the cron expression.**
+   GitHub's scheduler is best-effort and its drift is not "a few minutes". Over
+   59 intervals of the nominally-10-minute `social-cron.yml` (2026-07-30): median
+   26.9 min, p90 57.0, max 72.9. Over 39 intervals of the nominally-5-minute
+   Upptime `uptime.yml`: median 26.6, p90 52.9, max 60.1. The heartbeat grace and
+   `UPPTIME_FRESH_MINUTES` were both first written from the cron expression and
+   would have false-alarmed on 31% and ~50% of probes respectively. Before
+   tightening any threshold on a GitHub-scheduled job, re-measure:
+   `gh api "repos/OWNER/REPO/actions/workflows/WF/runs?per_page=100" --jq
+   '.workflow_runs[].created_at'` and diff consecutive timestamps.
+6. **One root cause, one alert.** The queue-stall reason is suppressed when a
    platform token is invalid — the cron skips blocked platforms, so the token is
    the whole reason and the actionable half.
-6. **Cooldowns and clocks advance only on successful delivery.** Otherwise a
+7. **Cooldowns and clocks advance only on successful delivery.** Otherwise a
    failed send suppresses retries of an alert nobody received.
-7. **Prefer auth-free checks.** The expiry and integrity sweeps use public DNS,
+8. **Prefer auth-free checks.** The expiry and integrity sweeps use public DNS,
    public RDAP, TLS handshakes and public URLs. Losing expiry monitoring because
    a token expired would be a particularly stupid failure.
 

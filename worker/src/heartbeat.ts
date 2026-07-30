@@ -33,18 +33,25 @@ export const HEARTBEAT_PREFIX = 'heartbeat:cron:';
  * Extra tolerance on top of 2x the nominal interval before a heartbeat is
  * considered stale.
  *
- * These crons are driven by GitHub Actions `schedule:`, which is best-effort
- * and routinely runs several minutes late under platform load — a bare 2x
- * interval on the 10-minute publish cron would flap. 15 minutes of grace
- * absorbs normal scheduler drift while still catching a genuinely dead cron
- * within roughly half an hour.
+ * Sized against the MEASURED distribution, not the nominal cadence. GitHub
+ * Actions `schedule:` is best-effort and its drift is not "a few minutes": over
+ * the last 59 intervals of social-cron.yml (2026-07-30), the 10-minute cron's
+ * gaps were median 26.9 min, p90 57.0 min, max 72.9 min. That is a lower bound
+ * — social-cron.yml carries two schedules and the runs list pools them, so the
+ * publish-only gaps can only be longer.
  *
- * Note the flat grace dominates for short intervals: the 10-minute publish cron
- * trips at 35 minutes, so it actually absorbs three missed runs, not one. That
- * is the intended trade — detection within the hour, no 3am page for scheduler
- * drift — but don't read "2x interval" as "tolerates exactly one miss".
+ * At the original 15-minute grace the publish cron tripped at 35 minutes, which
+ * 18 of those 59 gaps exceeded: a 31% false-503 rate from day one, on a check
+ * whose whole value is that a red Upptime means something. 60 minutes puts the
+ * threshold at 80 minutes, above the observed maximum, and still catches a
+ * genuinely dead cron inside an hour and a half.
+ *
+ * Note the flat grace dominates for short intervals: the publish cron absorbs
+ * seven missed runs, not one. That is the intended trade — don't read
+ * "2x interval" as "tolerates exactly one miss". If this ever needs tightening,
+ * re-measure the gap distribution first; do not reason from the cron expression.
  */
-export const HEARTBEAT_GRACE_MS = 15 * 60_000;
+export const HEARTBEAT_GRACE_MS = 60 * 60_000;
 
 export interface CronSpec {
   /** Heartbeat name, also the KV key suffix. */
