@@ -1361,11 +1361,10 @@ describe('GET /api/health stuck queue', () => {
     expect(body.queue.facebook.oldestDueMinutes).toBeNull();
   });
 
-  // One root cause, one fix, one alert. The publish cron skips platforms whose
-  // token is invalid, so their posts sit and age forever — reporting both the
-  // token and the stall would double-page for a single problem, and the token is
-  // the actionable half.
-  it('suppresses the stall reason when a platform token is invalid, keeping it in the body', async () => {
+  // One root cause, one fix, one alert — but only when the tokens FULLY explain
+  // the stall. With every configured platform blocked, the cron skips every post,
+  // so the stall is entirely accounted for by the token reason.
+  it('suppresses the stall reason when every platform is blocked, keeping it in the body', async () => {
     const kv = queuedKeysKV([Date.now() - STUCK_QUEUE_GRACE_MS - 60_000]);
     mockDebugAuth.mockResolvedValue({ ...healthyToken, valid: false });
 
@@ -1380,6 +1379,28 @@ describe('GET /api/health stuck queue', () => {
     expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(false);
     // Still reported as state — suppressed as a REASON, not hidden.
     expect(body.queue.facebook.stalled).toBe(true);
+  });
+
+  // The suppression must NOT extend to a partially-blocked estate: a dead
+  // Facebook token masking an unrelated Twitter stall would hide the second
+  // fault until the first was fixed.
+  it('still reports the stall when only SOME platforms are blocked', async () => {
+    const kv = queuedKeysKV([Date.now() - STUCK_QUEUE_GRACE_MS - 60_000]);
+    setConfiguredPlatforms(['facebook', 'twitter']);
+    getPlatformMocks('facebook').debugAuth.mockResolvedValue({ ...healthyToken, valid: false });
+    getPlatformMocks('twitter').debugAuth.mockResolvedValue({
+      ...healthyToken,
+      platform: 'twitter',
+      valid: true,
+    });
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as { degraded: string[] };
+    expect(body.degraded).toContain('invalid platform token: facebook');
+    // Both reasons: the stall is not fully explained by the dead token.
+    expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(true);
   });
 
   // The regression the drain allowance exists to prevent: a legitimate burst

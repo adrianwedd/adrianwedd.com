@@ -1005,15 +1005,21 @@ app.get('/api/health', async (c) => {
   // against grace + the drain time the backlog implies, so a large legitimate
   // burst doesn't page anyone (see isQueueStalled).
   //
-  // Suppressed when a platform token is invalid, because then the queue IS stuck
-  // but the token is the whole reason: the publish cron skips blocked platforms,
-  // so their posts sit and age forever. Reporting both would mean two alerts for
-  // one root cause and one fix, and the token reason is the actionable one. The
-  // stall is still visible as `queue.facebook.stalled` in the body.
+  // Suppressed ONLY when EVERY configured platform has an invalid token. In that
+  // case the cron skips every post, so the stall is fully explained by the tokens
+  // and reporting it too would be two alerts for one root cause with one fix.
+  //
+  // The suppression is deliberately that narrow. Suppressing whenever ANY token
+  // is invalid would hide a genuinely independent stall: a dead Facebook token
+  // would mask a Twitter queue that had stopped draining for an unrelated
+  // reason, and the second fault would only surface after the first was fixed.
+  // The stall state stays in the body either way.
   const stalled = isQueueStalled(dueState, healthNow);
+  const allPlatformsBlocked =
+    invalidPlatforms.length > 0 && invalidPlatforms.length === Object.keys(platformsHealth).length;
   const oldestDueMinutes =
     dueState.oldestDueEpoch === null ? null : Math.round((healthNow - dueState.oldestDueEpoch) / 60_000);
-  if (stalled && invalidPlatforms.length === 0) {
+  if (stalled && !allPlatformsBlocked) {
     degraded.push(`queue stalled: ${dueState.due} post(s) due, oldest ${oldestDueMinutes}m overdue`);
   }
 

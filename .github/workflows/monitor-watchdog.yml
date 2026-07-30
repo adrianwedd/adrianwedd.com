@@ -126,18 +126,31 @@ jobs:
           # watchdog can't report itself, but the withheld check-in makes the
           # Cloudflare cron email — this entry catches the narrower case where
           # the schedule is dropped while manual dispatches keep passing.
+          # 4th field: alert when the LAST run FAILED, not just when it stopped.
+          #
+          # Freshness alone can't see a crashed check. expiry-sweep and
+          # content-integrity don't check in to Cloudflare, and their post-check
+          # steps are `if: success()`, so a hard crash in one of them opens no
+          # issue and sends no email — and a red run is still a RECENT run, so a
+          # created_at-only check reads it as healthy. That is a check failing
+          # completely silently, which is the exact thing this file exists to
+          # prevent.
+          #
+          # Only `yes` for workflows whose failure is unambiguously a problem.
+          # e2e.yml is `no`: it runs on pull requests, where a red run is often
+          # just a branch under development and would page constantly.
           FRESHNESS="
-          adrianwedd/upptime|uptime.yml|2
-          adrianwedd/twitb-status|uptime.yml|2
-          adrianwedd/failurefirst-status|uptime.yml|2
-          adrianwedd/adrianwedd.com|social-cron.yml|2
-          adrianwedd/adrianwedd.com|worker-deploy.yml|30
-          adrianwedd/adrianwedd.com|e2e.yml|30
-          adrianwedd/adrianwedd.com|social-token-alert.yml|200
-          adrianwedd/adrianwedd.com|content-pipeline.yml|200
-          adrianwedd/adrianwedd.com|expiry-sweep.yml|200
-          adrianwedd/adrianwedd.com|content-integrity.yml|200
-          adrianwedd/adrianwedd.com|monitor-watchdog.yml|4
+          adrianwedd/upptime|uptime.yml|2|yes
+          adrianwedd/twitb-status|uptime.yml|2|yes
+          adrianwedd/failurefirst-status|uptime.yml|2|yes
+          adrianwedd/adrianwedd.com|social-cron.yml|2|yes
+          adrianwedd/adrianwedd.com|worker-deploy.yml|30|no
+          adrianwedd/adrianwedd.com|e2e.yml|30|no
+          adrianwedd/adrianwedd.com|social-token-alert.yml|200|yes
+          adrianwedd/adrianwedd.com|content-pipeline.yml|200|no
+          adrianwedd/adrianwedd.com|expiry-sweep.yml|200|yes
+          adrianwedd/adrianwedd.com|content-integrity.yml|200|yes
+          adrianwedd/adrianwedd.com|monitor-watchdog.yml|4|yes
           "
 
           finding() { echo "- $1" >> findings.txt; }
@@ -178,17 +191,30 @@ jobs:
             done <<< "$WORKFLOWS"
           done
 
-          # ── 2. Scheduled workflows that have stopped running ─────────────────
-          echo "$FRESHNESS" | while IFS='|' read -r REPO WF MAXH; do
+          # ── 2. Scheduled workflows that have stopped running, or are failing ──
+          echo "$FRESHNESS" | while IFS='|' read -r REPO WF MAXH ALERT_ON_FAIL; do
             [ -z "${REPO:-}" ] && continue
-            if ! RUN=$(gh api "repos/${REPO}/actions/workflows/${WF}/runs?per_page=1" \
-                 --jq '.workflow_runs[0].created_at // ""' 2>err.txt); then
+            # Fetch timestamp AND conclusion together: a red run is still a recent
+            # run, so freshness alone would report a permanently crashing check as
+            # healthy.
+            if ! RUNINFO=$(gh api "repos/${REPO}/actions/workflows/${WF}/runs?per_page=1" \
+                 --jq '.workflow_runs[0] | "\(.created_at // "")\t\(.status // "")\t\(.conclusion // "")"' 2>err.txt); then
               finding "Could not read runs for \`${REPO}\` → \`${WF}\` — $(head -c 200 err.txt | tr -d '\n')."
               continue
             fi
+            RUN=$(echo "$RUNINFO" | cut -f1)
+            RUN_STATUS=$(echo "$RUNINFO" | cut -f2)
+            RUN_CONCLUSION=$(echo "$RUNINFO" | cut -f3)
             if [ -z "$RUN" ]; then
               finding "\`${REPO}\` → \`${WF}\` has **no runs at all**."
               continue
+            fi
+            if [ "${ALERT_ON_FAIL:-no}" = "yes" ] && [ "$RUN_STATUS" = "completed" ]; then
+              case "$RUN_CONCLUSION" in
+                success|skipped|cancelled) ;;
+                *)
+                  finding "\`${REPO}\` → \`${WF}\` last run concluded **${RUN_CONCLUSION}**. The schedule is still firing, so a freshness check alone would call this healthy — but the check itself is failing, so whatever it monitors is UNVERIFIED." ;;
+              esac
             fi
             LAST=$(date -u -d "$RUN" +%s 2>/dev/null || echo 0)
             if [ "$LAST" -eq 0 ]; then

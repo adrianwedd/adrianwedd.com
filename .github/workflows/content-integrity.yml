@@ -114,7 +114,19 @@ jobs:
               VIEWS=$(echo "$ANALYTICS" | jq -r '.overview.totalPageviews // 0')
               PERIOD=$(echo "$ANALYTICS" | jq -r '"\(.period.start) → \(.period.end)"')
               echo "analytics: ${VIEWS} pageviews (${PERIOD})"
-              if [ "${VIEWS%%.*}" -lt "$MIN_PAGEVIEWS" ]; then
+              # Validate numeric BEFORE comparing. With `set +e`, `[ "" -lt 10 ]`
+              # prints "integer expression expected", skips the block, records no
+              # finding and exits the step 0 — a genuine failure producing no
+              # signal at all, which is the one outcome this file must never have.
+              # An unparseable value is therefore itself a finding.
+              VIEWS_INT="${VIEWS%%.*}"
+              case "${VIEWS_INT:-}" in
+                ''|*[!0-9]*)
+                  finding "ANALYTICS: could not read a numeric pageview count from the payload (got \`${VIEWS:-<empty>}\`). The payload parsed as JSON but \`.overview.totalPageviews\` is missing or malformed, so traffic is UNVERIFIED."
+                  VIEWS_INT=""
+                  ;;
+              esac
+              if [ -n "$VIEWS_INT" ] && [ "$VIEWS_INT" -lt "$MIN_PAGEVIEWS" ]; then
                 finding "ANALYTICS: only **${VIEWS}** pageviews reported for ${PERIOD}. Collection has probably stopped — check the consent banner and the GA4 tag, since a regression there leaves the site looking perfect while nothing is recorded."
               fi
             fi
