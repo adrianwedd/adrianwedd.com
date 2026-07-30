@@ -6,6 +6,7 @@ import type { SocialPost, IdempotencyRecord, Platform } from './platforms/types'
 import { processComments } from './cron/comments';
 import { sendCrisisAlert, sweepCrisisAlerts } from './email';
 import { CronLock } from './cron-lock';
+import { recordHeartbeat, readHeartbeats } from './heartbeat';
 
 export { CronLock };
 
@@ -714,8 +715,12 @@ app.post('/api/cron/publish', async (c) => {
       orphanedAfterSuccess,
     };
     if (restoreFailures > 0 || orphanedAfterSuccess > 0) {
+      // Failure path — deliberately no heartbeat. The 500 is the alert; writing
+      // a heartbeat here would let a cron that fails every run still read as
+      // "alive" on /api/health.
       return json(responseBody, 500);
     }
+    await recordHeartbeat(env.SOCIAL, 'publish');
     return json(responseBody);
   } finally {
     await lockStub
@@ -763,6 +768,7 @@ app.post('/api/cron/comments', async (c) => {
 
     // For backward compatibility, spread Facebook results at the top level
     const fbResult = platformResults.facebook as Record<string, unknown> | undefined;
+    await recordHeartbeat(env.SOCIAL, 'comments');
     return json({ ...fbResult, platforms: platformResults, crisisAlertsRetried });
   } finally {
     await commentsLockStub
@@ -827,15 +833,30 @@ app.get('/api/health', async (c) => {
     }
   }
 
-  // An invalid token is a 503 so uptime monitors alert on status code alone;
-  // consumers parsing the body (social-token-alert.yml) accept 200 and 503.
-  const anyTokenInvalid = Object.values(platformsHealth).some(
-    (p) => (p as { tokenValid: boolean }).tokenValid === false,
-  );
+  // Cron liveness. A worker whose scheduled caller has died keeps serving 200s
+  // forever, so heartbeat staleness is its own degradation reason.
+  const { crons } = await readHeartbeats(env.SOCIAL);
+
+  // Degradation reasons. Any non-empty list is a 503 so uptime monitors alert
+  // on the status code alone; consumers parsing the body
+  // (social-token-alert.yml) accept 200 and 503.
+  const degraded: string[] = [];
+
+  const invalidPlatforms = Object.entries(platformsHealth)
+    .filter(([, p]) => (p as { tokenValid: boolean }).tokenValid === false)
+    .map(([name]) => name);
+  if (invalidPlatforms.length > 0) degraded.push(`invalid platform token: ${invalidPlatforms.join(', ')}`);
+
+  const staleCrons = Object.entries(crons)
+    .filter(([, s]) => s.stale)
+    .map(([name]) => name);
+  if (staleCrons.length > 0) degraded.push(`stale cron heartbeat: ${staleCrons.join(', ')}`);
 
   return json(
     {
       platforms: platformsHealth,
+      crons,
+      ...(degraded.length > 0 ? { degraded } : {}),
       queue: {
         facebook: {
           queued: queuedResult.count,
@@ -848,7 +869,7 @@ app.get('/api/health', async (c) => {
       // Honest signal that a count is a floor, not silently truncated.
       ...(truncated ? { countsTruncated: true } : {}),
     },
-    anyTokenInvalid ? 503 : 200,
+    degraded.length > 0 ? 503 : 200,
   );
 });
 

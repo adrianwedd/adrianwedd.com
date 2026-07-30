@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from '../index';
 import type { SocialPost, AuthStatus } from '../platforms/types';
+import { CRON_SPECS, HEARTBEAT_PREFIX, HEARTBEAT_GRACE_MS } from '../heartbeat';
 
 // ── Mock createPlatform factory ──────────────────────────────────────────────
 //
@@ -76,6 +77,18 @@ function mockKV(): {
     list: vi.fn().mockResolvedValue({ keys: [], list_complete: true }),
     delete: vi.fn(async (key: string) => { store.delete(key); }),
   };
+}
+
+/**
+ * Seed a fresh heartbeat for every cron so /api/health reads as live.
+ *
+ * Absence of a heartbeat is a degradation signal (see heartbeat.ts), so any
+ * health test that expects 200 has to establish proof of life first.
+ */
+function seedHeartbeats(kv: ReturnType<typeof mockKV>, at: number = Date.now()): void {
+  for (const spec of CRON_SPECS) {
+    kv.store.set(`${HEARTBEAT_PREFIX}${spec.name}`, JSON.stringify({ at: new Date(at).toISOString(), atEpoch: at }));
+  }
 }
 
 function makePost(id: string, epochOffset = 0): SocialPost {
@@ -829,6 +842,20 @@ describe('POST /api/cron/comments', () => {
     expect(mockDebugAuth).not.toHaveBeenCalled();
     // Release must NOT fire when acquire failed
     expect(cronLock.release).not.toHaveBeenCalled();
+    // A skipped run is not proof of life — the lock holder writes its own.
+    expect(kv.store.get(`${HEARTBEAT_PREFIX}comments`)).toBeUndefined();
+  });
+
+  it('records a comments heartbeat after a successful run', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(commentsRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const raw = kv.store.get(`${HEARTBEAT_PREFIX}comments`);
+    expect(raw).toBeDefined();
+    expect(JSON.parse(raw!).atEpoch).toBeGreaterThan(Date.now() - 60_000);
   });
 
   it('iterates configured platforms and reports per-platform results', async () => {
@@ -1003,6 +1030,7 @@ describe('post type validation', () => {
 describe('GET /api/health token status', () => {
   it('returns 503 when any configured platform reports an invalid token', async () => {
     const kv = mockKV();
+    seedHeartbeats(kv);
     mockDebugAuth.mockResolvedValue({ ...healthyToken, valid: false });
 
     const res = await app.fetch(
@@ -1012,8 +1040,28 @@ describe('GET /api/health token status', () => {
       makeEnv(kv),
     );
     expect(res.status).toBe(503);
-    const body = (await res.json()) as { platforms: Record<string, { tokenValid: boolean }> };
+    const body = (await res.json()) as {
+      platforms: Record<string, { tokenValid: boolean }>;
+      degraded: string[];
+    };
     expect(body.platforms.facebook.tokenValid).toBe(false);
+    expect(body.degraded).toContain('invalid platform token: facebook');
+  });
+
+  it('returns 200 with fresh heartbeats and valid tokens', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { degraded?: string[] };
+    expect(body.degraded).toBeUndefined();
   });
 
   it('still returns 200 unauthenticated regardless of token state', async () => {
@@ -1028,9 +1076,107 @@ describe('GET /api/health token status', () => {
 
 // Crisis flags are surfaced separately in /api/health (flag-crisis: prefix,
 // written by cron/comments.ts) so monitoring can alert on a non-zero count.
+// Cron liveness. A worker whose scheduled caller has died keeps serving 200s on
+// every other check, so heartbeat staleness has to be its own 503 reason.
+describe('GET /api/health cron heartbeats', () => {
+  it('returns 503 when a cron heartbeat is missing entirely', async () => {
+    const kv = mockKV(); // no heartbeats seeded
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+
+    expect(res.status).toBe(503);
+    const body = (await res.json()) as {
+      crons: Record<string, { stale: boolean; lastRunAt: string | null }>;
+      degraded: string[];
+    };
+    expect(body.crons.publish.stale).toBe(true);
+    expect(body.crons.publish.lastRunAt).toBeNull();
+    expect(body.degraded.some((d) => d.startsWith('stale cron heartbeat:'))).toBe(true);
+  });
+
+  it('returns 503 naming only the stale cron when another is fresh', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    // Age out publish alone, past 2x its 10-minute interval plus grace.
+    const stalePublish = Date.now() - (2 * 10 * 60_000 + HEARTBEAT_GRACE_MS + 60_000);
+    kv.store.set(
+      `${HEARTBEAT_PREFIX}publish`,
+      JSON.stringify({ at: new Date(stalePublish).toISOString(), atEpoch: stalePublish }),
+    );
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+
+    expect(res.status).toBe(503);
+    const body = (await res.json()) as {
+      crons: Record<string, { stale: boolean }>;
+      degraded: string[];
+    };
+    expect(body.crons.publish.stale).toBe(true);
+    expect(body.crons.comments.stale).toBe(false);
+    expect(body.degraded).toContain('stale cron heartbeat: publish');
+  });
+
+  it('reports every configured cron in the body', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+
+    const body = (await res.json()) as { crons: Record<string, unknown> };
+    expect(Object.keys(body.crons).sort()).toEqual(CRON_SPECS.map((s) => s.name).sort());
+  });
+});
+
+// A successful cron run records proof of life; a failed or skipped one must not.
+describe('cron heartbeat writes', () => {
+  it('records a publish heartbeat after a successful run', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const raw = kv.store.get(`${HEARTBEAT_PREFIX}publish`);
+    expect(raw).toBeDefined();
+    expect(JSON.parse(raw!).atEpoch).toBeGreaterThan(Date.now() - 60_000);
+  });
+
+  it('does NOT record a heartbeat when the cron lock is already held', async () => {
+    const kv = mockKV();
+    const lock = mockCronLock();
+    lock.tryAcquire.mockResolvedValue({ acquired: false, token: null });
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv, lock));
+
+    expect(res.status).toBe(200);
+    expect((await res.json() as { skipped: boolean }).skipped).toBe(true);
+    expect(kv.store.get(`${HEARTBEAT_PREFIX}publish`)).toBeUndefined();
+  });
+});
+
 describe('GET /api/health crisisFlags', () => {
   it('reports the flag-crisis: key count alongside flaggedComments', async () => {
     const kv = mockKV();
+    seedHeartbeats(kv);
     kv.store.set('flag-crisis:c1', '{}');
     kv.store.set('flag-crisis:c2', '{}');
     kv.store.set('fb-flag:c3', '{}');
