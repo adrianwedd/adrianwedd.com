@@ -105,9 +105,10 @@ describe('readHeartbeats', () => {
     expect(crons.publish.stale).toBe(true);
   });
 
-  // Staleness threshold is 2x interval + grace: one missed run plus scheduler
-  // drift is tolerated, two is not.
-  it('tolerates one missed run plus grace but flags beyond the threshold', async () => {
+  // Staleness threshold is 2x interval + grace. Note the flat grace dominates
+  // for short intervals — the 10-minute cron trips at 35 min, so it absorbs
+  // three missed runs, not one. Assert the boundary itself, not a run count.
+  it('flags only once the age passes 2x interval + grace', async () => {
     const spec = CRON_SPECS.find((s) => s.name === 'publish')!;
     const limitMs = spec.intervalMs * 2 + HEARTBEAT_GRACE_MS;
 
@@ -152,7 +153,10 @@ describe('readHeartbeats', () => {
 
   // The health endpoint's job is to report degradation; a KV read failure must
   // not 500 it and lose the other checks in the response.
-  it('survives a KV read failure by leaving the entry stale', async () => {
+  //
+  // It is also marked `unverifiable`, because "the cron is dead" and "KV is
+  // failing so we can't tell" send an operator to different systems.
+  it('survives a KV read failure by marking the entry stale AND unverifiable', async () => {
     const kv = mockKV(allFresh());
     (kv.get as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('KV down'));
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -160,9 +164,22 @@ describe('readHeartbeats', () => {
     const { crons, anyStale } = await readHeartbeats(kv, NOW);
 
     expect(anyStale).toBe(true);
-    expect(Object.values(crons).filter((c) => c.stale)).toHaveLength(1);
+    const failed = Object.values(crons).filter((c) => c.stale);
+    expect(failed).toHaveLength(1);
+    expect(failed[0].unverifiable).toBe(true);
+    // The cron whose read succeeded is measured, not guessed at.
+    expect(Object.values(crons).filter((c) => !c.stale)[0].unverifiable).toBeUndefined();
 
     consoleError.mockRestore();
+  });
+
+  it('does not mark a genuinely missing heartbeat as unverifiable', async () => {
+    const { crons } = await readHeartbeats(mockKV(), NOW);
+
+    for (const spec of CRON_SPECS) {
+      expect(crons[spec.name].stale).toBe(true);
+      expect(crons[spec.name].unverifiable).toBeUndefined();
+    }
   });
 
   it('exposes the staleness threshold so a reader can interpret the age', async () => {

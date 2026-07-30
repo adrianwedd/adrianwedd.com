@@ -38,6 +38,11 @@ export const HEARTBEAT_PREFIX = 'heartbeat:cron:';
  * interval on the 10-minute publish cron would flap. 15 minutes of grace
  * absorbs normal scheduler drift while still catching a genuinely dead cron
  * within roughly half an hour.
+ *
+ * Note the flat grace dominates for short intervals: the 10-minute publish cron
+ * trips at 35 minutes, so it actually absorbs three missed runs, not one. That
+ * is the intended trade — detection within the hour, no 3am page for scheduler
+ * drift — but don't read "2x interval" as "tolerates exactly one miss".
  */
 export const HEARTBEAT_GRACE_MS = 15 * 60_000;
 
@@ -75,6 +80,14 @@ export interface HeartbeatStatus {
   /** Age beyond which this heartbeat reads as stale, for interpreting the above. */
   staleAfterSeconds: number;
   stale: boolean;
+  /**
+   * Set when staleness could not be MEASURED rather than measured as bad — the
+   * KV read itself failed. Both cases alert, but they point at different
+   * systems: "the cron is dead, go look at GitHub Actions" versus "KV is
+   * failing, the cron may be fine". Without this an operator paged at 3am by a
+   * Cloudflare KV incident would start by debugging the scheduler.
+   */
+  unverifiable?: boolean;
 }
 
 function staleAfterMs(spec: CronSpec): number {
@@ -126,6 +139,7 @@ export async function readHeartbeats(
       raw = await kv.get(`${HEARTBEAT_PREFIX}${spec.name}`);
     } catch (err) {
       console.error(`Heartbeat read failed for cron '${spec.name}': ${err instanceof Error ? err.message : String(err)}`);
+      status.unverifiable = true;
     }
 
     if (raw) {

@@ -1160,6 +1160,33 @@ describe('cron heartbeat writes', () => {
     expect(JSON.parse(raw!).atEpoch).toBeGreaterThan(Date.now() - 60_000);
   });
 
+  // A cron that fails every run must not read as alive. This is the semantic
+  // that keeps the heartbeat honest, and it is only enforced by the ORDER of the
+  // 500 return and the recordHeartbeat call — a refactor that hoists the write
+  // above the check would silently make a permanently broken cron look healthy.
+  it('does NOT record a heartbeat when the run returns 500', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValueOnce(healthyToken);
+    mockPublishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'fb_external_id', isTransient: false, isAuthError: false,
+    });
+
+    const post = makePost('post-500-no-heartbeat');
+    const queueKey = `post:queued:${post.scheduledAtEpoch}:${post.id}`;
+    kv.store.set(queueKey, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: queueKey }], list_complete: true });
+    // Terminal KV write throws → orphanedAfterSuccess → 500.
+    kv.put.mockImplementation(async (key: string, value: string) => {
+      if (key.startsWith('post:published:')) throw new Error('KV unavailable');
+      kv.store.set(key, value);
+    });
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(500);
+    expect(kv.store.get(`${HEARTBEAT_PREFIX}publish`)).toBeUndefined();
+  });
+
   it('does NOT record a heartbeat when the cron lock is already held', async () => {
     const kv = mockKV();
     const lock = mockCronLock();

@@ -904,10 +904,20 @@ app.get('/api/health', async (c) => {
     .map(([name]) => name);
   if (invalidPlatforms.length > 0) degraded.push(`invalid platform token: ${invalidPlatforms.join(', ')}`);
 
+  // Split "measured stale" from "couldn't measure": both alert, but they point
+  // at different systems (GitHub Actions vs KV), and the reason string is what
+  // an operator reads first at 3am.
   const staleCrons = Object.entries(crons)
-    .filter(([, s]) => s.stale)
+    .filter(([, s]) => s.stale && !s.unverifiable)
     .map(([name]) => name);
   if (staleCrons.length > 0) degraded.push(`stale cron heartbeat: ${staleCrons.join(', ')}`);
+
+  const unverifiableCrons = Object.entries(crons)
+    .filter(([, s]) => s.unverifiable)
+    .map(([name]) => name);
+  if (unverifiableCrons.length > 0) {
+    degraded.push(`unverifiable cron heartbeat (KV read failed): ${unverifiableCrons.join(', ')}`);
+  }
 
   // A crisis comment nobody could be told about. Crisis email is best-effort by
   // design (email.ts swallows send failures so they can't fail the comments
