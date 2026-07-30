@@ -130,5 +130,14 @@ Recorded so the next person doesn't assume it's covered.
   before building. Sketch if approved: bearer-authenticated `synthetic: true`
   flag, sentinel time slot, event deleted immediately, rate-limited, and the
   bypass rejected unless the bearer matches a dedicated secret.
+- **The Cloudflare Access tunnel services** (`qb`/`parr`/`rarr`/`sarr.wedd.au`).
+  Upptime watched all four until 2026-07-31, when they were removed — not
+  because they were failing or exposed (each correctly 302s to the Access
+  login) but because `history/summary.json` is world-readable and publishes
+  `url`, `slug` and a favicon URL beside `name`. The status page was
+  enumerating four otherwise-unguessable hostnames and labelling what ran
+  behind each. Renaming the checks would not have helped; the hostname is in
+  the data, not the label. Re-add this somewhere authenticated — the worker
+  watchdog is the natural home — rather than on a page the public reads.
 - **Whether Adrian actually reads the alerts.** The weekly proof-of-life email
   makes silence a signal, but nothing verifies a human acted on a real one.
