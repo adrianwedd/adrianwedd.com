@@ -7,6 +7,7 @@ import { processComments } from './cron/comments';
 import { sendCrisisAlert, sweepCrisisAlerts, countUnnotifiedCrisisFlags } from './email';
 import { CronLock } from './cron-lock';
 import { recordHeartbeat, readHeartbeats } from './heartbeat';
+import { recordExternalHeartbeat, readExternalHeartbeats, runWatchdogSweep } from './watchdog';
 
 export { CronLock };
 
@@ -961,4 +962,85 @@ app.get('/api/health', async (c) => {
   );
 });
 
-export default app;
+// ── POST /api/watchdog/heartbeat ──────────────────────────────────────────────
+//
+// Check-in endpoint for external pipelines (GitHub Actions workflows). See
+// watchdog.ts for why the watchman lives on Cloudflare rather than in Actions.
+
+app.post('/api/watchdog/heartbeat', async (c) => {
+  const env = c.env;
+  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET);
+  if (!authOk) return unauthorized();
+
+  let body: { name?: unknown; detail?: unknown };
+  try {
+    body = await c.req.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400);
+  }
+
+  if (typeof body.name !== 'string' || body.name.length === 0) {
+    return json({ error: 'name is required' }, 400);
+  }
+  // Cap the echoed detail: it lands in an alert email body, and an unbounded
+  // string would be both a KV-size and a readability problem.
+  const detail = typeof body.detail === 'string' ? body.detail.slice(0, 500) : undefined;
+
+  // Reject unknown names rather than accepting them. A silent typo in a workflow
+  // would otherwise write a heartbeat nothing ever reads, and the source it was
+  // meant to cover would look like it had never checked in — a false alarm whose
+  // cause is invisible from either side.
+  const recorded = await recordExternalHeartbeat(env.SOCIAL, body.name, detail);
+  if (!recorded) {
+    return json(
+      { error: `Unknown watchdog source '${body.name}' — add it to EXTERNAL_SOURCES in worker/src/watchdog.ts` },
+      400,
+    );
+  }
+
+  return json({ ok: true, name: body.name });
+});
+
+// ── GET /api/watchdog/status ──────────────────────────────────────────────────
+
+app.get('/api/watchdog/status', async (c) => {
+  const env = c.env;
+  const authOk =
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET)) ||
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.PUBLISH_SECRET)) ||
+    (await verifyBearer(c.req.header('Authorization') ?? null, env.CLI_SECRET));
+  if (!authOk) return json({ ok: true });
+
+  const sources = await readExternalHeartbeats(env.SOCIAL);
+  const stale = sources.filter((s) => s.stale).map((s) => s.name);
+
+  // 503 so this is monitorable by status code like /api/health. Note the
+  // asymmetry: GitHub going dark is caught by the Cloudflare cron's email, not
+  // by this endpoint — whatever polls this would be dark too. This exists so
+  // the state is inspectable and gradeable, not as the primary alert path.
+  return json({ sources, ...(stale.length > 0 ? { stale } : {}) }, stale.length > 0 ? 503 : 200);
+});
+
+// ── Scheduled handler (Cloudflare cron trigger) ───────────────────────────────
+//
+// Deliberately Cloudflare's scheduler, not GitHub Actions: this is the check
+// that has to keep working when GitHub Actions is the thing that stopped.
+
+export default {
+  fetch: app.fetch,
+  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(
+      runWatchdogSweep(env)
+        .then((result) => {
+          console.log(`Watchdog sweep: ${JSON.stringify(result)}`);
+        })
+        .catch((e) => {
+          console.error(`Watchdog sweep failed: ${e instanceof Error ? e.message : String(e)}`);
+        }),
+    );
+  },
+};
+
+// Named export retained so tests and any importer can keep using the Hono app
+// directly (app.fetch(request, env)) without going through the default export.
+export { app };

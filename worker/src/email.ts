@@ -50,6 +50,52 @@ export function buildCrisisAlertRaw(from: string, to: string, comment: CrisisCom
 }
 
 /**
+ * Build a plain-text ops email. Subject is stripped of CR/LF: it reaches a raw
+ * MIME header, and the same header-injection guard applies as for comment IDs.
+ */
+export function buildOpsEmailRaw(from: string, to: string, subject: string, body: string): string {
+  const safeSubject = subject.replace(/[\r\n]/g, ' ');
+  return [
+    `From: ${from}`,
+    `To: ${to}`,
+    `Subject: ${safeSubject}`,
+    `Date: ${new Date().toUTCString()}`,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=utf-8',
+    '',
+    ...body.split('\n'),
+    '',
+  ].join('\r\n');
+}
+
+/**
+ * Send an operational email (monitoring alerts, proof-of-life).
+ *
+ * Reuses the CRISIS_EMAIL binding rather than adding a second one: Cloudflare
+ * Email Sending bindings are pinned to a single verified destination address,
+ * and a second binding to the SAME address would be pure configuration
+ * surface with no isolation benefit.
+ *
+ * Returns whether the send succeeded, and never throws — callers use the
+ * boolean to decide whether to record a cooldown, so a swallowed failure must
+ * not be reported as a send.
+ */
+export async function sendOpsEmail(env: CrisisAlertEnv, subject: string, body: string): Promise<boolean> {
+  try {
+    if (!env.CRISIS_EMAIL || !env.CRISIS_ALERT_FROM || !env.CRISIS_ALERT_TO) {
+      console.error(`Ops email not configured (CRISIS_EMAIL binding / FROM / TO) — dropping: ${subject}`);
+      return false;
+    }
+    const raw = buildOpsEmailRaw(env.CRISIS_ALERT_FROM, env.CRISIS_ALERT_TO, subject, body);
+    await env.CRISIS_EMAIL.send(new EmailMessage(env.CRISIS_ALERT_FROM, env.CRISIS_ALERT_TO, raw));
+    return true;
+  } catch (e) {
+    console.error(`Ops email failed (${subject}): ${e instanceof Error ? e.message : String(e)}`);
+    return false;
+  }
+}
+
+/**
  * Email Adrian about a crisis-classified comment. Deduped per comment via KV
  * (crisis-emailed:<id>) so retried cron runs can't re-alert. Never throws:
  * an alerting failure must not fail the comments cron — /api/health remains

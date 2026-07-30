@@ -50,5 +50,16 @@ name = "API_RATE_LIMITER"
 namespace_id = "1001"
 simple = { limit = 30, period = 60 }
 
+# Watchdog cron (see src/watchdog.ts). Cloudflare's scheduler, deliberately NOT
+# GitHub Actions: this is the check that must keep working when GitHub Actions is
+# the thing that has stopped firing. It alerts by email when a monitoring
+# pipeline stops checking in, and sends a weekly proof-of-life so a broken
+# alerting channel can't masquerade as silence-means-healthy.
+#
+# Hourly, at :23 — off the hour so it doesn't queue behind the :00 rush, and not
+# colliding with social-cron's :07/:17/:27… publish ticks or its :45 comments run.
+[triggers]
+crons = ["23 * * * *"]
+
 [observability]
 enabled = true
