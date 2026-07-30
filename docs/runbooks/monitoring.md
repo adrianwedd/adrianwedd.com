@@ -10,7 +10,7 @@ still yes.
 
 | Layer | Where | Answers |
 |---|---|---|
-| Uptime | Upptime (`adrianwedd/upptime`), every 5 min | Is it serving? Do the authed health endpoints report degradation? |
+| Uptime | Upptime (`adrianwedd/status`, renamed from `adrianwedd/upptime` 2026-07-31), every 5 min | Is it serving? Do the authed health endpoints report degradation? |
 | Health endpoints | `worker/src/index.ts` `/api/health`, book-api `/health`, ops `/api/health/xero`, twitb `/api/health?deep` | Are tokens valid, crons alive, queues draining? |
 | Monitoring watchdog | `monitor-watchdog.yml` (hourly) + `worker/src/watchdog.ts` (Cloudflare cron) | Is the monitoring itself still running? |
 | Expiry sweep | `expiry-sweep.yml` (weekly) | What runs out on a date? |
@@ -106,8 +106,8 @@ The Cloudflare cron trigger is new, so a worker deploy is what activates it.
    returns 503 — that is the design (a cron with no recorded run is exactly the
    outage being detected), not a bug.
 3. Re-add the Upptime `Monitoring Watchdog` check on `/api/watchdog/status`
-   (upptime commit `1774d659`, reverted in `81cc5a1a` because the endpoint 404s
-   until the worker deploys).
+   (`adrianwedd/status` commit `1774d659`, reverted in `81cc5a1a` because the
+   endpoint 404s until the worker deploys).
 
 ## Still blind
 

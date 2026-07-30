@@ -111,8 +111,9 @@ Forbidden first. Each names the "helpful improvement" that violates it.
   code. `/api/health` answers `200 {"ok":true}` to an unauthenticated caller, so
   a status-code-only Upptime check would go permanently green if `$SECRET_SITE`
   were ever unset or rotated — failing silently, in the one direction that
-  cannot be noticed. OBSERVED (adrianwedd/upptime `.upptimerc.yml`, verified
-  live 2026-07-30).
+  cannot be noticed. OBSERVED (adrianwedd/status `.upptimerc.yml` — the repo was
+  named adrianwedd/upptime when this was verified live 2026-07-30, renamed
+  2026-07-31).
 - The three monitoring sweeps must keep `set +e -u +o pipefail`. GitHub Actions
   invokes `run:` as `bash -e {0}`, so restoring `-e`/pipefail makes the scripts
   abort on the very pipelines that detect problems — verified: the integrity

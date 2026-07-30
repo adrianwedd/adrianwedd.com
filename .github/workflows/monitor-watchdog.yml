@@ -106,7 +106,7 @@ jobs:
           # Repos whose workflows are checked for the disabled/stuck traps.
           REPOS="
           adrianwedd/adrianwedd.com
-          adrianwedd/upptime
+          adrianwedd/status
           adrianwedd/twitb-status
           adrianwedd/failurefirst-status
           "
@@ -149,7 +149,7 @@ jobs:
           # e2e.yml is `no`: it runs on pull requests, where a red run is often
           # just a branch under development and would page constantly.
           FRESHNESS="
-          adrianwedd/upptime|uptime.yml|2|yes
+          adrianwedd/status|uptime.yml|2|yes
           adrianwedd/twitb-status|uptime.yml|2|yes
           adrianwedd/failurefirst-status|uptime.yml|2|yes
           adrianwedd/adrianwedd.com|social-cron.yml|2|yes
@@ -307,8 +307,16 @@ jobs:
           # Recorded separately because it decides whether to relay the `upptime`
           # check-in to the worker, which is what makes a dead Upptime reach a
           # human by email rather than only by GitHub issue.
+          #
+          # The repo is adrianwedd/status (renamed from adrianwedd/upptime on
+          # 2026-07-31) but the check-in NAME stays `upptime`: it is the KV key
+          # in the worker's EXTERNAL_SOURCES (worker/src/watchdog.ts). Renaming
+          # it here without deploying a matching worker change would make every
+          # check-in 404 as an unknown pipeline, and the watchdog would then
+          # email that Upptime had gone dark. Don't "tidy" the two into
+          # agreement in one repo.
           UPPTIME_FRESH=no
-          if LASTRUN=$(gh api "repos/adrianwedd/upptime/actions/workflows/uptime.yml/runs?per_page=1" \
+          if LASTRUN=$(gh api "repos/adrianwedd/status/actions/workflows/uptime.yml/runs?per_page=1" \
                --jq '.workflow_runs[0].created_at // ""' 2>/dev/null) && [ -n "$LASTRUN" ]; then
             LAST=$(date -u -d "$LASTRUN" +%s 2>/dev/null || echo 0)
             AGEM=$(( (NOW - LAST) / 60 ))
