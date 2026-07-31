@@ -396,6 +396,11 @@ for REPO in $REPOS; do
   else
     while IFS=$'\t' read -r CREATED NAME URL; do
       [ -z "${CREATED:-}" ] && continue
+      # Assigned here too, not inherited. Without this the hung-run findings
+      # below read NAME_D from the waiting/queued loop above — naming the wrong
+      # run — and if that loop never iterated, `set -u` kills the script on the
+      # unbound variable partway through the sweep.
+      NAME_D=$(safe "${NAME:-}")
       # Same reasoning as the waiting/queued loop above.
       START=$(date -u -d "$CREATED" +%s 2>/dev/null || echo 0)
       if [ "$START" -eq 0 ]; then
