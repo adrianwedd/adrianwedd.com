@@ -313,9 +313,16 @@ jobs:
                 #     the check passing while the thing it measures is broken.
                 #
                 # Counting with a `created=>` filter is order-independent and has
-                # no empty-string path. Date granularity is a day, so a run
-                # completed the same day does not count — that errs toward
-                # reporting "blocking", which is the safe direction.
+                # no empty-string path.
+                #
+                # The filter carries the FULL timestamp, not `${CREATED%%T*}`.
+                # GitHub reads a bare `>YYYY-MM-DD` as "after the END of that
+                # day", so a date-only filter discards every run from the stuck
+                # run's own day: verified on workflow 254306947, where
+                # `>2026-07-31T00:00:00Z` counts 5 and `>2026-07-31` counts 0.
+                # With STUCK_PENDING_HOURS at 2 that is not an edge case — a run
+                # flagged two hours in would be called "blocking" until midnight
+                # every single time. Colons need encoding inside a query value.
                 #
                 # It must NOT be `status=completed`, which is every terminal
                 # state including `cancelled` and `skipped`. A run cancelled
@@ -327,9 +334,15 @@ jobs:
                 # through" requires. `success` alone would be wrong the other
                 # way: a chronically failing workflow would look permanently
                 # blocked, i.e. an hourly false alarm again.
+                #
+                # `in_progress` counts too. A later run executing RIGHT NOW is
+                # the most direct proof the group is not blocked, but its
+                # `conclusion` is null until it finishes (confirmed against the
+                # API), so a terminal-states-only filter would score the clearest
+                # possible evidence as zero and alert that the group is stuck.
                 BLOCKED=unknown
-                if EXECUTED=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?created=%3E${CREATED%%T*}&per_page=100" \
-                     --jq '[.workflow_runs[] | select(.conclusion == "success" or .conclusion == "failure" or .conclusion == "timed_out")] | length' 2>/dev/null); then
+                if EXECUTED=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?created=%3E${CREATED//:/%3A}&per_page=100" \
+                     --jq '[.workflow_runs[] | select(.status == "in_progress" or .conclusion == "success" or .conclusion == "failure" or .conclusion == "timed_out")] | length' 2>/dev/null); then
                   case "${EXECUTED:-}" in
                     ''|*[!0-9]*) BLOCKED=unknown ;;
                     0)           BLOCKED=yes ;;

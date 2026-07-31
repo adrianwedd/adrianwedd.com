@@ -82,5 +82,5 @@ scripts/notebooklm/logs/**/*.log
 # NotebookLM generation output. `exports/` is the export target for
 # generate-all-videos.sh / generate-all-notebook-assets.sh / run-ub-batch.sh;
 # the published copies live on R2 (cdn.adrianwedd.com), never in git.
-exports/
+/exports/
 scripts/notebooklm/staging/
