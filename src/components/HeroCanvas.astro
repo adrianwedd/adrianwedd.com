@@ -3619,8 +3619,10 @@
             }
             // Tiles under the pointer re-roll occasionally, leaving a trail.
             if (mouseOn) {
-              var dx = c * size - mx,
-                dy = r * size - my;
+              // Tile centre, not its top-left corner — measuring from the corner
+              // shifts the whole interaction radius half a tile up and left.
+              var dx = (c + 0.5) * size - mx,
+                dy = (r + 0.5) * size - my;
               if (dx * dx + dy * dy < 16900 && Math.random() < 0.02) {
                 tile.o = 1 - tile.o;
                 tile.prog = 0;
@@ -3765,12 +3767,19 @@
           // generations enter at the top, which is the band of the viewport the
           // content scrim leaves visible — growing upward would push the live
           // edge straight under the page copy.
+          // Buffer extent in CSS pixels, not w/h: the intrinsic size is rounded
+          // to whole physical pixels, so at fractional dpr those differ. Copying
+          // the buffer onto itself every frame would otherwise resample it —
+          // compounding into a smear, and leaving a sliver of the right edge
+          // uncleared to streak down the screen.
+          var bufW = off.width / dpr,
+            bufH = off.height / dpr;
           offCtx.globalCompositeOperation = 'copy';
-          offCtx.drawImage(off, 0, cellSize, w, h);
+          offCtx.drawImage(off, 0, cellSize, bufW, bufH);
           offCtx.globalCompositeOperation = 'source-over';
           offCtx.fillStyle = 'rgba(' + surfaceR + ',' + surfaceG + ',' + surfaceB + ',0.0022)';
-          offCtx.fillRect(0, 0, w, h);
-          offCtx.clearRect(0, 0, w, cellSize);
+          offCtx.fillRect(0, 0, bufW, bufH);
+          offCtx.clearRect(0, 0, bufW, cellSize);
 
           step();
 
@@ -3982,8 +3991,8 @@
         centreY = 0,
         clusterR = 0,
         maxR = 0;
-      var stuck = 0,
-        fading = 0;
+      var fading = 0,
+        seedsDrawn = false;
       var WALKERS = 190;
 
       function occupied(gx, gy) {
@@ -4015,8 +4024,8 @@
         // ever touches the cluster and the colony never starts.
         clusterR = 30;
         maxR = Math.min(w, h) * 0.46;
-        stuck = 0;
         fading = 0;
+        seedsDrawn = false;
         for (var s = 0; s < 3; s++) {
           var sa = Math.random() * 6.2832;
           var sr = Math.random() * 22;
@@ -4071,6 +4080,15 @@
         var cb = accent[2] + (TERTIARY_RGB[2] - accent[2]) * age;
         ctx.fillStyle = 'rgba(' + (cr | 0) + ',' + (cg | 0) + ',' + (cb | 0) + ',0.55)';
 
+        // reset() has no context to paint into, so the seeds are drawn on the
+        // first frame after it — otherwise every colony grows around a hole.
+        if (!seedsDrawn) {
+          for (var sd = 0; sd < seeds.length; sd++) {
+            ctx.fillRect(seeds[sd].x * cell, seeds[sd].y * cell, cell - 0.5, cell - 0.5);
+          }
+          seedsDrawn = true;
+        }
+
         // The pointer pulls walkers, so the colony grows toward the cursor.
         var pullX = 0,
           pullY = 0;
@@ -4095,7 +4113,6 @@
               occupied(wk.x, wk.y - 1)
             ) {
               grid[wk.y * gw + wk.x] = 1;
-              stuck++;
               ctx.fillRect(wk.x * cell, wk.y * cell, cell - 0.5, cell - 0.5);
               var dx = wk.x * cell - centreX,
                 dy = wk.y * cell - centreY;
@@ -4152,9 +4169,13 @@
       var phase = 0;
 
       function ensureBuffer(targetW) {
-        if (ocan && bw === targetW) return;
+        // Height is derived from the current aspect, so check it too: a resize
+        // that leaves the quality tier alone still changes what a valid buffer
+        // looks like.
+        var targetH = Math.max(2, Math.round((targetW * h) / w));
+        if (ocan && bw === targetW && bh === targetH) return;
         bw = targetW;
-        bh = Math.max(2, Math.round((targetW * h) / w));
+        bh = targetH;
         ocan = document.createElement('canvas');
         ocan.width = bw;
         ocan.height = bh;
@@ -4262,9 +4283,13 @@
       var theta = 0;
 
       function ensureBuffer(targetW) {
-        if (ocan && bw === targetW) return;
+        // Height is derived from the current aspect, so check it too: a resize
+        // that leaves the quality tier alone still changes what a valid buffer
+        // looks like.
+        var targetH = Math.max(2, Math.round((targetW * h) / w));
+        if (ocan && bw === targetW && bh === targetH) return;
         bw = targetW;
-        bh = Math.max(2, Math.round((targetW * h) / w));
+        bh = targetH;
         ocan = document.createElement('canvas');
         ocan.width = bw;
         ocan.height = bh;
@@ -4446,7 +4471,7 @@
         // Grow → hold → retract → regrow with a new random tree.
         if (phaseDir > 0) {
           grow = Math.min(1, grow + 0.0055);
-          if (grow === 1) {
+          if (grow >= 1) {
             holdTimer++;
             if (holdTimer > 420) {
               phaseDir = -1;
@@ -4455,7 +4480,7 @@
           }
         } else {
           grow = Math.max(0, grow - 0.011);
-          if (grow === 0) {
+          if (grow <= 0) {
             rebuild();
             phaseDir = 1;
           }
