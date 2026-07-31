@@ -260,7 +260,12 @@ jobs:
           # entire workflow exists to eliminate; it must not have its own.
           for REPO in $REPOS; do
             for STATUS in waiting queued; do
-              if ! RUNS=$(gh api "repos/${REPO}/actions/runs?status=${STATUS}&per_page=50" \
+              # `--paginate`, not a bare per_page. Runs come back newest-first, so
+              # a single page silently truncates from the OLD end — and the old
+              # end is exactly where a genuinely stuck run sits. A concurrency
+              # block that backs up more than one page would hide the run causing
+              # it behind the backlog it caused.
+              if ! RUNS=$(gh api --paginate "repos/${REPO}/actions/runs?status=${STATUS}&per_page=100" \
                    --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)\t\(.workflow_id)"' 2>err.txt); then
                 finding "Could not list \`${STATUS}\` runs for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Stuck-run detection for this repo is UNVERIFIED (the token may have workflow read but not run read)."
                 continue
@@ -290,8 +295,8 @@ jobs:
                 # so later runs cannot start" for every aged run. For the zombies
                 # that was simply false, and an hourly false alarm is how a
                 # monitor teaches you to stop reading it. So test the claim: has a
-                # LATER run of this same workflow completed since? If yes, the
-                # group is demonstrably not blocked.
+                # LATER run of this same workflow actually executed since? If yes,
+                # the group is demonstrably not blocked.
                 # Ask the API to COUNT completed runs of this workflow created
                 # after the stuck one, rather than fetching the newest and
                 # comparing timestamps. Two traps avoided:
@@ -307,14 +312,25 @@ jobs:
                 #     as a zombie. That is this workflow's own failure mode:
                 #     the check passing while the thing it measures is broken.
                 #
-                # total_count with a `created=>` filter is order-independent and
-                # has no empty-string path. Date granularity is a day, so a run
+                # Counting with a `created=>` filter is order-independent and has
+                # no empty-string path. Date granularity is a day, so a run
                 # completed the same day does not count — that errs toward
                 # reporting "blocking", which is the safe direction.
+                #
+                # It must NOT be `status=completed`, which is every terminal
+                # state including `cancelled` and `skipped`. A run cancelled
+                # while still queued never acquired the lock, so counting it
+                # would prove nothing while reading as proof — and this very
+                # workflow (254306947) has 4 cancelled runs among its completed
+                # ones. Only `success`, `failure` and `timed_out` mean the run
+                # actually started, which is what "the group let something
+                # through" requires. `success` alone would be wrong the other
+                # way: a chronically failing workflow would look permanently
+                # blocked, i.e. an hourly false alarm again.
                 BLOCKED=unknown
-                if COUNT=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?status=completed&created=%3E${CREATED%%T*}&per_page=1" \
-                     --jq '.total_count' 2>/dev/null); then
-                  case "${COUNT:-}" in
+                if EXECUTED=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?created=%3E${CREATED%%T*}&per_page=100" \
+                     --jq '[.workflow_runs[] | select(.conclusion == "success" or .conclusion == "failure" or .conclusion == "timed_out")] | length' 2>/dev/null); then
+                  case "${EXECUTED:-}" in
                     ''|*[!0-9]*) BLOCKED=unknown ;;
                     0)           BLOCKED=yes ;;
                     *)           BLOCKED=no ;;
@@ -323,13 +339,13 @@ jobs:
 
                 case "$BLOCKED" in
                   no)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow has completed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
                     ;;
                   yes)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow has completed since — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow has executed since (none reached success, failure or timed_out) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
                     ;;
                   *)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**. Could not list completed runs for workflow \`${WFID}\`, so whether it is blocking the concurrency group is UNVERIFIED — treat as blocking until checked: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**. Could not list later runs for workflow \`${WFID}\`, so whether it is blocking the concurrency group is UNVERIFIED — treat as blocking until checked: ${URL}"
                     ;;
                 esac
               done <<< "$RUNS"
