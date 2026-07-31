@@ -102,6 +102,9 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 
 ### Other workflows
 - **lighthouse.yml:** PR checks — builds + runs Lighthouse on 7 pages (90% thresholds)
+- **monitor-watchdog.yml:** Hourly — watches the *monitoring*, not the services. Actions-API checks for workflows disabled by GitHub's 60-day inactivity rule, schedules that have stopped firing, and runs stuck in `waiting`/`queued`/`in_progress` holding a concurrency group. Checks in to the worker so a dead GitHub scheduler gets escalated by email from Cloudflare. See `docs/runbooks/monitoring.md`
+- **expiry-sweep.yml:** Weekly — TLS certs, domain registration (public RDAP), DNSSEC DS presence. Auth-free by design
+- **content-integrity.yml:** Weekly + after each deploy — Pagefind index, analytics payload (must not be `_mock`), feeds and sitemap non-empty. The failures where every page still returns 200
 - **social-autopublish.yml:** Queue sync on push to main — regenerates the date-scheduled queue from content (`scripts/generate-social-queue.mjs`) and syncs it to the worker's KV; broadcasting itself is date-triggered via the cron, not fire-on-commit
 - **social-cron.yml:** Scheduled publish from queue every 10 min + comment monitor every 2 hours
 - **content-pipeline.yml:** Weekly discovery of academic papers for blog draft PRs
@@ -115,7 +118,16 @@ Located in `worker/`. Hono framework, TypeScript. State lives in KV (`SOCIAL`) p
 - `POST /api/queue` + `POST /api/queue/sync` — scheduled post queue (JSON seed in `social/facebook-posts.json`, KV is authoritative)
 - `POST /api/cron/publish` — scheduled publish from queue (cron fires every 10 min)
 - `POST /api/cron/comments` — comment monitor with classification (crisis detection, auto-reply)
-- `GET /api/health` — token health + queue status
+- `GET /api/health` — token health, cron heartbeats, queue state. **503s** (so Upptime alerts on the status code alone) when any platform token is invalid, a cron heartbeat is stale or missing, a crisis flag was never successfully emailed, or the queue has stalled. The `degraded` array names which condition tripped.
+- `POST /api/watchdog/heartbeat` + `GET /api/watchdog/status` — check-in endpoint for external monitoring pipelines, and its state
+
+**Scheduled handler:** the worker has a Cloudflare cron trigger (`[triggers]` in
+`wrangler.toml`, hourly at :23) running `runWatchdogSweep` — it emails when a
+monitoring pipeline stops checking in, and sends a weekly proof-of-life email so a
+broken alert channel can't masquerade as silence. Deliberately Cloudflare's
+scheduler, not GitHub Actions: it has to keep working when Actions is what
+stopped. The default export is therefore `{ fetch, scheduled }`, not the Hono app
+(the app is also a named export).
 
 **Auth:** Timing-safe bearer token (`PUBLISH_SECRET` / `CLI_SECRET`). Idempotency via KV with 30-day TTL (failed records bypassable via `forceRetry`).
 
@@ -389,6 +401,8 @@ exports/project-name/
 
 ## Gotchas
 
+- **GitHub Actions runs `run:` blocks as `bash -e {0}`.** With `-o pipefail`, any failing pipeline aborts the script — and in a check-accumulator script the failing pipelines are the ones *detecting* problems (`grep -o` exits 1 on no match). The three monitoring sweeps deliberately `set +e -u +o pipefail`; don't "tidy" it. Test workflow shell by extracting the `run:` block from the YAML and executing it under `bash -e` in `docker run ubuntu:24.04` — running it locally proves nothing (and `date -u -d` is GNU-only, so macOS silently differs)
+- `grep -c` counts matching **lines**, not occurrences. The RSS feeds are single-line XML, so 98 items count as 1 — use `grep -o … | wc -l`
 - Content collection IDs include file extension (`.md`/`.mdx`) — always strip with `slug()`
 - Light mode accent color is `#8a5e42` (umber) for WCAG AA on warm cream backgrounds
 - Tailwind color utilities (`bg-surface`, `text-muted`, `text-accent`) resolve through CSS custom properties — inspect the `@theme` block in `src/styles/global.css`

@@ -1,0 +1,313 @@
+name: Expiry Sweep
+
+# Things that fail on a DATE rather than by breaking.
+#
+# Uptime monitoring is blind to these by construction: a certificate 3 days from
+# expiry serves 200s exactly like a fresh one, a domain 2 weeks from lapse
+# resolves perfectly, and a zone whose DS record was never published at the
+# registrar answers every query. Then on the day, everything breaks at once — and
+# for a lapsed domain registration, some of it is not recoverable.
+#
+# Platform API tokens are already covered by social-token-alert.yml (7-day
+# threshold on the Facebook/Bluesky/Twitter data-access windows). This covers the
+# clocks nothing was watching:
+#
+#   1. TLS certificate expiry, per hostname.
+#   2. Domain registration expiry, per registrable domain, via public RDAP.
+#   3. DNSSEC DS presence — a zone signed at Cloudflare whose DS record was never
+#      published at an external registrar is not actually validating, and there
+#      is no error anywhere to tell you so.
+#
+# Deliberately auth-free. Every check here uses public DNS, public RDAP, or a TLS
+# handshake, so it cannot fail because a token expired — which would be a
+# particularly stupid way to lose the monitoring that watches expiry. (It also
+# means no Cloudflare API scopes are needed: the available tokens can list zones
+# but are not authorised for the registrar or DNSSEC endpoints.)
+
+on:
+  schedule:
+    - cron: '0 8 * * 1' # Mondays 08:00 UTC, an hour before the token alert
+  workflow_dispatch:
+    inputs:
+      cert_warn_days:
+        description: 'Warn when a TLS cert expires within this many days'
+        required: false
+        default: '21'
+      domain_warn_days:
+        description: 'Warn when a domain registration expires within this many days'
+        required: false
+        default: '45'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: expiry-sweep
+  cancel-in-progress: true
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      # Certs auto-renew (Cloudflare Universal SSL, GitHub Pages). 21 days is
+      # comfortably past the point where a renewal SHOULD have happened, so an
+      # alert here means the automation is stuck, not that time is passing.
+      CERT_WARN_DAYS: ${{ github.event.inputs.cert_warn_days || '21' }}
+      # Registrations are the expensive failure: lose one and the name can be
+      # taken. 45 days leaves room to fix a dead card and still act calmly.
+      DOMAIN_WARN_DAYS: ${{ github.event.inputs.domain_warn_days || '45' }}
+    steps:
+      - name: Sweep expiry clocks
+        id: sweep
+        run: |
+          set +e -u +o pipefail
+          # `set +e` and `+o pipefail` are deliberate and load-bearing, NOT sloppy.
+          #
+          # GitHub Actions runs `run:` blocks as `bash -e {0}`, so -e is already on
+          # before this script starts. These scripts are ACCUMULATORS: they probe
+          # many things, record findings, and report at the end. Under -e with
+          # pipefail, any failing pipeline aborts the whole script — and the
+          # pipelines that fail are precisely the ones detecting a problem.
+          # `grep -o` exits 1 when it finds no matches, so an empty feed (the
+          # thing being checked for) killed the script instead of reporting it:
+          # verified against the real scripts on ubuntu:24.04, where the integrity
+          # check aborted after 2 findings out of 5 and exited 1. The workflow then
+          # reports "failed" with no issue and no detail, which is strictly worse
+          # than the failure it was built to catch.
+          #
+          # Every command whose failure matters is checked explicitly by value
+          # (`if [ -z "${VAR:-}" ]`) or by `if ! cmd`. -u stays on to catch typos.
+          : > findings.txt
+          NOW=$(date -u +%s)
+          finding() { echo "- $1" >> findings.txt; }
+
+          # ── Hostnames whose TLS certificate is checked ──────────────────────
+          # Anything a visitor or an integration actually connects to.
+          HOSTS="
+          adrianwedd.com
+          cdn.adrianwedd.com
+          social.adrianwedd.com
+          book.adrianwedd.com
+          api.book.adrianwedd.com
+          ops.adrianwedd.com
+          status.adrianwedd.com
+          spark.wedd.au
+          ungovernable-body.wedd.au
+          failurefirst.org
+          thiswasntinthebrochure.wtf
+          evolvechiropractictas.com
+          tandapizza.com
+          annicalarsdotter.com
+          truecapacity.coach
+          "
+
+          # ── Registrable domains whose registration expiry is checked ────────
+          # Every zone on the account: a lapse on any of them is real loss.
+          DOMAINS="
+          adrianwedd.com
+          adrianwedd.dev
+          failurefirst.org
+          failurefirst.ai
+          thiswasntinthebrochure.com
+          thiswasntinthebrochure.wtf
+          evolvechiropractictas.com
+          tandapizza.com
+          annicalarsdotter.com
+          truecapacity.coach
+          adhdaf.org
+          bottom.pub
+          darcywedd.com
+          davidwedd.com
+          dolphinbea.ch
+          dolphinbeachapartments.com
+          homestasmania.com
+          mayawedd.com
+          nagori.ai
+          pacungbali.com
+          salmon.org.au
+          squishmallowdex.com
+          tasmania.homes
+          wolfclanmartialarts.com
+          ashcraig.farm
+          laurakelly.com.au
+          wedd.au
+          wedd.digital
+          wedd.xyz
+          "
+
+          # Registries that do not publish expiry over RDAP:
+          #   .au — auDA policy withholds it; those domains report "last changed"
+          #         and nothing else.
+          #   .ch — SWITCH serves no public RDAP for the domain; rdap.org 404s.
+          # Both verified by live lookup, 2026-07-30. Listed explicitly and skipped
+          # with a log line rather than a finding: a weekly finding that can never
+          # be resolved is just noise that teaches you to skim the issue. The cost
+          # is that these registrations are genuinely unmonitored — see the handoff
+          # note; the only fix is a registrar-side reminder.
+          NO_RDAP_EXPIRY_SUFFIXES=".au .ch"
+
+          # ── Domains expected to have a DS record published ──────────────────
+          # DNSSEC is enabled account-wide at Cloudflare, but the DS record has to
+          # be published at the REGISTRAR. For domains registered elsewhere that
+          # is a manual step, and until it happens the zone is signed but not
+          # validating — with no error surfaced anywhere.
+          DNSSEC_DOMAINS="$DOMAINS"
+
+          # ── 1. TLS certificate expiry ──────────────────────────────────────
+          for HOST in $HOSTS; do
+            END=$(echo | timeout 20 openssl s_client -connect "${HOST}:443" -servername "$HOST" 2>/dev/null \
+                  | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+            if [ -z "${END:-}" ]; then
+              finding "TLS: could not read a certificate for \`${HOST}\` — the handshake failed. Either the host is down or the cert is broken; check before dismissing."
+              continue
+            fi
+            ENDS=$(date -u -d "$END" +%s 2>/dev/null || echo 0)
+            if [ "$ENDS" -eq 0 ]; then
+              finding "TLS: could not parse the expiry date \`${END}\` for \`${HOST}\`."
+              continue
+            fi
+            DAYS=$(( (ENDS - NOW) / 86400 ))
+            echo "TLS ${HOST}: ${DAYS} days"
+            if [ "$DAYS" -lt 0 ]; then
+              finding "TLS: \`${HOST}\` certificate **EXPIRED ${DAYS#-} day(s) ago**."
+            elif [ "$DAYS" -lt "$CERT_WARN_DAYS" ]; then
+              finding "TLS: \`${HOST}\` certificate expires in **${DAYS} day(s)**. These renew automatically, so this means the renewal is stuck — not that it is merely due."
+            fi
+          done
+
+          # ── 2. Domain registration expiry (public RDAP) ─────────────────────
+          for DOMAIN in $DOMAINS; do
+            SKIP=no
+            for SUFFIX in $NO_RDAP_EXPIRY_SUFFIXES; do
+              case "$DOMAIN" in *"$SUFFIX") SKIP=yes;; esac
+            done
+            if [ "$SKIP" = yes ]; then
+              echo "RDAP ${DOMAIN}: registry does not publish expiry — skipped by policy"
+              continue
+            fi
+
+            # Retry with backoff, and pace the requests.
+            #
+            # This is not defensive boilerplate: a first cut fired all 29 lookups
+            # back to back and rdap.org rate-limited three of them, which produced
+            # three confident "this domain's clock is UNMONITORED" findings for
+            # domains that were completely fine. An expiry sweep whose weekly issue
+            # always contains phantom entries is worse than none, because the real
+            # entry arrives looking exactly like the noise.
+            EXP=""
+            HTTP=""
+            for ATTEMPT in 1 2 3; do
+              RESP=$(curl -sL --max-time 25 -H 'Accept: application/rdap+json' \
+                     -w '\n%{http_code}' "https://rdap.org/domain/${DOMAIN}" 2>/dev/null)
+              HTTP=$(echo "$RESP" | tail -n1)
+              EXP=$(echo "$RESP" | sed '$d' \
+                    | jq -r '[.events[]? | select(.eventAction=="expiration") | .eventDate] | first // ""' 2>/dev/null)
+              [ -n "${EXP:-}" ] && [ "$EXP" != "null" ] && break
+              sleep $(( ATTEMPT * 5 ))
+            done
+            # Pace the next domain even on success — 29 lookups in a burst is what
+            # triggered the rate limiting in the first place.
+            sleep 2
+
+            if [ -z "${EXP:-}" ] || [ "$EXP" = "null" ]; then
+              finding "RDAP: no expiration date for \`${DOMAIN}\` after 3 attempts (last HTTP ${HTTP:-none}). If this persists, the registry has stopped publishing it and this domain's registration clock is UNMONITORED — add the suffix to NO_RDAP_EXPIRY_SUFFIXES and set a registrar-side reminder instead."
+              continue
+            fi
+            EXPS=$(date -u -d "$EXP" +%s 2>/dev/null || echo 0)
+            if [ "$EXPS" -eq 0 ]; then
+              finding "RDAP: could not parse the expiry date \`${EXP}\` for \`${DOMAIN}\`."
+              continue
+            fi
+            DAYS=$(( (EXPS - NOW) / 86400 ))
+            echo "RDAP ${DOMAIN}: ${DAYS} days (${EXP})"
+            if [ "$DAYS" -lt 0 ]; then
+              finding "DOMAIN: \`${DOMAIN}\` registration **EXPIRED ${DAYS#-} day(s) ago** (${EXP}). Renew immediately — a lapsed name can be taken."
+            elif [ "$DAYS" -lt "$DOMAIN_WARN_DAYS" ]; then
+              finding "DOMAIN: \`${DOMAIN}\` registration expires in **${DAYS} day(s)** (${EXP}). Confirm auto-renew is on and the payment method is valid."
+            fi
+          done
+
+          # ── 3. DNSSEC DS records published at the registrar ─────────────────
+          MISSING_DS=""
+          for DOMAIN in $DNSSEC_DOMAINS; do
+            # Two resolvers, second only consulted if the first returns nothing.
+            # A single hardcoded resolver is a single point of failure that fails
+            # in the worst direction: if 1.1.1.1 were rate-limiting DS queries,
+            # every domain would report MISSING and the weekly issue would fill
+            # with false DNSSEC findings — which is how you learn to ignore it.
+            # Requiring both to return nothing makes a resolver problem look like
+            # a resolver problem, not like 29 broken zones.
+            DS=$(dig +short DS "$DOMAIN" @1.1.1.1 2>/dev/null | head -n1)
+            if [ -z "${DS:-}" ]; then
+              DS=$(dig +short DS "$DOMAIN" @8.8.8.8 2>/dev/null | head -n1)
+            fi
+            if [ -z "${DS:-}" ]; then
+              MISSING_DS="${MISSING_DS} ${DOMAIN}"
+              echo "DS ${DOMAIN}: MISSING"
+            else
+              echo "DS ${DOMAIN}: present"
+            fi
+          done
+          if [ -n "${MISSING_DS# }" ]; then
+            # Reported as ONE finding rather than one per domain: this is a known
+            # backlog of manual registrar steps, and 7 separate findings every week
+            # would drown the things that are actually new.
+            finding "DNSSEC: no DS record published for:${MISSING_DS}. These zones are signed at Cloudflare but not validating — the DS record has to be added at each registrar by hand. Until then DNSSEC is off for them in practice."
+          fi
+
+          COUNT=$(wc -l < findings.txt | tr -d ' ')
+          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
+          echo "=== ${COUNT} finding(s)"
+          cat findings.txt || true
+
+      - name: Open / update / close the expiry issue
+        # `success()`, not `always()`: on a crashed check step the `count` output is
+        # never set, so COUNT would default to 0, the step would see "no findings"
+        # and CHEERFULLY CLOSE an open issue — at the exact moment the checking
+        # stopped working. The withheld information is the alert; a failed run is
+        # visible, and for monitor-watchdog the skipped check-in also escalates.
+        if: success()
+        env:
+          FINDING_COUNT: ${{ steps.sweep.outputs.count }}
+        run: |
+          set +e -u +o pipefail  # see the note on the first step
+          TITLE="⏳ Expiry sweep: something is running out"
+          EXISTING=$(gh issue list --repo "$REPO" --state open --label expiry \
+            --json number,title \
+            | jq -r --arg t "$TITLE" '.[] | select(.title == $t) | .number' | head -n1)
+
+          COUNT="${FINDING_COUNT:-0}"
+          if [ "$COUNT" -gt 0 ]; then
+            BODY=$(printf 'The weekly expiry sweep found **%s** clock(s) worth attention.\n\n%s\n\n---\n\nNone of these show up in uptime monitoring: a certificate days from expiry and a domain weeks from lapse both serve and resolve perfectly until the moment they do not. Opened automatically by `expiry-sweep.yml` (run %s).\n' \
+              "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")
+            if [ -n "$EXISTING" ]; then
+              if ! gh issue comment "$EXISTING" --repo "$REPO" --body "$(printf 'Still outstanding — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"; then
+                echo "::error::Could not comment on expiry issue #${EXISTING} — findings were NOT recorded: $(cat findings.txt)"
+                FAILED=1
+              fi
+            else
+              gh label create expiry --repo "$REPO" \
+                --description "Something expires on a date (certs, domains, DNSSEC, tokens)" \
+                --color FBCA04 2>/dev/null || true
+              # Explicit, because the correct behaviour here was previously an
+              # ACCIDENT — see the matching note in content-integrity.yml. The
+              # run went red on a failed `gh` only because that call happened to
+              # be the last command in the block; adding a line after this `fi`
+              # would have silently turned it green while losing the findings.
+              if ! gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label expiry; then
+                echo "::error::Could not create the expiry issue — findings were NOT recorded: $(cat findings.txt)"
+                FAILED=1
+              fi
+            fi
+          elif [ -n "$EXISTING" ]; then
+            if ! gh issue close "$EXISTING" --repo "$REPO" \
+                 --comment "✅ All expiry clocks clear — certificates renewed, registrations in date, DS records published. Auto-closing."; then
+              echo "::error::Could not close resolved expiry issue #${EXISTING}"
+              FAILED=1
+            fi
+          fi
+
+          exit "${FAILED:-0}"

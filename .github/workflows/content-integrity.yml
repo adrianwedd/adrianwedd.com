@@ -1,0 +1,248 @@
+name: Content Integrity
+
+# Failures where every page still returns 200.
+#
+# The deploy gates catch broken builds and broken links. Uptime catches a dead
+# site. Between them sits a class of failure where the site is up, every URL
+# serves, and something the site is FOR has quietly stopped working:
+#
+#   1. Search. Pagefind's index is generated at build time into dist/pagefind/.
+#      If indexing fails or the directory doesn't ship, every page still renders
+#      perfectly and the search box just returns nothing, forever, silently.
+#   2. Analytics. fetch-ga4-data.mjs falls back to MOCK data when credentials are
+#      missing or invalid (by design, so local dev works). In production that
+#      means a dead service-account key replaces real numbers with fabricated
+#      ones. The payload self-flags with `_mock`, but nothing was checking.
+#   3. Traffic going to zero. A consent-banner or GA4 tag regression stops
+#      collection while the site looks perfect. Distinct from (2): the pipeline
+#      is healthy and the numbers are real, they're just all zero.
+#   4. The feeds and the sitemap emptying out. A content-collection or config
+#      change can ship a valid, well-formed, EMPTY feed.
+#
+# Every check reads a public URL — no credentials, so this can't break because a
+# token rotated.
+
+on:
+  schedule:
+    - cron: '30 7 * * 1' # Mondays 07:30 UTC, before the expiry sweep
+  workflow_dispatch:
+  # Also runs after a deploy: these are build-output failures, so the deploy that
+  # caused one is the cheapest moment to catch it.
+  workflow_run:
+    workflows: ['Deploy to GitHub Pages']
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: content-integrity
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      SITE: https://adrianwedd.com
+      # Pageviews over the reported period below which traffic counts as dead.
+      # Not 0: a genuinely quiet week on a personal site is possible, but the
+      # payload covers ~30 days and single digits over a month means collection
+      # has stopped, not that nobody visited.
+      MIN_PAGEVIEWS: '10'
+      # Minimum pages Pagefind should have indexed. The site has 300+ pages; a
+      # collapse to a handful means indexing partially failed.
+      MIN_INDEXED_PAGES: '100'
+    steps:
+      - name: Check content integrity
+        id: check
+        run: |
+          set +e -u +o pipefail
+          # `set +e` and `+o pipefail` are deliberate and load-bearing, NOT sloppy.
+          #
+          # GitHub Actions runs `run:` blocks as `bash -e {0}`, so -e is already on
+          # before this script starts. These scripts are ACCUMULATORS: they probe
+          # many things, record findings, and report at the end. Under -e with
+          # pipefail, any failing pipeline aborts the whole script — and the
+          # pipelines that fail are precisely the ones detecting a problem.
+          # `grep -o` exits 1 when it finds no matches, so an empty feed (the
+          # thing being checked for) killed the script instead of reporting it:
+          # verified against the real scripts on ubuntu:24.04, where the integrity
+          # check aborted after 2 findings out of 5 and exited 1. The workflow then
+          # reports "failed" with no issue and no detail, which is strictly worse
+          # than the failure it was built to catch.
+          #
+          # Every command whose failure matters is checked explicitly by value
+          # (`if [ -z "${VAR:-}" ]`) or by `if ! cmd`. -u stays on to catch typos.
+          : > findings.txt
+          finding() { echo "- $1" >> findings.txt; }
+
+          # ── 1. Pagefind search index ────────────────────────────────────────
+          ENTRY=$(curl -sL --max-time 30 "${SITE}/pagefind/pagefind-entry.json" 2>/dev/null)
+          if ! echo "$ENTRY" | jq -e . >/dev/null 2>&1; then
+            finding "SEARCH: \`/pagefind/pagefind-entry.json\` is missing or not valid JSON. Site-wide search is broken — every page still renders, the search box just returns nothing."
+          else
+            PAGES=$(echo "$ENTRY" | jq -r '[.languages[]?.page_count] | add // 0')
+            echo "pagefind indexed pages: ${PAGES}"
+            if [ "${PAGES:-0}" -lt "$MIN_INDEXED_PAGES" ]; then
+              finding "SEARCH: Pagefind indexed only **${PAGES}** page(s) (expected ≥ ${MIN_INDEXED_PAGES}). Indexing partially failed at build time; search results will be silently incomplete."
+            fi
+            # The entry file can be present and correct while the WASM and index
+            # shards it points at are missing — search fails at runtime with a
+            # perfectly healthy-looking entry file.
+            for ASSET in pagefind.js pagefind-modular-ui.js; do
+              CODE=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 20 "${SITE}/pagefind/${ASSET}" 2>/dev/null)
+              if [ "$CODE" != "200" ]; then
+                finding "SEARCH: \`/pagefind/${ASSET}\` returned HTTP ${CODE}. The index exists but its runtime is not being served."
+              fi
+            done
+          fi
+
+          # ── 2 & 3. Analytics: fabricated, or real-but-dead ──────────────────
+          ANALYTICS=$(curl -sL --max-time 30 "${SITE}/api/analytics.json" 2>/dev/null)
+          if ! echo "$ANALYTICS" | jq -e . >/dev/null 2>&1; then
+            finding "ANALYTICS: \`/api/analytics.json\` is missing or not valid JSON — the dashboard has no data to render."
+          else
+            # scripts/fetch-ga4-data.mjs sets _mock:true when it cannot reach GA4.
+            # In production that means the service-account key is dead and the
+            # dashboard is showing invented numbers.
+            if [ "$(echo "$ANALYTICS" | jq -r '._mock // false')" = "true" ]; then
+              finding "ANALYTICS: the published payload is flagged \`_mock: true\` — the GA4 service-account credential failed at build time and the dashboard is showing FABRICATED numbers. Rotate GA4_SERVICE_ACCOUNT_KEY."
+            else
+              VIEWS=$(echo "$ANALYTICS" | jq -r '.overview.totalPageviews // 0')
+              PERIOD=$(echo "$ANALYTICS" | jq -r '"\(.period.start) → \(.period.end)"')
+              echo "analytics: ${VIEWS} pageviews (${PERIOD})"
+              # Validate numeric BEFORE comparing. With `set +e`, `[ "" -lt 10 ]`
+              # prints "integer expression expected", skips the block, records no
+              # finding and exits the step 0 — a genuine failure producing no
+              # signal at all, which is the one outcome this file must never have.
+              # An unparseable value is therefore itself a finding.
+              VIEWS_INT="${VIEWS%%.*}"
+              case "${VIEWS_INT:-}" in
+                ''|*[!0-9]*)
+                  finding "ANALYTICS: could not read a numeric pageview count from the payload (got \`${VIEWS:-<empty>}\`). The payload parsed as JSON but \`.overview.totalPageviews\` is missing or malformed, so traffic is UNVERIFIED."
+                  VIEWS_INT=""
+                  ;;
+              esac
+              if [ -n "$VIEWS_INT" ] && [ "$VIEWS_INT" -lt "$MIN_PAGEVIEWS" ]; then
+                finding "ANALYTICS: only **${VIEWS}** pageviews reported for ${PERIOD}. Collection has probably stopped — check the consent banner and the GA4 tag, since a regression there leaves the site looking perfect while nothing is recorded."
+              fi
+            fi
+          fi
+
+          # ── 4. Feeds and sitemap non-empty ──────────────────────────────────
+          # A valid, well-formed, EMPTY feed is a successful build and a broken site.
+          check_count() {
+            LABEL="$1"; URL="$2"; PATTERN="$3"; MIN="$4"
+            BODY=$(curl -sL --max-time 30 "$URL" 2>/dev/null)
+            if [ -z "${BODY:-}" ]; then
+              finding "${LABEL}: \`${URL}\` returned an empty response."
+              return
+            fi
+            # `grep -o | wc -l`, NOT `grep -c`. grep -c counts matching LINES, and
+            # these documents are emitted as a single line — the blog feed's 98
+            # items counted as 1 and produced a confident "near-empty feed"
+            # finding on the first live run. Caught only by running it; a
+            # permanently false weekly finding is worse than no check.
+            N=$(echo "$BODY" | grep -o "$PATTERN" | wc -l | tr -d ' ')
+            echo "${LABEL}: ${N} entries"
+            if [ "${N:-0}" -lt "$MIN" ]; then
+              finding "${LABEL}: only **${N}** entr(ies) at \`${URL}\` (expected ≥ ${MIN}). The build shipped a well-formed but near-empty document, which passes every other gate."
+            fi
+          }
+
+          check_count "BLOG FEED"    "${SITE}/blog/rss.xml"    "<item" 50
+          check_count "PODCAST FEED" "${SITE}/audio/feed.xml"  "<item" 50
+
+          # The sitemap INDEX only points at child sitemaps — it has exactly one
+          # <loc> and would look healthy even if the child were empty. Follow it
+          # to where the URLs actually live.
+          INDEX=$(curl -sL --max-time 30 "${SITE}/sitemap-index.xml" 2>/dev/null)
+          CHILDREN=$(echo "$INDEX" | grep -o '<loc>[^<]*</loc>' | sed 's|</*loc>||g')
+          if [ -z "${CHILDREN:-}" ]; then
+            finding "SITEMAP: \`${SITE}/sitemap-index.xml\` lists no child sitemap — search engines have nothing to crawl."
+          else
+            # Sum across EVERY child, not just the first. Astro shards at 45k URLs,
+            # so today there is exactly one child and `head -n1` was equivalent —
+            # but the moment a `sitemap-1.xml` appears, a first-child-only check
+            # would keep passing while an entire shard shipped empty. The total is
+            # the threshold, not each child: the last shard is legitimately small,
+            # so a per-child minimum would false-alarm the week we cross 45k.
+            SITEMAP_TOTAL=0
+            for CHILD in $CHILDREN; do
+              CHILD_BODY=$(curl -sL --max-time 30 "$CHILD" 2>/dev/null)
+              CHILD_N=$(echo "${CHILD_BODY:-}" | grep -o '<url>' | wc -l | tr -d ' ')
+              echo "SITEMAP child ${CHILD}: ${CHILD_N} entries"
+              # An empty shard is a finding on its own terms — the total can stay
+              # healthy while one shard is a well-formed, URL-free document.
+              if [ "${CHILD_N:-0}" -eq 0 ]; then
+                finding "SITEMAP: child \`${CHILD}\` contains **no URLs**. It is well-formed and serves 200, so every other gate passes while that shard is uncrawlable."
+              fi
+              SITEMAP_TOTAL=$(( SITEMAP_TOTAL + CHILD_N ))
+            done
+            echo "SITEMAP: ${SITEMAP_TOTAL} entries across $(echo "$CHILDREN" | wc -l | tr -d ' ') child sitemap(s)"
+            if [ "${SITEMAP_TOTAL:-0}" -lt 200 ]; then
+              finding "SITEMAP: only **${SITEMAP_TOTAL}** URL(s) across all child sitemaps (expected ≥ 200). The build shipped a well-formed but near-empty sitemap, which passes every other gate."
+            fi
+          fi
+
+          COUNT=$(wc -l < findings.txt | tr -d ' ')
+          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
+          echo "=== ${COUNT} finding(s)"
+          cat findings.txt || true
+
+      - name: Open / update / close the integrity issue
+        # `success()`, not `always()`: on a crashed check step the `count` output is
+        # never set, so COUNT would default to 0, the step would see "no findings"
+        # and CHEERFULLY CLOSE an open issue — at the exact moment the checking
+        # stopped working. The withheld information is the alert; a failed run is
+        # visible, and for monitor-watchdog the skipped check-in also escalates.
+        if: success()
+        env:
+          FINDING_COUNT: ${{ steps.check.outputs.count }}
+        run: |
+          set +e -u +o pipefail  # see the note on the first step
+          TITLE="🔎 Content integrity: the site is up but something is broken"
+          EXISTING=$(gh issue list --repo "$REPO" --state open --label integrity \
+            --json number,title \
+            | jq -r --arg t "$TITLE" '.[] | select(.title == $t) | .number' | head -n1)
+
+          COUNT="${FINDING_COUNT:-0}"
+          if [ "$COUNT" -gt 0 ]; then
+            BODY=$(printf 'Found **%s** problem(s) that every other check passes.\n\n%s\n\n---\n\nAll of these serve HTTP 200. Uptime monitoring, the link checker, and the build gates are all green while they are broken. Opened automatically by `content-integrity.yml` (run %s).\n' \
+              "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")
+            if [ -n "$EXISTING" ]; then
+              if ! gh issue comment "$EXISTING" --repo "$REPO" --body "$(printf 'Still broken — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"; then
+                echo "::error::Could not comment on integrity issue #${EXISTING} — findings were NOT recorded: $(cat findings.txt)"
+                FAILED=1
+              fi
+            else
+              gh label create integrity --repo "$REPO" \
+                --description "Site is up but something it does is broken (search, analytics, feeds)" \
+                --color 1D76DB 2>/dev/null || true
+              # Explicit, because the correct behaviour here was previously an
+              # ACCIDENT. `set +e` stops a failed `gh` aborting the step, and the
+              # run still went red only because `gh issue create` happened to be
+              # the last command in the block, so its status became the step's.
+              # Verified by running the pre-fix block under `bash -e` with a
+              # stubbed failing `gh`: exit 1. Append one line after this `fi` and
+              # that silently becomes exit 0 — findings lost, run green, and
+              # ALERT_ON_FAIL=yes in monitor-watchdog.yml never fires. The
+              # annotation also names WHICH findings were lost, which the
+              # incidental version did not.
+              if ! gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label integrity; then
+                echo "::error::Could not create the integrity issue — findings were NOT recorded: $(cat findings.txt)"
+                FAILED=1
+              fi
+            fi
+          elif [ -n "$EXISTING" ]; then
+            if ! gh issue close "$EXISTING" --repo "$REPO" \
+                 --comment "✅ Content integrity restored — search index present, analytics real and non-zero, feeds and sitemap populated. Auto-closing."; then
+              echo "::error::Could not close resolved integrity issue #${EXISTING}"
+              FAILED=1
+            fi
+          fi
+
+          exit "${FAILED:-0}"

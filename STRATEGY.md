@@ -91,6 +91,37 @@ Forbidden first. Each names the "helpful improvement" that violates it.
   `generate-og-images.mjs` deliberately skips posts with a heroImage. Do not
   "backfill" cards for heroImage posts or gitignore the directory. OBSERVED
   (script comments + CLAUDE.md).
+- Never make a monitoring check quieter to make a dashboard greener. A missing
+  heartbeat, an unreadable repo, a source that never checked in — all count as
+  degraded on purpose. The "helpful" change that treats absence as "unknown, so
+  probably fine" restores the exact blind spot these checks were built to close.
+  Equally: never let a check sit permanently red (alert on the *un-notified*
+  subset of crisis flags, not the raw 90-day-TTL count), and never let one root
+  cause emit two alerts. A check that is always red and a check that cries wolf
+  both end up ignored, which is the same as not existing. OBSERVED
+  (worker/src/heartbeat.ts, watchdog.ts, docs/runbooks/monitoring.md).
+- Staleness thresholds for anything on GitHub's scheduler must be sized from the
+  MEASURED gap distribution, never from the cron expression. Measured 2026-07-30:
+  the nominally-10-minute social-cron gaps ran median 26.9 min / max 72.9, and
+  the nominally-5-minute Upptime run gaps median 26.6 / max 60.1. The first-cut
+  thresholds, written from the cron lines with "a few minutes" of grace, would
+  have false-alarmed on 31% and ~50% of probes. Re-measure before tightening.
+  OBSERVED (worker/src/heartbeat.ts, .github/workflows/monitor-watchdog.yml).
+- An authenticated monitoring check needs a body assertion, not just a status
+  code. `/api/health` answers `200 {"ok":true}` to an unauthenticated caller, so
+  a status-code-only Upptime check would go permanently green if `$SECRET_SITE`
+  were ever unset or rotated — failing silently, in the one direction that
+  cannot be noticed. OBSERVED (adrianwedd/status `.upptimerc.yml` — the repo was
+  named adrianwedd/upptime when this was verified live 2026-07-30, renamed
+  2026-07-31).
+- The three monitoring sweeps must keep `set +e -u +o pipefail`. GitHub Actions
+  invokes `run:` as `bash -e {0}`, so restoring `-e`/pipefail makes the scripts
+  abort on the very pipelines that detect problems — verified: the integrity
+  check aborted after 2 findings of 5 and exited 1. And their post-check steps
+  must stay `if: success()`, never `always()`: on a crashed check the missing
+  `count` output reads as 0, which closes the open issue and (for the watchdog)
+  sends a healthy check-in that suppresses the email escalation. OBSERVED
+  (the three workflows + their in-line comments).
 
 ## 3. DECISIONS & GRAVEYARD
 

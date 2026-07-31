@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from '../index';
 import type { SocialPost, AuthStatus } from '../platforms/types';
+import { CRON_SPECS, HEARTBEAT_PREFIX, HEARTBEAT_GRACE_MS } from '../heartbeat';
+import { STUCK_QUEUE_GRACE_MS } from '../index';
+import { EXTERNAL_HEARTBEAT_PREFIX, EXTERNAL_SOURCES } from '../watchdog';
 
 // ── Mock createPlatform factory ──────────────────────────────────────────────
 //
@@ -76,6 +79,18 @@ function mockKV(): {
     list: vi.fn().mockResolvedValue({ keys: [], list_complete: true }),
     delete: vi.fn(async (key: string) => { store.delete(key); }),
   };
+}
+
+/**
+ * Seed a fresh heartbeat for every cron so /api/health reads as live.
+ *
+ * Absence of a heartbeat is a degradation signal (see heartbeat.ts), so any
+ * health test that expects 200 has to establish proof of life first.
+ */
+function seedHeartbeats(kv: ReturnType<typeof mockKV>, at: number = Date.now()): void {
+  for (const spec of CRON_SPECS) {
+    kv.store.set(`${HEARTBEAT_PREFIX}${spec.name}`, JSON.stringify({ at: new Date(at).toISOString(), atEpoch: at }));
+  }
 }
 
 function makePost(id: string, epochOffset = 0): SocialPost {
@@ -829,6 +844,20 @@ describe('POST /api/cron/comments', () => {
     expect(mockDebugAuth).not.toHaveBeenCalled();
     // Release must NOT fire when acquire failed
     expect(cronLock.release).not.toHaveBeenCalled();
+    // A skipped run is not proof of life — the lock holder writes its own.
+    expect(kv.store.get(`${HEARTBEAT_PREFIX}comments`)).toBeUndefined();
+  });
+
+  it('records a comments heartbeat after a successful run', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(commentsRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const raw = kv.store.get(`${HEARTBEAT_PREFIX}comments`);
+    expect(raw).toBeDefined();
+    expect(JSON.parse(raw!).atEpoch).toBeGreaterThan(Date.now() - 60_000);
   });
 
   it('iterates configured platforms and reports per-platform results', async () => {
@@ -1003,6 +1032,7 @@ describe('post type validation', () => {
 describe('GET /api/health token status', () => {
   it('returns 503 when any configured platform reports an invalid token', async () => {
     const kv = mockKV();
+    seedHeartbeats(kv);
     mockDebugAuth.mockResolvedValue({ ...healthyToken, valid: false });
 
     const res = await app.fetch(
@@ -1012,8 +1042,28 @@ describe('GET /api/health token status', () => {
       makeEnv(kv),
     );
     expect(res.status).toBe(503);
-    const body = (await res.json()) as { platforms: Record<string, { tokenValid: boolean }> };
+    const body = (await res.json()) as {
+      platforms: Record<string, { tokenValid: boolean }>;
+      degraded: string[];
+    };
     expect(body.platforms.facebook.tokenValid).toBe(false);
+    expect(body.degraded).toContain('invalid platform token: facebook');
+  });
+
+  it('returns 200 with fresh heartbeats and valid tokens', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { degraded?: string[] };
+    expect(body.degraded).toBeUndefined();
   });
 
   it('still returns 200 unauthenticated regardless of token state', async () => {
@@ -1028,16 +1078,11 @@ describe('GET /api/health token status', () => {
 
 // Crisis flags are surfaced separately in /api/health (flag-crisis: prefix,
 // written by cron/comments.ts) so monitoring can alert on a non-zero count.
-describe('GET /api/health crisisFlags', () => {
-  it('reports the flag-crisis: key count alongside flaggedComments', async () => {
-    const kv = mockKV();
-    kv.store.set('flag-crisis:c1', '{}');
-    kv.store.set('flag-crisis:c2', '{}');
-    kv.store.set('fb-flag:c3', '{}');
-    kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
-      keys: [...kv.store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
-      list_complete: true,
-    }));
+// Cron liveness. A worker whose scheduled caller has died keeps serving 200s on
+// every other check, so heartbeat staleness has to be its own 503 reason.
+describe('GET /api/health cron heartbeats', () => {
+  it('returns 503 when a cron heartbeat is missing entirely', async () => {
+    const kv = mockKV(); // no heartbeats seeded
     mockDebugAuth.mockResolvedValue(healthyToken);
 
     const res = await app.fetch(
@@ -1046,9 +1091,497 @@ describe('GET /api/health crisisFlags', () => {
       }),
       makeEnv(kv),
     );
+
+    expect(res.status).toBe(503);
+    const body = (await res.json()) as {
+      crons: Record<string, { stale: boolean; lastRunAt: string | null }>;
+      degraded: string[];
+    };
+    expect(body.crons.publish.stale).toBe(true);
+    expect(body.crons.publish.lastRunAt).toBeNull();
+    expect(body.degraded.some((d) => d.startsWith('stale cron heartbeat:'))).toBe(true);
+  });
+
+  it('returns 503 naming only the stale cron when another is fresh', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    // Age out publish alone, past 2x its 10-minute interval plus grace.
+    const stalePublish = Date.now() - (2 * 10 * 60_000 + HEARTBEAT_GRACE_MS + 60_000);
+    kv.store.set(
+      `${HEARTBEAT_PREFIX}publish`,
+      JSON.stringify({ at: new Date(stalePublish).toISOString(), atEpoch: stalePublish }),
+    );
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+
+    expect(res.status).toBe(503);
+    const body = (await res.json()) as {
+      crons: Record<string, { stale: boolean }>;
+      degraded: string[];
+    };
+    expect(body.crons.publish.stale).toBe(true);
+    expect(body.crons.comments.stale).toBe(false);
+    expect(body.degraded).toContain('stale cron heartbeat: publish');
+  });
+
+  it('reports every configured cron in the body', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', {
+        headers: { Authorization: 'Bearer test-cron-secret' },
+      }),
+      makeEnv(kv),
+    );
+
+    const body = (await res.json()) as { crons: Record<string, unknown> };
+    expect(Object.keys(body.crons).sort()).toEqual(CRON_SPECS.map((s) => s.name).sort());
+  });
+});
+
+// A successful cron run records proof of life; a failed or skipped one must not.
+describe('cron heartbeat writes', () => {
+  it('records a publish heartbeat after a successful run', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv));
+
     expect(res.status).toBe(200);
-    const body = await res.json() as { recentActivity: { flaggedComments: number; crisisFlags: number } };
+    const raw = kv.store.get(`${HEARTBEAT_PREFIX}publish`);
+    expect(raw).toBeDefined();
+    expect(JSON.parse(raw!).atEpoch).toBeGreaterThan(Date.now() - 60_000);
+  });
+
+  // A cron that fails every run must not read as alive. This is the semantic
+  // that keeps the heartbeat honest, and it is only enforced by the ORDER of the
+  // 500 return and the recordHeartbeat call — a refactor that hoists the write
+  // above the check would silently make a permanently broken cron look healthy.
+  it('does NOT record a heartbeat when the run returns 500', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValueOnce(healthyToken);
+    mockPublishPost.mockResolvedValueOnce({
+      success: true, platformPostId: 'fb_external_id', isTransient: false, isAuthError: false,
+    });
+
+    const post = makePost('post-500-no-heartbeat');
+    const queueKey = `post:queued:${post.scheduledAtEpoch}:${post.id}`;
+    kv.store.set(queueKey, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: queueKey }], list_complete: true });
+    // Terminal KV write throws → orphanedAfterSuccess → 500.
+    kv.put.mockImplementation(async (key: string, value: string) => {
+      if (key.startsWith('post:published:')) throw new Error('KV unavailable');
+      kv.store.set(key, value);
+    });
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(500);
+    expect(kv.store.get(`${HEARTBEAT_PREFIX}publish`)).toBeUndefined();
+  });
+
+  it('does NOT record a heartbeat when the cron lock is already held', async () => {
+    const kv = mockKV();
+    const lock = mockCronLock();
+    lock.tryAcquire.mockResolvedValue({ acquired: false, token: null });
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv, lock));
+
+    expect(res.status).toBe(200);
+    expect((await res.json() as { skipped: boolean }).skipped).toBe(true);
+    expect(kv.store.get(`${HEARTBEAT_PREFIX}publish`)).toBeUndefined();
+  });
+});
+
+describe('GET /api/health crisisFlags', () => {
+  /** Make kv.list serve from the store so prefix counting works. */
+  function listFromStore(kv: ReturnType<typeof mockKV>) {
+    kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
+      keys: [...kv.store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
+      list_complete: true,
+    }));
+  }
+
+  function healthRequest() {
+    return new Request('http://localhost/api/health', {
+      headers: { Authorization: 'Bearer test-cron-secret' },
+    });
+  }
+
+  it('reports the flag-crisis: key count alongside flaggedComments', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    kv.store.set('flag-crisis:c2', '{}');
+    kv.store.set('fb-flag:c3', '{}');
+    // Both crisis comments were successfully emailed, so the operator has
+    // already been told — counts are informational, not a degradation.
+    kv.store.set('crisis-emailed:c1', 'ts');
+    kv.store.set('crisis-emailed:c2', 'ts');
+    listFromStore(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as {
+      recentActivity: { flaggedComments: number; crisisFlags: number; crisisFlagsUnnotified: number };
+    };
     expect(body.recentActivity.crisisFlags).toBe(2);
     expect(body.recentActivity.flaggedComments).toBe(1);
+    expect(body.recentActivity.crisisFlagsUnnotified).toBe(0);
+  });
+
+  // The gap this closes: crisis email is best-effort (email.ts swallows send
+  // failures so they can't fail the comments cron), so a crisis nobody could be
+  // told about has to surface as a status code — Upptime cannot read the body.
+  it('returns 503 when a crisis flag has never been emailed', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    kv.store.set('flag-crisis:c2', '{}');
+    kv.store.set('crisis-emailed:c1', 'ts'); // c2 never reached anyone
+    listFromStore(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    // Email IS configured here, so this is the send-failure case, not the
+    // no-channel-at-all case (covered separately below).
+    const res = await app.fetch(healthRequest(), {
+      ...makeEnv(kv),
+      CRISIS_EMAIL: { send: vi.fn(async () => {}) },
+      CRISIS_ALERT_FROM: 'alerts@wedd.au',
+      CRISIS_ALERT_TO: 'adrianwedd@gmail.com',
+    });
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as {
+      recentActivity: { crisisFlags: number; crisisFlagsUnnotified: number };
+      degraded: string[];
+    };
+    expect(body.recentActivity.crisisFlags).toBe(2);
+    expect(body.recentActivity.crisisFlagsUnnotified).toBe(1);
+    expect(body.degraded).toContain('unnotified crisis flags: 1');
+  });
+
+  // Nothing deletes a crisis flag on acknowledgement (90-day TTL), so alerting
+  // on the raw count would hold the check red for three months and train the
+  // operator to ignore it. Emailing must clear the alert.
+  it('clears the 503 once the flag has been emailed, without deleting the flag', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    listFromStore(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const before = await app.fetch(healthRequest(), makeEnv(kv));
+    expect(before.status).toBe(503);
+
+    kv.store.set('crisis-emailed:c1', 'ts');
+
+    const after = await app.fetch(healthRequest(), makeEnv(kv));
+    expect(after.status).toBe(200);
+    const body = await after.json() as { recentActivity: { crisisFlags: number } };
+    expect(body.recentActivity.crisisFlags).toBe(1); // flag still there for review
+  });
+
+  // countUnnotifiedCrisisFlags catches KV errors so a KV incident can't 500 the
+  // health endpoint. The trap is that its fallback is `count: 0`, which reads as
+  // "nothing unnotified" — and `countsTruncated` in the body is invisible to
+  // Upptime, which only sees status codes. A transient failure on the
+  // `crisis-emailed:` marker reads would have turned a live crisis green.
+  it('returns 503 when the unnotified-crisis count could not be measured', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    kv.store.set('crisis-emailed:c1', 'ts'); // would count as 0 unnotified if readable
+    listFromStore(kv);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    // Fail ONLY the marker reads: heartbeats and the queued-key lookup still
+    // work, so this is the narrow partial-KV case, not a total outage (which
+    // surfaces as a 500 from countKeysCapped and needs no special handling).
+    kv.get.mockImplementation(async (key: string) => {
+      if (key.startsWith('crisis-emailed:')) throw new Error('KV read failed');
+      return kv.store.get(key) ?? null;
+    });
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as { degraded: string[]; countsTruncated?: boolean };
+    expect(body.degraded).toContain('unverifiable crisis flag count (KV read failed)');
+    expect(body.countsTruncated).toBe(true);
+  });
+});
+
+// A cron that runs, returns 2xx and beats its heartbeat can still be failing to
+// drain the queue (stuck per-post lock, posts failing back to queued, blocked
+// platform). Overdue-by-more-than-grace is the signal for that.
+describe('GET /api/health stuck queue', () => {
+  function queuedKeysKV(epochs: number[]) {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    epochs.forEach((e, i) => kv.store.set(`post:queued:${e}:p${i}`, JSON.stringify(makePost(`p${i}`))));
+    kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
+      keys: [...kv.store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
+      list_complete: true,
+    }));
+    return kv;
+  }
+
+  function healthRequest() {
+    return new Request('http://localhost/api/health', {
+      headers: { Authorization: 'Bearer test-cron-secret' },
+    });
+  }
+
+  it('returns 503 when the oldest due post exceeds grace plus drain time', async () => {
+    const kv = queuedKeysKV([Date.now() - STUCK_QUEUE_GRACE_MS - 60_000]);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as {
+      queue: { facebook: { due: number; stalled: boolean; oldestDueMinutes: number } };
+      degraded: string[];
+    };
+    expect(body.queue.facebook.due).toBe(1);
+    expect(body.queue.facebook.stalled).toBe(true);
+    expect(body.queue.facebook.oldestDueMinutes).toBeGreaterThanOrEqual(46);
+    expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(true);
+  });
+
+  // Between a post falling due and the next cron tick it is legitimately
+  // waiting. Alerting there would flap every ten minutes.
+  it('stays 200 for a post that is due but inside the grace window', async () => {
+    const kv = queuedKeysKV([Date.now() - 60_000]);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as { queue: { facebook: { due: number; stalled: boolean } } };
+    expect(body.queue.facebook.due).toBe(1);
+    expect(body.queue.facebook.stalled).toBe(false);
+  });
+
+  it('stays 200 for posts scheduled in the future', async () => {
+    const kv = queuedKeysKV([Date.now() + 3_600_000, Date.now() + 86_400_000]);
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as {
+      queue: { facebook: { queued: number; due: number; oldestDueMinutes: number | null } };
+    };
+    expect(body.queue.facebook.queued).toBe(2);
+    expect(body.queue.facebook.due).toBe(0);
+    expect(body.queue.facebook.oldestDueMinutes).toBeNull();
+  });
+
+  // One root cause, one fix, one alert — but only when the tokens FULLY explain
+  // the stall. With every configured platform blocked, the cron skips every post,
+  // so the stall is entirely accounted for by the token reason.
+  it('suppresses the stall reason when every platform is blocked, keeping it in the body', async () => {
+    const kv = queuedKeysKV([Date.now() - STUCK_QUEUE_GRACE_MS - 60_000]);
+    mockDebugAuth.mockResolvedValue({ ...healthyToken, valid: false });
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as {
+      queue: { facebook: { stalled: boolean } };
+      degraded: string[];
+    };
+    expect(body.degraded).toContain('invalid platform token: facebook');
+    expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(false);
+    // Still reported as state — suppressed as a REASON, not hidden.
+    expect(body.queue.facebook.stalled).toBe(true);
+  });
+
+  // The suppression must NOT extend to a partially-blocked estate: a dead
+  // Facebook token masking an unrelated Twitter stall would hide the second
+  // fault until the first was fixed.
+  it('still reports the stall when only SOME platforms are blocked', async () => {
+    const kv = queuedKeysKV([Date.now() - STUCK_QUEUE_GRACE_MS - 60_000]);
+    setConfiguredPlatforms(['facebook', 'twitter']);
+    getPlatformMocks('facebook').debugAuth.mockResolvedValue({ ...healthyToken, valid: false });
+    getPlatformMocks('twitter').debugAuth.mockResolvedValue({
+      ...healthyToken,
+      platform: 'twitter',
+      valid: true,
+    });
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as { degraded: string[] };
+    expect(body.degraded).toContain('invalid platform token: facebook');
+    // Both reasons: the stall is not fully explained by the dead token.
+    expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(true);
+  });
+
+  // The regression the drain allowance exists to prevent: a legitimate burst
+  // larger than the batch cap must not page anyone while it is still draining.
+  it('stays 200 for a large burst that is still draining', async () => {
+    const age = STUCK_QUEUE_GRACE_MS + 20 * 60_000;
+    const kv = queuedKeysKV(Array.from({ length: 120 }, (_, i) => Date.now() - age + i * 100));
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(healthRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as { queue: { facebook: { due: number; stalled: boolean } } };
+    expect(body.queue.facebook.due).toBe(120);
+    expect(body.queue.facebook.stalled).toBe(false);
+  });
+});
+
+// Two distinct causes of an un-notified crisis need two distinct fixes, so the
+// reason string has to tell them apart.
+describe('GET /api/health with no alerting channel configured', () => {
+  it('names the missing binding rather than implying a send failure', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('flag-crisis:c1', '{}');
+    kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
+      keys: [...kv.store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
+      list_complete: true,
+    }));
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    // makeEnv provides no CRISIS_EMAIL binding.
+    const res = await app.fetch(
+      new Request('http://localhost/api/health', { headers: { Authorization: 'Bearer test-cron-secret' } }),
+      makeEnv(kv),
+    );
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as { degraded: string[] };
+    expect(body.degraded.some((d) => d.includes('NO alerting channel configured'))).toBe(true);
+  });
+});
+
+// ── Watchdog HTTP surface ─────────────────────────────────────────────────────
+//
+// The unit tests in watchdog.test.ts cover the sweep logic; these cover the
+// route wiring — auth, validation, and the status codes Upptime keys on.
+describe('POST /api/watchdog/heartbeat', () => {
+  function checkInRequest(body: unknown, token = 'test-cron-secret') {
+    return new Request('http://localhost/api/watchdog/heartbeat', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: typeof body === 'string' ? body : JSON.stringify(body),
+    });
+  }
+
+  it('records a check-in for a known source', async () => {
+    const kv = mockKV();
+
+    const res = await app.fetch(checkInRequest({ name: 'monitor-watchdog' }), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true, name: 'monitor-watchdog' });
+    expect(kv.store.has(`${EXTERNAL_HEARTBEAT_PREFIX}monitor-watchdog`)).toBe(true);
+  });
+
+  it('rejects a bad bearer token with 401 and writes nothing', async () => {
+    const kv = mockKV();
+
+    const res = await app.fetch(checkInRequest({ name: 'monitor-watchdog' }, 'wrong'), makeEnv(kv));
+
+    expect(res.status).toBe(401);
+    expect(kv.store.size).toBe(0);
+  });
+
+  it('rejects invalid JSON with 400', async () => {
+    const res = await app.fetch(checkInRequest('{not json'), makeEnv(mockKV()));
+    expect(res.status).toBe(400);
+  });
+
+  it.each([[{}], [{ name: '' }], [{ name: 42 }]])('rejects a missing or empty name with 400 (%j)', async (body) => {
+    const res = await app.fetch(checkInRequest(body), makeEnv(mockKV()));
+    expect(res.status).toBe(400);
+  });
+
+  // A typo'd name must not be accepted: the source it was meant to cover would
+  // look like it had never checked in, with no visible cause on either side.
+  it('rejects an unknown source name with 400 and a pointer to the fix', async () => {
+    const kv = mockKV();
+
+    const res = await app.fetch(checkInRequest({ name: 'moniter-watchdog' }), makeEnv(kv));
+
+    expect(res.status).toBe(400);
+    expect((await res.json() as { error: string }).error).toContain('EXTERNAL_SOURCES');
+    expect(kv.store.size).toBe(0);
+  });
+
+  it('truncates an oversized detail rather than storing it whole', async () => {
+    const kv = mockKV();
+
+    const res = await app.fetch(
+      checkInRequest({ name: 'monitor-watchdog', detail: 'x'.repeat(5000) }),
+      makeEnv(kv),
+    );
+
+    expect(res.status).toBe(200);
+    const record = JSON.parse(kv.store.get(`${EXTERNAL_HEARTBEAT_PREFIX}monitor-watchdog`)!);
+    expect(record.detail).toHaveLength(500);
+  });
+});
+
+describe('GET /api/watchdog/status', () => {
+  function statusRequest(authed = true) {
+    return new Request(
+      'http://localhost/api/watchdog/status',
+      authed ? { headers: { Authorization: 'Bearer test-cron-secret' } } : undefined,
+    );
+  }
+
+  it('returns 200 {ok:true} unauthenticated, leaking no state', async () => {
+    const res = await app.fetch(statusRequest(false), makeEnv(mockKV()));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true });
+  });
+
+  it('returns 503 when a source has gone stale', async () => {
+    const kv = mockKV(); // nothing has ever checked in
+
+    const res = await app.fetch(statusRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(503);
+    const body = await res.json() as { sources: { name: string; stale: boolean }[]; stale: string[] };
+    expect(body.stale.length).toBeGreaterThan(0);
+    expect(body.sources.every((s) => s.stale)).toBe(true);
+  });
+
+  it('returns 200 once every source has checked in', async () => {
+    const kv = mockKV();
+    const now = Date.now();
+    for (const source of EXTERNAL_SOURCES) {
+      kv.store.set(
+        `${EXTERNAL_HEARTBEAT_PREFIX}${source.name}`,
+        JSON.stringify({ at: new Date(now).toISOString(), atEpoch: now }),
+      );
+    }
+
+    const res = await app.fetch(statusRequest(), makeEnv(kv));
+
+    expect(res.status).toBe(200);
+    const body = await res.json() as { sources: { stale: boolean }[]; stale?: string[] };
+    expect(body.stale).toBeUndefined();
+    expect(body.sources.every((s) => !s.stale)).toBe(true);
   });
 });
