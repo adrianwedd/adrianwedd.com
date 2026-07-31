@@ -393,6 +393,14 @@ jobs:
       - name: Open / update / close the watchdog issue
         if: success()
         env:
+          # Overrides the job-level PAT deliberately. The PAT exists for
+          # cross-repo *reads*; issue writes are same-repo, which the job's
+          # `issues: write` already grants to github.token. Running this step on
+          # the PAT made the watchdog's first real run go red on
+          # "Resource not accessible by personal access token (createIssue)" —
+          # findings computed, findings discarded — and no PAT scope needs to
+          # exist for a write the default token can already do.
+          GH_TOKEN: ${{ github.token }}
           FINDING_COUNT: ${{ steps.check.outputs.count }}
         run: |
           set +e -u +o pipefail  # see the note on the first step
