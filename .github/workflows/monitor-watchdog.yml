@@ -266,11 +266,11 @@ jobs:
               # block that backs up more than one page would hide the run causing
               # it behind the backlog it caused.
               if ! RUNS=$(gh api --paginate "repos/${REPO}/actions/runs?status=${STATUS}&per_page=100" \
-                   --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)\t\(.workflow_id)"' 2>err.txt); then
+                   --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)\t\(.workflow_id)\t\(.head_branch // "")"' 2>err.txt); then
                 finding "Could not list \`${STATUS}\` runs for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Stuck-run detection for this repo is UNVERIFIED (the token may have workflow read but not run read)."
                 continue
               fi
-              while IFS=$'\t' read -r CREATED NAME URL WFID; do
+              while IFS=$'\t' read -r CREATED NAME URL WFID BRANCH; do
                 [ -z "${CREATED:-}" ] && continue
                 # Falling back to $NOW on a parse failure would compute age 0 and
                 # silently clear a run that has been stuck indefinitely — the
@@ -355,11 +355,33 @@ jobs:
                 # A failed or unparseable probe on ANY status forces UNVERIFIED
                 # rather than a partial sum, so a half-answered question can
                 # never read as a confident "not blocked".
+                #
+                # Scoped to the stuck run's OWN branch. Concurrency groups are
+                # often per-ref — this repo's e2e.yml uses
+                # `group: e2e-${{ github.ref }}` — and for those, a later run on
+                # a different branch is in a different group and proves nothing
+                # about this one. Unscoped, a run genuinely wedged on a feature
+                # branch would be waved through as a zombie because main kept
+                # building.
+                #
+                # The trade-off runs the other way for a STATIC group: there, a
+                # later run on any branch does prove the group is free, so
+                # branch-scoping can under-count and cry wolf. That is the
+                # direction to fail in, and the realistic case is narrow — the
+                # static-group workflows here (content-integrity, expiry-sweep,
+                # content-pipeline) are scheduled on main, so their stuck runs
+                # and their later runs are both on main.
+                #
+                # `head_branch` can be absent on some event types; when it is,
+                # fall back to the unscoped probe rather than sending an empty
+                # filter, which would match nothing and alarm on everything.
                 BLOCKED=unknown
                 EXECUTED=0
                 PROBE_OK=1
+                BRANCH_Q=""
+                [ -n "${BRANCH:-}" ] && BRANCH_Q="&branch=${BRANCH}"
                 for ST in success failure timed_out in_progress; do
-                  if N=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?status=${ST}&created=%3E${CREATED//:/%3A}&per_page=1" \
+                  if N=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?status=${ST}&created=%3E${CREATED//:/%3A}${BRANCH_Q}&per_page=1" \
                        --jq '.total_count' 2>/dev/null); then
                     case "${N:-}" in
                       ''|*[!0-9]*) PROBE_OK=0 ;;
@@ -375,10 +397,10 @@ jobs:
 
                 case "$BLOCKED" in
                   no)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow${BRANCH:+ on \`${BRANCH}\`} has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
                     ;;
                   yes)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow has executed since (nothing since it reached success, failure, timed_out, or is even running now) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow${BRANCH:+ on \`${BRANCH}\`} has executed since (nothing reached success, failure or timed_out, and nothing is running now) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
                     ;;
                   *)
                     finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**. Could not list later runs for workflow \`${WFID}\`, so whether it is blocking the concurrency group is UNVERIFIED — treat as blocking until checked: ${URL}"
@@ -422,13 +444,33 @@ jobs:
           # check-in 404 as an unknown pipeline, and the watchdog would then
           # email that Upptime had gone dark. Don't "tidy" the two into
           # agreement in one repo.
+          # The probe FAILING and the run being stale both leave UPPTIME_FRESH=no,
+          # and both withhold the relay — so a dead PIPELINE_PAT makes Cloudflare
+          # email "Upptime has stopped checking in" while Upptime is perfectly
+          # healthy. Withholding is still the right call (this file's whole
+          # premise is that silence must not be the failure mode, and an
+          # unreadable API is not evidence of health), but the alert must not
+          # assert more than was actually verified. So name the cause: an
+          # unreachable endpoint and a genuinely dark Upptime now read
+          # differently in the issue, even though both escalate.
+          #
+          # The remaining gap — the EMAIL text still says "stopped checking in"
+          # regardless — needs the check-in to carry its reason, tracked in #587.
           UPPTIME_FRESH=no
-          if LASTRUN=$(gh api "repos/adrianwedd/status/actions/workflows/uptime.yml/runs?per_page=1" \
-               --jq '.workflow_runs[0].created_at // ""' 2>/dev/null) && [ -n "$LASTRUN" ]; then
+          if ! LASTRUN=$(gh api "repos/adrianwedd/status/actions/workflows/uptime.yml/runs?per_page=1" \
+               --jq '.workflow_runs[0].created_at // ""' 2>upperr.txt); then
+            finding "Could not read \`adrianwedd/status\` uptime.yml runs — $(head -c 200 upperr.txt | tr -d '\n'). Upptime freshness is UNVERIFIED, so the relay is withheld and the Cloudflare watchdog will escalate: check \`PIPELINE_PAT\` before assuming Upptime is dark."
+          elif [ -z "$LASTRUN" ]; then
+            finding "\`adrianwedd/status\` uptime.yml reports NO runs at all. Upptime freshness is UNVERIFIED and the relay is withheld."
+          else
             LAST=$(date -u -d "$LASTRUN" +%s 2>/dev/null || echo 0)
-            AGEM=$(( (NOW - LAST) / 60 ))
-            echo "=== upptime last run ${AGEM}m ago"
-            if [ "$AGEM" -le "$UPPTIME_FRESH_MINUTES" ]; then UPPTIME_FRESH=yes; fi
+            if [ "$LAST" -eq 0 ]; then
+              finding "Could not parse \`created_at\` \`${LASTRUN}\` for the last \`uptime.yml\` run — Upptime freshness is UNKNOWN and the relay is withheld."
+            else
+              AGEM=$(( (NOW - LAST) / 60 ))
+              echo "=== upptime last run ${AGEM}m ago"
+              if [ "$AGEM" -le "$UPPTIME_FRESH_MINUTES" ]; then UPPTIME_FRESH=yes; fi
+            fi
           fi
           echo "upptime_fresh=${UPPTIME_FRESH}" >> "$GITHUB_OUTPUT"
 
