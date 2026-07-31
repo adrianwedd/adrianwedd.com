@@ -164,6 +164,15 @@ jobs:
 
           finding() { echo "- $1" >> findings.txt; }
 
+          # Run names and branch names are attacker-controllable: anyone who can
+          # open a fork PR against a monitored repo picks `head_branch`, and a
+          # stuck run puts it in an issue body this bot authors. Unfiltered, that
+          # is a free `@team` notification blast or a plausible-looking
+          # `[re-authenticate](https://evil/)` link posted by a trusted account.
+          # Neutralise the markdown/mention metacharacters and cap the length —
+          # display only; the API probe below uses the RAW branch.
+          safe() { local s="${1//[\`\[\]()@<>*_|]/ }"; printf '%.120s' "$s"; }
+
           # ── 1. Disabled workflows ────────────────────────────────────────────
           # `state` is disabled_inactivity when GitHub auto-disables after 60
           # days, or disabled_manually if a human switched it off. Both mean the
@@ -231,14 +240,25 @@ jobs:
             # for as long as something newer sat pending. A check silently not
             # running is exactly what the 4th field was added to catch.
             #
-            # per_page raised so the newest COMPLETED run is still on the page
-            # when several pending runs sit in front of it.
-            if ! RUNSJSON=$(gh api "repos/${REPO}/actions/workflows/${WF}/runs?per_page=30" 2>err.txt); then
+            # per_page=100 (the max) so the newest COMPLETED run is still on the
+            # page when pending runs sit in front of it. 30 is the API DEFAULT —
+            # writing it here would have raised nothing, and a workflow with a
+            # page of queued runs ahead of its last completed one would report
+            # an empty conclusion, i.e. silently healthy.
+            if ! RUNSJSON=$(gh api "repos/${REPO}/actions/workflows/${WF}/runs?per_page=100" 2>err.txt); then
               finding "Could not read runs for \`${REPO}\` → \`${WF}\` — $(head -c 200 err.txt | tr -d '\n')."
               continue
             fi
-            RUN=$(printf '%s' "$RUNSJSON" | jq -r \
-              '([.workflow_runs[] | select(.id != (env.GITHUB_RUN_ID | tonumber))][0] // {}) | .created_at // ""' 2>/dev/null)
+            # jq's own exit status matters here. Ignoring it (pipefail is off,
+            # but this is the LAST command in the pipeline, so $? is jq's) would
+            # turn a jq fault into an empty RUN, which the -z check below reports
+            # as "no runs at all" — crying wolf about the workflow when the fault
+            # was in the parse. Different problem, different message.
+            if ! RUN=$(printf '%s' "$RUNSJSON" | jq -r \
+              '([.workflow_runs[] | select(.id != (env.GITHUB_RUN_ID | tonumber))][0] // {}) | .created_at // ""' 2>err.txt); then
+              finding "Could not parse the runs payload for \`${REPO}\` → \`${WF}\` — $(head -c 200 err.txt | tr -d '\n'). Freshness and last-conclusion for it are UNVERIFIED."
+              continue
+            fi
             DONEINFO=$(printf '%s' "$RUNSJSON" | jq -r \
               '([.workflow_runs[] | select(.id != (env.GITHUB_RUN_ID | tonumber)) | select(.status == "completed")][0] // {})
                | [(.created_at // ""), (.conclusion // "")] | @tsv' 2>/dev/null)
@@ -289,13 +309,14 @@ jobs:
               fi
               while IFS=$'\t' read -r CREATED NAME URL WFID BRANCH; do
                 [ -z "${CREATED:-}" ] && continue
+                NAME_D=$(safe "${NAME:-}"); BRANCH_D=$(safe "${BRANCH:-}")
                 # Falling back to $NOW on a parse failure would compute age 0 and
                 # silently clear a run that has been stuck indefinitely — the
                 # check passing while the thing it measures is broken. Report the
                 # unparseable timestamp instead.
                 START=$(date -u -d "$CREATED" +%s 2>/dev/null || echo 0)
                 if [ "$START" -eq 0 ]; then
-                  finding "\`${REPO}\`: could not parse \`created_at\` \`${CREATED}\` for \`${STATUS}\` run **${NAME}** — stuck-run age is UNKNOWN for it: ${URL}"
+                  finding "\`${REPO}\`: could not parse \`created_at\` \`${CREATED}\` for \`${STATUS}\` run **${NAME_D}** — stuck-run age is UNKNOWN for it: ${URL}"
                   continue
                 fi
                 AGEH=$(( (NOW - START) / 3600 ))
@@ -423,13 +444,13 @@ jobs:
 
                 case "$BLOCKED" in
                   no)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow${BRANCH:+ on \`${BRANCH}\`} has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow${BRANCH_D:+ on \`${BRANCH_D}\`} has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
                     ;;
                   yes)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow${BRANCH:+ on \`${BRANCH}\`} has executed since (nothing reached success, failure or timed_out, and nothing is running now) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow${BRANCH_D:+ on \`${BRANCH_D}\`} has executed since (nothing reached success, failure or timed_out, and nothing is running now) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
                     ;;
                   *)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**. Could not list later runs for workflow \`${WFID}\`, so whether it is blocking the concurrency group is UNVERIFIED — treat as blocking until checked: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h**. Could not list later runs for workflow \`${WFID}\`, so whether it is blocking the concurrency group is UNVERIFIED — treat as blocking until checked: ${URL}"
                     ;;
                 esac
               done <<< "$RUNS"
@@ -447,12 +468,12 @@ jobs:
                 # Same reasoning as the waiting/queued loop above.
                 START=$(date -u -d "$CREATED" +%s 2>/dev/null || echo 0)
                 if [ "$START" -eq 0 ]; then
-                  finding "\`${REPO}\`: could not parse \`created_at\` \`${CREATED}\` for \`in_progress\` run **${NAME}** — hung-run age is UNKNOWN for it: ${URL}"
+                  finding "\`${REPO}\`: could not parse \`created_at\` \`${CREATED}\` for \`in_progress\` run **${NAME_D}** — hung-run age is UNKNOWN for it: ${URL}"
                   continue
                 fi
                 AGEH=$(( (NOW - START) / 3600 ))
                 if [ "$AGEH" -ge "$STUCK_RUNNING_HOURS" ]; then
-                  finding "\`${REPO}\`: run **${NAME}** has been \`in_progress\` for **${AGEH}h** — likely hung and holding its concurrency group. Cancel it: ${URL}"
+                  finding "\`${REPO}\`: run **${NAME_D}** has been \`in_progress\` for **${AGEH}h** — likely hung and holding its concurrency group. Cancel it: ${URL}"
                 fi
               done <<< "$RUNS"
             fi
