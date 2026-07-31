@@ -340,14 +340,37 @@ jobs:
                 # `conclusion` is null until it finishes (confirmed against the
                 # API), so a terminal-states-only filter would score the clearest
                 # possible evidence as zero and alert that the group is stuck.
+                #
+                # Each status is asked for SEPARATELY and summed via
+                # `total_count`, rather than fetching a page of runs and counting
+                # matches in jq. total_count is the total across all pages, so
+                # this is page-independent as well as order-independent: a jq
+                # count over `per_page=100` would return 0 — a false "blocking" —
+                # whenever the first page happened to be full of queued or
+                # cancelled runs and the executed ones sat on page 2. `--paginate`
+                # is not the fix here: it applies --jq per page and concatenates,
+                # so a scalar-per-page expression yields several numbers and the
+                # numeric guard below would reject the lot as garbage.
+                #
+                # A failed or unparseable probe on ANY status forces UNVERIFIED
+                # rather than a partial sum, so a half-answered question can
+                # never read as a confident "not blocked".
                 BLOCKED=unknown
-                if EXECUTED=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?created=%3E${CREATED//:/%3A}&per_page=100" \
-                     --jq '[.workflow_runs[] | select(.status == "in_progress" or .conclusion == "success" or .conclusion == "failure" or .conclusion == "timed_out")] | length' 2>/dev/null); then
-                  case "${EXECUTED:-}" in
-                    ''|*[!0-9]*) BLOCKED=unknown ;;
-                    0)           BLOCKED=yes ;;
-                    *)           BLOCKED=no ;;
-                  esac
+                EXECUTED=0
+                PROBE_OK=1
+                for ST in success failure timed_out in_progress; do
+                  if N=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?status=${ST}&created=%3E${CREATED//:/%3A}&per_page=1" \
+                       --jq '.total_count' 2>/dev/null); then
+                    case "${N:-}" in
+                      ''|*[!0-9]*) PROBE_OK=0 ;;
+                      *)           EXECUTED=$(( EXECUTED + N )) ;;
+                    esac
+                  else
+                    PROBE_OK=0
+                  fi
+                done
+                if [ "$PROBE_OK" -eq 1 ]; then
+                  if [ "$EXECUTED" -eq 0 ]; then BLOCKED=yes; else BLOCKED=no; fi
                 fi
 
                 case "$BLOCKED" in
@@ -355,7 +378,7 @@ jobs:
                     finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
                     ;;
                   yes)
-                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow has executed since (none reached success, failure or timed_out) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow has executed since (nothing since it reached success, failure, timed_out, or is even running now) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
                     ;;
                   *)
                     finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**. Could not list later runs for workflow \`${WFID}\`, so whether it is blocking the concurrency group is UNVERIFIED — treat as blocking until checked: ${URL}"
@@ -364,7 +387,10 @@ jobs:
               done <<< "$RUNS"
             done
 
-            if ! RUNS=$(gh api "repos/${REPO}/actions/runs?status=in_progress&per_page=50" \
+            # `--paginate` for the same reason as the waiting/queued listing
+            # above: newest-first means one page truncates from the old end, and
+            # the oldest in_progress run is the one most likely to be hung.
+            if ! RUNS=$(gh api --paginate "repos/${REPO}/actions/runs?status=in_progress&per_page=100" \
                  --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)"' 2>err.txt); then
               finding "Could not list \`in_progress\` runs for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Hung-run detection for this repo is UNVERIFIED."
             else
