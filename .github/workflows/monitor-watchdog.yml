@@ -261,11 +261,11 @@ jobs:
           for REPO in $REPOS; do
             for STATUS in waiting queued; do
               if ! RUNS=$(gh api "repos/${REPO}/actions/runs?status=${STATUS}&per_page=50" \
-                   --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)"' 2>err.txt); then
+                   --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)\t\(.workflow_id)"' 2>err.txt); then
                 finding "Could not list \`${STATUS}\` runs for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Stuck-run detection for this repo is UNVERIFIED (the token may have workflow read but not run read)."
                 continue
               fi
-              while IFS=$'\t' read -r CREATED NAME URL; do
+              while IFS=$'\t' read -r CREATED NAME URL WFID; do
                 [ -z "${CREATED:-}" ] && continue
                 # Falling back to $NOW on a parse failure would compute age 0 and
                 # silently clear a run that has been stuck indefinitely — the
@@ -277,9 +277,39 @@ jobs:
                   continue
                 fi
                 AGEH=$(( (NOW - START) / 3600 ))
-                if [ "$AGEH" -ge "$STUCK_PENDING_HOURS" ]; then
-                  finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
+                [ "$AGEH" -lt "$STUCK_PENDING_HOURS" ] && continue
+
+                # Age alone does NOT prove the run is blocking anything. GitHub
+                # leaves behind zombie records — `queued` forever, no job ever
+                # assigned, uncancellable via the API (`gh run cancel` 500s) and
+                # invisible to `gh run list` once past the 100-run window. Two of
+                # these (2026-03-31, 2026-05-15) sat in the status repos while
+                # every later run of the same workflow completed normally.
+                #
+                # The old text here asserted "it is holding its concurrency group,
+                # so later runs cannot start" for every aged run. For the zombies
+                # that was simply false, and an hourly false alarm is how a
+                # monitor teaches you to stop reading it. So test the claim: has a
+                # LATER run of this same workflow completed since? If yes, the
+                # group is demonstrably not blocked.
+                BLOCKED=unknown
+                if LATEST=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?status=completed&per_page=1" \
+                     --jq '.workflow_runs[0].created_at // ""' 2>/dev/null); then
+                  LSTART=$(date -u -d "${LATEST:-}" +%s 2>/dev/null || echo 0)
+                  if [ "$LSTART" -gt "$START" ]; then BLOCKED=no; else BLOCKED=yes; fi
                 fi
+
+                case "$BLOCKED" in
+                  no)
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow has completed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
+                    ;;
+                  yes)
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow has completed since — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
+                    ;;
+                  *)
+                    finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h**. Could not list completed runs for workflow \`${WFID}\`, so whether it is blocking the concurrency group is UNVERIFIED — treat as blocking until checked: ${URL}"
+                    ;;
+                esac
               done <<< "$RUNS"
             done
 
