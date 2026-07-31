@@ -80,255 +80,12 @@ jobs:
       # a genuinely dark Upptime still escalates.
       UPPTIME_FRESH_MINUTES: '90'
     steps:
+      # The liveness script lives in .github/scripts/, so it has to be on disk.
+      - uses: actions/checkout@v5
+
       - name: Check monitoring liveness
         id: check
-        run: |
-          set +e -u +o pipefail
-          # `set +e` and `+o pipefail` are deliberate and load-bearing, NOT sloppy.
-          #
-          # GitHub Actions runs `run:` blocks as `bash -e {0}`, so -e is already on
-          # before this script starts. These scripts are ACCUMULATORS: they probe
-          # many things, record findings, and report at the end. Under -e with
-          # pipefail, any failing pipeline aborts the whole script — and the
-          # pipelines that fail are precisely the ones detecting a problem.
-          # `grep -o` exits 1 when it finds no matches, so an empty feed (the
-          # thing being checked for) killed the script instead of reporting it:
-          # verified against the real scripts on ubuntu:24.04, where the integrity
-          # check aborted after 2 findings out of 5 and exited 1. The workflow then
-          # reports "failed" with no issue and no detail, which is strictly worse
-          # than the failure it was built to catch.
-          #
-          # Every command whose failure matters is checked explicitly by value
-          # (`if [ -z "${VAR:-}" ]`) or by `if ! cmd`. -u stays on to catch typos.
-          : > findings.txt
-          NOW=$(date -u +%s)
-
-          # Repos whose workflows are checked for the disabled/stuck traps.
-          REPOS="
-          adrianwedd/adrianwedd.com
-          adrianwedd/status
-          adrianwedd/twitb-status
-          adrianwedd/failurefirst-status
-          "
-
-          # repo|workflow file|max hours since last run.
-          #
-          # These are COARSE deliberately — they catch "the workflow is disabled or
-          # deleted", not "a run was late". For the social crons the tight
-          # threshold already exists elsewhere and is better: the worker's own
-          # heartbeats flag the publish cron at 80 minutes (worker/src/heartbeat.ts).
-          # So 2h here is ~12x the 10-minute cadence, not 3-4x, and that is the
-          # intended division of labour rather than a slack threshold. The failure
-          # this list catches does not fix itself, so finding it hours late costs
-          # nothing, while a tight threshold would just generate false alarms from
-          # GitHub's best-effort scheduler.
-          #
-          # NOTE on e2e.yml: it also runs on pull requests, so a busy PR week
-          # satisfies this check without the nightly having fired. It is a
-          # weaker signal than the others by design — the nightly's own failures
-          # are already visible as failed runs.
-          #
-          # This list includes the two new weekly sweeps and monitor-watchdog
-          # ITSELF. The sweeps are on GitHub Actions with no Cloudflare check-in
-          # of their own, so without an entry here they'd be the only unwatched
-          # monitoring in the estate. Self-listing is not circular: a dead
-          # watchdog can't report itself, but the withheld check-in makes the
-          # Cloudflare cron email — this entry catches the narrower case where
-          # the schedule is dropped while manual dispatches keep passing.
-          # 4th field: alert when the LAST run FAILED, not just when it stopped.
-          #
-          # Freshness alone can't see a crashed check. expiry-sweep and
-          # content-integrity don't check in to Cloudflare, and their post-check
-          # steps are `if: success()`, so a hard crash in one of them opens no
-          # issue and sends no email — and a red run is still a RECENT run, so a
-          # created_at-only check reads it as healthy. That is a check failing
-          # completely silently, which is the exact thing this file exists to
-          # prevent.
-          #
-          # Only `yes` for workflows whose failure is unambiguously a problem.
-          # e2e.yml is `no`: it runs on pull requests, where a red run is often
-          # just a branch under development and would page constantly.
-          FRESHNESS="
-          adrianwedd/status|uptime.yml|2|yes
-          adrianwedd/twitb-status|uptime.yml|2|yes
-          adrianwedd/failurefirst-status|uptime.yml|2|yes
-          adrianwedd/adrianwedd.com|social-cron.yml|2|yes
-          adrianwedd/adrianwedd.com|worker-deploy.yml|30|no
-          adrianwedd/adrianwedd.com|e2e.yml|30|no
-          adrianwedd/adrianwedd.com|social-token-alert.yml|200|yes
-          adrianwedd/adrianwedd.com|content-pipeline.yml|200|no
-          adrianwedd/adrianwedd.com|expiry-sweep.yml|200|yes
-          adrianwedd/adrianwedd.com|content-integrity.yml|200|yes
-          adrianwedd/adrianwedd.com|monitor-watchdog.yml|4|yes
-          "
-
-          finding() { echo "- $1" >> findings.txt; }
-
-          # ── 1. Disabled workflows ────────────────────────────────────────────
-          # `state` is disabled_inactivity when GitHub auto-disables after 60
-          # days, or disabled_manually if a human switched it off. Both mean the
-          # schedule is not running; both are silent.
-          for REPO in $REPOS; do
-            echo "=== workflows: $REPO"
-            if ! WORKFLOWS=$(gh api "repos/${REPO}/actions/workflows" --paginate \
-                 --jq '.workflows[] | "\(.path)\t\(.state)"' 2>err.txt); then
-              # An unreadable repo is itself a finding: silently skipping is how
-              # a check passes while the thing it measures is broken.
-              finding "Could not read workflows for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Monitoring for this repo is UNVERIFIED."
-              continue
-            fi
-            echo "$WORKFLOWS"
-            # An empty-but-successful response is a silent pass: the `while read`
-            # below simply wouldn't run and no disabled workflow would be found.
-            # Every one of these repos has workflows, so empty means the response
-            # shape changed under us.
-            if [ -z "$WORKFLOWS" ]; then
-              finding "\`${REPO}\` returned NO workflows — the API response shape may have changed. Monitoring for this repo is UNVERIFIED."
-              continue
-            fi
-            while IFS=$'\t' read -r WF STATE; do
-              [ -z "${WF:-}" ] && continue
-              case "$STATE" in
-                active) ;;
-                disabled_inactivity)
-                  finding "\`${REPO}\` → \`${WF}\` is **disabled_inactivity** — GitHub auto-disabled it after 60 days without repo activity. Re-enable it in the Actions tab (any push to the repo also resets the clock)." ;;
-                disabled_manually)
-                  finding "\`${REPO}\` → \`${WF}\` is **disabled_manually**. If that was deliberate, ignore; if not, re-enable it." ;;
-                *)
-                  finding "\`${REPO}\` → \`${WF}\` has unexpected state \`${STATE}\`." ;;
-              esac
-            done <<< "$WORKFLOWS"
-          done
-
-          # ── 2. Scheduled workflows that have stopped running, or are failing ──
-          echo "$FRESHNESS" | while IFS='|' read -r REPO WF MAXH ALERT_ON_FAIL; do
-            [ -z "${REPO:-}" ] && continue
-            # Fetch timestamp AND conclusion together: a red run is still a recent
-            # run, so freshness alone would report a permanently crashing check as
-            # healthy.
-            #
-            # Exclude THIS run. The runs collection is created_at-desc and
-            # includes non-completed runs (which is why `?status=in_progress` is
-            # a valid filter on this same endpoint, and what section 3 relies
-            # on), so for the monitor-watchdog.yml self-entry `.workflow_runs[0]`
-            # is the currently-executing run: created seconds ago, status
-            # in_progress, therefore always fresh and never fail-checked. Without
-            # this filter the self-entry is inert — it can never produce a
-            # finding, which is the silent-pass failure mode this whole file
-            # exists to eliminate. jq reads the id from the environment because
-            # `gh api --jq` takes no --argjson.
-            if ! RUNINFO=$(gh api "repos/${REPO}/actions/workflows/${WF}/runs?per_page=5" \
-                 --jq '[.workflow_runs[] | select(.id != (env.GITHUB_RUN_ID | tonumber))][0]
-                       | "\(.created_at // "")\t\(.status // "")\t\(.conclusion // "")"' 2>err.txt); then
-              finding "Could not read runs for \`${REPO}\` → \`${WF}\` — $(head -c 200 err.txt | tr -d '\n')."
-              continue
-            fi
-            RUN=$(echo "$RUNINFO" | cut -f1)
-            RUN_STATUS=$(echo "$RUNINFO" | cut -f2)
-            RUN_CONCLUSION=$(echo "$RUNINFO" | cut -f3)
-            if [ -z "$RUN" ]; then
-              finding "\`${REPO}\` → \`${WF}\` has **no runs at all** (excluding this watchdog run)."
-              continue
-            fi
-            if [ "${ALERT_ON_FAIL:-no}" = "yes" ] && [ "$RUN_STATUS" = "completed" ]; then
-              case "$RUN_CONCLUSION" in
-                success|skipped|cancelled) ;;
-                *)
-                  finding "\`${REPO}\` → \`${WF}\` last run concluded **${RUN_CONCLUSION}**. The schedule is still firing, so a freshness check alone would call this healthy — but the check itself is failing, so whatever it monitors is UNVERIFIED." ;;
-              esac
-            fi
-            LAST=$(date -u -d "$RUN" +%s 2>/dev/null || echo 0)
-            if [ "$LAST" -eq 0 ]; then
-              finding "Could not parse last-run timestamp \`${RUN}\` for \`${REPO}\` → \`${WF}\`."
-              continue
-            fi
-            AGEH=$(( (NOW - LAST) / 3600 ))
-            echo "=== ${REPO}/${WF}: last run ${AGEH}h ago (max ${MAXH}h)"
-            if [ "$AGEH" -gt "$MAXH" ]; then
-              finding "\`${REPO}\` → \`${WF}\` last ran **${AGEH}h ago** (threshold ${MAXH}h). The schedule has stopped firing — check for a disabled workflow, a stuck run holding the concurrency group, or a billing/permissions problem."
-            fi
-          done
-
-          # ── 3. Runs stuck pending or hung ────────────────────────────────────
-          # This is the 2026-07-21 trap: a run in `waiting` holds its concurrency
-          # group indefinitely, so every later run of that group never starts.
-          # NOTE on error handling here: an unreadable runs endpoint is REPORTED,
-          # not skipped. `actions/workflows` and `actions/runs` are separate REST
-          # endpoints, so a fine-grained PAT can grant one and not the other — in
-          # which case the disabled-workflow check above would pass while this
-          # check silently covered nothing. Silence is the failure mode this
-          # entire workflow exists to eliminate; it must not have its own.
-          for REPO in $REPOS; do
-            for STATUS in waiting queued; do
-              if ! RUNS=$(gh api "repos/${REPO}/actions/runs?status=${STATUS}&per_page=50" \
-                   --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)"' 2>err.txt); then
-                finding "Could not list \`${STATUS}\` runs for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Stuck-run detection for this repo is UNVERIFIED (the token may have workflow read but not run read)."
-                continue
-              fi
-              while IFS=$'\t' read -r CREATED NAME URL; do
-                [ -z "${CREATED:-}" ] && continue
-                # Falling back to $NOW on a parse failure would compute age 0 and
-                # silently clear a run that has been stuck indefinitely — the
-                # check passing while the thing it measures is broken. Report the
-                # unparseable timestamp instead.
-                START=$(date -u -d "$CREATED" +%s 2>/dev/null || echo 0)
-                if [ "$START" -eq 0 ]; then
-                  finding "\`${REPO}\`: could not parse \`created_at\` \`${CREATED}\` for \`${STATUS}\` run **${NAME}** — stuck-run age is UNKNOWN for it: ${URL}"
-                  continue
-                fi
-                AGEH=$(( (NOW - START) / 3600 ))
-                if [ "$AGEH" -ge "$STUCK_PENDING_HOURS" ]; then
-                  finding "\`${REPO}\`: run **${NAME}** has been \`${STATUS}\` for **${AGEH}h** — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
-                fi
-              done <<< "$RUNS"
-            done
-
-            if ! RUNS=$(gh api "repos/${REPO}/actions/runs?status=in_progress&per_page=50" \
-                 --jq '.workflow_runs[] | "\(.created_at)\t\(.name)\t\(.html_url)"' 2>err.txt); then
-              finding "Could not list \`in_progress\` runs for \`${REPO}\` — $(head -c 200 err.txt | tr -d '\n'). Hung-run detection for this repo is UNVERIFIED."
-            else
-              while IFS=$'\t' read -r CREATED NAME URL; do
-                [ -z "${CREATED:-}" ] && continue
-                # Same reasoning as the waiting/queued loop above.
-                START=$(date -u -d "$CREATED" +%s 2>/dev/null || echo 0)
-                if [ "$START" -eq 0 ]; then
-                  finding "\`${REPO}\`: could not parse \`created_at\` \`${CREATED}\` for \`in_progress\` run **${NAME}** — hung-run age is UNKNOWN for it: ${URL}"
-                  continue
-                fi
-                AGEH=$(( (NOW - START) / 3600 ))
-                if [ "$AGEH" -ge "$STUCK_RUNNING_HOURS" ]; then
-                  finding "\`${REPO}\`: run **${NAME}** has been \`in_progress\` for **${AGEH}h** — likely hung and holding its concurrency group. Cancel it: ${URL}"
-                fi
-              done <<< "$RUNS"
-            fi
-          done
-
-          # ── 4. Is Upptime itself still checking? ─────────────────────────────
-          # Recorded separately because it decides whether to relay the `upptime`
-          # check-in to the worker, which is what makes a dead Upptime reach a
-          # human by email rather than only by GitHub issue.
-          #
-          # The repo is adrianwedd/status (renamed from adrianwedd/upptime on
-          # 2026-07-31) but the check-in NAME stays `upptime`: it is the KV key
-          # in the worker's EXTERNAL_SOURCES (worker/src/watchdog.ts). Renaming
-          # it here without deploying a matching worker change would make every
-          # check-in 404 as an unknown pipeline, and the watchdog would then
-          # email that Upptime had gone dark. Don't "tidy" the two into
-          # agreement in one repo.
-          UPPTIME_FRESH=no
-          if LASTRUN=$(gh api "repos/adrianwedd/status/actions/workflows/uptime.yml/runs?per_page=1" \
-               --jq '.workflow_runs[0].created_at // ""' 2>/dev/null) && [ -n "$LASTRUN" ]; then
-            LAST=$(date -u -d "$LASTRUN" +%s 2>/dev/null || echo 0)
-            AGEM=$(( (NOW - LAST) / 60 ))
-            echo "=== upptime last run ${AGEM}m ago"
-            if [ "$AGEM" -le "$UPPTIME_FRESH_MINUTES" ]; then UPPTIME_FRESH=yes; fi
-          fi
-          echo "upptime_fresh=${UPPTIME_FRESH}" >> "$GITHUB_OUTPUT"
-
-          COUNT=$(wc -l < findings.txt | tr -d ' ')
-          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
-          echo "=== ${COUNT} finding(s)"
-          cat findings.txt || true
+        run: bash .github/scripts/watchdog-liveness.sh
 
       # Check in BEFORE the issue step: the check-in attests that the CHECK ran,
       # which is true regardless of what it found. Putting it after issue
@@ -405,11 +162,37 @@ jobs:
         run: |
           set +e -u +o pipefail  # see the note on the first step
           TITLE="🐕 Monitoring watchdog: monitoring is degraded"
-          EXISTING=$(gh issue list --repo "$HOME_REPO" --state open \
-            --label monitoring --json number,title \
-            | jq -r --arg t "$TITLE" '.[] | select(.title == $t) | .number' | head -n1)
+
+          # The lookup is NOT a pipeline. With pipefail off, `gh issue list`
+          # could fail (5xx, rate limit) while jq and head handled the empty
+          # stream and exited 0 — so EXISTING came back empty and the failure
+          # was indistinguishable from "no issue open". That silently forks
+          # both ways: a resolved problem never gets closed, and a live one
+          # opens a duplicate issue every hour instead of commenting.
+          #
+          # --limit too: the default is 30, so once 30 open issues carry the
+          # `monitoring` label the watchdog's own issue drops out of the lookup
+          # and the same duplicate-forever path opens up.
+          LOOKUP_OK=1
+          if ! ISSUE_JSON=$(gh issue list --repo "$HOME_REPO" --state open \
+               --label monitoring --limit 100 --json number,title 2>lookup-err.txt); then
+            LOOKUP_OK=0
+            EXISTING=""
+            echo "::error::Could not list existing watchdog issues — $(head -c 200 lookup-err.txt | tr -d '\n'). Refusing to create or close anything, to avoid duplicating or prematurely resolving."
+          else
+            EXISTING=$(printf '%s' "$ISSUE_JSON" \
+              | jq -r --arg t "$TITLE" '.[] | select(.title == $t) | .number' | head -n1)
+          fi
 
           COUNT="${FINDING_COUNT:-0}"
+
+          # A failed lookup must not fall through to "no issue exists".
+          if [ "$LOOKUP_OK" -eq 0 ]; then
+            if [ "${COUNT:-0}" -gt 0 ]; then
+              echo "::error::Watchdog found ${COUNT} problem(s) but could not reach the issue API — findings were NOT recorded: $(cat findings.txt 2>/dev/null)"
+            fi
+            exit 1
+          fi
 
           if [ "${COUNT:-0}" -gt 0 ]; then
             BODY=$(printf 'The watchdog found **%s** problem(s) with the monitoring itself.\n\n%s\n\n---\n\nThese are faults in the checks, not in the services they watch: while any of them stands, the corresponding check is not running and its silence means nothing. Opened automatically by `monitor-watchdog.yml` (run %s).\n' \
