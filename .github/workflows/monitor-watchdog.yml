@@ -292,11 +292,33 @@ jobs:
                 # monitor teaches you to stop reading it. So test the claim: has a
                 # LATER run of this same workflow completed since? If yes, the
                 # group is demonstrably not blocked.
+                # Ask the API to COUNT completed runs of this workflow created
+                # after the stuck one, rather than fetching the newest and
+                # comparing timestamps. Two traps avoided:
+                #
+                #   - `.workflow_runs[0]` assumes reverse-chronological order,
+                #     which GitHub does in practice but does not document. A
+                #     silent sort change would silently break the check.
+                #   - reading `created_at` off an EMPTY result yields "", and
+                #     `date -u -d ""` on GNU date does not fail — it returns
+                #     midnight today, exit 0, so `|| echo 0` never fires. A
+                #     workflow whose very first run is stuck (zero completed
+                #     runs, ever) would compare against today and be dismissed
+                #     as a zombie. That is this workflow's own failure mode:
+                #     the check passing while the thing it measures is broken.
+                #
+                # total_count with a `created=>` filter is order-independent and
+                # has no empty-string path. Date granularity is a day, so a run
+                # completed the same day does not count — that errs toward
+                # reporting "blocking", which is the safe direction.
                 BLOCKED=unknown
-                if LATEST=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?status=completed&per_page=1" \
-                     --jq '.workflow_runs[0].created_at // ""' 2>/dev/null); then
-                  LSTART=$(date -u -d "${LATEST:-}" +%s 2>/dev/null || echo 0)
-                  if [ "$LSTART" -gt "$START" ]; then BLOCKED=no; else BLOCKED=yes; fi
+                if COUNT=$(gh api "repos/${REPO}/actions/workflows/${WFID}/runs?status=completed&created=%3E${CREATED%%T*}&per_page=1" \
+                     --jq '.total_count' 2>/dev/null); then
+                  case "${COUNT:-}" in
+                    ''|*[!0-9]*) BLOCKED=unknown ;;
+                    0)           BLOCKED=yes ;;
+                    *)           BLOCKED=no ;;
+                  esac
                 fi
 
                 case "$BLOCKED" in
