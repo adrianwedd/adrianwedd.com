@@ -160,11 +160,32 @@ jobs:
           # <loc> and would look healthy even if the child were empty. Follow it
           # to where the URLs actually live.
           INDEX=$(curl -sL --max-time 30 "${SITE}/sitemap-index.xml" 2>/dev/null)
-          CHILD=$(echo "$INDEX" | grep -o '<loc>[^<]*</loc>' | head -n1 | sed 's|</*loc>||g')
-          if [ -z "${CHILD:-}" ]; then
+          CHILDREN=$(echo "$INDEX" | grep -o '<loc>[^<]*</loc>' | sed 's|</*loc>||g')
+          if [ -z "${CHILDREN:-}" ]; then
             finding "SITEMAP: \`${SITE}/sitemap-index.xml\` lists no child sitemap — search engines have nothing to crawl."
           else
-            check_count "SITEMAP" "$CHILD" "<loc>" 200
+            # Sum across EVERY child, not just the first. Astro shards at 45k URLs,
+            # so today there is exactly one child and `head -n1` was equivalent —
+            # but the moment a `sitemap-1.xml` appears, a first-child-only check
+            # would keep passing while an entire shard shipped empty. The total is
+            # the threshold, not each child: the last shard is legitimately small,
+            # so a per-child minimum would false-alarm the week we cross 45k.
+            SITEMAP_TOTAL=0
+            for CHILD in $CHILDREN; do
+              CHILD_BODY=$(curl -sL --max-time 30 "$CHILD" 2>/dev/null)
+              CHILD_N=$(echo "${CHILD_BODY:-}" | grep -o '<url>' | wc -l | tr -d ' ')
+              echo "SITEMAP child ${CHILD}: ${CHILD_N} entries"
+              # An empty shard is a finding on its own terms — the total can stay
+              # healthy while one shard is a well-formed, URL-free document.
+              if [ "${CHILD_N:-0}" -eq 0 ]; then
+                finding "SITEMAP: child \`${CHILD}\` contains **no URLs**. It is well-formed and serves 200, so every other gate passes while that shard is uncrawlable."
+              fi
+              SITEMAP_TOTAL=$(( SITEMAP_TOTAL + CHILD_N ))
+            done
+            echo "SITEMAP: ${SITEMAP_TOTAL} entries across $(echo "$CHILDREN" | wc -l | tr -d ' ') child sitemap(s)"
+            if [ "${SITEMAP_TOTAL:-0}" -lt 200 ]; then
+              finding "SITEMAP: only **${SITEMAP_TOTAL}** URL(s) across all child sitemaps (expected ≥ 200). The build shipped a well-formed but near-empty sitemap, which passes every other gate."
+            fi
           fi
 
           COUNT=$(wc -l < findings.txt | tr -d ' ')
@@ -193,14 +214,35 @@ jobs:
             BODY=$(printf 'Found **%s** problem(s) that every other check passes.\n\n%s\n\n---\n\nAll of these serve HTTP 200. Uptime monitoring, the link checker, and the build gates are all green while they are broken. Opened automatically by `content-integrity.yml` (run %s).\n' \
               "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")
             if [ -n "$EXISTING" ]; then
-              gh issue comment "$EXISTING" --repo "$REPO" --body "$(printf 'Still broken — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"
+              if ! gh issue comment "$EXISTING" --repo "$REPO" --body "$(printf 'Still broken — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"; then
+                echo "::error::Could not comment on integrity issue #${EXISTING} — findings were NOT recorded: $(cat findings.txt)"
+                FAILED=1
+              fi
             else
               gh label create integrity --repo "$REPO" \
                 --description "Site is up but something it does is broken (search, analytics, feeds)" \
                 --color 1D76DB 2>/dev/null || true
-              gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label integrity
+              # Explicit, because the correct behaviour here was previously an
+              # ACCIDENT. `set +e` stops a failed `gh` aborting the step, and the
+              # run still went red only because `gh issue create` happened to be
+              # the last command in the block, so its status became the step's.
+              # Verified by running the pre-fix block under `bash -e` with a
+              # stubbed failing `gh`: exit 1. Append one line after this `fi` and
+              # that silently becomes exit 0 — findings lost, run green, and
+              # ALERT_ON_FAIL=yes in monitor-watchdog.yml never fires. The
+              # annotation also names WHICH findings were lost, which the
+              # incidental version did not.
+              if ! gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label integrity; then
+                echo "::error::Could not create the integrity issue — findings were NOT recorded: $(cat findings.txt)"
+                FAILED=1
+              fi
             fi
           elif [ -n "$EXISTING" ]; then
-            gh issue close "$EXISTING" --repo "$REPO" \
-              --comment "✅ Content integrity restored — search index present, analytics real and non-zero, feeds and sitemap populated. Auto-closing."
+            if ! gh issue close "$EXISTING" --repo "$REPO" \
+                 --comment "✅ Content integrity restored — search index present, analytics real and non-zero, feeds and sitemap populated. Auto-closing."; then
+              echo "::error::Could not close resolved integrity issue #${EXISTING}"
+              FAILED=1
+            fi
           fi
+
+          exit "${FAILED:-0}"

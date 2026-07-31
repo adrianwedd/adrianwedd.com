@@ -284,14 +284,30 @@ jobs:
             BODY=$(printf 'The weekly expiry sweep found **%s** clock(s) worth attention.\n\n%s\n\n---\n\nNone of these show up in uptime monitoring: a certificate days from expiry and a domain weeks from lapse both serve and resolve perfectly until the moment they do not. Opened automatically by `expiry-sweep.yml` (run %s).\n' \
               "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")
             if [ -n "$EXISTING" ]; then
-              gh issue comment "$EXISTING" --repo "$REPO" --body "$(printf 'Still outstanding — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"
+              if ! gh issue comment "$EXISTING" --repo "$REPO" --body "$(printf 'Still outstanding — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"; then
+                echo "::error::Could not comment on expiry issue #${EXISTING} — findings were NOT recorded: $(cat findings.txt)"
+                FAILED=1
+              fi
             else
               gh label create expiry --repo "$REPO" \
                 --description "Something expires on a date (certs, domains, DNSSEC, tokens)" \
                 --color FBCA04 2>/dev/null || true
-              gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label expiry
+              # Explicit, because the correct behaviour here was previously an
+              # ACCIDENT — see the matching note in content-integrity.yml. The
+              # run went red on a failed `gh` only because that call happened to
+              # be the last command in the block; adding a line after this `fi`
+              # would have silently turned it green while losing the findings.
+              if ! gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" --label expiry; then
+                echo "::error::Could not create the expiry issue — findings were NOT recorded: $(cat findings.txt)"
+                FAILED=1
+              fi
             fi
           elif [ -n "$EXISTING" ]; then
-            gh issue close "$EXISTING" --repo "$REPO" \
-              --comment "✅ All expiry clocks clear — certificates renewed, registrations in date, DS records published. Auto-closing."
+            if ! gh issue close "$EXISTING" --repo "$REPO" \
+                 --comment "✅ All expiry clocks clear — certificates renewed, registrations in date, DS records published. Auto-closing."; then
+              echo "::error::Could not close resolved expiry issue #${EXISTING}"
+              FAILED=1
+            fi
           fi
+
+          exit "${FAILED:-0}"
