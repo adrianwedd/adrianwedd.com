@@ -1,7 +1,7 @@
 ---
 title: 'Home Assistant Without the Web UI — Overview'
 description: 'Audio deep dive: operating Home Assistant entirely over its APIs — three auth channels, reload semantics, and why exit 0 is not evidence.'
-date: 2026-08-01
+date: 2026-08-02
 tags: ['notebooklm', 'home-assistant', 'homelab', 'engineering']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-without-the-web-ui/audio.m4a'
 duration: '23:19'
