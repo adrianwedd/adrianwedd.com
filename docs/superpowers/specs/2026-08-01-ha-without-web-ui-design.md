@@ -32,8 +32,13 @@ that genuinely still need a browser, and how data gets in.
   documents and a much longer post.
 - The QA methodology story (two reviewers, the rejected finding, the argv-size
   trap). Its own post, if ever. Decided 2026-08-01.
-- The cloudflared/UDR7 tunnelling dead end. Weakly evidenced and off-topic — it
-  concerns tunnelling the *router* UI, not operating HA. Cut.
+- The cloudflared tunnelling dead end. Off-topic — it concerns tunnelling the
+  *router* UI, not operating HA — and only half-evidenced. Live read 2026-08-01:
+  the add-on's options schema exposes no TLS-verify-off knob (true, as far as it
+  goes), but `run_parameters` is a free-form string list with no enum, so the
+  schema would accept the flag; any rejection happens inside the add-on's run
+  script, which is not confirmable read-only. Cut. That verification is recorded
+  here as the *reason for the cut* and does not appear in the post.
 
 ## 3. Placement
 
@@ -42,7 +47,8 @@ that genuinely still need a browser, and how data gets in.
   `src/lib/utils.ts:10`). Permanent once published.
 - **Standalone, not a fourth part of "An Agent in the Walls."** That series
   closed deliberately — part 3 ends "This is the close of…", and its final
-  paragraph turns on a cheerful `rc: ok`, which is this post's thesis. Appending
+  paragraph turns on a cheerful `rc: ok`, which this post exists to distrust.
+  Appending
   would undercut a finished ending. Cross-link instead, in both directions of
   reading: part 2 (`/blog/there-is-no-api/`) for the same house's router, part 3
   (`/blog/the-limits-of-the-walls/`) for the discipline, and
@@ -54,10 +60,16 @@ that genuinely still need a browser, and how data gets in.
   date: 2026-08-01
   tags: ['engineering', 'homelab', 'home-assistant', 'raspberry-pi', 'ai-agents', 'claude-code']
   draft: false
-  autopublish: true
   ```
-  `heroImage`, `audioUrl`, `videoUrl`, `audioDuration`, `youtubeUrl` added in
-  phase 3. Description is 154 chars — under the 160 gate in
+  **`autopublish` is deliberately absent in phase 1.**
+  `scripts/generate-social-queue.mjs` broadcasts at 09:00 Hobart on the post's
+  `date`, and `date` is today — shipping `autopublish: true` before the assets
+  exist would fire the social queue at a post with no hero, no audio and no
+  video. It goes in at phase 3, once the kit is on the CDN.
+
+  `heroImage`, `audioUrl`, `videoUrl`, `audioDuration` and `autopublish` all land
+  together in phase 7; `youtubeUrl` + `videoUploadDate` at phase 6.
+  Description is **156** chars — under the 160 gate in
   `scripts/validate-content.js`.
 
 ## 4. Sanitisation
@@ -70,12 +82,18 @@ passphrase and infrastructure IDs.
 | `192.168.0.200`, `.116`, `.236` | `<HA_HOST>` etc. |
 | `~/.ssh/claude_code_key` | `~/.ssh/<key>` |
 | The five-row LLAT table (IDs, names, dates) | Cut. Lessons kept as prose. |
-| `/home/pi/frigate-nvr/.ha_token` | "an admin token on another box" |
+| `/home/pi/frigate-nvr/.ha_token` | "an admin token on another box" — path *and* hostname |
+| `pi5-hailo` (and other fleet hostnames) | "another box on the fleet" |
+| `UDR7` / the router model | "the router". The published parts 2 and 3 name it **zero** times — the blog has deliberately never identified the model, and §5.4's full-object-replace comparison is where it would leak. |
 | `home.wedd.au` | `<external hostname>` |
-| `172.30.32.0/23` | **Kept** — a fixed Supervisor docker range, identical on every install, and the value is the whole point of the fix. |
+| `172.30.32.0/23` | **Kept** — a fixed Supervisor docker range, identical on every install, and the value is the whole point of the fix. Has a home in §5.3. |
+| `pi` (username) | **Kept.** A conventional add-on default, identical on every install, and §5.2 cannot describe the ephemeral-home-directory trap without it. Not a secret; not specific to this house. |
 | `SPARK`, `px-mind`, `picar` | Kept only where already public; otherwise "a consumer". |
 
 The unifi repo is never named or linked.
+
+Pre-merge check: grep the finished post for `192.168.`, `wedd.au`, `UDR7`,
+`pi5-hailo`, `claude_code_key`, and any 8-hex-digit run.
 
 ## 5. Structure
 
@@ -101,6 +119,13 @@ Eleven sections, ~3,500 words. Each technique states the failure that produced i
    service nobody knew consumed it); a token in a file may be an identifier, not
    bearer material. The websocket for the five registry operations REST lacks.
    `sudo docker` as the diagnostic lever.
+   **Aside, and the home for the one sanitisation exception:** if you reach the
+   box through a tunnel or reverse proxy rather than on the LAN, Core needs an
+   `http:` block with `use_x_forwarded_for: true` and
+   `trusted_proxies: [172.30.32.0/23]` — the Supervisor add-on docker network,
+   the same on every install — followed by a Core restart. Without it the
+   requests fail at the proxy layer in a way that looks like a tunnel or DNS
+   problem. Verified present on the box 2026-08-01.
 4. **Where you write determines everything.** The reload-semantics table — plain
    YAML, `.storage`, websocket registry, add-on options, config entries — each
    with how to apply it and whether Core clobbers you. The centrepiece.
@@ -126,8 +151,16 @@ Eleven sections, ~3,500 words. Each technique states the failure that produced i
    required) because the default target is a down network mount. And the Google
    Drive Backup add-on prunes `/backup` per its own retention: a freshly created
    local backup vanished within minutes.
-8. **The three things that still need a browser.** LLAT revocation, companion-app
-   sensor toggles, OAuth consent. Stated precisely because the list is so short.
+8. **The four things that still need a browser.** LLAT revocation (creation is
+   API-only, revocation is not); companion-app sensor toggles, where the switch
+   is on the *phone*, not the server; OAuth consent redirects; and the
+   Tailscale admin console — `advertise_routes` is fully API-settable, and the
+   route stays **dead until a human approves it in a browser on a different
+   system entirely**. That last one is the most interesting of the four for this
+   post's argument, and the reason the section says four: it is the failure mode
+   the whole piece is about, wearing a different coat. Everything reads
+   configured. Nothing is wrong. It does not work, and no call you can make from
+   the box will tell you so.
 9. **Exit 0 is not evidence.** The `.storage` flush; the silently skipped
    `python3` block; MQTT sensors not writing state on identical payloads, so
    `last_reported` froze at the last *value change* and a steady battery failed a
@@ -149,6 +182,11 @@ Eleven sections, ~3,500 words. Each technique states the failure that produced i
     Core 2026.6.4 / OS 18.0 / 58 entries / 22 add-ons; live reads on the day of
     writing returned 2026.7.4 / 18.1 / 57 / 15. A journal records what *was* true.
 
+    *Provenance:* the corrected header of the reference doc @ `0ef8947` carries
+    only the version pair. The full quartet — including 58→57 entries and
+    22→15 add-ons — is recorded in `docs/qa/2026-08-01/67-qa-summary.md`, not in
+    the reference doc itself. All four figures are real; cite the QA summary.
+
 ## 6. Evidence standard
 
 Every claim ships in one of three states. Nothing ships as an uncorroborated
@@ -166,9 +204,10 @@ assertion.
 - 57 config entries — 50 loaded, 7 not; 6 `source: ignore`; 1 `disabled_by: user`.
 - `ha apps list` and `ha apps bogussubcommand` produce identical output.
 - The `http:` block is present with `use_x_forwarded_for` and the documented
-  `trusted_proxies` range.
+  `trusted_proxies` range. → published as the §5.3 aside.
 - Cloudflared add-on schema exposes no TLS-verify-off option; `run_parameters` is
-  a free-form string list with no enum.
+  a free-form string list with no enum. → **not published**; this is the evidence
+  behind the §2 cut, kept here so the decision is auditable.
 
 **Corrected before publication.** The source doc said a conversation agent's
 state is `"idle"`. It is not. Live, the four `conversation.*` entities read a
@@ -182,23 +221,32 @@ box, so the post states the requirement and omits the specific error string.
 
 ## 7. Sequencing
 
-1. Write the post. Validate: `node scripts/validate-content.js`,
-   `npm run lint`, `npm run build`.
-2. **QA on the unifi side** (operator is arranging) — technical accuracy against
-   the box and the journal. **Gate: no NLM assets until this clears.**
+1. Write the post, **without `autopublish`**. Validate:
+   `node scripts/validate-content.js`, `npm run lint`, `npm run build`.
+2. **QA on the unifi side** — technical accuracy against the box and the journal.
+   **Gate: no NLM assets until this clears.**
 3. NLM kit: audio overview, cinematic video (branded dark-botanical style prompt,
-   no figures, no stock footage), infographic hero. Sources = the published page
-   plus the sanitised reference doc. Upload audio/video to R2, infographic to
-   `public/notebook-assets/`; original quality, no re-encode. Signoff sting on
-   the video before upload.
-4. `src/content/audio/` entry cross-linking back to the post.
-5. YouTube upload (public), `youtubeUrl` + `videoUploadDate` into frontmatter.
-6. `.webp` heroImage needs its `.jpg` twin or the deploy gate fails.
+   no figures, no stock footage), **and the infographic hero — this step
+   produces it; nothing earlier does.** Sources = the post plus the sanitised
+   reference doc. Upload audio/video to R2, infographic to
+   `public/notebook-assets/<slug>/`; original quality, no re-encode. Signoff
+   sting appended to the video (stream-copy) before upload.
+4. **Generate the `.jpg` twin** beside the `.webp` hero. The deploy gate requires
+   it and a local build does not catch its absence — this has broken main twice.
+5. `src/content/audio/` entry cross-linking back to the post.
+6. YouTube upload (public), `youtubeUrl` + `videoUploadDate` into frontmatter.
+7. **Last:** add `heroImage`, `audioUrl`, `videoUrl`, `audioDuration` and
+   `autopublish: true`. Re-run `node scripts/validate-content.js` after this
+   edit — the phase-1 pass says nothing about frontmatter added later.
+
+Ordering rationale: the social queue fires on `date`, which is today, so
+`autopublish` is the last thing to land and only once every asset it would
+advertise actually exists.
 
 ## 8. Risks
 
-- **Sanitisation slip.** Mitigated by §4's table and a pre-merge grep for
-  `192.168.`, `wedd.au`, key filenames and token fragments across the post.
+- **Sanitisation slip.** Mitigated by §4's table and the pre-merge grep defined
+  at the end of §4 (single canonical list — do not duplicate it here).
 - **Publishing a stale claim.** Mitigated by §6 — and by the fact that the
   staleness failure is itself in the post.
 - **Length.** Eleven sections risks a reference dump. Every section must open
