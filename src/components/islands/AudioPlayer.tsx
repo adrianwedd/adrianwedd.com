@@ -159,8 +159,13 @@ export default function AudioPlayer({ src, title }: Props) {
 
         <div class="min-w-0 flex-1">
           <div class="text-text truncate text-sm font-medium">{title}</div>
-          <div class="mt-1 flex items-center gap-2">
+          <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
             <span class="text-text-muted text-xs tabular-nums">{formatTime(currentTime)}</span>
+            {/* `min-w-24` is a floor, not `min-w-0`: the range input's ~129px
+                intrinsic min-width used to widen the whole row on mobile, but
+                letting it shrink freely lets the transport buttons squeeze it to
+                0px at 320px. The floor plus `flex-wrap` above drops it onto its
+                own full-width line instead of collapsing it. */}
             <input
               type="range"
               min="0"
@@ -168,7 +173,7 @@ export default function AudioPlayer({ src, title }: Props) {
               step="5"
               value={currentTime}
               onInput={seek}
-              class="accent-accent h-1 w-full min-w-0 flex-1 cursor-pointer"
+              class="accent-accent h-1 min-w-24 flex-1 cursor-pointer"
               aria-label="Seek"
               aria-valuetext={`${formatTime(currentTime)} of ${formatTime(duration)}`}
             />

@@ -178,7 +178,10 @@
  * as the background extending past the text. The `.table-scroll` wrapper comes
  * from src/lib/rehype-table-scroll.mjs.
  */
-.prose .table-scroll {
+/* Unscoped: the rehype plugin runs for every markdown file, including the
+   CHANGELOG that /changelog/ renders outside `.prose`. The containment is
+   what stops the page widening, so it can't depend on the prose class. */
+.table-scroll {
   max-width: 100%;
   overflow-x: auto;
   margin: 1.5rem 0;
@@ -187,7 +190,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.prose .table-scroll > table {
+.table-scroll > table {
   margin: 0;
   min-width: 100%;
 }
@@ -206,8 +209,10 @@
   font-weight: 600;
 }
 
+/* Width and style stated outright rather than inherited from the typography
+   plugin's defaults, so a plugin upgrade can't quietly turn this into a no-op. */
 .prose tbody tr {
-  border-bottom-color: var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .prose tbody tr:last-child {
@@ -501,6 +506,37 @@
     color: black !important;
     white-space: pre-wrap !important;
     word-break: break-all;
+  }
+
+  /* Tables: undo the screen treatment. The scroll wrapper would clip anything
+     past the page width (print doesn't scroll), and the cell colours resolve
+     through the theme vars — cream-on-white, i.e. blank, from the dark theme. */
+  .table-scroll {
+    overflow-x: visible !important;
+    max-width: none !important;
+    border-color: #ddd !important;
+  }
+
+  .table-scroll > table {
+    min-width: 0 !important;
+  }
+
+  .prose table {
+    page-break-inside: auto;
+  }
+
+  .prose th,
+  .prose td {
+    color: black !important;
+    border-color: #ddd !important;
+  }
+
+  .prose thead th {
+    background: #f5f5f5 !important;
+  }
+
+  .prose tbody tr {
+    border-bottom-color: #ddd !important;
   }
 
   /* Page margins */

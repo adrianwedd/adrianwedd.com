@@ -6,8 +6,12 @@
  * background is wider than the text" on mobile. Styling lives in
  * `.prose .table-scroll` in src/styles/global.css.
  *
- * `tabindex="0"` keeps the scroll region reachable by keyboard (WCAG 2.1.1) —
- * no `role="region"`, which would need an accessible name to be worth having.
+ * The wrapper ships inert: no `tabindex`, no `role`. A scroll region only needs
+ * to be keyboard-reachable (WCAG 2.1.1) when it actually scrolls, and most
+ * tables on this site fit their column — a static `tabindex="0"` would add
+ * dozens of silent, unlabelled tab stops across the table-heavy posts. The
+ * `initTableScroll` block in BaseLayout.astro measures each wrapper and adds
+ * `tabindex`/`role="group"`/`aria-label` to just the ones that overflow.
  *
  * Hand-rolled walk rather than unist-util-visit: no new dependency, and the
  * parent-rewrite is simpler to express as a child map.
@@ -22,7 +26,7 @@ export default function rehypeTableScroll() {
           return {
             type: 'element',
             tagName: 'div',
-            properties: { className: ['table-scroll'], tabIndex: 0 },
+            properties: { className: ['table-scroll'] },
             children: [child],
           };
         }
