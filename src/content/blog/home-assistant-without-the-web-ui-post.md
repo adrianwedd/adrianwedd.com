@@ -4,6 +4,10 @@ description: 'The login page died, so I stopped using it. Operating Home Assista
 date: 2026-08-01
 tags: ['engineering', 'homelab', 'home-assistant', 'raspberry-pi', 'ai-agents', 'claude-code']
 draft: false
+heroImage: '/notebook-assets/home-assistant-without-the-web-ui/infographic.webp'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-without-the-web-ui/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-without-the-web-ui/video.mp4'
+audioDuration: '23:19'
 ---
 
 ## The forced move
