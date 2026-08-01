@@ -8,6 +8,9 @@ heroImage: '/notebook-assets/home-assistant-without-the-web-ui/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-without-the-web-ui/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/home-assistant-without-the-web-ui/video.mp4'
 audioDuration: '23:19'
+youtubeUrl: 'https://www.youtube.com/watch?v=kLO9T59qt9k'
+videoUploadDate: 2026-08-01T21:14:00Z
+autopublish: true
 ---
 
 ## The forced move
