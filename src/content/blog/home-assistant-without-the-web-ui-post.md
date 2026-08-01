@@ -311,12 +311,100 @@ Most of the value in the above is transferable, and the fastest way to transfer 
 - Nothing that merely looks dead gets switched off unasked. Flag and ask.
 ```
 
-Four task prompts follow. Each one distils a section of the post, so this doubles as an index.
+Four task prompts follow, each in a block you can copy whole. Each one distils a section of the post, so this doubles as an index.
 
-**Token audit** (_Three channels and a lever_). Audit the long-lived access tokens on my Home Assistant instance and tell me what would break if each were revoked. Read lifespans from the storage layer rather than trusting the UI's "valid for 10 years" boilerplate, which is static text and was wrong on my box. For every token, enumerate _deployments_ rather than owners: grep the fleet's config files, environment files and password manager entries, and treat "one consumer owns this" as a hypothesis to disprove — I revoked a token believed to have a single consumer and broke a service nobody knew was one. Distinguish tokens used as bearer material from tokens that merely appear in files as identifiers; rotating the latter costs a working integration for no security gain. Revocation does have an API, despite what a lot of write-ups say: `auth/refresh_tokens` lists the tokens and `auth/delete_refresh_token` removes one, over a websocket authenticated with a _user_ token, so plan the rotation as fully scriptable. Do not use the Supervisor's token for either: both commands are scoped to the authenticating user's own tokens, and while minting is cleanly refused for a `system_generated` user, `auth/delete_refresh_token` has no token-type guard and will not refuse — it looks the ID up among the Supervisor user's tokens, fails to find it, and reports the token ID as invalid. Check which credential you are holding before you believe that error. And note that a consumer with a dead token can sit `active (running)` at exit 0 indefinitely, so plan to verify data flow rather than unit state after any rotation.
+**Token audit** (_Three channels and a lever_).
 
-**Add an integration over REST** (_Adding an integration without a browser_). Add the `<domain>` integration without using the web UI, driving the config-flow API through the Supervisor proxy: `POST /core/api/config/config_entries/flow` with the handler to get a `flow_id` and schema, then POST each step's payload. That collection URL is POST-only — a GET on `.../config_entries/flow` with no ID returns 405 — but the per-flow resource `.../config_entries/flow/<flow_id>` does answer GET, so do not read the 405 as meaning the whole family is write-only. If you need to discover an undocumented schema, you may POST `{}` and read the required keys back out of `errors`, but only when the step has at least one mandatory field with no default; a step whose fields are all optional or defaulted will treat `{}` as a valid submission and advance or finalise the flow with defaults I did not choose. When unsure which kind of step you're on, re-read the schema with `GET /core/api/config/config_entries/flow/<flow_id>`, which submits nothing — note that is the setup-flow resource, not `.../options/flow/<flow_id>`, which is a separate manager and only knows options-flow IDs. Verify by reading `/core/api/states` for the new entities. If you need to undo this, disable the entry rather than deleting it — `DELETE /core/api/config/config_entries/entry/<id>` cascades to every entity the entry owns.
+```text
+Audit the long-lived access tokens on my Home Assistant instance and tell me
+what would break if each were revoked. Read lifespans from the storage layer
+rather than trusting the UI's "valid for 10 years" boilerplate, which is
+static text and was wrong on my box. For every token, enumerate deployments
+rather than owners: grep the fleet's config files, environment files and
+password manager entries, and treat "one consumer owns this" as a hypothesis
+to disprove — I revoked a token believed to have a single consumer and broke a
+service nobody knew was one. Distinguish tokens used as bearer material from
+tokens that merely appear in files as identifiers; rotating the latter costs a
+working integration for no security gain. Revocation does have an API, despite
+what a lot of write-ups say: `auth/refresh_tokens` lists the tokens and
+`auth/delete_refresh_token` removes one, over a websocket authenticated with a
+user token, so plan the rotation as fully scriptable. Do not use the
+Supervisor's token for either: both commands are scoped to the authenticating
+user's own tokens, and while minting is cleanly refused for a
+`system_generated` user, `auth/delete_refresh_token` has no token-type guard
+and will not refuse — it looks the ID up among the Supervisor user's tokens,
+fails to find it, and reports the token ID as invalid. Check which credential
+you are holding before you believe that error. And note that a consumer with a
+dead token can sit `active (running)` at exit 0 indefinitely, so plan to
+verify data flow rather than unit state after any rotation.
+```
 
-**Onboard an MQTT sensor** (_Getting data in_). Write a publisher that reports health from `<host>` into Home Assistant via MQTT discovery, so no YAML is added on the Home Assistant side. Use Python with paho, never `mosquitto_pub` for a scheduled publisher: its `-P` puts the password in argv, world-readable at `/proc/<pid>/cmdline` for the life of every run, and a timer is exactly where that form gets used. Explicitly assert the CONNACK before publishing — this is paho's footgun specifically, since the CLI would exit non-zero on a rejection: `connect()` returns when TCP is up, before the broker has accepted credentials, so a rejected password otherwise looks exactly like success and the process exits 0 having delivered nothing. Set `expire_after` to three times the publish interval rather than configuring a last will, because this process connects, publishes and exits by design and an LWT would fire on every successful run. Retain the _discovery_ payload so entities survive a Home Assistant restart, but publish the _state_ payload unretained: Home Assistant restores the last state and its remaining expiry itself, and a retained state message replayed by the broker can hand an entity back an already-expired value as if it were fresh. Expiry is what makes a dead host go `unavailable` instead of freezing at a stale-but-plausible value. Use flat entity names with no `device:` block so entity IDs stay deterministic. Set `force_update: true` on anything whose freshness is checked, or identical payloads will not write state.
+**Add an integration over REST** (_Adding an integration without a browser_).
 
-**Diagnose "configured but not working"** (_Exit 0 is not evidence_). `<thing>` reads as correctly configured and does not work. Assume every success signal you find is uninformative: exit 0, the Supervisor's `{"result": "ok"}` and `active (running)` mean the command ran, not that the change took. Verify settled state instead of the snapshot — after any Core restart, poll `/core/api/config` on the Supervisor proxy until `state == RUNNING`, because Home Assistant reports `NOT_RUNNING` for about a minute after the API is already answering 200. If a sensor looks stale, check `last_reported` against `last_changed` before concluding anything is dead: Home Assistant does not write state on identical payloads, so a genuinely healthy sensor holding a steady value will fail a freshness check forever unless `force_update: true` is set. Establish negative proof where you can — watch the value over a window long enough to see whether it ever reaches the threshold it's supposed to. And check whether the change requires approval outside this box: an option can be set, accepted and read back correctly while the thing it configures stays dead pending a human click in a third-party console, which no call made from here will ever reveal.
+```text
+Add the `<domain>` integration without using the web UI, driving the
+config-flow API through the Supervisor proxy: `POST
+/core/api/config/config_entries/flow` with the handler to get a `flow_id` and
+schema, then POST each step's payload. That collection URL is POST-only — a
+GET on `.../config_entries/flow` with no ID returns 405 — but the per-flow
+resource `.../config_entries/flow/<flow_id>` does answer GET, so do not read
+the 405 as meaning the whole family is write-only. If you need to discover an
+undocumented schema, you may POST `{}` and read the required keys back out of
+`errors`, but only when the step has at least one mandatory field with no
+default; a step whose fields are all optional or defaulted will treat `{}` as
+a valid submission and advance or finalise the flow with defaults I did not
+choose. When unsure which kind of step you're on, re-read the schema with `GET
+/core/api/config/config_entries/flow/<flow_id>`, which submits nothing — note
+that is the setup-flow resource, not `.../options/flow/<flow_id>`, which is a
+separate manager and only knows options-flow IDs. Verify by reading
+`/core/api/states` for the new entities. If you need to undo this, disable the
+entry rather than deleting it — `DELETE
+/core/api/config/config_entries/entry/<id>` cascades to every entity the entry
+owns.
+```
+
+**Onboard an MQTT sensor** (_Getting data in_).
+
+```text
+Write a publisher that reports health from `<host>` into Home Assistant via
+MQTT discovery, so no YAML is added on the Home Assistant side. Use Python
+with paho, never `mosquitto_pub` for a scheduled publisher: its `-P` puts the
+password in argv, world-readable at `/proc/<pid>/cmdline` for the life of
+every run, and a timer is exactly where that form gets used. Explicitly assert
+the CONNACK before publishing — this is paho's footgun specifically, since the
+CLI would exit non-zero on a rejection: `connect()` returns when TCP is up,
+before the broker has accepted credentials, so a rejected password otherwise
+looks exactly like success and the process exits 0 having delivered nothing.
+Set `expire_after` to three times the publish interval rather than configuring
+a last will, because this process connects, publishes and exits by design and
+an LWT would fire on every successful run. Retain the discovery payload so
+entities survive a Home Assistant restart, but publish the state payload
+unretained: Home Assistant restores the last state and its remaining expiry
+itself, and a retained state message replayed by the broker can hand an entity
+back an already-expired value as if it were fresh. Expiry is what makes a dead
+host go `unavailable` instead of freezing at a stale-but-plausible value. Use
+flat entity names with no `device:` block so entity IDs stay deterministic.
+Set `force_update: true` on anything whose freshness is checked, or identical
+payloads will not write state.
+```
+
+**Diagnose "configured but not working"** (_Exit 0 is not evidence_).
+
+```text
+`<thing>` reads as correctly configured and does not work. Assume every
+success signal you find is uninformative: exit 0, the Supervisor's `{"result":
+"ok"}` and `active (running)` mean the command ran, not that the change took.
+Verify settled state instead of the snapshot — after any Core restart, poll
+`/core/api/config` on the Supervisor proxy until `state == RUNNING`, because
+Home Assistant reports `NOT_RUNNING` for about a minute after the API is
+already answering 200. If a sensor looks stale, check `last_reported` against
+`last_changed` before concluding anything is dead: Home Assistant does not
+write state on identical payloads, so a genuinely healthy sensor holding a
+steady value will fail a freshness check forever unless `force_update: true`
+is set. Establish negative proof where you can — watch the value over a window
+long enough to see whether it ever reaches the threshold it's supposed to. And
+check whether the change requires approval outside this box: an option can be
+set, accepted and read back correctly while the thing it configures stays dead
+pending a human click in a third-party console, which no call made from here
+will ever reveal.
+```
