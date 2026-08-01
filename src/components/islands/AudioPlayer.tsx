@@ -168,7 +168,7 @@ export default function AudioPlayer({ src, title }: Props) {
               step="5"
               value={currentTime}
               onInput={seek}
-              class="accent-accent h-1 flex-1 cursor-pointer"
+              class="accent-accent h-1 w-full min-w-0 flex-1 cursor-pointer"
               aria-label="Seek"
               aria-valuetext={`${formatTime(currentTime)} of ${formatTime(duration)}`}
             />

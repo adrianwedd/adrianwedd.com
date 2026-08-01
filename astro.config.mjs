@@ -4,6 +4,8 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import preact from '@astrojs/preact';
 import tailwindcss from '@tailwindcss/vite';
+import { unified } from '@astrojs/markdown-remark';
+import rehypeTableScroll from './src/lib/rehype-table-scroll.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -47,7 +49,8 @@ function getSitemapMeta(pathname) {
   if (/^\/gallery\//.test(pathname)) return { priority: 0.6, changefreq: 'monthly' };
   if (pathname === '/fixes/') return { priority: 0.8, changefreq: 'weekly' };
   if (/^\/fixes\/[^/]+\/$/.test(pathname)) return { priority: 0.7, changefreq: 'monthly' };
-  if (['/services/', '/local/', '/about/', '/contact/', '/new/', '/now/'].includes(pathname)) return { priority: 0.7, changefreq: 'monthly' };
+  if (['/services/', '/local/', '/about/', '/contact/', '/new/', '/now/'].includes(pathname))
+    return { priority: 0.7, changefreq: 'monthly' };
   if (pathname === '/activity/') return { priority: 0.7, changefreq: 'weekly' };
   return { priority: 0.5, changefreq: 'monthly' };
 }
@@ -78,6 +81,13 @@ export default defineConfig({
     }),
     preact(),
   ],
+  markdown: {
+    // `markdown.rehypePlugins` is deprecated in Astro 6.4 — the processor is
+    // the supported route. mdx() inherits it via extendMarkdownConfig.
+    processor: unified({
+      rehypePlugins: [rehypeTableScroll],
+    }),
+  },
   vite: {
     plugins: [tailwindcss()],
   },
