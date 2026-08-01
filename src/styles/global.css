@@ -164,6 +164,75 @@
   }
 }
 
+/*
+ * Prose overrides for markdown tables and inline code.
+ *
+ * Unlayered on purpose: @tailwindcss/typography emits `.prose` into the
+ * utilities layer, which outranks @layer base no matter how specific the
+ * selector is — the same reason `.light` sits outside @theme above.
+ *
+ * Two problems the plugin leaves behind. Its cell colours are slate greys
+ * baked in at build time, so table text is near-black on the dark surface and
+ * effectively invisible. And a wide table (or a long unbreakable inline path)
+ * widens the whole document rather than its own column, which reads on mobile
+ * as the background extending past the text. The `.table-scroll` wrapper comes
+ * from src/lib/rehype-table-scroll.mjs.
+ */
+/* Unscoped: the rehype plugin runs for every markdown file, including the
+   CHANGELOG that /changelog/ renders outside `.prose`. The containment is
+   what stops the page widening, so it can't depend on the prose class. */
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll > table {
+  margin: 0;
+  min-width: 100%;
+}
+
+.prose th,
+.prose td {
+  color: var(--color-text);
+  border-color: var(--color-border);
+  padding: 0.625rem 0.875rem;
+  vertical-align: top;
+}
+
+.prose thead th {
+  background-color: var(--color-surface-alt);
+  border-bottom-color: var(--color-border);
+  font-weight: 600;
+}
+
+/* Width and style stated outright rather than inherited from the typography
+   plugin's defaults, so a plugin upgrade can't quietly turn this into a no-op. */
+.prose tbody tr {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose tbody tr:last-child {
+  border-bottom-width: 0;
+}
+
+/* `pre > code` is excluded: the block already scrolls, and wrapping there
+   would mangle copy-pasteable commands. */
+.prose :not(pre) > code {
+  overflow-wrap: break-word;
+}
+
+/* The plugin wraps inline code in literal backtick glyphs. The code already
+   has its own background, colour and mono face — the backticks just print
+   twice and get picked up when you copy the string. */
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
 @layer utilities {
   .card-hover {
     transition:
@@ -437,6 +506,37 @@
     color: black !important;
     white-space: pre-wrap !important;
     word-break: break-all;
+  }
+
+  /* Tables: undo the screen treatment. The scroll wrapper would clip anything
+     past the page width (print doesn't scroll), and the cell colours resolve
+     through the theme vars — cream-on-white, i.e. blank, from the dark theme. */
+  .table-scroll {
+    overflow-x: visible !important;
+    max-width: none !important;
+    border-color: #ddd !important;
+  }
+
+  .table-scroll > table {
+    min-width: 0 !important;
+  }
+
+  .prose table {
+    page-break-inside: auto;
+  }
+
+  .prose th,
+  .prose td {
+    color: black !important;
+    border-color: #ddd !important;
+  }
+
+  .prose thead th {
+    background: #f5f5f5 !important;
+  }
+
+  .prose tbody tr {
+    border-bottom-color: #ddd !important;
   }
 
   /* Page margins */

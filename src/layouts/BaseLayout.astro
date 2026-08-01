@@ -368,14 +368,43 @@ const props = Astro.props;
           });
         }
 
+        // Scrollable tables (src/lib/rehype-table-scroll.mjs) — a wrapper only
+        // becomes a tab stop when its table genuinely overflows, so tables that
+        // fit their column don't litter the tab order with silent stops.
+        function syncTableScroll() {
+          var wrappers = document.querySelectorAll('.table-scroll');
+          for (var i = 0; i < wrappers.length; i++) {
+            var el = wrappers[i];
+            if (el.scrollWidth > el.clientWidth + 1) {
+              el.setAttribute('tabindex', '0');
+              el.setAttribute('role', 'group');
+              el.setAttribute('aria-label', 'Table, scrolls horizontally');
+            } else {
+              el.removeAttribute('tabindex');
+              el.removeAttribute('role');
+              el.removeAttribute('aria-label');
+            }
+          }
+        }
+
+        function initTableScroll() {
+          syncTableScroll();
+          var root = document.documentElement;
+          if (root.dataset.tsInit) return;
+          root.dataset.tsInit = '1';
+          window.addEventListener('resize', syncTableScroll, { passive: true });
+        }
+
         initKeyboardShortcuts();
         initBackToTop();
+        initTableScroll();
         var root = document.documentElement;
         if (!root.dataset.layoutSwapInit) {
           root.dataset.layoutSwapInit = '1';
           document.addEventListener('astro:after-swap', function () {
             initKeyboardShortcuts();
             initBackToTop();
+            initTableScroll();
           });
         }
       })();
