@@ -315,7 +315,7 @@ Four task prompts follow, each in a block you can copy whole. Each one distils a
 
 **Token audit** (_Three channels and a lever_).
 
-```text
+```markdown
 Audit the long-lived access tokens on my Home Assistant instance and tell me
 what would break if each were revoked. Read lifespans from the storage layer
 rather than trusting the UI's "valid for 10 years" boilerplate, which is
@@ -341,7 +341,7 @@ verify data flow rather than unit state after any rotation.
 
 **Add an integration over REST** (_Adding an integration without a browser_).
 
-```text
+```markdown
 Add the `<domain>` integration without using the web UI, driving the
 config-flow API through the Supervisor proxy: `POST
 /core/api/config/config_entries/flow` with the handler to get a `flow_id` and
@@ -365,7 +365,7 @@ owns.
 
 **Onboard an MQTT sensor** (_Getting data in_).
 
-```text
+```markdown
 Write a publisher that reports health from `<host>` into Home Assistant via
 MQTT discovery, so no YAML is added on the Home Assistant side. Use Python
 with paho, never `mosquitto_pub` for a scheduled publisher: its `-P` puts the
@@ -390,7 +390,7 @@ payloads will not write state.
 
 **Diagnose "configured but not working"** (_Exit 0 is not evidence_).
 
-```text
+```markdown
 `<thing>` reads as correctly configured and does not work. Assume every
 success signal you find is uninformative: exit 0, the Supervisor's `{"result":
 "ok"}` and `active (running)` mean the command ran, not that the change took.
