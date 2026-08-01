@@ -65,12 +65,22 @@ that genuinely still need a browser, and how data gets in.
   `scripts/generate-social-queue.mjs` broadcasts at 09:00 Hobart on the post's
   `date`, and `date` is today — shipping `autopublish: true` before the assets
   exist would fire the social queue at a post with no hero, no audio and no
-  video. It goes in at phase 3, once the kit is on the CDN.
+  video. It goes in at phase 7, once the kit is on the CDN.
 
-  `heroImage`, `audioUrl`, `videoUrl`, `audioDuration` and `autopublish` all land
-  together in phase 7; `youtubeUrl` + `videoUploadDate` at phase 6.
+  `heroImage`, `audioUrl`, `videoUrl` and `audioDuration` land at phase 3 with
+  the R2 upload — `scripts/upload-videos-to-youtube.py` selects only non-draft
+  posts that have a `videoUrl` and no `youtubeUrl` (lines 71–76), so `videoUrl`
+  must precede phase 6. `youtubeUrl` is written by the uploader itself at
+  phase 6; `videoUploadDate` it does not write (it writes only `youtubeUrl`,
+  line 216) — set manually from the actual upload timestamp. `autopublish`
+  alone lands at phase 7.
   Description is **156** chars — under the 160 gate in
   `scripts/validate-content.js`.
+
+  `autopublish` is read by `generate-social-queue.mjs` via gray-matter (raw
+  frontmatter), not the Zod schema — it is deliberately absent from
+  `src/content.config.ts`, like the 20 published posts that already use it.
+  **Do not add it to the schema.**
 
 ## 4. Sanitisation
 
@@ -90,10 +100,27 @@ passphrase and infrastructure IDs.
 | `pi` (username) | **Kept.** A conventional add-on default, identical on every install, and §5.2 cannot describe the ephemeral-home-directory trap without it. Not a secret; not specific to this house. |
 | `SPARK`, `px-mind`, `picar` | Kept only where already public; otherwise "a consumer". |
 
-The unifi repo is never named or linked.
+The unifi repo is never named or linked — and neither are its internal paths.
+`docs/qa/…` and issue numbers from that repo are structure leaks, same as
+hostnames.
 
-Pre-merge check: grep the finished post for `192.168.`, `wedd.au`, `UDR7`,
-`pi5-hailo`, `claude_code_key`, and any 8-hex-digit run.
+**The sanitisation gate is an artifact, not just a table.** The NLM sources are
+"the post plus the sanitised reference doc" (§7 phase 3) — that doc must be
+*created*: copy the source reference doc to the session scratchpad, apply every
+row of the table above, and run the pre-merge grep against it **before** it is
+uploaded to NotebookLM. Generated assets get the same treatment on the way
+back: read every word of text on the infographic (NLM infographics have
+previously fabricated statistics and garbled titles), and spot-check the audio
+and video for spoken identifiers, before anything goes to R2 or YouTube.
+
+Pre-merge check — run against the finished post *and* the sanitised reference
+doc:
+
+```
+grep -nE '192\.168\.|wedd\.au|UDR7|pi5-hailo|claude_code_key|unifi|docs/qa' <file>
+grep -nE '\b[0-9a-f]{8}\b' <file>   # IDs from the journal; review hits manually —
+                                    # 6-digit colour codes do not match this
+```
 
 ## 5. Structure
 
@@ -182,10 +209,14 @@ Eleven sections, ~3,500 words. Each technique states the failure that produced i
     Core 2026.6.4 / OS 18.0 / 58 entries / 22 add-ons; live reads on the day of
     writing returned 2026.7.4 / 18.1 / 57 / 15. A journal records what *was* true.
 
-    *Provenance:* the corrected header of the reference doc @ `0ef8947` carries
-    only the version pair. The full quartet — including 58→57 entries and
-    22→15 add-ons — is recorded in `docs/qa/2026-08-01/67-qa-summary.md`, not in
-    the reference doc itself. All four figures are real; cite the QA summary.
+    *Provenance — spec-internal, never published:* the corrected header of the
+    reference doc @ `0ef8947` carries only the version pair. The full quartet —
+    including 58→57 entries and 22→15 add-ons — is recorded in the unifi repo's
+    QA summary for issue 67 (2026-08-01), not in the reference doc itself. All
+    four figures are real. The post states the numbers as "the source notes
+    said / live reads returned" with **no citation of any file, path, repo or
+    issue number** — a private-repo path in a published post is a structure
+    leak, and `docs/qa` is now in the §4 grep for exactly this reason.
 
 ## 6. Evidence standard
 
@@ -221,27 +252,57 @@ box, so the post states the requirement and omits the specific error string.
 
 ## 7. Sequencing
 
-1. Write the post, **without `autopublish`**. Validate:
-   `node scripts/validate-content.js`, `npm run lint`, `npm run build`.
+**Publication model: one feature branch, one merge.** Every phase below happens
+on the branch; nothing merges to main until phase 7 is complete. The merge is
+the publication event — the site deploy and the social-queue regeneration both
+fire on that single push. This is what actually enforces the phase-2 QA gate:
+`draft: false` from phase 1 is safe because an unmerged branch serves nothing.
+
+1. Write the post, **without `autopublish`**. Create the sanitised reference
+   doc (§4) and grep both. Validate: `node scripts/validate-content.js`,
+   `npm run lint`, `npm run build`.
 2. **QA on the unifi side** — technical accuracy against the box and the journal.
    **Gate: no NLM assets until this clears.**
 3. NLM kit: audio overview, cinematic video (branded dark-botanical style prompt,
    no figures, no stock footage), **and the infographic hero — this step
    produces it; nothing earlier does.** Sources = the post plus the sanitised
-   reference doc. Upload audio/video to R2, infographic to
-   `public/notebook-assets/<slug>/`; original quality, no re-encode. Signoff
-   sting appended to the video (stream-copy) before upload.
-4. **Generate the `.jpg` twin** beside the `.webp` hero. The deploy gate requires
-   it and a local build does not catch its absence — this has broken main twice.
+   reference doc (§4 — grepped before upload). Review generated assets per §4.
+   - **Audio/video: original quality, no re-encode — ever.** The "no re-encode"
+     rule is about *audio and video streams*; it does not apply to images.
+   - **Signoff sting:** no sting asset exists in this repo, on this machine, or
+     at any guessable CDN key (verified 2026-08-01) — it has been produced ad
+     hoc per video. Recover it once: the published videos carry it as their
+     final ~3 s (e.g. `notebook-assets/the-index/video.mp4` on the CDN), so
+     extract that tail with `-c copy`, verify it visually, and keep it as the
+     canonical asset for this and future videos. Concat onto the new video with
+     `-c copy` (stream copy both sides).
+   - **Infographic: convert** the NLM PNG to
+     `public/notebook-assets/<slug>/infographic.webp` (the established
+     `cwebp`/sharp pattern, ~150 KB target) — this conversion is expected and
+     is not a violation of the no-re-encode rule above.
+   - Upload audio + sting'd video to R2 (`scripts/upload-media-to-r2.sh`);
+     **write `videoUrl`, `audioUrl`, `heroImage`, `audioDuration` into
+     frontmatter now** — phase 6's uploader refuses posts without `videoUrl`.
+4. **Generate the `.jpg` twin** beside the `.webp` hero (from the original PNG,
+   not the WebP). The deploy gate requires it and a local build does not catch
+   its absence — this has broken main twice.
 5. `src/content/audio/` entry cross-linking back to the post.
-6. YouTube upload (public), `youtubeUrl` + `videoUploadDate` into frontmatter.
-7. **Last:** add `heroImage`, `audioUrl`, `videoUrl`, `audioDuration` and
-   `autopublish: true`. Re-run `node scripts/validate-content.js` after this
-   edit — the phase-1 pass says nothing about frontmatter added later.
+6. YouTube upload (public) via `scripts/upload-videos-to-youtube.py` — it
+   selects non-draft posts with `videoUrl` and no `youtubeUrl`, and writes
+   `youtubeUrl` back itself. **`videoUploadDate` it does not write:** set it
+   manually from the actual upload timestamp.
+7. **Last:** add `autopublish: true` (everything else is already in from
+   phases 3–6). Re-run `node scripts/validate-content.js` after this edit —
+   the phase-1 pass says nothing about frontmatter added later. **Check the
+   date before merging:** `generate-social-queue.mjs` skips any post whose
+   `date` is before today (Hobart) — "assumed already broadcast", silently. If
+   the phases have spilled past midnight, bump `date` to the merge day first.
+   Then merge.
 
-Ordering rationale: the social queue fires on `date`, which is today, so
-`autopublish` is the last thing to land and only once every asset it would
-advertise actually exists.
+Ordering rationale: the social queue fires on `date`, so `autopublish` is the
+last thing to land and only once every asset it would advertise actually
+exists — and `date` must still be "today" at the moment of merge, or the queue
+drops the post without an error.
 
 ## 8. Risks
 
