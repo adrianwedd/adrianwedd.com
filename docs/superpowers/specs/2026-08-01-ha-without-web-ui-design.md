@@ -124,7 +124,8 @@ grep -nE '\b[0-9a-f]{8}\b' <file>   # IDs from the journal; review hits manually
 
 ## 5. Structure
 
-Eleven sections, ~3,500 words. Each technique states the failure that produced it.
+Eleven sections plus a closing appendix, ~4,000 words. Each technique states the
+failure that produced it.
 
 1. **The forced move.** Turnstile dead; and separately, UI changes leave no diff,
    no backup, no reviewable artifact. Thesis stated.
@@ -218,7 +219,47 @@ Eleven sections, ~3,500 words. Each technique states the failure that produced i
     issue number** — a private-repo path in a published post is a structure
     leak, and `docs/qa` is now in the §4 grep for exactly this reason.
 
-## 6. Evidence standard
+12. **Appendix: prompts to hand your agent.** The post's most reusable artifact,
+    added 2026-08-01 at Adrian's direction: the audience most likely to need
+    this material is a Claude (Code) user pointed at their own Home Assistant
+    box, and the fastest way to transfer the lessons is as paste-able prompts,
+    not prose. Two parts, both drafted with the §4 placeholders
+    (`<HA_HOST>`, `~/.ssh/<key>`) so readers substitute their own values:
+
+    a. **An operating-rules block** for the reader's `CLAUDE.md` / system
+       prompt — the post's rules distilled into imperative agent instructions
+       (~30 lines, one fenced markdown block, explicitly framed as
+       "copy this into your agent's context"). Must encode at minimum:
+       `SUPERVISOR_TOKEN` requires a login shell (`bash -lc`); prefer the
+       Supervisor proxy (`/core/api/...`) over direct `:8123` auth; `.storage`
+       edits are stop → poll-until-down → edit via the SSH add-on's own
+       interpreter → start, never edit-then-restart; SSH keys go in the add-on's
+       `ssh.authorized_keys` option, one key per array element, never the
+       rendered file; prefer disable over delete — `DELETE
+       /config_entries/entry/<id>` cascades to all entities; back up before
+       every write, and the backup add-on may prune local backups; treat exit 0
+       / `rc: ok` / `active (running)` as "the command ran", not "the change
+       took" — verify settled state by reading it back after the relevant
+       reload; `ha apps` ignores unknown subcommands, use the API;
+       `--location=.local` on backup creation; MQTT publishing is Python +
+       paho with the CONNACK asserted, never `mosquitto_pub` with an argv
+       password; know the four browser-only operations and *say so* instead of
+       retrying; nothing that merely looks dead gets switched off unasked.
+
+    b. **Four task prompts**, each one paragraph, each mapping to a section of
+       the post so the appendix doubles as an index: token audit (§3 —
+       enumerate deployments before revoking anything); add an integration by
+       config flow over REST (§6 — including the `POST {}` probe and its
+       precondition); onboard an MQTT sensor end-to-end (§10 — discovery,
+       expire_after, retained, CONNACK); and diagnose "configured but not
+       working" (§9 — settled-state verification, `last_reported` vs
+       `last_changed`, the freshness-check trap).
+
+    The appendix contains **nothing not already in the body** — it is a
+    distillation, so it adds no new sanitisation surface, but it still goes
+    through the §4 greps with the rest of the post (prompts are the most
+    copy-paste-prone text on the page; a leaked identifier here propagates
+    into strangers' configs).
 
 Every claim ships in one of three states. Nothing ships as an uncorroborated
 assertion.
@@ -310,6 +351,8 @@ drops the post without an error.
   at the end of §4 (single canonical list — do not duplicate it here).
 - **Publishing a stale claim.** Mitigated by §6 — and by the fact that the
   staleness failure is itself in the post.
-- **Length.** Eleven sections risks a reference dump. Every section must open
-  with the failure, not the recipe; if a section cannot name what it cost, it
-  gets cut.
+- **Length.** Eleven sections plus an appendix risks a reference dump. Every
+  section must open with the failure, not the recipe; if a section cannot name
+  what it cost, it gets cut. The appendix is exempt from the failure-first rule
+  (it is deliberately a recipe) but not from the no-new-claims rule — anything
+  in a prompt must be stated and evidenced in the body first.
