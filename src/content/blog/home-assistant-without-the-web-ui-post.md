@@ -74,7 +74,7 @@ The second channel is long-lived access tokens, for callers that aren't on the b
 
 The UI says "Each token will be valid for 10 years from creation". That sentence is static boilerplate, not a statement about the token you just made. The storage layer said 365 days for the two I'd just minted. If a token's lifespan matters to you, read it from storage; don't read it off the screen that was going to say that regardless.
 
-The Supervisor cannot mint these. `system_generated` users are refused by `auth/long_lived_access_token`, so a rotation has to bootstrap from an existing user token over the websocket — the old token creates its own replacement. And there is no revocation API at all. Creation is API-driven; revocation is not.
+The Supervisor cannot mint these. `system_generated` users are refused by `auth/long_lived_access_token`, so a rotation has to bootstrap from an existing user token over the websocket — the old token creates its own replacement. Revocation works the same way, and this is the thing I had written down wrong for months: `auth/refresh_tokens` lists them, `auth/delete_refresh_token` removes one, both over that same user-authenticated websocket. Neither is reachable with the Supervisor's own token and both are scoped to the authenticating user, which is most of why the UI looks like the only door. It isn't.
 
 The rule I'd most want to hand someone else: **before revoking, enumerate deployments, not owners.** One token was believed to belong to a single consumer. It was also in a second consumer's `.env`, was an admin token on another box on the fleet, and was stored twice in the password manager. Revoking it broke a service nobody knew was a consumer, and the breakage was silent — the consumer skipped every call and sat there `active (running)`, exit 0, for as long as I let it. Conversely, a token appearing in a file is not proof that the file uses it as bearer material: one appeared across thirty files purely as an identifier, and rotating it would have cost a working integration for no security gain whatsoever.
 
@@ -116,7 +116,7 @@ This is the table. It is the most useful thing in this post.
 | Add-on options — `ssh.authorized_keys`, and everything else in an add-on's config | `POST /addons/<slug>/options` → `POST /addons/<slug>/restart` | No — but it's a **full-object replace**. |
 | Config entries — integrations | The REST config-flow API | No. |
 
-The add-on row has a trap with the same shape as the one this house's router pulled on me, which is what made me recognise it: `POST /addons/<slug>/options` is a full-object replace. Post only the key you're changing and every key you omitted is **deleted**. On the MQTT broker add-on that means a sparse POST quietly removes existing logins. On the SSH add-on it means deleting every authorised key except the one you just sent — locking yourself out of the box this entire way of working depends on. GET the current options, mutate the one key, POST the whole object back. Every time.
+The add-on row has a trap with the same shape as the one this house's router pulled on me, which is what made me recognise it: `POST /addons/<slug>/options` is a full-object replace. Post only the key you're changing and every key you omitted is **deleted**. On the MQTT broker add-on that means a sparse POST quietly removes existing logins. On the SSH add-on it means deleting every authorised key except the one you just sent — locking yourself out of the box this entire way of working depends on. GET the current options — from `/addons/<slug>/info`, which returns them in an `options` object, because `/addons/<slug>/options` is POST-only and 405s on a GET — mutate the one key, and POST the whole object back. Every time.
 
 And note the relationship between rows: the add-on *option* is durable and survives restarts, while the *file it renders to* does not. Both statements are true at once, and the contradiction is only apparent. The option is the source; the file is the output.
 
@@ -159,18 +159,19 @@ There is, though, and it's the same API the browser is calling:
 POST /core/api/config/config_entries/flow          {"handler":"<domain>"}
       → returns flow_id + data_schema
 POST /core/api/config/config_entries/flow/<flow_id>  <step payload>
+GET  /core/api/config/config_entries/flow/<flow_id>  # re-read a setup step's schema
 POST /core/api/config/config_entries/options/flow  {"handler":"<entry_id>"}
-GET  /core/api/config/config_entries/options/flow/<flow_id>   # re-read schema
+GET  /core/api/config/config_entries/options/flow/<flow_id>   # ditto, options flow
 GET  /core/api/states                                          # verification
 ```
 
 The flow endpoint is POST-only, incidentally — a GET returns 405, which for about a minute reads like the endpoint doesn't exist.
 
-There's a useful trick for a schema you have no documentation for: POST `{}` and read the `errors` the API hands back, which names its own required keys. **Its precondition matters more than the trick.** That only works when the step has at least one mandatory field with no default. A step whose fields are all optional or defaulted treats `{}` as a *valid submission* and advances — or finalises — the flow with default values you didn't choose. If you're not sure which kind of step you're on, `GET` the options-flow endpoint instead: it re-reads the current step's schema without submitting anything.
+There's a useful trick for a schema you have no documentation for: POST `{}` and read the `errors` the API hands back, which names its own required keys. **Its precondition matters more than the trick.** That only works when the step has at least one mandatory field with no default. A step whose fields are all optional or defaulted treats `{}` as a *valid submission* and advances — or finalises — the flow with default values you didn't choose. If you're not sure which kind of step you're on, `GET` the flow's own resource URL instead — it re-reads the current step's schema without submitting anything. Mind which flow, though: setup flows and options flows are separate managers with separate ID spaces, so a setup `flow_id` belongs at `/core/api/config/config_entries/flow/<flow_id>`, and handing it to the `.../options/flow/<flow_id>` endpoint gets you an error rather than a schema.
 
 Reading existing entries honestly is its own skill. `GET /core/api/config/config_entries/entry` gives you `state` and `source`, and of the 57 entries on this box, 50 load and 7 don't — which looks like seven problems and is zero. Six are `source: ignore`: discovery hits I deliberately dismissed. One is `disabled_by: user`: a decision I made on purpose. Only `setup_error` and `setup_retry` are actually broken. An agent tidying up "failures" here will helpfully undo a series of choices.
 
-**And the deletion cascades.** `DELETE /config_entries/entry/<id>` removes every entity the entry owns, silently, without a restart. I removed one zombie entry and it took twelve live entities with it, along with their history. Disable instead — `disabled_by` over the websocket. The entry goes inert, and its entities keep everything they've recorded. Delete only when you've confirmed the entry owns nothing you want; the one dead cloud integration I *have* deleted was safe precisely because it owned zero entities and I'd checked.
+**And the deletion cascades.** `DELETE /core/api/config/config_entries/entry/<id>` removes every entity the entry owns, silently, without a restart. I removed one zombie entry and it took twelve live entities with it, along with their history. Disable instead — `disabled_by` over the websocket. The entry goes inert, and its entities keep everything they've recorded. Delete only when you've confirmed the entry owns nothing you want; the one dead cloud integration I *have* deleted was safe precisely because it owned zero entities and I'd checked.
 
 ## Add-ons, and the subcommand that isn't
 
@@ -182,11 +183,9 @@ Add-on management is SSH-only, by the way. Core's long-lived tokens do not reach
 
 Backups have two traps stacked on each other. The default backup target is a network mount that is currently down, so you must pass `--location=.local` — **with the equals sign**, which is required. And more consequentially: the cloud backup add-on auto-prunes `/backup` according to its own retention config, which it applies to everything in there, including the backup you made ninety seconds ago for the change you're about to make. Mine vanished within minutes. A local backup is not a durable restore point while that add-on is running. Pause it, or re-verify immediately before you actually need the thing.
 
-## The four things that still need a browser
+## The three things that still need a browser
 
-Everything above is automatable. This is the list that isn't, and it's short enough to be worth stating precisely.
-
-**Revoking a long-lived token.** Creation is API-only; revocation is UI-only. A perfect inversion, and the reason a token rotation is never quite fully scripted.
+Everything above is automatable. This is the list that isn't, and it's short enough to be worth stating precisely. It used to have a fourth entry — revoking a long-lived token — and that entry was simply wrong. `auth/delete_refresh_token` has been sitting on the websocket the whole time, and I'd never gone to look because I'd written down that it wasn't there.
 
 **Companion-app sensor toggles.** Enabling extra phone sensors registers entities as `disabled_by: integration`, and the switch that flips them is on the *phone*, not the server. No amount of server-side access reaches it.
 
@@ -210,7 +209,7 @@ The proof that mattered there was negative. An arming counter was supposed to cl
 
 The same shape caught me in a template. A couple of automations spoke their assistant's answer by reading `states('conversation.…')`, and they had been silently broken for as long as they'd existed — no error, no log line, just an announcement that made no sense. A conversation agent's entity state is not its answer, and it is not `"idle"` either, which is what I'd assumed and written down. Read live, the `conversation.*` entities hold a **last-used timestamp** — or `unknown` if they've never been used. So `states()` on one returns a date, forever, and a template that renders it produces something perfectly well-formed and completely wrong. The answer only exists in the service call's `response_variable`; you have to capture it there and hand it to `tts.speak`. That isn't a tidier way to write the same automation. It's the only way the automation works at all.
 
-So: **verify settled state, not the snapshot.** After a Core restart, wait out the settle period — and know that Home Assistant reports `state: NOT_RUNNING` for roughly a minute *after* the API is already answering 200. HTTP 200 is not readiness. Poll `/api/config` until `state == RUNNING` before you believe any read you take in that window.
+So: **verify settled state, not the snapshot.** After a Core restart, wait out the settle period — and know that Home Assistant reports `state: NOT_RUNNING` for roughly a minute *after* the API is already answering 200. HTTP 200 is not readiness. Poll `/core/api/config` on the proxy — `/api/config` if you're talking to `:8123` directly — until `state == RUNNING` before you believe any read you take in that window.
 
 And know which resets are by design. My off-grid shutdown interlock deliberately forces its armed flag off and zeroes a related counter on every start, then re-arms itself about six minutes later. Reading that as a regression has cost me time more than once, which is a good argument for writing down the behaviours that look like bugs and aren't.
 
@@ -218,13 +217,13 @@ And know which resets are by design. My off-grid shutdown interlock deliberately
 
 Fleet health comes in over MQTT discovery: a small publisher on each machine sends semantic health, entities appear in Home Assistant automatically, and nothing is added to any YAML file. Four decisions in that publisher are load-bearing, and each of them is there because the alternative failed quietly.
 
-**Python and paho, not `mosquitto_pub`.** The CLI takes a password only via argv, which is world-readable at `/proc/<pid>/cmdline` for the life of the process — once a minute, forever, on every machine. It's a small window each time and an enormous number of windows.
+**Python and paho, not `mosquitto_pub -P`.** That flag puts the password in argv, where it's world-readable at `/proc/<pid>/cmdline` for the life of the process — once a minute, forever, on every machine. It's a small window each time and an enormous number of windows. (The CLI does have a way out — it reads the same options from `~/.config/mosquitto_pub` — so this alone wouldn't have forced the move. The next one did.)
 
 **Assert the CONNACK.** `connect()` returns as soon as the TCP connection is up, which is *before* the broker has accepted your credentials. A rejected password looks precisely like success: publishes queue up locally, the process exits 0, the timer that runs it reports healthy, and nothing whatsoever reaches Home Assistant. This is exactly the silent-failure class the monitoring exists to catch, arriving inside the monitoring.
 
 **`expire_after`, not a last will.** An MQTT last-will fires when a long-lived connection drops — but this process connects, publishes and exits by design, so an LWT would fire on every *successful* run. `expire_after` at three times the publish interval says the same thing without lying about it.
 
-**Retained and expiring, together.** Retained so entities survive a Home Assistant restart instead of disappearing until the next publish. Expiring so that a dead host goes `unavailable` rather than freezing at its last good value — because a stale-but-plausible reading reads as healthy, and that's worse than no reading at all.
+**Retain the discovery config; do not retain the state.** Retain the discovery payload, so the entities survive a Home Assistant restart instead of disappearing until the next publish. Publish the *state* unretained, though, because Home Assistant already stores the last state and the time remaining on its expiry across a restart — and a retained state message the broker replays on reconnect can hand an entity back a value that has already expired, briefly, as if it were fresh. Which is the whole thing the expiry was for: a dead host should go `unavailable` rather than freeze at its last good value, because a stale-but-plausible reading reads as healthy, and that's worse than no reading at all.
 
 Flat entity names, no `device:` block: entity IDs have to stay deterministic or the automations that reference them break the next time something is re-registered.
 
@@ -269,10 +268,12 @@ Most of the value in the above is transferable, and the fastest way to transfer 
   SSH add-on's own `sudo python3`.
 - SSH keys go in the add-on's `ssh.authorized_keys` option, ONE key per array
   element. Never edit the rendered file — it is regenerated on every start.
-- `POST /addons/<slug>/options` is a full-object replace. GET current options,
-  mutate one key, POST the whole object. A sparse POST deletes what you omit.
-- Prefer disable over delete. `DELETE /config_entries/entry/<id>` cascades to
-  every entity the entry owns, silently and without a restart. Use
+- `POST /addons/<slug>/options` is a full-object replace. GET current options
+  from `/addons/<slug>/info` (the `options` path itself is POST-only and 405s
+  on a GET), mutate one key, POST the whole object back. A sparse POST deletes
+  what you omit.
+- Prefer disable over delete. `DELETE /core/api/config/config_entries/entry/<id>`
+  cascades to every entity the entry owns, silently and without a restart. Use
   `disabled_by` over the websocket instead.
 - `source: ignore` and `disabled_by: user` are decisions, not breakage.
   Do not "fix" them.
@@ -282,23 +283,29 @@ Most of the value in the above is transferable, and the fastest way to transfer 
 - `ha apps` ignores unknown subcommands and prints the list anyway. Never
   infer a subcommand exists from its output; use the API.
 - MQTT publishing is Python + paho with the CONNACK explicitly asserted.
-  Never `mosquitto_pub` — the password goes in argv and is world-readable.
+  Never `mosquitto_pub -P` — that password goes in argv, world-readable at
+  `/proc/<pid>/cmdline`. Retain the discovery payload, not the state payload.
 - `scp` does not work on this box. Pipe: `ssh ... 'cat > /path' < file`.
-- Treat exit 0, `rc: ok` and `active (running)` as "the command ran", NOT as
-  "the change took". Verify by reading settled state back after the relevant
-  reload. Core reports `NOT_RUNNING` for ~60s after the API answers 200.
-- Four operations require a human in a browser: revoking a long-lived token,
-  companion-app sensor toggles, OAuth consent, and third-party admin consoles
-  (e.g. Tailscale route approval). Say so and stop; do not retry.
+- Treat exit 0, the Supervisor's `{"result": "ok"}` and `active (running)` as
+  "the command ran", NOT as "the change took". Verify by reading settled state
+  back after the relevant reload. Poll `/core/api/config` until
+  `state == RUNNING`: Core reports `NOT_RUNNING` for ~60s after the API
+  answers 200.
+- Three operations require a human in a browser: companion-app sensor toggles,
+  OAuth consent, and third-party admin consoles (e.g. Tailscale route
+  approval). Say so and stop; do not retry. Revoking a long-lived token is NOT
+  one of them — `auth/refresh_tokens` lists and `auth/delete_refresh_token`
+  revokes, over a websocket authenticated with a *user* token (not the
+  Supervisor's).
 - Nothing that merely looks dead gets switched off unasked. Flag and ask.
 ```
 
 Four task prompts follow. Each one distils a section of the post, so this doubles as an index.
 
-**Token audit** (*Three channels and a lever*). Audit the long-lived access tokens on my Home Assistant instance and tell me what would break if each were revoked. Read lifespans from the storage layer rather than trusting the UI's "valid for 10 years" boilerplate, which is static text and was wrong on my box. For every token, enumerate *deployments* rather than owners: grep the fleet's config files, environment files and password manager entries, and treat "one consumer owns this" as a hypothesis to disprove — I revoked a token believed to have a single consumer and broke a service nobody knew was one. Distinguish tokens used as bearer material from tokens that merely appear in files as identifiers; rotating the latter costs a working integration for no security gain. Note that revocation itself has no API and will need me in a browser, and that a consumer with a dead token can sit `active (running)` at exit 0 indefinitely, so plan to verify data flow rather than unit state after any rotation.
+**Token audit** (*Three channels and a lever*). Audit the long-lived access tokens on my Home Assistant instance and tell me what would break if each were revoked. Read lifespans from the storage layer rather than trusting the UI's "valid for 10 years" boilerplate, which is static text and was wrong on my box. For every token, enumerate *deployments* rather than owners: grep the fleet's config files, environment files and password manager entries, and treat "one consumer owns this" as a hypothesis to disprove — I revoked a token believed to have a single consumer and broke a service nobody knew was one. Distinguish tokens used as bearer material from tokens that merely appear in files as identifiers; rotating the latter costs a working integration for no security gain. Revocation does have an API, despite what a lot of write-ups say: `auth/refresh_tokens` lists the tokens and `auth/delete_refresh_token` removes one, over a websocket authenticated with a *user* token — not the Supervisor's, which can neither mint nor revoke — so plan the rotation as fully scriptable. And note that a consumer with a dead token can sit `active (running)` at exit 0 indefinitely, so plan to verify data flow rather than unit state after any rotation.
 
-**Add an integration over REST** (*Adding an integration without a browser*). Add the `<domain>` integration without using the web UI, driving the config-flow API through the Supervisor proxy: `POST /core/api/config/config_entries/flow` with the handler to get a `flow_id` and schema, then POST each step's payload. The endpoint is POST-only — a GET returns 405. If you need to discover an undocumented schema, you may POST `{}` and read the required keys back out of `errors`, but only when the step has at least one mandatory field with no default; a step whose fields are all optional or defaulted will treat `{}` as a valid submission and advance or finalise the flow with defaults I did not choose. When unsure which kind of step you're on, re-read the schema with `GET .../options/flow/<flow_id>` instead, which submits nothing. Verify by reading `/core/api/states` for the new entities. If you need to undo this, disable the entry rather than deleting it — `DELETE` cascades to every entity the entry owns.
+**Add an integration over REST** (*Adding an integration without a browser*). Add the `<domain>` integration without using the web UI, driving the config-flow API through the Supervisor proxy: `POST /core/api/config/config_entries/flow` with the handler to get a `flow_id` and schema, then POST each step's payload. The endpoint is POST-only — a GET returns 405. If you need to discover an undocumented schema, you may POST `{}` and read the required keys back out of `errors`, but only when the step has at least one mandatory field with no default; a step whose fields are all optional or defaulted will treat `{}` as a valid submission and advance or finalise the flow with defaults I did not choose. When unsure which kind of step you're on, re-read the schema with `GET /core/api/config/config_entries/flow/<flow_id>`, which submits nothing — note that is the setup-flow resource, not `.../options/flow/<flow_id>`, which is a separate manager and only knows options-flow IDs. Verify by reading `/core/api/states` for the new entities. If you need to undo this, disable the entry rather than deleting it — `DELETE /core/api/config/config_entries/entry/<id>` cascades to every entity the entry owns.
 
-**Onboard an MQTT sensor** (*Getting data in*). Write a publisher that reports health from `<host>` into Home Assistant via MQTT discovery, so no YAML is added on the Home Assistant side. Use Python with paho, not `mosquitto_pub`: the CLI takes the password via argv and it is world-readable at `/proc/<pid>/cmdline` for the life of every run. Explicitly assert the CONNACK before publishing — `connect()` returns when TCP is up, before the broker has accepted credentials, so a rejected password otherwise looks exactly like success and the process exits 0 having delivered nothing. Set `expire_after` to three times the publish interval rather than configuring a last will, because this process connects, publishes and exits by design and an LWT would fire on every successful run. Publish retained *and* expiring, so entities survive a Home Assistant restart but a dead host goes `unavailable` instead of freezing at a stale-but-plausible value. Use flat entity names with no `device:` block so entity IDs stay deterministic. Set `force_update: true` on anything whose freshness is checked, or identical payloads will not write state.
+**Onboard an MQTT sensor** (*Getting data in*). Write a publisher that reports health from `<host>` into Home Assistant via MQTT discovery, so no YAML is added on the Home Assistant side. Use Python with paho, not `mosquitto_pub -P`: that password goes in argv and is world-readable at `/proc/<pid>/cmdline` for the life of every run. Explicitly assert the CONNACK before publishing — `connect()` returns when TCP is up, before the broker has accepted credentials, so a rejected password otherwise looks exactly like success and the process exits 0 having delivered nothing. Set `expire_after` to three times the publish interval rather than configuring a last will, because this process connects, publishes and exits by design and an LWT would fire on every successful run. Retain the *discovery* payload so entities survive a Home Assistant restart, but publish the *state* payload unretained: Home Assistant restores the last state and its remaining expiry itself, and a retained state message replayed by the broker can hand an entity back an already-expired value as if it were fresh. Expiry is what makes a dead host go `unavailable` instead of freezing at a stale-but-plausible value. Use flat entity names with no `device:` block so entity IDs stay deterministic. Set `force_update: true` on anything whose freshness is checked, or identical payloads will not write state.
 
-**Diagnose "configured but not working"** (*Exit 0 is not evidence*). `<thing>` reads as correctly configured and does not work. Assume every success signal you find is uninformative: exit 0, `rc: ok` and `active (running)` mean the command ran, not that the change took. Verify settled state instead of the snapshot — after any Core restart, poll `/api/config` until `state == RUNNING`, because Home Assistant reports `NOT_RUNNING` for about a minute after the API is already answering 200. If a sensor looks stale, check `last_reported` against `last_changed` before concluding anything is dead: Home Assistant does not write state on identical payloads, so a genuinely healthy sensor holding a steady value will fail a freshness check forever unless `force_update: true` is set. Establish negative proof where you can — watch the value over a window long enough to see whether it ever reaches the threshold it's supposed to. And check whether the change requires approval outside this box: an option can be set, accepted and read back correctly while the thing it configures stays dead pending a human click in a third-party console, which no call made from here will ever reveal.
+**Diagnose "configured but not working"** (*Exit 0 is not evidence*). `<thing>` reads as correctly configured and does not work. Assume every success signal you find is uninformative: exit 0, the Supervisor's `{"result": "ok"}` and `active (running)` mean the command ran, not that the change took. Verify settled state instead of the snapshot — after any Core restart, poll `/core/api/config` on the Supervisor proxy until `state == RUNNING`, because Home Assistant reports `NOT_RUNNING` for about a minute after the API is already answering 200. If a sensor looks stale, check `last_reported` against `last_changed` before concluding anything is dead: Home Assistant does not write state on identical payloads, so a genuinely healthy sensor holding a steady value will fail a freshness check forever unless `force_update: true` is set. Establish negative proof where you can — watch the value over a window long enough to see whether it ever reaches the threshold it's supposed to. And check whether the change requires approval outside this box: an option can be set, accepted and read back correctly while the thing it configures stays dead pending a human click in a third-party console, which no call made from here will ever reveal.
