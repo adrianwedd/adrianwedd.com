@@ -179,7 +179,12 @@ failure that produced it.
    required) because the default target is a down network mount. And the Google
    Drive Backup add-on prunes `/backup` per its own retention: a freshly created
    local backup vanished within minutes.
-8. **The four things that still need a browser.** LLAT revocation (creation is
+8. **The four things that still need a browser.**
+   *Corrected during Task-4 QA (2026-08-01): the LLAT-revocation item was wrong —
+   `auth/delete_refresh_token` exists on the websocket (verified against HA core
+   source), so the published section is "three things", and the token lessons
+   moved fully into §3. The remaining three items stand as below.*
+   LLAT revocation (creation is
    API-only, revocation is not); companion-app sensor toggles, where the switch
    is on the *phone*, not the server; OAuth consent redirects; and the
    Tailscale admin console — `advertise_routes` is fully API-settable, and the
