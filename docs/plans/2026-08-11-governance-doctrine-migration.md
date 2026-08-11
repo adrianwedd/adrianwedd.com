@@ -6,6 +6,24 @@ instruction currently governing agent behaviour in this repo, plus a target
 architecture and migration sequence. Applying it is a separate, explicitly
 authorized step.
 
+**Revision history:**
+- **v1** (2026-08-11, PR #608 as opened): initial semantic inventory.
+- **v2** (2026-08-11, this revision, PR #608 after operator review): bounded
+  adversarial correction pass. The v1 inventory called E1–E7 "genuine fire
+  doors" too readily — several are compound rules containing a real
+  invariant plus an unnecessarily broad stop condition. Re-audited §2.6 by
+  **effect, reversibility, and blast radius** rather than by filename/
+  hostname/tool-name. Added the model-neutral stop rule to the target
+  architecture (§4 item 1a). Added an explicit green-envelope classification
+  for ordinary git/GitHub bookkeeping (§4 item 1b) — previously
+  unspecified, and unspecified was itself predicted to produce a new
+  false-stop specimen ("the work is complete locally, shall I commit it?").
+  Corrected D9's proposed fix, which v1 had accidentally re-committed to
+  the same "which file is currently stale" pattern it was diagnosing (§5
+  step 2, §3 D9). Narrowed F5's claim about the approval-seeking skill's
+  provenance, which v1 overstated (§3 F5). No invariant's substance changed
+  in this revision — see §6.
+
 **Method:** read `AGENTS.md`, `STRATEGY.md`, `CLAUDE.md`, `GEMINI.md` in full
 (no partial reads). Checked for repo-local `.claude/skills/` or `.claude/agents/`
 doctrine — none exist in this repo (only stale agent worktrees under
@@ -114,7 +132,7 @@ so its *presence* doesn't imply "this file also governs when to stop."
 | D6 | `repo:` frontmatter removed from 5 private-repo projects | S | 🟢 | Preserve |
 | D7 | Social queue JSON is seed only, KV is authoritative | S | 🟢 | Preserve |
 | D8 | Pagefind over hosted search | S | 🟢 | Preserve |
-| D9 | **"CLAUDE.md's four collections is stale, trust the code (six)"** | S, but **now itself stale** | 🔴 | **Retire and replace** — see Finding F2. This entry is a live demonstration of the exact failure mode the whole migration is meant to fix: a drift-flag that itself drifted, undetected, because nothing re-checks stale claims about staleness. |
+| D9 | **"CLAUDE.md's four collections is stale, trust the code (six)"** | S, but **now itself stale** | 🔴 | **Retire and replace with a timeless rule, not a corrected scoreboard** — see Finding F2 and its v2 correction. This entry is a live demonstration of the exact failure mode the whole migration is meant to fix: a drift-flag that itself drifted, undetected, because nothing re-checks stale claims about staleness. |
 
 ### 2.5 `STRATEGY.md` §4 FAILURE MODES (lines 167–189)
 
@@ -130,18 +148,30 @@ so its *presence* doesn't imply "this file also governs when to stop."
 
 ### 2.6 `STRATEGY.md` §5 ESCALATION TRIGGERS (lines 191–208)
 
-| # | Trigger | Bucket | Stop-risk | Disposition | Notes |
-|---|---|---|---|---|---|
-| E1 | Anything touching secrets/auth (`.dev.vars`, `.env*`, GA4 keys, `PIPELINE_PAT`, `PUBLISH_SECRET`, NLM cookies, YouTube OAuth) | A (real fire door) | 🟢 | Preserve verbatim | Textbook fire door |
-| E2 | Any non-dry-run `wrangler deploy`; KV/R2/DO mutations; DNS/email config; Cloudflare API calls (even reads) | A (real fire door) | 🟢 | Preserve verbatim | Textbook fire door. Note: "even reads" is deliberately broad because the account holds non-site infrastructure — this breadth is *earned*, not accidental, per its own stated reason |
-| E3 | Any call to social endpoints / `fb-post.sh` / queue sync / autopublish-triggering frontmatter changes | A (real fire door) | 🟢 | Preserve verbatim, cross-ref I3/F-b | Real external-platform side effect |
-| E4 | Deleting/renaming `src/content/`, `public/notebook-assets/`, `public/og/`, generated media; adding redirects | A (real fire door) | 🟢 | Preserve verbatim, cross-ref I1 | |
-| E5 | NotebookLM generation runs (quota risk, dedicated-account ToS risk); YouTube uploads | A (real fire door) | 🟢 | Preserve verbatim | |
-| E6 | Any untracked repo-root file you didn't create | A (real fire door) | 🟢 | Preserve verbatim, cross-ref F-c | |
-| E7 | Changes to `deploy.yml` gates, branch protection, `.lychee.toml` | A (real fire door) | 🟢 | Preserve verbatim | |
-| E8 | **"Any ambiguity between this file, CLAUDE.md, and the code; any task that seems to require violating Section 2."** | Stated as A, but the first clause is not a fire door at all | 🔴 **confirmed** | **Split and narrow** | **This is the same defect as F-e, restated, and it's appended to a list of seven otherwise-legitimate triggers — which is exactly why it reads as "just another item" instead of the outlier it is.** The second clause ("violating Section 2") *is* a legitimate fire door — any task that would require breaking a real invariant genuinely should escalate. The first clause ("any ambiguity... between docs") is not; see rewrite below. |
+**v2 correction:** v1 of this audit accepted all seven §5 triggers as
+"genuine fire doors... preserve verbatim" (and mislabeled them "six of
+eight" while enumerating seven — a small arithmetic slip that's also a
+tell for insufficiently critical reading). On operator review, four of the
+seven are compound rules: a real invariant wrapped in a stop condition
+broader than the invariant justifies. The diagnostic question for each row
+below is **not** "does this rule protect something real" (all seven do) but
+**"does the specific consequence named actually require Adrian, or does the
+rule's wording sweep in reversible, non-identity-bearing work alongside the
+one action that does"** — fire doors should describe consequences, not
+filenames, hostnames, or tool names.
 
-**Six of eight §5 triggers (E1–E7) are correctly scoped, evidenced fire doors and should move to the authority layer essentially unchanged.** Only E8's first clause is the defect, and it's a narrow, surgical fix — not a reason to distrust the section as a whole.
+| # | Trigger (as written) | Real consequence being protected against | Bucket | Stop-risk | Disposition | Notes |
+|---|---|---|---|---|---|---|
+| E1 | Anything touching secrets/auth (`.dev.vars`, `.env*`, GA4 keys, `PIPELINE_PAT`, `PUBLISH_SECRET`, NLM cookies, YouTube OAuth) | Exposing, committing, printing, or mutating a secret/credential value; rotating or regenerating one | A (real fire door) | 🟢 | Preserve, narrow the verb from "touching" to "exposing/committing/mutating a value" | Referencing a secret's *name* in code, or checking whether an env var is *set* (not its value) for a health-style check, is not the fire door — reading or writing the *value* is. Worth stating explicitly so a literal agent doesn't treat `grep PUBLISH_SECRET .env.example` (the placeholder file, no real value) as a fire door |
+| E2 | Any non-dry-run `wrangler deploy`; KV/R2/DO mutations; DNS/email config; Cloudflare API calls (even reads) | Mutating production infrastructure, or reading/touching unrelated infrastructure sharing the same Cloudflare account | A (real fire door) | 🟢 | Preserve verbatim | Not flagged by the operator — already effect-scoped. The "even reads" breadth is justified in its own text (multi-tenant account) rather than accidental, so it survives the effect test as written |
+| E3 | Any call to social endpoints / `fb-post.sh` / queue sync / autopublish-triggering frontmatter changes | **Causing an identity-bearing public post, or mutating the live send queue/schedule** | A (real fire door), but as written it's keyed to a *hostname*, not an effect | 🟡→ narrow | **Narrow to the effect** | `social.adrianwedd.com` has genuine read-only endpoints (`GET /api/health`, `GET /api/watchdog/status`) that report state and cause no external effect — calling them is not a fire door under any reading of what's being protected. The real boundary: `POST /api/publish`, `POST /api/queue/sync`, `POST /api/cron/*` (manually invoked), `fb-post.sh`, and any frontmatter edit that could trigger autopublish (already I3/F-b) — i.e. anything that causes a post or changes what will be posted. "Any call to this hostname" is not the semantic boundary; "cause a publish or mutate the queue" is |
+| E4 | Deleting/renaming `src/content/`, `public/notebook-assets/`, `public/og/`, generated media; adding redirects | Breaking a permanent published URL or destroying irreplaceable generated media | A (real fire door) | 🟢 | Preserve verbatim, cross-ref I1/I2 | Not flagged — already effect-scoped (delete/rename/add-redirect are the actual destructive/URL-changing actions, not e.g. "touching" the directory) |
+| E5 | NotebookLM generation runs (quota risk, dedicated-account ToS risk); YouTube uploads | Two different consequences bundled together | Split | 🟡→ narrow | **Split into a resource envelope + a fire door** | NotebookLM generation consumes a shared daily quota (~50/type) against a dedicated account under ToS risk — this is **resource consumption within a standing envelope**, not an external publish: proceed within quota/standing authority (as already granted for ordinary content work), escalate only when approaching/crossing the quota ceiling or when authentication needs renewing. YouTube upload is a genuinely different act — **identity-bearing external publication** — and stays a fire door on its own, unbundled from quota management |
+| E6 | Any untracked repo-root file you didn't create | Absorbing or mutating foreign dirty-tree state that doesn't belong to the current task | Miscategorized — this is an **operating invariant**, not a fire door | 🔴 **confirmed** | **Retire as a fire door; move to `OPERATING_INVARIANTS.md`** | The valuable rule: don't touch, build on, or incorporate a stray file you didn't create — leave it alone. That does **not** require Adrian to decide anything; the correct default behaviour is simply "ignore it and continue your actual task," which needs no operator involvement at all. It becomes an escalation only in the narrower case where the assigned task genuinely requires inspecting, depending on, mutating, or deleting that specific file — and *that* narrower case is already covered by other, more specific fire doors (E4 for deletion, general judgment for "depends on unknown file contents") |
+| E7 | Changes to `deploy.yml` gates, branch protection, `.lychee.toml` | Two or three different consequences conflated | Split | 🔴 **confirmed** | **Split by action, not by filename** | Mutating actual GitHub branch-protection settings is an external control-plane action on a shared account — genuine fire door. Preparing, editing, and testing a reversible local patch to `deploy.yml` or `.lychee.toml` on a branch (the normal way CI gets fixed) is ordinary, reviewable, revertible work — it should proceed under the same green envelope as any other code change, then go through PR review like any other change (this repo already gates `main` behind required status checks + PR, per the branch-protection push rejection encountered live while producing this artifact — see the note at the end of this document). The fire door is *merging into `main`/actually changing protection rules*, not *drafting the fix* |
+| E8 | **"Any ambiguity between this file, CLAUDE.md, and the code; any task that seems to require violating Section 2."** | Same defect as F-e (§2.5), restated | Stated as A, first clause is not a fire door at all | 🔴 **confirmed** | **Split and narrow** | Unchanged from v1: the second clause ("violating Section 2") is a legitimate fire door; the first clause ("any ambiguity... between docs") is not. See F3's rewrite. |
+
+**Corrected count: of the seven §5 triggers, three (E1 narrowed, E2, E4) survive essentially as written; E3 is narrowed from hostname to effect; E5 splits into a resource envelope plus a narrower fire door; E6 is retired as a fire door and reclassified as an operating invariant; E7 splits by action (drafting a fix vs. mutating protection/merging). E8's first clause remains the one outright-defective clause, unchanged from v1's finding.** This is a materially different picture from v1's "six of eight... preserve verbatim essentially unchanged" — the pathology the operator caught in F3/E8 was present, in milder and easier-to-miss form, in four of the other six triggers.
 
 ### 2.7 `STRATEGY.md` §6 VERIFICATION (lines 210–232)
 
@@ -212,6 +242,18 @@ unstated in GEMINI.md. Not independently verified against
 made and this is a doctrine audit, not a code audit) — worth a one-line check
 before the migration commits a number as canonical.
 
+**v2 correction:** v1's own migration sequence (§5 step 2, as originally
+written) proposed fixing D9 by naming *AGENTS.md and GEMINI.md* as the
+currently-stale files — which is accurate today but repeats the exact
+pattern being diagnosed: a durable doctrine file asserting which other file
+is currently stale, which will itself go stale the next time any of these
+files changes. That is whack-a-mole with a v2 sticker on it, not a fix.
+D9's replacement must be a timeless, self-enforcing rule, not a corrected
+scoreboard — see the rewrite in §5 step 2 below. The specific
+AGENTS.md/GEMINI.md correction (fixing "four" to "six" in those two files)
+still needs to happen, but as an ordinary content fix during migration, not
+as new content *of* D9 itself.
+
 ### F3 — The doc-conflict-as-full-stop rule (STRATEGY.md §4 line 182–185 and §5 line 207–208) is the rule the operator specifically flagged, and it appears in two places with the same defect
 
 Exact text:
@@ -268,15 +310,38 @@ constitution" instead of deferring.
 
 ### F5 — Skill/workflow "seek approval" ceremony was not found in this repo
 
-No `.claude/skills/` directory exists here. If the "shall I apply it?"
-Codex incident the operator described originated from a generic
-approval-seeking skill, it was invoked from a globally-installed plugin, not
-from anything committed to this repo. This audit cannot characterize or scope
-that behaviour — it can only confirm the repo itself contributes no such rule.
-Recommend checking global plugin/skill configuration (outside any repo)
-separately if that failure mode needs to be closed off at the source rather
-than only defended against via the authority-outranks-ceremony rule proposed
-in §4 item 6 below.
+**v2 correction:** v1 of this finding overclaimed provenance ("it was invoked
+from a globally-installed plugin, not from anything committed to this repo").
+That conclusion isn't supported by what this audit actually established.
+
+What this audit established: no `.claude/skills/` directory exists in this
+repo. What it did **not** establish: where the approval-seeking behaviour
+observed in the Codex incident actually came from. The transcript referenced
+elsewhere in this conversation indicates Codex read a `superpowers:brainstorming`-named
+skill, but this repo-local audit did not inspect that skill's installation
+scope, ownership, or authority level — "not found in this repo" is evidence
+of absence *here*, not evidence of presence *elsewhere*, and conflating the
+two overreaches past what a read-only audit of four local files can support.
+
+Correct framing: **the approval-seeking workflow was not found in the
+audited repo-local doctrine. Its source is external to the files audited
+here and remains to be identified.** Recommend checking plugin/skill
+configuration outside this repo separately if that failure mode needs to be
+closed off at the source, rather than only defended against via the
+authority-outranks-ceremony rule proposed in §4 item 1a below — the doctrine
+fix and the provenance investigation are independent pieces of work, and
+this document does not resolve the second one.
+
+### F6 — The general design principle this pass surfaced
+
+**Preserve the invariant. Challenge the escalation.** For every existing
+"ask first" rule: what precise consequence is this protecting Adrian from?
+Make *that consequence*, and only that consequence, the fire door. Everything
+reversible on the path to that consequence — drafting, testing, preparing,
+reading, committing to a branch — stays green. §2.6's re-audit is this
+principle applied mechanically to all seven §5 triggers; it should also be
+the standing test applied to any *new* escalation trigger proposed during
+the migration steps in §5, not just the ones this audit happened to catch.
 
 ---
 
@@ -292,15 +357,60 @@ Five artifacts, each with a single job:
      mechanical constraints; tool-specific files are thin adapters onto this.
    - The default-authorization statement: ordinary reversible local edits
      (code, content, docs, tests) proceed without asking; the enumerated fire
-     doors (moved here from STRATEGY §5, minus the ambiguity clause) require
+     doors (§2.6's corrected set — E1 narrowed, E2, E4 verbatim, E3 narrowed
+     to effect, E5 split into quota-envelope + YouTube-upload fire door, E7
+     split into draft-vs-mutate-protection, E8 narrowed per F3) require
      explicit operator sign-off; a doc/doc or doc/code disagreement is
      investigated and fixed in-flight, not an automatic stop (F3's rewrite).
+     E6 is **not** in this list — it moved to the invariants file per §2.6.
    - One line: *a generic skill or workflow's own procedure (e.g. "seek
      design approval before implementing") cannot create a permission
      boundary this file doesn't already require — repo authority always
      outranks workflow ceremony* (closes the gap in F5 at the doctrine
      level, even though the source of that ceremony wasn't found in-repo).
-   - The escalation-packet requirement (§4.6 below), stated once, here.
+   - The escalation-packet requirement (item 6 below), stated once, here.
+
+   **1a. The stop rule.** Distinct from the fire-door list — fire doors say
+   *what requires sign-off*, the stop rule says *when to yield control at
+   all*. Model-neutral, four questions in order, evaluated before yielding:
+
+   > Before yielding control: **is the assigned outcome complete?** If yes,
+   > stop. If not, **is there useful authorized executable work?** If yes,
+   > continue. If not, **does Adrian genuinely need to decide something?**
+   > If yes, provide the decision packet (item 6 below). If not, stop with
+   > a clear status and receipts.
+   >
+   > "Programme incomplete" alone is not a reason to manufacture work;
+   > difficulty alone is not a reason to manufacture an operator decision.
+
+   This is deliberately the compact, model-neutral version — not the fuller
+   ledger-state machinery (`EXHAUSTED_FRONTIER`, delegated-work lifecycle,
+   etc.) developed the same day for the research repo's Claude-Code-specific
+   Stop hook. That machinery is a good fit for a long-running, heavily
+   subagent-delegated research programme; it is more apparatus than this
+   repo's ordinary edit-test-commit-PR work needs. Import the four-question
+   shape, not the apparatus.
+
+   **1b. The green envelope, explicitly.** v1 left "ordinary reversible
+   local edits... proceed without asking" underspecified for the thing
+   agents actually spend most of a session doing: routine git/GitHub
+   bookkeeping. Left unstated, the predictable next false-stop specimen is
+   "the work is complete locally — shall I commit it?" Explicit classification:
+   - **Green, no sign-off needed:** creating a branch; narrowly-staged local
+     commits; pushing a branch (not `main`); opening or updating a PR;
+     posting an ordinary GitHub issue/PR comment as a status receipt;
+     running tests/linters/builds locally.
+   - **Still green, still no sign-off, but classified separately because it
+     has its own name above:** anything that itself crosses a fire door —
+     e.g. a PR that happens to touch `deploy.yml` is fine to open (E7:
+     drafting), but merging it or separately mutating branch protection is
+     not (E7: mutating).
+   - **Not green — the effect list in item 1 above.**
+   The key is the same effect-based test as §2.6, applied prospectively:
+   an action is green unless it itself causes one of the named consequences
+   (external publish, credential exposure, production infrastructure
+   mutation, permanent-URL breakage, protection-rule mutation) — not because
+   it superficially resembles "shipping" or "being done."
 
 2. **`STRATEGY.md` — strategy only.**
    Keeps §1 INTENT (minus the "done" authority clause, which moves to
@@ -316,11 +426,17 @@ Five artifacts, each with a single job:
    research repo. Nothing in this file is a stop rule — it's "here is what
    breaks and how to check," full stop (pun noted).
 
-4. **Fire doors — short, explicit, and branch-local.**
-   Lives inside `AGENTS.md`'s authority block as a flat list: the seven §5
-   triggers, E8 narrowed per F3's rewrite, each one-line, each naming the
-   specific real-world consequence (posts publicly / spends secrets budget /
-   mutates production infrastructure / breaks a permanent URL). "Branch-local"
+4. **Fire doors — short, explicit, effect-keyed, and branch-local.**
+   Lives inside `AGENTS.md`'s authority block as a flat list, per §2.6's
+   corrected set (six entries, not seven — E6 moved out): E1 (secret/
+   credential *value* exposure or mutation), E2 (production infra mutation
+   or cross-tenant Cloudflare reads, verbatim), E3 (causing a public post or
+   mutating the live queue — not "calling the hostname"), E4 (destroying
+   permanent content/media, verbatim), E5b (YouTube upload only — quota
+   management for NLM generation is the green envelope, not a fire door),
+   E7b (mutating branch protection / merging a gate change — not drafting
+   one), E8 narrowed per F3. Each one-line, each naming the specific
+   real-world consequence, not a filename/hostname/tool. "Branch-local"
    means: hitting a fire door blocks only the specific action/branch of work
    that crosses it, not the whole session — this should be stated explicitly
    since none of the current files say it one way or the other, and the
@@ -367,19 +483,30 @@ Each step is small, reversible, and independently reviewable — no step
 requires trusting the whole plan before the first commit.
 
 1. **Create `docs/policy/OPERATING_INVARIANTS.md`** — move STRATEGY §2/§4/§6
-   content verbatim (except F3's item, rewritten per §3 above). STRATEGY.md
-   is not yet edited in this step; this step only creates the new file.
+   content verbatim (except F3's item, rewritten per §3 above), plus E6
+   (untracked repo-root files), reclassified from fire door to invariant
+   per §2.6. STRATEGY.md is not yet edited in this step; this step only
+   creates the new file.
 2. **Trim `STRATEGY.md`** — remove the sections now duplicated in
-   `OPERATING_INVARIANTS.md`; fix D9 (F2) to correctly identify AGENTS.md
-   and GEMINI.md as the currently-stale files; rewrite the ambiguity clause
-   in what remains of §4/§5 per F3, or remove it entirely if it's fully
-   superseded by the new AGENTS.md authority block from step 3.
+   `OPERATING_INVARIANTS.md`. Replace D9 with a timeless rule, not a
+   corrected scoreboard (v2 correction, §3 F2): *"Factual descriptions of
+   the current implementation belong in, or must be derived from, the
+   implementation/source of truth. Do not maintain durable doctrine whose
+   content is 'file X is currently stale'; correct or remove the stale
+   duplication instead."* The four-collections example moves to this
+   document's history (§3 F2 above) as the illustrative case, not into the
+   normative file. Separately, as an ordinary content fix (not a D9
+   rewrite): correct "four collections" to "six" in `AGENTS.md` and
+   `GEMINI.md` directly. Rewrite the ambiguity clause in what remains of
+   §4/§5 per F3, or remove it entirely if it's fully superseded by the new
+   AGENTS.md authority block from step 3.
 3. **Write the `AGENTS.md` authority block** — the governance preamble
-   described in target-architecture item 1, including the seven fire doors
-   (E1–E7 verbatim, E8 narrowed), the escalation-packet requirement, and the
-   "methodology cannot create a permission boundary" line. Existing
-   AGENTS.md reference content (stack/commands/gotchas) stays below it,
-   deduplicated against `OPERATING_INVARIANTS.md` where it overlaps (A3–A8).
+   described in target-architecture item 1: the corrected six-entry fire
+   door list (§2.6), the stop rule (item 1a), the green envelope (item 1b),
+   the escalation-packet requirement, and the "methodology cannot create a
+   permission boundary" line. Existing AGENTS.md reference content
+   (stack/commands/gotchas) stays below it, deduplicated against
+   `OPERATING_INVARIANTS.md` where it overlaps (A3–A8).
 4. **Trim `CLAUDE.md`** — remove sections fully covered by
    `OPERATING_INVARIANTS.md`/`AGENTS.md`; keep the QA-tools section and
    NotebookLM runbook as tool-adapter content; add the one-line "AGENTS.md
@@ -406,16 +533,38 @@ repo-local documentation edits.
 
 ## 6. Explicit non-goals
 
-Nothing in this proposal weakens, removes, or narrows the substance of:
-I1 (permalinks), I2 (media preservation), I3 (autopublish safety), I12
-(dependency overrides), I13 (worker idempotency/CronLock), I14 (secrets),
-I18–I21 (monitoring anti-gaming, staleness calibration, auth body
-assertions, `bash -e` handling), or any of E1–E7 (the seven genuine fire
-doors). Every one of those is preserved verbatim and, where duplicated,
-consolidated to a single canonical location rather than deleted. The only
-rules narrowed are the two identified false-stop risks (F3's pair,
-STRATEGY §4/§5's doc-ambiguity clauses) — and even those are narrowed, not
-removed: the underlying "don't silently paper over a real conflict" instinct
-survives, only the "any ambiguity, however trivial" trigger condition is
-tightened to "an ambiguity that actually controls a fire-door action or an
-operator value judgment."
+Nothing in this proposal weakens, removes, or narrows the *substance* of any
+invariant: I1 (permalinks), I2 (media preservation), I3 (autopublish
+safety), I12 (dependency overrides), I13 (worker idempotency/CronLock), I14
+(secrets), I18–I21 (monitoring anti-gaming, staleness calibration, auth body
+assertions, `bash -e` handling), E2 (production infra mutation), or E4
+(destroying permanent content/media). Every one of those is preserved
+verbatim and, where duplicated, consolidated to a single canonical location
+rather than deleted.
+
+**v2 update:** the set of narrowed rules is larger than v1 claimed, but the
+principle is the same in every case — narrow the *escalation trigger*, never
+the *invariant it protects*: E1 (secret-value exposure, not "touching"),
+E3 (causing a publish/queue mutation, not "calling a hostname"), E5 (split:
+YouTube upload stays a fire door; NLM quota management becomes a green
+resource envelope, which is a narrowing of *when to ask*, not a licence to
+ignore the quota/ToS risk itself — that risk is exactly why the quota
+ceiling still triggers an escalation), E6 (retired as a fire door entirely,
+reclassified as an invariant — "don't touch it" is stronger and more
+reliably followed as a default behaviour than "ask before continuing," since
+the default *is* to leave it alone), E7 (split: mutating branch protection
+stays a fire door; drafting a reversible local fix does not), E8/F3's pair
+(doc-ambiguity narrowed to fire-door-relevant ambiguity only). In every one
+of these seven cases the underlying protective instinct is preserved and,
+in E6's case, arguably strengthened (a default of "don't touch" beats a
+default of "ask, and someone might approve touching it").
+
+**Live example encountered while producing this artifact:** pushing v1 of
+this document directly to `main` was rejected by GitHub branch protection
+(`GH006: Protected branch update failed... 2 of 2 required status checks are
+expected`). That is exactly the E7-mutate/E7-draft distinction in
+miniature — drafting and committing the artifact was ordinary green work;
+landing it on `main` runs through the repo's own required-PR gate
+regardless of what this document says, which is the correct outcome and
+the reason this document itself shipped as PR #608 rather than a direct
+commit.
