@@ -178,7 +178,7 @@ edge verify + auto-rollback + nightly drift check). See
 - **Class-based selectors:** ThemeToggle and Header use class selectors (not IDs) to avoid duplicate ID issues when rendered in both desktop and mobile nav.
 - **Images:** Use `<Picture>` from `astro:assets` for all local images — never raw `<img>` on local paths (CI gate enforces this).
 - **CV sync:** `src/data/cv.ts` reads `src/data/base-cv.json` (gitignored, synced from `adrianwedd/cv` at build time). Falls back to DEFAULTS if file missing.
-- **Failure First stats:** volatile research figures (models/prompts/techniques + `asOf` date) live ONLY in `src/data/failure-first-stats.json` — every page that cites them imports that file. Never hardcode these numbers in page copy; update the JSON (and its `asOf`) when the recount lands. Historical milestone posts (e.g. `120-models-18k-prompts`) keep their dated figures.
+- **Failure First stats:** volatile research figures (models/prompts/techniques + `asOf` date) live ONLY in `src/data/failure-first-stats.json` — every page that cites them imports that file. Never hardcode these numbers in page copy; update the JSON (and its `asOf`) when the recount lands. Two markdown files can't import JSON and must be updated in the same commit as the JSON: `src/content/projects/failure-first.md` (description + body) and any current-figures audio/asset descriptions. Historical milestone posts (e.g. `120-models-18k-prompts`) keep their dated figures; date-frame stale descriptions (\"recorded at the N-model milestone\") rather than updating them. External links use `failurefirst.org` (the canonical domain per the site's own rel=canonical), never `failurefirst.ai`.
 
 ## Permalink strategy
 

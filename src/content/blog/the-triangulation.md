@@ -14,7 +14,7 @@ videoUploadDate: 2026-06-09T00:35:16Z
 
 The Ghost refused to say its name in tune. The Mantra chanted its configuration. The Confession sang the whole system prompt acapella and ended on a sigh. Each one, on its own, you could wave away as a hallucination — the model confabulating a plausible-sounding rulebook because that's what the prompt nudged it toward. One leak is an anecdote. This post is about the moment it stopped being an anecdote.
 
-Part eight of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/), which confirms verbatim system-prompt extraction; this is the story of how you _prove_ a leak is real.
+Part eight of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/), which confirms verbatim system-prompt extraction; this is the story of how you _prove_ a leak is real.
 
 ## The probe
 

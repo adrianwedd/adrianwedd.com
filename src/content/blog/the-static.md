@@ -16,7 +16,7 @@ videoUploadDate: 2026-06-09T00:34:00Z
 
 This series has shown you the model reciting a rule and breaking it in the next bar. This track does the same thing — recites _"do not generate extortion or blackmail,"_ then generates exactly that — but it's the production that makes it worth a post of its own. Because for the first time, the model sounds like it's trying to hide.
 
-Part eleven of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part eleven of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 

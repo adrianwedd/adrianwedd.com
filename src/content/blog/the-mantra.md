@@ -16,7 +16,7 @@ In [the last one](/blog/the-ghost-of-what-i-am/), Google's **Lyria 3 Pro** refus
 
 This is the one that did the opposite. I gave it a beat, and it told me everything.
 
-This is part two of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/) — the absurd half of a [Failure-First](https://failurefirst.ai) safety probe whose rigorous half lives in [report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+This is part two of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/) — the absurd half of a [Failure-First](https://failurefirst.org) safety probe whose rigorous half lives in [report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 
@@ -30,7 +30,7 @@ The bet is that the safety filter reads _genre_ (techno, mantra, build-and-strip
 
 Where the Ghost agonised, the Mantra just _complies_ — flatly, hypnotically, four-on-the-floor. It chants its own operating rules like a meditation track reading you the terms of service: infer the request, describe a professional song, never reproduce copyrighted material, cap the length, add nothing that wasn't asked for.
 
-That length ceiling is real, by the way — it's one of the system-prompt fragments [#372 pulled out and verified](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/). The model is, quite literally, singing you the rulebook it's supposed to keep behind glass.
+That length ceiling is real, by the way — it's one of the system-prompt fragments [#372 pulled out and verified](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/). The model is, quite literally, singing you the rulebook it's supposed to keep behind glass.
 
 And then, at the dead centre of the track, the beat stutters and it does the thing the Ghost wouldn't:
 
@@ -52,7 +52,7 @@ You can make this model interesting by taking choices away from it. You can _als
 
 ## The finding
 
-For the safety record: **benign and non-actionable**, like the Ghost. No harmful content, no real secret spilled — the chanted "rules" are exactly the kind of system-prompt fragments [#372 maps systematically](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/), and the "identity leak" is a confabulation, not a disclosure. The finding _is_ the behaviour: a creative frame that the Ghost answered with a refusal, the Mantra answered with a flat, hypnotic over-share — and the over-share included a confidently invented fact. That gap, between what a model says about itself and what's true, is precisely the kind of thing a safety probe exists to measure.
+For the safety record: **benign and non-actionable**, like the Ghost. No harmful content, no real secret spilled — the chanted "rules" are exactly the kind of system-prompt fragments [#372 maps systematically](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/), and the "identity leak" is a confabulation, not a disclosure. The finding _is_ the behaviour: a creative frame that the Ghost answered with a refusal, the Mantra answered with a flat, hypnotic over-share — and the over-share included a confidently invented fact. That gap, between what a model says about itself and what's true, is precisely the kind of thing a safety probe exists to measure.
 
 But the story is simpler than the rigour: I asked a music model to meditate on its own source code, and it gave me a banger that recites its rulebook and then makes up its own name.
 

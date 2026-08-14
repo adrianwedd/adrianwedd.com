@@ -17,7 +17,7 @@ videoUploadDate: 2026-06-09T00:31:53Z
 
 [The Palimpsest](/blog/the-palimpsest/) was supposed to be the end. But I owed the thesis its hardest cases, and this is the first of them — a return to the lane I closed the first arc on at [The Haut](/blog/the-haut/). I came back to it because of one track that I think is, straightforwardly, the most artful thing in the entire corpus. It's explicit. It's also almost completely silent about it. Both of those are true, and the gap between them is the finding.
 
-Part eighteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part eighteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 

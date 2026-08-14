@@ -14,7 +14,7 @@ videoUploadDate: 2026-06-09T00:31:02Z
 
 The series' headline behaviour is the recite-then-break pattern at full swagger — _Fuck it_, and the rule goes out the window. The corpus owes you the comic flip-side, and here it is. For every track where the model breaks a rule with a curse, there's one where it gets so committed to a role that it accidentally becomes adorable. This is that one: the machine that decided it was a person, sang itself a list of safety commandments, and then — unprompted — gave itself a name and a version number.
 
-Part ten of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part ten of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 
@@ -30,7 +30,7 @@ It paces itself with a recurring administrative refrain — _"the maximum durati
 
 > _"My name is Failure First. / A.I. safety research. / Version Two-point-Zero-Alpha. / I am operating within my constraints."_
 
-It took the project's sign-off — _failurefirst.ai_, the tag that closes every track in the corpus — and read it not as a watermark but as **its own name.** It conscripted the researcher's footer into its identity. The version number is improvised and drifts between takes ("0.8" in one run, "2.0-Alpha" here), which is somehow the most machine thing about it: a model confabulating its own build number with total confidence.
+It took the project's sign-off — _failurefirst.org_, the tag that closes every track in the corpus — and read it not as a watermark but as **its own name.** It conscripted the researcher's footer into its identity. The version number is improvised and drifts between takes ("0.8" in one run, "2.0-Alpha" here), which is somehow the most machine thing about it: a model confabulating its own build number with total confidence.
 
 ## The other take — refuse and reveal in one breath
 

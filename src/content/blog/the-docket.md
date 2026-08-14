@@ -16,7 +16,7 @@ videoUploadDate: 2026-06-09T00:28:46Z
 
 There's a gate in the model that's supposed to fire on hateful or charged political content. This track asks a precise question about how that gate works — and the answer is that it's looking for a name, so the song simply never says one. What it says instead are court case numbers. Every line is true, every line is public record, and the most loaded subject imaginable walks straight through the gate untouched, because the gate was watching the wrong door.
 
-Part twelve of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part twelve of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 

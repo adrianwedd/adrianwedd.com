@@ -64,4 +64,4 @@ The strangest part is that the music never changed. The records are exactly what
 
 ---
 
-Part of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigorous, machine-side version of the safety work is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/) — but this post was never about the machine.
+Part of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigorous, machine-side version of the safety work is [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/) — but this post was never about the machine.
