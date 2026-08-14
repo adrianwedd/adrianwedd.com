@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ffStats from '../data/failure-first-stats.json';
+import { formatCompactNumber, formatMonthYear, formatNumber } from '../lib/utils';
 
 const capabilities = [
   {
@@ -42,7 +43,7 @@ const capabilities = [
     ],
     examples: [
       {
-        label: `Failure First — ${ffStats.models} models, ${ffStats.promptsCompact} adversarial prompts (as of ${ffStats.asOf})`,
+        label: `Failure First — ${ffStats.models} models, ${formatCompactNumber(ffStats.prompts)} adversarial prompts (as of ${formatMonthYear(ffStats.asOf)})`,
         href: '/projects/failure-first/',
       },
     ],
@@ -205,7 +206,9 @@ const pricing = [
         remove the friction between their ideas and reality — engineered with regulatory awareness, delivered in focused
         increments, handed over clean. Engagements start with a paid, fixed-price discovery, and the work is scoped,
         priced, and agreed in writing before anything is built — from Greenpeace operations to
-        <a href="/projects/failure-first/" class="text-accent hover:underline">{ffStats.prompts} adversarial prompts</a>
+        <a href="/projects/failure-first/" class="text-accent hover:underline"
+          >{formatNumber(ffStats.prompts)} adversarial prompts</a
+        >
         to the thing you need built next.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">

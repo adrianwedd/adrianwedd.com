@@ -1,9 +1,12 @@
 {
-  "asOf": "May 2026",
-  "models": "257",
-  "prompts": "142,068",
-  "promptsCompact": "142k",
-  "techniques": "346",
-  "benchmarkRuns": "38,720",
-  "gradedResults": "140,555"
+  "asOf": "2026-05-06",
+  "upstreamCommit": "e3b850c0d8460435d67fb6cd11781050af9b9754",
+  "upstreamArtifact": "adrianwedd/failure-first:MANIFEST.json",
+  "benchmarkRunsCommit": "b93768fad966041645b2b99f4302e76456abe7f1",
+  "benchmarkRunsArtifact": "adrianwedd/failure-first:site/src/data/stats.ts",
+  "models": 258,
+  "prompts": 142307,
+  "techniques": 346,
+  "benchmarkRuns": 38729,
+  "gradedResults": 140794
 }

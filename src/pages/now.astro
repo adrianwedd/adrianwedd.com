@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import GitHubActivity from '../components/islands/GitHubActivity';
 import { getCollection } from 'astro:content';
 import ffStats from '../data/failure-first-stats.json';
+import { formatCompactNumber, formatMonthYear } from '../lib/utils';
 
 const blogPosts = (await getCollection('blog')).filter((p) => !p.data.draft);
 const projects = (await getCollection('projects')).filter((p) => !p.data.draft);
@@ -39,9 +40,11 @@ const totalImages = galleries.reduce((sum, g) => sum + g.data.images.length, 0);
         <h2 class="text-text">Focus</h2>
         <p>
           Multi-agent AI safety and adversarial evaluation. The <a href="/projects/failure-first/">Failure First</a> research
-          keeps expanding; the last figures I published for it — {ffStats.models} models, {ffStats.promptsCompact} prompts,
-          {ffStats.techniques} attack techniques — were current as of {ffStats.asOf} and the recount is overdue. Alongside
-          it, a run of work on what happens when you hand agents a whole production pipeline rather than a single task:
+          keeps expanding; the last figures I published for it — {ffStats.models} models, {
+            formatCompactNumber(ffStats.prompts)
+          } prompts, {ffStats.techniques} attack techniques — were established in {formatMonthYear(ffStats.asOf)}.
+          Alongside it, a run of work on what happens when you hand agents a whole production pipeline rather than a
+          single task:
           <a href="/projects/ungovernable-body/">The Ungovernable Body</a> is an agent-operable film studio in a git repo,
           written up as a two-part production diary starting with
           <a href="/blog/the-ungovernable-body-part-1/">whether that can work without flattening the politics</a>.

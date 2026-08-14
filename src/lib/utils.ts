@@ -10,6 +10,24 @@ export function slug(id: string): string {
   return id.replace(/-post(\.mdx?)?$/, '').replace(/\.mdx?$/, '');
 }
 
+/** Locale-stable formatting for published research counts. */
+export function formatNumber(value: number): string {
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value);
+}
+
+/** Whole-thousand presentation derived from a canonical numeric count. */
+export function formatCompactNumber(value: number): string {
+  if (value < 1000) return formatNumber(value);
+  return `${Math.round(value / 1000)}k`;
+}
+
+/** Human-readable evidence month derived from an ISO date. */
+export function formatMonthYear(isoDate: string): string {
+  return new Intl.DateTimeFormat('en-AU', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
+    new Date(`${isoDate}T00:00:00Z`),
+  );
+}
+
 /** Canonical URL slug for a tag: lowercase, whitespace → hyphen. */
 export function tagSlug(tag: string): string {
   return tag.toLowerCase().trim().replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');

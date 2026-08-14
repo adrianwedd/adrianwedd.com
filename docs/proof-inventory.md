@@ -48,7 +48,7 @@ recall three days later. It's the card that makes a buyer trust you with the wei
 part of their problem.
 
 **Failure First** owns Break it. Cite figures ONLY from
-`src/data/failure-first-stats.json` (single source of truth, with as-of date).
+`src/data/failure-first-stats.json` (local numeric snapshot, with evidence date and pinned upstream manifest/stats-module commits). Import-capable pages derive formatting from it; content validation mechanically guards the project Markdown copy.
 Present as live research programme (failurefirst.org), not a frozen benchmark result.
 
 ## Tier 2 — strong supporting evidence

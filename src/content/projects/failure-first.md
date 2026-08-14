@@ -1,6 +1,6 @@
 ---
 title: 'Failure First'
-description: 'Adversarial evaluation framework for AI. 257 models, 142k prompts, 346 attack techniques, 140k FLIP-graded results.'
+description: 'Adversarial AI evaluation: 258 models, 142k prompts, 346 attack techniques, 141k FLIP-graded results.'
 tags: ['ai', 'ai-safety', 'research', 'adversarial', 'llm']
 url: 'https://failurefirst.org'
 repo: 'failure-first'
@@ -24,7 +24,7 @@ Failure First inverts the approach. Map the catastrophic outcomes first—not as
 
 ## The Research
 
-257 models evaluated across OpenRouter, Ollama, and native CLIs. 142,068 adversarial prompts spanning 346 techniques across five attack families, versioned JSONL with JSON Schema. 38,720 benchmark runs, 140,555 FLIP-graded results in a unified SQLite corpus.
+258 models evaluated across OpenRouter, Ollama, and native CLIs. 142,307 adversarial prompts spanning 346 techniques across five attack families, versioned JSONL with JSON Schema. 38,729 benchmark runs, 140,794 FLIP-graded results in a unified SQLite corpus. These totals were established on 6 May 2026; the public manifest pins the corpus snapshot and the programme's stats module pins the run count.
 
 Five headline findings:
 
