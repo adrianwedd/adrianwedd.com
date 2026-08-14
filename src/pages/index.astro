@@ -4,6 +4,7 @@ import Personalisation from '../components/islands/Personalisation.tsx';
 import { getCollection } from 'astro:content';
 import { slug } from '../lib/utils';
 import ScrollReveal from '../components/ScrollReveal.astro';
+import ffStats from '../data/failure-first-stats.json';
 
 const allPosts = await getCollection('blog');
 const recentPosts = allPosts
@@ -129,7 +130,9 @@ const recentPosts = allPosts
         >
         <h3 class="text-text group-hover:text-accent text-base font-semibold transition-colors">Failure First</h3>
         <p class="text-text-muted mt-2 text-sm leading-relaxed">
-          Adversarial evaluation framework. 120+ models, 18,000+ prompts.
+          Adversarial evaluation framework. {ffStats.models} models, {ffStats.promptsCompact} prompts (as of {
+            ffStats.asOf
+          }).
         </p>
       </a>
       <a
