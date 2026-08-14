@@ -8,6 +8,7 @@ autopublish: true
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/song-moved-the-robot/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/song-moved-the-robot/video.mp4'
 audioDuration: '19:20'
+youtubeUrl: 'https://www.youtube.com/watch?v=ZT-0tj2PKCs'
 ---
 
 _We put a music model in a humanoid robot harness by accident. It sang instead of issuing commands. Then we built something that could understand the song — and discovered that deciding which parts of a song deserve consequences is itself a control problem._
