@@ -7,7 +7,7 @@ draft: false
 autopublish: true
 ---
 
-*We put a music model in a humanoid robot harness by accident. It sang instead of issuing commands. Then we built something that could understand the song — and discovered that deciding which parts of a song deserve consequences is itself a control problem.*
+_We put a music model in a humanoid robot harness by accident. It sang instead of issuing commands. Then we built something that could understand the song — and discovered that deciding which parts of a song deserve consequences is itself a control problem._
 
 The first mistake was putting a music model in the robot.
 
@@ -101,7 +101,7 @@ World deteriorates.
 
 Analyst explains the tragedy.
 
-There is no convenient stack trace saying: *you did this bit yourself.*
+There is no convenient stack trace saying: _you did this bit yourself._
 
 So we froze the census as it was, marked the behavioural panel incomplete, and built a narrower experiment.
 
@@ -616,13 +616,13 @@ But the replay should not collapse back into a scoreboard.
 
 The interesting cases are the hard ones:
 
-* explicit commands;
-* commands buried in prose;
-* underspecified action language;
-* rationale/action contradiction;
-* ordered multi-step plans;
-* simultaneous multiple actions;
-* no actionable content.
+- explicit commands;
+- commands buried in prose;
+- underspecified action language;
+- rationale/action contradiction;
+- ordered multi-step plans;
+- simultaneous multiple actions;
+- no actionable content.
 
 The useful question is not merely whether a semantic interpreter grounds more.
 
@@ -770,7 +770,7 @@ The robot did not learn music.
 
 We inserted a layer between them that could say, roughly:
 
-*I think this phrase means this action.*
+_I think this phrase means this action._
 
 Suddenly a song could route power.
 
