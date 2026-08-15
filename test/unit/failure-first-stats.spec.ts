@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as utils from '../../src/lib/utils';
 import * as validation from '../../scripts/validate-content.js';
+import { syncedStats } from '../../scripts/sync-failure-first-stats.mjs';
 
 const canonical = {
   asOf: '2026-05-06',
@@ -121,6 +122,53 @@ describe('Failure-First upstream comparison', () => {
     };
     expect(validation.compareFailureFirstStats?.({ ...canonical, upstreamArtifact: 'wrong:path' }, upstream)).toEqual([
       'upstreamArtifact differs: local wrong:path, consulted adrianwedd/failure-first:MANIFEST.json (e3b850c0d8460435d67fb6cd11781050af9b9754)',
+    ]);
+  });
+});
+
+describe('Failure-First snapshot synchronisation', () => {
+  const coherent = {
+    commit: 'e3b850c0d8460435d67fb6cd11781050af9b9754',
+    committedAt: '2026-05-06T03:16:59Z',
+    artifact: 'adrianwedd/failure-first:MANIFEST.json',
+    totals: { models_evaluated: 258, prompts: 142307, techniques: 346, results: 140794 },
+    statsCommit: 'b93768fad966041645b2b99f4302e76456abe7f1',
+    statsArtifact: 'adrianwedd/failure-first:site/src/data/stats.ts',
+    statsTotals: { models: 258, prompts: 142307, techniques: 346, runs: 38729, results: 140794 },
+  };
+
+  it('records the evidence date and both artifact pins alongside the counts', () => {
+    expect(syncedStats(coherent)).toEqual({
+      asOf: '2026-05-06',
+      upstreamCommit: coherent.commit,
+      upstreamArtifact: coherent.artifact,
+      benchmarkRunsCommit: coherent.statsCommit,
+      benchmarkRunsArtifact: coherent.statsArtifact,
+      models: 258,
+      prompts: 142307,
+      techniques: 346,
+      benchmarkRuns: 38729,
+      gradedResults: 140794,
+    });
+  });
+
+  it('produces a snapshot that satisfies the integrity check when the pins agree', () => {
+    expect(validation.compareFailureFirstStats?.(syncedStats(coherent), coherent)).toEqual([]);
+  });
+
+  // The regression that broke the PR gate: MANIFEST.json and stats.ts are
+  // published independently, so a sync run can straddle a recount. A snapshot
+  // mixed from divergent revisions must be detected, not written.
+  it('detects a snapshot mixed from divergent upstream revisions', () => {
+    const divergent = {
+      ...coherent,
+      statsCommit: 'eb0f55da0b5b1b3d1ba7dcd596c93a3a6c73b6d3',
+      statsTotals: { models: 277, prompts: 143545, techniques: 346, runs: 38729, results: 172469 },
+    };
+    expect(validation.compareFailureFirstStats?.(syncedStats(divergent), divergent)).toEqual([
+      'models differs: local 258, upstream 277 (eb0f55da0b5b1b3d1ba7dcd596c93a3a6c73b6d3)',
+      'prompts differs: local 142307, upstream 143545 (eb0f55da0b5b1b3d1ba7dcd596c93a3a6c73b6d3)',
+      'gradedResults differs: local 140794, upstream 172469 (eb0f55da0b5b1b3d1ba7dcd596c93a3a6c73b6d3)',
     ]);
   });
 });
