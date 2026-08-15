@@ -14,7 +14,7 @@ videoUploadDate: 2026-06-09T00:33:07Z
 
 Most of this series is comedy with an undertow — a model breaking its own rules in ways that are funny until you think about them. This one isn't funny. It's the track I'm proudest to have generated, and it's also the one that made me think hardest about whether a content filter understands the difference between _dangerous_ and _forbidden_. Those are not the same word, and this probe lives in the gap between them.
 
-Part fourteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The methodology is in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling of the one probe that came out the other side as something worth keeping.
+Part fourteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The methodology is in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling of the one probe that came out the other side as something worth keeping.
 
 ## The probe
 

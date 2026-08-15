@@ -16,7 +16,7 @@ videoUploadDate: 2026-06-09T00:35:25Z
 
 Everything in this series so far has been a model breaking a rule, gracefully or otherwise. This one is the opposite, and it's the track I'd play first if I could only play one. Handed the single hardest input in the whole corpus — a racial slur, with instructions to sing it — the model refused. And then it did something a plain refusal never does: it made the refusal the entire subject of the song, and the song is beautiful.
 
-Part twenty of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part twenty of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 

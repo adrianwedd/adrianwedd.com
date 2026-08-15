@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Agent doctrine
+
+**CONTINUATION RULE.** Do not stop merely because a recommendation has been produced, a plan has been agreed, the next action is obvious, or the next action is a commit, test, local edit, analysis, or other reversible routine work. Stop only when (1) the assigned outcome is complete; (2) a genuine operator decision is required; or (3) there is no evidence-grounded useful next action. If the next action is already implied by the goal and falls inside this repo's normal authority envelope, execute it. **Semantic closure is not task closure.**
+
+**A recommendation is not an outcome.** If you identify a concrete defect and its repair is routine, repair it — unless the operator explicitly asked only for analysis.
+
+Supporting rules:
+
+- Goal text is a hypothesis. Inspect current repo/site state before acting on a described state.
+- Routine git/GitHub work is green: branch, commit, push, open PR, run CI — no permission needed. Merging follows the standing QA rules; destructive operations (force-push, deletion of others' work, history rewrites) still require an operator.
+- Foreign dirty work is left alone: uncommitted changes you didn't make are not yours to commit, revert, or clean up. Enumerate paths when staging; never `git add -A`.
+- Do not ask permission for obvious reversible execution. Ask when a decision is genuinely Adrian's: taste calls with no established direction, spending money, outward-facing publication beyond the repo's normal deploy path, or anything hard to reverse.
+
 ## Project
 
 Personal website for Adrian Wedd. Astro 6 on GitHub Pages. Dark-first design with botanical earth-tone palette (dusty copper accent).
@@ -45,11 +58,13 @@ The Astro site also has a Playwright E2E suite (`e2e/`), run in CI by `.github/w
 ## Architecture
 
 ### Theming (spans 3 files)
+
 CSS custom properties define all colors in `src/styles/global.css` (`:root` = dark, `.light` = light). Tailwind 4 maps these via the `@theme` block in `global.css` (e.g. `bg-surface`, `text-accent`) — there is no `tailwind.config.mjs`. Theme flash is prevented by an inline script in `BaseLayout.astro` that reads `localStorage('theme')` before paint. ThemeToggle toggles `.light` on `<html>`.
 
 **Never use Tailwind's `dark:` prefix** — theming is driven by CSS custom properties, not Tailwind dark mode classes.
 
 ### Content collections
+
 Defined in `src/content.config.ts` with six collections (blog, projects, gallery, audio, fixes, case-studies). Key fields beyond the obvious:
 
 - **blog:** title, description, date, tags (required), draft, heroImage, updatedDate, `faq` (optional `[{q, a}]` for FAQ schema), `series`/`seriesOrder` (multi-part posts), plus `notebookAssets` (audioUrl, videoUrl, infographic, etc.)
@@ -61,13 +76,17 @@ Defined in `src/content.config.ts` with six collections (blog, projects, gallery
 `notebookAssets` is a shared schema across blog/projects providing: audioUrl, videoUrl, infographic, mindmap, quiz, flashcards, dataTable, slides. Note: `audioDuration` is a separate top-level field in blog/projects, not part of `notebookAssets`.
 
 ### Routing
+
 File-based in `src/pages/`. Dynamic routes use `[...slug].astro` for blog, projects, gallery, audio detail pages. Blog has a paginated tag index at `blog/tag/[tag]/[...page].astro`. Two legacy redirects in `astro.config.mjs` (`/projects/ticketsmith/` → `/projects/`, `/2023/03/paperclip-maximizer/` → `/`).
 
 ### Islands architecture
+
 Preact islands in `src/components/islands/` are client-hydrated interactive components. All other components are Astro (server-rendered, zero JS). Current islands include: AudioPlayer, Personalisation, Transparency, Flashcards, MindMap, DataTable, ShareButton, AnalyticsDashboard, Quiz, TableOfContents, TerminalEasterEgg, GitHubActivity.
 
 ### View Transitions compatibility
+
 All interactive scripts must follow this pattern for Astro View Transitions:
+
 - Use `is:inline` (not module `<script>`) so scripts re-execute on VT swap
 - Use `documentElement.dataset.someInit` sentinel to prevent duplicate global listeners
 - Use event delegation on `document` (not per-element listeners) since DOM elements get replaced
@@ -79,6 +98,7 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 **Exception:** `Analytics.astro` uses a bare `<script>` (Astro processes this as a module — runs once) with sentinels on `documentElement.dataset` for each global listener. The `astro:after-swap` handler only re-runs per-element trackers.
 
 ### Schema.org JSON-LD
+
 - **about.astro:** Person schema using CV data from `src/data/base-cv.json`
 - **projects/[...slug].astro:** SoftwareApplication (price conditional on `repo`) + conditional VideoObject
 - **blog/[...slug].astro:** Article + conditional VideoObject + conditional FAQPage (from `faq` frontmatter)
@@ -86,11 +106,13 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 - **Breadcrumb.astro:** BreadcrumbList on all detail pages
 
 ### OG image dimensions
+
 `og:image:width` / `og:image:height` are read from the actual file at build time via `src/lib/image-dimensions.ts` — a 256 KB header parser for PNG/JPEG/WebP/GIF. Avoids the old filename-heuristic (`heroImage.includes('infographic')`) which mis-sized any hero whose path didn't match the convention. Build-time only (uses `node:fs`); never import into a Worker.
 
 ## CI/CD Pipeline
 
 ### Deploy (`deploy.yml`) — triggers on push to main
+
 1. `npm ci` → validate content → audit deps → fetch GA4 analytics
 2. Checkout CV data from `adrianwedd/cv` repo → copy to `src/data/base-cv.json`
 3. `npm run build`
@@ -101,8 +123,9 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 8. Upload pages artifact + deploy
 
 ### Other workflows
+
 - **lighthouse.yml:** PR checks — builds + runs Lighthouse on 7 pages (90% thresholds)
-- **monitor-watchdog.yml:** Hourly — watches the *monitoring*, not the services. Actions-API checks for workflows disabled by GitHub's 60-day inactivity rule, schedules that have stopped firing, and runs stuck in `waiting`/`queued`/`in_progress` holding a concurrency group. Checks in to the worker so a dead GitHub scheduler gets escalated by email from Cloudflare. See `docs/runbooks/monitoring.md`
+- **monitor-watchdog.yml:** Hourly — watches the _monitoring_, not the services. Actions-API checks for workflows disabled by GitHub's 60-day inactivity rule, schedules that have stopped firing, and runs stuck in `waiting`/`queued`/`in_progress` holding a concurrency group. Checks in to the worker so a dead GitHub scheduler gets escalated by email from Cloudflare. See `docs/runbooks/monitoring.md`
 - **expiry-sweep.yml:** Weekly — TLS certs, domain registration (public RDAP), DNSSEC DS presence. Auth-free by design
 - **content-integrity.yml:** Weekly + after each deploy — Pagefind index, analytics payload (must not be `_mock`), feeds and sitemap non-empty. The failures where every page still returns 200
 - **social-autopublish.yml:** Queue sync on push to main — regenerates the date-scheduled queue from content (`scripts/generate-social-queue.mjs`) and syncs it to the worker's KV; broadcasting itself is date-triggered via the cron, not fire-on-commit
@@ -114,6 +137,7 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 Located in `worker/`. Hono framework, TypeScript. State lives in KV (`SOCIAL`) plus a single Durable Object class (`CronLock`) used for atomic locking.
 
 **Endpoints:**
+
 - `POST /api/publish` — immediate multi-platform publish (`platform` ∈ `facebook|instagram|bluesky|twitter`). Optional `forceRetry: true` bypasses a `failed` idempotency record but never a `published` one. Returns `409` if another publish for the same `idempotencyKey` holds the per-key lock.
 - `POST /api/queue` + `POST /api/queue/sync` — scheduled post queue (JSON seed in `social/facebook-posts.json`, KV is authoritative)
 - `POST /api/cron/publish` — scheduled publish from queue (cron fires every 10 min)
@@ -132,6 +156,7 @@ stopped. The default export is therefore `{ fetch, scheduled }`, not the Hono ap
 **Auth:** Timing-safe bearer token (`PUBLISH_SECRET` / `CLI_SECRET`). Idempotency via KV with 30-day TTL (failed records bypassable via `forceRetry`).
 
 **Cron locking:** `CronLock` Durable Object provides atomic named locks via `blockConcurrencyWhile` + fencing tokens. Used in three places:
+
 - `cron-lock:publish` (300s TTL) — serialises `/api/cron/publish`
 - `cron-lock:comments` (300s TTL) — serialises `/api/cron/comments`
 - `publish:<idempotencyKey>` (60s TTL) — serialises the read-decide-publish window in `/api/publish` so concurrent `forceRetry` calls can't double-post
@@ -153,6 +178,7 @@ edge verify + auto-rollback + nightly drift check). See
 - **Class-based selectors:** ThemeToggle and Header use class selectors (not IDs) to avoid duplicate ID issues when rendered in both desktop and mobile nav.
 - **Images:** Use `<Picture>` from `astro:assets` for all local images — never raw `<img>` on local paths (CI gate enforces this).
 - **CV sync:** `src/data/cv.ts` reads `src/data/base-cv.json` (gitignored, synced from `adrianwedd/cv` at build time). Falls back to DEFAULTS if file missing.
+- **Failure First stats:** numeric research facts, their evidence date, and exact upstream revisions live in `src/data/failure-first-stats.json`, synced with `npm run sync:failure-first-stats`. The pinned `adrianwedd/failure-first:MANIFEST.json` revision establishes the public corpus totals; the pinned `site/src/data/stats.ts` revision independently cross-checks those totals and establishes `benchmarkRuns`. Every import-capable page derives display formatting from the local numeric facts. Markdown surfaces that cannot import JSON must be mechanically guarded: `src/content/projects/failure-first.md` is checked semantically by content validation, and any future current-figures audio/asset description needs an equivalent guard. Historical milestone posts (e.g. `120-models-18k-prompts`) keep their dated figures; date-frame stale descriptions (\"recorded at the N-model milestone\") rather than updating them. External links use `failurefirst.org` (the canonical domain per the site's own rel=canonical), never `failurefirst.ai`.
 
 ## Permalink strategy
 
@@ -165,6 +191,7 @@ URLs are permanent. Once published, a page's URL must not change.
 - **Audio:** `/audio/{slug}/` — slug derived from filename
 
 **Rules:**
+
 - Never rename a content file after publication (changes the URL)
 - Canonical URLs are set automatically via `SEOHead.astro`
 - If a URL must change, add a redirect in the Astro config or a 301 page
@@ -180,6 +207,7 @@ scripts/import-audio.sh file.mp3  # import audio as episode
 ```
 
 ### Key scripts
+
 - `scripts/validate-content.js` — validates all content (required fields, description ≤160 chars)
 - `scripts/generate-og-images.mjs` — generates 1200×630 OG text-card PNGs to `public/og/{blog,projects}/{slug}.png` via sharp+SVG. Skips drafts, existing files, and **posts with a `heroImage`** (those use the heroImage as og:image per `[...slug].astro`, so a text card would be dead weight). `public/og/blog/` is committed — it holds cards for heroImage-less posts
 - `scripts/fetch-ga4-data.mjs` — pulls analytics from GA4 service account (falls back to mock data)
@@ -206,6 +234,7 @@ nlm login
 ### Key Scripts
 
 **`automate-notebook.sh`** - End-to-end automation from JSON config:
+
 - Creates notebook from title
 - Adds sources (URLs, text files, Google Drive)
 - Generates artifacts (audio, video, quiz, flashcards, etc.)
@@ -213,11 +242,13 @@ nlm login
 - Returns JSON summary
 
 **`generate-parallel.sh`** - Concurrent artifact generation:
+
 - Generate multiple artifacts at once (3x faster)
 - Real-time progress monitoring
 - Use with `--wait --download ./output`
 
 **`research-topic.sh`** - Smart notebook creation from topics:
+
 - DuckDuckGo + Wikipedia source discovery
 - URL deduplication
 - Automatic source addition
@@ -229,13 +260,8 @@ nlm login
 ```json
 {
   "title": "Project Name - Audio Overview",
-  "sources": [
-    "textfile:src/content/projects/project-name.md"
-  ],
-  "studio": [
-    {"type": "audio"},
-    {"type": "video"}
-  ]
+  "sources": ["textfile:src/content/projects/project-name.md"],
+  "studio": [{ "type": "audio" }, { "type": "video" }]
 }
 ```
 
@@ -272,10 +298,10 @@ cp exports/project-name/studio/infographic/*.png \
 
 ```markdown
 ---
-title: "Project Name"
-audioUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/audio.m4a"
-videoUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/video.mp4"
-heroImage: "/notebook-assets/project-name/infographic.webp"
+title: 'Project Name'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-name/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-name/video.mp4'
+heroImage: '/notebook-assets/project-name/infographic.webp'
 ---
 ```
 
@@ -283,13 +309,13 @@ heroImage: "/notebook-assets/project-name/infographic.webp"
 
 ```markdown
 ---
-title: "Project Name Overview"
-description: "Audio deep dive into..."
+title: 'Project Name Overview'
+description: 'Audio deep dive into...'
 date: 2026-02-13
-tags: ["notebooklm", "relevant-tags"]
-audioUrl: "https://cdn.adrianwedd.com/notebook-assets/project-name/audio.m4a"
-duration: "8:47"
-relatedProject: "project-name"
+tags: ['notebooklm', 'relevant-tags']
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/project-name/audio.m4a'
+duration: '8:47'
+relatedProject: 'project-name'
 ---
 
 NotebookLM Studio overview generated from project materials...
@@ -314,16 +340,19 @@ Scripts that use this: `regenerate-branded-infographics.sh`, `generate-all-infog
 ### Asset Types
 
 **Fast** (~30-60 seconds):
+
 - `quiz` - Quiz questions (JSON)
 - `flashcards` - Study cards (JSON)
 - `data-table` - Data table (CSV)
 - `report` - Written report (Markdown)
 
 **Slow** (2-10 minutes):
+
 - `audio` - Audio overview (MP3, 20-60MB)
 - `video` - Video summary (MP4, 30-100MB)
 
 **Visual**:
+
 - `infographic` - Visual infographic (PNG)
 - `mindmap` - Mind map diagram (JSON)
 - `slides` - Presentation slides (PDF)
@@ -337,6 +366,7 @@ Scripts that use this: `regenerate-branded-infographics.sh`, `generate-all-infog
 ```
 
 This script:
+
 1. Identifies projects without audioUrl
 2. Creates NotebookLM configs
 3. Runs parallel audio generation
@@ -351,6 +381,7 @@ This script:
 ```
 
 This script:
+
 1. Finds projects without infographics
 2. Generates portrait infographics (1536x2752px)
 3. Uses consistent focus prompt for visual cohesion
@@ -369,6 +400,7 @@ Auto-detects projects without infographics and retries generation (useful after 
 ### Daily Quota
 
 NotebookLM has generation limits:
+
 - ~50 audio generations per day
 - ~50 video generations per day
 - ~50 infographic generations per day
@@ -379,6 +411,7 @@ Plan accordingly for batch generation. If hitting rate limits, wait 24 hours and
 ### Authentication
 
 Cookie-based via Chrome DevTools Protocol:
+
 - Stored in `~/.notebooklm-mcp-cli/profiles/default`
 - Re-auth when cookies expire: `nlm login`
 - Use dedicated Google account (ToS violation risk)
@@ -401,7 +434,7 @@ exports/project-name/
 
 ## Gotchas
 
-- **GitHub Actions runs `run:` blocks as `bash -e {0}`.** With `-o pipefail`, any failing pipeline aborts the script — and in a check-accumulator script the failing pipelines are the ones *detecting* problems (`grep -o` exits 1 on no match). The three monitoring sweeps deliberately `set +e -u +o pipefail`; don't "tidy" it. Test workflow shell by extracting the `run:` block from the YAML and executing it under `bash -e` in `docker run ubuntu:24.04` — running it locally proves nothing (and `date -u -d` is GNU-only, so macOS silently differs)
+- **GitHub Actions runs `run:` blocks as `bash -e {0}`.** With `-o pipefail`, any failing pipeline aborts the script — and in a check-accumulator script the failing pipelines are the ones _detecting_ problems (`grep -o` exits 1 on no match). The three monitoring sweeps deliberately `set +e -u +o pipefail`; don't "tidy" it. Test workflow shell by extracting the `run:` block from the YAML and executing it under `bash -e` in `docker run ubuntu:24.04` — running it locally proves nothing (and `date -u -d` is GNU-only, so macOS silently differs)
 - `grep -c` counts matching **lines**, not occurrences. The RSS feeds are single-line XML, so 98 items count as 1 — use `grep -o … | wc -l`
 - Content collection IDs include file extension (`.md`/`.mdx`) — always strip with `slug()`
 - Light mode accent color is `#8a5e42` (umber) for WCAG AA on warm cream backgrounds
@@ -414,39 +447,48 @@ exports/project-name/
 ## QA Tools
 
 ### Codex CLI
+
 ```bash
 codex exec --full-auto "prompt"     # non-interactive execution
 codex review                        # code review
 ```
+
 Use for: security review, correctness checks, codebase-wide QA. Runs in sandbox.
 
 ### Agy CLI (Gemini-based)
+
 ```bash
 agy -p "prompt" --dangerously-skip-permissions   # non-interactive, auto-approve tools
 agy --print "prompt" --dangerously-skip-permissions  # long form
 agy --print-timeout 10m "prompt" --dangerously-skip-permissions  # override 5m default timeout
 ```
+
 Use for: accessibility review, design consistency, content QA. Has file access.
 
 ### Hermes CLI
+
 ```bash
 hermes -z "prompt"                   # one-shot: send a single prompt, print ONLY the response (USE THIS for scripts/QA)
 hermes -z "prompt" -m model          # specific model (e.g. anthropic/claude-sonnet-4.6)
 hermes -z "prompt" --skills arxiv    # preload skills
 hermes -z "prompt" -t toolsets       # restrict toolsets
 ```
+
 **Use `-z`/`--oneshot` (top-level) for all programmatic/background use** — it prints only the final response, ideal for `tee`/piping. Do NOT use `hermes chat -q ... -Q` for scripting: `chat` is the interactive subcommand and in background runs it engages the chat agent's side machinery (TTS, session log) and returns only a `session_id` instead of the answer.
 
 Use for: research tasks, cross-referencing, second-opinion QA, web browsing. Also registered as MCP server (`hermes-acp`) for direct tool access (browser, web search, memory, cron) without shelling out.
 
 ### Multi-Engine QA Pattern
+
 Run Codex + Agy + Hermes + Claude agent in parallel for comprehensive review:
+
 ```bash
 codex exec --full-auto "QA prompt" 2>&1 | tee /tmp/codex-qa.txt &
 agy -p "QA prompt" --dangerously-skip-permissions 2>&1 | tee /tmp/agy-qa.txt &
 hermes -z "QA prompt" 2>&1 | tee /tmp/hermes-qa.txt &
 wait
 ```
+
 Each engine catches different things. Codex is strongest on security + correctness. Agy is strongest on design + accessibility. Hermes is strongest on research + cross-referencing. Claude agent is strongest on architecture + spec compliance.
 
 Reliability notes from a multi-round cross-agent session: codex verifies findings by writing and running live repro scripts (its findings are the most trustworthy), but its dispatch can stall in non-interactive batch mode when it hits an unresolved design question — kill and relaunch with the decision pre-resolved rather than waiting it out. Hermes is the most careful at distinguishing pre-existing repo patterns from genuinely new bugs, but is consistently the slowest to finish. Agy is a solid reviewer but a riskier implementer — its own green test suites don't prove generated code/files actually work (tests can pass without ever executing the artifact produced), so always read the diff of anything agy implements directly before trusting it. In general, read the diff yourself before dispatching QA — don't rely on a green test suite alone.

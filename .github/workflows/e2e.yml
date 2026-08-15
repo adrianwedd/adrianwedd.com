@@ -31,6 +31,11 @@ jobs:
       - run: npm run lint
       - run: npm run format:check
       - run: npm run test:unit
+      - run: npm run check:failure-first-stats
+        env:
+          # Authenticated api.github.com — unauthenticated is 60/hr per IP and
+          # shared runners exhaust it.
+          GITHUB_TOKEN: ${{ github.token }}
 
   # Runs on every trigger: PR (this is the gate), plus nightly/dispatch so the
   # @smoke lifecycle checks aren't skipped there. The `full` job is non-PR only,

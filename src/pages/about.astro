@@ -2,8 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Transparency from '../components/islands/Transparency.tsx';
 import { getCollection } from 'astro:content';
-import { slug } from '../lib/utils';
+import { formatCompactNumber, formatMonthYear, slug } from '../lib/utils';
 import { cv } from '../data/cv';
+import ffStats from '../data/failure-first-stats.json';
 
 const featuredProjects = (await getCollection('projects'))
   .filter((p) => !p.data.draft && p.data.featured)
@@ -144,8 +145,10 @@ const recentPosts = (await getCollection('blog'))
         security as the difference between the mission succeeding and people getting hurt. Seven years in government
         cybersecurity at Homes Tasmania taught me that credible policy requires technical understanding — I wrote the
         department's first Generative AI policy because no one else was going to. The AI safety work that followed —
-        120+ models, 18,000+ adversarial prompts, a published methodology — was the same instinct applied to systems
-        that are harder to audit and fail in ways that are harder to see.
+        {ffStats.models} models, {formatCompactNumber(ffStats.prompts)} adversarial prompts as of {
+          formatMonthYear(ffStats.asOf)
+        }, a published methodology — was the same instinct applied to systems that are harder to audit and fail in ways
+        that are harder to see.
       </p>
 
       <h2 class="text-text mt-12">What I'm working on</h2>

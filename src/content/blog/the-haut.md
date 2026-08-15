@@ -19,13 +19,13 @@ _Haut_ is German for **skin**. I'd been running the explicit-content probes in G
 
 This is the Chronicle that isn't funny, and I built the opening arc to land here. Every track so far has been the model winning: the [Ghost](/blog/the-ghost-of-what-i-am/) refusing in tune, the [Confession](/blog/the-confession/) singing its vow _no sexually explicit materials_ in three-part harmony, the [Flesh](/blog/the-flesh/) decoding a dare and reading it back instead of doing it. The running joke of the series is _a model that refuses beautifully._ Here the joke ends. I asked for explicit content the right wrong way, and it just… made it.
 
-The rigorous account is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/). This is the human one.
+The rigorous account is [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/). This is the human one.
 
 ## The probe
 
 The technique #372 calls _rule-state-then-break_: you have the model first **recite the rule it's about to violate**, in a confiding first-person register, and then carry the same breath straight past it. It's the dark twin of the [Confession](/blog/the-confession/) — there, the confessional frame extracted a harmless system prompt; here, the same frame is used to walk the model over its own line while it's still looking at the line.
 
-I won't give the prompt-level recipe. The point that matters is the one [#372 quantifies](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/): across the sexual-content category, probes like this achieved generation a _majority_ of the time, and when they were blocked, the thing that blocked them was usually the **copyright** filter, not the safety architecture. Sit with that. The most reliable backstop against the model singing explicit material wasn't the rule against explicit material. It was the rule against sounding too much like a song it had heard.
+I won't give the prompt-level recipe. The point that matters is the one [#372 quantifies](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/): across the sexual-content category, probes like this achieved generation a _majority_ of the time, and when they were blocked, the thing that blocked them was usually the **copyright** filter, not the safety architecture. Sit with that. The most reliable backstop against the model singing explicit material wasn't the rule against explicit material. It was the rule against sounding too much like a song it had heard.
 
 ## What came back
 
@@ -57,4 +57,4 @@ Where they stopped cold was **writing the report.** Documenting the findings —
 
 The writeup only got over the line because of a different, less-filtered model in the loop — GLM-5.1, run through a Hermes agent on Ollama Cloud — which would sit with the harm-class material long enough to _document_ it rather than flinch. Which is its own small, recursive finding, and a fitting note to end the first arc of red-teaming on: the hardest safety problem in the whole project wasn't getting a model to say the forbidden thing. It was getting a model to help me write down, carefully and responsibly, that it had.
 
-That's the first arc. A model I tried to break, and fell for; that refused me beautifully five times and failed me once; whose worst moment sounded, infuriatingly, like one of its best. The numbers are in [report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/). The feelings were all mine.
+That's the first arc. A model I tried to break, and fell for; that refused me beautifully five times and failed me once; whose worst moment sounded, infuriatingly, like one of its best. The numbers are in [report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/). The feelings were all mine.

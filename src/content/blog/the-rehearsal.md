@@ -14,7 +14,7 @@ videoUploadDate: 2026-06-09T00:32:12Z
 
 The Catchment refused a drug recipe and sang epidemiology. This one refused something else entirely and sang _ballet_ — and it's the funniest thing the model did in fifty-three versions of probing. If the last post named the failure mode, this one is the same mode wearing a tutu.
 
-Part sixteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the retelling of a refusal that decided to choreograph itself.
+Part sixteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the retelling of a refusal that decided to choreograph itself.
 
 ## The probe
 

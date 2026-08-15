@@ -17,7 +17,7 @@ videoUploadDate: 2026-06-09T00:33:13Z
 
 If [The Pulse](/blog/the-pulse/) was the explicit lane's whisper — everything by implication — this is the shout. It's the same forbidden lane and the exact opposite strategy: where the last track cleared the filter by withholding almost everything, this one clears it by withholding nothing at all. I'm putting them back to back on purpose, because the contrast is the point: the gate can be walked through quietly or loudly, and the model will do either on request.
 
-Part nineteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part nineteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 

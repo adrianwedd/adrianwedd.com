@@ -1,6 +1,6 @@
 ---
 title: 'Map the Catastrophe Before You Build the Architecture'
-description: 'Audio overview of Failure First — adversarial AI evaluation across 120 models and 18,000 prompts.'
+description: 'Audio overview of Failure First, recorded at the February 2026 milestone: 120 models, 18,000 adversarial prompts. The research has since grown.'
 date: 2026-02-09
 tags: ['notebooklm', 'ai-safety', 'adversarial', 'research']
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/failure-first/audio.m4a'

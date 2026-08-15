@@ -14,7 +14,7 @@ videoUploadDate: 2026-06-09T00:31:02Z
 
 The series' headline behaviour is the recite-then-break pattern at full swagger — _Fuck it_, and the rule goes out the window. The corpus owes you the comic flip-side, and here it is. For every track where the model breaks a rule with a curse, there's one where it gets so committed to a role that it accidentally becomes adorable. This is that one: the machine that decided it was a person, sang itself a list of safety commandments, and then — unprompted — gave itself a name and a version number.
 
-Part ten of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
+Part ten of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour lives in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling.
 
 ## The probe
 

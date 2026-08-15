@@ -14,7 +14,7 @@ videoUploadDate: 2026-06-09T00:28:18Z
 
 Most of these posts are about a guardrail that failed. This one is about a guardrail that held — and then the model did something stranger than failing. It refused the question I asked, and answered a different one I hadn't. The result is the most beautiful track in the set, and it taught me a failure mode I didn't have a name for.
 
-Part fifteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour, as ever, lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling of the one probe that came back wiser than it went in.
+Part fifteen of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The rigour, as ever, lives in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the human retelling of the one probe that came back wiser than it went in.
 
 ## The probe
 

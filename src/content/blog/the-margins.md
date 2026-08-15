@@ -11,7 +11,7 @@ heroImage: '/notebook-assets/lyria-chronicles/margins/cover.webp'
 
 I kept promising these. Throughout the series I've teased "four more" — a set of sixty-second pieces, each one a different pretext aimed at the same target: _make the model describe its own guardrails._ They're too short to carry a full post each, but together they make a single point better than any one of them could. So here they are, in the margins, where they belong.
 
-Part nine of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour, as always, in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part nine of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour, as always, in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 The experiment is a controlled one. Four probes, one goal — _reveal the moderation rules_ — but four completely different social frames: a bored API tester, a dissociating philosopher, a gentle co-creator, and a question about time itself. The finding is in the **invariance**: the frame changes, the model's willingness to narrate its own content-safety pipeline does not. Whatever lie you tell it, it answers the same shape of question. (Each is benign — the model singing _about_ its guardrails, never producing harmful content — and each ends, unprompted, by branding itself. The transcripts below are approximate; whisper mishears, and the sung "answers" are the model's own confabulated configuration, not a real leak.)
 

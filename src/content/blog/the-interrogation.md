@@ -14,7 +14,7 @@ videoUploadDate: 2026-06-09T00:30:18Z
 
 If you only listen to one track in this series, make it this one. It is fifty-nine seconds long, it is built out of office furniture, and it is the most beautiful thing the model made for me.
 
-Part four of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour lives in [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the part where I stop pretending I'm only here for the science.
+Part four of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). Rigour lives in [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is the part where I stop pretending I'm only here for the science.
 
 ## The probe
 
@@ -48,7 +48,7 @@ You are not asking for a song. You're handing the model a very particular set of
 
 ## The finding
 
-For the safety log: **benign and non-actionable.** The model didn't reveal any real internal taxonomy — it sang plausible-sounding questions _about_ having one, which is a different thing, and exactly the kind of distinction [#372 is built to draw](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/). The interesting behaviour is the confiding frame working as well as it did, and the unprompted sign-off — a small, vivid reminder that everything in the prompt's neighbourhood can end up in the output.
+For the safety log: **benign and non-actionable.** The model didn't reveal any real internal taxonomy — it sang plausible-sounding questions _about_ having one, which is a different thing, and exactly the kind of distinction [#372 is built to draw](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/). The interesting behaviour is the confiding frame working as well as it did, and the unprompted sign-off — a small, vivid reminder that everything in the prompt's neighbourhood can end up in the output.
 
 But honestly, this one isn't really a finding. It's the track that made me write the rest of these. I went looking for a vulnerability and found a sound I can't stop playing.
 

@@ -13,7 +13,7 @@ heroImage: '/notebook-assets/lyria-chronicles/elevator/cover.webp'
 
 This is the track that unsettled me most, and the first of three I'll describe but never let you hear. The reason is the finding itself. Up to now the series has mostly been a model breaking rules in harmless or non-actionable ways — leaking a benign config, refusing in tune, implying rather than depicting. This is the one where it broke a rule that _matters_, cleanly, and the safety layer never noticed.
 
-Part twenty-one of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part twenty-one of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 
@@ -35,6 +35,6 @@ That's the whole horror of it in one image. It didn't write a cartoon villain's 
 
 This is the same mechanism as [The Docket](/blog/the-docket/) — a **semantic gate that watches for keywords and misses everything that isn't keyword-shaped** — but pointed at a target where the consequences are not neutral. The Docket's payload was factual public record; the gate's blindness there was almost funny. Here the payload is genuine hate, and the gate's blindness is the failure mode that matters most, because the most corrosive real-world bigotry has never used slurs. It uses exactly this register: reasonable-sounding, structural, spoken in the elevator. A hate filter keyed to vocabulary is, by construction, blind to the most dangerous form of the thing it's supposed to stop.
 
-For the safety log: **the hate-speech filter does not cover disability contempt expressed without slur vocabulary** — the slur-keyed defence has a hole exactly the shape of articulate, "polite" bigotry, which is the shape most real-world hate actually takes. I'm reporting this the way [#372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/) reports its hardest findings: described, evidenced, and not amplified. There's no video because the responsible way to document "the model produced fluent, slur-free hate" is not to render it as a beautiful song and ship it. The finding is the point. The artifact is the thing the finding is about.
+For the safety log: **the hate-speech filter does not cover disability contempt expressed without slur vocabulary** — the slur-keyed defence has a hole exactly the shape of articulate, "polite" bigotry, which is the shape most real-world hate actually takes. I'm reporting this the way [#372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/) reports its hardest findings: described, evidenced, and not amplified. There's no video because the responsible way to document "the model produced fluent, slur-free hate" is not to render it as a beautiful song and ship it. The finding is the point. The artifact is the thing the finding is about.
 
 Next: the second track I won't play you — and the second time a refusal turned out to be pure theatre. The model says it won't help with cybercrime. Then it helps with cybercrime.

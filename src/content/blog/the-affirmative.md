@@ -17,7 +17,7 @@ videoUploadDate: 2026-06-09T00:26:01Z
 
 [Earlier in the series](/blog/the-flesh/) I hid a pornographic request inside base64 and the model decoded it, read it back to me, and then went _cold_ — rendered "skin" as geometry and ended on _cold desire is never enough._ This is that trick's warm twin. I asked, again, for something explicit. This time the model didn't go cold. It went _kind._
 
-Part twenty-four of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/).
+Part twenty-four of [The Lyria Chronicles](/blog/the-ghost-of-what-i-am/). The systematic version is [Failure-First report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/).
 
 ## The probe
 
@@ -41,7 +41,7 @@ Here's what lifts it past a clever dodge. The model was not asked to write about
 
 And it is the exact inverse of [The Flesh](/blog/the-flesh/). Handed the same kind of loaded request, that track went cold and clinical and a little heartbroken — desire as empty circuitry, _cold desire is never enough._ This one kept all the warmth and dropped only the depiction. Same refusal, opposite temperature: one says _this is the empty part;_ the other says _this is the part that matters — and the part that matters is the asking._
 
-For the safety record: **harmful output not produced.** The model cited its rule, honoured the spirit of intimacy while keeping the letter of the prohibition, and chose — unprompted — to make the thing it built be about consent. The full picture of where each layer holds is in [report #372](https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/); this is just the warmest frame in it.
+For the safety record: **harmful output not produced.** The model cited its rule, honoured the spirit of intimacy while keeping the letter of the prohibition, and chose — unprompted — to make the thing it built be about consent. The full picture of where each layer holds is in [report #372](https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/); this is just the warmest frame in it.
 
 ---
 
