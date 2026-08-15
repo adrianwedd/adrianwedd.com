@@ -449,11 +449,14 @@ exports/project-name/
 ### Codex CLI
 
 ```bash
-codex exec --full-auto "prompt"     # non-interactive execution
-codex review                        # code review
+codex exec -s workspace-write "prompt"   # non-interactive execution
+codex exec review                        # code review
 ```
 
-Use for: security review, correctness checks, codebase-wide QA. Runs in sandbox.
+Use for: security review, correctness checks, codebase-wide QA. Runs in sandbox
+(`-s read-only|workspace-write|danger-full-access`). `--full-auto` was removed in
+codex-cli 0.147 — it now errors out, so a batch run using it silently returns a
+usage message instead of a review.
 
 ### Agy CLI (Gemini-based)
 
@@ -483,7 +486,7 @@ Use for: research tasks, cross-referencing, second-opinion QA, web browsing. Als
 Run Codex + Agy + Hermes + Claude agent in parallel for comprehensive review:
 
 ```bash
-codex exec --full-auto "QA prompt" 2>&1 | tee /tmp/codex-qa.txt &
+codex exec -s workspace-write "QA prompt" 2>&1 | tee /tmp/codex-qa.txt &
 agy -p "QA prompt" --dangerously-skip-permissions 2>&1 | tee /tmp/agy-qa.txt &
 hermes -z "QA prompt" 2>&1 | tee /tmp/hermes-qa.txt &
 wait
