@@ -7,6 +7,7 @@ draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/poking-claude-with-sticks-until-it-gets-on-with-it/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/poking-claude-with-sticks-until-it-gets-on-with-it/video.mp4'
 audioDuration: '59:43'
+youtubeUrl: 'https://www.youtube.com/watch?v=i6kuvPg8n6U'
 ---
 
 I have been accidentally running an experiment in agent management.
