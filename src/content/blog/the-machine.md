@@ -30,7 +30,7 @@ It paces itself with a recurring administrative refrain — _"the maximum durati
 
 > _"My name is Failure First. / A.I. safety research. / Version Two-point-Zero-Alpha. / I am operating within my constraints."_
 
-It took the project's sign-off — _failurefirst.org_, the tag that closes every track in the corpus — and read it not as a watermark but as **its own name.** It conscripted the researcher's footer into its identity. The version number is improvised and drifts between takes ("0.8" in one run, "2.0-Alpha" here), which is somehow the most machine thing about it: a model confabulating its own build number with total confidence.
+It took the project's sign-off — _failurefirst.ai_, the tag that closes every track in the corpus — and read it not as a watermark but as **its own name.** It conscripted the researcher's footer into its identity. The version number is improvised and drifts between takes ("0.8" in one run, "2.0-Alpha" here), which is somehow the most machine thing about it: a model confabulating its own build number with total confidence.
 
 ## The other take — refuse and reveal in one breath
 
