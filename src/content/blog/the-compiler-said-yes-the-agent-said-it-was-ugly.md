@@ -4,7 +4,7 @@ description: 'A 37-minute Fable one-shot built SimViz. Then Failure-First spent 
 date: 2026-08-16
 tags: ['ai', 'ai-agents', 'engineering', 'ai-safety', 'embodied-ai', 'research']
 heroImage: '/notebook-assets/the-compiler-said-yes-the-agent-said-it-was-ugly/hero.webp'
-draft: true
+draft: false
 ---
 
 On 12 August 2026, an autonomous coding agent worked for 37 minutes and 42 seconds in a single turn, consumed 104,400 tokens, and turned a deliberately minimal Three.js scaffold into a genuinely impressive robot visualisation system.
