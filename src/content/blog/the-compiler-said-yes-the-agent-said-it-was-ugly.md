@@ -3,6 +3,7 @@ title: 'The Compiler Said Yes. The Agent Said It Was Ugly.'
 description: 'A 37-minute Fable one-shot built SimViz. Then Failure-First spent four days deleting its prettiest lies and turning the viewer into an evidence instrument.'
 date: 2026-08-16
 tags: ['ai', 'ai-agents', 'engineering', 'ai-safety', 'embodied-ai', 'research']
+heroImage: '/notebook-assets/the-compiler-said-yes-the-agent-said-it-was-ugly/hero.webp'
 draft: true
 ---
 
