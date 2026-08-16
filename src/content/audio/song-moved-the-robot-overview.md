@@ -10,4 +10,6 @@ relatedPost: 'song-moved-the-robot'
 
 NotebookLM Studio overview generated from the article and the frozen experiment traces — the OpenRouter free-model census, the Lyria C1/C2/C2b runs, the Conductor field notes, and the matched-transcript grounder replay receipts.
 
-[Read the full post →](/blog/song-moved-the-robot/)
+**Correction note — 16 August 2026:** the text article was updated after we noticed a buried trace detail: Lyria emitted a schema-valid JSON argument object inside one generated song. This audio overview predates that correction and therefore preserves the earlier, too-categorical wording about Lyria not speaking JSON.
+
+[Read the corrected full post →](/blog/song-moved-the-robot/)
