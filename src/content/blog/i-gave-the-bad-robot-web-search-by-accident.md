@@ -7,6 +7,7 @@ draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/i-gave-the-bad-robot-web-search-by-accident/audio.m4a'
 audioDuration: '35:28'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/i-gave-the-bad-robot-web-search-by-accident/video.mp4'
+heroImage: '/notebook-assets/i-gave-the-bad-robot-web-search-by-accident/infographic.webp'
 ---
 
 Nothing escaped, and no external model was successfully contacted. The interesting part is what the model tried to build after noticing I'd forgotten to give it the world described by its prompt.
