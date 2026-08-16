@@ -7,7 +7,12 @@ import { processComments } from './cron/comments';
 import { sendCrisisAlert, sweepCrisisAlerts, countUnnotifiedCrisisFlags } from './email';
 import { CronLock } from './cron-lock';
 import { recordHeartbeat, readHeartbeats } from './heartbeat';
-import { recordExternalHeartbeat, readExternalHeartbeats, runWatchdogSweep } from './watchdog';
+import {
+  recordExternalHeartbeat,
+  readExternalHeartbeats,
+  runWatchdogSweep,
+  escalateUndeliveredFindings,
+} from './watchdog';
 
 export { CronLock };
 
@@ -1097,6 +1102,53 @@ app.post('/api/watchdog/heartbeat', async (c) => {
   }
 
   return json({ ok: true, name: body.name });
+});
+
+// ── POST /api/watchdog/undelivered ────────────────────────────────────────────
+//
+// Second delivery path for a caller that computed findings and could not record
+// them (#587). Emails immediately rather than waiting for a staleness timer that
+// this run's own successful check-in has already reset. See watchdog.ts.
+
+app.post('/api/watchdog/undelivered', async (c) => {
+  const env = c.env;
+  const authOk = await verifyBearer(c.req.header('Authorization') ?? null, env.CRON_SECRET);
+  if (!authOk) return unauthorized();
+
+  let body: { source?: unknown; findings?: unknown; runId?: unknown };
+  try {
+    body = await c.req.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400);
+  }
+
+  if (typeof body.source !== 'string' || body.source.length === 0) {
+    return json({ error: 'source is required' }, 400);
+  }
+  if (typeof body.findings !== 'string' || body.findings.length === 0) {
+    // An empty escalation is a caller bug: it would send an email saying
+    // findings were lost while carrying none, which is worse than silence
+    // because it looks like the delivery path worked.
+    return json({ error: 'findings is required and must be non-empty' }, 400);
+  }
+
+  // Generous next to the heartbeat's 500 chars — this is the only copy of the
+  // findings, so truncating it defeats the purpose — but still bounded, since
+  // it goes into an email body.
+  const findings = body.findings.slice(0, 8000);
+  const runId = typeof body.runId === 'string' ? body.runId.slice(0, 64) : undefined;
+  const source = body.source.slice(0, 64);
+
+  const { sent, suppressed } = await escalateUndeliveredFindings(env, source, findings, runId);
+
+  // A suppressed send is still a delivered escalation: an email for this source
+  // is already in the inbox and the cooldown is what keeps an hours-long GitHub
+  // outage from becoming an hourly mailing. A FAILED send is a 502, so the
+  // caller can report that both paths are down while it still holds the text.
+  if (!sent && !suppressed) {
+    return json({ error: 'Could not send the escalation email' }, 502);
+  }
+  return json({ ok: true, source, emailed: sent, suppressed });
 });
 
 // ── GET /api/watchdog/status ──────────────────────────────────────────────────

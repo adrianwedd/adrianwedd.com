@@ -32,6 +32,7 @@ set +e -u +o pipefail
 # Every command whose failure matters is checked explicitly by value
 # (`if [ -z "${VAR:-}" ]`) or by `if ! cmd`. -u stays on to catch typos.
 : > findings.txt
+: > notes.txt
 NOW=$(date -u +%s)
 
 # Repos whose workflows are checked for the disabled/stuck traps.
@@ -94,6 +95,21 @@ adrianwedd/adrianwedd.com|monitor-watchdog.yml|4|yes
 "
 
 finding() { echo "- $1" >> findings.txt; }
+
+# An observation that is NOT a fault in the monitoring. Notes are printed to
+# the run log and the job summary; they never open an issue, never comment on
+# one, and never hold it open.
+#
+# The distinction matters because this issue's own premise is "while any of
+# these stands, the corresponding check is not running and its silence means
+# nothing". A GitHub zombie run record fails that test on its own wording —
+# the script has already PROVEN a later run executed, so nothing is stalled
+# and every check is still running. Reporting it as a finding held #582 open
+# for 16 days and re-posted the same text 371 times, which is precisely how a
+# monitor teaches its reader to stop opening it. The record is still worth
+# printing (it is clutter someone may want to clear by hand) — it is just not
+# degradation.
+note() { echo "- $1" >> notes.txt; }
 
 # Run names and branch names are attacker-controllable: anyone who can
 # open a fork PR against a monitored repo picks `head_branch`, and a
@@ -375,7 +391,9 @@ for REPO in $REPOS; do
 
       case "$BLOCKED" in
         no)
-          finding "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow${BRANCH_D:+ on \`${BRANCH_D}\`} has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
+          # A note, not a finding — see note() above. The probe has proven the
+          # group is not blocked, so nothing here is unmonitored.
+          note "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow${BRANCH_D:+ on \`${BRANCH_D}\`} has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
           ;;
         yes)
           finding "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow${BRANCH_D:+ on \`${BRANCH_D}\`} has executed since (nothing reached success, failure or timed_out, and nothing is running now) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
@@ -461,3 +479,30 @@ COUNT=$(wc -l < findings.txt | tr -d ' ')
 echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
 echo "=== ${COUNT} finding(s)"
 cat findings.txt || true
+
+# The findings FINGERPRINT, not a counter. The issue step comments only when
+# this changes, so a standing problem is stated once instead of hourly.
+#
+# It hashes the finding TEXT, so a finding whose wording moves (a stuck run's
+# age climbs every hour) still re-comments — which is why the age is rounded
+# to a day below before hashing. Sorting first makes the fingerprint
+# order-independent: the repo/workflow iteration order is stable today but
+# nothing enforces that, and a reordering that re-alerted every run would be
+# indistinguishable from a real change.
+FINGERPRINT=$(sed -E 's/for \*\*[0-9]+h\*\*/for **Nh**/g' findings.txt \
+  | sort | sha256sum | cut -c1-16)
+echo "fingerprint=${FINGERPRINT}" >> "$GITHUB_OUTPUT"
+echo "=== fingerprint ${FINGERPRINT}"
+
+NOTECOUNT=$(wc -l < notes.txt | tr -d ' ')
+if [ "${NOTECOUNT:-0}" -gt 0 ]; then
+  echo "=== ${NOTECOUNT} note(s) — observations, not faults in the monitoring"
+  cat notes.txt || true
+  if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+    {
+      printf '### Watchdog notes (not findings)\n\n'
+      cat notes.txt
+      printf '\nThese do not open or hold open the watchdog issue.\n'
+    } >> "$GITHUB_STEP_SUMMARY"
+  fi
+fi

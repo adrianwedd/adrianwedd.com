@@ -1541,6 +1541,87 @@ describe('POST /api/watchdog/heartbeat', () => {
   });
 });
 
+describe('POST /api/watchdog/undelivered', () => {
+  function undeliveredRequest(body: unknown, token = 'test-cron-secret') {
+    return new Request('http://localhost/api/watchdog/undelivered', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: typeof body === 'string' ? body : JSON.stringify(body),
+    });
+  }
+
+  function emailEnv(kv: ReturnType<typeof mockKV>, send = vi.fn(async () => {})) {
+    return { ...makeEnv(kv), CRISIS_EMAIL: { send }, CRISIS_ALERT_FROM: 'alerts@wedd.au', CRISIS_ALERT_TO: 'adrianwedd@gmail.com', send };
+  }
+
+  it('emails findings the caller could not file', async () => {
+    const kv = mockKV();
+    const env = emailEnv(kv);
+
+    const res = await app.fetch(
+      undeliveredRequest({ source: 'monitor-watchdog', findings: '- uptime.yml disabled', runId: '99' }),
+      env as never,
+    );
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true, source: 'monitor-watchdog', emailed: true, suppressed: false });
+    expect(env.send).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects a bad bearer token with 401 and sends nothing', async () => {
+    const env = emailEnv(mockKV());
+
+    const res = await app.fetch(
+      undeliveredRequest({ source: 'monitor-watchdog', findings: '- x' }, 'wrong'),
+      env as never,
+    );
+
+    expect(res.status).toBe(401);
+    expect(env.send).not.toHaveBeenCalled();
+  });
+
+  // An escalation carrying no findings would email "your findings were lost"
+  // while carrying none — worse than silence, because it reads as delivery.
+  it.each([[{ source: 'monitor-watchdog' }], [{ source: 'monitor-watchdog', findings: '' }], [{ findings: '- x' }]])(
+    'rejects an incomplete payload with 400 (%j)',
+    async (body) => {
+      const env = emailEnv(mockKV());
+      const res = await app.fetch(undeliveredRequest(body), env as never);
+      expect(res.status).toBe(400);
+      expect(env.send).not.toHaveBeenCalled();
+    },
+  );
+
+  // The caller still holds the text at this point, so a failed send has to be
+  // visible to it — otherwise both paths are down and nothing says so.
+  it('returns 502 when the email cannot be sent', async () => {
+    const env = emailEnv(mockKV(), vi.fn(async () => {
+      throw new Error('binding down');
+    }));
+
+    const res = await app.fetch(
+      undeliveredRequest({ source: 'monitor-watchdog', findings: '- lost' }),
+      env as never,
+    );
+
+    expect(res.status).toBe(502);
+  });
+
+  it('reports a cooldown-suppressed escalation as delivered', async () => {
+    const kv = mockKV();
+    kv.store.set('watchdog-undelivered:monitor-watchdog', 'earlier');
+    const env = emailEnv(kv);
+
+    const res = await app.fetch(
+      undeliveredRequest({ source: 'monitor-watchdog', findings: '- still broken' }),
+      env as never,
+    );
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ ok: true, emailed: false, suppressed: true });
+  });
+});
+
 describe('GET /api/watchdog/status', () => {
   function statusRequest(authed = true) {
     return new Request(

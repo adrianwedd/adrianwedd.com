@@ -148,6 +148,7 @@ jobs:
       # legitimately open monitoring issue. A failed run plus the withheld
       # check-in above are the signals in that case.
       - name: Open / update / close the watchdog issue
+        id: issue
         if: success()
         env:
           # Overrides the job-level PAT deliberately. The PAT exists for
@@ -159,6 +160,7 @@ jobs:
           # exist for a write the default token can already do.
           GH_TOKEN: ${{ github.token }}
           FINDING_COUNT: ${{ steps.check.outputs.count }}
+          FINGERPRINT: ${{ steps.check.outputs.fingerprint }}
         run: |
           set +e -u +o pipefail  # see the note on the first step
           TITLE="🐕 Monitoring watchdog: monitoring is degraded"
@@ -195,10 +197,42 @@ jobs:
           fi
 
           if [ "${COUNT:-0}" -gt 0 ]; then
-            BODY=$(printf 'The watchdog found **%s** problem(s) with the monitoring itself.\n\n%s\n\n---\n\nThese are faults in the checks, not in the services they watch: while any of them stands, the corresponding check is not running and its silence means nothing. Opened automatically by `monitor-watchdog.yml` (run %s).\n' \
-              "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")
+            # The body carries the fingerprint marker too, so the very next run
+            # of an unchanged set reads it and stays quiet instead of posting a
+            # redundant first comment under a just-opened issue.
+            BODY=$(printf 'The watchdog found **%s** problem(s) with the monitoring itself.\n\n%s\n\n---\n\nThese are faults in the checks, not in the services they watch: while any of them stands, the corresponding check is not running and its silence means nothing. Opened automatically by `monitor-watchdog.yml` (run %s). It comments again only when the finding set changes, and closes itself when the set empties.\n<!-- watchdog-fingerprint: %s -->\n' \
+              "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID" "$FINGERPRINT")
             if [ -n "$EXISTING" ]; then
-              if ! gh issue comment "$EXISTING" --repo "$HOME_REPO" --body "$(printf 'Still degraded — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"; then
+              # Comment only when the FINDING SET has changed.
+              #
+              # The old behaviour commented every hour for as long as anything
+              # stood. On #582 that produced 371 identical comments in 16 days
+              # and buried the two times the set actually changed. An alert
+              # nobody opens is not an alert, so restating an unchanged problem
+              # hourly costs signal and buys nothing: the issue being OPEN is
+              # already the standing statement, and it still auto-closes the
+              # moment the findings clear.
+              #
+              # The marker is written into the comment body as an HTML comment,
+              # so the state lives on the issue itself rather than in workflow
+              # storage that a re-run or a cache eviction could lose. Only the
+              # LATEST bot comment is consulted, so a set that changes A → B → A
+              # still re-comments on the return to A.
+              LAST_FP=""
+              # Falls back to the issue BODY when there are no comments yet —
+              # the create path stamps the marker there, so a freshly opened
+              # issue must not draw an immediate duplicate comment.
+              if LAST_BODY=$(gh issue view "$EXISTING" --repo "$HOME_REPO" \
+                   --json comments,body --jq '(.comments[-1].body // .body) // ""' 2>/dev/null); then
+                LAST_FP=$(printf '%s' "$LAST_BODY" \
+                  | sed -n 's/.*<!-- watchdog-fingerprint: \([0-9a-f]*\) -->.*/\1/p' | head -n1)
+              fi
+              # An unreadable comment list must fall through to COMMENTING, not
+              # to silence: the failure mode to avoid is a changed finding set
+              # that never gets posted because a lookup 500'd.
+              if [ -n "$FINGERPRINT" ] && [ "$LAST_FP" = "$FINGERPRINT" ]; then
+                echo "Findings unchanged (fingerprint ${FINGERPRINT}) — not re-commenting on #${EXISTING}."
+              elif ! gh issue comment "$EXISTING" --repo "$HOME_REPO" --body "$(printf 'Findings changed — now **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s. This issue stays open while anything above stands; the watchdog now comments only when the set changes.)_\n<!-- watchdog-fingerprint: %s -->\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID" "$FINGERPRINT")"; then
                 echo "::error::Could not comment on watchdog issue #${EXISTING} — findings were NOT recorded: $(cat findings.txt)"
                 FAILED=1
               fi
@@ -231,4 +265,63 @@ jobs:
             fi
           fi
 
+          # Recorded BEFORE the exit so the escalation step below can read it:
+          # step outputs survive a failing step, the step's own `outcome` alone
+          # cannot distinguish "issue write failed with findings in hand" from
+          # "issue write failed with nothing to report".
+          if [ "${FAILED:-0}" -ne 0 ] && [ "${COUNT:-0}" -gt 0 ]; then
+            echo "undelivered=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "undelivered=no" >> "$GITHUB_OUTPUT"
+          fi
+
           exit "${FAILED:-0}"
+
+      # ── #587: findings must never die with the GitHub API ──────────────────
+      #
+      # The check-in above is deliberately FIRST, so a GitHub outage can't
+      # masquerade as a dead watchdog. The cost of that ordering is this hole:
+      # if the sweep finds real degradation and the issue write then fails, the
+      # Cloudflare timer has already been reset, no email goes out, and the only
+      # trace is a red run in a tab whose unwatchedness is this workflow's whole
+      # premise. It has happened once for real — five findings discarded on the
+      # watchdog's first run, recoverable only because the error text happened
+      # to name them.
+      #
+      # Rather than reorder (which reintroduces exactly the false "watchdog is
+      # dead" email the order was chosen to avoid), send the findings themselves
+      # to the worker, which emails them immediately. GitHub's issue tracker
+      # becomes a convenience rather than the sole delivery path.
+      #
+      # `always()` plus an explicit outcome test, not `failure()`: this must run
+      # when the issue step failed, and must NOT run when the check step died
+      # (there, findings.txt is partial and the withheld check-in is the signal).
+      - name: Escalate undelivered findings by email
+        if: always() && steps.issue.outputs.undelivered == 'yes'
+        env:
+          FINDING_COUNT: ${{ steps.check.outputs.count }}
+        run: |
+          set +e -u +o pipefail  # see the note on the first step
+          if [ -z "${SOCIAL_WORKER_URL:-}" ] || [ -z "${SOCIAL_CRON_SECRET:-}" ]; then
+            echo "::error::Findings could not be filed as an issue AND the worker is unconfigured — they are lost: $(cat findings.txt 2>/dev/null)"
+            exit 1
+          fi
+
+          CODE=$(curl -s -o /tmp/undelivered.json -w '%{http_code}' \
+            -X POST "${SOCIAL_WORKER_URL}/api/watchdog/undelivered" \
+            -H "Authorization: Bearer ${SOCIAL_CRON_SECRET}" \
+            -H 'Content-Type: application/json' \
+            --max-time 30 \
+            --data "$(jq -nc --arg s monitor-watchdog \
+                              --arg r "${GITHUB_RUN_ID}" \
+                              --arg f "$(cat findings.txt 2>/dev/null)" \
+                              '{source:$s, runId:$r, findings:$f}')")
+          echo "undelivered escalation: HTTP ${CODE}"
+          if [ "$CODE" != "200" ]; then
+            cat /tmp/undelivered.json 2>/dev/null || true
+            # Both delivery paths are now down. Say so in the loudest terms the
+            # run log allows, and keep the findings in the annotation — that is
+            # the only reason the first incident was recoverable at all.
+            echo "::error::BOTH delivery paths failed (issue write AND worker escalation HTTP ${CODE}). Findings: $(cat findings.txt 2>/dev/null)"
+            exit 1
+          fi

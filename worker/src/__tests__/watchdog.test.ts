@@ -7,6 +7,8 @@ import {
   EXTERNAL_SOURCES,
   ALERT_COOLDOWN_MS,
   PROOF_OF_LIFE_INTERVAL_MS,
+  UNDELIVERED_COOLDOWN_MS,
+  escalateUndeliveredFindings,
   type WatchdogEnv,
 } from '../watchdog';
 
@@ -316,5 +318,67 @@ describe('weekly proof-of-life', () => {
   // a magic number buried in the module.
   it('uses a 24h alert cooldown', () => {
     expect(ALERT_COOLDOWN_MS).toBe(24 * 60 * 60_000);
+  });
+});
+
+// ── #587: findings that could not be filed ────────────────────────────────────
+//
+// monitor-watchdog checks in BEFORE writing its issue, so a failed issue write
+// leaves findings with no delivery path and a staleness timer already reset.
+// This is the second path.
+describe('escalateUndeliveredFindings', () => {
+  it('emails the findings verbatim and records a cooldown', async () => {
+    const kv = mockKV();
+    const env = makeEnv(kv);
+
+    const res = await escalateUndeliveredFindings(env, 'monitor-watchdog', '- uptime.yml is disabled', '42', NOW);
+
+    expect(res).toEqual({ sent: true, suppressed: false });
+    expect(env.send).toHaveBeenCalledTimes(1);
+    const raw = JSON.stringify((env.send.mock.calls as unknown[][])[0][0]);
+    expect(raw).toContain('uptime.yml is disabled');
+    // The run link is what makes the email actionable.
+    expect(raw).toContain('/actions/runs/42');
+    expect(kv.store.has('watchdog-undelivered:monitor-watchdog')).toBe(true);
+  });
+
+  it('suppresses a second escalation inside the cooldown', async () => {
+    const kv = mockKV({ 'watchdog-undelivered:monitor-watchdog': 'earlier' });
+    const env = makeEnv(kv);
+
+    const res = await escalateUndeliveredFindings(env, 'monitor-watchdog', '- still broken', '43', NOW);
+
+    expect(res).toEqual({ sent: false, suppressed: true });
+    expect(env.send).not.toHaveBeenCalled();
+  });
+
+  // A cooldown written on a FAILED send would suppress retries of an alert that
+  // never reached anyone — the exact failure this whole path exists to prevent.
+  it('does not record a cooldown when the send fails', async () => {
+    const kv = mockKV();
+    const send = vi.fn(async () => {
+      throw new Error('email binding down');
+    });
+    const env = makeEnv(kv, send);
+
+    const res = await escalateUndeliveredFindings(env, 'monitor-watchdog', '- lost findings', '44', NOW);
+
+    expect(res).toEqual({ sent: false, suppressed: false });
+    expect(kv.store.has('watchdog-undelivered:monitor-watchdog')).toBe(false);
+  });
+
+  // Erring toward a duplicate email beats erring toward silence.
+  it('still alerts when the cooldown read itself fails', async () => {
+    const kv = mockKV();
+    kv.get.mockRejectedValueOnce(new Error('KV unavailable'));
+    const env = makeEnv(kv);
+
+    const res = await escalateUndeliveredFindings(env, 'monitor-watchdog', '- findings', '45', NOW);
+
+    expect(res.sent).toBe(true);
+  });
+
+  it('uses a 6h cooldown', () => {
+    expect(UNDELIVERED_COOLDOWN_MS).toBe(6 * 60 * 60_000);
   });
 });

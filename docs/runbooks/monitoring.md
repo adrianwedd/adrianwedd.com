@@ -33,6 +33,25 @@ So the two platforms watch each other:
 - **GitHub → Cloudflare.** Upptime checks `/api/health` and (once re-added, see
   below) `/api/watchdog/status`, both of which 503 on degradation.
 
+**Second delivery path for findings (#587).** The watchdog checks in to
+Cloudflare *before* it writes its GitHub issue, deliberately — otherwise a GitHub
+API failure would masquerade as a dead watchdog and email about the wrong thing.
+The cost is that a failed issue write leaves real findings with nowhere to go and
+a staleness timer this run has already reset. So when the issue write fails while
+holding findings, the workflow POSTs them to `/api/watchdog/undelivered` and the
+worker emails them immediately (6h cooldown per source, `UNDELIVERED_COOLDOWN_MS`).
+If *that* also fails, the run goes red with the findings in the step annotation —
+the only reason the first such incident was recoverable at all.
+
+**Noise budget (#582).** The watchdog comments on its issue only when the finding
+*set* changes, keyed by a fingerprint stamped into the issue body and each
+comment as `<!-- watchdog-fingerprint: … -->`. The age of a stuck run is
+normalised out before hashing, so a standing problem doesn't re-comment hourly.
+Zombie run records — where the script has *proven* a later run of that workflow
+executed, so nothing is blocked — are printed as **notes** in the job summary and
+never counted as findings. They cannot be cancelled via the API (it 500s); clear
+them from the Actions UI if the clutter bothers you.
+
 **The limit, stated plainly:** the worker is a shared dependency of the
 Cloudflare→GitHub direction. If the worker is down, its cron doesn't fire, the
 check-in fails, and no email goes out. What catches that is the GitHub side going

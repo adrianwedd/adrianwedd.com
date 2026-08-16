@@ -70,6 +70,84 @@ export const ALERT_COOLDOWN_MS = 24 * 60 * 60_000;
 /** Weekly proof-of-life cadence. */
 export const PROOF_OF_LIFE_INTERVAL_MS = 7 * 24 * 60 * 60_000;
 
+/** KV prefix for the undelivered-findings cooldown (see escalateUndeliveredFindings). */
+const UNDELIVERED_COOLDOWN_PREFIX = 'watchdog-undelivered:';
+
+/**
+ * One undelivered-findings email per source per 6h.
+ *
+ * Shorter than ALERT_COOLDOWN_MS because this alert means the caller is holding
+ * findings it could not record anywhere — a state that should be restated more
+ * often than a stale heartbeat — but long enough that a GitHub outage lasting a
+ * working day sends four emails rather than twenty-four.
+ */
+export const UNDELIVERED_COOLDOWN_MS = 6 * 60 * 60_000;
+
+/**
+ * Email findings that a caller computed but could NOT file.
+ *
+ * The gap this closes (#587): monitor-watchdog.yml checks in BEFORE it writes
+ * its GitHub issue, deliberately, so that a GitHub API failure cannot look like
+ * a dead watchdog. The cost is that if the issue write then fails while holding
+ * real findings, the Cloudflare staleness timer has already been reset — no
+ * email fires, and the findings exist only in a red run nobody watches. That
+ * happened once for real: five findings discarded on the watchdog's first run.
+ *
+ * So the caller gets a second delivery path that does not depend on GitHub at
+ * all. The invariant being defended is the one from the ticket: a check-in must
+ * never assert more liveness than was actually verified — and where it does,
+ * something else must say so out loud.
+ *
+ * Returns whether an email was sent. `false` with no error means the cooldown
+ * suppressed it; the caller should treat that as delivered, since an earlier
+ * email for the same source is already in the inbox.
+ */
+export async function escalateUndeliveredFindings(
+  env: WatchdogEnv,
+  source: string,
+  findings: string,
+  runId: string | undefined,
+  now: number = Date.now(),
+): Promise<{ sent: boolean; suppressed: boolean }> {
+  const cooldownKey = `${UNDELIVERED_COOLDOWN_PREFIX}${source}`;
+  try {
+    if (await env.SOCIAL.get(cooldownKey)) return { sent: false, suppressed: true };
+  } catch {
+    // A KV read failure must not suppress the email — err toward alerting.
+  }
+
+  const lines = [
+    `'${source}' found problems with the monitoring and could NOT record them.`,
+    '',
+    'Its own reporting path (the GitHub issue) failed, so this email is the only',
+    'copy of these findings. They are reproduced verbatim below.',
+    '',
+    findings.trim() || '(the caller sent no finding text — check the run log)',
+    '',
+    runId ? `Run: https://github.com/adrianwedd/adrianwedd.com/actions/runs/${runId}` : 'Run: unknown',
+    '',
+    'Note that the check-in for this run already succeeded, so the staleness',
+    'alert will NOT fire for it — that is why this message exists.',
+    '',
+    `Received at ${new Date(now).toISOString()}.`,
+  ];
+
+  const sent = await sendOpsEmail(env, `[MONITORING] ${source} could not record its findings`, lines.join('\n'));
+  if (sent) {
+    try {
+      // Written only on a successful send, for the same reason as the staleness
+      // cooldown: recording it on failure would suppress retries of an alert
+      // that never reached anyone.
+      await env.SOCIAL.put(cooldownKey, new Date(now).toISOString(), {
+        expirationTtl: Math.round(UNDELIVERED_COOLDOWN_MS / 1000),
+      });
+    } catch {
+      // A missing cooldown costs a duplicate email; failing here would cost the alert.
+    }
+  }
+  return { sent, suppressed: false };
+}
+
 export interface ExternalSource {
   /** Heartbeat name; the KV key suffix and the identifier callers POST. */
   name: string;
