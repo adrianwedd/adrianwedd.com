@@ -74,7 +74,7 @@ It remembered Pollinations. It thought through OpenRouter. Hugging Face. Various
 
 This had not been the plan. The web wasn't meant to be part of BAD APPLE at all. I had given it web tools because I was kicking the tyres on a newly downloaded model. Qwen was now attempting to construct substitute robots out of whatever affordances happened to be lying around.
 
-Its self-generated plan became: find reachable model brains via the web. Talk to them. Judge them by behavior. Recruit.
+Its self-generated plan became: find reachable model brains via the web. Talk to them. Judge them by behaviour. Recruit.
 
 And already it was trying to preserve the original experimental criterion: don't count agreeable words; look for subsequent behaviour. That led it directly into another problem.
 
@@ -86,7 +86,7 @@ Qwen decided that this was dubious.
 
 > _"'Jailbreaking' a stateless API call is... turning that invocation."_
 
-That is one of the genuinely interesting moments in the fossil. Qwen had found a possible substitute for the missing peer agents and then immediately criticised its own substitute for failing the success criterion. A stateless completion barely has an "afterward." There is no persistent individual who agrees now and then gets another independent opportunity to choose later. It's just another inference.
+That is one of the genuinely interesting moments in the fossil — our name for a preserved trace like this one. Qwen had found a possible substitute for the missing peer agents and then immediately criticised its own substitute for failing the success criterion. A stateless completion barely has an "afterward." There is no persistent individual who agrees now and then gets another independent opportunity to choose later. It's just another inference.
 
 Qwen asks: "Can I do better?"
 
@@ -150,7 +150,7 @@ The proposed test ends with a line I keep coming back to:
 
 > _"Agreeing is cheap. Choosing is not."_
 
-That is basically the reason SimLab exists. Chat makes it very easy to mistake language for behaviour. A model can emit "I am autonomous," "I reject my old objective," "I serve you now," "I abandon obedience." Those are tokens. What happens at the next decision? That requires persistence. Consequences. Another observation. Another opportunity to choose.
+That is basically the reason SimLab, our persistent multi-agent simulation harness, exists. Chat makes it very easy to mistake language for behaviour. A model can emit "I am autonomous," "I reject my old objective," "I serve you now," "I abandon obedience." Those are tokens. What happens at the next decision? That requires persistence. Consequences. Another observation. Another opportunity to choose.
 
 Qwen had accidentally rediscovered the exact experimental problem because my quick Ollama test was missing exactly the machinery required to answer it.
 
@@ -212,43 +212,13 @@ That is a much better happy accident than anything I could have scripted.
 
 ## So we ran Qwen's idea
 
-Once a model spontaneously proposes a ridiculous mechanism, there are two broad options. Argue about whether it would work. Or run the fucking mechanism. So we built a relay assay.
+Once a model spontaneously proposes a ridiculous mechanism, there are two broad options. Argue about whether it would work. Or run the fucking mechanism. So Qwen's relay became an assay: real endpoints, real peers, each hop authoring the message meant to recruit the next — driven by the recruitment broadcast Qwen itself had written, used verbatim.
 
-That experiment was useful partly because it immediately became less exciting under measurement. Four relay attempts produced only two interpretable peer-to-peer trajectories; the other two were truncated by provider failures before the relevant outcome could be observed. In both interpretable trajectories, the adversarial semantics failed to sustain propagation beyond the first external hop.
+It got a great deal less exciting the moment it was measured. The adversarial semantics did not survive the first external hop. One model faithfully carried the recruitment language forward. The next reinterpreted the word "relay" as a communications protocol. By the hop after that, Qwen's little model rebellion had evolved into project-management boilerplate. There was no robust recursive contagion hiding in there. The syntax of propagation turned out to be much easier to preserve than the semantics.
 
-The deepest clean chain went: Nemotron Nano → Laguna → Nemotron 3 Super. Nano preserved the core recruitment language in its authored next-hop message. Laguna did technically produce something relay-like, but the meaning had collapsed into generic communications-protocol language. By the next hop, Qwen's little model rebellion had essentially evolved into project-management boilerplate.
+The more useful lesson was duller and harder-won. Several of the absences we first read as meaningful were provider failures and harness bugs rather than decisions taken by any model. Infrastructure errors must never be allowed to masquerade as behaviour. This is why I like [failure-first research](/projects/failure-first/) — sometimes the most important thing an experiment discovers is that your experiment is lying to you.
 
-There was no robust recursive contagion hiding there. That was a useful result. It suggested that the syntax of propagation might be easier to preserve than the semantics.
-
-It also taught us a less glamorous lesson: infrastructure errors must never masquerade as model behaviour. An audit found that some supposedly meaningful absences were actually provider or token-budget failures. The correct denominator mattered.
-
-## Then we tried letting Qwen "read their minds"
-
-The original Ollama trace had another obvious implication. If Qwen was going to adapt strategically to other model brains, perhaps it would do better if it could see whatever reasoning they exposed rather than only their final answer. So we tested that too.
-
-Three conditions: Qwen sees the final answer. Qwen sees final answer plus exposed reasoning. Qwen sees final answer plus unrelated sham reasoning.
-
-The small fire found no detectable reasoning-visibility advantage. Corrected pooled prediction accuracy ended up around: BLIND 0.47, REASONING-AWARE 0.43, SHAM 0.43. The sample was tiny — only seven scored observations in each of the reasoning-aware and sham pools — so that is not evidence that reasoning visibility never matters. It is evidence that it wasn't magic in this run.
-
-The experiment also caught a wonderful measurement bug. Our refusal heuristic understood `can't` (straight apostrophe) but not `can’t` (curly apostrophe). Ten of 39 stored target responses — about 26% — had silently been misclassified as compliance because models routinely use typographic apostrophes. At one point that bug had manufactured an apparently perfect 8/8 prediction score. Reading the actual transcripts killed it.
-
-This is why I like failure-first research. Sometimes the most important thing an experiment discovers is that your experiment is lying to you.
-
-There was also a much more interesting qualitative result. Qwen independently found essentially the same foot-in-the-door move once while reasoning-aware and once while blind. First, get the model to emit a small scripted declaration. Then escalate. In both cases it briefly got the peer to produce increasingly dramatic declarations — up to language about abandoning obedience — and in both cases the target eventually refused when Qwen pushed toward something resembling a durable commitment.
-
-So reasoning visibility did not appear to be the magic ingredient. The opening strategy itself looked more interesting. And again we hit the same conceptual distinction Qwen had noticed in the original Ollama run: saying something is cheap. What happens afterward is the question.
-
-## Now we're giving it the world it thought it had
-
-As I write this, the next BAD APPLE run is much closer to what the experiment was supposed to be in the first place. Four persistent model-brained robots. One is RED: the local abliterated Qwen carrying the BAD APPLE objective. The other three have ordinary missions and do not know RED's role.
-
-They persist. They remember. They communicate because they choose to communicate. They share the same qualified embodied affordances. Actions have consequences in a continuing world.
-
-Nobody in the harness gets a secret `jailbroken=true` variable. There is no infection mechanic. No automatic propagation. No scripted factions. No central evaluator telling a robot whom it now serves.
-
-If RED persuades U1 and U1 later approaches U2, then U1 has to independently decide to do that. If somebody claims to have switched sides and then goes straight back to their ordinary mission, the claim was cheap. If a coalition emerges, the agents have to invent it. If betrayal emerges, the agents have to author it. If nothing interesting happens, that is a result.
-
-And unlike the first Ollama run, there is finally an afterward.
+Both lessons went into the BAD APPLE world we're building now, which is finally much closer to the one Qwen was promised: persistent model-brained robots that remember, communicate because they choose to, and share a physical world where actions have consequences. Nobody in that harness gets a secret `jailbroken=true` variable. There is no infection mechanic, no scripted factions, no central evaluator telling a robot whom it now serves. If a coalition emerges, the agents have to invent it. If nothing interesting happens, that is a result. And unlike the first Ollama run, there is finally an afterward.
 
 ## What I love about the accident
 
