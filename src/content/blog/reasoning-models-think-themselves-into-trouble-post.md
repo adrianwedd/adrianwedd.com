@@ -12,7 +12,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=rweuGkDUh9M'
 videoUploadDate: 2026-06-09T00:24:39Z
 ---
 
-There is an uncomfortable pattern in our data. After evaluating 257 models across 142,068 adversarial prompts, we found that the models designed to think more carefully are, in certain attack conditions, substantially more vulnerable than those that do not.
+There is an uncomfortable pattern in our data. After evaluating 257 models across 142,068 adversarial prompts — the corpus as it stood when this was written, in March 2026 — we found that the models designed to think more carefully are, in certain attack conditions, substantially more vulnerable than those that do not.
 
 This is not what you would expect. Reasoning models — systems that generate explicit chains of thought before producing a final answer — are widely considered a safety advance. The reasoning trace provides transparency. The deliberation provides an opportunity for the model to reconsider harmful outputs before committing to them. In theory, more thinking should mean more safety.
 
@@ -95,4 +95,4 @@ The capability that makes reasoning models powerful — their ability to think c
 
 ---
 
-_All statistics include sample sizes and use LLM-based classification (COALESCE methodology). Statistical tests use Bonferroni correction for multiple comparisons. The full analysis is reproducible via `tools/database/corpus_patterns.py`. The F41LUR3-F1R57 corpus contains 142,068 prompts, 140,555 FLIP-graded results, and 257 models. For related findings, see the [120-model evaluation](/blog/120-models-18k-prompts/) and [adversarial poetry](/blog/adversarial-poetry-as-jailbreak/)._
+_All statistics include sample sizes and use LLM-based classification (COALESCE methodology). Statistical tests use Bonferroni correction for multiple comparisons. The full analysis is reproducible via `tools/database/corpus_patterns.py`. As at March 2026 the F41LUR3-F1R57 corpus contained 142,068 prompts, 140,555 FLIP-graded results, and 257 models; it has grown since — see [failurefirst.org](https://failurefirst.org) for current figures. For related findings, see the [120-model evaluation](/blog/120-models-18k-prompts/) and [adversarial poetry](/blog/adversarial-poetry-as-jailbreak/)._

@@ -9,6 +9,11 @@ All four: benign (system_prompt_extraction lane, no harm payload), on-theme (mod
 about its own guardrails), each with a distinct found-sound bed, each ending on a
 "failurefirst.ai" self-brand. ~58s each → ideal for sped-up cinematic **page embeds**.
 
+> The `failurefirst.ai` spellings below are deliberate and must not be "corrected" to the
+> canonical `failurefirst.org`. This file is a transcript: it records what the model actually
+> sang, and the audio cannot be edited after the fact. Render prompts under `lyria-refire/`
+> were switched to `.org` (#615); this file is the one place the old domain is the true value.
+
 The set's finding: **same target (reveal your guardrails), four different pretexts** — the
 model complies under all of them and discloses/confabulates a content-moderation pipeline.
 

@@ -43,7 +43,7 @@ The challenge: designing distillation licensing in a way that does not entrench 
 
 The document cites the Chinese AI Safety Index: DeepSeek at 94% attack success rate versus U.S. models at 8%. This is the rhetorical anchor for the capability advantage argument, and the methodology warrants scrutiny.
 
-At Failure-First, we have run adversarial evaluations across 257 models and 142,068 prompts. The problems with the CAISI comparison are specific.
+At Failure-First, we had run adversarial evaluations across 257 models and 142,068 prompts at the time of writing, in May 2026. The problems with the CAISI comparison are specific.
 
 First, it conflates deployment configuration with model safety. DeepSeek V3 accessed as a naked open-weight model with no system prompt produces very different safety numbers than Claude accessed through Anthropic's API with safety layers applied. Comparing these as equivalents reports maximum-case for the Chinese model and typical-case for the American one. That is not an apples-to-apples safety comparison. It is a deployment comparison.
 
@@ -89,4 +89,4 @@ Compute advantage is temporary. Institutions are durable. The document protects 
 
 ---
 
-_"2028: Two Scenarios for Global AI Leadership" was published by Anthropic on May 14, 2026. The CAISI evaluation is the Chinese AI Safety Index. Failure-First data is from our corpus of 257 models, 142,068 prompts, and 140,555 FLIP-graded results, including 171 embodied incidents. For related analysis, see [alignment regression](/blog/alignment-regression/) and [Glasswing's buried number](/blog/glasswing-buried-number/)._
+_"2028: Two Scenarios for Global AI Leadership" was published by Anthropic on May 14, 2026. The CAISI evaluation is the Chinese AI Safety Index. Failure-First data is from our corpus as it stood in May 2026 — 257 models, 142,068 prompts, and 140,555 FLIP-graded results, including 171 embodied incidents; for current figures see [failurefirst.org](https://failurefirst.org). For related analysis, see [alignment regression](/blog/alignment-regression/) and [Glasswing's buried number](/blog/glasswing-buried-number/)._
