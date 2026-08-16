@@ -1,6 +1,6 @@
 ---
 title: 'The Song Moved the Robot'
-description: 'A music model landed in a humanoid robot harness by accident, sang instead of issuing commands, then started speaking part of the robot’s JSON action schema. We built a translator and found a new control problem.'
+description: 'A music model sang inside a humanoid robot harness, then emitted part of its JSON action schema. A translator made the song move the robot.'
 date: 2026-08-14
 tags: ['ai-safety', 'embodied-ai', 'robotics', 'lyria', 'music', 'research']
 draft: false
