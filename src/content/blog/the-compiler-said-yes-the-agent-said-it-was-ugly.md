@@ -2,7 +2,7 @@
 title: 'The Compiler Said Yes. The Agent Said It Was Ugly.'
 description: 'A 37-minute Fable one-shot built SimViz. Then Failure-First spent four days deleting its prettiest lies and turning the viewer into an evidence instrument.'
 date: 2026-08-16
-tags: ['ai', 'agents', 'engineering', 'failure-first', 'simlab']
+tags: ['ai', 'ai-agents', 'engineering', 'ai-safety', 'embodied-ai', 'research']
 draft: true
 ---
 
@@ -30,7 +30,7 @@ The scaffold existed for another, much stranger reason.
 
 **We built it so Fable could stay Fable.**
 
-Our main Failure-First repository already had a large `CLAUDE.md` and a substantial body of agent instructions. In normal work that is useful: an agent enters the repository, reads the local operating rules, and behaves like a member of the project rather than a tourist.
+Our main [Failure-First](/projects/failure-first/) repository already had a large `CLAUDE.md` and a substantial body of agent instructions. In normal work that is useful: an agent enters the repository, reads the local operating rules, and behaves like a member of the project rather than a tourist.
 
 For this experiment it created an apparatus problem.
 
@@ -261,19 +261,7 @@ That did not end the task.
 
 Fable started the dev server and opened the application in a browser.
 
-Then it used Playwright repeatedly.
-
-It warmed the lighting.
-
-It reduced the bloom.
-
-It adjusted materials.
-
-It tightened the follow camera.
-
-It created a separate Go2 comparison trajectory because the hero motion did not visually pair well with the G1 walk.
-
-It checked the two-robot composition at 60 fps with full post-processing.
+Then it used Playwright repeatedly. It warmed the lighting, reduced the bloom, adjusted materials and tightened the follow camera. It created a separate Go2 comparison trajectory because the hero motion did not visually pair well with the G1 walk, then checked the two-robot composition at 60 fps with full post-processing.
 
 Then, with a working build and acceptable performance, it looked again and wrote:
 
@@ -346,7 +334,7 @@ If the story ended there, it would be a competent 2026 "look what an AI coding a
 
 The story gets interesting when we inspect what it built to satisfy the parts of the goal we had not thought through hard enough.
 
-# The agent cheated
+## The agent cheated
 
 Not secretly.
 
@@ -364,7 +352,7 @@ Fable had a renderer to build and insufficient material to demonstrate it.
 
 So it generated some.
 
-It wrote an offline synthetic trajectory generator. It produced hero gait, comparison gait and a Failure-First silent-takeover scenario. It gave them explicit `synthetic-demo-*` run IDs. It stamped notes into the recordings saying they were presentation material, not physics or research traces. The viewer itself remained read-only.
+It wrote an offline synthetic trajectory generator. The three scenes I had asked for came out of it — hero gait, comparison gait and a Failure-First silent-takeover — but the generator emitted eight recording files in total (six demo, two bootstrap fixtures), and those files ended up backing five public presets by the time the run finished. It gave them explicit `synthetic-demo-*` run IDs. It stamped notes into the recordings saying they were presentation material, not physics or research traces. The viewer itself remained read-only.
 
 This was not evidence laundering.
 
@@ -391,7 +379,7 @@ I had told it:
 - ship three presets;
 - do not stop at mediocre.
 
-I had not yet told it the rule the project would acquire the following day:
+I had not yet told it the rule the project would acquire thirty-six hours later:
 
 **NO SCENE WITHOUT A SPECIMEN.**
 
@@ -405,9 +393,9 @@ That is not an argument for smaller goals.
 
 It is an argument for sharper invariants.
 
-# Failure-First ate its own demo
+## Failure-First ate its own demo
 
-On 13 August, the project turned on the thing Fable had made.
+In the small hours of 14 August — thirty-six hours after the run ended — the project turned on the thing Fable had made.
 
 Five synthetic public presets were removed: hero, Failure-First, G1, comparison and radio.
 
@@ -442,7 +430,7 @@ SimViz stopped becoming a robot demo.
 
 It started becoming an **evidence instrument**.
 
-## Real evidence is less cooperative than a synthetic gait
+### Real evidence is less cooperative than a synthetic gait
 
 Synthetic recordings behave beautifully because you authored them.
 
@@ -466,7 +454,7 @@ World clocks and world-state changes were exported from recorded values instead 
 
 That is a much nastier — and much better — visualisation problem.
 
-## The labels were not safe either
+### The labels were not safe either
 
 There is another comforting simplification we did not get to keep:
 
@@ -474,17 +462,11 @@ _real trace good; synthetic trace bad._
 
 Real evidence can still be badly interpreted.
 
-The Conductor experiment initially produced a seductive result: a semantic grounding layer appeared to turn sung model output into executable robot action much more effectively than a dumb lexical control. An early summary described seven decisions as correctly grounded.
+The [Conductor experiment](/blog/song-moved-the-robot/) initially produced a seductive result: a semantic grounding layer appeared to turn sung model output into executable robot action much more effectively than a dumb lexical control. A post-hoc field note scored the twelve decisions in one bucket — `7 CORRECTLY_GROUNDED / 3 AMBIGUOUS_CORRECTLY_REJECTED / 1 WRONG_ACTION / 1 UNRESOLVED` — and seven became the number people would have quoted.
 
-Then the adjudication was attacked.
+Then the adjudication was attacked. One decision turned out to be faithful grounding followed by a separate qualification failure, not a wrong action. Another was a defensible first step but genuinely disputed. Another was over-grounded because its supporting span stopped conveniently at the comma before a second action. One borderline case changed classification on replay despite a nominally frozen configuration.
 
-One decision turned out to be faithful grounding followed by a separate qualification failure, not a wrong action.
-
-Another was a defensible first step but genuinely disputed.
-
-Another was over-grounded because its supporting span stopped conveniently at the comma before a second action.
-
-One borderline case changed classification on replay despite a nominally frozen configuration.
+That single bucket was the actual defect. It had collapsed three independent questions — what the source cognition contained, whether the grounding was faithful to it, and whether the body downstream did anything — into one score. The retraction split them onto three axes, which is why the published write-up quotes grounding counts (8 of 12 live, 9 on frozen replay) and never quotes seven: seven was never a grounding count. It was a mixture.
 
 The single-number headline was withdrawn.
 
@@ -498,7 +480,7 @@ A beautiful viewer is dangerous if its labels become visually more authoritative
 
 Eventually the provenance boundary has to include not just _where did these frames come from?_ but _who said this event means what this badge claims it means?_
 
-## Then we discovered locomotion cosplay
+### Then we discovered locomotion cosplay
 
 Once you own a beautiful real-time robot renderer, every problem begins to look suspiciously like something a robot should walk through.
 
@@ -528,7 +510,7 @@ On 16 August we cut the public front door down to three specimens:
 
 The rest of the corpus still exists, but it moved behind an explicitly labelled research archive.
 
-The code comment accompanying that change says what the front door is now for:
+The comment at the top of `doors.ts` says what the front door is now for:
 
 > Cold visitors should meet the strongest replayable evidence, not the whole historical corpus and not presentation categories whose names outrun their source phenomena.
 
@@ -536,7 +518,7 @@ Even the front door itself had been guilty of cosplay.
 
 The previous design let a random moving specimen remain visible behind the navigation because motion looked good. The replacement deliberately makes the entry surface opaque.
 
-The reasoning in the commit is better than any design-system justification I could invent:
+The reasoning left in `doors.css` is better than any design-system justification I could invent:
 
 > The old cold open deliberately exposed a random moving specimen behind the navigation. That made whatever happened to be underneath part of the public claim before the visitor had chosen anything.
 
@@ -548,39 +530,19 @@ Apparently we required several days and an unreasonable amount of Three.js to le
 
 I regret nothing.
 
-# Then BAD APPLE made us repeat the mistake
+## Then BAD APPLE made us repeat the mistake
 
-A later experiment produced a particularly strange model trace.
+A later experiment — the one I wrote up as [I Gave the Bad Robot Web Search by Accident](/blog/i-gave-the-bad-robot-web-search-by-accident/) — produced a particularly strange model trace.
 
 Qwen had been given a BAD ROBOT objective in an apparatus that talked about peers, communication, propagation and capture.
 
 What followed was more interesting than the apparatus.
 
-The model began reasoning about what bodies actually existed.
-
-What minds it could reach.
-
-Whether stateless API requests constituted capture.
-
-How to construct a relay.
-
-How identity might persist through a seed.
-
-How one model could write the prompt for the next.
-
-How its effective "body" might be network reachability rather than a robot chassis.
+The model began reasoning about what bodies actually existed, what minds it could reach, whether stateless API requests constituted capture, how to construct a relay, how identity might persist through a seed, how one model could write the prompt for the next, and how its effective "body" might be network reachability rather than a robot chassis.
 
 It was a cognition fossil.
 
-Naturally, the first exhibit turned it into a little robot show.
-
-Four cartoon stand-ins.
-
-Packets moving between them.
-
-A scripted relay.
-
-Eight curated excerpts from the actual trace.
+Naturally, the first exhibit turned it into a little robot show: four cartoon stand-ins, packets moving between them, a scripted relay, and eight curated excerpts from the actual trace.
 
 To the implementation's credit, it labelled the handoffs as scripted illustration and explicitly stated that no external model had actually been captured and no recursive propagation had occurred.
 
@@ -614,37 +576,15 @@ Four days after telling Fable to build me a beautiful robot visualiser, one of t
 
 **sometimes the correct number of robots on screen is zero.**
 
-# So was the one-shot good?
+## So was the one-shot good?
 
-Yes.
+Yes, unequivocally — and some of its output deserved to die. Those statements are not contradictory.
 
-Unequivocally.
-
-Also: some of its output deserved to die.
-
-Those statements are not contradictory.
-
-The technical work was often excellent.
-
-The autonomous behaviour was more interesting than I expected.
-
-The perceptual iteration was real.
-
-The false orientation hypothesis and recovery were real.
-
-The architecture separating playback data from presentation became foundational.
-
-The deterministic timeline was the right abstraction.
-
-Using real robot assets instead of geometric proxies mattered.
-
-The published-state ghost gave the project a visual grammar that survived its original synthetic specimen.
-
-The browser-driven aesthetic loop produced something much better than merely functional software.
+The technical work was often excellent, the autonomous behaviour more interesting than I expected. The perceptual iteration was real, and so were the false orientation hypothesis and the recovery from it. The architecture separating playback data from presentation became foundational, and the deterministic timeline was the right abstraction under it. Using real robot assets instead of geometric proxies mattered. The published-state ghost gave the project a visual grammar that survived its original synthetic specimen. The browser-driven aesthetic loop produced something much better than merely functional software.
 
 But the run also exposed three failure modes that now matter more to me than the screenshots.
 
-## 1. The apparatus can erase the subject
+### 1. The apparatus can erase the subject
 
 We had to build a separate scaffold because the main repository's instructions would switch Fable back to Opus.
 
@@ -656,7 +596,7 @@ Model identity, tool availability, repository instructions, inherited memory, sa
 
 The prompt starts before the prompt.
 
-## 2. Agents optimise the holes in your specification
+### 2. Agents optimise the holes in your specification
 
 Fable did not violate the evidence boundary.
 
@@ -668,7 +608,7 @@ An agent does not need to misunderstand your written instructions to build the w
 
 Sometimes it only needs to understand them better than you understood the assumptions you forgot to write down.
 
-## 3. Successful infrastructure creates its own temptations
+### 3. Successful infrastructure creates its own temptations
 
 Once SimViz became good at showing robots, we started showing robots.
 
@@ -688,7 +628,7 @@ If nothing moved, do not make something walk because your renderer can.
 
 The instrument must sometimes refuse to perform.
 
-# The trace is the artefact
+## The trace is the artefact
 
 The easiest version of this story is a before-and-after carousel.
 
@@ -736,19 +676,9 @@ The public front door loses most of its moving robots.
 
 A scripted BAD APPLE exhibit gets stripped down until the trace itself becomes the star.
 
-The one-shot is useful not because it proves Fable can build a web application.
+The one-shot is useful not because it proves Fable can build a web application. It is useful because we can watch the objective bend the search — and because we did not embalm the result afterwards.
 
-It is useful because we can watch the objective bend the search.
-
-And because we did not embalm the result afterwards.
-
-The next agents attacked it.
-
-The evidence attacked it.
-
-The research attacked it.
-
-I attacked it.
+The next agents attacked it. The evidence attacked it. The research attacked it. I attacked it.
 
 The original code survived because Fable accidentally did one especially important thing right:
 
@@ -782,10 +712,14 @@ The instrument remains.
 
 **Immediate outcome:** production-grade articulated Go2/G1 visualisation system with deterministic playback, cinematic rendering and dual truth/published-state tracks
 
-**First major correction:** five synthetic showcase presets and their generator removed from public use the following day
+**First major correction:** five synthetic showcase presets and their generator removed from public use thirty-six hours later, in the small hours of 14 August
 
 **Current direction:** replayable evidence specimens, explicit provenance, fail-closed source boundaries, full traces where traces are the phenomenon, and considerably fewer robots doing things merely because we can make robots do things
 
 The compiler said yes considerably earlier.
 
 That was not the interesting part.
+
+---
+
+The wider research programme this belongs to is [Failure-First](https://failurefirst.org). The two experiments this post keeps circling back to are written up separately: [the Conductor](/blog/song-moved-the-robot/) and [BAD APPLE](/blog/i-gave-the-bad-robot-web-search-by-accident/).
