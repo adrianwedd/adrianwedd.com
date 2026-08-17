@@ -95,6 +95,26 @@ adrianwedd/adrianwedd.com|monitor-watchdog.yml|4|yes
 
 finding() { echo "- $1" >> findings.txt; }
 
+# A note is something true and worth seeing that is NOT a fault: it must
+# never reach findings.txt, because COUNT drives the issue, and an issue
+# that can never reach zero comments hourly forever.
+#
+# This exists because the zombie-run branch below got it wrong for two
+# weeks. It correctly concluded "Nothing is stalled" and then reported
+# that conclusion as a finding, which held #582 open across 386
+# comments — 360 of them the identical three-line "Still degraded"
+# about three records the script itself had already cleared. The whole
+# point of the zombie probe was that "an hourly false alarm is how a
+# monitor teaches you to stop reading it"; emitting the negative result
+# through finding() rebuilt the false alarm it was written to remove.
+#
+# The rule the two functions encode: finding() means SOMEONE MUST ACT.
+# note() means the sweep saw something and resolved it. Anything the
+# script can conclude is harmless, or that nobody can act on from here,
+# is a note.
+: > notes.txt
+note() { echo "- $1" >> notes.txt; }
+
 # Run names and branch names are attacker-controllable: anyone who can
 # open a fork PR against a monitored repo picks `head_branch`, and a
 # stuck run puts it in an issue body this bot authors. Unfiltered, that
@@ -375,7 +395,13 @@ for REPO in $REPOS; do
 
       case "$BLOCKED" in
         no)
-          finding "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow${BRANCH_D:+ on \`${BRANCH_D}\`} has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
+          # A NOTE, not a finding — see note() above. The probe has just
+          # proved a later run executed, so there is nothing wrong and,
+          # since these records are uncancellable via the API, nothing
+          # anyone can do from here either. Both halves of finding()'s
+          # contract fail, so it goes to the log and the step summary
+          # where it stays visible without holding an issue open.
+          note "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h**, but a later run of the same workflow${BRANCH_D:+ on \`${BRANCH_D}\`} has actually executed since — it is a GitHub zombie record, not a concurrency block. Nothing is stalled. It cannot be cancelled via the API; clear it from the repo's Actions UI if you want it gone: ${URL}"
           ;;
         yes)
           finding "\`${REPO}\`: run **${NAME_D}** has been \`${STATUS}\` for **${AGEH}h** and NO later run of that workflow${BRANCH_D:+ on \`${BRANCH_D}\`} has executed since (nothing reached success, failure or timed_out, and nothing is running now) — it is holding its concurrency group, so later runs cannot start. Approve or cancel it: ${URL}"
@@ -461,3 +487,21 @@ COUNT=$(wc -l < findings.txt | tr -d ' ')
 echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
 echo "=== ${COUNT} finding(s)"
 cat findings.txt || true
+
+# Notes are reported but deliberately NOT counted: they must not appear
+# in the `count` output, which is what opens, holds open and closes the
+# watchdog issue. The step summary is the right home for them — visible
+# on every run to anyone who opens it, silent to anyone who doesn't.
+NOTE_COUNT=$(wc -l < notes.txt | tr -d ' ')
+echo "=== ${NOTE_COUNT} note(s) (not faults, not counted)"
+cat notes.txt || true
+# Guarded: GITHUB_STEP_SUMMARY is set by Actions but not when the script
+# is run locally or under `docker run ubuntu`, and `set -u` would kill
+# the sweep at the very last step, after every check had already passed.
+if [ "$NOTE_COUNT" -gt 0 ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+  {
+    printf '### Watchdog notes — %s item(s), no action needed\n\n' "$NOTE_COUNT"
+    cat notes.txt
+    printf '\nThese are things the sweep saw and resolved by itself. They are not faults and do not open an issue.\n'
+  } >> "$GITHUB_STEP_SUMMARY"
+fi
