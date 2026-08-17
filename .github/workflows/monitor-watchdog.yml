@@ -177,9 +177,12 @@ jobs:
               # A silently-failed create is the worst outcome here: the findings
               # vanish, the next hourly run finds no EXISTING issue and tries
               # again, and the only trace is a run that reported success. Fail
-              # the step so the run goes red — and note that the check-in already
-              # happened in the previous step, so this failure surfaces as a red
-              # run rather than as a spurious "watchdog is dead" email.
+              # the step so the run goes red — and mark the findings lost, which
+              # withholds the check-in in the step below and escalates by email.
+              # This comment used to say the opposite: that the check-in had
+              # "already happened in the previous step", so a red run was the
+              # only signal. That was true of the old ordering and was exactly
+              # the #587 hole; the check-in now runs after this step.
               if ! gh issue create --repo "$HOME_REPO" --title "$TITLE" --body "$BODY" --label monitoring; then
                 echo "::error::Could not create the watchdog issue — findings were NOT recorded: $(cat findings.txt)"
                 lost
