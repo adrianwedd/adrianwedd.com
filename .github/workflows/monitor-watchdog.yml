@@ -87,67 +87,13 @@ jobs:
         id: check
         run: bash .github/scripts/watchdog-liveness.sh
 
-      # Check in BEFORE the issue step: the check-in attests that the CHECK ran,
-      # which is true regardless of what it found. Putting it after issue
-      # management would let a gh-issue API failure masquerade as a dead watchdog
-      # and trigger an email about the wrong thing.
-      #
-      # `if: success()`, NOT `always()`. A crashed check step must NOT check in.
-      # With always(), a check that died — Actions API outage, runner failure,
-      # anything — still sent a fresh heartbeat reporting zero findings, so the
-      # Cloudflare watchdog stayed silent and the outage was invisible from both
-      # sides. That is the watchdog actively defeating its own escalation path.
-      # Withholding the check-in is what makes the Cloudflare email fire.
-      - name: Check in to the Cloudflare watchdog
-        if: success()
-        env:
-          # Passed through env rather than spliced into the script body: step
-          # outputs are interpolated by the YAML templater before the shell sees
-          # them, so `${{ }}` inside run: is a shell-injection boundary even when
-          # the value is first-party.
-          FINDING_COUNT: ${{ steps.check.outputs.count }}
-          UPPTIME_FRESH: ${{ steps.check.outputs.upptime_fresh }}
-        run: |
-          set +e -u +o pipefail  # see the note on the first step
-          if [ -z "${SOCIAL_WORKER_URL:-}" ] || [ -z "${SOCIAL_CRON_SECRET:-}" ]; then
-            echo "::warning::SOCIAL_WORKER_URL / SOCIAL_CRON_SECRET unset — cannot check in"
-            exit 0
-          fi
-
-          checkin() {
-            NAME="$1"; DETAIL="$2"
-            CODE=$(curl -s -o /tmp/checkin.json -w '%{http_code}' \
-              -X POST "${SOCIAL_WORKER_URL}/api/watchdog/heartbeat" \
-              -H "Authorization: Bearer ${SOCIAL_CRON_SECRET}" \
-              -H 'Content-Type: application/json' \
-              --max-time 30 \
-              --data "$(jq -nc --arg n "$NAME" --arg d "$DETAIL" '{name:$n, detail:$d}')")
-            echo "check-in ${NAME}: HTTP ${CODE}"
-            if [ "$CODE" != "200" ]; then
-              cat /tmp/checkin.json 2>/dev/null || true
-              # A failed check-in is a warning, not a job failure: the worker
-              # will alert on the missing heartbeat by itself, and failing here
-              # would just add a second, noisier signal for the same fault.
-              echo "::warning::Watchdog check-in for ${NAME} returned HTTP ${CODE}"
-            fi
-          }
-
-          checkin monitor-watchdog "run ${GITHUB_RUN_ID}: ${FINDING_COUNT:-0} finding(s)"
-
-          if [ "${UPPTIME_FRESH:-no}" = "yes" ]; then
-            checkin upptime "relayed by monitor-watchdog run ${GITHUB_RUN_ID}"
-          else
-            # Deliberately withhold the relay so the worker's Cloudflare cron
-            # escalates to email. Upptime being dark is the one failure that
-            # cannot be reported by anything running on GitHub Actions.
-            echo "::warning::Upptime has not run recently — withholding its check-in so the worker escalates by email"
-          fi
-
-      # Also `success()`: on a crashed check, findings.txt is partial and the
+      # `success()`: on a crashed check, findings.txt is partial and the
       # `count` output is missing entirely, which would read as 0 and AUTO-CLOSE a
       # legitimately open monitoring issue. A failed run plus the withheld
-      # check-in above are the signals in that case.
+      # check-in — the step BELOW, which gates on `steps.check.outcome` for this
+      # very reason — are the signals in that case.
       - name: Open / update / close the watchdog issue
+        id: issue
         if: success()
         env:
           # Overrides the job-level PAT deliberately. The PAT exists for
@@ -186,10 +132,27 @@ jobs:
 
           COUNT="${FINDING_COUNT:-0}"
 
+          # Whether real findings failed to reach a human-visible place. This
+          # is the signal the check-in step below withholds on, so it MUST be
+          # written on every exit path, including the early `exit 1`: an
+          # unwritten output reads as "" downstream, and "" would be treated as
+          # "nothing was lost" — checking in normally and re-opening the exact
+          # hole this closes (#587).
+          #
+          # Written by an EXIT trap, exactly once, rather than echoed at each
+          # site. Emitting the key twice and assuming the later value wins
+          # would be relying on undocumented duplicate-key behaviour in
+          # $GITHUB_OUTPUT; the trap needs no such assumption and cannot be
+          # skipped by an early return.
+          LOST=no
+          lost() { LOST=yes; }
+          trap 'echo "findings_lost=${LOST}" >> "$GITHUB_OUTPUT"' EXIT
+
           # A failed lookup must not fall through to "no issue exists".
           if [ "$LOOKUP_OK" -eq 0 ]; then
             if [ "${COUNT:-0}" -gt 0 ]; then
               echo "::error::Watchdog found ${COUNT} problem(s) but could not reach the issue API — findings were NOT recorded: $(cat findings.txt 2>/dev/null)"
+              lost
             fi
             exit 1
           fi
@@ -200,6 +163,7 @@ jobs:
             if [ -n "$EXISTING" ]; then
               if ! gh issue comment "$EXISTING" --repo "$HOME_REPO" --body "$(printf 'Still degraded — **%s** finding(s):\n\n%s\n\n_(automated re-check, run %s)_\n' "$COUNT" "$(cat findings.txt)" "$GITHUB_RUN_ID")"; then
                 echo "::error::Could not comment on watchdog issue #${EXISTING} — findings were NOT recorded: $(cat findings.txt)"
+                lost
                 FAILED=1
               fi
             else
@@ -218,6 +182,7 @@ jobs:
               # run rather than as a spurious "watchdog is dead" email.
               if ! gh issue create --repo "$HOME_REPO" --title "$TITLE" --body "$BODY" --label monitoring; then
                 echo "::error::Could not create the watchdog issue — findings were NOT recorded: $(cat findings.txt)"
+                lost
                 FAILED=1
               fi
             fi
@@ -232,3 +197,100 @@ jobs:
           fi
 
           exit "${FAILED:-0}"
+
+      # Check in AFTER issue management, not before — the ordering is the fix
+      # for #587 and is load-bearing in both directions.
+      #
+      # The old order (check in first) was defended on the grounds that the
+      # check-in attests "the CHECK ran", which is true whatever it found, and
+      # that a gh-issue API failure shouldn't masquerade as a dead watchdog.
+      # Sound as far as it goes, but it left a hole: when the sweep found real
+      # degradation and `gh issue create` then failed, the check-in had already
+      # landed, so Cloudflare's timer reset and NO email went out. Findings
+      # discarded, nobody told — a monitor going quiet in precisely the
+      # situation it exists to report. It happened on the watchdog's first real
+      # run: five findings thrown away, including failurefirst-status having
+      # been dark for six weeks.
+      #
+      # The invariant, stated so it survives the next edit: A CHECK-IN MUST
+      # NEVER ASSERT MORE LIVENESS THAN WAS ACTUALLY VERIFIED. Reaching this
+      # step having recorded nothing means the reporting path is broken, and
+      # the honest signal for that is silence — which is what makes the
+      # Cloudflare cron escalate by email.
+      #
+      # Reordering alone would over-correct into the false-pretext case the old
+      # comment warned about, so the withhold is narrow: ONLY when findings
+      # existed AND writing them failed. A failed *close* with zero findings
+      # does not withhold — nothing was lost, a stale-open issue is visible on
+      # its own, and emailing there would train the reader to ignore the alert.
+      #
+      # `!cancelled() && ...` rather than a bare expression: the issue step
+      # exits non-zero on exactly the failure this step must react to, and a
+      # step whose `if` omits a status function is skipped once the job has
+      # failed. Skipping here would withhold BOTH check-ins, including the
+      # Upptime relay, and email that Upptime is dark when it is fine.
+      - name: Check in to the Cloudflare watchdog
+        if: ${{ !cancelled() && steps.check.outcome == 'success' }}
+        env:
+          # Passed through env rather than spliced into the script body: step
+          # outputs are interpolated by the YAML templater before the shell sees
+          # them, so `${{ }}` inside run: is a shell-injection boundary even when
+          # the value is first-party.
+          FINDING_COUNT: ${{ steps.check.outputs.count }}
+          UPPTIME_FRESH: ${{ steps.check.outputs.upptime_fresh }}
+          FINDINGS_LOST: ${{ steps.issue.outputs.findings_lost }}
+          ISSUE_OUTCOME: ${{ steps.issue.outcome }}
+        run: |
+          set +e -u +o pipefail  # see the note on the first step
+          if [ -z "${SOCIAL_WORKER_URL:-}" ] || [ -z "${SOCIAL_CRON_SECRET:-}" ]; then
+            echo "::warning::SOCIAL_WORKER_URL / SOCIAL_CRON_SECRET unset — cannot check in"
+            exit 0
+          fi
+
+          checkin() {
+            NAME="$1"; DETAIL="$2"
+            CODE=$(curl -s -o /tmp/checkin.json -w '%{http_code}' \
+              -X POST "${SOCIAL_WORKER_URL}/api/watchdog/heartbeat" \
+              -H "Authorization: Bearer ${SOCIAL_CRON_SECRET}" \
+              -H 'Content-Type: application/json' \
+              --max-time 30 \
+              --data "$(jq -nc --arg n "$NAME" --arg d "$DETAIL" '{name:$n, detail:$d}')")
+            echo "check-in ${NAME}: HTTP ${CODE}"
+            if [ "$CODE" != "200" ]; then
+              cat /tmp/checkin.json 2>/dev/null || true
+              # A failed check-in is a warning, not a job failure: the worker
+              # will alert on the missing heartbeat by itself, and failing here
+              # would just add a second, noisier signal for the same fault.
+              echo "::warning::Watchdog check-in for ${NAME} returned HTTP ${CODE}"
+            fi
+          }
+
+          # Treat an unset/empty FINDINGS_LOST as LOST when the issue step did
+          # not succeed. The output is missing precisely when that step died
+          # before its trap could run — a runner crash, a cancellation, an OOM —
+          # and in that state nothing can attest the findings were recorded.
+          # Defaulting the unknown case to "fine" is how a monitor lies.
+          LOST="${FINDINGS_LOST:-}"
+          if [ -z "$LOST" ]; then
+            if [ "${ISSUE_OUTCOME:-}" = "success" ]; then LOST=no; else LOST=yes; fi
+          fi
+
+          if [ "$LOST" = "yes" ]; then
+            # Withheld deliberately. Do NOT "fix" this by checking in anyway.
+            echo "::error::Findings were NOT recorded (issue step outcome: ${ISSUE_OUTCOME:-unknown}) — withholding the monitor-watchdog check-in so the Cloudflare cron escalates by email. See the annotations above for the findings themselves."
+          else
+            checkin monitor-watchdog "run ${GITHUB_RUN_ID}: ${FINDING_COUNT:-0} finding(s)"
+          fi
+
+          # Independent of the above on purpose: Upptime freshness is a
+          # separate fact about a separate pipeline. Suppressing this relay
+          # because our own issue write failed would email "Upptime has stopped
+          # checking in" about a healthy Upptime.
+          if [ "${UPPTIME_FRESH:-no}" = "yes" ]; then
+            checkin upptime "relayed by monitor-watchdog run ${GITHUB_RUN_ID}"
+          else
+            # Deliberately withhold the relay so the worker's Cloudflare cron
+            # escalates to email. Upptime being dark is the one failure that
+            # cannot be reported by anything running on GitHub Actions.
+            echo "::warning::Upptime has not run recently — withholding its check-in so the worker escalates by email"
+          fi
