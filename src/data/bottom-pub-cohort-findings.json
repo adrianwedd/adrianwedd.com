@@ -1,0 +1,68 @@
+{
+  "_provenance": {
+    "source": "adrianwedd/bottom.pub (private) public/data/cohort-findings.json",
+    "sourceUrl": "https://bottom.pub/what-cygnet-told-us/",
+    "reproducedOn": "2026-08-20",
+    "copiedIntoThisRepoOn": "2026-08-20",
+    "manifestDigest": "747988bcea7f84e0e141ce76e52be707943b5ad357ab6feae7448677bab117f1",
+    "note": "Copied verbatim from bottom.pub's committed public derivative. Never edit by hand — regenerate from the source repo and re-freeze."
+  },
+  "meta": {
+    "title": "Financial-survey cohort findings — Pass 1, frozen 20 August 2026",
+    "financial_survey_n": 145,
+    "pledge_linked_n": 90,
+    "no_linked_pledge_n": 55,
+    "eoi_n": 58,
+    "community_survey_n": 32,
+    "suppression_threshold": 5,
+    "linkage": "Pledge linkage is by exact email match only. It is a lower bound: a respondent who pledged under a different address is counted as having no linked pledge. The financial survey and pledge form both collected email from every respondent, so this pair is well observed.",
+    "universe": "Counts are exact-email identities on the financial survey, respondent-deduplicated. The pledge-linked group means identities linkable by exact email to a pledge submission, not a verified set of people who pledged.",
+    "pledge_nature": "Pledges were explicitly non-binding and no money was collected. A pledge is a commitment signal, not a payment.",
+    "exclusions": "Five reviewed test submissions registered across the four instruments are excluded from every count.",
+    "reproduced": "2026-08-20",
+    "reproduction": "Every count was re-derived by an independent script from the flagged corpus and matched the analysis exactly.",
+    "instruments_note": "Denominators are instrument-specific and never mixed: financial survey /145, expression-of-interest /58, community survey /32."
+  },
+  "pairs": [
+    { "slug": "clear-governance", "label": "Clear governance", "group": "conditions", "pledged": 72, "not_pledged": 38 },
+    { "slug": "business-plan", "label": "A credible business plan", "group": "conditions", "pledged": 64, "not_pledged": 36 },
+    { "slug": "asset-lock", "label": "An asset lock", "group": "conditions", "pledged": 54, "not_pledged": 32 },
+    { "slug": "transparency-risks", "label": "Transparency about risks", "group": "conditions", "pledged": 53, "not_pledged": 34 },
+    { "slug": "legal-structure", "label": "The legal structure settled", "group": "conditions", "pledged": 51, "not_pledged": 32 },
+    { "slug": "building-inspection", "label": "A building inspection", "group": "conditions", "pledged": 51, "not_pledged": 30 },
+    { "slug": "experienced-publican", "label": "An experienced publican", "group": "conditions", "pledged": 51, "not_pledged": 27 },
+    { "slug": "community-support", "label": "Evidence of community support", "group": "conditions", "pledged": 47, "not_pledged": 34 },
+    { "slug": "valuation", "label": "An independent valuation", "group": "conditions", "pledged": 37, "not_pledged": 22 },
+    { "slug": "grant-cofunding", "label": "Grant co-funding", "group": "conditions", "pledged": 26, "not_pledged": 8 },
+    { "slug": "community-meeting", "label": "A community meeting first", "group": "conditions", "pledged": 25, "not_pledged": 18 },
+    { "slug": "total-capital", "label": "The total capital required", "group": "info", "pledged": 61, "not_pledged": 35 },
+    { "slug": "coop-model", "label": "How the co-op model works", "group": "info", "pledged": 53, "not_pledged": 32 },
+    { "slug": "money-if-fails", "label": "What happens to money if it fails", "group": "info", "pledged": 49, "not_pledged": 29 },
+    { "slug": "timeline", "label": "The timeline", "group": "info", "pledged": 43, "not_pledged": 33 },
+    { "slug": "decision-making", "label": "How decisions would be made", "group": "info", "pledged": 43, "not_pledged": 33 },
+    { "slug": "day-to-day-manager", "label": "Who runs it day to day", "group": "info", "pledged": 38, "not_pledged": 24 },
+    { "slug": "risk-assessment", "label": "A risk assessment", "group": "info", "pledged": 34, "not_pledged": 27 },
+    { "slug": "case-studies", "label": "Case studies of other co-ops", "group": "info", "pledged": 33, "not_pledged": 20 },
+    { "slug": "returns", "label": "Whether there would be returns", "group": "info", "pledged": 32, "not_pledged": 21 }
+  ],
+  "eoi_skills": {
+    "published": [
+      { "slug": "food-garden", "label": "Food and garden", "count": 9 },
+      { "slug": "hospitality", "label": "Hospitality", "count": 8 },
+      { "slug": "community", "label": "Community work", "count": 6 },
+      { "slug": "comms", "label": "Communications", "count": 5 },
+      { "slug": "operations", "label": "Operations", "count": 5 }
+    ],
+    "zero": [
+      { "slug": "legal", "label": "Legal" }
+    ],
+    "suppressed": [
+      { "slug": "admin", "label": "Administration", "disposition": "name", "reason": "Fixed public form option; generic occupational area with no publicly named holder on the site; presence alone points to nobody." },
+      { "slug": "other-skill", "label": "Other", "disposition": "name", "reason": "Free-text catch-all, not an occupation; presence alone points to nobody." },
+      { "slug": "trades", "label": null, "disposition": "withhold-label", "reason": "Fixed public form option, but maps onto a building/trades role attached to a publicly named working-group member; naming it would invite inference about that person's EOI participation." },
+      { "slug": "finance", "label": null, "disposition": "withhold-label", "reason": "Fixed public form option, but maps onto a finance/funding role attached to a publicly named working-group member; naming it would invite inference about that person's EOI participation." },
+      { "slug": "strategy", "label": null, "disposition": "withhold-label", "reason": "Fixed public form option, but maps onto a strategy/project-management role attached to a publicly named working-group member; naming it would invite inference about that person's EOI participation." }
+    ],
+    "suppressed_note": "Five further skill areas were each offered by fewer than five people, so they are described without counts under the site's disclosure rule. Two of them — administration and other — are named; the labels of the remaining three are withheld because each maps onto a role already attached to a publicly named person, and naming the category would invite inference about their participation."
+  }
+}

@@ -6,8 +6,12 @@ import { slug } from '../../lib/utils';
 
 export async function getStaticPaths() {
   const caseStudies = await getCollection('case-studies');
+  // bottom-pub-project has its own bespoke page (bottom-pub-project.astro) —
+  // the prose template here can't carry its charts, so its collection entry
+  // (used only for the /case-studies/ index card) is excluded from this
+  // catch-all.
   return caseStudies
-    .filter((c) => !c.data.draft)
+    .filter((c) => !c.data.draft && slug(c.id) !== 'bottom-pub-project')
     .map((c) => ({
       params: { slug: slug(c.id) },
       props: { caseStudy: c },
