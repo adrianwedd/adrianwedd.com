@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Bespoke OG card for /case-studies/bottom-pub-project/ — a desaturated
- * render of the A3 tension field (the page's hero), with the H1 over it.
+ * render of the conditions field (the page's hero), with the H1 over it.
  * Formulas mirror src/lib/bottom-pub-charts.ts; kept as plain JS here so this
  * script has no TypeScript/Astro build dependency.
  */
@@ -65,9 +65,9 @@ const svg = `<svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2
   ${threads}
   ${dots}
   <rect width="${WIDTH}" height="${HEIGHT}" fill="${COLORS.bg}" fill-opacity="0.42" />
-  <text x="80" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="54" font-weight="700" fill="${COLORS.text}">The campaign failed.</text>
-  <text x="80" y="298" font-family="system-ui, -apple-system, sans-serif" font-size="54" font-weight="700" fill="${COLORS.text}">The system didn't disappear.</text>
-  <text x="80" y="350" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="22" fill="${COLORS.accent}">The Bottom Pub Project · Cygnet, Tasmania</text>
+  <text x="80" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="54" font-weight="700" fill="${COLORS.text}">We tried to buy the Bottom Pub.</text>
+  <text x="80" y="298" font-family="system-ui, -apple-system, sans-serif" font-size="54" font-weight="700" fill="${COLORS.text}">We didn’t.</text>
+  <text x="80" y="350" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="22" fill="${COLORS.accent}">Cygnet, Tasmania · May–August 2026</text>
   <text x="80" y="560" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="18" fill="${COLORS.muted}">adrianwedd.com/case-studies/bottom-pub-project</text>
 </svg>`;
 

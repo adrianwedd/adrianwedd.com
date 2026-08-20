@@ -1,14 +1,14 @@
 ---
-title: "The campaign failed. The system didn't disappear."
-description: 'A failed pub bid left behind a frozen civic archive, a privacy pipeline that can’t leak, audited charts and a release system that distrusts its own checks.'
+title: 'We tried to buy the Bottom Pub. We didn’t.'
+description: 'A community bid for Cygnet’s Commercial Hotel failed. What survived: 543 responses, a small-town privacy process, and a site that had to stop lying by omission.'
 date: 2026-08-20
-tags: ['case-study', 'data-visualisation', 'privacy-engineering', 'release-engineering', 'agentic-engineering']
-category: 'Civic data & release engineering'
+tags: ['case-study', 'data-visualisation', 'privacy-engineering', 'community']
+category: 'Civic data'
 draft: false
 ---
 
-A three-month bid to buy a Tasmanian pub didn't get the building. What it left behind: a byte-frozen civic archive, a privacy pipeline that structurally cannot leak, charts that carry their own receipts, and a release system that learned not to trust its own green checks.
+For three months in 2026, a group of people in Cygnet tried to bring the Commercial Hotel into community ownership. The offer failed. What was left: hundreds of responses from locals, a small-town privacy process, and a website that had to stop asking for money for a thing that wasn't going to happen.
 
-This is the sequel to [_A website that is not allowed to accidentally lie_](/case-studies/bottom-pub-co-op/) — that piece was about stopping the site lying while selling; this one is about what the system became after the sale fell through.
+The sequel to [_A website that is not allowed to accidentally lie_](/case-studies/bottom-pub-co-op/).
 
 [Read the full case study →](/case-studies/bottom-pub-project/)
