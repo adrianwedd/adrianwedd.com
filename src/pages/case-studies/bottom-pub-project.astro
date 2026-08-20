@@ -1,152 +1,132 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import cohortRaw from '../../data/bottom-pub-cohort-findings.json';
-import manifestRaw from '../../data/bottom-pub-release-manifest.json';
-import {
-  computePairs,
-  a3Position,
-  a3ThreadWidth,
-  a1x,
-  b2Radius,
-  B2_RINGS,
-  goldenAnglePack,
-  type ComputedPair,
-} from '../../lib/bottom-pub-charts';
-
-const cohort = cohortRaw as typeof cohortRaw & {
-  meta: {
-    financial_survey_n: number;
-    pledge_linked_n: number;
-    no_linked_pledge_n: number;
-    eoi_n: number;
-    community_survey_n: number;
-  };
-  pairs: Array<{
-    slug: string;
-    label: string;
-    group: 'conditions' | 'info';
-    pledged: number;
-    not_pledged: number;
-  }>;
-  eoi_skills: {
-    published: Array<{ slug: string; label: string; count: number }>;
-    zero: Array<{ slug: string; label: string }>;
-    suppressed: Array<{ slug: string; label: string | null; disposition: string; reason: string }>;
-    suppressed_note: string;
-  };
-};
-const manifest = manifestRaw as typeof manifestRaw;
-
-const allPairs = computePairs(cohort.pairs, cohort.meta);
-const conditions = allPairs.filter((p) => p.group === 'conditions');
-const infoNeeds = allPairs.filter((p) => p.group === 'info');
-const fmt = (v: number) => v.toFixed(1);
-const grant = allPairs.find((p) => p.slug === 'grant-cofunding')!;
-const nFin = cohort.meta.financial_survey_n;
-const nPledge = cohort.meta.pledge_linked_n;
-const nNoPledge = cohort.meta.no_linked_pledge_n;
-const nEoi = cohort.meta.eoi_n;
-const nCommunity = cohort.meta.community_survey_n;
-
-/* Hero — the conditions field. x = gap between the two groups, y = how many
- * people ticked the condition overall. Only grant co-funding is labelled. */
-const pooledMax = Math.max(...conditions.map((p) => p.pooled));
-const pooledMin = Math.min(...conditions.map((p) => p.pooled));
-const HERO_FRAME = { cx: 500, half: 380, yTop: 70, yBot: 330 };
-const heroNodes = conditions.map((p, i) => ({
-  ...p,
-  idx: i + 1,
-  ...a3Position(p, pooledMax, pooledMin, HERO_FRAME),
-}));
-const heroPole = {
-  pledge: { x: HERO_FRAME.cx + HERO_FRAME.half + 40, y: (HERO_FRAME.yTop + HERO_FRAME.yBot) / 2 },
-  noLink: { x: HERO_FRAME.cx - HERO_FRAME.half - 40, y: (HERO_FRAME.yTop + HERO_FRAME.yBot) / 2 },
-};
-const heroAlt = `Eleven conditions from the financial survey, placed by the gap between people with a linked pledge and people without one. Most sit near the shared centre line. One stands apart: grant co-funding, ${fmt(grant.p90)} percent among pledge-linked respondents versus ${fmt(grant.p55)} percent among the rest.`;
-
-/* Same field, numbered, for the machinery section. */
-const A3E_FRAME = { cx: 340, half: 260, yTop: 60, yBot: 460 };
-const a3eNodes = conditions.map((p, i) => ({ ...p, idx: i + 1, ...a3Position(p, pooledMax, pooledMin, A3E_FRAME) }));
-const a3eAlt = `The same eleven conditions, numbered 1–${a3eNodes.length} and threaded to two poles: pledge-linked respondents and no-linked-pledge respondents, thread width scaled to each group's percentage. Full numbers in the table below.`;
-const a3ePole = {
-  pledge: { x: A3E_FRAME.cx + A3E_FRAME.half + 60, y: (A3E_FRAME.yTop + A3E_FRAME.yBot) / 2 },
-  noLink: { x: A3E_FRAME.cx - A3E_FRAME.half - 60, y: (A3E_FRAME.yTop + A3E_FRAME.yBot) / 2 },
-};
-
-/* Dumbbell chart — all twenty options, one shared 0–100% axis. */
-const A1_AXIS = { x0: 0, x1: 560 };
-const rowH = 30;
-const headH = 26;
-const groupGap = 20;
-type A1Row = { kind: 'head'; label: string; y: number } | { kind: 'pair'; p: ComputedPair; y: number };
-function a1layout(startY: number): { rows: A1Row[]; height: number } {
-  const rows: A1Row[] = [];
-  let y = startY;
-  for (const [label, group] of [
-    ['What people would need to see first', [...conditions].sort((a, b) => b.p90 - a.p90)],
-    ['What people wanted to know', [...infoNeeds].sort((a, b) => b.p90 - a.p90)],
-  ] as const) {
-    rows.push({ kind: 'head', label, y });
-    y += headH;
-    for (const p of group) {
-      rows.push({ kind: 'pair', p, y });
-      y += rowH;
-    }
-    y += groupGap;
-  }
-  return { rows, height: y };
-}
-const a1 = a1layout(30);
-const a1ticks = [0, 25, 50, 75, 100];
-
-/* Skills map — one dot per recorded offer; distance from the centre is the
- * count, angle carries no data. */
-const B2_CENTER = { cx: 210, cy: 210 };
-const b2Clusters = [...cohort.eoi_skills.published, ...cohort.eoi_skills.zero.map((z) => ({ ...z, count: 0 }))].sort(
-  (a, b) => b.count - a.count,
-);
-const b2Layout = b2Clusters.map((c, i) => {
-  const angle = -90 + i * (360 / b2Clusters.length);
-  const rad = (angle * Math.PI) / 180;
-  const r = b2Radius(c.count);
-  const cx = B2_CENTER.cx + r * Math.cos(rad);
-  const cy = B2_CENTER.cy + r * Math.sin(rad);
-  const dots = c.count > 0 ? goldenAnglePack(c.count, 3.6).map((o) => ({ x: cx + o.dx, y: cy + o.dy })) : [];
-  return { ...c, angle, r, cx, cy, dots };
-});
-const topSkill = b2Clusters[0];
-
-const spine = [
-  { date: 'May 2026', label: 'The campaign to buy the Commercial Hotel begins' },
-  { date: '3 June – 23 July', label: `Community survey open (${nCommunity} responses in the frozen findings)` },
-  { date: '28 June', label: 'The financial survey closes and the pledge form opens — the same day' },
-  {
-    date: '13 August',
-    label: 'The offer is unsuccessful. The building goes under contract to a buyer we weren’t told about',
-  },
-  {
-    date: '18 August',
-    label: 'The homepage stops asking for pledges. The outcome and the next meeting go up together',
-  },
-  {
-    date: '19 August',
-    label: 'Footer, structured data and thirteen briefing pages brought into line with the outcome',
-  },
-  {
-    date: '23 August',
-    label: 'Cygnet Community Co-operative formation meeting — the next group’s story, not this one’s',
-    grey: true,
-  },
-];
 
 const pageUrl = '/case-studies/bottom-pub-project/';
 const ogImage = '/og/case-studies/bottom-pub-project.png';
 const meta = {
-  title: 'We tried to buy the Bottom Pub. We didn’t.',
+  title: 'There was no brief. There was a pub.',
   description:
-    'A community bid for Cygnet’s Commercial Hotel failed. What survived: 543 responses, a small-town privacy process, and a site that had to stop lying by omission.',
+    'How an ill-defined community acquisition effort became a functioning digital operation in three months.',
 };
+
+// Dates and times are from the bottom.pub repository's commit history, Australia/Hobart.
+type Moment = {
+  date: string;
+  time?: string;
+  built: string;
+  world: string;
+  commits?: number;
+  quiet?: boolean;
+};
+
+const chronology: Moment[] = [
+  {
+    date: 'May 9',
+    time: '19:01',
+    built: 'Claim scanner, research vault, proposal drafts and a public site—four commits in the same minute.',
+    world:
+      'By midnight the briefings rendered as pages and the legal hedging had been replaced with cited legislation.',
+    commits: 9,
+  },
+  {
+    date: 'May 10',
+    time: '14:58',
+    built: 'Expression-of-interest form wired to a database.',
+    world: 'Security headers, SEO, structured data and an offline-capable shell followed before midnight.',
+    commits: 36,
+  },
+  {
+    date: 'May 18',
+    time: '17:35',
+    built: 'Contact intake: form, database, triage, email and issue tracker—landed inside three minutes.',
+    world:
+      'The working group needed somewhere to put what people were telling them. The admin vault and members area arrived the same evening.',
+    commits: 57,
+  },
+  {
+    date: 'May 19',
+    built:
+      'EOI admin panel and CSV export. Property watchdog. CI. Public status page. Admin cockpit. Public and admin search.',
+    world: 'Each one working before the next began; the last of them landed at 23:18.',
+    commits: 83,
+  },
+  {
+    date: 'Jun 2',
+    time: '13:23',
+    built: 'Financial feasibility survey: public form, endpoint, schema, consent handling, notifications.',
+    world:
+      'By 16:31 the EOI flow and news archive had their own pages, the media section was rebuilt and the navigation changed site-wide.',
+    commits: 19,
+  },
+  {
+    date: 'Jun 4',
+    time: '01:16',
+    built: 'Community survey. Admin result pages for both surveys by 02:31.',
+    world: 'The financial survey was renamed the Bottom Pub Pledge—the word the campaign would live on for two months.',
+    commits: 39,
+  },
+  {
+    date: 'Jun 8–10',
+    built:
+      'In-house mailing list merged at 15:06. Full site replatform started at 15:18; cutover merged two days later.',
+    world: 'Live site, live forms, live database—none of it paused.',
+  },
+  {
+    date: 'Jun 12',
+    time: '13:05',
+    built: 'Brief, assumptions and CI changed state.',
+    world: 'The Commercial Hotel was formally listed. The research stopped being hypothetical.',
+  },
+  {
+    date: 'Jun 24',
+    built:
+      'Eight-day acquisition sprint kit: feasibility study, adviser memos, finance figures, guardrail checklist, supporters strategy.',
+    world: 'Pledges passed $1 million the same day.',
+    commits: 18,
+  },
+  {
+    date: 'Jun 28',
+    time: '13:48',
+    built: 'Final pledge system: worker, database, admin panel, homepage call to action, community loan tier.',
+    world: 'Drafted for review at 13:48; live with launch copy by 19:19.',
+    commits: 27,
+  },
+  {
+    date: 'Jul 7 – Aug 17',
+    built: 'One automated commit a day.',
+    world: 'Six weeks of waiting on other people’s decisions.',
+    quiet: true,
+  },
+  {
+    date: 'Aug 13',
+    built: '',
+    world: 'The offer failed.',
+    quiet: true,
+  },
+  {
+    date: 'Aug 18',
+    time: '18:26',
+    built: 'Outcome published. Intake endpoints closed at 18:52. Public archive—two tranches—by 21:25.',
+    world: 'Every page that had been asking for support now had to say so honestly.',
+    commits: 19,
+  },
+  {
+    date: 'Aug 19',
+    time: '17:42',
+    built:
+      'Community findings brief specified. Rendered at build time, with suppression rules and privacy tests, at 18:13.',
+    world: 'Thirty-one minutes. The linkage bug that turned fourteen people into one was found and fixed before 23:00.',
+    commits: 82,
+  },
+];
+
+const facts = [
+  ['3 months', 'idea → live campaign → acquisition attempt → archive'],
+  ['543 responses', 'across four instruments'],
+  ['56 artefacts', 'in the verified public archive'],
+  ['13 August', 'the bid failed. The research, the record and the system persisted.'],
+];
 ---
 
 <BaseLayout
@@ -159,7 +139,7 @@ const meta = {
   siteNameInTitle={false}
   heroAnimation="pulse"
   publishedDate="2026-08-20T00:00:00.000Z"
-  tags={['case-study', 'data-visualisation', 'privacy-engineering', 'community']}
+  tags={['case-study', 'systems', 'privacy-engineering', 'community']}
 >
   <script
     is:inline
@@ -172,7 +152,7 @@ const meta = {
       url: new URL(pageUrl, Astro.site).href,
       image: new URL(ogImage, Astro.site).href,
       datePublished: '2026-08-20',
-      keywords: ['case-study', 'data-visualisation', 'privacy-engineering', 'community'],
+      keywords: ['case-study', 'systems', 'privacy-engineering', 'community'],
       author: { '@type': 'Person', name: 'Adrian Wedd', url: 'https://adrianwedd.com' },
       publisher: {
         '@type': 'Organization',
@@ -183,673 +163,150 @@ const meta = {
       mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(pageUrl, Astro.site).href },
     })}
   />
-  <script
-    is:inline
-    type="application/ld+json"
-    set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Dataset',
-      name: 'Bottom Pub Project — financial-survey cohort findings (public derivative)',
-      description: `Frozen, reproduced counts from a community financial survey (n=${nFin}), used to compute the charts on this page.`,
-      isBasedOn: 'https://bottom.pub/what-cygnet-told-us/',
-    })}
-  />
 
   <div class="bp-case">
     <Breadcrumb crumbs={[{ label: 'Case Studies', href: '/case-studies/' }, { label: meta.title }]} />
 
     <header class="bp-hero" aria-label="Case study introduction">
       <p class="bp-kicker">Case study · Cygnet, Tasmania · May–August 2026</p>
-      <h1 class="bp-h1">{meta.title}</h1>
+      <h1>{meta.title}</h1>
       <p class="bp-deck">
-        For three months in 2026, a group of people in Cygnet tried to bring the Commercial Hotel into community
-        ownership. The offer failed. This is about what was left over.
+        A community campaign to buy a pub went from idea to functioning digital operation in weeks. I built the
+        machinery around it as the problem unfolded.
       </p>
-      <svg
-        class="bp-hero-field"
-        viewBox="0 0 1000 400"
-        role="img"
-        aria-label={heroAlt}
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <line
-          x1={HERO_FRAME.cx}
-          y1={HERO_FRAME.yTop - 20}
-          x2={HERO_FRAME.cx}
-          y2={HERO_FRAME.yBot + 20}
-          class="bp-hero-axis"></line>
-        {
-          heroNodes.map((n) => (
-            <>
-              <line
-                x1={heroPole.pledge.x}
-                y1={heroPole.pledge.y}
-                x2={n.x}
-                y2={n.y}
-                class={n.slug === 'grant-cofunding' ? 'bp-hero-thread bp-hero-thread--hot' : 'bp-hero-thread'}
-                stroke-width={a3ThreadWidth(n.p90)}
-              />
-              <line
-                x1={heroPole.noLink.x}
-                y1={heroPole.noLink.y}
-                x2={n.x}
-                y2={n.y}
-                class={n.slug === 'grant-cofunding' ? 'bp-hero-thread bp-hero-thread--hot' : 'bp-hero-thread'}
-                stroke-width={a3ThreadWidth(n.p55)}
-              />
-            </>
-          ))
-        }
-        {
-          heroNodes.map((n) => (
-            <circle
-              cx={n.x}
-              cy={n.y}
-              r={n.slug === 'grant-cofunding' ? 5 : 3}
-              class={n.slug === 'grant-cofunding' ? 'bp-hero-node bp-hero-node--hot' : 'bp-hero-node'}
-            />
-          ))
-        }
-        <text
-          x={heroNodes.find((n) => n.slug === 'grant-cofunding')!.x}
-          y={HERO_FRAME.yTop - 30}
-          text-anchor="middle"
-          class="bp-hero-label"
-        >
-          Grant co-funding — {fmt(grant.p90)}% vs {fmt(grant.p55)}%
-        </text>
-      </svg>
-      <p class="bp-caption">
-        What {nFin} people said they’d need before investing, placed by how differently pledge-linked and no-linked-pledge
-        respondents answered. Most sit near the centre line.
-      </p>
+      <div class="bp-signal" aria-label="The forces shaping the project">
+        <span>commercial deadline</span><span>community politics</span><span>private data</span><span
+          >money in motion</span
+        ><span>no stable requirements</span><strong>working system</strong>
+      </div>
     </header>
 
     <main class="bp-body" data-pagefind-body>
-      <section class="bp-movement bp-movement--first" aria-label="Introduction">
-        <p>
-          On 13 August 2026 the offer for the Commercial Hotel — the Bottom Pub, to anyone local — was unsuccessful. The
-          building went under contract to a buyer whose name we weren’t told.
-        </p>
-        <p>
-          By then we had something else: hundreds of responses from locals, a working picture of what people wanted from
-          the place and what they’d need to see before putting money in, a pile of research and due diligence, and a
-          website built around an awkward constraint — <strong
-            >in a town this small, “anonymous” data often isn’t anonymous at all.</strong
-          >
-        </p>
-        <p>
-          So when the campaign ended, I didn’t want the site to become a digital corpse. I wanted the useful parts to
-          survive. This is what that took, and what we found out along the way.
-        </p>
-      </section>
-
-      {/* ============================= 1 ============================= */}
-      <section class="bp-movement" aria-labelledby="s1-h">
-        <p class="bp-movement-label">1</p>
-        <h2 id="s1-h" class="bp-movement-title">We asked Cygnet.</h2>
-        <p>
-          Four separate questionnaires ran over the three months: a community survey about what people wanted from the
-          pub ({nCommunity} responses), a financial survey about what they’d need to see before investing ({nFin}),
-          expressions of interest in helping ({nEoi}), and non-binding pledges. Five hundred and forty-three responses
-          in all. Five of those were our own test entries, left in the data but flagged so nothing counts them.
-        </p>
-        <p>
-          The financial survey has the most to say. {nPledge} of its {nFin} respondents could be matched by email to a pledge;
-          {nNoPledge} couldn’t. It’s tempting to read those as the believers and the sceptics. The chart at the top of this
-          page is what happens when you ask the data: each condition sits where the gap between the two groups puts it, and
-          almost all of them sit on the centre line. Both groups wanted the same things in roughly the same proportions —
-          clear governance first, a credible business plan, an asset lock, honesty about the risks. The one condition that
-          stands apart is grant co-funding: {fmt(grant.p90)}% of the pledge-linked group set it as a condition, against {
-            fmt(grant.p55)
-          }% of the rest. The people who had already put a number next to their name were the ones most keen that some
-          of the money come from somewhere else.
-        </p>
-
-        <figure class="bp-figure bp-figure--wide">
-          <svg
-            class="bp-a1"
-            viewBox={`0 0 700 ${a1.height}`}
-            role="img"
-            aria-label={`All twenty options from the financial survey, comparing the ${nPledge} pledge-linked respondents with the ${nNoPledge} who had no linked pledge, on one shared 0 to 100 percent axis. Every value is printed in the table at the end of the page.`}
-          >
-            {
-              a1ticks.map((t) => (
-                <>
-                  <line
-                    x1={a1x(t, A1_AXIS.x0, A1_AXIS.x1) + 120}
-                    y1="12"
-                    x2={a1x(t, A1_AXIS.x0, A1_AXIS.x1) + 120}
-                    y2={a1.height - 10}
-                    class="bp-a1-axis"
-                  />
-                  <text x={a1x(t, A1_AXIS.x0, A1_AXIS.x1) + 120} y="10" text-anchor="middle" class="bp-a1-ticklabel">
-                    {t}%
-                  </text>
-                </>
-              ))
-            }
-            {
-              a1.rows.map((row) =>
-                row.kind === 'head' ? (
-                  <text x="0" y={row.y - 8} class="bp-a1-grouphead">
-                    {row.label.toUpperCase()}
-                  </text>
-                ) : (
-                  <>
-                    <text x="0" y={row.y + 4} class="bp-a1-rowlabel">
-                      {row.p.label}
-                    </text>
-                    <line
-                      x1={a1x(row.p.p55, A1_AXIS.x0, A1_AXIS.x1) + 120}
-                      y1={row.y}
-                      x2={a1x(row.p.p90, A1_AXIS.x0, A1_AXIS.x1) + 120}
-                      y2={row.y}
-                      class="bp-a1-conn"
-                    />
-                    <circle
-                      cx={a1x(row.p.p55, A1_AXIS.x0, A1_AXIS.x1) + 120}
-                      cy={row.y}
-                      r="4.5"
-                      class="bp-a1-dot bp-a1-dot--nolink"
-                    />
-                    <circle
-                      cx={a1x(row.p.p90, A1_AXIS.x0, A1_AXIS.x1) + 120}
-                      cy={row.y}
-                      r="4.5"
-                      class="bp-a1-dot bp-a1-dot--pledge"
-                    />
-                  </>
-                ),
-              )
-            }
-          </svg>
-          <figcaption class="bp-legend">
-            <span class="bp-legend-swatch bp-legend-swatch--pledge"></span> pledge-linked ({nPledge}) &nbsp;&nbsp;
-            <span class="bp-legend-swatch bp-legend-swatch--nolink"></span> no linked pledge ({nNoPledge}). What people
-            wanted to know tells the same story: the total capital required first, then how a co-op works, then what
-            happens to the money if it falls over. Full numbers at the end of the page.
-          </figcaption>
-        </figure>
-
-        <figure class="bp-figure">
-          <svg
-            class="bp-b2"
-            viewBox="0 0 420 420"
-            role="img"
-            aria-label={`What ${nEoi} people offered to do: one dot per recorded skill. Distance from the centre is the count; angle means nothing.`}
-          >
-            {
-              B2_RINGS.map((tick) => (
-                <>
-                  <circle
-                    cx={B2_CENTER.cx}
-                    cy={B2_CENTER.cy}
-                    r={b2Radius(tick)}
-                    class={tick === 0 ? 'bp-b2-ring bp-b2-ring--absence' : 'bp-b2-ring'}
-                  />
-                  <text
-                    x={B2_CENTER.cx}
-                    y={B2_CENTER.cy - b2Radius(tick) - 4}
-                    text-anchor="middle"
-                    class="bp-b2-ringlabel"
-                  >
-                    {tick} people
-                  </text>
-                </>
-              ))
-            }
-            {
-              b2Layout.map((c) =>
-                c.count === 0 ? (
-                  <>
-                    <circle cx={c.cx} cy={c.cy} r="7" class="bp-b2-dot bp-b2-dot--zero" />
-                    <text x={c.cx} y={c.cy - 12} text-anchor="middle" class="bp-b2-label">
-                      {c.label} · 0
-                    </text>
-                  </>
-                ) : (
-                  <>
-                    {c.dots.map((d) => (
-                      <circle cx={d.x} cy={d.y} r="3.4" class="bp-b2-dot" />
-                    ))}
-                    <text x={c.cx} y={c.cy - (c.count > 6 ? 24 : 18)} text-anchor="middle" class="bp-b2-label">
-                      {c.label} · {c.count}
-                    </text>
-                  </>
-                ),
-              )
-            }
-            <circle cx={B2_CENTER.cx} cy={B2_CENTER.cy} r="30" class="bp-b2-core"></circle>
-            <text x={B2_CENTER.cx} y={B2_CENTER.cy - 3} text-anchor="middle" class="bp-b2-corelabel">{nEoi} people</text
-            >
-            <text x={B2_CENTER.cx} y={B2_CENTER.cy + 10} text-anchor="middle" class="bp-b2-corelabel">offered help</text
-            >
-          </svg>
-          <figcaption class="bp-caption">
-            {nEoi} people said what they could do. {topSkill.label} was the most-offered skill, then hospitality, then community
-            work. Nobody recorded a legal offer — that’s the empty dashed ring at the edge, drawn because zero is an answer
-            too. Five more areas were offered by fewer than five people each, and the site doesn’t publish counts that small.
-            The next section is about why.
-          </figcaption>
-        </figure>
-      </section>
-
-      {/* ============================= 2 ============================= */}
-      <section class="bp-movement" aria-labelledby="s2-h">
-        <p class="bp-movement-label">2</p>
-        <h2 id="s2-h" class="bp-movement-title">Small-town privacy is weird.</h2>
-        <p>
-          Dropping names, emails and phone numbers from a survey doesn’t make it anonymous here. A single free-text
-          sentence can identify someone through their business, a family relationship, a health circumstance, or an
-          anecdote only one person in town could tell.
-        </p>
-        <p>
-          So the free text was read, by hand, before any of it went near a public page. Every proper noun — 356 of them
-          — was looked at; 310 were kept, the rest generalised or cut. A long answer was treated as a reason to look
-          harder, not a reason to redact: of the twenty answers over 400 characters, eleven were published as written,
-          eight were generalised and one was removed. Anything that would come out as a count of fewer than five people
-          isn’t published at all, because in a town this size “three people said” is a short list. And the only thing
-          that crosses from the private responses to the public site is a number. Free text goes in; counts come out.
-        </p>
-        <div
-          class="bp-oneway"
-          role="img"
-          aria-label="One-way flow: respondents’ free text on the left, counts only on the right of a single disclosure boundary"
-        >
-          <div class="bp-oneway-side bp-oneway-side--in">
-            <span class="bp-oneway-caption">what people wrote</span>
-            <span class="bp-oneway-mark bp-oneway-mark--filled"></span>
-            <span class="bp-oneway-mark bp-oneway-mark--filled"></span>
-            <span class="bp-oneway-mark bp-oneway-mark--filled"></span>
-          </div>
-          <div class="bp-oneway-gate">review · count · floor of 5</div>
-          <div class="bp-oneway-side bp-oneway-side--out">
-            <span class="bp-oneway-mark bp-oneway-mark--count">12</span>
-            <span class="bp-oneway-mark bp-oneway-mark--count">45</span>
-            <span class="bp-oneway-mark bp-oneway-mark--count">8</span>
-            <span class="bp-oneway-caption">what gets published</span>
-          </div>
+      <section class="bp-act bp-act--opening" aria-labelledby="act-one">
+        <p class="bp-act-number">01 / No brief</p>
+        <h2 id="act-one">Discovery and delivery had to happen at the same time.</h2>
+        <div class="bp-copy">
+          <p>
+            The Commercial Hotel—the Bottom Pub to anyone local—was closed. People in Cygnet wanted to know whether the
+            town could buy it together. That simple question concealed almost everything that had not yet been decided:
+            ownership structure, money, governance, appetite, legal boundaries, operating model, and even what could
+            honestly be said in public.
+          </p>
+          <p>
+            The campaign needed a credible public face immediately. Then it needed ways to listen, organise, publish,
+            protect people, test claims, move information between systems, and keep all of that aligned while the facts
+            changed underneath it.
+          </p>
+          <p>
+            There was no finished specification to implement. Each answer exposed the next missing piece. The work was
+            to understand the problem quickly enough that the infrastructure could appear before its absence became the
+            bottleneck.
+          </p>
         </div>
-        <p>Two cases made the privacy problem concrete.</p>
-        <h3>Fourteen people turned into one</h3>
-        <p>
-          Fourteen community-survey responses had the same placeholder name in the name field. The first attempt to link
-          responses across the four questionnaires treated a shared name as a shared person, and quietly merged fourteen
-          residents into one very opinionated respondent with fourteen answers. That isn’t losing evidence; it’s
-          inventing it. It was caught before anything was published, and the check that caught it is now permanent.
-        </p>
-        <h3>Two public pages, one person</h3>
-        <p>
-          A working-group member asked for their name to be left off the team page, and it was. The same person had
-          written the draft funding strategy, which sat elsewhere on the site under their name. Each page was fine on
-          its own. Read together, they identified exactly the person who had asked not to be. The fix was to put the
-          relationship on the page as a plain conflict-of-interest disclosure rather than leave it as a puzzle anyone
-          could solve.
-        </p>
-        <p>
-          A near relative: a research page described “the town’s other licensed venue” as a likely objector to a liquor
-          licence. There is one other licensed venue. The page now says any party with standing can object — which is
-          the law — and points at nobody.
-        </p>
+
+        <dl class="bp-facts">
+          {
+            facts.map(([value, label]) => (
+              <div>
+                <>
+                  <dt>{value}</dt>
+                  <dd>{label}</dd>
+                </>
+              </div>
+            ))
+          }
+        </dl>
       </section>
 
-      {/* ============================= 3 ============================= */}
-      <section class="bp-movement" aria-labelledby="s3-h">
-        <p class="bp-movement-label">3</p>
-        <h2 id="s3-h" class="bp-movement-title">Truth has a timestamp.</h2>
-        <p>
-          Nothing on the site was false when it was written. Then reality changed underneath it. The offer failed on 13
-          August; the homepage kept asking people to pledge for five more days. Every sentence on it had been true in
-          July, but together they were now asking for money for a thing that wasn’t going to happen. On 18 August the
-          outcome and the next step — a co-operative formation meeting on 23 August — went up together, so there was
-          never a version of the site where the bad news existed without the next thing to do. A day later a sweep of
-          the footer, the structured data and thirteen briefing pages found more statements whose timestamps had
-          expired: text that spoke as if the bid were live or the co-op already existed.
+      <section class="bp-act" aria-labelledby="act-two">
+        <p class="bp-act-number">02 / What appeared, and when</p>
+        <h2 id="act-two">The requirements changed repeatedly, sometimes within hours.</h2>
+        <p class="bp-lede">
+          Not every commit. Fourteen moments where the problem changed and working infrastructure appeared behind it.
         </p>
-        <ol class="bp-timeline" aria-label="What happened, in order">
+
+        <ol class="bp-chron" aria-label="Build chronology">
           {
-            spine.map((s) => (
-              <li class={s.grey ? 'bp-timeline-item bp-timeline-item--grey' : 'bp-timeline-item'}>
-                <span class="bp-timeline-date">{s.date}</span>
-                <span class="bp-timeline-text">{s.label}</span>
+            chronology.map((m) => (
+              <li class:list={['bp-moment', { 'bp-moment--quiet': m.quiet }]}>
+                <div class="bp-when">
+                  <span class="bp-date">{m.date}</span>
+                  {m.time && <span class="bp-time">{m.time}</span>}
+                </div>
+                <div class="bp-what">
+                  {m.built && <p class="bp-built">{m.built}</p>}
+                  <p class="bp-world">{m.world}</p>
+                </div>
+                <span class="bp-commits">{m.commits ? `${m.commits} commits` : ''}</span>
               </li>
             ))
           }
         </ol>
-        <p>The same shape turned up in smaller places.</p>
-        <h3>Open and closed at once</h3>
-        <p>
-          One page told a visitor the community survey was still open and, further down, that it had closed. Both were
-          true — of different things. The form was open; the findings were a snapshot of responses up to 23 July. The
-          page was split in two: a live survey, and a findings page whose numbers don’t change when someone fills in the
-          form.
-        </p>
-        <h3>Signed off isn’t the same as published</h3>
-        <p>
-          The 56-document archive had been checked twice over — once for approval, once for banned phrasing — and both
-          checks were clean. What actually went out didn’t quite match what had been approved; nobody had checked that
-          the two were the same bytes. Each check was true on its own. Together they missed the thing that mattered. It
-          doesn’t anymore — see the machinery below if you want to know how.
+
+        <p class="bp-source">
+          Dates and times from the project’s commit history, Hobart time. Commit counts are per day.
         </p>
       </section>
 
-      {/* ============================= 4 ============================= */}
-      <section class="bp-movement" aria-labelledby="s4-h">
-        <p class="bp-movement-label">4</p>
-        <h2 id="s4-h" class="bp-movement-title">What changed when the pictures met the numbers.</h2>
-        <h3>The radar chart</h3>
-        <p>
-          Early on there was a second way of drawing the conditions data: a radar, eleven spokes, one polygon for the
-          pledgers and one for everyone else. The prototype used illustrative geometry and showed two visibly different
-          shapes, two visibly different kinds of person. Once every spoke was tied to the actual percentages, using the
-          same rule for both polygons, the apparent gap almost disappeared. The two shapes nearly sat on top of each
-          other: what looked like a divide was not in the data.
-        </p>
-        <p>
-          The field at the top of this page and the dumbbell chart above show what remained. Every mark on them is
-          computed from the published counts when the page is built: less dramatic, and what the {nFin} people actually said.
-        </p>
-        <h3>The funnel</h3>
-        <p>
-          Four questionnaires seem to describe a journey: survey, then interest, then pledge. The calendar shows
-          something else. The financial survey closed and the pledge form opened on the same day, 28 June. Everyone who
-          did both did the survey first because that was the only order available, not because anyone was “converted”.
-          The sequence came from the forms, not from a funnel.
-        </p>
-        <div
-          class="bp-calendar"
-          role="img"
-          aria-label="Two fielding windows on a shared time axis, touching at 28 June 2026; a would-be funnel arrow is drawn and crossed out"
-        >
-          <div class="bp-calendar-track">
-            <div class="bp-calendar-bar bp-calendar-bar--financial">financial survey (closes 28 Jun)</div>
-          </div>
-          <div class="bp-calendar-track">
-            <div class="bp-calendar-bar bp-calendar-bar--pledges">pledges (open 28 Jun)</div>
-          </div>
-          <div class="bp-calendar-funnel" aria-hidden="true">then → funnel → stage → journey → converted</div>
+      <section class="bp-act" aria-labelledby="act-three">
+        <p class="bp-act-number">03 / Judgement</p>
+        <h2 id="act-three">Three moments from the same months.</h2>
+
+        <div class="bp-cases">
+          <article>
+            <p class="bp-case-index">01</p>
+            <h3>Fourteen people quietly became one.</h3>
+            <p>
+              Fourteen survey responses shared the same placeholder in the name field. An early linkage pass interpreted
+              that shared value as one identity and produced a single, wildly prolific respondent. The error was caught
+              before publication; identity matching was narrowed to exact email, and the failure became a permanent
+              check.
+            </p>
+            <p class="bp-proof">Fast analysis is useless if the system invents a person who never existed.</p>
+          </article>
+
+          <article>
+            <p class="bp-case-index">02</p>
+            <h3>Removing names does not make a small town anonymous.</h3>
+            <p>
+              A business, family relationship, health circumstance, or recognisable anecdote can identify someone just
+              as effectively as a name. Free text was therefore reviewed by hand before publication. Proper nouns were
+              examined, risky details generalised or removed, and small counts suppressed. Private words went in; only
+              safe aggregates came out.
+            </p>
+            <p class="bp-proof">The constraint wasn’t “strip identifiers.” It was “do not expose a neighbour.”</p>
+          </article>
+
+          <article>
+            <p class="bp-case-index">03</p>
+            <h3>The bid died. Every public claim changed with it.</h3>
+            <p>
+              On 13 August the offer failed. Copy that had been accurate days earlier was suddenly asking people to
+              support something that was no longer happening. The site could not publish a sad update and leave stale
+              promises behind; it had to change state.
+            </p>
+            <p class="bp-proof">
+              Homepage, forms, footer, structured data and thirteen briefing pages changed in the same pass.
+            </p>
+          </article>
         </div>
       </section>
 
-      {/* ============================= CLOSE ============================= */}
-      <section class="bp-movement bp-coda" aria-labelledby="coda-h">
-        <h2 id="coda-h" class="bp-movement-title bp-visually-hidden">What was left</h2>
-        <p>We didn’t get the pub.</p>
-        <p>
-          But the work is still useful: the research is preserved, the community data can be published without exposing
-          the people who supplied it, and the next group — starting with the co-operative meeting on 23 August — doesn’t
-          have to start from zero.
-        </p>
-        <p>Sometimes that’s what a failed project leaves you with.</p>
+      <section class="bp-act bp-act--coda" aria-labelledby="act-four">
+        <p class="bp-act-number">04 / After</p>
+        <h2 id="act-four">The offer failed on 13 August.</h2>
+        <div class="bp-coda-copy">
+          <p>
+            The research still exists. The community record still exists. The infrastructure changed state and kept
+            working.
+          </p>
+        </div>
+
+        <p class="bp-final">Three months earlier, none of it existed.</p>
         <p class="bp-links">
-          <a href="https://bottom.pub/what-cygnet-told-us/">What Cygnet told us, on bottom.pub →</a>
-          <br />
-          <a href="/case-studies/bottom-pub-co-op/"
-            >The first case study: a website that is not allowed to accidentally lie →</a
-          >
+          <a href="https://bottom.pub/">Visit the project that survived →</a><br />
+          <a href="/case-studies/bottom-pub-co-op/">Read how the first guardrails were built →</a>
         </p>
-      </section>
-
-      {/* ============================= MACHINERY ============================= */}
-      <section class="bp-movement bp-machinery" aria-labelledby="mach-h">
-        <h2 id="mach-h" class="bp-movement-title">Want the machinery?</h2>
-        <p class="bp-methodology">
-          Technical notes, chart encodings, the full tables and the archive manifest. Nothing above depends on reading
-          this.
-        </p>
-
-        <details class="bp-details">
-          <summary>Technical notes</summary>
-          <ul class="bp-notes">
-            <li>
-              <strong>Corpus.</strong> 543 rows across four instruments (community survey, financial survey, EOI, pledges),
-              each with its own denominator ({nFin} / {nEoi} / {nCommunity}) and never pooled. Contact-form enquiries
-              were deliberately excluded — a different reasonable-use expectation from a questionnaire. Five confirmed
-              test rows are flagged, not deleted, and filtered by every script that touches the corpus.
-            </li>
-            <li>
-              <strong>Identity.</strong> Cross-instrument linkage is by exact email only, and is a lower bound: a respondent
-              who pledged under a different address counts as “no linked pledge”. A name-only candidate graph exists as a
-              sensitivity check and is never used for anything published. The placeholder-name overmerge is regression-locked
-              in the de-identification tests.
-            </li>
-            <li>
-              <strong>Disclosure.</strong> Suppression happens in exactly one function on the way to anything tracked, published
-              or charted; nothing downstream of it sees respondent text. Floor is five. For the EOI skills map, two sub-five
-              categories are named without a count (a fixed form option or free-text catch-all points at nobody); three withhold
-              even the label because each maps onto a role already attached to a publicly named working-group member.
-            </li>
-            <li>
-              <strong>Free text.</strong> 356 proper nouns reviewed by hand, 310 kept (87.1%). A token shared between two
-              respondents is not treated as safe for either. Answers over 400 characters are a review trigger, not a redaction
-              rule.
-            </li>
-            <li>
-              <strong>Archive.</strong> 56 artefacts, SHA-256 per artefact plus a digest over the set, frozen in a release
-              manifest. The build fails on content edited, artefact added, artefact removed, or manifest hand-edited; a <code
-                >--check</code
-              > pass cross-validates the review attestation against the manifest and refuses <code
-                >publication_state: ready</code
-              > with pending items or a moved digest. Regenerating the manifest is a human decision, never a build step. Corrections
-              found after the freeze go in a supersession file shown above the frozen document; the frozen bytes don’t change.
-            </li>
-            <li>
-              <strong>Frozen vs live.</strong> The findings page is a snapshot (3 Jun–23 Jul 2026); the survey form is a separate
-              route. A live row count never mutates a published denominator.
-            </li>
-            <li>
-              <strong>Language guard.</strong> A build check bans lifecycle words (then, funnel, stage, journey, converted)
-              across any instrument pair whose fielding windows didn’t overlap.
-            </li>
-            <li>
-              <strong>Edge.</strong> The trailing-slash failure came from a <code>format: 'preserve'</code> build behind a
-              host that 308-redirects the canonical directory URL; fixed by moving to a directory route. The required verify
-              check on the repository has an empty bypass-actor list, confirmed against the live API: admin can’t override
-              it.
-            </li>
-            <li>
-              <strong>Reproduction.</strong> Every count on this page was re-derived by an independent script from the flagged
-              corpus and matched the analysis exactly; the published derivative pins those values as test literals because
-              the private corpus is never present in CI.
-            </li>
-            <li>
-              <strong>Still open.</strong> What worried the people who pledged anyway; whether offered skills line up with
-              the operational burden the project named; which themes recur across instruments. Not analysed, not claimed.
-            </li>
-          </ul>
-        </details>
-
-        <details class="bp-details">
-          <summary>The conditions field, numbered, with its encoding</summary>
-          <svg class="bp-a3e" viewBox="0 0 700 500" role="img" aria-label={a3eAlt}>
-            <line
-              x1={A3E_FRAME.cx}
-              y1={A3E_FRAME.yTop - 20}
-              x2={A3E_FRAME.cx}
-              y2={A3E_FRAME.yBot + 20}
-              class="bp-a3e-axis"></line>
-            {
-              a3eNodes.map((n) => (
-                <>
-                  <line
-                    x1={a3ePole.pledge.x}
-                    y1={a3ePole.pledge.y}
-                    x2={n.x}
-                    y2={n.y}
-                    class="bp-a3e-thread bp-a3e-thread--pledge"
-                    stroke-width={a3ThreadWidth(n.p90)}
-                  />
-                  <line
-                    x1={a3ePole.noLink.x}
-                    y1={a3ePole.noLink.y}
-                    x2={n.x}
-                    y2={n.y}
-                    class="bp-a3e-thread bp-a3e-thread--nolink"
-                    stroke-width={a3ThreadWidth(n.p55)}
-                  />
-                </>
-              ))
-            }
-            {
-              a3eNodes.map((n) => (
-                <>
-                  <circle cx={n.x} cy={n.y} r={7} class="bp-a3e-node" />
-                  <text x={n.x} y={n.y + 4} text-anchor="middle" class="bp-a3e-idx">
-                    {n.idx}
-                  </text>
-                </>
-              ))
-            }
-          </svg>
-          <table class="bp-table">
-            <caption>Conditions, with the pair behind each numbered node.</caption>
-            <thead
-              ><tr
-                ><th scope="col">#</th><th scope="col">Condition</th><th scope="col">Pledge-linked (n={nPledge})</th><th
-                  scope="col">No linked pledge (n={nNoPledge})</th
-                ><th scope="col">Δpp</th></tr
-              ></thead
-            >
-            <tbody>
-              {
-                conditions.map((p, i) => (
-                  <tr class={p.slug === 'grant-cofunding' ? 'bp-row-hot' : ''}>
-                    <td>{i + 1}</td>
-                    <td>{p.label}</td>
-                    <td>{fmt(p.p90)}%</td>
-                    <td>{fmt(p.p55)}%</td>
-                    <td>
-                      {p.delta >= 0 ? '+' : ''}
-                      {fmt(p.delta)}
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-          <table class="bp-table">
-            <caption>Encoding</caption>
-            <tbody>
-              <tr><td>x</td><td>Δpp = p90 − p55, mapped Δ/16 × half-width about the centre line</td></tr>
-              <tr
-                ><td>y</td><td>pooled prevalence (pledged+not_pledged)/{nFin}, linear from max (top) to min (bottom)</td
-                ></tr
-              >
-              <tr><td>thread stroke</td><td>cohort% / 18</td></tr>
-              <tr><td>node radius</td><td>constant</td></tr>
-            </tbody>
-          </table>
-          <p class="bp-methodology">
-            An alternate lean-ratio transform of the x-axis was tested; the grant co-funding outlier and the overall
-            shape survived it. Percentage points were kept because the units are native.
-          </p>
-        </details>
-
-        <details class="bp-details">
-          <summary>All twenty options — full table</summary>
-          <table class="bp-table">
-            <thead
-              ><tr
-                ><th scope="col">Group</th><th scope="col">Option</th><th scope="col">Pledge-linked</th><th scope="col"
-                  >No linked pledge</th
-                ></tr
-              ></thead
-            >
-            <tbody>
-              {
-                [...conditions, ...infoNeeds].map((p) => (
-                  <tr>
-                    <td>{p.group === 'conditions' ? 'Condition' : 'Information need'}</td>
-                    <td>{p.label}</td>
-                    <td>
-                      {fmt(p.p90)}% ({p.pledged}/{nPledge})
-                    </td>
-                    <td>
-                      {fmt(p.p55)}% ({p.not_pledged}/{nNoPledge})
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </details>
-
-        <details class="bp-details">
-          <summary>Skills offered — table, and how the map is drawn</summary>
-          <table class="bp-table">
-            <thead><tr><th scope="col">Skill area</th><th scope="col">Recorded offers</th></tr></thead>
-            <tbody>
-              {
-                cohort.eoi_skills.published.map((s) => (
-                  <tr>
-                    <>
-                      <td>{s.label}</td>
-                      <td>{s.count}</td>
-                    </>
-                  </tr>
-                ))
-              }
-              {
-                cohort.eoi_skills.zero.map((s) => (
-                  <tr>
-                    <>
-                      <td>{s.label}</td>
-                      <td>0</td>
-                    </>
-                  </tr>
-                ))
-              }
-              <tr><td>Administration</td><td>fewer than 5</td></tr>
-              <tr><td>Other</td><td>fewer than 5</td></tr>
-              <tr><td>(three areas, labels withheld)</td><td>fewer than 5 each</td></tr>
-            </tbody>
-          </table>
-          <p class="bp-methodology">
-            Radius r(count) = 172 − (count/9) × 108, so abundant categories fall toward the core. Rings at 0, 3, 6, 9.
-            Angular position is evenly spaced by descending count and carries no data; dots within a cluster use
-            golden-angle packing purely to avoid overlap.
-          </p>
-        </details>
-
-        <details class="bp-details">
-          <summary>Archive manifest — 56 artefacts</summary>
-          <div
-            class="bp-manifest-strip"
-            role="img"
-            aria-label={`56 artefact hashes from the release manifest, digest ${manifest.manifest_digest}`}
-          >
-            {
-              Object.entries(manifest.artefacts).map(([name, hash]) => (
-                <span class="bp-manifest-cell" title={name}>
-                  {(hash as string).slice(0, 8)}
-                </span>
-              ))
-            }
-          </div>
-          <table class="bp-table">
-            <caption>Every artefact in the frozen public archive, with its SHA-256 prefix.</caption>
-            <thead><tr><th scope="col">Artefact</th><th scope="col">SHA-256 (first 16 chars)</th></tr></thead>
-            <tbody>
-              {
-                Object.entries(manifest.artefacts).map(([name, hash]) => (
-                  <tr>
-                    <>
-                      <td>{name}</td>
-                      <td>
-                        <code>{(hash as string).slice(0, 16)}…</code>
-                      </td>
-                    </>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-          <p class="bp-endmark">
-            Manifest digest <code>{manifest.manifest_digest}</code>
-            <br />Counts reproduced {cohort.meta.reproduced ?? '2026-08-20'}.
-          </p>
-        </details>
       </section>
     </main>
   </div>
@@ -857,494 +314,327 @@ const meta = {
 
 <style>
   .bp-case {
-    padding: 0 0 4rem;
+    --bp-rust: var(--color-accent);
+    --bp-line: var(--color-border);
+    padding-bottom: 5rem;
   }
-
-  /* ---- Hero ---- */
-  .bp-hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2.5rem 1.25rem 1.5rem;
-    text-align: center;
-  }
-  .bp-kicker {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    margin: 0;
-  }
-  .bp-h1 {
-    font-size: clamp(1.9rem, 4.5vw, 3rem);
-    line-height: 1.15;
-    margin: 0;
-    color: var(--color-text);
-    max-width: 20ch;
-  }
-  .bp-deck {
-    max-width: 60ch;
-    color: var(--color-text-muted);
-    font-size: 1.05rem;
-    line-height: 1.65;
-    margin: 0;
-  }
-  .bp-hero-field {
-    width: 100%;
-    max-width: 900px;
-    height: auto;
-  }
-  .bp-hero-axis {
-    stroke: var(--color-border);
-    stroke-width: 1;
-    stroke-dasharray: 2 6;
-  }
-  .bp-hero-thread {
-    stroke: var(--color-border);
-    opacity: 0.55;
-  }
-  .bp-hero-thread--hot {
-    stroke: var(--color-accent);
-    opacity: 0.9;
-  }
-  .bp-hero-node {
-    fill: var(--color-text-muted);
-  }
-  .bp-hero-node--hot {
-    fill: var(--color-accent);
-  }
-  .bp-hero-label {
-    fill: var(--color-accent);
-    font-family: var(--font-mono);
-    font-size: 13px;
-  }
-  .bp-caption {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    max-width: 60ch;
-    margin: 0;
-    line-height: 1.6;
-  }
-
-  /* ---- Body ---- */
+  .bp-hero,
   .bp-body {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 1.25rem;
+    width: min(1120px, calc(100% - 2.5rem));
+    margin-inline: auto;
   }
-  .bp-movement {
-    padding: 3rem 0;
-    border-top: 1px solid var(--color-border);
-  }
-  .bp-movement--first {
-    border-top: none;
-    padding-top: 1.5rem;
-  }
-  .bp-movement-label {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    margin: 0 0 0.5rem;
-  }
-  .bp-movement-title {
-    max-width: 34ch;
-    margin: 0 0 1rem;
-    color: var(--color-text);
-  }
-  .bp-movement h3 {
-    margin: 1.75rem 0 0.5rem;
-    color: var(--color-text);
-    font-size: 1.1rem;
-  }
-  .bp-body p {
-    max-width: 68ch;
-    line-height: 1.7;
-    color: var(--color-text);
-    margin: 0 0 1rem;
-  }
-  .bp-body code {
-    font-family: var(--font-mono);
-    font-size: 0.85em;
-    background: var(--color-surface-alt);
-    padding: 0.05em 0.35em;
-    border-radius: 0.25em;
-  }
-  .bp-visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-
-  /* ---- Figures ---- */
-  .bp-figure {
-    margin: 1.5rem 0;
-  }
-  .bp-figure--wide {
-    max-width: none;
-  }
-
-  /* ---- Timeline ---- */
-  .bp-timeline {
-    list-style: none;
-    margin: 1.5rem 0;
-    padding: 0;
-    border-left: 2px solid var(--color-border);
-  }
-  .bp-timeline-item {
-    position: relative;
-    padding: 0 0 1.1rem 1.25rem;
-  }
-  .bp-timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -5px;
-    top: 0.3rem;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-accent);
-  }
-  .bp-timeline-item--grey {
-    opacity: 0.55;
-  }
-  .bp-timeline-item--grey::before {
-    background: var(--color-text-muted);
-  }
-  .bp-timeline-date {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-  }
-  .bp-timeline-text {
-    display: block;
-    color: var(--color-text);
-    max-width: 60ch;
-  }
-
-  /* ---- Manifest strip ---- */
-  .bp-manifest-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-    gap: 0.35rem;
-    margin: 1.25rem 0;
-    max-width: 900px;
-  }
-  .bp-manifest-cell {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--color-text-muted);
-    background: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    border-radius: 0.25rem;
-    padding: 0.3rem 0.2rem;
-    text-align: center;
-    cursor: help;
-  }
-  .bp-manifest-cell:hover,
-  .bp-manifest-cell:focus {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
-  }
-
-  /* ---- One-way diagram ---- */
-  .bp-oneway {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 1.5rem 0;
-    max-width: 640px;
-  }
-  .bp-oneway-side {
+  .bp-hero {
+    min-height: 72vh;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    align-items: center;
-  }
-  .bp-oneway-caption {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-muted);
-  }
-  .bp-oneway-mark {
-    width: 2.4rem;
-    height: 1.4rem;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    border-radius: 0.25rem;
+    padding: 4rem 0 3rem;
   }
-  .bp-oneway-mark--filled {
-    background: var(--color-accent-muted);
-  }
-  .bp-oneway-mark--count {
-    background: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-  }
-  .bp-oneway-gate {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-accent);
-    border-left: 1px dashed var(--color-border);
-    border-right: 1px dashed var(--color-border);
-    padding: 0 0.75rem;
-    writing-mode: vertical-rl;
-  }
-
-  /* ---- Tables ---- */
-  .bp-table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 0.85rem;
-    margin: 1rem 0;
-  }
-  .bp-table caption {
-    text-align: left;
-    color: var(--color-text-muted);
-    font-size: 0.8rem;
-    margin-bottom: 0.4rem;
-  }
-  .bp-table th,
-  .bp-table td {
-    border: 1px solid var(--color-border);
-    padding: 0.4rem 0.6rem;
-    text-align: left;
-  }
-  .bp-row-hot td {
-    color: var(--color-accent);
-  }
-
-  /* ---- Calendar ---- */
-  .bp-calendar {
-    margin: 1.25rem 0;
-    max-width: 640px;
-  }
-  .bp-calendar-track {
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.4rem;
-  }
-  .bp-calendar-bar {
+  .bp-kicker,
+  .bp-act-number,
+  .bp-date,
+  .bp-commits,
+  .bp-case-index {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.25rem;
-    color: var(--color-surface);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
-  .bp-calendar-bar--financial {
-    background: var(--color-accent);
-    margin-right: auto;
+  .bp-kicker,
+  .bp-act-number,
+  .bp-case-index {
+    color: var(--bp-rust);
   }
-  .bp-calendar-bar--pledges {
-    background: var(--bp-teal);
-    margin-left: auto;
-  }
-  .bp-calendar-funnel {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-status-error);
-    text-decoration: line-through;
-    text-align: center;
-    margin-top: 0.5rem;
-  }
-
-  /* ---- Conditions field (numbered) ---- */
-  .bp-a3e {
-    width: 100%;
-    max-width: 700px;
-    height: auto;
+  .bp-hero h1 {
+    max-width: 13ch;
     margin: 1rem 0;
-  }
-  .bp-a3e-axis {
-    stroke: var(--color-border);
-    stroke-dasharray: 2 6;
-  }
-  .bp-a3e-thread {
-    opacity: 0.6;
-  }
-  .bp-a3e-thread--pledge {
-    stroke: var(--color-accent);
-  }
-  .bp-a3e-thread--nolink {
-    stroke: var(--bp-teal);
-  }
-  .bp-a3e-node {
-    fill: var(--color-surface-raised);
-    stroke: var(--color-text-muted);
-    stroke-width: 1;
-  }
-  .bp-a3e-idx {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    fill: var(--color-text);
-  }
-  .bp-methodology {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    max-width: 60ch;
-  }
-
-  /* ---- Dumbbell ---- */
-  .bp-a1 {
-    width: 100%;
-    height: auto;
-    margin: 1rem 0;
-  }
-  .bp-a1-axis {
-    stroke: var(--color-border);
-  }
-  .bp-a1-ticklabel {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    fill: var(--color-text-muted);
-  }
-  .bp-a1-grouphead {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.05em;
-    fill: var(--color-accent);
-  }
-  .bp-a1-rowlabel {
-    font-size: 11px;
-    fill: var(--color-text);
-  }
-  .bp-a1-conn {
-    stroke: var(--color-text-muted);
-    stroke-width: 1.4;
-    opacity: 0.6;
-  }
-  .bp-a1-dot--pledge {
-    fill: var(--color-accent);
-  }
-  .bp-a1-dot--nolink {
-    fill: var(--bp-teal);
-  }
-  .bp-legend {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-  }
-  .bp-legend-swatch {
-    display: inline-block;
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 50%;
-    margin-right: 0.25rem;
-  }
-  .bp-legend-swatch--pledge {
-    background: var(--color-accent);
-  }
-  .bp-legend-swatch--nolink {
-    background: var(--bp-teal);
-  }
-
-  /* ---- Skills map ---- */
-  .bp-b2 {
-    width: 100%;
-    max-width: 460px;
-    height: auto;
-    margin: 1rem auto;
-    display: block;
-  }
-  .bp-b2-ring {
-    fill: none;
-    stroke: var(--color-border);
-    stroke-width: 1;
-  }
-  .bp-b2-ring--absence {
-    stroke-dasharray: 3 4;
-  }
-  .bp-b2-ringlabel {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    fill: var(--color-text-muted);
-  }
-  .bp-b2-dot {
-    fill: var(--color-accent);
-  }
-  .bp-b2-dot--zero {
-    fill: none;
-    stroke: var(--color-text-muted);
-    stroke-width: 1.5;
-    stroke-dasharray: 2 2;
-  }
-  .bp-b2-label {
-    font-family: var(--font-mono);
-    font-size: 8.5px;
-    fill: var(--color-text);
-  }
-  .bp-b2-core {
-    fill: var(--color-surface-alt);
-    stroke: var(--color-border);
-  }
-  .bp-b2-corelabel {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    fill: var(--color-text-muted);
-  }
-
-  /* ---- Details / machinery ---- */
-  .bp-details {
-    margin: 1rem 0;
-  }
-  .bp-details summary {
-    cursor: pointer;
-    color: var(--color-accent);
-    font-size: 0.9rem;
-  }
-  .bp-machinery {
-    opacity: 0.92;
-  }
-  .bp-notes {
-    padding-left: 1.1rem;
-    max-width: 72ch;
-  }
-  .bp-notes li {
-    margin: 0.6rem 0;
-    font-size: 0.9rem;
-    line-height: 1.6;
     color: var(--color-text);
+    font-size: clamp(3rem, 9vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.055em;
   }
-  .bp-endmark {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
+  .bp-deck {
+    max-width: 54ch;
+    margin: 1.5rem 0 3rem;
+    color: var(--color-text);
+    font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+    line-height: 1.55;
+  }
+  .bp-signal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 900px;
+  }
+  .bp-signal span,
+  .bp-signal strong {
+    border: 1px solid var(--bp-line);
+    border-radius: 999px;
+    padding: 0.42rem 0.72rem;
     color: var(--color-text-muted);
-    word-break: break-all;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 400;
   }
-
-  /* ---- Close ---- */
-  .bp-coda p {
-    font-size: 1.05rem;
+  .bp-signal strong {
+    border-color: var(--bp-rust);
+    color: var(--bp-rust);
+  }
+  .bp-signal strong::before {
+    content: '→ ';
+  }
+  .bp-act {
+    padding: clamp(4rem, 9vw, 8rem) 0;
+    border-top: 1px solid var(--bp-line);
+  }
+  .bp-act h2 {
+    max-width: 18ch;
+    margin: 0.75rem 0 2rem;
+    color: var(--color-text);
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+  .bp-copy,
+  .bp-lede,
+  .bp-coda-copy {
+    max-width: 68ch;
+  }
+  .bp-copy p,
+  .bp-lede,
+  .bp-coda-copy p,
+  .bp-cases article > p:not(.bp-case-index):not(.bp-proof) {
+    color: var(--color-text);
+    font-size: 1.02rem;
+    line-height: 1.75;
+  }
+  .bp-copy p,
+  .bp-coda-copy p {
+    margin: 0 0 1rem;
+  }
+  .bp-facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin: 3rem 0 0;
+    background: var(--bp-line);
+    border: 1px solid var(--bp-line);
+  }
+  .bp-facts div {
+    min-height: 9rem;
+    padding: 1.25rem;
+    background: var(--color-surface);
+  }
+  .bp-facts dt {
+    color: var(--bp-rust);
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .bp-facts dd {
+    margin: 0.75rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .bp-chron {
+    margin: 3rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--bp-line);
+  }
+  .bp-moment {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr 6.5rem;
+    gap: 1.5rem;
+    padding: 1.35rem 0;
+    border-bottom: 1px solid var(--bp-line);
+  }
+  .bp-when {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .bp-date {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+  .bp-time {
+    color: var(--bp-rust);
+    font-family: var(--font-mono);
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .bp-what p {
+    margin: 0;
+    line-height: 1.55;
+  }
+  .bp-built {
+    color: var(--color-text);
+    font-size: clamp(1.02rem, 1.6vw, 1.2rem);
+    font-weight: 600;
+  }
+  .bp-world {
+    margin-top: 0.35rem !important;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+  .bp-commits {
+    align-self: start;
+    padding-top: 0.3rem;
+    color: var(--color-text-muted);
+    text-align: right;
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+  .bp-moment--quiet {
+    padding: 1rem 0;
+    background: transparent;
+  }
+  .bp-moment--quiet .bp-date {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+  .bp-moment--quiet .bp-built {
+    color: var(--color-text-muted);
+    font-weight: 400;
+    font-style: italic;
+  }
+  .bp-moment--quiet .bp-world {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .bp-source {
+    margin: 1.25rem 0 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+  .bp-cases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 3rem;
+    background: var(--bp-line);
+    border: 1px solid var(--bp-line);
+  }
+  .bp-cases article {
+    display: flex;
+    flex-direction: column;
+    min-height: 31rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: var(--color-surface);
+  }
+  .bp-cases h3 {
+    margin: 1rem 0;
+    color: var(--color-text);
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
+    line-height: 1.1;
+  }
+  .bp-proof {
+    margin: auto 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--bp-line);
+    color: var(--bp-rust);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.55;
+  }
+  .bp-act--coda h2 {
+    max-width: 14ch;
+  }
+  .bp-coda-copy p {
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    line-height: 1.5;
+  }
+  .bp-final {
+    max-width: 18ch;
+    margin: clamp(3rem, 8vw, 6rem) 0 3rem;
+    color: var(--color-text);
+    font-size: clamp(1.75rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .bp-links {
+    margin: 0;
+    line-height: 2;
   }
   .bp-links a {
-    color: var(--color-accent);
+    color: var(--bp-rust);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .bp-case * {
-      animation: none !important;
-      transition: none !important;
+  @media (max-width: 800px) {
+    .bp-hero {
+      min-height: auto;
+      padding-top: 3rem;
+    }
+    .bp-moment {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    .bp-when {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+    .bp-commits {
+      text-align: left;
+      padding-top: 0;
+    }
+    .bp-facts,
+    .bp-cases {
+      grid-template-columns: 1fr 1fr;
+    }
+    .bp-cases article:last-child {
+      grid-column: 1 / -1;
+      min-height: auto;
     }
   }
-</style>
-
-<style is:global>
-  :root {
-    --bp-teal: #7fb8c4;
+  @media (max-width: 520px) {
+    .bp-hero,
+    .bp-body {
+      width: min(100% - 2rem, 1120px);
+    }
+    .bp-facts,
+    .bp-cases {
+      grid-template-columns: 1fr;
+    }
+    .bp-cases article:last-child {
+      grid-column: auto;
+    }
+    .bp-cases article {
+      min-height: auto;
+    }
   }
-  .light {
-    --bp-teal: #2a616a;
+  @media (prefers-reduced-motion: no-preference) {
+    .bp-signal span,
+    .bp-signal strong {
+      animation: bp-arrive 500ms ease-out both;
+    }
+    .bp-signal :nth-child(2) {
+      animation-delay: 70ms;
+    }
+    .bp-signal :nth-child(3) {
+      animation-delay: 140ms;
+    }
+    .bp-signal :nth-child(4) {
+      animation-delay: 210ms;
+    }
+    .bp-signal :nth-child(5) {
+      animation-delay: 280ms;
+    }
+    .bp-signal :nth-child(6) {
+      animation-delay: 420ms;
+    }
+  }
+  @keyframes bp-arrive {
+    from {
+      opacity: 0;
+      transform: translateY(0.4rem);
+    }
   }
 </style>

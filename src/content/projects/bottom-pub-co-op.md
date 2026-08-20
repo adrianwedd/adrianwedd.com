@@ -37,6 +37,6 @@ Through the campaign, the project held to Stage 1: gauging community interest be
 
 ## What happened next
 
-The offer for the Commercial Hotel was unsuccessful on 13 August 2026; the property went to an undisclosed buyer under contract. Stage 1 language was retired the same week. What the campaign left behind — the research, the community data, and a site that had to stop asking for money for a thing that wasn't going to happen — is its own story: [We tried to buy the Bottom Pub. We didn’t. →](/case-studies/bottom-pub-project/)
+The offer for the Commercial Hotel was unsuccessful on 13 August 2026; the property went to an undisclosed buyer under contract. Stage 1 language was retired the same week. The campaign became a three-month test of building inside ambiguity—and of whether the resulting system could survive its central premise disappearing: [There was no brief. There was a pub. →](/case-studies/bottom-pub-project/)
 
 [Visit the site →](https://bottom.pub/) | [Read the community proposal →](/blog/the-bottom-pub-co-op/)

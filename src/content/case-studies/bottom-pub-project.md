@@ -1,14 +1,14 @@
 ---
-title: 'We tried to buy the Bottom Pub. We didn’t.'
-description: 'A community bid for Cygnet’s Commercial Hotel failed. What survived: 543 responses, a small-town privacy process, and a site that had to stop lying by omission.'
+title: 'There was no brief. There was a pub.'
+description: 'How an ill-defined community acquisition effort became a functioning digital operation in three months.'
 date: 2026-08-20
-tags: ['case-study', 'data-visualisation', 'privacy-engineering', 'community']
-category: 'Civic data'
+tags: ['case-study', 'systems', 'privacy-engineering', 'community']
+category: 'Systems engineering'
 draft: false
 ---
 
-For three months in 2026, a group of people in Cygnet tried to bring the Commercial Hotel into community ownership. The offer failed. What was left: hundreds of responses from locals, a small-town privacy process, and a website that had to stop asking for money for a thing that wasn't going to happen.
+An ill-defined community acquisition effort became a functioning digital operation in three months: public site, research, forms, data, campaign infrastructure, privacy controls, publishing, automation, verification, and a system capable of surviving the failure of the bid itself.
 
-The sequel to [_A website that is not allowed to accidentally lie_](/case-studies/bottom-pub-co-op/).
+The sequel to [_A website that is not allowed to accidentally lie_](/case-studies/bottom-pub-co-op/), and a case study in building the missing machinery while reality is still defining the problem.
 
 [Read the full case study →](/case-studies/bottom-pub-project/)
