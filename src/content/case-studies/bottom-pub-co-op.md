@@ -28,4 +28,4 @@ Most local sites don't have investment-offer stakes, but everyone eventually pub
 
 [Read the full technical write-up →](/projects/bottom-pub-co-op/) · [Visit the site →](https://bottom.pub/)
 
-**What happened next.** The offer for the pub was unsuccessful. The system this piece describes — the claim scanner, the guardrails, the discipline of not saying more than was true — turned out to matter for a different reason than expected: [We tried to buy the Bottom Pub. We didn’t. →](/case-studies/bottom-pub-project/)
+**What happened next.** The offer for the pub was unsuccessful. The system this piece describes—the claim scanner, the guardrails, the discipline of not saying more than was true—became part of something much larger: [There was no brief. There was a pub. →](/case-studies/bottom-pub-project/)
