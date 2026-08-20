@@ -63,11 +63,12 @@ const heroPole = {
   pledge: { x: HERO_FRAME.cx + HERO_FRAME.half + 40, y: (HERO_FRAME.yTop + HERO_FRAME.yBot) / 2 },
   noLink: { x: HERO_FRAME.cx - HERO_FRAME.half - 40, y: (HERO_FRAME.yTop + HERO_FRAME.yBot) / 2 },
 };
-const heroAlt = `Eleven conditions from the financial survey, placed by the gap between people who also pledged and people who didn't. Almost all sit near the shared centre line. One stands apart: grant co-funding, ${fmt(grant.p90)} percent among pledge-linked respondents versus ${fmt(grant.p55)} percent among the rest.`;
+const heroAlt = `Eleven conditions from the financial survey, placed by the gap between people with a linked pledge and people without one. Most sit near the shared centre line. One stands apart: grant co-funding, ${fmt(grant.p90)} percent among pledge-linked respondents versus ${fmt(grant.p55)} percent among the rest.`;
 
 /* Same field, numbered, for the machinery section. */
 const A3E_FRAME = { cx: 340, half: 260, yTop: 60, yBot: 460 };
 const a3eNodes = conditions.map((p, i) => ({ ...p, idx: i + 1, ...a3Position(p, pooledMax, pooledMin, A3E_FRAME) }));
+const a3eAlt = `The same eleven conditions, numbered 1–${a3eNodes.length} and threaded to two poles: pledge-linked respondents and no-linked-pledge respondents, thread width scaled to each group's percentage. Full numbers in the table below.`;
 const a3ePole = {
   pledge: { x: A3E_FRAME.cx + A3E_FRAME.half + 60, y: (A3E_FRAME.yTop + A3E_FRAME.yBot) / 2 },
   noLink: { x: A3E_FRAME.cx - A3E_FRAME.half - 60, y: (A3E_FRAME.yTop + A3E_FRAME.yBot) / 2 },
@@ -191,7 +192,6 @@ const meta = {
       name: 'Bottom Pub Project — financial-survey cohort findings (public derivative)',
       description: `Frozen, reproduced counts from a community financial survey (n=${nFin}), used to compute the charts on this page.`,
       isBasedOn: 'https://bottom.pub/what-cygnet-told-us/',
-      license: 'https://bottom.pub/what-cygnet-told-us/',
     })}
   />
 
@@ -260,8 +260,8 @@ const meta = {
         </text>
       </svg>
       <p class="bp-caption">
-        What {nFin} people said they’d need before investing, placed by how differently pledgers and non-pledgers answered.
-        Almost everything sits on the centre line.
+        What {nFin} people said they’d need before investing, placed by how differently pledge-linked and no-linked-pledge
+        respondents answered. Most sit near the centre line.
       </p>
     </header>
 
@@ -365,7 +365,7 @@ const meta = {
             }
           </svg>
           <figcaption class="bp-legend">
-            <span class="bp-legend-swatch bp-legend-swatch--pledge"></span> also pledged ({nPledge}) &nbsp;&nbsp;
+            <span class="bp-legend-swatch bp-legend-swatch--pledge"></span> pledge-linked ({nPledge}) &nbsp;&nbsp;
             <span class="bp-legend-swatch bp-legend-swatch--nolink"></span> no linked pledge ({nNoPledge}). What people
             wanted to know tells the same story: the total capital required first, then how a co-op works, then what
             happens to the money if it falls over. Full numbers at the end of the page.
@@ -525,47 +525,12 @@ const meta = {
           page was split in two: a live survey, and a findings page whose numbers don’t change when someone fills in the
           form.
         </p>
-        <h3>What was reviewed and what was served</h3>
+        <h3>Signed off isn’t the same as published</h3>
         <p>
-          The archive — 56 documents, frozen so they stay as they were on the day they were written — had two checks on
-          it. One proved each document carried a reviewer’s sign-off. One proved its text contained no banned phrasing.
-          Both were green. The published archive still contained bytes that didn’t match what had been reviewed, because
-          nothing checked the relationship between the two. The sign-off was on the file; the file had changed
-          underneath it.
-        </p>
-        <div
-          class="bp-gates"
-          role="img"
-          aria-label="Four panels: two green checks; the same two with a blank third row for served-equals-reviewed; the third row failing on a fingerprint mismatch; and finally the two bound together"
-        >
-          <div class="bp-gate-frame">
-            <span class="bp-gate-num">before</span>
-            <code class="bp-gate-row bp-gate-row--pass">reviewer sign-off ✓</code>
-            <code class="bp-gate-row bp-gate-row--pass">no banned language ✓</code>
-          </div>
-          <div class="bp-gate-frame">
-            <span class="bp-gate-num">the missing check</span>
-            <code class="bp-gate-row bp-gate-row--pass">reviewer sign-off ✓</code>
-            <code class="bp-gate-row bp-gate-row--pass">no banned language ✓</code>
-            <code class="bp-gate-row bp-gate-row--blank">served = reviewed ?</code>
-          </div>
-          <div class="bp-gate-frame">
-            <span class="bp-gate-num">what it found</span>
-            <code class="bp-gate-row bp-gate-row--pass">reviewer sign-off ✓</code>
-            <code class="bp-gate-row bp-gate-row--pass">no banned language ✓</code>
-            <code class="bp-gate-row bp-gate-row--fail">✗ fingerprint mismatch</code>
-          </div>
-          <div class="bp-gate-frame">
-            <span class="bp-gate-num">now</span>
-            <code class="bp-gate-row bp-gate-row--bound">●━━━━━━━━● review and bytes bound together</code>
-          </div>
-        </div>
-        <p>
-          The archive now carries a fingerprint for every document and one for the whole set, and a check that fails if
-          a fingerprint has moved or if the review record says “ready” while items are still pending. (The review record
-          had itself been saying “quarantined” for days after that stopped being true.) That’s the pattern in all of
-          these: each part true, the relationship between the parts wrong, and no check on any single part will tell
-          you.
+          The 56-document archive had been checked twice over — once for approval, once for banned phrasing — and both
+          checks were clean. What actually went out didn’t quite match what had been approved; nobody had checked that
+          the two were the same bytes. Each check was true on its own. Together they missed the thing that mattered. It
+          doesn’t anymore — see the machinery below if you want to know how.
         </p>
       </section>
 
@@ -583,8 +548,7 @@ const meta = {
         </p>
         <p>
           The field at the top of this page and the dumbbell chart above show what remained. Every mark on them is
-          computed from the published counts when the page is built: less dramatic, and what the {nFin} people actually
-          said.
+          computed from the published counts when the page is built: less dramatic, and what the {nFin} people actually said.
         </p>
         <h3>The funnel</h3>
         <p>
@@ -698,7 +662,7 @@ const meta = {
 
         <details class="bp-details">
           <summary>The conditions field, numbered, with its encoding</summary>
-          <svg class="bp-a3e" viewBox="0 0 700 500" role="img" aria-label={heroAlt}>
+          <svg class="bp-a3e" viewBox="0 0 700 500" role="img" aria-label={a3eAlt}>
             <line
               x1={A3E_FRAME.cx}
               y1={A3E_FRAME.yTop - 20}
@@ -1137,48 +1101,6 @@ const meta = {
     border-right: 1px dashed var(--color-border);
     padding: 0 0.75rem;
     writing-mode: vertical-rl;
-  }
-
-  /* ---- Gates panel ---- */
-  .bp-gates {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(180px, 1fr));
-    gap: 0.75rem;
-    margin: 1.5rem 0;
-    overflow-x: auto;
-  }
-  .bp-gate-frame {
-    background: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    padding: 0.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-  .bp-gate-num {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--color-text-muted);
-  }
-  .bp-gate-row {
-    font-size: 0.72rem;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.2rem;
-    background: var(--color-surface);
-  }
-  .bp-gate-row--pass {
-    color: var(--color-status-active);
-  }
-  .bp-gate-row--blank {
-    color: var(--color-text-muted);
-    opacity: 0.6;
-  }
-  .bp-gate-row--fail {
-    color: var(--color-status-error);
-  }
-  .bp-gate-row--bound {
-    color: var(--color-accent);
   }
 
   /* ---- Tables ---- */
