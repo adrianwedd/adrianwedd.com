@@ -10,31 +10,122 @@ const meta = {
     'How an ill-defined community acquisition effort became a functioning digital operation in three months.',
 };
 
-const expansion = [
-  { phase: '01', need: 'Make the idea real', built: 'Public site · campaign identity · credible information' },
-  { phase: '02', need: 'Find out what Cygnet wanted', built: 'Research · surveys · forms · structured data' },
+// Dates and times are from the bottom.pub repository's commit history, Australia/Hobart.
+type Moment = {
+  date: string;
+  time?: string;
+  built: string;
+  world: string;
+  commits?: number;
+  quiet?: boolean;
+};
+
+const chronology: Moment[] = [
   {
-    phase: '03',
-    need: 'Turn interest into an operation',
-    built: 'EOIs · pledges · financial material · stakeholder briefings',
+    date: 'May 9',
+    time: '19:01',
+    built: 'Claim scanner, research vault, proposal drafts and a public site—four commits in the same minute.',
+    world:
+      'By midnight the briefings rendered as pages and the legal hedging had been replaced with cited legislation.',
+    commits: 9,
   },
   {
-    phase: '04',
-    need: 'Handle the consequences',
-    built: 'Privacy controls · publishing gates · automation · verification',
+    date: 'May 10',
+    time: '14:58',
+    built: 'Expression-of-interest form wired to a database.',
+    world: 'Security headers, SEO, structured data and an offline-capable shell followed before midnight.',
+    commits: 36,
   },
   {
-    phase: '05',
-    need: 'Survive the ending',
-    built: 'State transition · corrections · preserved research · public archive',
+    date: 'May 18',
+    time: '17:35',
+    built: 'Contact intake: form, database, triage, email and issue tracker—landed inside three minutes.',
+    world:
+      'The working group needed somewhere to put what people were telling them. The admin vault and members area arrived the same evening.',
+    commits: 57,
+  },
+  {
+    date: 'May 19',
+    built:
+      'EOI admin panel and CSV export. Property watchdog. CI. Public status page. Admin cockpit. Public and admin search.',
+    world: 'Each one working before the next began; the last of them landed at 23:18.',
+    commits: 83,
+  },
+  {
+    date: 'Jun 2',
+    time: '13:23',
+    built: 'Financial feasibility survey: public form, endpoint, schema, consent handling, notifications.',
+    world:
+      'By 16:31 the EOI flow and news archive had their own pages, the media section was rebuilt and the navigation changed site-wide.',
+    commits: 19,
+  },
+  {
+    date: 'Jun 4',
+    time: '01:16',
+    built: 'Community survey. Admin result pages for both surveys by 02:31.',
+    world: 'The financial survey was renamed the Bottom Pub Pledge—the word the campaign would live on for two months.',
+    commits: 39,
+  },
+  {
+    date: 'Jun 8–10',
+    built:
+      'In-house mailing list merged at 15:06. Full site replatform started at 15:18; cutover merged two days later.',
+    world: 'Live site, live forms, live database—none of it paused.',
+  },
+  {
+    date: 'Jun 12',
+    time: '13:05',
+    built: 'Brief, assumptions and CI changed state.',
+    world: 'The Commercial Hotel was formally listed. The research stopped being hypothetical.',
+  },
+  {
+    date: 'Jun 24',
+    built:
+      'Eight-day acquisition sprint kit: feasibility study, adviser memos, finance figures, guardrail checklist, supporters strategy.',
+    world: 'Pledges passed $1 million the same day.',
+    commits: 18,
+  },
+  {
+    date: 'Jun 28',
+    time: '13:48',
+    built: 'Final pledge system: worker, database, admin panel, homepage call to action, community loan tier.',
+    world: 'Drafted for review at 13:48; live with launch copy by 19:19.',
+    commits: 27,
+  },
+  {
+    date: 'Jul 7 – Aug 17',
+    built: 'One automated commit a day.',
+    world: 'Six weeks of waiting on other people’s decisions.',
+    quiet: true,
+  },
+  {
+    date: 'Aug 13',
+    built: '',
+    world: 'The offer failed.',
+    quiet: true,
+  },
+  {
+    date: 'Aug 18',
+    time: '18:26',
+    built: 'Outcome published. Intake endpoints closed at 18:52. Public archive—two tranches—by 21:25.',
+    world: 'Every page that had been asking for support now had to say so honestly.',
+    commits: 19,
+  },
+  {
+    date: 'Aug 19',
+    time: '17:42',
+    built:
+      'Community findings brief specified. Rendered at build time, with suppression rules and privacy tests, at 18:13.',
+    world: 'Thirty-one minutes. The linkage bug that turned fourteen people into one was found and fixed before 23:00.',
+    commits: 82,
   },
 ];
 
 const facts = [
   ['3 months', 'from live question to functioning digital operation'],
-  ['543 responses', 'across four instruments—not a toy dataset'],
-  ['56 artefacts', 'preserved as a verified public record'],
-  ['1 failed bid', 'without the system becoming rubble'],
+  ['543 responses', 'across four instruments'],
+  ['56 artefacts', 'in the verified public archive'],
+  ['13 August', 'the bid failed. The research, the record and the system persisted.'],
 ];
 ---
 
@@ -83,8 +174,6 @@ const facts = [
         A community campaign to buy a pub went from idea to functioning digital operation in weeks. I built the
         machinery around it as the problem unfolded.
       </p>
-      <p class="bp-thesis">The specification was reality, arriving continuously.</p>
-
       <div class="bp-signal" aria-label="The forces shaping the project">
         <span>commercial deadline</span><span>community politics</span><span>private data</span><span
           >money in motion</span
@@ -95,7 +184,7 @@ const facts = [
     <main class="bp-body" data-pagefind-body>
       <section class="bp-act bp-act--opening" aria-labelledby="act-one">
         <p class="bp-act-number">01 / No brief</p>
-        <h2 id="act-one">There was a live commercial situation and no time for discovery theatre.</h2>
+        <h2 id="act-one">Discovery and delivery had to happen at the same time.</h2>
         <div class="bp-copy">
           <p>
             The Commercial Hotel—the Bottom Pub to anyone local—was for sale. People in Cygnet wanted to know whether
@@ -130,58 +219,42 @@ const facts = [
       </section>
 
       <section class="bp-act" aria-labelledby="act-two">
-        <p class="bp-act-number">02 / Velocity + range</p>
-        <h2 id="act-two">The system grew as fast as the problem did.</h2>
+        <p class="bp-act-number">02 / What appeared, and when</p>
+        <h2 id="act-two">The requirements changed repeatedly, sometimes within hours.</h2>
         <p class="bp-lede">
-          Not as a roadmap executed in order. As a chain reaction: every new fact created a new operational need, and
-          each need had to join the same working system.
+          Not every commit. Fourteen moments where the problem changed and working infrastructure appeared behind it.
         </p>
 
-        <ol class="bp-expansion" aria-label="How the system expanded">
+        <ol class="bp-chron" aria-label="Build chronology">
           {
-            expansion.map((item) => (
-              <li>
-                <span class="bp-phase">{item.phase}</span>
-                <div>
-                  <>
-                    <span class="bp-need">{item.need}</span>
-                    <span class="bp-built">{item.built}</span>
-                  </>
+            chronology.map((m) => (
+              <li class:list={['bp-moment', { 'bp-moment--quiet': m.quiet }]}>
+                <div class="bp-when">
+                  <span class="bp-date">{m.date}</span>
+                  {m.time && <span class="bp-time">{m.time}</span>}
                 </div>
+                <div class="bp-what">
+                  {m.built && <p class="bp-built">{m.built}</p>}
+                  <p class="bp-world">{m.world}</p>
+                </div>
+                <span class="bp-commits">{m.commits ? `${m.commits} commits` : ''}</span>
               </li>
             ))
           }
         </ol>
 
-        <p class="bp-punch">
-          Website became campaign infrastructure. Campaign infrastructure became research operation. Research became
-          public evidence. Public evidence required privacy, governance, automation, and verification. All of it
-          happened while the acquisition itself kept moving.
+        <p class="bp-source">
+          Dates and times from the project’s commit history, Hobart time. Commit counts are per day.
         </p>
       </section>
 
       <section class="bp-act" aria-labelledby="act-three">
-        <p class="bp-act-number">03 / Judgement under pressure</p>
-        <h2 id="act-three">Speed didn’t mean cowboy shit.</h2>
-        <p class="bp-lede">
-          Moving quickly only mattered if the system remained trustworthy. Three moments show what that required.
-        </p>
+        <p class="bp-act-number">03 / Judgement</p>
+        <h2 id="act-three">Three moments from the same months.</h2>
 
         <div class="bp-cases">
           <article>
             <p class="bp-case-index">01</p>
-            <h3>Removing names does not make a small town anonymous.</h3>
-            <p>
-              A business, family relationship, health circumstance, or recognisable anecdote can identify someone just
-              as effectively as a name. Free text was therefore reviewed by hand before publication. Proper nouns were
-              examined, risky details generalised or removed, and small counts suppressed. Private words went in; only
-              safe aggregates came out.
-            </p>
-            <p class="bp-proof">The constraint wasn’t “strip identifiers.” It was “do not expose a neighbour.”</p>
-          </article>
-
-          <article>
-            <p class="bp-case-index">02</p>
             <h3>Fourteen people quietly became one.</h3>
             <p>
               Fourteen survey responses shared the same placeholder in the name field. An early linkage pass interpreted
@@ -193,37 +266,43 @@ const facts = [
           </article>
 
           <article>
+            <p class="bp-case-index">02</p>
+            <h3>Removing names does not make a small town anonymous.</h3>
+            <p>
+              A business, family relationship, health circumstance, or recognisable anecdote can identify someone just
+              as effectively as a name. Free text was therefore reviewed by hand before publication. Proper nouns were
+              examined, risky details generalised or removed, and small counts suppressed. Private words went in; only
+              safe aggregates came out.
+            </p>
+            <p class="bp-proof">The constraint wasn’t “strip identifiers.” It was “do not expose a neighbour.”</p>
+          </article>
+
+          <article>
             <p class="bp-case-index">03</p>
             <h3>The bid died. Every public claim changed with it.</h3>
             <p>
               On 13 August the offer failed. Copy that had been accurate days earlier was suddenly asking people to
-              support something that was no longer happening. The site had to change state across the homepage, forms,
-              footer, structured data, and thirteen briefing pages—not merely publish a sad update and leave stale
-              promises behind.
+              support something that was no longer happening. The site could not publish a sad update and leave stale
+              promises behind; it had to change state.
             </p>
-            <p class="bp-proof">Truth was not a page. It was a property of the whole information surface.</p>
+            <p class="bp-proof">
+              Homepage, forms, footer, structured data and thirteen briefing pages changed in the same pass.
+            </p>
           </article>
         </div>
       </section>
 
       <section class="bp-act bp-act--coda" aria-labelledby="act-four">
-        <p class="bp-act-number">04 / Designed for reality</p>
-        <h2 id="act-four">The deal failed. The infrastructure survived.</h2>
+        <p class="bp-act-number">04 / After</p>
+        <h2 id="act-four">The offer failed on 13 August.</h2>
         <div class="bp-coda-copy">
-          <p>Three months after the work began, the acquisition failed.</p>
-          <p>The system didn’t.</p>
           <p>
-            It stopped soliciting support for a dead bid. It preserved the research, structured information, community
-            knowledge, and public record. It could tell the truth about what had happened without erasing the useful
-            work or trapping the next group inside the previous campaign’s assumptions.
-          </p>
-          <p>
-            That is the deeper test of a system built inside ambiguity: not whether reality follows the plan, but
-            whether the work remains coherent when reality changes its mind.
+            The research still exists. The community record still exists. The infrastructure changed state and kept
+            working.
           </p>
         </div>
 
-        <p class="bp-final">Enter the chaos. Find the shape. Build the missing machinery.</p>
+        <p class="bp-final">Three months earlier, none of it existed.</p>
         <p class="bp-links">
           <a href="https://bottom.pub/">Visit the project that survived →</a><br />
           <a href="/case-studies/bottom-pub-co-op/">Read how the first guardrails were built →</a>
@@ -253,7 +332,8 @@ const facts = [
   }
   .bp-kicker,
   .bp-act-number,
-  .bp-phase,
+  .bp-date,
+  .bp-commits,
   .bp-case-index {
     font-family: var(--font-mono);
     font-size: 0.72rem;
@@ -275,17 +355,10 @@ const facts = [
   }
   .bp-deck {
     max-width: 54ch;
-    margin: 1.5rem 0 0;
+    margin: 1.5rem 0 3rem;
     color: var(--color-text);
     font-size: clamp(1.1rem, 2.2vw, 1.45rem);
     line-height: 1.55;
-  }
-  .bp-thesis {
-    max-width: 40ch;
-    margin: 1rem 0 3rem;
-    color: var(--color-text-muted);
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    font-style: italic;
   }
   .bp-signal {
     display: flex;
@@ -331,7 +404,6 @@ const facts = [
   .bp-copy p,
   .bp-lede,
   .bp-coda-copy p,
-  .bp-punch,
   .bp-cases article > p:not(.bp-case-index):not(.bp-proof) {
     color: var(--color-text);
     font-size: 1.02rem;
@@ -366,65 +438,80 @@ const facts = [
     font-size: 0.85rem;
     line-height: 1.5;
   }
-  .bp-expansion {
-    position: relative;
-    margin: 3rem 0;
+  .bp-chron {
+    margin: 3rem 0 0;
     padding: 0;
     list-style: none;
+    border-top: 1px solid var(--bp-line);
   }
-  .bp-expansion::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 1.15rem;
-    width: 1px;
-    background: linear-gradient(var(--bp-line), var(--bp-rust));
-  }
-  .bp-expansion li {
-    position: relative;
+  .bp-moment {
     display: grid;
-    grid-template-columns: 2.4rem 1fr;
-    gap: 1.25rem;
-    padding: 0 0 clamp(2rem, 5vw, 4rem);
+    grid-template-columns: 9.5rem 1fr 6.5rem;
+    gap: 1.5rem;
+    padding: 1.35rem 0;
+    border-bottom: 1px solid var(--bp-line);
   }
-  .bp-phase {
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    width: 2.4rem;
-    height: 2.4rem;
-    border: 1px solid var(--bp-line);
-    border-radius: 50%;
-    background: var(--color-surface);
-    color: var(--color-text-muted);
+  .bp-when {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
   }
-  .bp-expansion li:last-child .bp-phase {
-    border-color: var(--bp-rust);
-    color: var(--bp-rust);
-  }
-  .bp-need,
-  .bp-built {
-    display: block;
-  }
-  .bp-need {
-    margin-bottom: 0.55rem;
+  .bp-date {
     color: var(--color-text);
-    font-size: clamp(1.25rem, 2.5vw, 2rem);
     font-weight: 700;
   }
+  .bp-time {
+    color: var(--bp-rust);
+    font-family: var(--font-mono);
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .bp-what p {
+    margin: 0;
+    line-height: 1.55;
+  }
   .bp-built {
+    color: var(--color-text);
+    font-size: clamp(1.02rem, 1.6vw, 1.2rem);
+    font-weight: 600;
+  }
+  .bp-world {
+    margin-top: 0.35rem !important;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+  .bp-commits {
+    align-self: start;
+    padding-top: 0.3rem;
+    color: var(--color-text-muted);
+    text-align: right;
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+  .bp-moment--quiet {
+    padding: 1rem 0;
+    background: transparent;
+  }
+  .bp-moment--quiet .bp-date {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+  .bp-moment--quiet .bp-built {
+    color: var(--color-text-muted);
+    font-weight: 400;
+    font-style: italic;
+  }
+  .bp-moment--quiet .bp-world {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .bp-source {
+    margin: 1.25rem 0 0;
     color: var(--color-text-muted);
     font-family: var(--font-mono);
-    font-size: 0.8rem;
-    line-height: 1.6;
-  }
-  .bp-punch {
-    max-width: 52ch;
-    margin: 1rem 0 0 clamp(3.65rem, 8vw, 7rem);
-    padding-left: 1.25rem;
-    border-left: 3px solid var(--bp-rust);
-    font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+    font-size: 0.72rem;
   }
   .bp-cases {
     display: grid;
@@ -459,22 +546,15 @@ const facts = [
   .bp-act--coda h2 {
     max-width: 14ch;
   }
-  .bp-coda-copy p:nth-child(1),
-  .bp-coda-copy p:nth-child(2) {
-    margin-bottom: 0;
-    font-size: clamp(1.5rem, 3.5vw, 2.8rem);
-    font-weight: 700;
-    line-height: 1.25;
-  }
-  .bp-coda-copy p:nth-child(2) {
-    margin-bottom: 2rem;
-    color: var(--bp-rust);
+  .bp-coda-copy p {
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    line-height: 1.5;
   }
   .bp-final {
-    max-width: 22ch;
-    margin: clamp(4rem, 10vw, 8rem) 0 3rem;
+    max-width: 18ch;
+    margin: clamp(3rem, 8vw, 6rem) 0 3rem;
     color: var(--color-text);
-    font-size: clamp(2rem, 6vw, 5rem);
+    font-size: clamp(1.75rem, 5vw, 4rem);
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.04em;
@@ -491,6 +571,19 @@ const facts = [
     .bp-hero {
       min-height: auto;
       padding-top: 3rem;
+    }
+    .bp-moment {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    .bp-when {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+    .bp-commits {
+      text-align: left;
+      padding-top: 0;
     }
     .bp-facts,
     .bp-cases {
@@ -515,9 +608,6 @@ const facts = [
     }
     .bp-cases article {
       min-height: auto;
-    }
-    .bp-punch {
-      margin-left: 0;
     }
   }
   @media (prefers-reduced-motion: no-preference) {
