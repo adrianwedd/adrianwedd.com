@@ -3,7 +3,7 @@ title: 'The Bottom Pub Co-op'
 description: 'Cloudflare Pages site for a community co-operative proposal. EOI intake, Claude triage, Access-gated admin vault, editorial guardrails at build time.'
 tags: ['web', 'cloudflare', 'community', 'ai', 'governance']
 url: 'https://bottom.pub'
-status: 'active'
+status: 'complete'
 featured: true
 date: 2026-05-15
 heroImage: '/notebook-assets/the-bottom-pub-co-op/infographic.webp'
@@ -31,8 +31,12 @@ An automated watchdog monitors the property's listing status and feeds a synthes
 
 The admin vault is behind Cloudflare Access at the edge, with JWT validation in the Pages Function as a second layer — fail-closed if the environment isn't correctly configured. The vault holds steering committee materials, a live GitHub Issues kanban, the choice map, and the enquiry triage queue with the pending Claude drafts.
 
-## Stage discipline
+## Stage discipline, while it applied
 
-The project is at Stage 1: gauging community interest before formal feasibility work begins. No purchase agreement. No investment offer. The system is designed to hold that line.
+Through the campaign, the project held to Stage 1: gauging community interest before formal feasibility work began. No purchase agreement. No investment offer. The system was designed to hold that line, and did — the claim scanner, the rendered-page check and the Access probe all describe the guardrails that were in force while an offer was still possible.
+
+## What happened next
+
+The offer for the Commercial Hotel was unsuccessful on 13 August 2026; the property went to an undisclosed buyer under contract. Stage 1 language was retired the same week. What the campaign left behind — a byte-frozen public archive, a privacy pipeline built so it structurally cannot leak, and a release system that stopped trusting its own green checks after a real incident — is its own story: [The campaign failed. The system didn't disappear. →](/case-studies/bottom-pub-project/)
 
 [Visit the site →](https://bottom.pub/) | [Read the community proposal →](/blog/the-bottom-pub-co-op/)

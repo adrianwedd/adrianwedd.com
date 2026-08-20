@@ -27,3 +27,5 @@ The honest proof it was worth building: a multi-model QA pass found the scanner 
 Most local sites don't have investment-offer stakes, but everyone eventually publishes something that quietly goes wrong — a discontinued service still listed, a compliance detail that changed, a claim that was true when it was written and isn't now. A build/deploy check that actually reads your own content before it goes live catches the thing a person reviewing it once, months ago, never will.
 
 [Read the full technical write-up →](/projects/bottom-pub-co-op/) · [Visit the site →](https://bottom.pub/)
+
+**What happened next.** The offer for the pub was unsuccessful. The system this piece describes — the claim scanner, the guardrails, the discipline of not saying more than was true — turned out to matter for a different reason than expected: [The campaign failed. The system didn't disappear. →](/case-studies/bottom-pub-project/)
