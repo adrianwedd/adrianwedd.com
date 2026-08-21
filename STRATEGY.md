@@ -7,8 +7,38 @@ how a site "should" be built. It does not override the user's instructions, and
 it does not extend to other repositories. Entries are labeled OBSERVED
 (explicit in code/history) or INFERRED (probable; evidence stated).
 
-If something here conflicts with what you observe in the code, report the drift
-rather than following it blindly — parts go stale (see Section 4).
+If something here conflicts with what you observe in the code, do not follow it
+blindly — parts go stale (see Section 4). Drift is a repair job, not a stop
+sign: work out which source is stale, wrong, or differently scoped (git log the
+claim, read the code, check the CI run), reconcile what the evidence settles,
+and say what you resolved. Correcting a stale fact here is in scope for the
+task that exposes it; changing an invariant, a decision, or the Section 5 list
+needs the task to name that change. Escalate only an unsettled conflict about
+an invariant.
+
+## 0. AUTONOMY
+
+A task is delegation: it authorizes the reversible, repository-local work
+needed to achieve it — reading anything local, the Section 6 checks, editing
+content, components, styles, scripts, worker code, and workflows, `wrangler
+deploy --dry-run`, committing on a branch, pushing it, and opening a PR —
+without a second permission check, unless the task says review-only / no
+changes. The boundary is **what reaches the public or a live system**, not
+"how big is the change": implementation is not execution. Editing
+`deploy.yml`, a worker, or a workflow on a branch is repo-local (call the diff
+out in the PR); a real `wrangler deploy`, a KV/R2/DO mutation, a secret, a
+frontmatter change that can fire autopublish, an NLM generation run, a YouTube
+upload, or a URL change landing on `main` is the gate (Section 5). When the
+current task explicitly authorizes a class of action, do not ask again whether
+you may do it; only the Section 5 boundaries that are genuinely the human's
+always need a fresh, specific go-ahead.
+
+Missing conversational history is never a blocker. Reconstruct state from
+`git log`, `gh` issues/PRs and workflow runs, files on disk, and the Section 6
+checks; re-derive an earlier agent's reasoning from the evidence rather than
+reporting its absence. Resolve ordinary ambiguity with evidence first, and
+report the assumption you made after doing the recoverable work, not instead
+of it.
 
 ## 1. INTENT
 
@@ -173,7 +203,8 @@ Executors never relitigate these.
   `date` or `autopublish` on a published file — this can re-fire social posts.
 - Treating untracked repo-root files as litter. Treat ANY untracked root file
   as hazardous unless your current task created it — never commit, delete, or
-  build on one; escalate. Known strays as of 2026-07-02: `diff.txt`,
+  build on one; leave it untouched and note it in your summary (it is not a
+  reason to stop). Known strays as of 2026-07-02: `diff.txt`,
   `modify_config.py`, `put_payload.json`, `tunnel_config.json` (exposes a
   live Cloudflare tunnel ID and home-LAN topology), `TOMORROW.md`.
   OBSERVED (untracked, unrelated to the site).
@@ -181,14 +212,20 @@ Executors never relitigate these.
   claiming a worker fix is "live" after merge without a `wrangler deploy`.
 - Trusting CLAUDE.md/AGENTS.md/GEMINI.md over the code or this file — parts
   are stale (collection count; an old 64k-audio step). If code, CLAUDE.md,
-  and this file conflict with EACH OTHER, stop and report the drift unless
-  the task explicitly resolves it.
+  and this file conflict with EACH OTHER, reconcile them (code wins on what
+  the system does; this file wins on what is allowed) and say what you
+  resolved; escalate only a conflict about an invariant the evidence cannot
+  settle.
 - Running two `nlm` CLI processes concurrently (token-file race), or using
   the NLM MCP instead of the CLI. Tell: parallel nlm invocations in one step.
 - "Cleaning up" `dist/` into git or formatting sweeps across `src/content/`
   producing giant content diffs unrelated to the task.
 
-## 5. ESCALATION TRIGGERS — full stop, ask the human
+## 5. ESCALATION TRIGGERS — stop the gated action, continue the safe work, ask the human once
+
+A trigger stops movement through that door, not the task: finish every
+independent repo-local part, then bring the gated decision back once with
+evidence and a recommendation.
 
 - Anything touching secrets/auth: `.dev.vars`, `.env*`, GA4 keys,
   `PIPELINE_PAT`, `PUBLISH_SECRET`/`CLI_SECRET`, NLM cookies, YouTube OAuth.
@@ -202,10 +239,12 @@ Executors never relitigate these.
   `public/og/`, or any generated media; adding redirects.
 - NotebookLM generation runs (daily quota ~50/type; dedicated-account ToS
   risk) and YouTube uploads.
-- Any untracked repo-root file you didn't create (see Section 4).
-- Changes to `deploy.yml` gates, branch protection, or `.lychee.toml`.
-- Any ambiguity between this file, CLAUDE.md, and the code; any task that
-  seems to require violating Section 2.
+- Branch protection (a live repo setting), and weakening a `deploy.yml` gate
+  or a `.lychee.toml` exclusion. Editing either file on a branch for a task
+  that names it is repo-local — call the diff out in the PR.
+- A conflict about an invariant that the evidence cannot settle; any task
+  that seems to require violating Section 2. (Untracked root files and
+  ordinary doc drift are handled per Section 4, not escalated.)
 
 ## 6. VERIFICATION (in order)
 
@@ -216,8 +255,9 @@ Executors never relitigate these.
    `scripts/test-site.sh` + internal-link check. Slow but required before
    claiming done.
 5. If any `src/content/` filename, any slug, a collection definition, or a
-   redirect changed: list the before/after URL impact and escalate before
-   committing. No automated check exists for this.
+   redirect changed: list the before/after URL impact in the PR and leave the
+   merge to the human — that is the approval Section 2 requires. No automated
+   check exists for this.
 6. If you touched a `.webp` heroImage: confirm the `.jpg` twin exists at the
    same path under `public/` (`ls public/<path>.jpg`).
 7. If you touched `worker/`: `cd worker && npm test` → all pass, then
