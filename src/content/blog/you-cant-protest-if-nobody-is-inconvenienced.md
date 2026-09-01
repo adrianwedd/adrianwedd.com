@@ -8,7 +8,7 @@ draft: true
 
 I am a crusty old activist. For fifteen years I worked and volunteered for Greenpeace: coordinating actions, crewing boats, climbing things and occasionally working internationally. Professional troublemaker, broadly speaking.
 
-I have been arrested in seven of Australia's eight states and territories. The Northern Territory remains an embarrassing gap in an otherwise needlessly comprehensive collection.
+I have been arrested in seven Australian jurisdictions. The Northern Territory remains an embarrassing gap in an otherwise needlessly comprehensive collection.
 
 In May 2009, I chained myself to a coal excavator at Hazelwood, then Australia's dirtiest power station. [Seven of us were charged with trespass](https://www.abc.net.au/news/2009-07-16/green-activists-face-court-over-power-station/1354844) after an action reported as temporarily stopping coal production. In December, as Kevin Rudd arrived at the Copenhagen climate talks, I was part of the [five-person Greenpeace team that scaled a sail of the Sydney Opera House](https://www.abc.net.au/news/2009-12-15/climate-activists-scale-opera-house/1178744) and unfurled a 100-square-metre banner: **STOP THE POLITICS — CLIMATE TREATY NOW.**
 
@@ -38,19 +38,19 @@ Liberal and Labor governments have both done it. Governments discover a touching
 
 ## From arresting conduct to mapping movements
 
-I met Scott Parkin through Greenpeace. In 2005, the American peace activist was detained and removed from Australia after an adverse ASIO security assessment. His case was an early warning that the boundary between dissent and national security was not self-policing.
+I met Scott Parkin through Greenpeace. In 2005, he was detained and removed from Australia after an adverse ASIO security assessment. The [Inspector-General of Intelligence and Security investigated complaints](https://www.igis.gov.au/inquiries/parkin-inquiry) that this was wrong because Parkin advocated peaceful civil disobedience. His case warned that the boundary between dissent and national security was not self-policing.
 
 That boundary matters even more now.
 
 The old model was legible: commit an offence, risk arrest. The newer model moves upstream. Police predict disruption, then search, exclude or move people on. Intelligence agencies map networks around suspected political violence.
 
-On 27 August 2026, a new federal law expanded the matters for which ASIO may seek an adult compulsory questioning warrant. The list now expressly includes sabotage, politically motivated violence, promotion of communal violence and attacks on Australia's defence system, as well as espionage and foreign interference.
+On 27 August 2026, a [new federal law](https://www.legislation.gov.au/C2026A00081/asmade/2026-08-26/text/original/epub/OEBPS/document_1/document_1.html) expanded adult questioning warrants to sabotage, politically motivated violence, promotion of communal violence and attacks on Australia's defence system, as well as espionage and foreign interference.
 
 This does **not** make peaceful protest an ASIO offence. The law still says lawful advocacy, protest and dissent cannot, by themselves, be treated as prejudicial to security.
 
 But “by themselves” is carrying a great deal of democratic weight.
 
-One violent actor can give an intelligence agency reason to examine a much larger movement. A person compelled to answer questions need not be accused of violence; they may simply be thought useful.
+One violent actor may create a pathway for an intelligence agency to examine a much larger movement. A person need not themselves be suspected of violence; they may be compelled because ASIO considers they hold information relevant to important intelligence about it.
 
 The danger is not that ASIO will arrest everyone at a march. It is that proximity, association and provocative politics gradually become proxies for violent intent inside systems the public cannot inspect.
 
