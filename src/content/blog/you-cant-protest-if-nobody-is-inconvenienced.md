@@ -6,9 +6,9 @@ tags: ['politics', 'protest', 'civil-liberties', 'australia', 'activism']
 draft: true
 ---
 
-I am a crusty old activist. For fifteen years I volunteered, took action and worked in roles for Greenpeace. I have been arrested in New South Wales, Victoria, Queensland, South Australia, Western Australia, Tasmania and the ACT.
+I am a crusty old activist. For fifteen years I worked and volunteered for Greenpeace: coordinating actions, crewing boats, climbing things and occasionally working internationally. Professional troublemaker, broadly speaking.
 
-That is seven of Australia's eight states and territories. The Northern Territory remains an embarrassing gap in an otherwise needlessly comprehensive collection.
+I have been arrested in seven of Australia's eight states and territories. The Northern Territory remains an embarrassing gap in an otherwise needlessly comprehensive collection.
 
 In May 2009, I chained myself to a coal excavator at Hazelwood, then Australia's dirtiest power station. [Seven of us were charged with trespass](https://www.abc.net.au/news/2009-07-16/green-activists-face-court-over-power-station/1354844) after an action reported as temporarily stopping coal production. In December, as Kevin Rudd arrived at the Copenhagen climate talks, I was part of the [five-person Greenpeace team that scaled a sail of the Sydney Opera House](https://www.abc.net.au/news/2009-12-15/climate-activists-scale-opera-house/1178744) and unfurled a 100-square-metre banner: **STOP THE POLITICS — CLIMATE TREATY NOW.**
 
