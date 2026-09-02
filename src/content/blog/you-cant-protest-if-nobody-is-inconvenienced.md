@@ -3,6 +3,10 @@ title: "You Can't Protest If Nobody Is Inconvenienced"
 description: 'I was arrested across Australia when civil disobedience still had a comprehensible price. We have since made effective protest dangerously unaffordable.'
 date: 2026-09-02
 tags: ['politics', 'protest', 'civil-liberties', 'australia', 'activism']
+heroImage: '/notebook-assets/you-cant-protest-if-nobody-is-inconvenienced/infographic.webp'
+heroAlt: 'Dark botanical infographic: the rising statutory price of effective protest in Australia — fines, prison terms and intelligence powers replacing the old comprehensible cost of arrest.'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/you-cant-protest-if-nobody-is-inconvenienced/audio.m4a'
+audioDuration: '43:27'
 draft: true
 ---
 
