@@ -28,15 +28,15 @@
     "lighthouse": "lhci autorun --config=.github/lighthouse/lighthouserc.json --upload.target=filesystem --upload.outputDir=.lighthouseci"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
     "@astrojs/mdx": "^6.0.1",
     "@astrojs/preact": "^5.1.4",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
-    "@tailwindcss/vite": "^4.3.0",
+    "@tailwindcss/vite": "^4.3.3",
     "astro": "^6.4.2",
-    "preact": "^10.29.2",
-    "satori": "^0.26.0",
+    "preact": "^10.29.8",
+    "satori": "^0.33.4",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.0",
     "typescript": ">=5.0.0 <6.0.0"
@@ -68,17 +68,17 @@
   "devDependencies": {
     "@google-analytics/data": "^6.1.0",
     "@lhci/cli": "^0.15.1",
-    "@playwright/test": "1.55.1",
+    "@playwright/test": "1.62.1",
     "@tailwindcss/typography": "^0.5.20",
-    "@typescript-eslint/parser": "^8.60.1",
-    "eslint": "^10.4.1",
+    "@typescript-eslint/parser": "^8.68.0",
+    "eslint": "^10.9.1",
     "eslint-plugin-astro": "^1.7.0",
     "gray-matter": "^4.0.3",
     "node-html-parser": "^7.1.0",
     "pagefind": "^1.5.0",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "vitest": "^4.1.9"
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "vitest": "^4.1.11"
   }
 }
