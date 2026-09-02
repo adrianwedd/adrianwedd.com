@@ -32,7 +32,7 @@ Yet governments increasingly treat disruption itself as the harm.
 
 In New South Wales, disrupting certain roads can attract up to two years in prison or a $22,000 fine. In South Australia, obstructing a public place can attract a $50,000 fine or three months in prison. In Tasmania, obstructing a workplace through a picket can mean up to 12 months in prison.
 
-The Human Rights Law Centre counted 49 federal, state and territory bills introduced between 2003 and 2023 ([*Protest in Peril*](https://www.hrlc.org.au/reports/protest-peril/)). That excludes regulations, council by-laws, police policy and policing practice.
+The Human Rights Law Centre counted 49 federal, state and territory bills introduced between 2003 and 2023 ([_Protest in Peril_](https://www.hrlc.org.au/reports/protest-peril/)). That excludes regulations, council by-laws, police policy and policing practice.
 
 Liberal and Labor governments have both done it. Governments discover a touching commitment to civil liberties shortly after losing office.
 
@@ -42,7 +42,7 @@ I met Scott Parkin through Greenpeace. In 2005, he was detained and removed from
 
 The old model was legible: commit an offence, risk arrest. The newer model moves upstream. Police predict disruption, then search, exclude or move people on. Intelligence agencies map networks around suspected political violence.
 
-On 27 August 2026, the [*Australian Security Intelligence Organisation Amendment Act (No. 2) 2026*](https://www.legislation.gov.au/C2026A00081/asmade) expanded adult questioning warrants to sabotage, politically motivated violence, promotion of communal violence, attacks on Australia's defence system and serious threats to territorial or border integrity, as well as espionage and foreign interference. The powers still sunset in 2029.
+On 27 August 2026, the [_Australian Security Intelligence Organisation Amendment Act (No. 2) 2026_](https://www.legislation.gov.au/C2026A00081/asmade) expanded adult questioning warrants to sabotage, politically motivated violence, promotion of communal violence, attacks on Australia's defence system and serious threats to territorial or border integrity, as well as espionage and foreign interference. The powers still sunset in 2029.
 
 This does **not** make peaceful protest an ASIO offence. [Section 17A](https://www.legislation.gov.au/C2004A02123/latest/text) still says lawful advocacy, protest and dissent cannot, by themselves, be treated as prejudicial to security.
 
