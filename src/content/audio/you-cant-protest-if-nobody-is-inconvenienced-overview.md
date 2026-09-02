@@ -3,7 +3,7 @@ title: "You Can't Protest If Nobody Is Inconvenienced"
 description: "Audio overview of You Can't Protest If Nobody Is Inconvenienced."
 date: 2026-09-02
 tags: ['notebooklm', 'politics', 'protest', 'civil-liberties', 'australia', 'activism']
-draft: true
+draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/you-cant-protest-if-nobody-is-inconvenienced/audio.m4a'
 duration: '43:27'
 relatedPost: 'you-cant-protest-if-nobody-is-inconvenienced'
