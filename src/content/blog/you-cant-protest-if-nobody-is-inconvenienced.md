@@ -6,11 +6,11 @@ tags: ['politics', 'protest', 'civil-liberties', 'australia', 'activism']
 draft: true
 ---
 
-I am a crusty old activist. For fifteen years I worked and volunteered for Greenpeace: coordinating actions, crewing boats, climbing things and occasionally working internationally. Professional troublemaker, broadly speaking.
+I am a crusty old activist. For fifteen years I worked and volunteered for Greenpeace: coordinating actions, crewing boats, climbing things and working internationally. Professional troublemaker, broadly speaking.
 
-I have been arrested in seven Australian jurisdictions. The Northern Territory remains an embarrassing gap in an otherwise needlessly comprehensive collection.
+I have been arrested in seven Australian jurisdictions. The Northern Territory remains an embarrassing gap in a needlessly comprehensive collection.
 
-In May 2009, I chained myself to a coal excavator at Hazelwood, then Australia's dirtiest power station. [Seven of us were charged with trespass](https://www.abc.net.au/news/2009-07-16/green-activists-face-court-over-power-station/1354844) after an action reported as temporarily stopping coal production. In December, as Kevin Rudd arrived at the Copenhagen climate talks, I was part of the [five-person Greenpeace team that scaled a sail of the Sydney Opera House](https://www.abc.net.au/news/2009-12-15/climate-activists-scale-opera-house/1178744) and unfurled a 100-square-metre banner: **STOP THE POLITICS — CLIMATE TREATY NOW.**
+In May 2009, I chained myself to a coal excavator at Hazelwood, then Australia's dirtiest power station. Seven of us faced trespass charges after the action temporarily stopped coal production ([ABC, 2009](https://www.abc.net.au/news/2009-07-16/green-activists-face-court-over-power-station/1354844)). In December, as Kevin Rudd arrived at the Copenhagen climate talks, I joined five Greenpeace activists scaling an Opera House sail ([ABC, 2009](https://www.abc.net.au/news/2009-12-15/climate-activists-scale-opera-house/1178744)) and unfurling a 100-square-metre banner: **STOP THE POLITICS, CLIMATE TREATY NOW.**
 
 There were other power stations, D-locks and actions without arrests. Despite all the arrests, I never recorded a conviction: section 10 dismissals, good-behaviour bonds and interstate variations on the theme.
 
@@ -32,27 +32,25 @@ Yet governments increasingly treat disruption itself as the harm.
 
 In New South Wales, disrupting certain roads can attract up to two years in prison or a $22,000 fine. In South Australia, obstructing a public place can attract a $50,000 fine or three months in prison. In Tasmania, obstructing a workplace through a picket can mean up to 12 months in prison.
 
-The [Human Rights Law Centre counted 49 federal, state and territory bills affecting protest between 2003 and 2023](https://www.hrlc.org.au/reports/protest-peril/). That excludes regulations, council by-laws, police policy and policing practice.
+The Human Rights Law Centre counted 49 federal, state and territory bills introduced between 2003 and 2023 ([*Protest in Peril*](https://www.hrlc.org.au/reports/protest-peril/)). That excludes regulations, council by-laws, police policy and policing practice.
 
 Liberal and Labor governments have both done it. Governments discover a touching commitment to civil liberties shortly after losing office.
 
 ## From arresting conduct to mapping movements
 
-I met Scott Parkin through Greenpeace. In 2005, he was detained and removed from Australia after an adverse ASIO security assessment. The [Inspector-General of Intelligence and Security investigated complaints](https://www.igis.gov.au/inquiries/parkin-inquiry) that this was wrong because Parkin advocated peaceful civil disobedience. His case warned that the boundary between dissent and national security was not self-policing.
-
-That boundary matters even more now.
+I met Scott Parkin through Greenpeace. In 2005, he was detained and removed from Australia after an adverse ASIO security assessment. The Inspector-General of Intelligence and Security investigated complaints that this was wrong because Parkin advocated peaceful civil disobedience ([Parkin inquiry](https://www.igis.gov.au/inquiries/parkin-inquiry)). His case warned that the boundary between dissent and national security was not self-policing.
 
 The old model was legible: commit an offence, risk arrest. The newer model moves upstream. Police predict disruption, then search, exclude or move people on. Intelligence agencies map networks around suspected political violence.
 
-On 27 August 2026, a [new federal law](https://www.legislation.gov.au/C2026A00081/asmade/2026-08-26/text/original/epub/OEBPS/document_1/document_1.html) expanded adult questioning warrants to sabotage, politically motivated violence, promotion of communal violence and attacks on Australia's defence system, as well as espionage and foreign interference.
+On 27 August 2026, the [*Australian Security Intelligence Organisation Amendment Act (No. 2) 2026*](https://www.legislation.gov.au/C2026A00081/asmade) expanded adult questioning warrants to sabotage, politically motivated violence, promotion of communal violence, attacks on Australia's defence system and serious threats to territorial or border integrity, as well as espionage and foreign interference. The powers still sunset in 2029.
 
-This does **not** make peaceful protest an ASIO offence. The law still says lawful advocacy, protest and dissent cannot, by themselves, be treated as prejudicial to security.
+This does **not** make peaceful protest an ASIO offence. [Section 17A](https://www.legislation.gov.au/C2004A02123/latest/text) still says lawful advocacy, protest and dissent cannot, by themselves, be treated as prejudicial to security.
 
 But “by themselves” is carrying a great deal of democratic weight.
 
 One violent actor may create a pathway for an intelligence agency to examine a much larger movement. A person need not themselves be suspected of violence; they may be compelled because ASIO considers they hold information relevant to important intelligence about it.
 
-The danger is not that ASIO will arrest everyone at a march. It is that proximity, association and provocative politics gradually become proxies for violent intent inside systems the public cannot inspect.
+The danger is that proximity, association and provocative politics become proxies for violent intent inside systems the public cannot inspect.
 
 ## The right that exists after you win in court
 
