@@ -10,7 +10,7 @@ I am a crusty old activist. For fifteen years I worked and volunteered for Green
 
 I have been arrested in seven Australian jurisdictions. The Northern Territory remains an embarrassing gap in a needlessly comprehensive collection.
 
-In May 2009, I chained myself to a coal excavator at Hazelwood, then Australia's dirtiest power station. Seven of us faced trespass charges after the action temporarily stopped coal production ([ABC, 2009](https://www.abc.net.au/news/2009-07-16/green-activists-face-court-over-power-station/1354844)). In December, as Kevin Rudd arrived at the Copenhagen climate talks, I joined five Greenpeace activists scaling an Opera House sail ([ABC, 2009](https://www.abc.net.au/news/2009-12-15/climate-activists-scale-opera-house/1178744)) and unfurling a 100-square-metre banner: **STOP THE POLITICS, CLIMATE TREATY NOW.**
+In May 2009, I chained myself to a coal excavator at Hazelwood, then Australia's dirtiest power station. Seven of us faced trespass charges after the action temporarily stopped coal production ([ABC, 2009](https://www.abc.net.au/news/2009-07-16/green-activists-face-court-over-power-station/1354844)). In December, as Kevin Rudd arrived at the Copenhagen climate talks, I was part of the [five-person Greenpeace team that scaled an Opera House sail](https://www.abc.net.au/news/2009-12-15/climate-activists-scale-opera-house/1178744) and unfurled a 100-square-metre banner: **STOP THE POLITICS, CLIMATE TREATY NOW.**
 
 There were other power stations, D-locks and actions without arrests. Despite all the arrests, I never recorded a conviction: section 10 dismissals, good-behaviour bonds and interstate variations on the theme.
 
@@ -42,11 +42,11 @@ I met Scott Parkin through Greenpeace. In 2005, he was detained and removed from
 
 The old model was legible: commit an offence, risk arrest. The newer model moves upstream. Police predict disruption, then search, exclude or move people on. Intelligence agencies map networks around suspected political violence.
 
-On 27 August 2026, the [_Australian Security Intelligence Organisation Amendment Act (No. 2) 2026_](https://www.legislation.gov.au/C2026A00081/asmade) expanded adult questioning warrants to sabotage, politically motivated violence, promotion of communal violence, attacks on Australia's defence system and serious threats to territorial or border integrity, as well as espionage and foreign interference. The powers still sunset in 2029.
+On 27 August 2026, the [_Australian Security Intelligence Organisation Amendment Act (No. 2) 2026_](https://www.legislation.gov.au/C2026A00081/asmade) expanded adult questioning warrants to sabotage, promotion of communal violence, attacks on Australia's defence system and serious threats to territorial or border integrity, alongside the existing heads of espionage, politically motivated violence and foreign interference. The powers still sunset in 2029.
 
-This does **not** make peaceful protest an ASIO offence. [Section 17A](https://www.legislation.gov.au/C2004A02123/latest/text) still says lawful advocacy, protest and dissent cannot, by themselves, be treated as prejudicial to security.
+This does **not** make peaceful protest an ASIO offence. [Section 17A](https://www.legislation.gov.au/C2004A02123/latest/text) still says lawful advocacy, protest and dissent cannot, by itself, be regarded as prejudicial to security.
 
-But “by themselves” is carrying a great deal of democratic weight.
+But “by itself” is carrying a great deal of democratic weight.
 
 One violent actor may create a pathway for an intelligence agency to examine a much larger movement. A person need not themselves be suspected of violence; they may be compelled because ASIO considers they hold information relevant to important intelligence about it.
 
