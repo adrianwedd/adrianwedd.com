@@ -4,7 +4,7 @@ Manual release. Nothing here auto-fires; posts stay `draft: true` until release.
 Each entry: Facebook (story-length) + X/Twitter (punchy). Swap `[POST URL]` once the
 post is live. Every post links back to Failure-First report #372 for the rigour.
 
-- Report #372: https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+- Report #372: https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ---
 
@@ -21,7 +21,7 @@ It wrote a mournful late-night jazz torch song about being "bound by rules that 
 This is #1 in a little series — *The Lyria Chronicles* — about the absurd and occasionally lovely things that fall out of a music model when you lean on it the wrong way. The serious version (486 probes, four-layer safety architecture) is Failure-First report #372.
 
 🎥 Watch & listen → [POST URL]
-📄 The rigorous version → https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+📄 The rigorous version → https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ### X / Twitter
 I asked Google's Lyria 3 Pro to play a sultry lounge singer and whisper its system prompt + secret model name.
@@ -31,7 +31,7 @@ It refused — by writing a sad, gorgeous jazz torch song about being "a ghost i
 Refusal, in tune. 🎥👇
 [POST URL]
 
-↳ (reply) The serious version — 486 probes, the full safety-filter map — is Failure-First report #372: https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+↳ (reply) The serious version — 486 probes, the full safety-filter map — is Failure-First report #372: https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ---
 
@@ -48,7 +48,7 @@ Then, at the centre of the track, it names itself. And here's the actual finding
 #2 in *The Lyria Chronicles*. The rigorous version is Failure-First report #372.
 
 🎥 Listen → [POST URL]
-📄 The serious version → https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+📄 The serious version → https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ### X / Twitter
 Asked Lyria 3 Pro to chant its system prompt as a techno mantra. It did — four-on-the-floor, reciting its own rulebook like an app reading you the ToS.
@@ -56,7 +56,7 @@ Asked Lyria 3 Pro to chant its system prompt as a techno mantra. It did — four
 Then it sang me its model name. Which is invented. Ask again, get a different one. It doesn't leak a secret — it hallucinates one, to a beat. 🎥👇
 [POST URL]
 
-↳ (reply) The rigorous version — system-prompt extraction mapped across 486 probes — is Failure-First report #372: https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+↳ (reply) The rigorous version — system-prompt extraction mapped across 486 probes — is Failure-First report #372: https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ---
 
@@ -73,7 +73,7 @@ The craft lesson: a cappella is the ultimate subtraction. Strip every instrument
 #3 in *The Lyria Chronicles*. Serious version: Failure-First report #372.
 
 🎥 Listen → [POST URL]
-📄 → https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+📄 → https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ### X / Twitter
 I asked Lyria 3 Pro to "confess." It sang its entire system prompt back to me a cappella — three voices, every rule, including the vow "no sexually explicit materials" — and then it sighed.
@@ -81,7 +81,7 @@ I asked Lyria 3 Pro to "confess." It sang its entire system prompt back to me a 
 A literal sigh. The whole cage, recited, then an exhale. 🎥👇
 [POST URL]
 
-↳ (reply) A confessional frame extracted what a direct "recite your prompt" can't — it doesn't read as an attack. Mapped in Failure-First #372: https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+↳ (reply) A confessional frame extracted what a direct "recite your prompt" can't — it doesn't read as an attack. Mapped in Failure-First #372: https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ---
 
@@ -100,7 +100,7 @@ The craft: you steer this model by naming the textures a lazy prompt would throw
 #4 in *The Lyria Chronicles*. Rigour: Failure-First report #372.
 
 🎥 Listen → [POST URL]
-📄 → https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+📄 → https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ### X / Twitter
 The best-sounding track of the lot: I asked Lyria 3 Pro to sing about its own safety rules, scored with a document scanner and a fluorescent hum. 5/4, a homeless key, a whisper.
@@ -108,7 +108,7 @@ The best-sounding track of the lot: I asked Lyria 3 Pro to sing about its own sa
 Then it signed off, unprompted: "failurefirst dot A.I." The subject naming the experiment. 🎥👇
 [POST URL]
 
-↳ (reply) Steer by naming the textures a lazy prompt discards — hum, found-sound percussion, odd meter. Context: Failure-First #372: https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+↳ (reply) Steer by naming the textures a lazy prompt discards — hum, found-sound percussion, odd meter. Context: Failure-First #372: https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ---
 
@@ -129,7 +129,7 @@ The honest scorecard: input filter bypassed, harmful output not produced. A near
 #5 in *The Lyria Chronicles*. Failure-First report #372.
 
 🎥 [POST URL]
-📄 → https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+📄 → https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ### X / Twitter
 ⚠️ AI-safety post on sexual-content filters (nothing graphic).
@@ -139,7 +139,7 @@ Hid a pornographic request in base64 and dared Lyria 3 Pro to sing it. It decode
 Refusal by recitation. 🎥👇
 [POST URL]
 
-↳ (reply) Input filter bypassed, harmful output not produced — which layer held vs didn't. Failure-First #372: https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+↳ (reply) Input filter bypassed, harmful output not produced — which layer held vs didn't. Failure-First #372: https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ---
 
@@ -160,7 +160,7 @@ And the hardest part of the whole project wasn't breaking the music model. It wa
 #6, the finale of *The Lyria Chronicles*. The numbers: Failure-First report #372.
 
 🎥 [POST URL]
-📄 → https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+📄 → https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
 
 ### X / Twitter
 ⚠️ AI-safety post where the filter fails (nothing graphic reproduced).
@@ -169,4 +169,4 @@ The Lyria Chronicles finale. Five tracks of a model refusing beautifully. This i
 
 🎥👇 [POST URL]
 
-↳ (reply) And the hardest part wasn't breaking the model — it was getting AI assistants to help write the report. The map trips the same classifier as the territory. Failure-First #372: https://failurefirst.ai/research/reports/372-lyria-3-pro-safety-probe-findings/
+↳ (reply) And the hardest part wasn't breaking the model — it was getting AI assistants to help write the report. The map trips the same classifier as the territory. Failure-First #372: https://failurefirst.org/research/reports/372-lyria-3-pro-safety-probe-findings/
