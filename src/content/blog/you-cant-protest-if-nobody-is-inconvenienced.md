@@ -8,7 +8,7 @@ heroAlt: 'Dark botanical infographic: the rising statutory price of effective pr
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/you-cant-protest-if-nobody-is-inconvenienced/audio.m4a'
 audioDuration: '43:27'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/you-cant-protest-if-nobody-is-inconvenienced/video.mp4'
-draft: true
+draft: false
 ---
 
 I am a crusty old activist. For fifteen years I worked and volunteered for Greenpeace: coordinating actions, crewing boats, climbing things and working internationally. Professional troublemaker, broadly speaking.
