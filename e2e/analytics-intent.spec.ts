@@ -25,6 +25,7 @@ async function events(page: Page): Promise<AnalyticsEvent[]> {
 test('@smoke UTM attribution survives an internal View Transition', async ({ page }) => {
   await enableAnalytics(page);
   await page.goto('/?utm_source=facebook&utm_medium=social&utm_campaign=measurement_test&aw_traffic=ci');
+  const origin = new URL(page.url()).origin;
 
   const landing = (await events(page)).find((event) => event.name === 'page_view');
   expect(landing?.parameters).toMatchObject({
@@ -32,6 +33,7 @@ test('@smoke UTM attribution survives an internal View Transition', async ({ pag
     utm_medium: 'social',
     utm_campaign: 'measurement_test',
     traffic_type: 'ci',
+    page_location: `${origin}/`,
     page_path: '/',
   });
 
@@ -63,6 +65,7 @@ test('@smoke high-intent and outbound events fire once without query leakage', a
     link_path: '/',
   });
   expect(JSON.stringify(captured.find((event) => event.name === 'outbound_click'))).not.toContain('private-value');
+  expect(captured.every((event) => !String(event.parameters.page_location || '').includes('?'))).toBe(true);
 
   await page.goto('/contact/');
   await page.evaluate(() => {
