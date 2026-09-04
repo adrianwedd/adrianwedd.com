@@ -36,7 +36,12 @@ jobs:
       - name: Validate content
         run: node scripts/validate-content.js
       - name: Audit dependencies
-        run: npm audit --audit-level=high --omit=dev
+        # npm ≤10 submits the tree to the registry's /audits/quick endpoint,
+        # which is being retired: since 2026-09-04 it 400s ("Invalid package
+        # tree") on GitHub runners for this lockfile while smaller trees still
+        # pass. npm ≥11 uses the replacement bulk advisory endpoint, so run
+        # the audit with an npm 11 without changing the Node/npm that builds.
+        run: npx -y npm@11 audit --audit-level=high --omit=dev
       # Runs on PRs too. public/api/analytics.json is gitignored, so skipping this
       # left PR builds with no file at all and an analytics page that 404s on
       # fetch. Without secrets the script writes mock data flagged `_mock: true`,
@@ -134,7 +139,8 @@ jobs:
       - name: Type check worker
         run: cd worker && npx tsc --noEmit
       - name: Audit worker dependencies
-        run: cd worker && npm audit --audit-level=high --omit=dev
+        # npm ≥11 for the bulk advisory endpoint — see the root Audit dependencies step.
+        run: cd worker && npx -y npm@11 audit --audit-level=high --omit=dev
       # External link check is network-flaky/slow and its value is pre-deploy,
       # not pre-merge — keep it push-only so PRs stay fast and deterministic.
       # (check:links below still covers same-origin links on every PR.)
@@ -204,7 +210,8 @@ jobs:
       - name: Type check worker CSP
         run: cd worker-csp && npx tsc --noEmit
       - name: Audit worker CSP dependencies
-        run: cd worker-csp && npm audit --audit-level=high --omit=dev
+        # npm ≥11 for the bulk advisory endpoint — see the root Audit dependencies step.
+        run: cd worker-csp && npx -y npm@11 audit --audit-level=high --omit=dev
 
   deploy:
     needs: [build, worker-csp]
