@@ -66,6 +66,10 @@ const imageHeight = imageDimensions?.height ?? 900;
 // OG image: swap .webp -> .jpg for scraper compatibility.
 const ogImage = ogSafeImage(image.src);
 const ogDimensions = getImageDimensions(ogImage);
+
+// Astro 7 scopes the Astro global to the frontmatter; capture what the
+// template's JSON-LD needs.
+const site = Astro.site;
 ---
 
 <BaseLayout
@@ -86,12 +90,12 @@ const ogDimensions = getImageDimensions(ogImage);
       '@context': 'https://schema.org',
       '@type': 'ImageObject',
       name: image.alt,
-      contentUrl: new URL(image.src, Astro.site).href,
+      contentUrl: new URL(image.src, site).href,
       ...(image.caption ? { caption: image.caption } : {}),
       isPartOf: {
         '@type': 'ImageGallery',
         name: gallery.data.title,
-        url: new URL(`/gallery/${collectionSlug}/`, Astro.site).href,
+        url: new URL(`/gallery/${collectionSlug}/`, site).href,
       },
       author: {
         '@type': 'Person',

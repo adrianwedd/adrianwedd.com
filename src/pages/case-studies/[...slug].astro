@@ -22,6 +22,11 @@ const { caseStudy } = Astro.props;
 const { Content } = await render(caseStudy);
 const caseStudySlug = slug(caseStudy.id);
 const ogImage = `/og/case-studies/${caseStudySlug}.png`;
+
+// Astro 7 scopes the Astro global to the frontmatter; capture what the
+// template's JSON-LD needs.
+const site = Astro.site;
+const pathname = Astro.url.pathname;
 ---
 
 <BaseLayout
@@ -41,8 +46,8 @@ const ogImage = `/og/case-studies/${caseStudySlug}.png`;
       '@type': 'Article',
       headline: caseStudy.data.title,
       description: caseStudy.data.description,
-      url: new URL(Astro.url.pathname, Astro.site).href,
-      image: new URL(ogImage, Astro.site).href,
+      url: new URL(pathname, site).href,
+      image: new URL(ogImage, site).href,
       datePublished: caseStudy.data.date.toISOString(),
       keywords: caseStudy.data.tags,
       author: {
@@ -56,7 +61,7 @@ const ogImage = `/og/case-studies/${caseStudySlug}.png`;
         url: 'https://adrianwedd.com',
         logo: { '@type': 'ImageObject', url: 'https://adrianwedd.com/favicon.svg' },
       },
-      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(Astro.url.pathname, Astro.site).href },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(pathname, site).href },
     })}
   />
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>

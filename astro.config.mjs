@@ -58,6 +58,10 @@ function getSitemapMeta(pathname) {
 export default defineConfig({
   site: 'https://adrianwedd.com',
   trailingSlash: 'always',
+  // Astro 7 changed the compressHTML default from `true` to `'jsx'`, which
+  // collapses whitespace inside inline elements (e.g. <a>… <code></a> losing
+  // its trailing space). Keep the Astro 6 behaviour.
+  compressHTML: true,
   integrations: [
     mdx(),
     sitemap({
