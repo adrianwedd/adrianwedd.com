@@ -3,9 +3,10 @@
 // Only loads after user grants analytics consent.
 //
 // Custom events:
-//   Content: project_click, gallery_view, audio_play, audio_progress
-//   Engagement: scroll_depth, reading_time, outbound_click, copy_text
-//   Navigation: internal_nav, tag_filter, theme_switch
+//   Intent: contact_intent, booking_intent, enquiry_submit, booking_complete
+//   Journey: cv_view, high_intent_transition, project_outbound_click, file_download
+//   Engagement: article_engaged, scroll_depth, engaged_time, audio_play, audio_progress
+//   Utility: gallery_view, tag_filter, theme_switch, copy_text
 //   Performance: page_timing
 //
 // Custom dimensions:
@@ -14,7 +15,11 @@
 
 <script>
   const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '';
+  const DEPLOYMENT_TRAFFIC_TYPE = import.meta.env.PUBLIC_ANALYTICS_TRAFFIC_TYPE || 'unclassified';
   const LI_PARTNER_ID = '8890876';
+  const ATTRIBUTION_KEY = 'adrianwedd_attribution';
+  const TRAFFIC_KEY = 'adrianwedd_traffic_type';
+  const CAMPAIGN_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'] as const;
 
   // advertising is optional: consents stored before the category existed lack it —
   // treat missing as false (no ad scripts) rather than re-prompting.
@@ -32,6 +37,87 @@
   function gtag(...args: any[]) {
     (window as any).dataLayer = (window as any).dataLayer || [];
     (window as any).dataLayer.push(arguments);
+  }
+
+  type Attribution = Partial<Record<(typeof CAMPAIGN_FIELDS)[number], string>>;
+
+  function cleanValue(value: string | null, max = 100): string {
+    return (value || '')
+      .replace(/[^a-zA-Z0-9._~ -]/g, '')
+      .trim()
+      .slice(0, max);
+  }
+
+  function safeLocation(raw: string): { domain: string; path: string } {
+    try {
+      const url = new URL(raw, window.location.origin);
+      return { domain: url.hostname.toLowerCase(), path: url.pathname.slice(0, 200) };
+    } catch {
+      return { domain: 'unknown', path: '' };
+    }
+  }
+
+  function captureAttribution(): Attribution {
+    let stored: Attribution = {};
+    try {
+      stored = JSON.parse(sessionStorage.getItem(ATTRIBUTION_KEY) || '{}');
+      const params = new URLSearchParams(window.location.search);
+      const incoming: Attribution = {};
+      for (const field of CAMPAIGN_FIELDS) {
+        const value = cleanValue(params.get(field));
+        if (value) incoming[field] = value;
+      }
+      if (Object.keys(incoming).length) {
+        stored = incoming;
+        sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(stored));
+      }
+
+      const marker = cleanValue(params.get('aw_traffic'), 30);
+      if (['internal', 'ci', 'preview', 'monitor'].includes(marker)) sessionStorage.setItem(TRAFFIC_KEY, marker);
+    } catch {
+      // Storage may be unavailable. GA still works without custom attribution.
+    }
+    return stored;
+  }
+
+  function decorateCvLinks() {
+    const attribution = captureAttribution();
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[href*="cv.adrianwedd.com"], a[href*="adrianwedd.github.io/cv"]')
+      .forEach((link) => {
+        try {
+          const url = new URL(link.href);
+          for (const field of CAMPAIGN_FIELDS) {
+            if (attribution[field]) url.searchParams.set(field, attribution[field] as string);
+          }
+          const type = trafficType();
+          if (type !== 'unclassified') url.searchParams.set('aw_traffic', type);
+          link.href = url.toString();
+        } catch {
+          // Keep the original link intact.
+        }
+      });
+  }
+
+  function trafficType(): string {
+    try {
+      return sessionStorage.getItem(TRAFFIC_KEY) || cleanValue(DEPLOYMENT_TRAFFIC_TYPE, 30) || 'unclassified';
+    } catch {
+      return cleanValue(DEPLOYMENT_TRAFFIC_TYPE, 30) || 'unclassified';
+    }
+  }
+
+  function track(name: string, parameters: Record<string, unknown> = {}) {
+    try {
+      gtag('event', name, {
+        ...captureAttribution(),
+        traffic_type: trafficType(),
+        page_path: window.location.pathname,
+        ...parameters,
+      });
+    } catch {
+      // Measurement must never interfere with navigation or site behaviour.
+    }
   }
 
   function loadLinkedInInsight() {
@@ -85,6 +171,7 @@
 
     // Send enriched page view
     sendPageView();
+    decorateCvLinks();
 
     // Document/window-level listeners (sentinel-guarded, registered once)
     trackScrollDepth();
@@ -97,6 +184,7 @@
     // Content/navigation trackers — delegated on document, registered once (VT-safe)
     trackContentClicks();
     trackAudioPlayback();
+    trackCompletionEvents();
   }
 
   // --- Environment helpers ---
@@ -129,7 +217,7 @@
     const screen = classifyScreen();
     const connection = getConnectionType();
 
-    gtag('event', 'page_view', {
+    track('page_view', {
       page_path: path,
       page_title: document.title,
       content_type: contentType,
@@ -157,6 +245,8 @@
     if (path.startsWith('/gallery/')) return 'gallery';
     if (path === '/audio/' || path === '/audio') return 'audio_index';
     if (path.startsWith('/audio/')) return 'audio';
+    if (path === '/services/' || path === '/services') return 'services';
+    if (path === '/contact/' || path === '/contact') return 'contact';
     if (path.startsWith('/about')) return 'about';
     return 'other';
   }
@@ -192,6 +282,22 @@
   // Registered once on window (sentinel-guarded). Resets milestones per page via trackScrollDepthReset().
 
   let scrollTracked = new Set<number>();
+  let maxScrollDepth = 0;
+  let articleEngagedSent = false;
+
+  function maybeTrackArticleEngaged() {
+    const contentType = getContentType(window.location.pathname);
+    const seconds = (window as any).__readingMax || 0;
+    if (
+      !articleEngagedSent &&
+      ['blog_post', 'project'].includes(contentType) &&
+      maxScrollDepth >= 75 &&
+      seconds >= 60
+    ) {
+      articleEngagedSent = true;
+      track('article_engaged', { content_type: contentType, depth: maxScrollDepth, seconds });
+    }
+  }
 
   function trackScrollDepth() {
     const root = document.documentElement;
@@ -206,15 +312,17 @@
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         if (docHeight <= 0) return;
         const pct = Math.round((window.scrollY / docHeight) * 100);
+        maxScrollDepth = Math.max(maxScrollDepth, Math.min(pct, 100));
         for (const m of milestones) {
           if (pct >= m && !scrollTracked.has(m)) {
             scrollTracked.add(m);
-            gtag('event', 'scroll_depth', {
+            track('scroll_depth', {
               depth: m,
               content_type: getContentType(window.location.pathname),
             });
           }
         }
+        maybeTrackArticleEngaged();
       },
       { passive: true },
     );
@@ -222,6 +330,8 @@
 
   function trackScrollDepthReset() {
     scrollTracked = new Set<number>();
+    maxScrollDepth = 0;
+    articleEngagedSent = false;
   }
 
   // --- Reading time ---
@@ -252,6 +362,7 @@
     readingInterval = setInterval(() => {
       const elapsed = Math.round((Date.now() - start) / 1000);
       if (elapsed > ((window as any).__readingMax || 0)) (window as any).__readingMax = elapsed;
+      maybeTrackArticleEngaged();
     }, 1000);
   }
 
@@ -260,8 +371,8 @@
     readingInterval = null;
     const max = (window as any).__readingMax || 0;
     const contentType = (window as any).__readingType || '';
-    if (max >= 5) {
-      gtag('event', 'reading_time', {
+    if (max >= 60) {
+      track('engaged_time', {
         seconds: max,
         content_type: contentType,
         page_path: window.location.pathname,
@@ -289,10 +400,10 @@
       try {
         const url = new URL(link.href);
         if (url.hostname !== window.location.hostname) {
-          gtag('event', 'outbound_click', {
-            link_url: link.href,
-            link_text: link.textContent?.trim().slice(0, 100) || '',
-            link_domain: url.hostname,
+          const destination = safeLocation(link.href);
+          track('outbound_click', {
+            link_path: destination.path,
+            link_domain: destination.domain,
           });
         }
       } catch {
@@ -310,7 +421,7 @@
     root.dataset.copyInit = '1';
 
     document.addEventListener('copy', () => {
-      gtag('event', 'copy_text', {
+      track('copy_text', {
         page_path: window.location.pathname,
         content_type: getContentType(window.location.pathname),
       });
@@ -332,20 +443,70 @@
 
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
+      const link = target.closest('a[href]') as HTMLAnchorElement | null;
+
+      if (link) {
+        const href = link.getAttribute('href') || '';
+        const destination = safeLocation(link.href);
+        const contentType = getContentType(window.location.pathname);
+        const fromContent = ['blog_post', 'project'].includes(contentType);
+
+        if (href.startsWith('mailto:')) {
+          track('contact_intent', { contact_method: 'email', source_content_type: contentType });
+        } else if (href.startsWith('tel:')) {
+          track('contact_intent', { contact_method: 'phone', source_content_type: contentType });
+        } else if (href === '#booking-widget' || href.endsWith('/contact/#booking-widget')) {
+          track('booking_intent', { source_content_type: contentType });
+        }
+
+        if (destination.domain === 'cv.adrianwedd.com' || destination.domain === 'adrianwedd.github.io') {
+          track('cv_view', { destination_domain: destination.domain });
+        }
+
+        if (
+          (destination.path === '/services/' || destination.path === '/contact/') &&
+          (fromContent || contentType === 'other')
+        ) {
+          track('high_intent_transition', {
+            from_content_type: contentType,
+            destination_path: destination.path,
+          });
+        }
+
+        if (href.toLowerCase().endsWith('.pdf') || link.hasAttribute('download')) {
+          track('file_download', {
+            file_path: destination.path,
+            file_type: destination.path.split('.').pop() || 'unknown',
+          });
+        }
+
+        if (
+          destination.domain !== window.location.hostname &&
+          ['blog_post', 'project'].includes(contentType) &&
+          !href.startsWith('mailto:') &&
+          !href.startsWith('tel:')
+        ) {
+          track('project_outbound_click', {
+            destination_domain: destination.domain,
+            destination_path: destination.path,
+            source_content_type: contentType,
+          });
+        }
+      }
 
       // Project clicks
       const projectLink = target.closest('a[href*="/projects/"]') as HTMLAnchorElement | null;
       if (projectLink) {
-        gtag('event', 'project_click', {
+        track('project_click', {
           project_name: projectLink.textContent?.trim() || 'unknown',
-          link_url: projectLink.href,
+          link_path: safeLocation(projectLink.href).path,
         });
       }
 
       // Gallery views
       const galleryTrigger = target.closest('.gallery-trigger') as HTMLElement | null;
       if (galleryTrigger) {
-        gtag('event', 'gallery_view', {
+        track('gallery_view', {
           image_index: galleryTrigger.dataset.index,
           collection: window.location.pathname,
         });
@@ -354,7 +515,7 @@
       // Tag filters
       const tagEl = target.closest('[data-tag]') as HTMLElement | null;
       if (tagEl) {
-        gtag('event', 'tag_filter', {
+        track('tag_filter', {
           tag: tagEl.dataset.tag,
           page_path: window.location.pathname,
         });
@@ -364,7 +525,7 @@
       if (target.closest('.theme-toggle')) {
         setTimeout(() => {
           const theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
-          gtag('event', 'theme_switch', { theme });
+          track('theme_switch', { theme });
         }, 50);
       }
     });
@@ -389,9 +550,8 @@
         const el = e.target as HTMLAudioElement;
         if (el.tagName !== 'AUDIO' || started.has(el)) return;
         started.add(el);
-        gtag('event', 'audio_play', {
-          audio_src: el.src,
-          page_path: window.location.pathname,
+        track('audio_play', {
+          audio_path: safeLocation(el.src).path,
         });
       },
       true,
@@ -411,8 +571,8 @@
         for (const m of [25, 50, 75, 100]) {
           if (pct >= m && !set.has(m)) {
             set.add(m);
-            gtag('event', 'audio_progress', {
-              audio_src: el.src,
+            track('audio_progress', {
+              audio_path: safeLocation(el.src).path,
               progress: m,
             });
           }
@@ -437,7 +597,7 @@
         const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
         if (!nav) return;
 
-        gtag('event', 'page_timing', {
+        track('page_timing', {
           dns_ms: Math.round(nav.domainLookupEnd - nav.domainLookupStart),
           tcp_ms: Math.round(nav.connectEnd - nav.connectStart),
           ttfb_ms: Math.round(nav.responseStart - nav.requestStart),
@@ -448,6 +608,17 @@
         });
       }, 100);
     });
+  }
+
+  // Contact scripts emit these only after their APIs confirm success. Keeping
+  // analytics out of those workflows means a blocked/broken tracker cannot
+  // affect submission or booking behaviour.
+  function trackCompletionEvents() {
+    const root = document.documentElement;
+    if (root.dataset.analyticsCompletionInit) return;
+    root.dataset.analyticsCompletionInit = '1';
+    document.addEventListener('analytics:enquiry-success', () => track('enquiry_submit'));
+    document.addEventListener('analytics:booking-success', () => track('booking_complete'));
   }
 
   // --- Init ---
@@ -487,6 +658,7 @@
 
         // Send new page view
         sendPageView();
+        decorateCvLinks();
 
         // Content/audio trackers are document-delegated and sentinel-guarded
         // (registered once in loadGA4) — no per-element re-binding needed here.
