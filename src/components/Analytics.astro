@@ -112,6 +112,7 @@
       gtag('event', name, {
         ...captureAttribution(),
         traffic_type: trafficType(),
+        page_location: `${window.location.origin}${window.location.pathname}`,
         page_path: window.location.pathname,
         ...parameters,
       });
