@@ -717,6 +717,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             if (stepConfirm) stepConfirm.classList.remove('hidden');
             if (confirmDetail)
               confirmDetail.textContent = name + ' \u00b7 ' + (formSlotLabel ? formSlotLabel.textContent : '');
+            document.dispatchEvent(new CustomEvent('analytics:booking-success'));
           })
           .catch(function () {
             if (formError) {
@@ -874,6 +875,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             return res.json();
           })
           .then(function (data) {
+            document.dispatchEvent(new CustomEvent('analytics:enquiry-success'));
             // Store write_token for reply capability
             if (data.write_token) {
               try {

@@ -34,6 +34,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         until you clear your browser data.
       </p>
       <p class="text-text-muted">
+        If you enable analytics, this site also keeps campaign labels from explicitly UTM-tagged links and a coarse
+        internal/test traffic label in <strong>sessionStorage</strong>. These last only for the browser session and help
+        distinguish known tests from unclassified visits. Link destinations sent to analytics contain only a hostname
+        and path — never query strings, link text, email addresses, or form contents.
+      </p>
+      <p class="text-text-muted">
         The consent banner also sets one first-party cookie (<code>consent</code>, 1-year expiry) recording which
         categories you enabled. If you grant consent, GA4 (analytics) and AdSense/LinkedIn (advertising) set their own
         third-party cookies.
