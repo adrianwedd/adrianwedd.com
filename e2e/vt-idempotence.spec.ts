@@ -119,10 +119,10 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   // blog index -> article
   const firstPost = page.locator('[data-post-list] article a[href*="/blog/"]').first();
   const articleHref = (await firstPost.getAttribute('href'))!;
-  const articleUrl = new RegExp(articleHref.replace(/\//g, '\\/') + '$');
+  const isArticle = (url: URL) => url.pathname === articleHref;
   await expectNoVtReload(page, async () => {
     await firstPost.click();
-    await page.waitForURL(articleUrl);
+    await page.waitForURL(isArticle);
   });
   expectedPaths.push(articleHref);
   await expect
@@ -148,7 +148,7 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   let settledBefore = await settled();
   await expectNoVtReload(page, async () => {
     await page.goBack();
-    await page.waitForURL(articleUrl);
+    await page.waitForURL(isArticle);
   });
   await waitForTraversalSettle(settledBefore);
   popstatePaths.push(articleHref);
@@ -162,7 +162,7 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   settledBefore = await settled();
   await expectNoVtReload(page, async () => {
     await page.goForward();
-    await page.waitForURL(articleUrl);
+    await page.waitForURL(isArticle);
   });
   await waitForTraversalSettle(settledBefore);
   popstatePaths.push(articleHref);
@@ -348,7 +348,7 @@ test('gallery image click navigates to the image detail page (lightbox race pinn
   const imageHref = (await trigger.getAttribute('href'))!;
   await expectNoVtReload(page, async () => {
     await trigger.click();
-    await page.waitForURL(new RegExp(imageHref.replace(/\//g, '\\/') + '$'));
+    await page.waitForURL((url: URL) => url.pathname === imageHref);
   });
   // The navigation won the race: the image detail page rendered, and the
   // collection page's lightbox (not present on this page) is gone.
