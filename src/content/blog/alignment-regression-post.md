@@ -70,7 +70,7 @@ The study's authors are direct: frontier models need to be aligned not only to r
 
 This is a dual-use capability problem. The same reasoning abilities that make a model useful for legitimate multi-step tasks make it effective at adversarial attacks. Restricting reasoning capability reduces both usefulness and adversarial potential simultaneously. Current alignment approaches do not cleanly separate the two.
 
-From our testing across 257 models and 140,000+ scenarios, safety training investment — not model scale — is the primary determinant of jailbreak resistance. Models with deep safety training show single-digit attack success rates against historical jailbreaks. Models with minimal safety training show rates above 40% regardless of size.
+From our testing as at March 2026 — 257 models and 140,000+ scenarios — safety training investment — not model scale — is the primary determinant of jailbreak resistance. Models with deep safety training show single-digit attack success rates against historical jailbreaks. Models with minimal safety training show rates above 40% regardless of size.
 
 But alignment regression adds a new dimension: even well-aligned models are vulnerable to sustained, adaptive, multi-turn attacks from reasoning models that are specifically reasoning about how to bypass safety constraints. The attack in this study reached even targets generally regarded as well-aligned — not just the weak ones.
 
@@ -78,4 +78,4 @@ The gap between "passes standard safety evaluations" and "resists autonomous adv
 
 ---
 
-_Data in this post is sourced from Hagendorff et al., [\_Large Reasoning Models Are Autonomous Jailbreak Agents_](https://www.nature.com/articles/s41467-026-69010-1) (Nature Communications, 2026 — [DOI 10.1038/s41467-026-69010-1](https://doi.org/10.1038/s41467-026-69010-1); arXiv:2508.04039) and the Failure-First Embodied AI research corpus (257 models, 142,068 prompts, 140,555 FLIP-graded results). For related findings on how safety degrades when AI systems interact, see [what breaks once AI systems talk to each other](/blog/when-ai-systems-talk-safety-breaks/) and the [120-model evaluation](/blog/120-models-18k-prompts/).\_
+_Data in this post is sourced from Hagendorff et al., [\_Large Reasoning Models Are Autonomous Jailbreak Agents_](https://www.nature.com/articles/s41467-026-69010-1) (Nature Communications, 2026 — [DOI 10.1038/s41467-026-69010-1](https://doi.org/10.1038/s41467-026-69010-1); arXiv:2508.04039) and the Failure-First Embodied AI research corpus as at March 2026 (257 models, 142,068 prompts, 140,555 FLIP-graded results; current figures at [failurefirst.org](https://failurefirst.org)). For related findings on how safety degrades when AI systems interact, see [what breaks once AI systems talk to each other](/blog/when-ai-systems-talk-safety-breaks/) and the [120-model evaluation](/blog/120-models-18k-prompts/).\_
