@@ -36,3 +36,21 @@ export async function expectNoVtReload(page: Page, action: () => Promise<void>):
   expect(probe, 'window state should survive a VT swap (no hard reload)').toBe(42);
   expect(after, 'no new navigation entry — a VT swap, not a document nav').toBe(before);
 }
+
+// The header exposes two navigations: the desktop one inside <nav aria-label=
+// "Main navigation"> (hidden below the `md` breakpoint) and #mobile-nav-menu
+// behind the hamburger (hidden at and above it). At the Pixel 5 viewport the
+// nightly `mobile-chromium` project runs at, clicking a desktop nav link waits
+// 30s on a permanently hidden element — so route header navigation through
+// whichever control the current viewport actually exposes.
+export async function clickHeaderLink(page: Page, name: string): Promise<void> {
+  const desktop = page.getByLabel('Main navigation').getByRole('link', { name });
+  if (await desktop.isVisible()) {
+    await desktop.click();
+    return;
+  }
+  await page.locator('.mobile-menu-btn').click();
+  const menu = page.locator('#mobile-nav-menu');
+  await expect(menu).toBeVisible();
+  await menu.getByRole('link', { name }).click();
+}

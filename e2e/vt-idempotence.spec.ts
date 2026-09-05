@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { CONSENT_KEY, clearConsent, expectNoVtReload } from './fixtures';
+import { CONSENT_KEY, clearConsent, clickHeaderLink, expectNoVtReload } from './fixtures';
 
 // Adversarial View-Transitions + analytics verification. The @smoke specs
 // (vt-navigation, analytics-intent, consent, theme) prove each behaviour once;
@@ -67,7 +67,6 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   });
   await enableAnalytics(page);
   await page.goto('/?utm_source=journey&utm_medium=test&utm_campaign=vt_contract&aw_traffic=internal');
-  const nav = page.getByLabel('Main navigation');
 
   // Expected page_paths in order: hard load, then one per client-side
   // navigation (including the same-route one), then one per popstate.
@@ -87,7 +86,7 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
 
   // home -> projects index (VT)
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Projects' }).click();
+    await clickHeaderLink(page, 'Projects');
     await page.waitForURL('**/projects/');
   });
   expectedPaths.push('/projects/');
@@ -97,7 +96,7 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
 
   // projects -> blog index (VT)
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Blog' }).click();
+    await clickHeaderLink(page, 'Blog');
     await page.waitForURL('**/blog/');
   });
   expectedPaths.push('/blog/');
@@ -109,7 +108,7 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   // is still a navigation — exactly one more pageview, not two (duplicate
   // after-swap listener) and not zero (listener dropped by the swap).
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Blog' }).click();
+    await clickHeaderLink(page, 'Blog');
   });
   expectedPaths.push('/blog/');
   await expect
@@ -131,7 +130,7 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
 
   // article -> services
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Services' }).click();
+    await clickHeaderLink(page, 'Services');
     await page.waitForURL('**/services/');
   });
   expectedPaths.push('/services/');
@@ -214,13 +213,12 @@ test('back to /projects/ is a dead traversal — the filter script nulls history
   // updateURL) updates this expectation deliberately.
   await enableAnalytics(page);
   await page.goto('/');
-  const nav = page.getByLabel('Main navigation');
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Projects' }).click();
+    await clickHeaderLink(page, 'Projects');
     await page.waitForURL('**/projects/');
   });
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Blog' }).click();
+    await clickHeaderLink(page, 'Blog');
     await page.waitForURL('**/blog/');
   });
   const before = (await events(page)).filter((e) => e.name === 'page_view').length;
@@ -272,7 +270,7 @@ test('article_engaged cannot fire below the reading threshold and never double-f
   // The reading tracker is article-scoped: a deep scroll on a non-article
   // page must not produce one.
   await expectNoVtReload(page, async () => {
-    await page.getByLabel('Main navigation').getByRole('link', { name: 'About' }).click();
+    await clickHeaderLink(page, 'About');
     await page.waitForURL('**/about/');
   });
   await page.evaluate(() => {
@@ -295,7 +293,7 @@ test('consent rejection never tracks and the banner stays dismissed across swaps
   expect(await events(page)).toEqual([]);
 
   await expectNoVtReload(page, async () => {
-    await page.getByLabel('Main navigation').getByRole('link', { name: 'Blog' }).click();
+    await clickHeaderLink(page, 'Blog');
     await page.waitForURL('**/blog/');
   });
   // The stored choice survives the swap: no banner resurrection, no tracking.
@@ -304,11 +302,10 @@ test('consent rejection never tracks and the banner stays dismissed across swaps
 });
 
 test('Pagefind mounts exactly once and stays functional on its second VT visit', async ({ page }) => {
-  const nav = page.getByLabel('Main navigation');
   await page.goto('/');
 
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Search' }).click();
+    await clickHeaderLink(page, 'Search');
     await page.waitForURL('**/search/');
   });
   const input = page.locator('.pagefind-ui__search-input');
@@ -320,11 +317,11 @@ test('Pagefind mounts exactly once and stays functional on its second VT visit',
   // double-mounting. An over-guarded sentinel leaves a dead input; an
   // under-guarded one mounts a second Pagefind root.
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Blog' }).click();
+    await clickHeaderLink(page, 'Blog');
     await page.waitForURL('**/blog/');
   });
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Search' }).click();
+    await clickHeaderLink(page, 'Search');
     await page.waitForURL('**/search/');
   });
   expect(await page.locator('#search .pagefind-ui').count()).toBe(1);
@@ -391,10 +388,9 @@ test('long mixed journey hydrates islands without console errors', async ({ page
   });
   page.on('pageerror', (err) => errors.push(String(err)));
 
-  const nav = page.getByLabel('Main navigation');
   await page.goto('/');
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Blog' }).click();
+    await clickHeaderLink(page, 'Blog');
     await page.waitForURL('**/blog/');
   });
   await expectNoVtReload(page, async () => {
@@ -402,7 +398,7 @@ test('long mixed journey hydrates islands without console errors', async ({ page
     await page.waitForURL(/\/blog\/[^/]+\/$/);
   });
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Projects' }).click();
+    await clickHeaderLink(page, 'Projects');
     await page.waitForURL('**/projects/');
   });
   await expectNoVtReload(page, async () => {
@@ -415,7 +411,7 @@ test('long mixed journey hydrates islands without console errors', async ({ page
   await page.waitForURL(/\/audio\/[^/]+\/$/);
   await expect(page.getByRole('button', { name: /play/i }).first()).toBeVisible();
   await expectNoVtReload(page, async () => {
-    await nav.getByRole('link', { name: 'Search' }).click();
+    await clickHeaderLink(page, 'Search');
     await page.waitForURL('**/search/');
   });
 
