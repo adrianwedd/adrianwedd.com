@@ -9,8 +9,9 @@ test('@smoke theme toggle persists across VT swap and reload', async ({ page }) 
     localStorage.setItem('theme', 'dark');
     document.documentElement.classList.remove('light');
   });
-  // ThemeToggle renders in both the desktop nav and the mobile bar; only one is
-  // visible at a given viewport, and the hidden one comes first in DOM order.
+  // ThemeToggle renders in both the desktop nav and the mobile bar; the
+  // desktop-nav one comes first in DOM order, so at mobile viewports a bare
+  // .first() resolves to the hidden desktop toggle. Always resolve via :visible.
   await page.locator('.theme-toggle:visible').first().click();
   await expect(page.locator('html')).toHaveClass(/light/);
   expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('light');

@@ -35,6 +35,8 @@ test('@smoke VT navigation preserves window + theme, no full reload', async ({ p
   });
   await expect(page.locator('html')).toHaveClass(/light/);
   // Delegated theme-toggle listener survived the swaps (not duplicated/dead):
-  await page.locator('.theme-toggle').first().click();
+  // the desktop-nav toggle comes first in DOM order and is hidden at mobile
+  // viewports, so resolve through :visible like theme.spec.ts does.
+  await page.locator('.theme-toggle:visible').first().click();
   await expect(page.locator('html')).not.toHaveClass(/light/);
 });
