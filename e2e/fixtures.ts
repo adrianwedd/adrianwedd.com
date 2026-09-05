@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 
 // Verified hardcoded across ConsentBanner.astro, Analytics.astro:23,
 // Transparency.tsx:11, Personalisation.tsx, 404.astro. Do not scrape source.
@@ -62,25 +62,58 @@ export async function clickHeaderLink(page: Page, name: string): Promise<void> {
   await menu.getByRole('link', { name }).click();
 }
 
-// Chromium's mobile emulation (Pixel 5) hit-tests synthetic MOUSE events
-// against a visual viewport that can diverge from the rendered scroll state
-// for the full retry window: a card below a min-h-[100dvh] hero is reported
-// "visible, enabled and stable", the scroll succeeds, and the click still
-// resolves to the hero at a stale offset. This kept audio-player.spec red on
-// the nightly mobile project — twice red on CI with 30s of Playwright's own
-// internal retries (run 33939494950), so it is not a settle race a longer
-// wait can close (see #662; it failed identically on Astro 6, 2026-09-04
-// nightly). Touch dispatch takes a different input path than the synthetic
-// mouse events the emulated context mishandles, and it is what a real mobile
-// user produces anyway — so touch contexts tap, mouse-only contexts (the
-// desktop chromium project) click. Actionability is not weakened: the element
-// must still be visible, enabled, and the real hit target for the tap to land.
+// Two distinct failure modes shape this helper; each fix breaks the other, so
+// it tries the strict form first and escalates only on its bounded failure.
+//
+// 1. Post-VT-swap clicks need actionability ON. After a swap the
+//    ::view-transition overlay is still up for a few hundred ms; a forced tap
+//    dispatches into it and the click is simply lost (probe shows a healthy
+//    main thread — correct rect, elementFromPoint inside the target — yet no
+//    navigation). The plain tap's stability loop rides the overlay out.
+//
+// 2. Fresh-load pages on CI can hit the opposite wall: Chromium's mobile
+//    emulation runs the MAIN-THREAD hit test behind locator actionability
+//    against a state that disagrees with the compositor — the screencast
+//    shows the card scrolled into view while elementFromPoint still resolves
+//    to the min-h-[100dvh] hero, for the full 30s window, on the mouse path
+//    (run 33939494950) and identically on the touch path (run 33950106238).
+//    It failed the same way on Astro 6 (2026-09-04 nightly), so it is an
+//    emulation artefact, not a site or migration defect, and no wait closes
+//    it (see #662). There, force skips the never-converging check and still
+//    dispatches the real touch.
+//
+// What replaces the skipped check in mode 2 is the caller's own outcome
+// assertion — every clickCard call site waits for the navigation or state the
+// click must produce, so a click that truly landed on the wrong element still
+// fails the spec. The probe records what the main thread believed at dispatch
+// time and is attached to the test, so a residual failure carries its own
+// evidence.
 export async function clickCard(page: Page, locator: Locator): Promise<void> {
   await locator.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior }));
   await page.waitForTimeout(100);
-  if (await page.evaluate(() => navigator.maxTouchPoints > 0)) {
-    await locator.tap();
-  } else {
+  if (!(await page.evaluate(() => navigator.maxTouchPoints > 0))) {
     await locator.click();
+    return;
+  }
+  const probe = await locator.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+    return {
+      rect: { x: r.x, y: r.y, width: r.width, height: r.height },
+      scrollY: window.scrollY,
+      visualViewport: {
+        scale: window.visualViewport?.scale,
+        offsetTop: window.visualViewport?.offsetTop,
+        offsetLeft: window.visualViewport?.offsetLeft,
+      },
+      elementFromPoint: hit ? `${hit.tagName}.${hit.className || ''}` : null,
+      hitInsideTarget: !!hit && el.contains(hit),
+    };
+  });
+  test.info().attach('clickCard-hit-test', { body: JSON.stringify(probe, null, 2) });
+  try {
+    await locator.tap({ timeout: 5_000 });
+  } catch {
+    await locator.tap({ force: true });
   }
 }

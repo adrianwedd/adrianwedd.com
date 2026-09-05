@@ -41,12 +41,13 @@ export default defineConfig({
     //    actionability checks on CI's slower CPU.
     //
     // Neither addresses the third, mobile-only failure mode: Chromium's mobile
-    // emulation can hit-test synthetic MOUSE events against a visual viewport
-    // that has diverged from the rendered scroll — persistently, for the whole
-    // retry window (run 33939494950: "<hero> intercepts pointer events" on
-    // every retry for 30s while the screencast shows the card scrolled into
-    // view). clickCard() routes those clicks through touch dispatch — see
-    // fixtures.ts.
+    // emulation on CI can run the main-thread hit test behind locator
+    // actionability against a scroll state that disagrees with the compositor
+    // — persistently, for the whole retry window (runs 33939494950 mouse /
+    // 33950106238 touch: "<hero> intercepts pointer events" on every retry for
+    // 30s while the screencast shows the card scrolled into view). clickCard()
+    // skips the actionability consult (force) and dispatches the real
+    // tap/click anyway — see fixtures.ts.
     //
     // Set via contextOptions, not as a bare `use` key: `reducedMotion` appears
     // only inside a doc comment in @playwright/test 1.55.1's test.d.ts, and a
