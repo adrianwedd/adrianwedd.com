@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectNoVtReload } from './fixtures';
+import { clickHeaderLink, expectNoVtReload } from './fixtures';
 
 test('@smoke VT navigation preserves window + theme, no full reload', async ({ page }) => {
   await page.goto('/');
@@ -10,10 +10,10 @@ test('@smoke VT navigation preserves window + theme, no full reload', async ({ p
     document.documentElement.classList.add('light');
   });
 
-  // home -> blog index (VT swap, window state must survive).
-  // trailingSlash:'always' → the canonical link is exactly '/blog/'.
+  // home -> blog index (VT swap, window state must survive), via whichever
+  // header nav the viewport exposes.
   await expectNoVtReload(page, async () => {
-    await page.locator('a[href="/blog/"]').first().click();
+    await clickHeaderLink(page, 'Blog');
     await page.waitForURL('**/blog/');
   });
   await expect(page.locator('html')).toHaveClass(/light/);

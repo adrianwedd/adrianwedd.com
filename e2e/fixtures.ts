@@ -49,9 +49,13 @@ export async function clickHeaderLink(page: Page, name: string): Promise<void> {
     await desktop.click();
     return;
   }
-  await page.locator('.mobile-menu-btn').click();
+  // Tolerate an already-open menu: clicking the button again would close it,
+  // and the visibility wait below would then time out.
   const menu = page.locator('#mobile-nav-menu');
-  await expect(menu).toBeVisible();
+  if (!(await menu.isVisible())) {
+    await page.locator('.mobile-menu-btn').click();
+    await expect(menu).toBeVisible();
+  }
   await menu.getByRole('link', { name }).click();
 }
 

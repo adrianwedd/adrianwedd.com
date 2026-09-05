@@ -37,7 +37,7 @@ test('@smoke UTM attribution survives an internal View Transition', async ({ pag
     page_path: '/',
   });
 
-  await page.getByLabel('Main navigation').getByRole('link', { name: 'Services' }).click();
+  await clickHeaderLink(page, 'Services');
   await expect(page).toHaveURL(/\/services\/$/);
   const pageViews = (await events(page)).filter((event) => event.name === 'page_view');
   expect(pageViews.at(-1)?.parameters).toMatchObject({
@@ -83,7 +83,7 @@ test('@smoke high-intent and outbound events fire once without query leakage', a
 test('@smoke navigation works when analytics is unavailable', async ({ page }) => {
   await page.route(/googletagmanager\.com|google-analytics\.com/, (route) => route.abort());
   await page.goto('/services/');
-  await page.locator('a[href="/contact/"]').first().click();
+  await page.locator('a[href="/contact/"]:visible').first().click();
   await expect(page).toHaveURL(/\/contact\/$/);
 });
 
