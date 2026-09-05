@@ -10,9 +10,7 @@ import { test, expect } from '@playwright/test';
 // scrolled to.
 test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
-test('@smoke below-fold scroll-reveal blocks start hidden and reveal on scroll', async ({
-  page,
-}) => {
+test('@smoke below-fold scroll-reveal blocks start hidden and reveal on scroll', async ({ page }) => {
   await page.goto('/');
 
   // Pick a block that is genuinely below the fold at load; assert loudly if
