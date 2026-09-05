@@ -40,6 +40,11 @@ const allEpisodes = (await getCollection('audio'))
 const currentIndex = allEpisodes.findIndex((e) => e.id === episode.id);
 const prevEpisode = currentIndex < allEpisodes.length - 1 ? allEpisodes[currentIndex + 1] : null;
 const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
+
+// Astro 7 scopes the Astro global to the frontmatter; capture what the
+// template's JSON-LD needs.
+const site = Astro.site;
+const pathname = Astro.url.pathname;
 ---
 
 <BaseLayout
@@ -59,7 +64,7 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
       '@type': episode.data.audioUrl ? 'AudioObject' : 'VideoObject',
       name: episode.data.title,
       description: episode.data.description,
-      url: new URL(Astro.url.pathname, Astro.site).href,
+      url: new URL(pathname, site).href,
       datePublished: episode.data.date.toISOString(),
       ...(episode.data.duration
         ? {
@@ -74,7 +79,7 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
       // An entry with neither URL would make `new URL('', site)` resolve to the
       // site root, asserting the homepage as this episode's media file. Omit
       // the property instead of claiming something false.
-      ...(mediaUrl && { contentUrl: new URL(mediaUrl, Astro.site).href }),
+      ...(mediaUrl && { contentUrl: new URL(mediaUrl, site).href }),
       ...(mediaUrl && {
         encodingFormat:
           containerOverride(mediaUrl) ?? mediaMimeType(mediaUrl, episode.data.audioUrl ? 'audio' : 'video'),
@@ -85,7 +90,7 @@ const nextEpisode = currentIndex > 0 ? allEpisodes[currentIndex - 1] : null;
       // https://developers.google.com/search/docs/appearance/structured-data/video
       ...(isVideo && {
         uploadDate: episode.data.date.toISOString(),
-        thumbnailUrl: new URL(ogImage, Astro.site).href,
+        thumbnailUrl: new URL(ogImage, site).href,
       }),
       keywords: episode.data.tags,
       author: {

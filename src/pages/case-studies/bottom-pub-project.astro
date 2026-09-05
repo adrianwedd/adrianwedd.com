@@ -4,6 +4,9 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 
 const pageUrl = '/case-studies/bottom-pub-project/';
 const ogImage = '/og/case-studies/bottom-pub-project.png';
+// Astro 7 scopes the Astro global to the frontmatter; capture what the
+// template's JSON-LD needs.
+const site = Astro.site;
 const meta = {
   title: 'There was no brief. There was a pub.',
   description:
@@ -149,8 +152,8 @@ const facts = [
       '@type': 'Article',
       headline: meta.title,
       description: meta.description,
-      url: new URL(pageUrl, Astro.site).href,
-      image: new URL(ogImage, Astro.site).href,
+      url: new URL(pageUrl, site).href,
+      image: new URL(ogImage, site).href,
       datePublished: '2026-08-20',
       keywords: ['case-study', 'systems', 'privacy-engineering', 'community'],
       author: { '@type': 'Person', name: 'Adrian Wedd', url: 'https://adrianwedd.com' },
@@ -160,7 +163,7 @@ const facts = [
         url: 'https://adrianwedd.com',
         logo: { '@type': 'ImageObject', url: 'https://adrianwedd.com/favicon.svg' },
       },
-      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(pageUrl, Astro.site).href },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(pageUrl, site).href },
     })}
   />
 

@@ -6,9 +6,14 @@ const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${PORT}`;
 // In CI the workflow runs `npm run build` once, so the server only needs to
 // `preview`. Locally we build then preview. Never reuse a running dev server —
 // the smoke suite must exercise the production build, not HMR output.
+// ASTRO_PREVIEW_BACKGROUND: Astro 7 detects AI-agent environments (via
+// am-i-vibing) and silently daemonises `astro preview`, exiting the foreground
+// process — Playwright then reports "Process from config.webServer exited
+// early". Setting the env var suppresses the auto-detection so preview stays
+// in the foreground. Harmless in CI, where no agent env vars are present.
 const webServerCommand = process.env.CI
-  ? `npm run preview -- --port ${PORT}`
-  : `npm run build && npm run preview -- --port ${PORT}`;
+  ? `ASTRO_PREVIEW_BACKGROUND=1 npm run preview -- --port ${PORT}`
+  : `npm run build && ASTRO_PREVIEW_BACKGROUND=1 npm run preview -- --port ${PORT}`;
 
 export default defineConfig({
   testDir: 'e2e',

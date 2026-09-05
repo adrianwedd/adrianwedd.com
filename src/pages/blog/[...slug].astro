@@ -114,6 +114,11 @@ const seriesProjectsList = post.data.series
 // posts named after their project.
 const candidateProjectSlug = post.data.relatedProject ?? postSlug.replace(/-post$/, '');
 const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === candidateProjectSlug);
+
+// Astro 7 scopes the Astro global to the frontmatter; capture what the
+// template's JSON-LD needs.
+const site = Astro.site;
+const pathname = Astro.url.pathname;
 ---
 
 <BaseLayout
@@ -138,12 +143,12 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
       // Identified so other nodes on this page (the FAQPage below) can point at
       // the article itself. Without an @id the only addressable node is the
       // WebPage named by mainEntityOfPage, which is a different entity.
-      '@id': `${new URL(Astro.url.pathname, Astro.site).href}#article`,
+      '@id': `${new URL(pathname, site).href}#article`,
       headline: post.data.title,
       description: post.data.description,
       inLanguage: 'en-AU',
-      url: new URL(Astro.url.pathname, Astro.site).href,
-      image: new URL(ogImage, Astro.site).href,
+      url: new URL(pathname, site).href,
+      image: new URL(ogImage, site).href,
       datePublished: post.data.date.toISOString(),
       ...(post.data.updatedDate ? { dateModified: post.data.updatedDate.toISOString() } : {}),
       wordCount: words,
@@ -159,7 +164,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
         url: 'https://adrianwedd.com',
         logo: { '@type': 'ImageObject', url: 'https://adrianwedd.com/favicon.svg' },
       },
-      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(Astro.url.pathname, Astro.site).href },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(pathname, site).href },
     })}
   />
   {
@@ -175,7 +180,7 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             '@type': 'VideoObject',
             name: post.data.title,
             description: post.data.description,
-            ...(post.data.videoUrl && { contentUrl: new URL(post.data.videoUrl, Astro.site).href }),
+            ...(post.data.videoUrl && { contentUrl: new URL(post.data.videoUrl, site).href }),
             ...(ytId && {
               embedUrl: `https://www.youtube.com/embed/${ytId}`,
               url: post.data.youtubeUrl,
@@ -184,8 +189,8 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
             // post dated ahead of its upload used to emit a FUTURE uploadDate.
             uploadDate: (post.data.videoUploadDate ?? post.data.date).toISOString(),
             thumbnailUrl: post.data.heroImage
-              ? new URL(ogSafeImage(post.data.heroImage), Astro.site).href
-              : new URL('/og-default.png', Astro.site).href,
+              ? new URL(ogSafeImage(post.data.heroImage), site).href
+              : new URL('/og-default.png', site).href,
           })}
         />
       );
@@ -209,13 +214,13 @@ const matchedProject = allProjects.find((p) => !p.data.draft && slug(p.id) === c
           // competing claims about the same page. isPartOf targets the Article's
           // #article @id specifically; pointing it at the bare page URL would
           // resolve to the WebPage from mainEntityOfPage, a different entity.
-          '@id': `${new URL(Astro.url.pathname, Astro.site).href}#faq`,
-          url: new URL(Astro.url.pathname, Astro.site).href,
+          '@id': `${new URL(pathname, site).href}#faq`,
+          url: new URL(pathname, site).href,
           inLanguage: 'en-AU',
-          isPartOf: { '@id': `${new URL(Astro.url.pathname, Astro.site).href}#article` },
+          isPartOf: { '@id': `${new URL(pathname, site).href}#article` },
           mainEntity: post.data.faq.map((item, i) => ({
             '@type': 'Question',
-            '@id': `${new URL(Astro.url.pathname, Astro.site).href}#faq-${i + 1}`,
+            '@id': `${new URL(pathname, site).href}#faq-${i + 1}`,
             name: item.q,
             acceptedAnswer: {
               '@type': 'Answer',

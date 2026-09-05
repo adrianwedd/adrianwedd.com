@@ -32,6 +32,11 @@ const allGalleries = (await getCollection('gallery'))
 const currentIndex = allGalleries.findIndex((g) => g.id === gallery.id);
 const prevGallery = currentIndex < allGalleries.length - 1 ? allGalleries[currentIndex + 1] : null;
 const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
+
+// Astro 7 scopes the Astro global to the frontmatter; capture what the
+// template's JSON-LD needs.
+const site = Astro.site;
+const pathname = Astro.url.pathname;
 ---
 
 <BaseLayout
@@ -52,11 +57,11 @@ const nextGallery = currentIndex > 0 ? allGalleries[currentIndex - 1] : null;
       '@type': 'ImageGallery',
       name: gallery.data.title,
       description: gallery.data.description || `Gallery: ${gallery.data.title}`,
-      url: new URL(Astro.url.pathname, Astro.site).href,
+      url: new URL(pathname, site).href,
       datePublished: gallery.data.date.toISOString(),
       image: gallery.data.images.map((img: { src: string; alt: string; caption?: string }) => ({
         '@type': 'ImageObject',
-        contentUrl: new URL(img.src, Astro.site).href,
+        contentUrl: new URL(img.src, site).href,
         name: img.alt,
         ...(img.caption ? { caption: img.caption } : {}),
       })),

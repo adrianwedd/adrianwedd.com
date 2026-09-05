@@ -110,6 +110,11 @@ const allBlogPosts = project.data.series
       .filter((p) => !p.data.draft && p.data.series === project.data.series)
       .sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
   : [];
+
+// Astro 7 scopes the Astro global to the frontmatter; capture what the
+// template's JSON-LD needs.
+const site = Astro.site;
+const pathname = Astro.url.pathname;
 ---
 
 <BaseLayout
@@ -139,7 +144,7 @@ const allBlogPosts = project.data.series
       '@type': 'CreativeWork',
       name: project.data.title,
       description: project.data.description,
-      url: new URL(Astro.url.pathname, Astro.site).href,
+      url: new URL(pathname, site).href,
       datePublished: project.data.date.toISOString(),
       ...(project.data.updatedDate ? { dateModified: project.data.updatedDate.toISOString() } : {}),
       keywords: project.data.tags,
@@ -162,13 +167,13 @@ const allBlogPosts = project.data.series
         ];
         return sameAs.length ? { sameAs } : {};
       })(),
-      ...(project.data.heroImage ? { image: new URL(ogSafeImage(project.data.heroImage), Astro.site).href } : {}),
+      ...(project.data.heroImage ? { image: new URL(ogSafeImage(project.data.heroImage), site).href } : {}),
       author: {
         '@type': 'Person',
         name: 'Adrian Wedd',
         url: 'https://adrianwedd.com',
       },
-      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(Astro.url.pathname, Astro.site).href },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(pathname, site).href },
     })}
   />
   {
@@ -184,7 +189,7 @@ const allBlogPosts = project.data.series
             '@type': 'VideoObject',
             name: project.data.title,
             description: project.data.description,
-            ...(project.data.videoUrl && { contentUrl: new URL(project.data.videoUrl, Astro.site).href }),
+            ...(project.data.videoUrl && { contentUrl: new URL(project.data.videoUrl, site).href }),
             ...(ytId && {
               embedUrl: `https://www.youtube.com/embed/${ytId}`,
               url: project.data.youtubeUrl,
@@ -192,8 +197,8 @@ const allBlogPosts = project.data.series
             // The video's own publication date, not the project's — see blog template.
             uploadDate: (project.data.videoUploadDate ?? project.data.date).toISOString(),
             thumbnailUrl: project.data.heroImage
-              ? new URL(ogSafeImage(project.data.heroImage), Astro.site).href
-              : new URL('/og-default.png', Astro.site).href,
+              ? new URL(ogSafeImage(project.data.heroImage), site).href
+              : new URL('/og-default.png', site).href,
           })}
         />
       );
