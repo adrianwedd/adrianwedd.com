@@ -24,6 +24,17 @@ export default defineConfig({
   use: {
     baseURL,
     trace: 'on-first-retry',
+    // ScrollReveal animates every revealed block over 0.5s (opacity + a
+    // translateY/scale transform, global.css:348). Playwright scrolls a target
+    // into view, the IntersectionObserver fires, and the element is still
+    // moving when the click lands — "element is not stable", then the hit test
+    // resolves to whatever is underneath. On CI's slower CPU that loops to
+    // timeout; locally it usually wins the race, which is why it read as a
+    // mobile-only nightly flake. The site already disables the animation
+    // entirely under prefers-reduced-motion (global.css:392), so asking for it
+    // removes the race without stubbing anything out — and exercises a real
+    // supported user mode rather than a synthetic one.
+    reducedMotion: 'reduce',
   },
   webServer: process.env.E2E_BASE_URL
     ? undefined
