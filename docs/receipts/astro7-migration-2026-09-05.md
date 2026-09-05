@@ -33,7 +33,8 @@ Controller issue: [#586](https://github.com/adrianwedd/adrianwedd.com/issues/586
 | #643 Dependabot eslint-plugin-astro | superseded by #657, closed with receipt              |
 | #621 (old oversized stats repair)   | closed as superseded before the migration (Gate 1)   |
 | #615 (stats contradictions)         | closed via #656 before the migration (Gate 1)        |
-| #644 #646 #651 #653 #639 #640 #622  | unrelated Dependabot updates — left open, NOT merged |
+| #644 #646 #651 #653 #639 #640       | unrelated Dependabot updates — left open, NOT merged |
+| #622                                | unrelated project PR — left open, NOT merged         |
 
 ## Gate evidence
 
@@ -127,7 +128,8 @@ Three engines ran the same broad brief in parallel against both subjects (A: mig
 ## Deferred work
 
 - #553 (image service migration) — untouched, next frontier.
-- #397 — untouched.
+- #397 — untouched by this migration; already merged on 2026-05-26.
 - extract-zip (dev-only, high, unpatched) — watch; revisit when upstream/puppeteer ships a fix.
 - fflate (moderate, prod-transitive) — Dependabot #651 left open.
-- Unrelated Dependabot PRs (#644 #646 #651 #653 #639 #640 #622) — deliberately left open; not merged merely for being green.
+- Unrelated Dependabot PRs (#644 #646 #651 #653 #639 #640) — deliberately left open; not merged merely for being green.
+- #622 — unrelated non-Dependabot project PR, left open.
