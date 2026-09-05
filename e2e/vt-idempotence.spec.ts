@@ -241,8 +241,9 @@ test('article_engaged cannot fire below the reading threshold and never double-f
   await enableAnalytics(page);
   await page.goto('/blog/you-cant-protest-if-nobody-is-inconvenienced/');
 
-  // Below threshold (the tracker requires ~60% read): no event, even after a
-  // full-page scroll dispatch.
+  // Below threshold (the tracker requires 60s dwell at ≥75% depth; __readingMax
+  // is the seconds hook, pinned directly so the spec need not wait a minute):
+  // no event, even after a full-page scroll dispatch.
   await page.evaluate(() => {
     (window as unknown as { __readingMax: number }).__readingMax = 40;
     window.scrollTo(0, document.documentElement.scrollHeight);
