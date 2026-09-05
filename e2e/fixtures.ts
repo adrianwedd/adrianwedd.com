@@ -21,10 +21,13 @@ export async function acceptConsent(page: Page): Promise<void> {
   await expect(page.locator('#consent-banner')).toBeHidden();
 }
 
-// Proves a View-Transitions swap occurred, distinguishing it from BOTH a hard
-// document reload (window state destroyed) and a BFCache restore (window state
-// preserved but a navigation entry is added). Two signals are required because
-// the window probe alone yields a false negative on BFCache back().
+// Proves the action was not a hard document reload: the window probe survives
+// only when the document was not destroyed, and no navigation entry is added.
+// On a forward navigation that proves a VT swap occurred. On a back/forward
+// traversal it does NOT distinguish a VT swap from a BFCache restore — a
+// restore also survives the probe and adds no entry — so where the difference
+// matters, count restores explicitly (the journey test in vt-idempotence.spec.ts
+// does exactly that with its __bfcacheRestores counter).
 export async function expectNoVtReload(page: Page, action: () => Promise<void>): Promise<void> {
   await page.evaluate(() => {
     (window as unknown as { __vtProbe?: number }).__vtProbe = 42;
@@ -59,17 +62,25 @@ export async function clickHeaderLink(page: Page, name: string): Promise<void> {
   await menu.getByRole('link', { name }).click();
 }
 
-// Chromium's mobile emulation (Pixel 5) hit-tests clicks against a visual
-// viewport that can lag Playwright's own scrollIntoViewIfNeeded, so a card
-// below a min-h-[100dvh] hero is reported as "visible, enabled and stable"
-// and then the click resolves to the hero sitting at the stale scroll offset.
-// This is what has kept audio-player.spec red on the nightly mobile project
-// (failing on main before the Astro 7 merge, see #662). Scrolling the element
-// to the middle of the viewport ourselves and letting a frame settle removes
-// the ambiguity without weakening actionability — the element must still be
-// visible, enabled, and the real hit target for the click to land.
+// Chromium's mobile emulation (Pixel 5) hit-tests synthetic MOUSE events
+// against a visual viewport that can diverge from the rendered scroll state
+// for the full retry window: a card below a min-h-[100dvh] hero is reported
+// "visible, enabled and stable", the scroll succeeds, and the click still
+// resolves to the hero at a stale offset. This kept audio-player.spec red on
+// the nightly mobile project — twice red on CI with 30s of Playwright's own
+// internal retries (run 33939494950), so it is not a settle race a longer
+// wait can close (see #662; it failed identically on Astro 6, 2026-09-04
+// nightly). Touch dispatch takes a different input path than the synthetic
+// mouse events the emulated context mishandles, and it is what a real mobile
+// user produces anyway — so touch contexts tap, mouse-only contexts (the
+// desktop chromium project) click. Actionability is not weakened: the element
+// must still be visible, enabled, and the real hit target for the tap to land.
 export async function clickCard(page: Page, locator: Locator): Promise<void> {
   await locator.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior }));
   await page.waitForTimeout(100);
-  await locator.click();
+  if (await page.evaluate(() => navigator.maxTouchPoints > 0)) {
+    await locator.tap();
+  } else {
+    await locator.click();
+  }
 }

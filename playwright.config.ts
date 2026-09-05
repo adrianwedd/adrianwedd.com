@@ -24,20 +24,35 @@ export default defineConfig({
   use: {
     baseURL,
     trace: 'on-first-retry',
-    // ScrollReveal animates every revealed block over 0.5s (opacity + a
-    // translateY/scale transform, global.css:348). Playwright scrolls a target
-    // into view, the IntersectionObserver fires, and the element is still
-    // moving when the click lands — "element is not stable", then the hit test
-    // resolves to whatever is underneath. On CI's slower CPU that loops to
-    // timeout; locally it usually wins the race, which is why it read as a
-    // mobile-only nightly flake. The site already disables the animation
-    // entirely under prefers-reduced-motion (global.css:88 and :392), so asking
-    // for it removes the race without stubbing anything out — and exercises a
-    // real supported user mode rather than a synthetic one.
+    // The suite runs under prefers-reduced-motion for two independent reasons:
+    //
+    // 1. ScrollReveal animates every revealed block over 0.5s (opacity + a
+    //    translateY/scale transform, global.css:348). Playwright scrolls a
+    //    target into view, the IntersectionObserver fires, and the element is
+    //    still moving when the click lands — "element is not stable", then the
+    //    hit test resolves to whatever is underneath. The site already disables
+    //    the animation entirely under prefers-reduced-motion (global.css:88 and
+    //    :392), so asking for it removes that race without stubbing anything
+    //    out — and exercises a real supported user mode rather than a
+    //    synthetic one.
+    //
+    // 2. It also idles HeroCanvas' body-level rAF loop (HeroCanvas.astro:4749
+    //    returns early), so the generative background never competes with
+    //    actionability checks on CI's slower CPU.
+    //
+    // Neither addresses the third, mobile-only failure mode: Chromium's mobile
+    // emulation can hit-test synthetic MOUSE events against a visual viewport
+    // that has diverged from the rendered scroll — persistently, for the whole
+    // retry window (run 33939494950: "<hero> intercepts pointer events" on
+    // every retry for 30s while the screencast shows the card scrolled into
+    // view). clickCard() routes those clicks through touch dispatch — see
+    // fixtures.ts.
     //
     // Set via contextOptions, not as a bare `use` key: `reducedMotion` appears
-    // only inside a doc comment in @playwright/test 1.55.1's test.d.ts, so the
-    // top-level form does not typecheck here.
+    // only inside a doc comment in @playwright/test 1.55.1's test.d.ts, and a
+    // bare key is silently ignored at runtime — dde8e55 shipped it that way and
+    // its first full run still logged "element is not stable" everywhere until
+    // 376c5bb moved it inside contextOptions.
     contextOptions: { reducedMotion: 'reduce' },
   },
   webServer: process.env.E2E_BASE_URL

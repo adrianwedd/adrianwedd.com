@@ -120,7 +120,7 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   const articleHref = (await firstPost.getAttribute('href'))!;
   const isArticle = (url: URL) => url.pathname === articleHref;
   await expectNoVtReload(page, async () => {
-    await firstPost.click();
+    await clickCard(page, firstPost);
     await page.waitForURL(isArticle);
   });
   expectedPaths.push(articleHref);
@@ -338,14 +338,14 @@ test('gallery image click navigates to the image detail page (lightbox race pinn
   // lightbox on collection pages) updates this expectation deliberately.
   await page.goto('/gallery/');
   await expectNoVtReload(page, async () => {
-    await page.locator('#main-content a[href^="/gallery/"]').first().click();
+    await clickCard(page, page.locator('#main-content a[href^="/gallery/"]').first());
     await page.waitForURL(/\/gallery\/[^/]+\/$/);
   });
 
   const trigger = page.locator('.gallery-trigger').first();
   const imageHref = (await trigger.getAttribute('href'))!;
   await expectNoVtReload(page, async () => {
-    await trigger.click();
+    await clickCard(page, trigger);
     await page.waitForURL((url: URL) => url.pathname === imageHref);
   });
   // The navigation won the race: the image detail page rendered, and the
@@ -394,7 +394,7 @@ test('long mixed journey hydrates islands without console errors', async ({ page
     await page.waitForURL('**/blog/');
   });
   await expectNoVtReload(page, async () => {
-    await page.locator('[data-post-list] article a[href*="/blog/"]').first().click();
+    await clickCard(page, page.locator('[data-post-list] article a[href*="/blog/"]').first());
     await page.waitForURL(/\/blog\/[^/]+\/$/);
   });
   await expectNoVtReload(page, async () => {
@@ -402,7 +402,7 @@ test('long mixed journey hydrates islands without console errors', async ({ page
     await page.waitForURL('**/projects/');
   });
   await expectNoVtReload(page, async () => {
-    await page.locator('#main-content a[href^="/projects/"]').first().click();
+    await clickCard(page, page.locator('#main-content a[href^="/projects/"]').first());
     await page.waitForURL(/\/projects\/[^/]+\/$/);
   });
   // Audio episode page exercises the AudioPlayer island.
