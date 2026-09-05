@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { clickCard } from './fixtures';
 
 // AudioPlayer is a Preact island; its single control is icon-only and swaps
 // aria-label between 'Play' and 'Pause' (AudioPlayer.tsx:96). Scope the episode
@@ -6,12 +7,18 @@ import { test, expect } from '@playwright/test';
 // R2 media streaming may never settle; wait for the control instead.
 test('audio player toggles play/pause state', async ({ page }) => {
   await page.goto('/audio/');
-  await page.locator('article a[href*="/audio/"]').first().click();
+  await clickCard(page, page.locator('article a[href*="/audio/"]').first());
   await page.waitForURL(/\/audio\/[^/]+\/$/);
   const playBtn = page.getByRole('button', { name: 'Play', exact: true });
   await expect(playBtn).toBeVisible({ timeout: 10_000 });
   await expect(playBtn).toBeEnabled();
-  await playBtn.click();
+  // Same emulation desync as the card clicks, one control deeper: on CI's
+  // mobile project the actionability hit test at the button's point resolves
+  // to the island's own wrapper div for the whole 30s window (run
+  // 33950660671), and the fixed consent banner intercepts some retries.
+  // clickCard's tap-then-force escalation handles it, and its scroll into
+  // viewport centre moves the button clear of the consent banner.
+  await clickCard(page, playBtn);
   // Do NOT assert playback/decode state: headless Chromium (incl. CI Linux
   // runners) lacks proprietary AAC/H.264 codecs, so the m4a never decodes and
   // <audio>.paused stays true — a deterministic red, not a real regression.
