@@ -31,10 +31,14 @@ export default defineConfig({
     // resolves to whatever is underneath. On CI's slower CPU that loops to
     // timeout; locally it usually wins the race, which is why it read as a
     // mobile-only nightly flake. The site already disables the animation
-    // entirely under prefers-reduced-motion (global.css:392), so asking for it
-    // removes the race without stubbing anything out — and exercises a real
-    // supported user mode rather than a synthetic one.
-    reducedMotion: 'reduce',
+    // entirely under prefers-reduced-motion (global.css:88 and :392), so asking
+    // for it removes the race without stubbing anything out — and exercises a
+    // real supported user mode rather than a synthetic one.
+    //
+    // Set via contextOptions, not as a bare `use` key: `reducedMotion` appears
+    // only inside a doc comment in @playwright/test 1.55.1's test.d.ts, so the
+    // top-level form does not typecheck here.
+    contextOptions: { reducedMotion: 'reduce' },
   },
   webServer: process.env.E2E_BASE_URL
     ? undefined

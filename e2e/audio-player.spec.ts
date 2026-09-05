@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { clickCard } from './fixtures';
 
 // AudioPlayer is a Preact island; its single control is icon-only and swaps
 // aria-label between 'Play' and 'Pause' (AudioPlayer.tsx:96). Scope the episode
@@ -6,7 +7,7 @@ import { test, expect } from '@playwright/test';
 // R2 media streaming may never settle; wait for the control instead.
 test('audio player toggles play/pause state', async ({ page }) => {
   await page.goto('/audio/');
-  await page.locator('article a[href*="/audio/"]').first().click();
+  await clickCard(page, page.locator('article a[href*="/audio/"]').first());
   await page.waitForURL(/\/audio\/[^/]+\/$/);
   const playBtn = page.getByRole('button', { name: 'Play', exact: true });
   await expect(playBtn).toBeVisible({ timeout: 10_000 });

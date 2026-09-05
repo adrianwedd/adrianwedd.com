@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { CONSENT_KEY, clearConsent, clickHeaderLink, expectNoVtReload } from './fixtures';
+import { CONSENT_KEY, clearConsent, clickCard, clickHeaderLink, expectNoVtReload } from './fixtures';
 
 // Adversarial View-Transitions + analytics verification. The @smoke specs
 // (vt-navigation, analytics-intent, consent, theme) prove each behaviour once;
@@ -407,7 +407,7 @@ test('long mixed journey hydrates islands without console errors', async ({ page
   });
   // Audio episode page exercises the AudioPlayer island.
   await page.goto('/audio/');
-  await page.locator('#main-content article a[href^="/audio/"]').first().click();
+  await clickCard(page, page.locator('#main-content article a[href^="/audio/"]').first());
   await page.waitForURL(/\/audio\/[^/]+\/$/);
   await expect(page.getByRole('button', { name: /play/i }).first()).toBeVisible();
   await expectNoVtReload(page, async () => {

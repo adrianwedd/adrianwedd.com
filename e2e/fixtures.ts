@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 // Verified hardcoded across ConsentBanner.astro, Analytics.astro:23,
 // Transparency.tsx:11, Personalisation.tsx, 404.astro. Do not scrape source.
@@ -53,4 +53,19 @@ export async function clickHeaderLink(page: Page, name: string): Promise<void> {
   const menu = page.locator('#mobile-nav-menu');
   await expect(menu).toBeVisible();
   await menu.getByRole('link', { name }).click();
+}
+
+// Chromium's mobile emulation (Pixel 5) hit-tests clicks against a visual
+// viewport that can lag Playwright's own scrollIntoViewIfNeeded, so a card
+// below a min-h-[100dvh] hero is reported as "visible, enabled and stable"
+// and then the click resolves to the hero sitting at the stale scroll offset.
+// This is what has kept audio-player.spec red on the nightly mobile project
+// (failing on main before the Astro 7 merge, see #662). Scrolling the element
+// to the middle of the viewport ourselves and letting a frame settle removes
+// the ambiguity without weakening actionability — the element must still be
+// visible, enabled, and the real hit target for the click to land.
+export async function clickCard(page: Page, locator: Locator): Promise<void> {
+  await locator.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior }));
+  await page.waitForTimeout(100);
+  await locator.click();
 }
