@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { CONSENT_KEY } from './fixtures';
+import { clickHeaderLink, CONSENT_KEY } from './fixtures';
 
 type AnalyticsEvent = { name: string; parameters: Record<string, unknown> };
 
