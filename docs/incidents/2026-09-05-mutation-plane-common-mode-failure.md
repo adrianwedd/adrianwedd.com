@@ -76,6 +76,16 @@ viewport. A test defect, not a migration regression, and one
 `playwright.config.ts:38-41` already warned about in a comment. Fixed in #660
 (24/24). Worth recording: the blocked step was the one carrying the finding.
 
+**Recurrence, same day (~07:15 UTC).** While opening the docs PR for this
+receipt, the same failure mode returned with the same signature: mutating
+Bash (`gh pr create`) and MCP GitHub writes both gated behind the unavailable
+classifier while read-only commands (`git stash list`, `git log`) passed
+through untouched. Two immediate retries failed; a third attempt roughly a
+minute later succeeded, and the session completed without further incident.
+Shorter, self-recovering, and hit at a moment with nothing in flight — but it
+confirms the common-mode gate is a standing property of this toolchain, not a
+one-off corridor failure.
+
 ## The design principle
 
 > **Reasoning availability and execution availability must fail independently.
