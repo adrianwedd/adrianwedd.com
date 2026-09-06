@@ -298,7 +298,9 @@ try {
         if (activeTag) p.set('tag', activeTag);
         if (sortSelect && sortSelect.value !== 'featured') p.set('sort', sortSelect.value);
         var qs = p.toString();
-        history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
+        // Preserve Astro ClientRouter's entry metadata. Replacing it with null
+        // makes popstate ignore this entry, leaving the URL and DOM out of sync.
+        history.replaceState(history.state, '', qs ? '?' + qs : window.location.pathname);
       }
 
       function applyFilters() {

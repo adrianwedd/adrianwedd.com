@@ -497,10 +497,15 @@
 
       // Project clicks
       const projectLink = target.closest('a[href*="/projects/"]') as HTMLAnchorElement | null;
-      if (projectLink) {
+      const projectDestination = projectLink ? safeLocation(projectLink.href) : null;
+      if (
+        projectLink &&
+        projectDestination?.domain === window.location.hostname &&
+        /^\/projects\/[^/]+\/$/.test(projectDestination.path)
+      ) {
         track('project_click', {
           project_name: projectLink.textContent?.trim() || 'unknown',
-          link_path: safeLocation(projectLink.href).path,
+          link_path: projectDestination.path,
         });
       }
 
@@ -663,6 +668,16 @@
 
         // Content/audio trackers are document-delegated and sentinel-guarded
         // (registered once in loadGA4) — no per-element re-binding needed here.
+      }
+    });
+    window.addEventListener('pageshow', (event) => {
+      // A persisted BFCache restore runs no Astro swap lifecycle. Count the
+      // restored page exactly once; ordinary loads have persisted === false
+      // and remain covered by loadGA4's initial page view.
+      if (!event.persisted) return;
+      const consent = getConsent();
+      if (consent?.analytics && typeof (window as any).gtag === 'function') {
+        sendPageView();
       }
     });
   } // end analyticsSwapInit sentinel

@@ -176,32 +176,36 @@ const imagesWithDims = images.map((img) => {
     if (!root.dataset.lightboxInit) {
       root.dataset.lightboxInit = '1';
 
-      document.addEventListener('click', function (e) {
-        // Gallery trigger clicks (delegated — works after VT swap)
-        var trigger = e.target.closest ? e.target.closest('.gallery-trigger') : null;
-        if (trigger) {
-          e.preventDefault();
-          show(parseInt(trigger.dataset.index), trigger);
-          return;
-        }
-        var target = e.target.closest ? e.target.closest('[id]') : null;
-        if (!target) return;
-        if (target.id === 'lightbox-close') {
-          hide();
-          return;
-        }
-        if (target.id === 'lightbox-prev') {
-          prev();
-          return;
-        }
-        if (target.id === 'lightbox-next') {
-          next();
-          return;
-        }
-        // Backdrop click
-        var lightbox = getLightbox();
-        if (lightbox && (e.target === lightbox || e.target.parentElement === lightbox)) hide();
-      });
+      document.addEventListener(
+        'click',
+        function (e) {
+          // Gallery trigger clicks (delegated — works after VT swap)
+          var trigger = e.target.closest ? e.target.closest('.gallery-trigger') : null;
+          if (trigger) {
+            e.preventDefault();
+            show(parseInt(trigger.dataset.index), trigger);
+            return;
+          }
+          var target = e.target.closest ? e.target.closest('[id]') : null;
+          if (!target) return;
+          if (target.id === 'lightbox-close') {
+            hide();
+            return;
+          }
+          if (target.id === 'lightbox-prev') {
+            prev();
+            return;
+          }
+          if (target.id === 'lightbox-next') {
+            next();
+            return;
+          }
+          // Backdrop click
+          var lightbox = getLightbox();
+          if (lightbox && (e.target === lightbox || e.target.parentElement === lightbox)) hide();
+        },
+        true,
+      );
 
       document.addEventListener('keydown', function (e) {
         var lightbox = getLightbox();

@@ -49,6 +49,44 @@ test('@smoke UTM attribution survives an internal View Transition', async ({ pag
   });
 });
 
+test('@smoke project index navigation is not a project click', async ({ page }) => {
+  await enableAnalytics(page);
+  await page.goto('/');
+  await page.evaluate(() => {
+    document.addEventListener('click', (event) => event.preventDefault(), true);
+  });
+
+  await clickHeaderLink(page, 'Projects');
+  expect((await events(page)).filter((event) => event.name === 'project_click')).toHaveLength(0);
+
+  await page.goto('/projects/');
+  await page.evaluate(() => {
+    document.addEventListener('click', (event) => event.preventDefault(), true);
+  });
+  await page.locator('.project-card a[href^="/projects/"]').first().click();
+  const projectClicks = (await events(page)).filter((event) => event.name === 'project_click');
+  expect(projectClicks).toHaveLength(1);
+  expect(projectClicks[0]?.parameters.link_path).toMatch(/^\/projects\/[^/]+\/$/);
+});
+
+test('persisted pageshow emits exactly one query-free page view', async ({ page }) => {
+  await enableAnalytics(page);
+  await page.goto('/');
+  await clickHeaderLink(page, 'Services');
+  await expect(page).toHaveURL(/\/services\/$/);
+  await clickHeaderLink(page, 'About');
+  await expect(page).toHaveURL(/\/about\/$/);
+  await page.evaluate(() => history.replaceState(history.state, '', '?private=never-send'));
+
+  const before = (await events(page)).filter((event) => event.name === 'page_view').length;
+  await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true })));
+  const pageViews = (await events(page)).filter((event) => event.name === 'page_view');
+  expect(pageViews).toHaveLength(before + 1);
+  expect(pageViews.at(-1)?.parameters).toMatchObject({ page_path: '/about/' });
+  expect(String(pageViews.at(-1)?.parameters.page_location || '')).not.toContain('?');
+  expect(JSON.stringify(pageViews.at(-1))).not.toContain('never-send');
+});
+
 test('@smoke high-intent and outbound events fire once without query leakage', async ({ page }) => {
   await enableAnalytics(page);
   await page.goto('/services/?utm_source=test&utm_campaign=measurement_test&secret=private-value');

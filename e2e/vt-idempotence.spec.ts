@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { CONSENT_KEY, clearConsent, clickCard, clickHeaderLink, expectNoVtReload } from './fixtures';
+import { acceptConsent, CONSENT_KEY, clearConsent, clickCard, clickHeaderLink, expectNoVtReload } from './fixtures';
 
 // Adversarial View-Transitions + analytics verification. The @smoke specs
 // (vt-navigation, analytics-intent, consent, theme) prove each behaviour once;
@@ -12,12 +12,6 @@ import { CONSENT_KEY, clearConsent, clickCard, clickHeaderLink, expectNoVtReload
 // Nightly-only: deliberately not @smoke — the journey test is slow and the
 // rest duplicate the smoke suite's happy paths under stress conditions.
 //
-// Two pre-existing defects surfaced by this suite's A/B runs (behaviour
-// identical on Astro 6 and 7, so pinned rather than fixed in the migration)
-// have their own tests with issue pointers: the gallery lightbox/navigation
-// race (#658) and the stateless /projects/ history entry (#659). A fix for
-// either must update its pin deliberately.
-
 type AnalyticsEvent = { name: string; parameters: Record<string, unknown> };
 
 // Duplicated from analytics-intent.spec.ts rather than extracted — zero edits
@@ -42,11 +36,9 @@ async function events(page: Page): Promise<AnalyticsEvent[]> {
 }
 
 test('exactly one page_view per real navigation across a mixed VT journey', async ({ page }) => {
-  // BFCache restores run no page JS at all (no astro:after-swap, no pageshow
-  // handler in Analytics.astro), so a restored back/forward legitimately fires
-  // no pageview — while a popstate that runs a VT swap must fire exactly one.
-  // Count restores so the assertion states the real contract instead of
-  // guessing which path the browser took.
+  // A traversal settles through either an Astro swap or a persisted pageshow;
+  // both paths must emit exactly one page view. Count restores so the test also
+  // proves the BFCache path was exercised when Chromium chooses it.
   await page.addInitScript(() => {
     (window as unknown as { __bfcacheRestores: number }).__bfcacheRestores = 0;
     (window as unknown as { __navSettles: number }).__navSettles = 0;
@@ -73,10 +65,8 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   // GA4's built-in history-change measurement would double-fire each
   // non-hard entry — an exact count is the assertion against that.
   //
-  // /projects/ appears only as a forward leg: its filter script nulls the
-  // history entry's state, so a traversal to it is dead (no swap, no
-  // page_view — pre-existing, see #659 and its dedicated pin test below).
-  // The back/forward legs only traverse stateful entries.
+  // The back/forward legs below traverse stateful entries and must each be
+  // represented once, regardless of which settle path Chromium chooses.
   const expectedPaths: string[] = ['/'];
   const expectedCount = () => expectedPaths.length;
 
@@ -135,8 +125,7 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   });
   expectedPaths.push('/services/');
 
-  // back/forward (popstate): BFCache restores fire no pageview (no JS runs);
-  // VT swap restores fire exactly one. Either way the count must be exact.
+  // Back/forward: both a BFCache restore and a VT swap fire exactly one.
   // Each traversal settles (swap or restore) before the next begins, so no
   // in-flight swap gets aborted mid-journey.
   const settled = () => page.evaluate(() => (window as unknown as { __navSettles?: number }).__navSettles ?? 0);
@@ -171,25 +160,17 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   );
   expect(bfcacheRestores).toBeLessThanOrEqual(popstatePaths.length);
 
-  // The contract: exactly one page_view per real navigation. The polls above
-  // pinned the forward navigations; each popstate that was NOT a BFCache
-  // restore ran a swap and must have fired exactly one page_view, restores
-  // fired none (no JS runs on a restore).
+  // The contract: exactly one page_view per real navigation, including every
+  // back/forward traversal regardless of its settle path.
   const pageViews = (await events(page)).filter((e) => e.name === 'page_view');
-  expect(pageViews).toHaveLength(expectedPaths.length + popstatePaths.length - bfcacheRestores);
+  expect(pageViews).toHaveLength(expectedPaths.length + popstatePaths.length);
   const firedPaths = pageViews.map((e) => e.parameters.page_path);
   // The first six are the hard load + forward navigations, in order.
   expect(firedPaths.slice(0, expectedPaths.length)).toEqual(expectedPaths);
-  // The tail is the popstate swaps — an in-order subsequence of the popstate
-  // paths with exactly (popstates - restores) entries, since WHICH popstate
-  // BFCache-restored is not deterministic.
+  // The tail is every traversal in order; BFCache and swaps are equivalent at
+  // this measurement boundary.
   const tail = firedPaths.slice(expectedPaths.length);
-  expect(tail).toHaveLength(popstatePaths.length - bfcacheRestores);
-  let tailIndex = 0;
-  for (const path of popstatePaths) {
-    if (tailIndex < tail.length && tail[tailIndex] === path) tailIndex += 1;
-  }
-  expect(tailIndex, `tail ${JSON.stringify(tail)} must follow popstate order`).toBe(tail.length);
+  expect(tail).toEqual(popstatePaths);
 
   // And every fired page_view carries the landing attribution (utm survives
   // the journey, traffic_type retained) and a query-free page_location.
@@ -203,36 +184,41 @@ test('exactly one page_view per real navigation across a mixed VT journey', asyn
   }
 });
 
-test('back to /projects/ is a dead traversal — the filter script nulls history state (see #659)', async ({ page }) => {
-  // Pre-existing defect, identical on Astro 6 and 7: the projects filter
-  // script's updateURL() calls history.replaceState(null, '', …), wiping the
-  // router state off the /projects/ history entry. Astro's onPopState then
-  // returns on ev.state === null: the browser moves the URL to /projects/,
-  // but the DOM is never swapped (it keeps showing the previous page) and no
-  // page_view fires. Pinned so the repair (preserve history.state in
-  // updateURL) updates this expectation deliberately.
+test('project filters preserve history state across back and forward navigation', async ({ page }) => {
   await enableAnalytics(page);
   await page.goto('/');
   await expectNoVtReload(page, async () => {
     await clickHeaderLink(page, 'Projects');
     await page.waitForURL('**/projects/');
   });
+
+  const activeFilter = page.locator('#status-filters .status-filter[data-status="active"]');
+  await activeFilter.click();
+  await expect(page).toHaveURL(/\/projects\/\?status=active$/);
+  await expect(activeFilter).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.project-card[data-status="complete"]').first()).toBeHidden();
+
   await expectNoVtReload(page, async () => {
     await clickHeaderLink(page, 'Blog');
     await page.waitForURL('**/blog/');
   });
   const before = (await events(page)).filter((e) => e.name === 'page_view').length;
 
-  // Back to the stateless /projects/ entry: the URL moves…
   await expectNoVtReload(page, async () => {
     await page.goBack();
-    await page.waitForURL('**/projects/');
+    await page.waitForURL('**/projects/?status=active');
   });
-  await page.waitForTimeout(700); // …but no swap ever arrives
-  // The DOM still shows the blog index under the /projects/ URL…
+  await expect(page.locator('main h1')).toContainText('Thirty-odd things built in public');
+  await expect(activeFilter).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.project-card[data-status="complete"]').first()).toBeHidden();
+  expect((await events(page)).filter((e) => e.name === 'page_view')).toHaveLength(before + 1);
+
+  await expectNoVtReload(page, async () => {
+    await page.goForward();
+    await page.waitForURL('**/blog/');
+  });
   await expect(page.locator('[data-post-list]')).toBeVisible();
-  // …and the dead traversal fired no page_view.
-  expect((await events(page)).filter((e) => e.name === 'page_view')).toHaveLength(before);
+  expect((await events(page)).filter((e) => e.name === 'page_view')).toHaveLength(before + 2);
 });
 
 test('article_engaged cannot fire below the reading threshold and never double-fires', async ({ page }) => {
@@ -329,14 +315,9 @@ test('Pagefind mounts exactly once and stays functional on its second VT visit',
   await expect(page.locator('#search .pagefind-ui__result-link').first()).toBeVisible();
 });
 
-test('gallery image click navigates to the image detail page (lightbox race pinned, see #658)', async ({ page }) => {
-  // The gallery trigger's delegated lightbox listener calls preventDefault,
-  // but Astro's router — whose document-level click listener is registered
-  // earlier — has already started the navigation, so the swap replaces the
-  // page mid-lightbox. Pre-existing on Astro 6 and identical on Astro 7;
-  // pinned here so a fix for #658 (capture-phase listener, or dropping the
-  // lightbox on collection pages) updates this expectation deliberately.
+test('gallery image opens the authoritative lightbox and its detail link navigates', async ({ page }) => {
   await page.goto('/gallery/');
+  await acceptConsent(page);
   await expectNoVtReload(page, async () => {
     await clickCard(page, page.locator('#main-content a[href^="/gallery/"]').first());
     await page.waitForURL(/\/gallery\/[^/]+\/$/);
@@ -344,13 +325,17 @@ test('gallery image click navigates to the image detail page (lightbox race pinn
 
   const trigger = page.locator('.gallery-trigger').first();
   const imageHref = (await trigger.getAttribute('href'))!;
+  const collectionUrl = page.url();
+  await clickCard(page, trigger);
+  await expect(page.locator('#lightbox')).toBeVisible();
+  await expect(page).toHaveURL(collectionUrl);
+  await expect(page.locator('#lightbox-detail')).toHaveAttribute('href', imageHref);
+  await expect(page.getByRole('button', { name: 'Close lightbox' })).toBeFocused();
+
   await expectNoVtReload(page, async () => {
-    await clickCard(page, trigger);
+    await page.locator('#lightbox-detail').click();
     await page.waitForURL((url: URL) => url.pathname === imageHref);
   });
-  // The navigation won the race: the image detail page rendered, and the
-  // collection page's lightbox (not present on this page) is gone.
-  await expect(page.locator('#main-content')).toBeVisible();
   expect(await page.locator('#lightbox').count()).toBe(0);
 });
 
