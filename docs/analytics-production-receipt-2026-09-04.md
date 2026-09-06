@@ -54,7 +54,10 @@ The controlled journey sent `debug_mode=true` and a subsequent diagnostic sent G
 - CV analytics rollback: revert `83eb4cd94a8ce34b3a4cd30475350a5d06e3753c` through the CV repository's protected release path.
 - The GA history-change setting should be re-enabled only if manual View Transition pageviews are also removed or replaced; otherwise duplicate pageviews and unsafe automatic referrers return.
 
+## Measurement correction — 2026-09-06
+
+Two pre-existing measurement defects were corrected together on 2026-09-06. Header navigation to the Projects index no longer emits `project_click`; only links to an individual `/projects/{slug}/` page qualify. This creates an intentional discontinuity in that event series: before this date, visits to the index through the header inflated the metric with `project_name: "Projects"`. Persisted BFCache restores now emit exactly one manual, query-free `page_view`, closing the corresponding undercount without changing ordinary-load or Astro View Transition measurement.
+
 ## Separate consent decision
 
 The CV's independent consent behavior was not changed. The policy and architecture decision remains tracked in [cv#397](https://github.com/adrianwedd/cv/issues/397).
-
