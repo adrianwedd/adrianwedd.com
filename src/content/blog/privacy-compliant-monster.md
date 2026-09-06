@@ -4,6 +4,9 @@ description: 'Most of the obvious loopholes died under scrutiny. What survived w
 date: 2026-09-06
 tags: ['privacy', 'systems-thinking', 'policy', 'AI']
 draft: false
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/privacy-compliant-monster/audio.m4a'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/privacy-compliant-monster/video.mp4'
+audioDuration: '23:32'
 ---
 
 _I went looking for loopholes in Australia's proposed privacy reforms. Most of the obvious ones died under scrutiny. What survived was stranger: the law can regulate each use of your data while still struggling to see the power of the profile built from all of it._
