@@ -1,0 +1,86 @@
+== home
+   notebook: f1636dcb-4ae6-400b-bccd-b4bb9c3a808e
+   artifact: 5069fac1-8a3c-4d74-8489-461ccadc2127
+   saved: 2752 1536 (3741KB)
+== about
+   notebook: 22058ffb-ad81-4679-84cb-04dea8906e10
+   artifact: 08dbf165-a92f-49da-b506-f04ac7b25690
+   still generating (12x5s)
+   saved: 2752 1536 (4009KB)
+== now
+   notebook: 4101f6c0-4666-49f5-855a-73fc9ff7d200
+   artifact: 5da876f7-5e85-4c82-b0f4-ec8465c43b93
+   saved: 2752 1536 (4136KB)
+== contact
+   notebook: 6c884078-cf59-4708-a5d8-f055389d927d
+   artifact: 320e0820-0ec5-46cf-bf4a-fda515cb8c61
+   saved: 2752 1536 (3932KB)
+== colophon: already generated, skipping
+== changelog
+   notebook: 32f031c8-ff70-47f0-b650-c34ad52788de
+   artifact: 793499ca-ff1e-4714-ae2f-604c270004ce
+   still generating (12x5s)
+   saved: 2752 1536 (3421KB)
+== local
+   notebook: 154773e0-3391-4f8c-af34-24cd78daeed6
+   artifact: e9dedaf9-930b-4692-8386-8658b2cf9d80
+   saved: 2752 1536 (3903KB)
+== privacy
+   notebook: 213bf98e-5427-4914-a85b-9e85ef20e563
+   artifact: 4fdef7db-f94a-40b1-aee2-308ea566d3ba
+   saved: 2752 1536 (4499KB)
+== search
+   notebook: b9c42b33-1a66-4877-b9ae-60eee0fe7857
+   artifact: 9869778e-b1b9-4c4b-80a3-da72f766f4da
+   still generating (12x5s)
+   saved: 2752 1536 (3592KB)
+== blog
+   notebook: 5d4fc4b1-d7b1-40a1-aefb-b6ba2eddcfae
+   artifact: 0978a472-1d0f-4151-8c13-03bf0cae3bf7
+   still generating (12x5s)
+   saved: 2752 1536 (4263KB)
+== projects
+   notebook: 205efaf4-de09-4485-9b9d-44fd76871cbd
+   artifact: 3bf84960-871a-4a35-8c53-6b787e70fb8f
+   still generating (12x5s)
+   saved: 2752 1536 (3979KB)
+== gallery
+   notebook: f1f9b450-6133-440d-adb5-d7a5cde14a6b
+   artifact: 6002ae34-7dfa-4ff8-8abf-953536f8a48e
+   saved: 2752 1536 (4225KB)
+== audio
+   notebook: f5270a07-a757-461c-86ce-88497c2fe4de
+   artifact: aac78438-9482-4bd8-af74-c0add0d0d36e
+   saved: 2752 1536 (4263KB)
+== case-studies
+   notebook: e736f175-cdd4-44ca-b68a-6fc82bd82f95
+   artifact: cd507d93-dbeb-47b1-b105-bb293d1cfc1e
+   saved: 2752 1536 (4058KB)
+== fixes
+   notebook: 660a8ebf-cd8d-4a52-ba7e-87ec4feda7b9
+   artifact: c49824f2-6e20-4a7d-b118-908cdd7d842c
+   saved: 2752 1536 (4012KB)
+== new
+   notebook: b03f550c-34cd-40e4-8445-58cf8994dff3
+   artifact: ad5a079a-6199-4937-b59a-c74940aafcbf
+   still generating (12x5s)
+   saved: 2752 1536 (4011KB)
+== activity
+   notebook: 8a20be31-af91-43ea-8f86-50a4799f8d3f
+   artifact: b7e26683-0df3-436a-9d68-c27a2bf5b608
+   still generating (12x5s)
+   saved: 2752 1536 (3892KB)
+== analytics
+   notebook: ce41f22e-6884-4b1f-b441-b4e081f475f4
+   artifact: 2c7b74c2-12de-404d-8953-fde8adec530e
+   saved: 2752 1536 (3891KB)
+== enquiry
+   ERROR: could not create notebook
+   {
+  "status": "error",
+  "error": "Failed to create notebook: API error (code 3): INVALID_ARGUMENT"
+}
+
+generated 17, skipped 1, of 19
+FAILED (1): enquiry:no-notebook
+Re-run to retry — completed pages are skipped.
