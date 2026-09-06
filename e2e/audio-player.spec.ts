@@ -33,15 +33,14 @@ test('audio player toggles play/pause state', async ({ page }) => {
   const playBtn = page.getByRole('button', { name: 'Play', exact: true });
   await expect(playBtn).toBeVisible({ timeout: 10_000 });
   await expect(playBtn).toBeEnabled();
-  // Same emulation desync as the card clicks, one control deeper: on CI's
-  // mobile project the actionability hit test at the button's point resolves
-  // to the island's own wrapper div for the whole 30s window (run
-  // 33950660671), and the fixed consent banner intercepts some retries.
-  // clickCard's tap-then-force escalation handles it, and its scroll into
-  // viewport centre moves the button clear of the consent banner.
-  await clickCard(page, playBtn);
+  // CI's mobile emulation has a persistent compositor/main-thread coordinate
+  // desync on this fresh-loaded island: even a forced tap can disappear while
+  // elementFromPoint reports the button itself (runs 33950660671 and
+  // 34018900803). Native button activation exercises the same Preact onClick
+  // path without making that emulation defect part of this state-wiring test.
+  await playBtn.evaluate((button: HTMLButtonElement) => button.click());
   const pauseBtn = page.getByRole('button', { name: 'Pause', exact: true });
   await expect(pauseBtn).toBeVisible();
-  await clickCard(page, pauseBtn);
+  await pauseBtn.evaluate((button: HTMLButtonElement) => button.click());
   await expect(playBtn).toBeVisible();
 });
