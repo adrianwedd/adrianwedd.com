@@ -11,7 +11,7 @@ audioDuration: '23:32'
 
 _I went looking for loopholes in Australia's proposed privacy reforms. Most of the obvious ones died under scrutiny. What survived was stranger: the law can regulate each use of your data while still struggling to see the power of the profile built from all of it._
 
-**Read the full submission:** [PDF](/downloads/privacy-reform-2026-submission.pdf) · [Markdown](/downloads/privacy-reform-2026-submission.md). This is my completed submission text, prepared for the Attorney-General's Department consultation; it has not yet been submitted. This post concerns the 2026 exposure draft, not enacted law.
+**Read the full submission:** [PDF](/downloads/privacy-reform-2026-submission.pdf) · [Markdown](/downloads/privacy-reform-2026-submission.md). I submitted this response to the Attorney-General's Department consultation on 6 September 2026. This post concerns the 2026 exposure draft, not enacted law.
 
 I expected to hate this Bill.
 
