@@ -8,6 +8,11 @@ import { unified } from '@astrojs/markdown-remark';
 import rehypeTableScroll from './src/lib/rehype-table-scroll.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
+import { syncHeroImages } from './scripts/sync-hero-images.mjs';
+
+// Run before Vite expands the image glob, including direct `astro check`/dev.
+// Public artwork remains canonical; importable copies are disposable.
+syncHeroImages(process.cwd());
 
 // Build URL→lastmod map from content frontmatter
 function buildContentDateMap() {

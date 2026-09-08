@@ -42,7 +42,9 @@ jobs:
   # so nothing runs twice on a PR.
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Cold AVIF/WebP generation for 128 heroes takes ~13 minutes on the
+    # hosted runner. Keep room for the build and unchanged browser tests.
+    timeout-minutes: 20
     env:
       CI: 'true'
       PUBLIC_GA_MEASUREMENT_ID: G-TESTE2E0000
