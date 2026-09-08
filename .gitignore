@@ -84,3 +84,6 @@ scripts/notebooklm/logs/**/*.log
 # the published copies live on R2 (cdn.adrianwedd.com), never in git.
 /exports/
 scripts/notebooklm/staging/
+
+# Disposable imports recreated from public artwork by astro.config.mjs
+/src/assets/generated-heroes/

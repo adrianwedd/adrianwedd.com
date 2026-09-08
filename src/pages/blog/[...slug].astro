@@ -9,7 +9,8 @@ import NotebookAssets from '../../components/NotebookAssets.astro';
 import SeriesCTA from '../../components/SeriesCTA.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
 import { getCollection, render } from 'astro:content';
-import { slug, tagSlug, youtubeId, ogSafeImage, heroAltText, isPublicPath } from '../../lib/utils';
+import { slug, tagSlug, youtubeId, ogSafeImage, heroAltText } from '../../lib/utils';
+import { resolveHeroImage } from '../../lib/hero-image';
 import { getImageDimensions } from '../../lib/image-dimensions';
 import ProjectCTA from '../../components/ProjectCTA.astro';
 
@@ -90,6 +91,7 @@ const ogImageHeight = ogDimensions?.height ?? 630;
 // Hero <Picture> intrinsic dimensions: read the real file so the browser
 // reserves the correct aspect ratio (infographic heroes are portrait
 // 1536x2752 — hardcoding 1200x630 caused layout shift once the image loaded).
+const heroSource = resolveHeroImage(post.data.heroImage);
 const heroDimensions = post.data.heroImage ? getImageDimensions(post.data.heroImage) : null;
 const heroWidth = heroDimensions?.width ?? 1200;
 const heroHeight = heroDimensions?.height ?? 630;
@@ -132,7 +134,6 @@ const pathname = Astro.url.pathname;
   siteNameInTitle={false}
   publishedDate={post.data.date.toISOString()}
   tags={post.data.tags}
-  preloadImage={typeof post.data.heroImage === 'string' ? post.data.heroImage : undefined}
 >
   <script
     is:inline
@@ -341,12 +342,18 @@ const pathname = Astro.url.pathname;
           />
         ) : post.data.heroImage ? (
           <Picture
-            src={post.data.heroImage}
-            width={heroWidth}
-            height={heroHeight}
-            {...(isPublicPath(post.data.heroImage)
-              ? {}
-              : { widths: [640, 1200, 1920], formats: ['avif', 'webp'] as const })}
+            width={Math.min(heroWidth, 1200)}
+            height={Math.round((heroHeight * Math.min(heroWidth, 1200)) / heroWidth)}
+            {...(typeof heroSource === 'object'
+              ? {
+                  src: heroSource,
+                  widths: [480, 768, 1200],
+                  formats: ['avif', 'webp'] as const,
+                  fallbackFormat: 'webp' as const,
+                  sizes:
+                    '(max-width: 639px) calc(100vw - 2rem), (max-width: 767px) calc(100vw - 3rem), (max-width: 1023px) 720px, 704px',
+                }
+              : { src: heroSource! })}
             alt={heroAlt}
             class="border-border mt-8 w-full rounded-lg border"
             loading="eager"
