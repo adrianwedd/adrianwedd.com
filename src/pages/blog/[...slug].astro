@@ -70,6 +70,7 @@ const postSlug = slug(post.id);
 // OG image: twitter:card=summary_large_image wants ~1.91:1 and centre-crops the
 // rest into mush. Prefer the generated landscape text card in that case.
 const ogTextCard = `/og/blog/${postSlug}.png`;
+const dedicatedOg = post.data.ogImage ? ogSafeImage(post.data.ogImage) : null;
 const heroOg = post.data.heroImage ? ogSafeImage(post.data.heroImage) : null;
 const heroOgDimensions = heroOg ? getImageDimensions(heroOg) : null;
 // Use the hero only when its dimensions are *known* and landscape. Unknown
@@ -80,7 +81,7 @@ const heroOgDimensions = heroOg ? getImageDimensions(heroOg) : null;
 // here), so agreement is not guaranteed by construction. scripts/check-og-
 // images.mjs is what actually makes this safe; it runs on every PR.
 const heroOgIsLandscape = !!heroOgDimensions && heroOgDimensions.width >= heroOgDimensions.height;
-const ogImage = heroOg && heroOgIsLandscape ? heroOg : ogTextCard;
+const ogImage = dedicatedOg ?? (heroOg && heroOgIsLandscape ? heroOg : ogTextCard);
 // Read the actual image dimensions at build time (covers infographics, text
 // cards, and any future OG image shape without filename-based heuristics).
 // Falls back to standard 1200x630 if the file is missing or unreadable.
@@ -129,7 +130,8 @@ const pathname = Astro.url.pathname;
   image={ogImage}
   imageWidth={ogImageWidth}
   imageHeight={ogImageHeight}
-  imageAlt={(ogImage === ogTextCard ? `${post.data.title} — adrianwedd.com` : heroAlt) || undefined}
+  imageAlt={(ogImage === ogTextCard || ogImage === dedicatedOg ? `${post.data.title} — adrianwedd.com` : heroAlt) ||
+    undefined}
   type="article"
   siteNameInTitle={false}
   publishedDate={post.data.date.toISOString()}

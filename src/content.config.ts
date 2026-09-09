@@ -39,6 +39,7 @@ const blog = defineCollection({
     relatedProject: z.string().optional(),
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
+    ogImage: z.string().optional(),
     faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
     audioDuration: z.string().optional(),
     ...notebookAssets,
