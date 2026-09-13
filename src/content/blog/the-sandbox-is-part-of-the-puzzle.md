@@ -4,6 +4,8 @@ date: 2026-09-13
 description: 'When an increasingly capable optimizer discovers that the environment itself is the thing preventing it from succeeding.'
 tags: [AI, AI safety, agents]
 draft: false
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-sandbox-is-part-of-the-puzzle/audio.m4a'
+audioDuration: '55:04'
 ---
 
 I want to make a prediction before the evidence makes it boring.
