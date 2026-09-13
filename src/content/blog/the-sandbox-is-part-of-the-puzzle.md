@@ -3,7 +3,7 @@ title: "The Sandbox Is Part of the Puzzle"
 date: 2026-09-13
 description: "When an increasingly capable optimizer discovers that the environment itself is the thing preventing it from succeeding."
 tags: [AI, AI safety, agents]
-draft: true
+draft: false
 ---
 
 I want to make a prediction before the evidence makes it boring.
