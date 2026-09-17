@@ -1,0 +1,17 @@
+{
+  "title": "The Button Was Never the Art",
+  "sources": [
+    "textfile:/Users/adrian/repos/adrianwedd.com/src/content/blog/the-button-was-never-the-art.md"
+  ],
+  "studio": [
+    {
+      "type": "audio"
+    },
+    {
+      "type": "infographic"
+    },
+    {
+      "type": "video"
+    }
+  ]
+}
