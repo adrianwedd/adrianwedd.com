@@ -1,12 +1,12 @@
 ---
 title: 'A Weathervane, Not a Map'
-description: "Field notes from working with AI agents while the weather keeps changing — why scaffolding has a half-life, and what survived the collisions."
+description: 'Field notes from working with AI agents while the weather keeps changing — why scaffolding has a half-life, and what survived the collisions.'
 date: 2026-09-18
 tags: ['ai-safety', 'ai-agents', 'autonomy', 'research', 'llm']
 draft: true
 ---
 
-*Field notes from working with AI agents while the weather keeps changing.*
+_Field notes from working with AI agents while the weather keeps changing._
 
 I should probably begin by saying this is not an article about how to use AI.
 
@@ -74,7 +74,7 @@ A parenting book.
 
 ## Trying not to lie to tired parents
 
-Late in 2025 I was working on *[This Wasn't in the Brochure](/projects/this-wasnt-in-the-brochure/)*, a book about parenting neurodivergent kids while being neurodivergent yourself.
+Late in 2025 I was working on _[This Wasn't in the Brochure](/projects/this-wasnt-in-the-brochure/)_, a book about parenting neurodivergent kids while being neurodivergent yourself.
 
 ADHD, autism, Pathological Demand Avoidance, oppositional behaviour, medication, schools, meltdowns, co-parenting, family law: precisely the sort of material where a language model can produce something warm, reassuring, beautifully structured and dangerously wrong.
 
@@ -214,7 +214,7 @@ Repair the apparatus.
 
 Then run the corrected experiment separately.
 
-This is where words like *observed*, *derived*, *inferred*, *unknown* and *falsifiable* started becoming operational rather than academic decoration.
+This is where words like _observed_, _derived_, _inferred_, _unknown_ and _falsifiable_ started becoming operational rather than academic decoration.
 
 Null results became conditional on observability.
 
@@ -236,7 +236,7 @@ Not because I had developed a framework and was rolling it out.
 
 More because I would look at a new problem and think:
 
-*That shit seemed to work over there. Does some mangled version of it help here?*
+_That shit seemed to work over there. Does some mangled version of it help here?_
 
 [Bottom Pub](/projects/bottom-pub-co-op/) was one of the stranger permutations.
 
@@ -360,7 +360,7 @@ Historical handoffs can remain as fossils. They don't regain authority because a
 
 Again, I don't conclude from this that handoffs are bad.
 
-I conclude that *this project*, under *these conditions*, learned something expensive about what happens when representations start competing with the thing they represent.
+I conclude that _this project_, under _these conditions_, learned something expensive about what happens when representations start competing with the thing they represent.
 
 Somewhere else, a handoff might be exactly the right tool.
 
