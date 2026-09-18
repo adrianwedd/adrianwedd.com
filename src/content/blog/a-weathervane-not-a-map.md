@@ -3,7 +3,10 @@ title: 'A Weathervane, Not a Map'
 description: 'Field notes from working with AI agents while the weather keeps changing — why scaffolding has a half-life, and what survived the collisions.'
 date: 2026-09-18
 tags: ['ai-safety', 'ai-agents', 'autonomy', 'research', 'llm']
-draft: true
+draft: false
+heroImage: '/notebook-assets/a-weathervane-not-a-map/hero.jpg'
+heroAlt: 'A copper weathervane above faint topographic contours and the outline of Australia, under a dark moon and shadowed foliage.'
+ogImage: '/og/blog/a-weathervane-not-a-map.png'
 ---
 
 _Field notes from working with AI agents while the weather keeps changing._
