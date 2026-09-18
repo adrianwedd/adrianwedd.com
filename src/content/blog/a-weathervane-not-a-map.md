@@ -162,9 +162,9 @@ Very precise. Very consequential. Exactly the kind of sentence the machinery exi
 
 Except that finding doesn't match the manuscript revisions I can now inspect.
 
-The sentence is absent from the initial committed manuscript. It is absent from every later edition, including the one produced by the evidence-upgrade pass that rewrote that entire section. What the section actually carried was a "Dopamine Crash" heading with no percentage anywhere in it. When the remediation list was later worked, an independent audit ran the search pattern written into the list itself, `85%.*dopamine|dopamine.*crash.*85%`, and recorded the result as "Not present".
+The sentence is absent from the initial committed manuscript. It is absent from every later edition, including the one produced by the evidence-upgrade pass that rewrote that entire section. What the section actually carried was a "Dopamine Crash" heading with no percentage anywhere in it. When the remediation list was later worked, an independent audit ran the search pattern written into the list itself, `85%.*dopamine|dopamine.*crash.*85%`, and recorded the result as "Not present". Reviewing chapter five, that audit stopped to note that the chapter was not about medication at all — it is the meltdown chapter — and that the claim it was told to find belonged somewhere else.
 
-The finding cited a line number. I checked it. Line 189 of that chapter is a bullet about collaborative problem solving, 133 lines below the dopamine-crash passage it was annotating.
+The finding cited a line number: 189. I checked it. Line 189 of that chapter is a bullet about collaborative problem solving, 133 lines below the dopamine-crash passage it was annotating. Better: the same coordinate appears against three different chapters in three different review reports. It isn't a manuscript line at all. It's a row in a claim ledger.
 
 I can't tell you which of those it was: a finding about a version that never entered the repository, or a reviewer constructing a claim out of the section it was reading. The committed record can't distinguish them, because the sentence isn't in it either way.
 
