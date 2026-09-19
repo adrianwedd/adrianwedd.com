@@ -9,6 +9,7 @@ heroAlt: 'A copper weathervane above faint topographic contours and the outline 
 ogImage: '/og/blog/a-weathervane-not-a-map.png'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/a-weathervane-not-a-map/audio.m4a'
 audioDuration: '44:21'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/a-weathervane-not-a-map/video.mp4'
 ---
 
 _Field notes from working with AI agents while the weather keeps changing._
