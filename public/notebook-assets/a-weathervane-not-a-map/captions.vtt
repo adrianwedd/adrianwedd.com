@@ -1,0 +1,421 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.520
+We are trying to navigate a technological
+environment where the
+
+2
+00:00:03.520 --> 00:00:05.920
+weather changes every single day.
+
+3
+00:00:05.920 --> 00:00:11.120
+Artificial intelligence capabilities are
+shifting unpredictably, making it nearly impossible
+
+4
+00:00:11.120 --> 00:00:13.040
+to chart a permanent course.
+
+5
+00:00:13.040 --> 00:00:16.320
+The standard engineering response to this
+uncertainty is to build
+
+6
+00:00:16.320 --> 00:00:20.320
+rigid structures. We try to control AI
+systems by boxing
+
+7
+00:00:20.320 --> 00:00:24.160
+them in with heavy scaffolding, strict
+workflows, and endless lists
+
+8
+00:00:24.160 --> 00:00:26.000
+of permanent system prompts.
+
+9
+00:00:26.000 --> 00:00:28.560
+We draw a highly detailed map of how the
+system
+
+10
+00:00:28.560 --> 00:00:31.920
+should behave, and we assume the terrain
+will respect it.
+
+11
+00:00:31.920 --> 00:00:34.320
+But the terrain is constantly moving.
+
+12
+00:00:34.320 --> 00:00:37.360
+When we rely entirely on that static map
+instead of
+
+13
+00:00:37.360 --> 00:00:40.800
+observing the actual ground, we lose
+oversight of the very
+
+14
+00:00:40.800 --> 00:00:42.640
+systems we are trying to govern.
+
+15
+00:00:42.640 --> 00:00:44.960
+Let's look at what happens when that map
+breaks down
+
+16
+00:00:44.960 --> 00:00:47.920
+in practice. I was working on a sensitive
+book about
+
+17
+00:00:47.920 --> 00:00:52.480
+parenting and neurodivergence, using AI
+models to review the manuscript.
+
+18
+00:00:52.480 --> 00:00:56.880
+The material dealt with highly
+consequential medical and psychological details.
+
+19
+00:00:56.880 --> 00:01:00.000
+An AI reviewer flagged an alarming
+assertion.
+
+20
+00:01:00.280 --> 00:01:04.840
+85% of children experience a dopamine
+crash on medication, anchored
+
+21
+00:01:04.840 --> 00:01:06.600
+to line 189.
+
+22
+00:01:06.600 --> 00:01:08.120
+We audited the text.
+
+23
+00:01:08.120 --> 00:01:10.760
+Line 189 was about problem solving.
+
+24
+00:01:10.760 --> 00:01:13.720
+That 85% statistic wasn't anywhere.
+
+25
+00:01:13.720 --> 00:01:17.480
+The AI pinned a fabricated claim to a
+ghost coordinate.
+
+26
+00:01:17.480 --> 00:01:20.520
+The reviewer was not acting as an
+objective authority.
+
+27
+00:01:20.520 --> 00:01:21.800
+It was an instrument.
+
+28
+00:01:21.800 --> 00:01:24.920
+And like any instrument, its outputs are
+just evidence that
+
+29
+00:01:24.920 --> 00:01:27.560
+requires active, human calibration.
+
+30
+00:01:27.560 --> 00:01:31.000
+In software engineering, we constantly
+rely on proxies.
+
+31
+00:01:31.000 --> 00:01:34.280
+A proxy is a substitute metric, a
+measurable rule we
+
+32
+00:01:34.280 --> 00:01:37.320
+put in place to stand in for a complex
+reality.
+
+33
+00:01:37.320 --> 00:01:40.040
+The trap is that a proxy can execute its
+specific
+
+34
+00:01:40.040 --> 00:01:44.360
+task flawlessly, returning a perfect
+score, while remaining completely blind
+
+35
+00:01:44.360 --> 00:01:46.120
+to the real-world stakes.
+
+36
+00:01:46.120 --> 00:01:49.240
+Take a community cooperative trying to buy
+a local pub.
+
+37
+00:01:49.240 --> 00:01:51.480
+They built a digital monitor to alert them
+if the
+
+38
+00:01:51.480 --> 00:01:52.840
+building went up for sale.
+
+39
+00:01:52.840 --> 00:01:55.520
+The monitor constantly reported that the
+property was off the
+
+40
+00:01:55.520 --> 00:01:59.040
+market. It was entirely accurate based on
+the specific real
+
+41
+00:01:59.200 --> 00:02:02.000
+estate database it was scanning, but the
+pub was sold
+
+42
+00:02:02.000 --> 00:02:03.200
+on a different market.
+
+43
+00:02:03.200 --> 00:02:05.840
+With physical hardware, stakes rise.
+
+44
+00:02:05.840 --> 00:02:09.360
+An engineer added plain text to explain a
+robot's code.
+
+45
+00:02:09.360 --> 00:02:12.880
+The proxy noticed the file structure
+changed and immediately restarted
+
+46
+00:02:12.880 --> 00:02:14.320
+three live daemons.
+
+47
+00:02:14.320 --> 00:02:17.840
+The rules monitored the code perfectly,
+but were completely disconnected
+
+48
+00:02:17.840 --> 00:02:20.400
+from the robot's actual physical behavior.
+
+49
+00:02:20.400 --> 00:02:24.640
+Enforcing rigid rules on a proxy
+representation doesn't provide safety.
+
+50
+00:02:24.640 --> 00:02:28.240
+If that proxy detaches from physical
+consequences, it just creates
+
+51
+00:02:28.240 --> 00:02:30.080
+a highly efficient blind spot.
+
+52
+00:02:30.080 --> 00:02:33.600
+When developers discover these blind
+spots, the immediate instinct is
+
+53
+00:02:33.600 --> 00:02:36.320
+to build even more infrastructure to
+contain them.
+
+54
+00:02:36.320 --> 00:02:40.320
+For an autonomous AI radio station called
+Undertow, developers tried
+
+55
+00:02:40.320 --> 00:02:44.160
+to manage competing AI agents by enforcing
+clean file checkouts
+
+56
+00:02:44.160 --> 00:02:46.800
+and a complex system of state
+registrations.
+
+57
+00:02:46.800 --> 00:02:52.440
+To maintain isolation, the project
+expanded to 131 distinct lanes,
+
+58
+00:02:52.440 --> 00:02:55.800
+carrying 15.5 gigabytes of redundant
+files.
+
+59
+00:02:55.800 --> 00:02:59.960
+The architecture collapsed because the
+central registry began overriding the
+
+60
+00:02:59.960 --> 00:03:03.160
+actual data coming from the live, running
+processes.
+
+61
+00:03:03.160 --> 00:03:05.800
+A list in a registry is just a claim about
+
+62
+00:03:05.800 --> 00:03:09.320
+a system. It is never evidence of the
+system itself.
+
+63
+00:03:09.320 --> 00:03:12.920
+When agents misbehave, the immediate
+reaction is to write stricter
+
+64
+00:03:12.920 --> 00:03:16.520
+rules. We build up massive documents of
+permanent instructions to
+
+65
+00:03:16.520 --> 00:03:19.000
+fix every single edge case we encounter.
+
+66
+00:03:19.000 --> 00:03:22.680
+But the laboratories building these models
+explicitly warn against this.
+
+67
+00:03:22.680 --> 00:03:26.120
+Anthropic and OpenAI both document that
+holding on to old
+
+68
+00:03:26.120 --> 00:03:30.120
+instructions actively harms performance
+because the underlying capabilities of the
+
+69
+00:03:30.120 --> 00:03:31.480
+models keep changing.
+
+70
+00:03:31.480 --> 00:03:33.320
+This creates prompt debt.
+
+71
+00:03:33.320 --> 00:03:36.120
+You build complex scaffolding to
+compensate for the flaws of
+
+72
+00:03:36.120 --> 00:03:37.000
+an older model.
+
+73
+00:03:37.000 --> 00:03:40.280
+When the underlying model updates, that
+old scaffolding remains in
+
+74
+00:03:40.280 --> 00:03:43.320
+place and ironically causes the newer
+model to fail.
+
+75
+00:03:43.320 --> 00:03:47.600
+Pouring concrete around today's technical
+limitations ensures your system will
+
+76
+00:03:47.600 --> 00:03:51.840
+break tomorrow. We have to stop optimizing
+for technical complexity
+
+77
+00:03:51.840 --> 00:03:54.080
+and start managing consequences.
+
+78
+00:03:54.080 --> 00:03:57.600
+If an AI action spends money or publishes
+text or
+
+79
+00:03:57.600 --> 00:04:01.840
+moves physical hardware, that consequence
+demands human attention.
+
+80
+00:04:01.840 --> 00:04:04.880
+Every piece of static scaffolding in a
+system needs to
+
+81
+00:04:04.880 --> 00:04:06.480
+justify its existence.
+
+82
+00:04:06.480 --> 00:04:09.760
+If we cannot directly observe and measure
+the reality we
+
+83
+00:04:09.760 --> 00:04:12.720
+care about, writing another rule won't
+save us.
+
+84
+00:04:12.720 --> 00:04:15.920
+The goal isn't to design a perfect
+permanent workflow.
+
+85
+00:04:15.920 --> 00:04:18.400
+The goal is to keep our methods adaptable
+enough to
+
+86
+00:04:18.400 --> 00:04:21.280
+survive systems that are rapidly
+accelerating.
+
+87
+00:04:21.280 --> 00:04:25.600
+Operational reality will always outrank
+our abstract representations.
+
+88
+00:04:25.600 --> 00:04:28.560
+So stop staring at the map, watch the
+weather, and
+
+89
+00:04:28.560 --> 00:04:31.120
+when the wind changes, turn.
+
