@@ -7,6 +7,8 @@ draft: false
 heroImage: '/notebook-assets/a-weathervane-not-a-map/hero.jpg'
 heroAlt: 'A copper weathervane above faint topographic contours and the outline of Australia, under a dark moon and shadowed foliage.'
 ogImage: '/og/blog/a-weathervane-not-a-map.png'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/a-weathervane-not-a-map/audio.m4a'
+audioDuration: '44:21'
 ---
 
 _Field notes from working with AI agents while the weather keeps changing._
