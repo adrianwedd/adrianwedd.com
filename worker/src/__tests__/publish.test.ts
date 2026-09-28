@@ -228,9 +228,10 @@ describe('POST /api/cron/publish', () => {
     expect(mockPublishPost).not.toHaveBeenCalled();
   });
 
-  it('skips posts for a platform whose token expires today (daysUntilExpiry <= 0)', async () => {
+  it('publishes when data-access time has passed but Meta still validates the token', async () => {
     const kv = mockKV();
-    mockDebugAuth.mockResolvedValueOnce({ valid: true, platform: 'facebook', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0 });
+    mockDebugAuth.mockResolvedValueOnce({ valid: true, platform: 'facebook', expiresAt: 0, dataAccessExpiresAt: 1, daysUntilExpiry: -12, permissionsVerified: true, missingPermissions: [] });
+    mockPublishPost.mockResolvedValueOnce({ success: true, platformPostId: 'fb_post_id', isTransient: false, isAuthError: false });
 
     const post = makePost('p1');
     kv.store.set(`post:queued:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify(post));
@@ -239,8 +240,21 @@ describe('POST /api/cron/publish', () => {
     const res = await app.fetch(cronRequest(), makeEnv(kv));
     expect(res.status).toBe(200);
     const body = await res.json() as Record<string, unknown>;
+    expect(body.published).toBe(1);
+    expect((body.tokenExpiresInDays as Record<string, number>).facebook).toBe(-12);
+    expect(mockPublishPost).toHaveBeenCalledOnce();
+  });
+
+  it('does not publish when the Page token lacks pages_manage_posts', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValueOnce({ ...healthyToken, permissionsVerified: true, missingPermissions: ['pages_manage_posts'] });
+    const post = makePost('p1');
+    kv.store.set(`post:queued:${post.scheduledAtEpoch}:${post.id}`, JSON.stringify(post));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: `post:queued:${post.scheduledAtEpoch}:${post.id}` }], list_complete: true });
+
+    const res = await app.fetch(cronRequest(), makeEnv(kv));
+    const body = await res.json() as { published: number };
     expect(body.published).toBe(0);
-    expect((body.tokenExpiresInDays as Record<string, number>).facebook).toBe(0);
     expect(mockPublishPost).not.toHaveBeenCalled();
   });
 
@@ -875,7 +889,7 @@ describe('POST /api/cron/comments', () => {
     expect(platforms.bluesky).toBeDefined();
   });
 
-  it('skips a platform with expired data access and continues with others', async () => {
+  it('skips a platform with invalid auth and continues with others', async () => {
     const kv = mockKV();
     setConfiguredPlatforms(['facebook', 'bluesky']);
     getPlatformMocks('facebook').debugAuth.mockResolvedValueOnce({
@@ -887,8 +901,29 @@ describe('POST /api/cron/comments', () => {
     expect(res.status).toBe(200);
     const body = await res.json() as Record<string, unknown>;
     const platforms = body.platforms as Record<string, { error?: string }>;
-    expect(platforms.facebook.error).toBe('data access expired');
+    expect(platforms.facebook.error).toBe('comment access unavailable');
     expect(platforms.bluesky).toBeDefined();
+  });
+
+  it('skips Facebook comments when reply permission is missing, even if the token is valid', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValueOnce({ ...healthyToken, daysUntilExpiry: -12, permissionsVerified: true, missingPermissions: ['pages_manage_engagement'] });
+
+    const res = await app.fetch(commentsRequest(), makeEnv(kv));
+    const body = await res.json() as { platforms: { facebook: { error: string } } };
+    expect(res.status).toBe(200);
+    expect(body.platforms.facebook.error).toBe('comment access unavailable');
+  });
+
+  it('checks Facebook comments when data-access time has passed but permissions remain', async () => {
+    const kv = mockKV();
+    mockDebugAuth.mockResolvedValueOnce({ ...healthyToken, daysUntilExpiry: -12, permissionsVerified: true, missingPermissions: [] });
+
+    const res = await app.fetch(commentsRequest(), makeEnv(kv));
+    const body = await res.json() as { platforms: { facebook: { postsChecked?: number; error?: string } } };
+    expect(res.status).toBe(200);
+    expect(body.platforms.facebook.postsChecked).toBe(0);
+    expect(body.platforms.facebook.error).toBeUndefined();
   });
 
   it('releases the comments lock in finally even on unexpected error', async () => {
@@ -1029,7 +1064,43 @@ describe('post type validation', () => {
 
 // An invalid platform token must surface as a 503 on the authenticated
 // /api/health so uptime monitoring alerts on it (body unchanged).
+describe('GET /api/diagnostics/failed-posts', () => {
+  it('requires CLI auth and returns only bounded failure metadata', async () => {
+    const kv = mockKV();
+    const failed = { ...makePost('failed-1'), status: 'failed', error: 'Graph #200', message: 'private message', imageUrl: 'https://example.com/private.jpg' };
+    kv.store.set('post:failed:failed-1', JSON.stringify(failed));
+    kv.list.mockResolvedValueOnce({ keys: [{ name: 'post:failed:failed-1', expiration: 180 * 24 * 60 * 60 + 1000 }], list_complete: true });
+
+    const url = 'http://localhost/api/diagnostics/failed-posts';
+    expect((await app.fetch(new Request(url), makeEnv(kv))).status).toBe(401);
+    const res = await app.fetch(new Request(url, { headers: { Authorization: 'Bearer test-cli-secret' } }), makeEnv(kv));
+    expect(res.status).toBe(200);
+    const body = await res.json() as { failures: Array<Record<string, unknown>>; cursor: string | null };
+    expect(body.failures).toEqual([{
+      id: 'failed-1', platform: 'facebook', scheduledAt: failed.scheduledAt,
+      error: 'Graph #200', failedAtApprox: '1970-01-01T00:16:40.000Z',
+    }]);
+    expect(JSON.stringify(body)).not.toContain('private message');
+    expect(JSON.stringify(body)).not.toContain('private.jpg');
+    expect(body.cursor).toBeNull();
+    expect(kv.list).toHaveBeenCalledWith({ prefix: 'post:failed:', limit: 25 });
+  });
+});
+
 describe('GET /api/health token status', () => {
+  it('reports missing Page permission even when the token is valid', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    mockDebugAuth.mockResolvedValue({ ...healthyToken, expiresAt: 0, daysUntilExpiry: -12, permissionsVerified: true, missingPermissions: ['pages_manage_engagement'] });
+
+    const res = await app.fetch(new Request('http://localhost/api/health', {
+      headers: { Authorization: 'Bearer test-cron-secret' },
+    }), makeEnv(kv));
+    expect(res.status).toBe(503);
+    const body = await res.json() as { platforms: { facebook: { tokenValid: boolean; tokenExpiresAt: number; missingPermissions: string[] } }; degraded: string[] };
+    expect(body.platforms.facebook).toMatchObject({ tokenValid: true, tokenExpiresAt: 0, missingPermissions: ['pages_manage_engagement'] });
+    expect(body.degraded).toContain('missing platform permissions: facebook (pages_manage_engagement)');
+  });
   it('returns 503 when any configured platform reports an invalid token', async () => {
     const kv = mockKV();
     seedHeartbeats(kv);

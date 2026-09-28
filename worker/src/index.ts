@@ -585,13 +585,11 @@ app.post('/api/cron/publish', async (c) => {
       const adapter = createPlatform(platformName, env);
       const tokenHealth = await adapter.debugAuth();
       tokenExpiryByPlatform[platformName] = tokenHealth.daysUntilExpiry;
-      if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
+      if (!tokenHealth.valid || tokenHealth.permissionsVerified === false || tokenHealth.missingPermissions?.includes('pages_manage_posts')) {
         console.error(`${platformName} auth invalid — skipping posts for this platform`);
         blockedPlatforms.add(platformName);
-      } else if (tokenHealth.daysUntilExpiry <= 7) {
-        console.error(`${platformName} token expires in ${tokenHealth.daysUntilExpiry} days — URGENT`);
-      } else if (tokenHealth.daysUntilExpiry <= 14) {
-        console.warn(`${platformName} token expires in ${tokenHealth.daysUntilExpiry} days`);
+      } else if (tokenHealth.daysUntilExpiry <= 0) {
+        console.warn(`${platformName} data-access timestamp passed but token remains valid — continuing posts`);
       }
     }
 
@@ -851,11 +849,12 @@ app.post('/api/cron/comments', async (c) => {
     for (const platformName of getConfiguredPlatforms(env)) {
       const adapter = createPlatform(platformName, env);
       const tokenHealth = await adapter.debugAuth();
-      if (!tokenHealth.valid || tokenHealth.daysUntilExpiry <= 0) {
-        // Mirror the publish-cron behaviour: skip the bad platform and continue with others.
-        console.error(`${platformName} data access expired — skipping comments for this platform`);
+      if (!tokenHealth.valid || tokenHealth.permissionsVerified === false ||
+          tokenHealth.missingPermissions?.some((scope) => scope === 'pages_read_engagement' || scope === 'pages_manage_engagement')) {
+        // Do not mark comments as seen when the Page cannot read or reply to them.
+        console.error(`${platformName} comment access unavailable — skipping comments for this platform`);
         platformResults[platformName] = {
-          error: 'data access expired',
+          error: 'comment access unavailable',
           tokenExpiresInDays: tokenHealth.daysUntilExpiry,
         };
         continue;
@@ -881,6 +880,38 @@ app.post('/api/cron/comments', async (c) => {
   }
 });
 
+// ── GET /api/diagnostics/failed-posts ─────────────────────────────────────────
+
+// Bounded, authenticated access to failure metadata. Messages and media URLs
+// stay in KV; operators need the errors and dates to distinguish old residue
+// from an active publishing fault.
+app.get('/api/diagnostics/failed-posts', async (c) => {
+  if (!(await verifyBearer(c.req.header('Authorization') ?? null, c.env.CLI_SECRET))) return unauthorized();
+  const cursor = c.req.query('cursor');
+  if (cursor && cursor.length > 2048) return json({ error: 'Invalid cursor' }, 400);
+
+  const page = await c.env.SOCIAL.list({ prefix: 'post:failed:', limit: 25, ...(cursor ? { cursor } : {}) });
+  const failures = await Promise.all(page.keys.map(async (key) => {
+    const raw = await c.env.SOCIAL.get(key.name);
+    if (!raw) return null;
+    try {
+      const post = JSON.parse(raw) as SocialPost;
+      return {
+        id: post.id,
+        platform: post.platform,
+        scheduledAt: post.scheduledAt,
+        error: post.error,
+        // Newer failures have a 180-day TTL; older records have no usable
+        // failure timestamp, so do not present scheduledAt as the failure date.
+        failedAtApprox: key.expiration ? new Date((key.expiration - 180 * 24 * 60 * 60) * 1000).toISOString() : null,
+      };
+    } catch {
+      return { id: key.name.slice('post:failed:'.length), error: 'Unreadable record', failedAtApprox: null };
+    }
+  }));
+  return json({ failures: failures.filter((failure) => failure !== null), cursor: page.list_complete ? null : page.cursor });
+});
+
 // ── GET /api/health ───────────────────────────────────────────────────────────
 
 app.get('/api/health', async (c) => {
@@ -899,8 +930,11 @@ app.get('/api/health', async (c) => {
     const authStatus = await adapter.debugAuth();
     platformsHealth[platformName] = {
       tokenValid: authStatus.valid,
+      tokenExpiresAt: authStatus.expiresAt,
       dataAccessExpiresAt: authStatus.dataAccessExpiresAt,
       daysUntilExpiry: authStatus.daysUntilExpiry,
+      ...(authStatus.permissionsVerified !== undefined ? { permissionsVerified: authStatus.permissionsVerified } : {}),
+      ...(authStatus.missingPermissions !== undefined ? { missingPermissions: authStatus.missingPermissions } : {}),
     };
   }
 
@@ -967,6 +1001,12 @@ app.get('/api/health', async (c) => {
     .filter(([, p]) => (p as { tokenValid: boolean }).tokenValid === false)
     .map(([name]) => name);
   if (invalidPlatforms.length > 0) degraded.push(`invalid platform token: ${invalidPlatforms.join(', ')}`);
+
+  for (const [name, status] of Object.entries(platformsHealth)) {
+    const auth = status as { permissionsVerified?: boolean; missingPermissions?: string[] };
+    if (auth.permissionsVerified === false) degraded.push(`unverifiable platform permissions: ${name}`);
+    if (auth.missingPermissions?.length) degraded.push(`missing platform permissions: ${name} (${auth.missingPermissions.join(', ')})`);
+  }
 
   // Split "measured stale" from "couldn't measure": both alert, but they point
   // at different systems (GitHub Actions vs KV), and the reason string is what

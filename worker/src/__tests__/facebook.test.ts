@@ -168,3 +168,24 @@ describe('publishPost', () => {
     expect(result.error).toContain('Network timeout');
   });
 });
+
+describe('debugAuth', () => {
+  it('distinguishes an expired data-access date from token validity and missing Page permissions', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ data: {
+        is_valid: true,
+        expires_at: 0,
+        data_access_expires_at: 1,
+        scopes: ['pages_read_engagement', 'pages_manage_posts'],
+      } }),
+    });
+
+    const status = await createFacebookPlatform('35753603727', 'fake-token', 'fake-app-token').debugAuth();
+    expect(status.valid).toBe(true);
+    expect(status.expiresAt).toBe(0);
+    expect(status.daysUntilExpiry).toBeLessThan(0);
+    expect(status.permissionsVerified).toBe(true);
+    expect(status.missingPermissions).toEqual(['pages_manage_engagement']);
+  });
+});

@@ -1,17 +1,11 @@
-name: Social Token Expiry Alert
+name: Social Token Access Alert
 
-# Polls the social worker's /api/health and opens a GitHub issue when any
-# platform's data-access window is within THRESHOLD days of expiring. The
-# Facebook token never *expires*, but its data-access does (~quarterly), which
-# is what bit #189. This turns that recurring manual scramble into a heads-up.
+# Page-token data-access timestamps can pass while Page operations remain
+# available. Alert on actual token validity, required permissions, and the
+# token's own expiry. See #680 for the live verification.
 #
-# No new secrets: reuses SOCIAL_WORKER_URL + SOCIAL_CRON_SECRET (the worker's
-# /api/health accepts CRON_SECRET as bearer) and the built-in GITHUB_TOKEN.
-#
-# Idempotent: one open issue per platform (deduped by the `token-expiry` label
-# + platform name in the title). While still expiring it comments with the
-# updated day count instead of opening a new issue; once the platform is healthy
-# again it auto-closes the issue.
+# Uses the authenticated Worker health endpoint and opens one issue per
+# platform, deduped by the `token-access` label and platform title.
 
 on:
   schedule:
@@ -19,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       threshold:
-        description: 'Alert when daysUntilExpiry is below this'
+        description: 'Alert when actual token expiry is within this many days'
         required: false
         default: '7'
 
@@ -49,7 +43,7 @@ jobs:
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | sed '$d')
           echo "HTTP status: $HTTP_CODE"
-          # 503 = worker up but a platform token is invalid — the body still
+          # 503 = worker up but an operational check failed — the body still
           # carries the platforms block this job exists to act on.
           if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "503" ]; then
             echo "::error::Health check returned HTTP $HTTP_CODE"
@@ -58,7 +52,7 @@ jobs:
           fi
           # Guard: an unauthenticated /api/health returns {"ok":true} with no
           # platforms block — treat a missing platforms object as a hard failure
-          # so a misconfigured secret can't silently mask an expiring token.
+          # so a misconfigured secret cannot silently mask a token problem.
           if ! echo "$BODY" | jq -e '.platforms' >/dev/null 2>&1; then
             echo "::error::Health response has no .platforms block (auth misconfigured?)"
             echo "$BODY"
@@ -66,50 +60,52 @@ jobs:
           fi
           echo "$BODY" > health.json
 
-      - name: Open / update / close expiry issues
+      - name: Open / update / close access issues
         run: |
           set -euo pipefail
           THRESHOLD="${THRESHOLD:-7}"
+          NOW=$(date +%s)
 
-          # Iterate every platform the worker reports, so adding bluesky/twitter
-          # later needs no change here.
-          jq -r '.platforms | to_entries[] | "\(.key)\t\(.value.daysUntilExpiry)\t\(.value.dataAccessExpiresAt // "unknown")"' health.json \
-          | while IFS=$'\t' read -r PLATFORM DAYS EXPIRES; do
-              echo "=== ${PLATFORM}: daysUntilExpiry=${DAYS} (expires ${EXPIRES})"
+          jq -c '.platforms | to_entries[]' health.json | while IFS= read -r ENTRY; do
+              PLATFORM=$(jq -r '.key' <<< "$ENTRY")
+              VALID=$(jq -r '.value.tokenValid' <<< "$ENTRY")
+              EXPIRES=$(jq -r '.value.tokenExpiresAt // 0' <<< "$ENTRY")
+              VERIFIED=$(jq -r 'if (.value | has("permissionsVerified")) then .value.permissionsVerified else true end' <<< "$ENTRY")
+              MISSING=$(jq -r '(.value.missingPermissions // []) | join(", ")' <<< "$ENTRY")
+              echo "=== ${PLATFORM}: valid=${VALID}, tokenExpiresAt=${EXPIRES}, permissionsVerified=${VERIFIED}, missing=${MISSING}"
 
-              TITLE="🔑 ${PLATFORM} token data-access expiring"
-              # Existing open issue for this platform, if any. The worker's
-              # platform names are untrusted here, so never splice them into a
-              # jq program or search string — pass the title via `jq --arg` and
-              # filter the label-scoped listing client-side instead.
+              TITLE="🔑 ${PLATFORM} token access needs attention"
               EXISTING=$(gh issue list --repo "$REPO" --state open \
-                --label token-expiry --json number,title \
+                --label token-access --json number,title \
                 | jq -r --arg title "$TITLE" \
                   '.[] | select(.title == $title) | .number' | head -n1)
 
-              # Non-numeric / null days → can't reason about it; skip quietly.
-              case "$DAYS" in
-                ''|*[!0-9-]*) echo "  non-numeric days; skipping"; continue;;
-              esac
+              REASON=""
+              if [ "$VALID" != "true" ]; then REASON="token invalid"; fi
+              if [ "$VERIFIED" = "false" ]; then REASON="${REASON:+$REASON; }permissions unverifiable"; fi
+              if [ -n "$MISSING" ]; then REASON="${REASON:+$REASON; }missing permissions: $MISSING"; fi
+              if [[ "$EXPIRES" =~ ^[0-9]+$ ]] && [ "$EXPIRES" -gt 0 ]; then
+                DAYS=$(( (EXPIRES - NOW) / 86400 ))
+                if [ "$DAYS" -lt "$THRESHOLD" ]; then
+                  REASON="${REASON:+$REASON; }token expires in $DAYS day(s)"
+                fi
+              fi
 
-              if [ "$DAYS" -lt "$THRESHOLD" ]; then
-                BODY=$(printf '**%s** data-access expires in **%s day(s)** (on %s).\n\nRenew the token and update the worker secret, then close this issue.\n\nSee the FB renewal runbook (#189). This issue was opened automatically by `social-token-alert.yml`.' "$PLATFORM" "$DAYS" "$EXPIRES")
+              if [ -n "$REASON" ]; then
+                BODY=$(printf '**%s** token access needs attention: %s.\n\nInspect the token and Worker operations before renewing. Opened by `social-token-alert.yml`.' "$PLATFORM" "$REASON")
                 if [ -n "$EXISTING" ]; then
                   echo "  updating existing issue #${EXISTING}"
                   gh issue comment "$EXISTING" --repo "$REPO" \
-                    --body "Still expiring: **${DAYS} day(s)** left (expires ${EXPIRES}). _(automated re-check)_"
+                    --body "Token access still needs attention: **${REASON}**. _(automated re-check)_"
                 else
                   echo "  opening new issue"
                   gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" \
-                    --label token-expiry || \
+                    --label token-access || \
                   gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY"
                 fi
-              else
-                # Healthy — close any lingering alert from a previous window.
-                if [ -n "$EXISTING" ]; then
-                  echo "  healthy again; closing #${EXISTING}"
-                  gh issue close "$EXISTING" --repo "$REPO" \
-                    --comment "✅ ${PLATFORM} token healthy again: ${DAYS} day(s) until expiry. Auto-closing."
-                fi
+              elif [ -n "$EXISTING" ]; then
+                echo "  healthy again; closing #${EXISTING}"
+                gh issue close "$EXISTING" --repo "$REPO" \
+                  --comment "✅ ${PLATFORM} token valid with required permissions and no imminent token expiry. Auto-closing."
               fi
             done
