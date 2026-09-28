@@ -64,22 +64,20 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
 // OG image: prefer the post's hero infographic, but swap .webp -> .jpg
 // because FB / X / LinkedIn / iMessage do not reliably render WebP og:image
 // scrapes. The .jpg twin is generated alongside the .webp at build/asset
-// time. Fall back to the auto-generated text-card OG PNG when no heroImage.
+// time. Fall back to the checked-in legacy card when no authored ogImage or
+// usable hero exists. Builds no longer manufacture generic text cards.
 const postSlug = slug(post.id);
 // A portrait hero (our NotebookLM infographics are 1536x2752) is unusable as an
 // OG image: twitter:card=summary_large_image wants ~1.91:1 and centre-crops the
-// rest into mush. Prefer the generated landscape text card in that case.
+// rest into mush. Prefer dedicated landscape artwork in that case.
 const ogTextCard = `/og/blog/${postSlug}.png`;
 const dedicatedOg = post.data.ogImage ? ogSafeImage(post.data.ogImage) : null;
 const heroOg = post.data.heroImage ? ogSafeImage(post.data.heroImage) : null;
 const heroOgDimensions = heroOg ? getImageDimensions(heroOg) : null;
 // Use the hero only when its dimensions are *known* and landscape. Unknown
-// dimensions (missing .jpg twin, unreadable header) fall back to the text card,
-// matching scripts/generate-og-images.mjs, which generates a card in exactly the
-// same cases. Both sides read the same ogSafeImage() path and default the same
-// way — but they use different image readers (sharp there, image-dimensions
-// here), so agreement is not guaranteed by construction. scripts/check-og-
-// images.mjs is what actually makes this safe; it runs on every PR.
+// dimensions (missing .jpg twin, unreadable header) fall back to a checked-in
+// legacy card. scripts/check-og-images.mjs ensures the selected asset exists and
+// has a usable social-card aspect ratio.
 const heroOgIsLandscape = !!heroOgDimensions && heroOgDimensions.width >= heroOgDimensions.height;
 const ogImage = dedicatedOg ?? (heroOg && heroOgIsLandscape ? heroOg : ogTextCard);
 // Read the actual image dimensions at build time (covers infographics, text

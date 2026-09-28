@@ -60,6 +60,9 @@ const projects = defineCollection({
     featured: z.boolean().default(false),
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
+    // Authored landscape social artwork. This must be generated and reviewed
+    // editorially, then committed; production builds do not manufacture cards.
+    ogImage: z.string().optional(),
     date: z.coerce.date(),
     series: z.string().optional(),
     seriesOrder: z.number().optional(),
