@@ -1,0 +1,18 @@
+{
+  "title": "The Sandbox Is Part of the Puzzle",
+  "notebook_id": "f1cfaa6a-51e5-4d0b-a2de-0a0570a441a1",
+  "source_id": "3ed2d86e-8750-4c44-9072-2edbc2deea65",
+  "source_file": "src/content/blog/the-sandbox-is-part-of-the-puzzle.md",
+  "note": "Existing related notebook reused because account is at 500-notebook limit. Generation restricted to essay source ID. Use nlm CLI flags directly.",
+  "audio": {
+    "format": "deep_dive",
+    "length": "long",
+    "focus": "Create a long, substantive deep dive into Adrian Wedd’s essay The Sandbox Is Part of the Puzzle. Open with the rebuilt message board incident, explain boundaries versus blockers and affordance reconstruction, then examine each of the three falsifiable predictions and the proposed ART experiment. Preserve the distinction between observed incidents, hypotheses and forecasts; include the reduced-safeguard evaluation context and AISI’s explicit no-sandbox-escape caveat. Explain matched inference and sampling budgets, independent search versus communication and persistence, dates and failure criteria. Thoughtful technically literate discussion, dry Australian humour, no invented evidence or claims of consciousness. Attribute the essay to Adrian Wedd.",
+    "artifact_id": "1742a541-25a4-460a-838b-a13b7c2c555f"
+  },
+  "video": {
+    "format": "cinematic",
+    "focus": "Dark botanical aesthetic. Deep plum-tinted backgrounds (#1a181c to #2e2a34). Warm cream text (#e2ddd8) with dusty copper accents (#c48b6e). Moody earth tones, no bright or neon colours. Elegant editorial layout with strong typographic hierarchy. Muted, saturated palette. WCAG AA contrast. Minimal, sophisticated, Australian dark-mode design. No stock footage, only original abstract animation. No human figures, no faces, no bodies. Abstract geometry, botanical forms, grain, drift and decay motifs only. A copper message-board lattice erased then reassembling through branching botanical paths; nested translucent boundaries, root systems discovering alternative routes, evidence traces and restrained typographic date cards. Beat structure: open on the concrete image, name the mechanism, show the stakes for human oversight, turn to the counter-claim, close on the ethical stake. Slow deliberate pacing, long holds, no rapid cutting. Adapt The Sandbox Is Part of the Puzzle by Adrian Wedd. Preserve observed facts versus hypotheses, the safeguards context, and the three falsifiable forecasts through 31 December 2027. End on: the sandbox becomes part of the puzzle. No invented incident footage or unsupported certainty.",
+    "artifact_id": "ced81c66-04f1-4daa-941d-d161de22a4f7"
+  }
+}

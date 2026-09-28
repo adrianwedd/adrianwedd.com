@@ -15,11 +15,11 @@ Goal: make `main`, the deployed workers, and the branch list agree with reality.
 - [ ] Verify deployed workers match `main`: HSTS (#492), COOP/CORP (#494), health KV cap (#495), CSP Report-Only (#497) — curl the live headers; `wrangler deploy` anything stale
 - [ ] Root cruft: remove or relocate `diff.txt`, `modify_config.py`, `put_payload.json`, `tunnel_config.json`; commit or discard `scripts/notebooklm/scripts/strip-outro.sh`
 - [ ] Commit `worker-mta-sts/` (uncommitted since the 2026-06-15 email-security sweep)
-- [ ] Branch triage: delete merged remotes (`codex/*`, `content/499-asr-reframing`, `content/youtube-urls-*`, `feat/*`, `spec/*`); **preserve** the three `content/auto-drafts-*` branches (unmerged content — triaged in S40)
+- [ ] Branch triage: delete merged remotes (`codex/*`, `content/499-asr-reframing`, `content/youtube-urls-*`, `feat/*`, `spec/*`); `content/auto-drafts-*` historical branches are preserved once in `archive/auto-drafts-2026-backlog` (see S40)
 - [ ] Dependabot #517–519: merge greens; document an auto-merge policy for patch/minor dev-dep bumps
 - [ ] Refresh `docs/ROADMAP.md` statuses (Sprint 18–21 issues all closed since it was last touched)
 
-**Exit:** clean `git status`, remote branches = `main` + 3 auto-drafts, live worker headers verified against `main`.
+**Exit:** clean `git status`, remote branches = `main` + one rolling `content/auto-drafts` backlog branch, live worker headers verified against `main`.
 
 ## Sprint 37: Security Close-Out, Part 1 (#473)
 
@@ -61,10 +61,10 @@ Goal: pay down the content debts already researched or owed.
 - [ ] LLM-security failure-first post from the harvested sources (Das 2024 survey, Shayegani 2023 adversarial survey)
 - [ ] Eight Minutes Part 3: the owed takedown-outcomes follow-up note
 - [ ] the-tell / the-recital slot collision (#10/#12) — **needs Adrian's renumber-or-cut call**, then publish or archive
-- [ ] Triage the three `content/auto-drafts-*` branches (20260531 / 20260607 / 20260614): harvest what's good, close the rest with notes
+- [ ] Triage the rolling `content/auto-drafts` backlog PR: harvest what's good onto a human-owned branch, reject the rest in `data/auto-drafts-seen.json`. Historical 2026 branches preserved once in `archive/auto-drafts-2026-backlog`.
 - [ ] NLM kit sweep for recent posts shipped without one (AI data centres #514 first candidate)
 
-**Exit:** ≥2 posts live with full kits; zero orphan auto-draft branches; no owed series notes.
+**Exit:** ≥2 posts live with full kits; zero orphan auto-draft branches; at most one live generator-owned backlog branch/PR; every triaged paper has durable identity/provenance; no owed series notes.
 
 ## Sprint 41: Services & Local Conversion (Track A Follow-Through)
 
