@@ -1,0 +1,627 @@
+{
+  "about": [
+    "Deterministic DoH fixtures for scripts/dnssec-check.mjs.",
+    "Synthetic, recorded BY HAND to the documented Cloudflare / Google DoH JSON",
+    "shape — do not read them as a claim about any real zone. Zone names are",
+    "reserved examples (example / example.com) precisely so nobody mistakes them",
+    "for live state: a test must never depend on a domain being broken right now.",
+    "Key format: <resolverId>|<zone>|<TYPE>[|cd] — resolverId is cloudflare or",
+    "google, TYPE is DS or SOA, and the |cd suffix marks a checking-disabled query.",
+    "Status is the DNS RCODE (0 NOERROR, 2 SERVFAIL); AD is whether the resolver",
+    "authenticated the answer. See the source URLs cited in dnssec-check.mjs."
+  ],
+  "responses": {
+    "cloudflare|signed.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "signed.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "signed.example.",
+            "type": 43,
+            "TTL": 86400,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000001"
+          }
+        ]
+      }
+    },
+    "google|signed.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "signed.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "signed.example.",
+            "type": 43,
+            "TTL": 21600,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000001"
+          }
+        ],
+        "Comment": "Response from 2001:db8::1."
+      }
+    },
+    "cloudflare|signed.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "signed.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "signed.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          },
+          {
+            "name": "signed.example.",
+            "type": 46,
+            "TTL": 1800,
+            "data": "SOA 13 2 1800 1790669850 1790489850 34505 signed.example. AAAA"
+          }
+        ]
+      }
+    },
+    "google|signed.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "signed.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "signed.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          },
+          {
+            "name": "signed.example.",
+            "type": 46,
+            "TTL": 1800,
+            "data": "soa 13 2 1800 1790669850 1790489850 34505 signed.example. BBBB"
+          }
+        ],
+        "Comment": "Response from 2001:db8::2."
+      }
+    },
+
+    "cloudflare|insecure.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "insecure.example.", "type": 43 }],
+        "Authority": [
+          {
+            "name": "example.",
+            "type": 6,
+            "TTL": 900,
+            "data": "a.iana-servers.net. nstld.verisign-grs.com. 1790579736 900 1800 604800 3600"
+          }
+        ]
+      }
+    },
+    "google|insecure.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "insecure.example.", "type": 43 }],
+        "Authority": [
+          {
+            "name": "example.",
+            "type": 6,
+            "TTL": 900,
+            "data": "a.iana-servers.net. nstld.verisign-grs.com. 1790579736 900 1800 604800 3600"
+          }
+        ]
+      }
+    },
+    "cloudflare|insecure.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "insecure.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "insecure.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+    "google|insecure.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "insecure.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "insecure.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+
+    "cloudflare|bogus.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "bogus.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "bogus.example.",
+            "type": 43,
+            "TTL": 86400,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000002"
+          }
+        ]
+      }
+    },
+    "google|bogus.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "bogus.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "bogus.example.",
+            "type": 43,
+            "TTL": 21600,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000002"
+          }
+        ]
+      }
+    },
+    "cloudflare|bogus.example|SOA": {
+      "json": {
+        "Status": 2,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "bogus.example.", "type": 6 }],
+        "Comment": "DNSSEC validation failure."
+      }
+    },
+    "google|bogus.example|SOA": {
+      "json": {
+        "Status": 2,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "bogus.example.", "type": 6 }],
+        "Comment": "DNSSEC validation failure. Please check http://dnsviz.net/d/bogus.example/dnssec/."
+      }
+    },
+    "cloudflare|bogus.example|SOA|cd": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": true,
+        "Question": [{ "name": "bogus.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "bogus.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+    "google|bogus.example|SOA|cd": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": true,
+        "Question": [{ "name": "bogus.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "bogus.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+
+    "cloudflare|partial.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "partial.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "partial.example.",
+            "type": 43,
+            "TTL": 86400,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000003"
+          }
+        ]
+      }
+    },
+    "cloudflare|partial.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "partial.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "partial.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+    "google|partial.example|DS": {
+      "json": {
+        "Status": 2,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "partial.example.", "type": 43 }],
+        "Comment": "DNSSEC validation failure."
+      }
+    },
+    "google|partial.example|DS|cd": {
+      "json": {
+        "Status": 2,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": true,
+        "Question": [{ "name": "partial.example.", "type": 43 }],
+        "Comment": "SERVFAIL without validation too — the resolver cannot answer at all."
+      }
+    },
+
+    "cloudflare|noad.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "noad.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "noad.example.",
+            "type": 43,
+            "TTL": 86400,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000004"
+          }
+        ]
+      }
+    },
+    "google|noad.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "noad.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "noad.example.",
+            "type": 43,
+            "TTL": 21600,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000004"
+          }
+        ]
+      }
+    },
+    "cloudflare|noad.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "noad.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "noad.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+    "google|noad.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "noad.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "noad.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+
+    "cloudflare|ds-mismatch.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "ds-mismatch.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "ds-mismatch.example.",
+            "type": 43,
+            "TTL": 86400,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000005"
+          }
+        ]
+      }
+    },
+    "google|ds-mismatch.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "ds-mismatch.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "ds-mismatch.example.",
+            "type": 43,
+            "TTL": 21600,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000006"
+          }
+        ]
+      }
+    },
+    "cloudflare|ds-mismatch.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "ds-mismatch.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "ds-mismatch.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+    "google|ds-mismatch.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "ds-mismatch.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "ds-mismatch.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+
+    "cloudflare|malformed.example|DS": {
+      "text": "<html><body>502 Bad Gateway</body></html>"
+    },
+    "google|malformed.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "malformed.example.", "type": 43 }],
+        "Answer": [
+          {
+            "name": "malformed.example.",
+            "type": 43,
+            "TTL": 21600,
+            "data": "2371 13 2 0000000000000000000000000000000000000000000000000000000000000007"
+          }
+        ]
+      }
+    },
+    "google|malformed.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": true,
+        "CD": false,
+        "Question": [{ "name": "malformed.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "malformed.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+
+    "cloudflare|httperror.example|DS": {
+      "status": 503,
+      "text": "Service Unavailable"
+    },
+    "google|httperror.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "httperror.example.", "type": 43 }],
+        "Authority": [
+          {
+            "name": "example.",
+            "type": 6,
+            "TTL": 900,
+            "data": "a.iana-servers.net. nstld.verisign-grs.com. 1790579736 900 1800 604800 3600"
+          }
+        ]
+      }
+    },
+    "google|httperror.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "httperror.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "httperror.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    },
+
+    "cloudflare|timeout.example|DS": {
+      "error": "The operation was aborted: timed out after 10000ms"
+    },
+    "google|timeout.example|DS": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "timeout.example.", "type": 43 }],
+        "Authority": [
+          {
+            "name": "example.",
+            "type": 6,
+            "TTL": 900,
+            "data": "a.iana-servers.net. nstld.verisign-grs.com. 1790579736 900 1800 604800 3600"
+          }
+        ]
+      }
+    },
+    "google|timeout.example|SOA": {
+      "json": {
+        "Status": 0,
+        "TC": false,
+        "RD": true,
+        "RA": true,
+        "AD": false,
+        "CD": false,
+        "Question": [{ "name": "timeout.example.", "type": 6 }],
+        "Answer": [
+          {
+            "name": "timeout.example.",
+            "type": 6,
+            "TTL": 1800,
+            "data": "ns1.example. hostmaster.example. 2026092801 10000 2400 604800 1800"
+          }
+        ]
+      }
+    }
+  }
+}
