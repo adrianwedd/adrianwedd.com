@@ -93,6 +93,11 @@ Break these and the monitoring gets worse, not better.
   Those registrations are only covered by a registrar-side reminder.
 - **A GitHub run stuck `waiting` holds its concurrency group** and blocks every
   later run of that group. A 2026-07-21 worker-deploy run did this for five days.
+- **A DS record's presence does not prove DNSSEC validation.** The first sweep
+  treated any parent DS as healthy; `tasmania.homes` returned SERVFAIL from
+  validating resolvers during the 2026-09-28 publication attempt (#584).
+  `scripts/dnssec-check.mjs` now checks DS and an authenticated apex SOA through
+  two resolvers. Errors and disagreement remain findings rather than all-clear.
 - **GitHub silently disables scheduled workflows after 60 days of repo
   inactivity.**
 

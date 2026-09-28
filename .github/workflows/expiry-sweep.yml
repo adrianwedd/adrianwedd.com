@@ -14,15 +14,23 @@ name: Expiry Sweep
 #
 #   1. TLS certificate expiry, per hostname.
 #   2. Domain registration expiry, per registrable domain, via public RDAP.
-#   3. DNSSEC DS presence — a zone signed at Cloudflare whose DS record was never
-#      published at an external registrar is not actually validating, and there
-#      is no error anywhere to tell you so.
+#   3. DNSSEC validation — a zone signed at Cloudflare whose DS record was never
+#      published at an external registrar is not actually validating. Presence
+#      of a DS record is NOT enough to say a zone is fine: a DS that does not
+#      match the zone's current key makes every validating resolver SERVFAIL,
+#      and the first cut of this sweep reported exactly that state as "present".
+#      The check is now scripts/dnssec-check.mjs (two independent DoH resolvers,
+#      apex SOA + AD, fail-closed on disagreement), unit-tested in
+#      test/unit/dnssec-check.spec.ts so there is ONE implementation rather than
+#      inline shell no test can reach.
 #
 # Deliberately auth-free. Every check here uses public DNS, public RDAP, or a TLS
 # handshake, so it cannot fail because a token expired — which would be a
 # particularly stupid way to lose the monitoring that watches expiry. (It also
 # means no Cloudflare API scopes are needed: the available tokens can list zones
-# but are not authorised for the registrar or DNSSEC endpoints.)
+# but are not authorised for the registrar or DNSSEC endpoints.) The DNSSEC
+# probe speaks HTTPS DoH JSON to 1.1.1.1 and 8.8.8.8 directly — no `dig`, no
+# third-party CLI, and no API credential of any kind.
 
 on:
   schedule:
@@ -60,6 +68,14 @@ jobs:
       # taken. 45 days leaves room to fix a dead card and still act calmly.
       DOMAIN_WARN_DAYS: ${{ github.event.inputs.domain_warn_days || '45' }}
     steps:
+      # The DNSSEC section runs scripts/dnssec-check.mjs from this repo (one
+      # tested implementation, rather than shell that only exists inside this
+      # file). Everything else here needs no checkout.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
       - name: Sweep expiry clocks
         id: sweep
         run: |
@@ -149,11 +165,19 @@ jobs:
           # note; the only fix is a registrar-side reminder.
           NO_RDAP_EXPIRY_SUFFIXES=".au .ch"
 
-          # ── Domains expected to have a DS record published ──────────────────
-          # DNSSEC is enabled account-wide at Cloudflare, but the DS record has to
-          # be published at the REGISTRAR. For domains registered elsewhere that
-          # is a manual step, and until it happens the zone is signed but not
-          # validating — with no error surfaced anywhere.
+          # ── Domains whose DNSSEC state is verified ─────────────────────────
+          # Every zone on the account, as with the registration sweep.
+          #
+          # DNSSEC is enabled account-wide at Cloudflare, but the DS record has
+          # to be published at the REGISTRAR. For domains registered elsewhere
+          # that is a manual step. Two opposite failure modes exist and neither
+          # is visible anywhere else:
+          #   * DS never published → the zone is signed but not validating;
+          #   * DS published but not matching the zone's current key → every
+          #     validating resolver returns SERVFAIL.
+          # The second is worse than the first and looks, to a presence test,
+          # like the best case. `scripts/dnssec-check.mjs` distinguishes them and
+          # treats everything it cannot establish as a finding of its own.
           DNSSEC_DOMAINS="$DOMAINS"
 
           # ── 1. TLS certificate expiry ──────────────────────────────────────
@@ -230,32 +254,52 @@ jobs:
             fi
           done
 
-          # ── 3. DNSSEC DS records published at the registrar ─────────────────
-          MISSING_DS=""
-          for DOMAIN in $DNSSEC_DOMAINS; do
-            # Two resolvers, second only consulted if the first returns nothing.
-            # A single hardcoded resolver is a single point of failure that fails
-            # in the worst direction: if 1.1.1.1 were rate-limiting DS queries,
-            # every domain would report MISSING and the weekly issue would fill
-            # with false DNSSEC findings — which is how you learn to ignore it.
-            # Requiring both to return nothing makes a resolver problem look like
-            # a resolver problem, not like 29 broken zones.
-            DS=$(dig +short DS "$DOMAIN" @1.1.1.1 2>/dev/null | head -n1)
-            if [ -z "${DS:-}" ]; then
-              DS=$(dig +short DS "$DOMAIN" @8.8.8.8 2>/dev/null | head -n1)
-            fi
-            if [ -z "${DS:-}" ]; then
-              MISSING_DS="${MISSING_DS} ${DOMAIN}"
-              echo "DS ${DOMAIN}: MISSING"
+          # ── 3. DNSSEC: is the delegation actually validating? ──────────────
+          # `scripts/dnssec-check.mjs` asks two independent validating resolvers
+          # over DoH JSON (1.1.1.1 + 8.8.8.8) for the parent DS *and* for an
+          # authenticated apex SOA, and prints one finding per condition.
+          #
+          # This replaced a `dig +short DS` presence test, which had the failure
+          # direction exactly wrong: a DS record published at the registrar that
+          # does not match the zone's current key makes every validating resolver
+          # SERVFAIL, and presence-testing called that "present" — i.e. healthy.
+          # Observed 2026-09-28 on tasmania.homes during the #584 incident.
+          #
+          # The classification is unit-tested (test/unit/dnssec-check.spec.ts)
+          # against deterministic fixtures for: signed control, unsigned control,
+          # DS present with SERVFAIL, partial propagation, DS present with AD
+          # false, resolver disagreement, malformed body, HTTP error and timeout.
+          #
+          # A clean run may have zero findings. Require machine-readable results
+          # for every configured zone before allowing that state to close an issue.
+          # A crash, malformed/incomplete JSON, or a non-secure zone with no
+          # finding becomes a probe-error finding instead of a false all-clear.
+          DNSSEC_ZONES="$DNSSEC_DOMAINS"
+          DNSSEC_EXPECTED_NAMES=$(printf '%s\n' "$DNSSEC_ZONES" | tr -s '[:space:]' '\n' | jq -Rsc 'split("\n") | map(select(length > 0)) | unique')
+          DNSSEC_EXPECTED=$(printf '%s' "$DNSSEC_EXPECTED_NAMES" | jq 'length')
+          DNSSEC_JSON=$(DNSSEC_DOMAINS="$DNSSEC_ZONES" node scripts/dnssec-check.mjs --json 2>dnssec-probe.log)
+          DNSSEC_RC=$?
+          cat dnssec-probe.log 1>&2 || true
+          DNSSEC_VALID=0
+          if [ "$DNSSEC_RC" -eq 0 ] && printf '%s' "$DNSSEC_JSON" | jq -e --argjson expected "$DNSSEC_EXPECTED" --argjson names "$DNSSEC_EXPECTED_NAMES" '
+            (.zones | type) == "array" and (.zones | length) == $expected and
+            ([.zones[].zone] | sort) == $names and
+            (.findings | type) == "array" and
+            all(.findings[]; type == "string" and startswith("- DNSSEC:")) and
+            all(.zones[]; .state == "secure" or .state == "unsigned" or .state == "bogus" or .state == "inconsistent" or .state == "unknown") and
+            (if (.findings | length) == 0 then all(.zones[]; .state == "secure") else true end)
+          ' >/dev/null 2>&1; then
+            DNSSEC_VALID=1
+          fi
+          if [ "$DNSSEC_VALID" -eq 1 ]; then
+            printf '%s' "$DNSSEC_JSON" | jq -r '.findings[]' >> findings.txt
+          else
+            if [ "$DNSSEC_RC" -ne 0 ]; then
+              DNSSEC_WHY="exit ${DNSSEC_RC}"
             else
-              echo "DS ${DOMAIN}: present"
+              DNSSEC_WHY="incomplete or malformed zone results"
             fi
-          done
-          if [ -n "${MISSING_DS# }" ]; then
-            # Reported as ONE finding rather than one per domain: this is a known
-            # backlog of manual registrar steps, and 7 separate findings every week
-            # would drown the things that are actually new.
-            finding "DNSSEC: no DS record published for:${MISSING_DS}. These zones are signed at Cloudflare but not validating — the DS record has to be added at each registrar by hand. Until then DNSSEC is off for them in practice."
+            finding "DNSSEC: the validation probe produced no usable result (${DNSSEC_WHY}) — this run established NOTHING about DNSSEC for any zone. Not a missing DS and not an all-clear: treat DNSSEC monitoring as broken until it runs clean. Probe output: $(tail -n 3 dnssec-probe.log 2>/dev/null | tr '\n' ' ' | cut -c1-400)"
           fi
 
           COUNT=$(wc -l < findings.txt | tr -d ' ')
