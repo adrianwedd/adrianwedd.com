@@ -1074,7 +1074,8 @@ app.get('/api/health', async (c) => {
       crons,
       ...(degraded.length > 0 ? { degraded } : {}),
       queue: {
-        facebook: {
+        // These prefixes contain posts from every configured platform.
+        all: {
           queued: queuedResult.count,
           published: publishedResult.count,
           failed: failedResult.count,
