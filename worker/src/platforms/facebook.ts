@@ -117,6 +117,8 @@ export function createFacebookPlatform(
       }
       const now = Math.floor(Date.now() / 1000);
       const dataAccessExpiresAt = Number(data.data_access_expires_at) || 0;
+      const requiredScopes = ['pages_manage_posts', 'pages_read_engagement', 'pages_manage_engagement'];
+      const scopes = Array.isArray(data.scopes) ? data.scopes.filter((scope): scope is string => typeof scope === 'string') : null;
       const daysUntilExpiry = dataAccessExpiresAt > 0
         ? Math.floor((dataAccessExpiresAt - now) / 86400)
         : Infinity;
@@ -126,6 +128,8 @@ export function createFacebookPlatform(
         expiresAt: Number(data.expires_at) || 0,
         dataAccessExpiresAt,
         daysUntilExpiry: Number.isFinite(daysUntilExpiry) ? daysUntilExpiry : 999,
+        permissionsVerified: scopes !== null,
+        missingPermissions: scopes === null ? [] : requiredScopes.filter((scope) => !scopes.includes(scope)),
       };
     } catch {
       return { valid: false, platform: 'facebook', expiresAt: 0, dataAccessExpiresAt: 0, daysUntilExpiry: 0 };

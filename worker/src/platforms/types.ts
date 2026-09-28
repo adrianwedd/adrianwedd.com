@@ -44,6 +44,8 @@ export interface AuthStatus {
   expiresAt: number;
   dataAccessExpiresAt: number;
   daysUntilExpiry: number;
+  permissionsVerified?: boolean;
+  missingPermissions?: string[];
 }
 
 export interface IdempotencyRecord {
