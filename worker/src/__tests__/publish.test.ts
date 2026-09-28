@@ -1088,6 +1088,25 @@ describe('GET /api/diagnostics/failed-posts', () => {
 });
 
 describe('GET /api/health token status', () => {
+  it('labels cross-platform queue counts as all, not Facebook', async () => {
+    const kv = mockKV();
+    seedHeartbeats(kv);
+    kv.store.set('post:failed:twitter-1', JSON.stringify({ platform: 'twitter', error: 'CreditsDepleted' }));
+    kv.list.mockImplementation(async ({ prefix }: { prefix: string }) => ({
+      keys: [...kv.store.keys()].filter((name) => name.startsWith(prefix)).map((name) => ({ name })),
+      list_complete: true,
+    }));
+    mockDebugAuth.mockResolvedValue(healthyToken);
+
+    const res = await app.fetch(new Request('http://localhost/api/health', {
+      headers: { Authorization: 'Bearer test-cron-secret' },
+    }), makeEnv(kv));
+    const body = await res.json() as { queue: Record<string, { failed: number }> };
+    expect(res.status).toBe(200);
+    expect(body.queue.all.failed).toBe(1);
+    expect(body.queue.facebook).toBeUndefined();
+  });
+
   it('reports missing Page permission even when the token is valid', async () => {
     const kv = mockKV();
     seedHeartbeats(kv);
@@ -1423,12 +1442,12 @@ describe('GET /api/health stuck queue', () => {
 
     expect(res.status).toBe(503);
     const body = await res.json() as {
-      queue: { facebook: { due: number; stalled: boolean; oldestDueMinutes: number } };
+      queue: { all: { due: number; stalled: boolean; oldestDueMinutes: number } };
       degraded: string[];
     };
-    expect(body.queue.facebook.due).toBe(1);
-    expect(body.queue.facebook.stalled).toBe(true);
-    expect(body.queue.facebook.oldestDueMinutes).toBeGreaterThanOrEqual(46);
+    expect(body.queue.all.due).toBe(1);
+    expect(body.queue.all.stalled).toBe(true);
+    expect(body.queue.all.oldestDueMinutes).toBeGreaterThanOrEqual(46);
     expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(true);
   });
 
@@ -1441,9 +1460,9 @@ describe('GET /api/health stuck queue', () => {
     const res = await app.fetch(healthRequest(), makeEnv(kv));
 
     expect(res.status).toBe(200);
-    const body = await res.json() as { queue: { facebook: { due: number; stalled: boolean } } };
-    expect(body.queue.facebook.due).toBe(1);
-    expect(body.queue.facebook.stalled).toBe(false);
+    const body = await res.json() as { queue: { all: { due: number; stalled: boolean } } };
+    expect(body.queue.all.due).toBe(1);
+    expect(body.queue.all.stalled).toBe(false);
   });
 
   it('stays 200 for posts scheduled in the future', async () => {
@@ -1454,11 +1473,11 @@ describe('GET /api/health stuck queue', () => {
 
     expect(res.status).toBe(200);
     const body = await res.json() as {
-      queue: { facebook: { queued: number; due: number; oldestDueMinutes: number | null } };
+      queue: { all: { queued: number; due: number; oldestDueMinutes: number | null } };
     };
-    expect(body.queue.facebook.queued).toBe(2);
-    expect(body.queue.facebook.due).toBe(0);
-    expect(body.queue.facebook.oldestDueMinutes).toBeNull();
+    expect(body.queue.all.queued).toBe(2);
+    expect(body.queue.all.due).toBe(0);
+    expect(body.queue.all.oldestDueMinutes).toBeNull();
   });
 
   // One root cause, one fix, one alert — but only when the tokens FULLY explain
@@ -1472,13 +1491,13 @@ describe('GET /api/health stuck queue', () => {
 
     expect(res.status).toBe(503);
     const body = await res.json() as {
-      queue: { facebook: { stalled: boolean } };
+      queue: { all: { stalled: boolean } };
       degraded: string[];
     };
     expect(body.degraded).toContain('invalid platform token: facebook');
     expect(body.degraded.some((d) => d.startsWith('queue stalled:'))).toBe(false);
     // Still reported as state — suppressed as a REASON, not hidden.
-    expect(body.queue.facebook.stalled).toBe(true);
+    expect(body.queue.all.stalled).toBe(true);
   });
 
   // The suppression must NOT extend to a partially-blocked estate: a dead
@@ -1513,9 +1532,9 @@ describe('GET /api/health stuck queue', () => {
     const res = await app.fetch(healthRequest(), makeEnv(kv));
 
     expect(res.status).toBe(200);
-    const body = await res.json() as { queue: { facebook: { due: number; stalled: boolean } } };
-    expect(body.queue.facebook.due).toBe(120);
-    expect(body.queue.facebook.stalled).toBe(false);
+    const body = await res.json() as { queue: { all: { due: number; stalled: boolean } } };
+    expect(body.queue.all.due).toBe(120);
+    expect(body.queue.all.stalled).toBe(false);
   });
 });
 
