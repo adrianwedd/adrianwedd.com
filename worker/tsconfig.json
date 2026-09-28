@@ -10,5 +10,5 @@
     "types": ["@cloudflare/workers-types", "node"],
     "paths": { "~/*": ["./src/*"] }
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "test-shims/**/*.ts"]
 }
