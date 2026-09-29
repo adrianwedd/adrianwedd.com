@@ -47,6 +47,10 @@ exclude = [
   "https?://social\\.adrianwedd\\.com",
   # Expired SSL cert (not our problem)
   "https?://nownownow\\.com",
+  # Bot-walled (403 to non-browser agents); page content verified via snapshots 2026-09
+  "https?://www\\.pmc\\.gov\\.au",
+  "https?://www\\.weforum\\.org",
+  "https?://www\\.premier\\.tas\\.gov\\.au",
 ]
 
 # Exclude these file patterns from being checked AS SOURCES
