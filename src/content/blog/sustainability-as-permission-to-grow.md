@@ -4,7 +4,7 @@ description: 'Sustainability frameworks are becoming how AI infrastructure gets 
 date: 2026-09-29
 tags: ['ai-safety', 'policy', 'data-centres', 'energy', 'governance', 'tasmania', 'research']
 heroImage: '/notebook-assets/sustainability-as-permission-to-grow/hero.jpg'
-heroAlt: 'Schematic contours of an island under a dark moon: a hydro storage icon wired through the landscape to a stacked grid of computational load.'
+heroAlt: 'The essay title, Sustainability as Permission to Grow, over dark botanical artwork, with the line: when a community says no to a datacentre, the capital stalls.'
 ogImage: '/og/blog/sustainability-as-permission-to-grow.png'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/sustainability-as-permission-to-grow/audio.m4a'
 audioDuration: '47:29'
