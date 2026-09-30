@@ -6,6 +6,9 @@ tags: ['ai-safety', 'policy', 'data-centres', 'energy', 'governance', 'tasmania'
 heroImage: '/notebook-assets/sustainability-as-permission-to-grow/hero.jpg'
 heroAlt: 'Schematic contours of an island under a dark moon: a hydro storage icon wired through the landscape to a stacked grid of computational load.'
 ogImage: '/og/blog/sustainability-as-permission-to-grow.png'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/sustainability-as-permission-to-grow/audio.m4a'
+audioDuration: '47:29'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/sustainability-as-permission-to-grow/video.mp4'
 draft: false
 ---
 

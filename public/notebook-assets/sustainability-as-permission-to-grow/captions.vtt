@@ -1,0 +1,594 @@
+WEBVTT
+
+1
+00:00:00.240 --> 00:00:03.040
+AI is eating the physical world.
+
+2
+00:00:03.040 --> 00:00:06.880
+Building the infrastructure to power the
+global artificial intelligence boom
+
+3
+00:00:06.880 --> 00:00:10.800
+requires vast amounts of steel, concrete,
+and land.
+
+4
+00:00:10.800 --> 00:00:14.000
+But right now, this global buildout is
+hitting a wall.
+
+5
+00:00:14.000 --> 00:00:14.800
+In the U.S.
+
+6
+00:00:14.800 --> 00:00:19.280
+alone, local communities, worried about
+water scarcity and over-taxed electrical
+
+7
+00:00:19.280 --> 00:00:23.680
+grids, have pushed back, freezing well
+over $100 billion in
+
+8
+00:00:23.680 --> 00:00:25.680
+planned data center investments.
+
+9
+00:00:25.680 --> 00:00:28.640
+To get that stalled capital moving again,
+the industry is
+
+10
+00:00:28.640 --> 00:00:31.040
+pointing to sustainability frameworks.
+
+11
+00:00:31.040 --> 00:00:35.280
+The World Economic Forum estimates better
+environmental and community practices
+
+12
+00:00:35.280 --> 00:00:39.040
+could push up to $1 trillion in planned AI
+infrastructure
+
+13
+00:00:39.040 --> 00:00:40.720
+past local resistance.
+
+14
+00:00:40.720 --> 00:00:44.240
+In this investment risk framework, a local
+community rejecting a
+
+15
+00:00:44.240 --> 00:00:47.040
+development and a cooling system running
+out of water are
+
+16
+00:00:47.040 --> 00:00:49.920
+treated as similar impediments to
+construction.
+
+17
+00:00:49.920 --> 00:00:54.320
+Sustainability becomes the mechanism to
+manage those constraints, placate local
+
+18
+00:00:54.320 --> 00:00:57.200
+opposition, and keep the concrete pouring.
+
+19
+00:00:57.200 --> 00:01:00.600
+The older idea of sustainable development
+included a sense of
+
+20
+00:01:00.600 --> 00:01:04.280
+limits. But when sustainability is reduced
+to a project management
+
+21
+00:01:04.280 --> 00:01:07.400
+tool, it stops acting as a break on
+consumption.
+
+22
+00:01:07.400 --> 00:01:11.160
+It becomes the lubricant to ensure
+development proceeds.
+
+23
+00:01:11.160 --> 00:01:14.040
+The first line of defense in data center
+sustainability is
+
+24
+00:01:14.040 --> 00:01:18.680
+usually an engineering metric called power
+usage effectiveness, or PUE.
+
+25
+00:01:18.680 --> 00:01:22.200
+It measures exactly how much electricity
+entering a facility actually
+
+26
+00:01:22.200 --> 00:01:25.480
+reaches the computing equipment, rather
+than being lost to overheads
+
+27
+00:01:25.480 --> 00:01:29.720
+like cooling. But efficient hardware is
+only half the equation.
+
+28
+00:01:29.720 --> 00:01:33.640
+Generating an image, reasoning through a
+complex prompt, or creating
+
+29
+00:01:33.640 --> 00:01:36.840
+video consumes hundreds of times more
+energy per query than
+
+30
+00:01:36.840 --> 00:01:38.280
+a simple text search.
+
+31
+00:01:38.280 --> 00:01:41.800
+As computing becomes cheaper and more
+efficient, the industry doesn't
+
+32
+00:01:41.800 --> 00:01:44.120
+do the same amount of work with less
+power.
+
+33
+00:01:44.120 --> 00:01:48.680
+Instead, they invent heavier workloads,
+deploy more autonomous agents, and
+
+34
+00:01:48.680 --> 00:01:52.360
+generate an exponentially larger volume of
+data tokens across the
+
+35
+00:01:52.360 --> 00:01:55.000
+globe. This chart shows the tension
+clearly.
+
+36
+00:01:55.520 --> 00:02:00.000
+While the energy required per query, the
+shallow downward curve,
+
+37
+00:02:00.000 --> 00:02:04.960
+continues to improve, total global
+electricity consumption from AI data
+
+38
+00:02:04.960 --> 00:02:08.400
+centers is projected to aggressively
+multiply by the end of
+
+39
+00:02:08.400 --> 00:02:13.040
+the decade. Calculating how efficiently a
+resource is converted into
+
+40
+00:02:13.040 --> 00:02:16.880
+computation means very little if the total
+volume of computation
+
+41
+00:02:16.880 --> 00:02:20.160
+expands far faster than those efficiency
+gains.
+
+42
+00:02:20.160 --> 00:02:24.400
+In the end, mere efficiency is simply not
+sufficiency.
+
+43
+00:02:24.400 --> 00:02:26.880
+To see how this plays out physically, look
+at the
+
+44
+00:02:26.880 --> 00:02:28.480
+island of Tasmania.
+
+45
+00:02:28.480 --> 00:02:31.280
+Currently, its electrical grid is in
+balance.
+
+46
+00:02:31.280 --> 00:02:34.800
+The state generates roughly as much
+electricity as its customers
+
+47
+00:02:34.800 --> 00:02:39.040
+use. Now, a single company is proposing
+hundreds of megawatts
+
+48
+00:02:39.040 --> 00:02:41.200
+of AI infrastructure in the state.
+
+49
+00:02:41.200 --> 00:02:45.760
+At full build, these facilities would
+consume around 3.3 terawatt
+
+50
+00:02:45.760 --> 00:02:49.280
+hours of electricity every year, requiring
+a severe adjustment to
+
+51
+00:02:49.280 --> 00:02:51.160
+the island's energy equation.
+
+52
+00:02:51.160 --> 00:02:54.200
+To offset this, the developer has promised
+to support at
+
+53
+00:02:54.200 --> 00:02:57.640
+least two megawatts of new renewable
+generation for every one
+
+54
+00:02:57.800 --> 00:03:00.760
+megawatt of contracted data center
+capacity.
+
+55
+00:03:00.760 --> 00:03:02.840
+Two for one sounds generous.
+
+56
+00:03:02.840 --> 00:03:07.320
+But megawatts measure potential capacity,
+while actual energy output is
+
+57
+00:03:07.320 --> 00:03:09.000
+consumed over time.
+
+58
+00:03:09.000 --> 00:03:12.600
+Because wind and solar fluctuate with the
+weather, those large
+
+59
+00:03:12.600 --> 00:03:16.360
+renewable capacity blocks shrink and vary
+in reality, while the
+
+60
+00:03:16.360 --> 00:03:19.880
+data center load remains a constant,
+unyielding drain.
+
+61
+00:03:19.880 --> 00:03:23.640
+Delivering on that promise means the
+specific mix of generation,
+
+62
+00:03:23.640 --> 00:03:26.280
+the timing of the wind, and the amount of
+battery
+
+63
+00:03:26.280 --> 00:03:30.280
+firming matter far more than the headline
+two-for-one figure.
+
+64
+00:03:30.280 --> 00:03:35.160
+A mathematically appealing sustainability
+pledge can easily obscure the sheer,
+
+65
+00:03:35.160 --> 00:03:39.320
+relentless volume of physical energy an AI
+facility extracts from
+
+66
+00:03:39.320 --> 00:03:41.720
+a local grid 24 hours a day.
+
+67
+00:03:41.720 --> 00:03:44.360
+Generating the power is only the first
+step.
+
+68
+00:03:44.360 --> 00:03:44.920
+You also have.
+
+69
+00:03:45.120 --> 00:03:48.800
+to transport it Concentrating a utility
+scale load in a
+
+70
+00:03:48.800 --> 00:03:52.640
+single location physically alters the
+entire electrical grid.
+
+71
+00:03:52.640 --> 00:03:56.880
+Accommodating a load of this size requires
+heavy physical infrastructure.
+
+72
+00:03:56.880 --> 00:04:01.600
+It means building new substations,
+installing voltage stability mechanisms, and
+
+73
+00:04:01.600 --> 00:04:03.920
+adding reactive power support.
+
+74
+00:04:03.920 --> 00:04:07.280
+In one area of Tasmania, network operators
+have costed a
+
+75
+00:04:07.280 --> 00:04:11.840
+credible upgrade option at roughly $370
+million.
+
+76
+00:04:11.840 --> 00:04:15.440
+Regulators in Australia are actively
+updating the rules to handle
+
+77
+00:04:15.440 --> 00:04:18.400
+this. They want to ensure that large data
+centers bring
+
+78
+00:04:18.400 --> 00:04:21.840
+their own renewable generation and pay for
+the specific network
+
+79
+00:04:21.840 --> 00:04:23.600
+upgrades they cause.
+
+80
+00:04:23.600 --> 00:04:28.160
+Forcing a corporation to internalize its
+physical externalities, making them
+
+81
+00:04:28.160 --> 00:04:32.480
+pay the infrastructure costs they create,
+is excellent energy policy.
+
+82
+00:04:32.480 --> 00:04:36.080
+But while making a project pay its
+physical bill successfully
+
+83
+00:04:36.080 --> 00:04:39.440
+answers how a data center gets built, it
+creates the
+
+84
+00:04:39.440 --> 00:04:42.920
+illusion that the ultimate question has
+been settled.
+
+85
+00:04:42.920 --> 00:04:47.000
+Because an electrical grid has physical
+limits, allocating power carries
+
+86
+00:04:47.000 --> 00:04:48.680
+an opportunity cost.
+
+87
+00:04:48.680 --> 00:04:51.800
+Every megawatt used by a server is a
+megawatt denied
+
+88
+00:04:51.800 --> 00:04:53.160
+to something else.
+
+89
+00:04:53.160 --> 00:04:56.760
+You can see this zero-sum reality clearly
+when older, heavy
+
+90
+00:04:56.760 --> 00:04:58.280
+industry shuts down.
+
+91
+00:04:58.280 --> 00:05:02.040
+If a facility like an aluminum or
+manganese smelter closes,
+
+92
+00:05:02.040 --> 00:05:05.640
+hundreds of megawatts of electricity
+suddenly become available on the
+
+93
+00:05:05.640 --> 00:05:09.000
+grid. The state then faces a difficult
+choice.
+
+94
+00:05:09.000 --> 00:05:11.800
+Should this newly available power be sold
+to an AI
+
+95
+00:05:11.800 --> 00:05:15.640
+data center, used to develop green
+hydrogen, or preserved for
+
+96
+00:05:15.640 --> 00:05:18.520
+a future industry we haven't even invented
+yet?
+
+97
+00:05:18.520 --> 00:05:21.160
+A highly automated data center might be
+willing to pay
+
+98
+00:05:21.160 --> 00:05:24.920
+premium commercial rates for the
+electricity, but after construction is
+
+99
+00:05:24.920 --> 00:05:28.600
+finished, it provides far fewer long-term
+jobs and local supply
+
+100
+00:05:28.600 --> 00:05:31.400
+chain benefits than traditional
+manufacturing.
+
+101
+00:05:31.400 --> 00:05:35.440
+Because power is finite, the utility of
+artificial intelligence must
+
+102
+00:05:35.440 --> 00:05:38.240
+be weighed against every other potential
+industry that could have
+
+103
+00:05:38.240 --> 00:05:39.840
+used that capacity.
+
+104
+00:05:39.840 --> 00:05:43.680
+The decision always comes down to a single
+question: compared
+
+105
+00:05:43.680 --> 00:05:47.520
+with what? Right now, there is an
+institutional blind spot.
+
+106
+00:05:47.520 --> 00:05:51.600
+Local councils approve the zoning
+applications, and grid operators verify
+
+107
+00:05:51.600 --> 00:05:56.800
+network capacity. But no single authority
+conducts a public comparative
+
+108
+00:05:56.800 --> 00:06:00.240
+test to decide if an AI facility is
+actually the
+
+109
+00:06:00.240 --> 00:06:02.640
+most valuable use of that power.
+
+110
+00:06:02.960 --> 00:06:07.200
+To manage this, communities need the power
+of the veto.
+
+111
+00:06:07.200 --> 00:06:10.640
+That is, the democratic capacity to reject
+a project that
+
+112
+00:06:10.640 --> 00:06:14.160
+fully pays its physical costs simply
+because it isn't the
+
+113
+00:06:14.160 --> 00:06:17.360
+preferred use of a finite public resource.
+
+114
+00:06:17.360 --> 00:06:21.040
+They also need a dividend, a requirement
+that these projects
+
+115
+00:06:21.040 --> 00:06:25.520
+provide a lasting social return, like
+funding local research or
+
+116
+00:06:25.520 --> 00:06:29.360
+reserving compute time for universities,
+so that some public value
+
+117
+00:06:29.360 --> 00:06:34.040
+remains long after the current generation
+of hardware becomes obsolete.
+
+118
+00:06:34.040 --> 00:06:38.600
+Sustainability frameworks, engineering
+metrics, and investment risk profiles can tell
+
+119
+00:06:38.600 --> 00:06:42.360
+us how efficiently resources are converted
+into computation.
+
+120
+00:06:42.360 --> 00:06:45.240
+They cannot determine public value.
+
+121
+00:06:45.240 --> 00:06:49.000
+We are building an intricate global
+machine to ensure AI
+
+122
+00:06:49.000 --> 00:06:52.840
+pays its physical bill, but we have
+completely failed to
+
+123
+00:06:52.840 --> 00:06:56.200
+decide what our electricity is actually
+for.
+
