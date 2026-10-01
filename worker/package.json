@@ -9,14 +9,14 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "hono": "^4.13.7"
+    "hono": "^4.13.10"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260906.1",
-    "@types/node": "^26.4.1",
+    "@cloudflare/workers-types": "^5.20260928.1",
+    "@types/node": "^26.6.3",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11",
-    "wrangler": "^4.129.0"
+    "wrangler": "^4.142.0"
   },
   "overrides": {
     "esbuild": "^0.28.1",
