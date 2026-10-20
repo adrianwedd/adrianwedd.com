@@ -2,7 +2,7 @@
 title: "The Groove Isn't in the Notes"
 description: "A simulated fire, quantum monkeyware, artificial minds and the pleasure of asking questions we don't yet know how to answer."
 date: 2026-10-20
-tags: ['ai', 'consciousness', 'philosophy', 'science', 'music']
+tags: ['ai', 'consciousness', 'philosophy', 'science', 'music', 'epistemology']
 draft: true
 ---
 
