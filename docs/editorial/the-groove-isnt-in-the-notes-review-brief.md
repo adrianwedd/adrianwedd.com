@@ -210,3 +210,23 @@ This pass independently verified the primary sources in full where earlier passe
 5. **Kalra et al. UV excitation and author caveat (factual precision, low):** Added `"ultraviolet"` before `"photoexcitation"` and included the authors' own Discussion caveat (`"and the authors themselves note that biology is unlikely to use tubulin for light harvesting"`).
 
 `draft: true` remains intact. Not merged, not published.
+
+## Integration pass — 2026-10-20 (single integrator, frozen at `13d86d6`)
+
+One integrator read the complete essay at remote head `13d86d6`; no other agent was writing to the branch. Earlier passes had become correlated (concurrent edits in a shared checkout), so their agreement should not be read as independent confirmation.
+
+**Corrections to earlier passes' claims (verified against primary text):**
+
+1. **Arıcı "stubbornness" is not in the paper.** The v1.0 Zenodo PDF (`pdftotext`, grep for `stubborn|recalcitran`: zero hits) rests the inference on _two_ properties, cost and selectivity (§5.2–5.4, pp. 19–21). The previous ledger's "recalcitrance … included" claim was wrong. The essay now says "cost and selectivity" in both places. Added his p. 20 concession that the safety explanation (E₂) "is, in fact, a serious competitor … and the present argument does not claim to defeat it", and the author's view that this rival does most of the work.
+2. **Kocur statistics.** The PMC full text (`PMC13458219`, mixed models) reports Heater × Time on back-of-hand skin temperature as b = 0.021, t(202) = 2.04, p = .042, with no Heater main effect (p = .955). Thermal sensation had a Heater main effect, p = .045. The previous ledger's "F(1,1326)" and its HR/RPE p-values (.871/.875) don't match the text this pass retrieved (HR p = .166; RPE p = .699). One of the two readings is wrong. The essay states no test statistics, so it is unaffected; re-check against the publisher PDF before quoting numbers. The °C figures (+0.80 vs +0.43) appear only in figures and were not verified here.
+3. **"Didn't budge" → "no statistically significant differences".** A non-significant result doesn't establish that nothing changed. The essay now says both positive effects only just cleared significance, that there was no overall skin-temperature difference, and that core temperature wasn't measured.
+
+**Voice:** the microtubule caveats were compressed to plain language (UV light, test tube, the seizure drug). The falsification paragraph went from five clauses to three, so the section reads as curiosity, not a methods appendix.
+
+**Verified at this head:** Kalra 1.11 nm Förster prediction, 305 nm excitation, "unlikely that biological systems utilize the light-harvesting properties of tubulin", picrotoxin mention (PMC XML). Hagan, Hameroff & Tuszyński arXiv:quant-ph/0005025 rebuts Tegmark. Zenodo DOI resolves to Arıcı v1.0 (14 May 2026).
+
+**Links:** all 8 essay links resolve. doi.org returns 302 to the publisher for every DOI; ACS, APS, ACM and Zenodo answer 403 to scripted requests (bot blocking, not rot).
+
+**Still unverified:** the originating conversation's chronology; Wührl's methods beyond the abstract; Milinkovic & Aru full text (this integrator saw only the abstract plus secondary coverage).
+
+`draft: true` unchanged. Not merged, not published.
