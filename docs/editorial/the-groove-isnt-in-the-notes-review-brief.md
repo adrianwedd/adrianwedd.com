@@ -244,4 +244,8 @@ Edited from verified remote head `3c1caf3e67c650d6ce22278682353d029f6803ce` afte
 
 The available turns of ChatGPT conversation `6ad694cc-2240-83ec-b2fe-2c2c974c9a89` were read. They include pasted feedback and the agreed editorial motifs; assistant replies appear as content-reference placeholders. This is not access to the complete originating consciousness discussion, and the models' first-person testimony is not evidence of experience.
 
-Validation results follow after checks. Merge and publication remain unauthorised; next action is Adrian's red-pen read.
+Validation: content validator reports 0 errors / 0 warnings; both Markdown files pass Prettier and `git diff --check`; final production build succeeds. Exact comparisons confirm unchanged frontmatter, ending and citation URLs. No draft article route was generated; RSS and sitemap XML exclude the essay. The colophon mentions the branch name as build provenance, not article content. Only the essay and this review brief are changed.
+
+Remote CI at the starting head `3c1caf3` fails in the dependency audit (4 high, 2 moderate), verified in run `39353640636`; this predates the revision. No dependency files were changed. New-head CI is a separate check after push. No fresh primary-paper verification is claimed.
+
+Essay revision pushed as `419b397`. Merge and publication remain unauthorised; next action is Adrian's red-pen read.
