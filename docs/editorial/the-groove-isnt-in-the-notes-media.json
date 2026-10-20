@@ -1,0 +1,59 @@
+{
+  "notebook_id": "8a59aba0-1dad-49e2-b290-a26eb0b77a9a",
+  "notebook_url": "https://notebooklm.google.com/notebook/8a59aba0-1dad-49e2-b290-a26eb0b77a9a",
+  "source_id": "2c40e7eb-e3fe-4fbd-ac63-763d30781922",
+  "source_commit": "1b58f71b673ff1e91c5f600bd10a16f4cfb6d87c",
+  "publication_status": "unpublished; draft:true; generated media require review before attachment/publication",
+  "audio": {
+    "format": "deep_dive",
+    "length": "long",
+    "language": "en",
+    "focus": "Adapt Adrian Wedd's essay The Groove Isn't in the Notes for an intellectually curious adult audience. Use Australian English. Preserve its warmth, irreverence, curiosity and willingness to be wrong. Follow the journey: simulated fire and human perception; biological distributed systems and subjective unity; other minds and mimicry; Ar\u0131c\u0131's conditional argument and its safety-training rival; the half-remembered quantum paper and what it actually found; biological computationalism; sparse electronic music and the listener; conversation as inquiry. Let questions and objections interrupt one another naturally. Do not manufacture a verdict or a list of takeaways. Attribute the author's experiences to Adrian; do not invent personal memories for the hosts or claim that AI systems feel, want or experience anything.\nScientific boundaries are essential: VR evidence concerns immersive headsets, thermal sensation and hand skin temperature, not combustion heat, core warming or consciousness in pixels. Nonsignificance is not proof of zero effect. Microtubule energy migration in a test tube exceeded the tested model's prediction; that is not proof of quantum coherence, quantum cognition or an anaesthesia mechanism. Preserve the UV illumination, light-harvesting limitation and picrotoxin caveat without turning the piece into a methods appendix. Ar\u0131c\u0131 does not establish current AI consciousness and concedes safety training is a serious rival. Biological differences do not prove necessary conditions for experience. Relationships alone do not make a subject. Model testimony in either direction needs training context; model agreement is not independent evidence. Keep hypotheses, observations and metaphors distinct. Use only the essay's stated evidence; don't invent findings, citations, quotations or precision. Preserve the unresolved ending and the thought that maybe begins an investigation rather than shelters us from one.\nCreate a long, unhurried deep-dive conversation between two thoughtful hosts. Let one develop an interesting possibility and the other test it without becoming a theatrical sceptic. Explain unfamiliar concepts plainly. Give music, silence and timing room in the discussion; no hype about AI collaboration. Include the conductor line in context, and return to how a suggestion, an objection and another go can develop a conversational groove. End with the essay's invitation to ask better questions and sometimes just shut up and dance. Do not impersonate the author.",
+    "creation_receipt": {
+      "artifact_type": "audio",
+      "artifact_id": "fe837a25-c7c5-447c-9444-a10a8c22606a",
+      "status": "unknown",
+      "message": "Audio generation started."
+    }
+  },
+  "video": {
+    "format": "cinematic",
+    "language": "en",
+    "focus": "Adapt Adrian Wedd's essay The Groove Isn't in the Notes for an intellectually curious adult audience. Use Australian English. Preserve its warmth, irreverence, curiosity and willingness to be wrong. Follow the journey: simulated fire and human perception; biological distributed systems and subjective unity; other minds and mimicry; Ar\u0131c\u0131's conditional argument and its safety-training rival; the half-remembered quantum paper and what it actually found; biological computationalism; sparse electronic music and the listener; conversation as inquiry. Let questions and objections interrupt one another naturally. Do not manufacture a verdict or a list of takeaways. Attribute the author's experiences to Adrian; do not invent personal memories for the hosts or claim that AI systems feel, want or experience anything.\nScientific boundaries are essential: VR evidence concerns immersive headsets, thermal sensation and hand skin temperature, not combustion heat, core warming or consciousness in pixels. Nonsignificance is not proof of zero effect. Microtubule energy migration in a test tube exceeded the tested model's prediction; that is not proof of quantum coherence, quantum cognition or an anaesthesia mechanism. Preserve the UV illumination, light-harvesting limitation and picrotoxin caveat without turning the piece into a methods appendix. Ar\u0131c\u0131 does not establish current AI consciousness and concedes safety training is a serious rival. Biological differences do not prove necessary conditions for experience. Relationships alone do not make a subject. Model testimony in either direction needs training context; model agreement is not independent evidence. Keep hypotheses, observations and metaphors distinct. Use only the essay's stated evidence; don't invent findings, citations, quotations or precision. Preserve the unresolved ending and the thought that maybe begins an investigation rather than shelters us from one.\nCreate a cinematic visual essay, not a slide presentation or a triumphant technology advert. Visual direction: near-black and warm charcoal, copper and amber highlights, cream serif titles, restrained grain, vinyl grooves, fine root-like branching forms, tactile natural textures and generous negative space. Use slow deliberate camera movement and sparse visual motifs; avoid neon brains, glowing quantum magic and sentient-robot faces. Distinguish illustrative metaphor from experimental apparatus. Move from screen flames and a human viewer through distributed biological activity, laboratory uncertainty, then the physical timing and space of electronic music. Show the measurement limits clearly without fake data graphics. Let rhythmic editing and pauses carry the musical connection. If music is used, favour sparse kick, bass, a worn piano chord and breathing room over a swelling orchestral climax. Credit Adrian Wedd and adrianwedd.com. Preserve the title exactly. Close without solving consciousness.",
+    "creation_receipt": {
+      "artifact_type": "video",
+      "artifact_id": "c5655090-3883-4039-b7e6-3af6b598c562",
+      "status": "unknown",
+      "message": "Video generation started."
+    }
+  },
+  "og": {
+    "source": "user-supplied the-groove.png",
+    "original_bytes": 2463375,
+    "output": "/og/blog/the-groove-isnt-in-the-notes.jpg",
+    "bytes": 151493,
+    "width": 1200,
+    "height": 630,
+    "original_sha256": "6dc30e107489a9c3c7d4362b515ab1150f64dc72f132b483516bd3bbf43fa04a"
+  },
+  "status_checked_date": "2026-10-20",
+  "artifacts_at_check": [
+    {
+      "artifact_id": "c5655090-3883-4039-b7e6-3af6b598c562",
+      "type": "video",
+      "status": "unknown"
+    },
+    {
+      "artifact_id": "fe837a25-c7c5-447c-9444-a10a8c22606a",
+      "type": "audio",
+      "status": "unknown"
+    }
+  ],
+  "validation": {
+    "content": "0 errors, 0 warnings",
+    "production_build": "passed",
+    "og_check": "821 references resolve; 752 landscape; 69 existing portrait warnings",
+    "draft_limitation": "Draft article excluded from generated site; its selected OG file checked directly at 1200x630 JPEG, 151493 bytes.",
+    "media_review": "Generations requested; outputs not yet reviewed or attached to article."
+  }
+}

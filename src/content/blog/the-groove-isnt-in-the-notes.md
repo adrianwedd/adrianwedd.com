@@ -4,6 +4,7 @@ description: "A simulated fire, quantum monkeyware, artificial minds and the ple
 date: 2026-10-20
 tags: ['ai', 'consciousness', 'philosophy', 'science', 'music', 'epistemology']
 draft: true
+ogImage: '/og/blog/the-groove-isnt-in-the-notes.jpg'
 ---
 
 _A simulated fire, quantum monkeyware, and the magnificent possibility that we have no fucking idea._
