@@ -3,8 +3,12 @@ title: "The Groove Isn't in the Notes"
 description: "A simulated fire, quantum monkeyware, artificial minds and the pleasure of asking questions we don't yet know how to answer."
 date: 2026-10-20
 tags: ['ai', 'consciousness', 'philosophy', 'science', 'music', 'epistemology']
-draft: true
+draft: false
 ogImage: '/og/blog/the-groove-isnt-in-the-notes.jpg'
+audioDuration: '54:03'
+notebookAssets:
+  audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-groove-isnt-in-the-notes/audio.m4a'
+  videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-groove-isnt-in-the-notes/video.mp4'
 ---
 
 _A simulated fire, quantum monkeyware, and the magnificent possibility that we have no fucking idea._
