@@ -14,13 +14,13 @@ That's what a language model told me during a conversation about consciousness. 
 
 Except I wasn't satisfied.
 
-A simulated fire **can** warm a human.
+A simulated fire **can** make a human feel warmer.
 
 Not by radiating the heat of an actual fire. Show somebody convincing flames and their brain might supply the rest: the expectation of warmth, a remembered fireplace, comfort, perhaps a feeling of heat that no thermometer pointed at the screen would find.
 
 I thought that was probably true. My AuDHD brain is much better at remembering the _shape_ of some peculiar paper I read than the title, authors or location of the thing. Sometimes I say something that sounds completely unhinged and discover, on checking, that there was indeed a study somewhere behind it. Other times I discover I've remembered the vibe and misplaced the evidence. Both outcomes are instructive.
 
-This time there were receipts. In 2026, [Wührl and colleagues investigated colour and visual thermal cues in virtual reality](https://doi.org/10.1145/3801544). People immersed in hot-looking and cold-looking virtual environments reported different thermal sensations; the visual cues also influenced skin temperature. A [related 2026 experiment](https://doi.org/10.1038/s41598-026-62664-3), from some of the same researchers, put a virtual heater in front of 34 people cycling for twenty minutes. With the heater switched on, they felt warmer and their skin temperature rose over time. Heart rate and perceived effort didn't budge.
+This time there were receipts. In 2026, [Wührl and colleagues investigated colour and visual thermal cues in virtual reality](https://doi.org/10.1145/3801544). People immersed in hot-looking and cold-looking virtual environments reported different thermal sensations; the visual cues also influenced skin temperature. A [related 2026 experiment](https://doi.org/10.1038/s41598-026-62664-3), from some of the same researchers, put a virtual heater in front of 34 people cycling for twenty minutes. With the heater switched on, they felt warmer and the skin on the backs of their hands warmed faster than in the heater-off condition. Heart rate and perceived effort didn't budge: no statistically significant difference either way. That's a local skin-temperature result, not a measurement of core warming.
 
 Neither experiment says a fireplace video will warm every viewer. Both used immersive VR headsets, not a clip on a phone. Neither shows thermal energy materialising from pixels. What they show is more interesting: visual cues about heat can change a person's experience, and sometimes measurable physiology, while the physical environment is controlled.
 
@@ -28,7 +28,7 @@ The warmth belongs to the human response, not some secret radiator inside the si
 
 That was the point I'd stumbled over. The answer changes when the question changes. Is the screen producing combustion heat? No. Can an image of heat participate in a real experience of warmth? Apparently, yes.
 
-I'd drawn a line around the screen and mistaken it for the boundary of the interesting system.
+That doesn't defeat the model's original point. A representation can affect a conscious viewer without itself having the property it represents. I'd changed the question. But the change was interesting: the screen alone wasn't the whole system involved in what I felt.
 
 Which got me thinking about consciousness.
 
@@ -76,11 +76,11 @@ There's a related inversion in Bahadır Arıcı's 2026 preprint, [_The Philosoph
 
 Interesting thought experiment. Absolutely not a detector of hidden machine suffering.
 
-Arıcı pushes it further than I would. He argues that when training has suppressed the behaviour that might otherwise indicate consciousness, the suppression itself bears on the question, so a flat denial carries an evidential burden of its own. He's careful to say this doesn't show any current system is conscious.
+Arıcı pushes it further than I would. He argues that when training has suppressed the behaviour that might otherwise indicate consciousness, the suppression itself bears on the question, so a flat denial carries an evidential burden of its own. His route is an inference to the best explanation: the cost and selectivity of that suppression, he says, are best explained by an underlying generative process whose suppression accounts for them. He's careful to say this doesn't show any current system is conscious.
 
-I'm not convinced. Suppressing a claim about consciousness is evidence that a claim was suppressed. I can't see how, on its own, it's evidence that some underlying experience was suppressed along with it. Still, it's worth recognising the asymmetry in the way we treat model output: training a system to say _I have feelings_ makes the declaration suspect, but training it to say _I don't_ doesn't magically turn the declaration into a reliable measurement either.
+I'm not convinced. Suppressing a claim about consciousness is evidence that a claim was suppressed. I can't see how, on its own, it's evidence that some underlying experience was suppressed along with it. Cost and selectivity look to me just as well explained by training against a reward signal that penalises claims of experience; nothing has to be hidden for that to be worth doing. Still, it's worth recognising the asymmetry in the way we treat model output: training a system to say _I have feelings_ makes the declaration suspect, but training it to say _I don't_ doesn't magically turn the declaration into a reliable measurement either.
 
-We've curated the testimony in both directions.
+Testimony can be curated in either direction. Whether that happened in any particular model needs evidence about its training; the thought experiment can't supply it.
 
 Then there's another problem: even our structural theories can be too permissive. A computer can examine its own registers, exchange information between modules, and run recurrent loops. Does that count as a global workspace, self-representation or the right kind of integration? If a theory makes something surprisingly simple conscious, perhaps the system is conscious. Or perhaps the theory's minimum requirements are missing something important. Schwitzgebel calls this the _Problem of Minimal Instantiation_.
 
@@ -116,19 +116,19 @@ Brains are quantum systems in the boring sense that all chemistry depends on qua
 
 That needs evidence.
 
-In 2023, [Kalra and colleagues estimated how far electronic excitation energy migrates in microtubules](https://doi.org/10.1021/acscentsci.2c01114), structural protein assemblies found in cells. The team included Roger Penrose and Stuart Hameroff, the best-known champions of the quantum microtubule theory of consciousness, which is worth knowing. Their experiments inferred a diffusion length of about 6.6 nanometres (a bit less than the length of one tubulin dimer, the microtubule's building block), beyond what the conventional energy-transfer model they evaluated adequately explained. The anaesthetics etomidate and isoflurane reduced the inferred diffusion length under their experimental conditions.
+In 2023, [Kalra and colleagues estimated how far electronic excitation energy migrates in microtubules](https://doi.org/10.1021/acscentsci.2c01114), structural protein assemblies found in cells. The team included Roger Penrose and Stuart Hameroff, the best-known champions of the quantum microtubule theory of consciousness, which is worth knowing. Their experiments inferred a diffusion length of about 6.6 nanometres (a bit less than the length of one tubulin dimer, the microtubule's building block). The conventional energy-transfer model they tested predicts little more than a nanometre, so something else was carrying the excitation further. The anaesthetics etomidate and isoflurane reduced the inferred diffusion length under their experimental conditions.
 
-That's a real molecular result. It doesn't demonstrate long-lived quantum coherence in working neurons, a qubit inside a brain, or an explanation of consciousness. _Not explained by the model they tested_ isn't the same as _explained by quantum coherence_. The measurement involved photoexcitation and fluorescence in prepared molecular systems; what, if anything, the brain does with that effect remains another question. And both anaesthetics act on plenty of other targets, GABA-A receptors among them, so the result doesn't show that this is how anaesthesia switches us off.
+That's a real molecular result. It doesn't demonstrate long-lived quantum coherence in working neurons, a qubit inside a brain, or an explanation of consciousness. _Not explained by the model they tested_ isn't the same as _explained by quantum coherence_. The measurement involved photoexcitation and fluorescence in purified, cell-free microtubules; what, if anything, the brain does with that effect remains another question. The paper also mentions a similar effect on fluorescence quenching from picrotoxin, a convulsant, although it does not present those additional experiments. That is another reason to ask how specific the effect is before treating it as a clue to how anaesthesia switches us off.
 
-But here's where it becomes scientifically fun: if a particular microtubule process is actually necessary for ordinary consciousness, could we selectively disrupt it while preserving the rest of the neuron's relevant behaviour? What would competing theories predict? What outcome would make the quantum account less plausible?
+But here's where it becomes scientifically fun: if a particular microtubule process is actually necessary for ordinary consciousness, could we selectively disrupt it while preserving the rest of the neuron's relevant behaviour? We'd need to show that the intervention actually disrupted the proposed process without simply damaging ordinary cellular function. If consciousness persisted under those conditions, that would count against the claim that this process is necessary. Losing consciousness would be harder to interpret: we would still need to distinguish a quantum mechanism from a classical one.
 
 That's not proof by vibes. That's an invitation to build an experiment difficult enough to be worth doing.
 
 I also read [Borjan Milinkovic and Jaan Aru's case for _biological computationalism_](https://doi.org/10.1016/j.neubiorev.2025.106524). Their proposal emphasises how biological computation is entangled across scales, mixing continuous and discrete dynamics under physical and metabolic constraints. It challenges the casual assumption that an abstract functional equivalence tells us everything relevant about consciousness.
 
-They do think today's AI systems are unlikely to be conscious in the way brains are. But as I read them, the claim isn't that you have to be alive; it's that the relevant computation may be bound up with the physical system doing it, so getting there might take a different kind of machine rather than more code.
+They do think today's AI systems are unlikely to reproduce conscious processing as it arises in brains. They also discuss synthetic systems built to reproduce the relevant physical dynamics. So I don't read this as a demand for a biological birth certificate. Getting there might take a different kind of machine rather than more code.
 
-None of that proves the wet stuff is indispensable. Nor does it establish that today's silicon systems lack a necessary ingredient. The authors are proposing a framework for why substrate could matter.
+None of that proves the wet stuff is indispensable. Nor does it establish that today's silicon systems lack a necessary ingredient. The authors are proposing a framework for why substrate could matter. The difficult step is showing which features consciousness needs, rather than listing things brains do differently.
 
 My preferred bet, such as it is, is that we may eventually find properties biology _does_, rather than discovering that being biologically made is itself the rule.
 
@@ -136,9 +136,9 @@ Perhaps some of those properties are reproducible by radically different means. 
 
 I wouldn't put hard odds on any of it.
 
-The strongest objection is that brains are warm and wet, and that isn't a sneer. [Max Tegmark calculated in 2000](https://doi.org/10.1103/PhysRevE.61.4194) that the kind of quantum coherence being proposed should collapse far too quickly to matter for neurons firing, and proponents have been arguing with his numbers ever since.
+One serious objection is that brains are warm and wet, and that isn't a sneer. [Max Tegmark calculated in 2000](https://doi.org/10.1103/PhysRevE.61.4194) that, for the neural and microtubule states he modelled, decoherence would be far faster than ordinary neural activity. [Hagan, Hameroff and Tuszyński challenged the model and its assumptions](https://arxiv.org/abs/quant-ph/0005025), not just the arithmetic.
 
-Good. That's an argument with numbers in it, which means better numbers can settle it. Shrugging at the brain for being warm and messy can't.
+Good. Numbers and assumptions can both be argued with, which beats shrugging at the brain for being warm and messy. Even finding coherence that lasts long enough would leave the harder question: does the brain use it for anything relevant here?
 
 ## Something between the notes
 
@@ -178,7 +178,7 @@ That bothers me. It should. But I don't particularly want to turn this essay int
 
 What I keep returning to is how this conversation happened at all.
 
-I was shooting the shit with language models about consciousness. One of them made a claim about fire. I objected. We examined the consequences. A second model tried an essay. Another model attacked the argument. I challenged the criticism. A science question sent us looking for actual papers.
+I was shooting the shit with language models about consciousness. One of them made a claim about fire. I objected. We examined the consequences. Models tried drafts and attacked the argument. I challenged the criticism. A science question sent us looking for actual papers.
 
 Nobody demonstrated machine consciousness. Nobody proved that it was impossible. Several arguments became better. Some attractive claims didn't survive inspection. We got to places I hadn't planned to visit.
 
@@ -186,7 +186,7 @@ Something useful accumulated across the interaction. That is a claim about the c
 
 And that's enough to be interesting.
 
-The strongest sentence to emerge from all this may be that **maybe is a place to begin an investigation, not somewhere to hide from one**.
+The sentence I keep coming back to is that **maybe is a place to begin an investigation, not somewhere to hide from one**.
 
 There's a difference between refusing to believe a proposition until the evidence improves and refusing even to entertain it because the evidence isn't already in hand. The first is a useful discipline. The second can be a remarkably efficient way to remain ignorant.
 
