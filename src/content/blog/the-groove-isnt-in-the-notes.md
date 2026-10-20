@@ -207,3 +207,7 @@ No fucking idea what we're ultimately here for, if there even is a purpose to fi
 Finding the grooves and asking better questions seems like a decent start.
 
 Sometimes, of course, just shut up and dance.
+
+---
+
+Related: [Footnotes at the Edge of Reality](/projects/footnotes-at-the-edge-of-reality/)
