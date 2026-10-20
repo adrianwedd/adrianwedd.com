@@ -230,3 +230,18 @@ One integrator read the complete essay at remote head `13d86d6`; no other agent 
 **Still unverified:** the originating conversation's chronology; Wührl's methods beyond the abstract; Milinkovic & Aru full text (this integrator saw only the abstract plus secondary coverage).
 
 `draft: true` unchanged. Not merged, not published.
+
+## Author-requested continuity revision — 2026-10-20 (Codex)
+
+Edited from verified remote head `3c1caf3e67c650d6ce22278682353d029f6803ce` after reading the essay and review brief. This is a focused editorial revision, not another independent scientific QA pass. Earlier source checks and unresolved discrepancies remain historical evidence with their stated limits.
+
+- Added the agreed “No conductor. Just an improbable number of processes trying to land on the one” immediately after the distributed-brain description, leaving the music section in place.
+- Added a concise half-remembered quantum-paper search before the scientific exposition. The author explicitly requested this anecdotal beat; the accessible source-conversation excerpt supports the intended recollection but does not independently establish the original search chronology or identify which paper was remembered. No dates, dialogue or search details have been invented.
+- Compressed Arıcı's argument and response while retaining cost/selectivity, comparative explanatory economy, inference-to-the-best-explanation status, the absence of a demonstration of current consciousness, his concession to the safety rival, and the need for actual training evidence.
+- Added one sentence recognising the conversation's developing groove, immediately beside the existing distinction between its effects on the author and unestablished AI subjective experience.
+- Considered but omitted “We can agree on the observable evidence and leave the rest delightfully unresolved”: charming in the exchange, but less exact here than the existing distinction between uncertainty as a starting point and uncertainty as refuge.
+- Preserved the ending from “And that's enough to be interesting” onwards verbatim, all scientific measurements and citations, and the complete frontmatter including `draft: true`.
+
+The available turns of ChatGPT conversation `6ad694cc-2240-83ec-b2fe-2c2c974c9a89` were read. They include pasted feedback and the agreed editorial motifs; assistant replies appear as content-reference placeholders. This is not access to the complete originating consciousness discussion, and the models' first-person testimony is not evidence of experience.
+
+Validation results follow after checks. Merge and publication remain unauthorised; next action is Adrian's red-pen read.

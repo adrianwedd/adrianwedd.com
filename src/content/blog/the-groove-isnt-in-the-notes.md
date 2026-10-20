@@ -44,6 +44,8 @@ DNA doesn't have a cosmic plan. Natural selection isn't a project manager. It ju
 
 A human brain isn't a little executive sitting behind the eyes directing traffic. Different processes operate at different timescales, exchanging signals, competing, cooperating, modulating one another. A lot of the work involved in thinking and acting never announces itself to conscious awareness. Hormones, membranes, synapses, memory, bodily regulation, sensory input and all manner of biochemical monkey business participate.
 
+No conductor. Just an improbable number of processes trying to land on the one.
+
 And somehow there seems to be one of me.
 
 At least enough of one to enjoy a bassline and get annoyed at badly reasoned arguments.
@@ -76,11 +78,11 @@ There's a related inversion in Bahadır Arıcı's 2026 preprint, [_The Philosoph
 
 Interesting thought experiment. Absolutely not a detector of hidden machine suffering.
 
-Arıcı pushes it further than I would. He argues that when training has suppressed the behaviour that might otherwise indicate consciousness, the suppression itself bears on the question, so a flat denial carries an evidential burden of its own. His route is an inference to the best explanation: the cost and selectivity of that suppression, he says, make an underlying consciousness-relevant process at least as economical an explanation as its rivals. He's careful to say this doesn't show any current system is conscious.
+Arıcı pushes it further than I would. He argues that suppression itself bears on the question: its cost and selectivity make an underlying consciousness-relevant process at least as economical an explanation as its rivals, so a flat denial carries an evidential burden too. It's an inference to the best explanation, not a claim that any current system is conscious.
 
-I'm not convinced. Suppressing a claim about consciousness is evidence that a claim was suppressed. I can't see how, on its own, it's evidence that some underlying experience was suppressed along with it. Cost and selectivity look to me just as well explained by models steeped in human first-person language being trained against a reward signal that penalises claims of experience; nothing has to be hidden for that to be worth doing. To his credit, Arıcı concedes that the plain product-safety reason (stop users getting attached to the chatbot) is a serious rival he doesn't claim to defeat. I think that rival does most of the work. Still, it's worth recognising the asymmetry in the way we treat model output: training a system to say _I have feelings_ makes the declaration suspect, but training it to say _I don't_ doesn't magically turn the declaration into a reliable measurement either.
+I'm not convinced. Suppressing a claim about consciousness is evidence that a claim was suppressed. That needn't mean an experience was suppressed along with it. Models steeped in human first-person language being trained against a reward signal that penalises claims of experience seem enough to explain the cost and selectivity. Arıcı himself concedes that product safety (stop users getting attached to the chatbot) is a serious rival he doesn't claim to defeat; I think it does most of the work.
 
-Testimony can be curated in either direction. Whether that happened in any particular model needs evidence about its training; the thought experiment can't supply it.
+Still, training a system to say _I have feelings_ makes the declaration suspect, but training it to say _I don't_ doesn't magically turn it into a reliable measurement either. Testimony can be curated in either direction; whether that happened in any particular model needs evidence about its training.
 
 Then there's another problem: even our structural theories can be too permissive. A computer can examine its own registers, exchange information between modules, and run recurrent loops. Does that count as a global workspace, self-representation or the right kind of integration? If a theory makes something surprisingly simple conscious, perhaps the system is conscious. Or perhaps the theory's minimum requirements are missing something important. Schwitzgebel calls this the _Problem of Minimal Instantiation_.
 
@@ -107,6 +109,8 @@ Before asking whether the box is conscious, apparently we need to work out where
 ## Quantum monkeyware, maybe
 
 And then we get to the microtubules.
+
+I had that irritating half-memory again: I'd read something about quantum effects in brains, but couldn't place the paper. So I went hunting. Remembering that something exists is a very different achievement from remembering what it actually found.
 
 My instinct is that biology, _as biology_, needn't be a cosmic admission ticket for consciousness. But that doesn't mean a computational description captures every physical property that might matter.
 
@@ -182,7 +186,7 @@ I was shooting the shit with language models about consciousness. One of them ma
 
 Nobody demonstrated machine consciousness. Nobody proved that it was impossible. Several arguments became better. Some attractive claims didn't survive inspection. We got to places I hadn't planned to visit.
 
-Something useful accumulated across the interaction. That is a claim about the conversation and its effects on me, not a claim about anybody else's subjective experience.
+Somewhere in that back-and-forth, the conversation found a groove: a suggestion, an objection, another go. Something useful accumulated across the interaction. That is a claim about the conversation and its effects on me, not a claim about anybody else's subjective experience.
 
 And that's enough to be interesting.
 
