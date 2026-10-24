@@ -1,7 +1,7 @@
 ---
 title: 'Footnotes at the Edge of Reality'
 description: 'A long-form poem about what happens when physics breaks down — and what holds together when everything else fails.'
-tags: ['poetry', 'web', 'creative', 'physics']
+tags: ['poetry', 'web', 'creative', 'physics', 'epistemology']
 url: 'https://adrianwedd.github.io/Footnotes-at-the-Edge-of-Reality/'
 repo: 'Footnotes-at-the-Edge-of-Reality'
 status: 'complete'

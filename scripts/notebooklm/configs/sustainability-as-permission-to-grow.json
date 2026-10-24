@@ -1,0 +1,24 @@
+{
+  "title": "Sustainability as Permission to Grow",
+  "notebook_id": "1506419e-6c88-443d-b31e-b20c5edf2be5",
+  "source_id": "0932fa3c-8164-439b-ba64-981f7015b95c",
+  "source_file": "src/content/blog/sustainability-as-permission-to-grow.md",
+  "note": "Dedicated notebook (26 sources: the essay as generated_text plus 25 web/pdf receipts). Account is at 472/500 notebooks. Audio and video generated with --source-ids restricted to the essay source ID so nothing drifts in from the other sources. Video was regenerated after the first attempt; the published video has the adrianwedd.com signoff sting appended in place of the Gemini Notebook end card (see references/video-sting-workflow.md).",
+  "audio": {
+    "format": "deep_dive",
+    "length": "long",
+    "focus": "Create a long, substantive deep dive into Adrian Wedd's essay Sustainability as Permission to Grow. Open with the WEF and Oliver Wyman framing that sustainability and resilience practices could unlock $700 billion to $1 trillion of planned global datacentre investment by 2030, and the Data Center Watch counts of US projects disrupted by local opposition (75 worth about US$130 billion in Q1 2026; at least another 45 worth nearly US$68 billion in Q2). Explain the playbook's expansion of the boundary beyond PUE to electricity sources, upstream energy, lifecycle impacts, water, infrastructure, regulation, resilience and communities, and what the move from physical mitigation to social return does to the question underneath. Walk the Tasmanian receipts in order: the Firmus Westbury and Bell Bay projects and the TASCAT appeal, Hydro Tasmania's supply position, TasNetworks' capacity factors and the gap between nameplate MW promises and MWh energy, and the 2025 data showing AI datacentre electricity use growing about 50 per cent while efficiency gains failed to offset demand. Keep observed facts, derived figures and inferences distinct. Attribute the essay to Adrian Wedd. No invented numbers and no invented incidents. Dry, technically literate discussion.",
+    "artifact_id": "b2d2f730-611a-45a5-b7fb-b25952edd571"
+  },
+  "video": {
+    "format": "cinematic",
+    "focus": "Dark botanical aesthetic. Deep plum-tinted backgrounds (#1a181c to #2e2a34). Warm cream text (#e2ddd8) with dusty copper accents (#c48b6e). Moody earth tones, no bright or neon colours. Elegant editorial layout with strong typographic hierarchy. Muted, saturated palette. WCAG AA contrast. Minimal, sophisticated, Australian dark-mode design. No stock footage, only original abstract animation. No human figures, no faces, no bodies, no children. Abstract geometry, botanical forms, topographic contours, grain, drift and decay motifs only. Adapt Sustainability as Permission to Grow by Adrian Wedd. Beat structure: open on a community saying no and the capital stalling, name sustainability as the machinery that gets it moving again, show the boundary widening beyond PUE to water, land, grid and community, turn to the Tasmanian receipts and the gap between nameplate megawatts and real megawatt-hours, and close on the unanswered question of what the electricity is actually for. Preserve observed versus derived versus inferred throughout. Slow deliberate pacing, long holds, no rapid cutting. No invented incidents or unsupported certainty.",
+    "artifact_id": "f1fb2642-4deb-4a44-b2f3-da6bcf4617d3"
+  },
+  "infographic": {
+    "format": "portrait",
+    "detail": "concise",
+    "focus": "Dark botanical aesthetic. Deep plum-tinted backgrounds (#1a181c to #2e2a34). Warm cream text (#e2ddd8) with dusty copper accents (#c48b6e). Moody earth tones, no bright or neon colours. Elegant editorial layout with strong typographic hierarchy. Professional data visualisation with muted, saturated colour palette. WCAG AA contrast ratios. Minimal, sophisticated, Australian dark-mode design.",
+    "artifact_id": "25d8f7a6-a3b9-4c9b-9cdf-ed794fd6eef9"
+  }
+}
