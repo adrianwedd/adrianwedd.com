@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
-import campaign from '../src/data/on-fire.json';
+import { readFileSync } from 'node:fs';
+
+const campaign = JSON.parse(readFileSync(new URL('../src/data/on-fire.json', import.meta.url), 'utf8')) as {
+  closed: boolean;
+};
 
 test('campaign advice, honest intake and clipboard work without disclosing applications @smoke', async ({
   page,

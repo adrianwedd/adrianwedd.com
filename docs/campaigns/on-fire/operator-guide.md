@@ -4,7 +4,7 @@ Prepared 25 October 2026. Owner: Adrian. Issue: [#746](https://github.com/adrian
 
 ## One inbox, one private record
 
-Applications arrive at the existing `adrian@adrianwedd.com` address with subject `ON FIRE — free website exposure review`. The public link opens an editable email draft; it does not submit an application or guarantee delivery. The page also exposes the full text and address without JavaScript or an email app.
+Applications arrive in the existing Google-hosted mailbox at `adrian@adrianwedd.com` address with subject `ON FIRE — free website exposure review`. The public link opens an editable email draft; it does not submit an application or guarantee delivery. The page also exposes the full text and address without JavaScript or an email app.
 
 The canonical award record is `~/.local/share/on-fire-campaign/ledger.json` on Adrian's machine. Use `scripts/on-fire/ledger.py` to maintain it. It has a process lock, atomic writes, private directory/file permissions and a lifetime limit of ten awards. No new service, database, credentials or recurring spend. Do not keep a second ledger, put client data in GitHub, or operate copied ledgers on two hosts. Other machines must use the canonical host; OS file locks do not coordinate replicas. Back up the private directory using existing protected backups, not this public repository.
 
