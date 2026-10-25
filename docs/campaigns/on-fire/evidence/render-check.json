@@ -1,0 +1,76 @@
+{
+  "observations": [
+    {
+      "name": "mobile",
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "headingWidth": 358,
+      "ctaBottom": 536,
+      "textColour": "rgb(226, 221, 216)",
+      "surface": "rgb(26, 24, 28)",
+      "contentHeight": 9025
+    },
+    {
+      "name": "mobile",
+      "theme": "light",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "headingWidth": 358,
+      "ctaBottom": 536,
+      "textColour": "rgb(26, 24, 28)",
+      "surface": "rgb(247, 244, 241)",
+      "contentHeight": 9025
+    },
+    {
+      "name": "tablet",
+      "theme": "dark",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "headingWidth": 720,
+      "ctaBottom": 546,
+      "textColour": "rgb(226, 221, 216)",
+      "surface": "rgb(26, 24, 28)",
+      "contentHeight": 6405
+    },
+    {
+      "name": "tablet",
+      "theme": "light",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "headingWidth": 720,
+      "ctaBottom": 546,
+      "textColour": "rgb(26, 24, 28)",
+      "surface": "rgb(247, 244, 241)",
+      "contentHeight": 6405
+    },
+    {
+      "name": "desktop",
+      "theme": "dark",
+      "width": 1440,
+      "height": 1000,
+      "overflow": false,
+      "headingWidth": 768,
+      "ctaBottom": 546,
+      "textColour": "rgb(226, 221, 216)",
+      "surface": "rgb(26, 24, 28)",
+      "contentHeight": 6453
+    },
+    {
+      "name": "desktop",
+      "theme": "light",
+      "width": 1440,
+      "height": 1000,
+      "overflow": false,
+      "headingWidth": 768,
+      "ctaBottom": 546,
+      "textColour": "rgb(26, 24, 28)",
+      "surface": "rgb(247, 244, 241)",
+      "contentHeight": 6453
+    }
+  ]
+}

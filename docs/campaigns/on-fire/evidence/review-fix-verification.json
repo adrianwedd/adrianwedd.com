@@ -1,0 +1,48 @@
+{
+  "recorded_at": "2026-10-25T07:40:04.240536+00:00",
+  "reviewed_parent": "a6f6a6fe9ef7a755feee1845ac6c8c5443fda2d8",
+  "scope": "Three accepted independent-review fixes; validated source and evidence committed together. Exact resulting commit is recorded in PR #747.",
+  "ledger_tests": 11,
+  "root_unit_tests": 217,
+  "root_unit_files": 14,
+  "open_browser": {
+    "passed": 6,
+    "skipped_closed_only": 2,
+    "projects": ["chromium", "mobile-chromium"]
+  },
+  "closed_browser": {
+    "passed": 8,
+    "skipped": 0,
+    "projects": ["chromium", "mobile-chromium"]
+  },
+  "builds": ["open passed", "closed passed", "restored open passed"],
+  "typecheck": {
+    "errors": 0,
+    "warnings": 0,
+    "existing_hints": 253
+  },
+  "content_validation": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "format": "passed for changed Astro, TypeScript and Markdown files",
+  "eslint": "changed Astro file passed; e2e TypeScript is ignored by existing ESLint configuration",
+  "source_state_restored_open": true,
+  "first_browser_attempt": "Preview startup race caused connection refusals; after HTTP readiness, all applicable checks passed.",
+  "production_changed": false,
+  "new_emails_sent": 0,
+  "private_live_ledger_accessed": false,
+  "independent_reviews": "Existing reports cover the reviewed parent; no independent re-review of these fixes is claimed.",
+  "unverified": [
+    "independent external-mailbox receipt/reply and spam placement",
+    "production release and live render; launch intentionally held"
+  ],
+  "screenshots": {
+    "desktop-closed-after-qa.png": {
+      "sha256": "14a92b98ba21ced1b6f543a830f80721e81a6ff0fc6df8f3b833a8975a9ca023"
+    },
+    "mobile-closed-after-qa.png": {
+      "sha256": "3bd7d22e4c47915509d9a25eee2cdad2c725a067c3eb84e65e28d2c0736f256a"
+    }
+  }
+}

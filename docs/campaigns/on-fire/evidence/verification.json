@@ -1,0 +1,73 @@
+{
+  "validated_source_commit": "61f53d252f37d4316b67219a040ce5b658d29930",
+  "recorded_at": "2026-10-25T03:00:19.822264+00:00",
+  "open_browser_tests": {
+    "passed": 6,
+    "skipped_closed_only": 2,
+    "projects": [
+      "chromium",
+      "mobile-chromium"
+    ]
+  },
+  "closed_browser_tests": {
+    "passed": 8,
+    "projects": [
+      "chromium",
+      "mobile-chromium"
+    ]
+  },
+  "allocation_tests": {
+    "passed": 8
+  },
+  "existing_unit_tests": {
+    "passed": 217,
+    "files": 14
+  },
+  "typecheck": {
+    "errors": 0,
+    "warnings": 0,
+    "hints": 253
+  },
+  "content_validation": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "internal_links": {
+    "checked": 96174,
+    "pages": 828,
+    "broken": 0
+  },
+  "social_images": {
+    "checked": 826,
+    "missing": 0,
+    "existing_portrait_warnings": 69
+  },
+  "site_checks": {
+    "errors": 0,
+    "warnings": 1
+  },
+  "production_dependency_audit": {
+    "vulnerabilities": 0
+  },
+  "full_dependency_audit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 4,
+    "high": 14,
+    "critical": 1,
+    "total": 19
+  },
+  "campaign_html": {
+    "bytes": 70304,
+    "gzip_bytes": 18087
+  },
+  "production_changed": false,
+  "outbound_enquiries_sent": 0,
+  "marketing_posts_sent": 0,
+  "new_direct_dependencies": 0,
+  "new_recurring_cost_aud": 0,
+  "unverified": [
+    "campaign-specific mailbox receipt and reply",
+    "production release and live render, intentionally held"
+  ]
+}

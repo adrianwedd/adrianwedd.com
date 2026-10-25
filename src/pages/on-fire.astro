@@ -1,0 +1,428 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import campaign from '../data/on-fire.json';
+
+const providerMessage =
+  "Hi, I've seen the recent PHP2Shell security advisories (CVE-2026-109618 and CVE-2026-109619). Could you confirm whether our website or hosting uses an affected PHP runtime, whether the relevant patches have been applied, whether there is any evidence of earlier compromise, and whether our backups and recovery process have been checked? Please also check PHP's 23 October session upload progress advisory. A short written update would be appreciated. Thanks.";
+const application = `Hi Adrian,\n\nI'd like to request the free initial website exposure review.\n\nBusiness name:\nPublic website URL:\nBusiness location (town/suburb):\nContact name:\nContact email:\nOptional concern (no sensitive details):\n\nAuthority: [Please confirm: I own or am authorised to represent this website.]\n\nI understand this is an enquiry, not an awarded place, and that the review is external and non-invasive.\n`;
+const email =
+  'mailto:adrian@adrianwedd.com?subject=' +
+  encodeURIComponent('ON FIRE — free website exposure review') +
+  '&body=' +
+  encodeURIComponent(application);
+const title = campaign.closed
+  ? 'The Internet Is On Fire | Website Security Advice in Southern Tasmania'
+  : 'The Internet Is On Fire | Free Website Security Checks in Southern Tasmania';
+const description = campaign.closed
+  ? 'The ten-place free assessment offer has closed. Get practical website security advice and questions to ask your hosting provider.'
+  : 'Critical vulnerabilities are hitting websites and software. Adrian Wedd is offering 10 free initial website security exposure checks for eligible Huon Valley and southern Tasmanian businesses.';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  siteNameInTitle={false}
+  image={campaign.closed ? '/og/on-fire-closed.png' : '/og/on-fire.png'}
+  imageAlt={campaign.closed
+    ? 'The internet is on fire. Your business does not have to be. Practical advice from Adrian Wedd.'
+    : 'The internet is on fire. Your business does not have to be. Ten free local website exposure reviews.'}
+>
+  <section aria-labelledby="fire-heading" class="relative px-4 pt-32 pb-16 sm:px-6 sm:pt-40 lg:px-8" data-pagefind-body>
+    <div class="relative z-10 mx-auto max-w-3xl">
+      <p class="text-accent mb-6 font-mono text-xs tracking-widest uppercase">
+        A note to our neighbours · Southern Tasmania
+      </p>
+      <h1 id="fire-heading" class="text-text">THE INTERNET <br />IS <span class="text-accent">ON FIRE.</span></h1>
+      <p class="text-text mt-6 text-xl font-semibold sm:text-2xl">Your business doesn't have to be.</p>
+
+      <p class="text-text mt-6 font-medium">
+        {
+          campaign.closed
+            ? 'The ten-place free offer has closed. The advice stays.'
+            : '10 local businesses. Free, personally reviewed website exposure checks.'
+        }
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a
+          href={campaign.closed ? '#provider-questions' : '#request'}
+          class="btn-primary bg-accent text-surface inline-block rounded-lg px-6 py-3 text-sm font-semibold no-underline hover:opacity-90"
+          >{campaign.closed ? 'Get the provider questions' : 'Request a free check'}</a
+        >
+        {
+          !campaign.closed && (
+            <a
+              href="#provider-questions"
+              class="btn-secondary border-border text-text-muted hover:border-accent hover:text-accent inline-flex items-center rounded-lg border px-5 py-3 text-sm font-medium no-underline"
+            >
+              What to ask your provider
+            </a>
+          )
+        }
+      </div>
+      <p class="text-text-muted mt-4 text-sm">No bullshit. No obligation. An enquiry doesn't reserve a place.</p>
+      <p class="text-text-muted mt-6 max-w-prose leading-relaxed">
+        The internet has had an absolute shocker. Critical flaws in PHP, the software underneath many websites. A
+        poisoned update to an AI tool. Ordinary businesses have better things to do than follow all this. Unfortunately,
+        running a café, orchard or workshop doesn't make the problem disappear. Your website might be fine. Let's
+        establish what we can actually verify — and what your hosting provider needs to answer.
+      </p>
+    </div>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+  <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
+    <h2 id="happened-heading" class="text-text">What the hell happened?</h2>
+    <div class="mt-8 space-y-8">
+      <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
+        <p class="text-accent font-mono text-xs">01 / THE WEBSITE SOFTWARE</p>
+        <h3 class="text-text mt-3 text-xl">PHP2Shell: check the engine, not just the paintwork.</h3>
+        <p class="text-text-muted mt-4">
+          <strong class="text-text">Confirmed:</strong> PHP's 21 October advisory describes two flaws, CVE-2026-109618 and
+          CVE-2026-109619, that can let an unauthenticated attacker run code on a server. They involve memory corruption and
+          stale internal state across requests.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Who should check:</strong> businesses whose websites use PHP, including many content-management
+          systems. PHP says installations serving web requests are at risk; it rates Apache mod_php highest, with a demonstrated
+          attack before application code runs. Actual exposure depends on the runtime, host and configuration. This does not
+          mean every PHP website is compromised.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Useful action:</strong> ask your host to verify the actual PHP runtime. The fixes released
+          on 21 October are PHP 8.2.35, 8.3.36, 8.4.27 and 8.5.12. A vendor may backport fixes, so a version string alone
+          is not proof either way. Older branches need vendor confirmation or an upgrade to a supported release.
+        </p>
+        <p class="text-text-muted mt-3">
+          PHP added a further warning on 23 October about an unusual combination of session configuration and
+          application code. Ask your host to check that too. Updating plugins and themes alone doesn't establish that
+          the runtime is patched.
+        </p>
+        <a href="https://www.php.net/archive/2026.php#2026-10-21-5" class="text-accent mt-4 inline-block underline"
+          >Read PHP's security advisory →</a
+        >
+      </article>
+      <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
+        <p class="text-accent font-mono text-xs">02 / THE SUPPLY CHAIN</p>
+        <h3 class="text-text mt-3 text-xl">A legitimate update channel. An illegitimate update.</h3>
+        <p class="text-text-muted mt-4">
+          <strong class="text-text">Confirmed:</strong> LiteLLM says its 1.107.0 release on 21 October contained credential-stealing
+          malware. Its later investigation traced the attack through an exposed, unrevoked key, stolen GitHub access and a
+          subverted release process.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Who might be affected:</strong> operators who installed or ran the affected Python package
+          or container images. This is an AI infrastructure incident; an ordinary business website isn't automatically affected
+          because it exists online.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Useful action:</strong> if your provider uses LiteLLM, ask them to check the exact installed
+          artifacts against the incident report and follow its response guidance. Installing a clean update alone doesn't
+          undo stolen credentials.
+        </p>
+        <a
+          href="https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain"
+          class="text-accent mt-4 inline-block underline">Read the corrected investigation →</a
+        >
+      </article>
+    </div>
+    <p class="text-text-muted mt-6">
+      Being patched today doesn't prove you weren't exposed yesterday. It also doesn't prove there was a compromise.
+      Those are different questions, and they need different evidence.
+    </p>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+  <section
+    id="provider-questions"
+    aria-labelledby="questions-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+    data-pagefind-body
+  >
+    <h2 id="questions-heading" class="text-text">Three questions for your website provider</h2>
+    <ol class="mt-8 space-y-8">
+      <li>
+        <h3 class="text-text text-xl">1. Are we running affected software?</h3><p class="text-text-muted mt-2">
+          For PHP2Shell, has the actual PHP runtime been checked and updated — as well as the website's plugins and
+          themes? Somebody should know what's running underneath your website.
+        </p>
+      </li>
+      <li>
+        <h3 class="text-text text-xl">2. Were we exposed before it was patched?</h3><p class="text-text-muted mt-2">
+          What evidence exists of exploitation or compromise? Have relevant logs and alerts been reviewed? What can't be
+          established from the records available?
+        </p>
+      </li>
+      <li>
+        <h3 class="text-text text-xl">3. Who is responsible if something goes wrong?</h3><p
+          class="text-text-muted mt-2"
+        >
+          Who manages hosting, backups, security updates and incident response? Has recovery been checked? Can you reach
+          the responsible person when it matters?
+        </p>
+      </li>
+    </ol>
+    <div class="border-border bg-surface-alt mt-8 rounded-xl border p-5 sm:p-6">
+      <h3 class="text-text font-semibold">Send this to your provider</h3>
+      <p id="provider-message" class="text-text-muted mt-4 leading-relaxed">{providerMessage}</p>
+      <button
+        hidden
+        data-fire-copy="provider-message"
+        type="button"
+        class="btn-secondary border-border text-text hover:border-accent mt-5 min-h-11 rounded-lg border px-5 py-3 text-sm font-medium"
+        >Copy provider message</button
+      >
+      <p id="fire-copy-status" role="status" aria-live="polite" class="text-text-muted mt-3 text-sm"></p>
+      <p class="text-text-muted mt-3 text-sm">
+        You can also select the message above and copy it into an email. No registration needed.
+      </p>
+    </div>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+  <section
+    id="offer"
+    aria-labelledby="offer-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+    data-pagefind-body
+  >
+    <h2 id="offer-heading" class="text-text">
+      {campaign.closed ? 'The free offer has closed.' : '10 local businesses. Free exposure checks.'}
+    </h2>
+    <p class="text-text-muted mt-6">
+      {
+        campaign.closed
+          ? 'The free offer has closed. Existing awards remain recorded within the ten-place lifetime limit. You can keep using the provider questions above.'
+          : 'The first ten eligible businesses receive a personally reviewed initial website exposure assessment, with a short written report in plain English.'
+      }
+    </p>
+    <ul class="text-text-muted mt-6 list-disc space-y-2 pl-6">
+      <li>Publicly observable website and hosting characteristics.</li>
+      <li>Relevant recent advisories and potential exposure.</li>
+      <li>Obvious externally visible configuration problems.</li>
+      <li>Questions only your hosting provider can resolve with evidence.</li>
+      <li>Prioritised next actions to take back to your developer or provider.</li>
+    </ul>
+    <p class="text-text mt-6 font-medium">Genuinely free. No obligation. No purchase required.</p>
+    <p class="text-text-muted mt-3">
+      This is an initial external review, not a full penetration test, forensic investigation, compliance certification
+      or guarantee of security. No exploit attempts or intrusive testing are included.
+    </p>
+    <h3 class="text-text mt-8 text-xl">Who it's for</h3>
+    <p class="text-text-muted mt-3">
+      Businesses in the Huon Valley and southern Tasmania with a public website. Sole traders, family businesses and
+      small not-for-profits are welcome. I'll confirm local eligibility and your authority to represent the website by
+      email. No website yet? <a href="/local/" class="text-accent underline"
+        >The local services page is a better starting point.</a
+      >
+    </p>
+    <p class="text-text-muted mt-3">
+      Eligible places are allocated in the order enquiries arrive, after review. Duplicate enquiries don't get extra
+      places. I'll confirm an award in writing; submitting an enquiry doesn't secure one. The ten-place limit includes
+      completed assessments.
+    </p>
+    <p class="text-text-muted mt-3">
+      This free review is separate from my <a href="/local/" class="text-accent underline"
+        >paid business diagnostic and implementation work</a
+      >. It isn't a first step you must take towards buying anything.
+    </p>
+  </section>
+
+  <section aria-labelledby="example-heading" class="mx-auto max-w-3xl px-4 pb-16 sm:px-6 lg:px-8" data-pagefind-body>
+    <h2 id="example-heading" class="text-text">What you'll receive</h2>
+    <div class="border-border bg-surface-alt mt-8 rounded-xl border p-5 sm:p-8">
+      <p class="text-accent font-mono text-xs uppercase">Illustrative example · fictional business</p>
+      <h3 class="text-text mt-4 text-xl">Initial website exposure review</h3>
+      <p class="text-text-muted mt-3">
+        Example Orchard · example.invalid<br />Example assessment date: 25 October 2026
+      </p>
+      <dl class="mt-6 space-y-5">
+        <div>
+          <dt class="text-text font-semibold">Observed</dt><dd class="text-text-muted mt-1">
+            Public site served over HTTPS. Underlying PHP runtime version not externally verifiable. Hosting ownership
+            not yet confirmed.
+          </dd>
+        </div>
+        <div>
+          <dt class="text-text font-semibold">Potential concern</dt><dd class="text-text-muted mt-1">
+            PHP2Shell exposure cannot be ruled in or out from public observations.
+          </dd>
+        </div>
+        <div>
+          <dt class="text-text font-semibold">Next action</dt><dd class="text-text-muted mt-1">
+            Ask the hosting provider to confirm the PHP runtime, patch status and relevant log review.
+          </dd>
+        </div>
+        <div>
+          <dt class="text-text font-semibold">Confidence and outcome</dt><dd class="text-text-muted mt-1">
+            Limited by external-only access. Provider verification required; no conclusion of compromise.
+          </dd>
+        </div>
+      </dl>
+    </div>
+    <p class="text-text-muted mt-4 text-sm">
+      An unanswered question is not a confirmed vulnerability. A lack of visible problems is not a security certificate.
+    </p>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+  <section
+    id="request"
+    aria-labelledby="request-heading"
+    class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
+    data-pagefind-body
+  >
+    <h2 id="request-heading" class="text-text">
+      {campaign.closed ? 'The offer has closed. Advice still available.' : 'Request a free check'}
+    </h2>
+    {
+      campaign.closed ? (
+        <p class="text-text-muted mt-6">
+          The limited free offer is closed.{' '}
+          <a href="#provider-questions" class="text-accent underline">
+            Copy the provider questions
+          </a>{' '}
+          or{' '}
+          <a href="/local/" class="text-accent underline">
+            see my local services
+          </a>
+          .
+        </p>
+      ) : (
+        <>
+          <p class="text-text-muted mt-6">
+            Email me using the draft below. Include your business name, public website URL, town or suburb, contact name
+            and email, and confirmation that you own or are authorised to represent the website. A short concern is
+            optional.
+          </p>
+          <p class="text-text mt-4 font-medium">
+            Please don't send passwords, API keys, hosting credentials, customer records, payment details or sensitive
+            files.
+          </p>
+          <a
+            href={email}
+            id="fire-email"
+            class="btn-primary bg-accent text-surface mt-6 inline-block rounded-lg px-6 py-3 text-sm font-semibold no-underline hover:opacity-90"
+          >
+            Open an email draft
+          </a>
+          <p class="text-text-muted mt-4 text-sm">
+            This opens your email app. You still need to complete and send the email. Nothing has been submitted by
+            clicking. If it doesn't open, email{' '}
+            <a href="mailto:adrian@adrianwedd.com" class="text-accent underline">
+              adrian@adrianwedd.com
+            </a>{' '}
+            with the subject “ON FIRE — free website exposure review”.
+          </p>
+          <details class="border-border mt-6 rounded-lg border p-5">
+            <>
+              <summary class="text-text min-h-11 cursor-pointer font-medium">Show the application text to copy</summary>
+              <pre class="text-text-muted mt-4 font-sans break-words whitespace-pre-wrap">{application}</pre>
+            </>
+          </details>
+          <p class="text-text-muted mt-4">
+            I'll reply to confirm receipt and check eligibility. A place is awarded only when I confirm that separately
+            in writing. If you haven't heard back within three business days, follow up by email. Please keep any
+            follow-up in the same thread.
+          </p>
+        </>
+      )
+    }
+    <p class="text-text-muted mt-6 text-sm">
+      Enquiry information is used to check eligibility, allocate places and deliver the review. It is held in my
+      Google-hosted email account and a private local campaign record, accessible to me and the providers operating that
+      infrastructure. Participant identities and findings aren't published or added to marketing lists. Campaign records
+      and assessment correspondence are scheduled for deletion 90 days after the offer closes, unless you ask me to
+      retain them or a legal requirement applies; provider backups may take longer to expire. <a
+        href="/privacy/#on-fire"
+        class="text-accent underline">Privacy details and deletion requests</a
+      >.
+    </p>
+  </section>
+
+  <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
+  <section aria-labelledby="adrian-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
+    <h2 id="adrian-heading" class="text-text">I'm Adrian. I'm in Cygnet.</h2>
+    <p class="text-text-muted mt-6">
+      I build and investigate software systems, from local business tools to adversarial testing of AI. My work spans
+      cybersecurity, reliability and finding out what systems actually do when things go wrong. This is me offering a
+      bounded piece of useful work to my neighbours.
+    </p>
+    <p class="text-text-muted mt-4">
+      <a href="/about/" class="text-accent underline">More about my background</a> · <a
+        href="/projects/failure-first/"
+        class="text-accent underline">Adversarial evaluation work</a
+      > · <a href="/local/" class="text-accent underline">Local services</a>
+    </p>
+  </section>
+
+  <section aria-labelledby="sources-heading" class="mx-auto max-w-3xl px-4 pb-16 sm:px-6 lg:px-8" data-pagefind-body>
+    <h2 id="sources-heading" class="text-text">Sources and updates</h2>
+    <p class="text-text-muted mt-6 text-sm">
+      Prepared: <time datetime="2026-10-25">25 October 2026</time>. Last reviewed: <time datetime={campaign.reviewed}
+        >{
+          new Date(campaign.reviewed + 'T12:00:00Z').toLocaleDateString('en-AU', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'Australia/Hobart',
+          })
+        }</time
+      >. Published: <time datetime="2026-10-25">25 October 2026</time>.
+    </p>
+    <ul class="mt-4 space-y-3 text-sm">
+      <li>
+        <a href="https://www.php.net/archive/2026.php#2026-10-21-5" class="text-accent underline"
+          >PHP: 21 October security advisory and fixed releases</a
+        >
+      </li>
+      <li>
+        <a href="https://www.php.net/archive/2026.php#2026-10-23-1" class="text-accent underline"
+          >PHP: 23 October session upload progress advisory</a
+        >
+      </li>
+      <li>
+        <a href="https://docs.litellm.ai/blog/security-incident-oct-21-2026" class="text-accent underline"
+          >LiteLLM: affected artifacts and response guidance</a
+        >
+      </li>
+      <li>
+        <a href="https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain" class="text-accent underline"
+          >LiteLLM: canonical investigation, 23 October</a
+        >
+      </li>
+    </ul>
+    <p class="text-text-muted mt-4 text-sm">
+      Advisories can change. These dates record an editorial review, not an automatic refresh. The later LiteLLM
+      investigation corrects parts of its initial explanation. Spotted something outdated? <a
+        href="mailto:adrian@adrianwedd.com?subject=ON%20FIRE%20correction"
+        class="text-accent underline">Email a correction</a
+      >.
+    </p>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  if (!document.documentElement.dataset.fireCopyInit) {
+    document.documentElement.dataset.fireCopyInit = '1';
+    function enableFireCopy() {
+      document.querySelectorAll('[data-fire-copy]').forEach(function (button) {
+        button.hidden = false;
+      });
+    }
+    document.addEventListener('astro:page-load', enableFireCopy);
+    enableFireCopy();
+    document.addEventListener('click', async function (event) {
+      var button = event.target.closest('[data-fire-copy]');
+      if (!button) return;
+      var message = document.getElementById(button.dataset.fireCopy);
+      var status = document.getElementById('fire-copy-status');
+      if (!message || !status) return;
+      try {
+        await navigator.clipboard.writeText(message.textContent.trim());
+        status.textContent = 'Copied. Paste this into a message to your website provider.';
+      } catch (_) {
+        status.textContent = 'Could not copy automatically. Select the message above and copy it manually.';
+      }
+    });
+  }
+</script>
