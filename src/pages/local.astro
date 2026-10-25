@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import campaign from '../data/on-fire.json';
 
 const paths = [
   {
@@ -108,9 +109,18 @@ const pillars = [
     <h2 id="proof-heading" class="text-text">Free guidance</h2>
     <p class="text-text-muted mt-6 max-w-prose">
       Common website problems local businesses can fix themselves, written up as composite examples — general guidance,
-      free. Analysis of your specific operation is what the paid diagnostic is for.
+      free. Broader analysis of your specific operation is what the paid diagnostic is for.
     </p>
     <div class="mt-6">
+      <p class="text-text-muted mb-4 text-sm">
+        A separate limited offer: <a href="/on-fire/" class="text-accent underline"
+          >{
+            campaign.closed
+              ? 'website security advice for local businesses (free offer closed)'
+              : 'ten free initial website security exposure reviews for local businesses'
+          }</a
+        >. No purchase required; separate from the paid diagnostic. See the campaign page for current offer status.
+      </p>
       <a href="/fixes/" class="text-accent hover:underline">Browse the free guides &rarr;</a>
     </div>
   </section>

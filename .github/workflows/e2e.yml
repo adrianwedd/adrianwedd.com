@@ -31,6 +31,8 @@ jobs:
       - run: npm run lint
       - run: npm run format:check
       - run: npm run test:unit
+      - name: Test private campaign allocation workflow
+        run: python3 -m unittest discover -s scripts/on-fire -p 'test_*.py' -v
       - run: npm run check:failure-first-stats
         env:
           # Authenticated api.github.com — unauthenticated is 60/hr per IP and
