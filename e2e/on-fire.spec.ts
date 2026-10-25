@@ -66,7 +66,8 @@ test('campaign remains useful without JavaScript @smoke', async ({ browser, base
   await expect(page.locator('#fire-email')).toHaveAttribute('href', /^mailto:/);
   await page.getByText('Show the application text to copy').click();
   await expect(page.locator('#request pre')).toContainText('Authority:');
-  await expect(page.locator('#provider-questions noscript')).toContainText('copy it into an email');
+  await expect(page.locator('[data-fire-copy]')).toBeHidden();
+  await expect(page.locator('#provider-questions')).toContainText('copy it into an email');
   await context.close();
 });
 

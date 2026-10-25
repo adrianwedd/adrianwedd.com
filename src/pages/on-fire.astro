@@ -165,17 +165,16 @@ const description = campaign.closed
       <h3 class="text-text font-semibold">Send this to your provider</h3>
       <p id="provider-message" class="text-text-muted mt-4 leading-relaxed">{providerMessage}</p>
       <button
+        hidden
         data-fire-copy="provider-message"
         type="button"
         class="btn-secondary border-border text-text hover:border-accent mt-5 min-h-11 rounded-lg border px-5 py-3 text-sm font-medium"
         >Copy provider message</button
       >
       <p id="fire-copy-status" role="status" aria-live="polite" class="text-text-muted mt-3 text-sm"></p>
-      <noscript
-        ><p class="text-text-muted mt-3 text-sm">
-          Select the message above and copy it into an email. No registration needed.
-        </p></noscript
-      >
+      <p class="text-text-muted mt-3 text-sm">
+        You can also select the message above and copy it into an email. No registration needed.
+      </p>
     </div>
   </section>
 
@@ -405,6 +404,13 @@ const description = campaign.closed
 <script is:inline>
   if (!document.documentElement.dataset.fireCopyInit) {
     document.documentElement.dataset.fireCopyInit = '1';
+    function enableFireCopy() {
+      document.querySelectorAll('[data-fire-copy]').forEach(function (button) {
+        button.hidden = false;
+      });
+    }
+    document.addEventListener('astro:page-load', enableFireCopy);
+    enableFireCopy();
     document.addEventListener('click', async function (event) {
       var button = event.target.closest('[data-fire-copy]');
       if (!button) return;
