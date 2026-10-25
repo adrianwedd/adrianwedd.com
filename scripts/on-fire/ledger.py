@@ -127,7 +127,7 @@ def operate(path, action, identifier=None, data=None):
         os.chmod(lock.name, 0o600)
         fcntl.flock(lock, fcntl.LOCK_EX)
         state = json.loads(path.read_text()) if path.exists() else {'schema': 1, 'records': [], 'closed_at': None}
-        if state.get('schema') != 1 or count(state) > LIMIT:
+        if not isinstance(state, dict) or state.get('schema') != 1 or count(state) > LIMIT:
             raise ValueError('invalid ledger; restore a verified private backup')
         if action == 'receive':
             result = receive(state, data)
@@ -179,7 +179,7 @@ def main():
         print(json.dumps(operate(args.ledger, args.action, args.id, data)))
     except (ValueError, KeyError, OSError):
         # Never echo input, parser text or filesystem details containing client data.
-        print('Request rejected. Check required fields, authority, queue order, status and capacity; no award was made.', file=sys.stderr)
+        print('Operation not confirmed. Check the private ledger status before retrying; verify fields, authority, queue order and capacity.', file=sys.stderr)
         return 1
     return 0
 
