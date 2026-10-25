@@ -26,7 +26,7 @@ test('campaign advice, honest intake and clipboard work without disclosing appli
     'content',
     campaign.closed ? 'https://adrianwedd.com/og/on-fire-closed.png' : 'https://adrianwedd.com/og/on-fire.png',
   );
-  await expect(page.locator('h1')).toHaveText('THE INTERNETIS ON FIRE.');
+  await expect(page.locator('h1')).toHaveText('THE INTERNET IS ON FIRE.');
   await expect(page.locator('#consent-reject')).toBeVisible();
   await page.locator('#consent-reject').click();
   if (!campaign.closed) {
@@ -104,6 +104,9 @@ test('closed campaign retains advice and removes application and promotional met
   await expect(page.locator('#fire-email')).toHaveCount(0);
   await expect(page.locator('a[href="#request"]')).toHaveCount(0);
   await expect(page.locator('#offer-heading')).toHaveText('The free offer has closed.');
+  await expect(page.locator('#request-heading')).toHaveText('The offer has closed. Advice still available.');
+  await expect(page.locator('main')).not.toContainText('All ten places have been awarded');
+  await expect(page.locator('main')).not.toContainText('Ten places awarded.');
   await expect(page).toHaveTitle('The Internet Is On Fire | Website Security Advice in Southern Tasmania');
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     'content',

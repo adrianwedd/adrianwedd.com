@@ -48,6 +48,8 @@ def received_time(value):
 def receive(state, data):
     if state.get('purged_at'):
         raise ValueError('campaign records have been purged; intake is closed')
+    if closed(state):
+        raise ValueError('campaign is closed; intake is closed')
     allowed = {'business', 'website', 'location', 'contact', 'email', 'authorised', 'received_at', 'reference', 'business_key'}
     if set(data) - allowed:
         raise ValueError('unexpected fields; do not store credentials or sensitive details')
@@ -75,8 +77,6 @@ def receive(state, data):
     for existing in state['records']:
         if existing.get('identity') == identity:
             return {'id': existing['id'], 'duplicate': True, 'status': existing['status']}
-    if state.get('purged_at'):
-        raise ValueError('campaign records have been purged; intake is closed')
     record.update(id=f"F{len(state['records']) + 1:03}", identity=identity, received_at=received_time(data.get('received_at')), authorised=True, status='submitted', awarded_at=None, history=[{'at': now(), 'event': 'submitted'}])
     state['records'].append(record)
     return {'id': record['id'], 'duplicate': False, 'status': 'submitted'}
@@ -84,6 +84,10 @@ def receive(state, data):
 
 def count(state):
     return sum(r['awarded_at'] is not None for r in state['records'])
+
+
+def closed(state):
+    return bool(state['closed_at']) or count(state) >= LIMIT
 
 
 def transition(state, identifier, action):
@@ -95,13 +99,13 @@ def transition(state, identifier, action):
     if action == 'award':
         if record['awarded_at']:
             return {'id': identifier, 'duplicate_award': True, 'awarded': count(state)}
+        if closed(state):
+            raise ValueError('campaign is closed; no further awards')
         if record['status'] != 'eligible':
             raise ValueError('eligibility and authority must be verified first')
         queue = sorted((r for r in state['records'] if r['status'] in ('submitted', 'eligible') and not r['awarded_at']), key=lambda r: (r['received_at'], r['id']))
         if queue[0]['id'] != identifier:
             raise ValueError('resolve earlier submissions first; awards follow mailbox submission order')
-        if count(state) >= LIMIT:
-            raise ValueError('all ten places have already been awarded')
         record['awarded_at'] = now()
         record['status'] = 'awarded'
         if count(state) == LIMIT:
@@ -112,7 +116,7 @@ def transition(state, identifier, action):
             raise ValueError('invalid status transition')
         record['status'] = action
     record['history'].append({'at': now(), 'event': action})
-    return {'id': identifier, 'status': record['status'], 'awarded': count(state), 'closed': count(state) >= LIMIT}
+    return {'id': identifier, 'status': record['status'], 'awarded': count(state), 'closed': closed(state)}
 
 
 def operate(path, action, identifier=None, data=None):
@@ -132,7 +136,11 @@ def operate(path, action, identifier=None, data=None):
         if action == 'receive':
             result = receive(state, data)
         elif action == 'status':
-            return {'awarded': count(state), 'limit': LIMIT, 'closed': count(state) >= LIMIT, 'closed_at': state['closed_at'], 'queue': [{'id': r['id'], 'status': r['status'], 'received_at': r.get('received_at')} for r in state['records']]}
+            return {'awarded': count(state), 'limit': LIMIT, 'closed': closed(state), 'closed_at': state['closed_at'], 'queue': [{'id': r['id'], 'status': r['status'], 'received_at': r.get('received_at')} for r in state['records']]}
+        elif action == 'close':
+            if not state['closed_at']:
+                state['closed_at'] = now()
+            result = {'closed': True, 'closed_at': state['closed_at'], 'awarded': count(state)}
         elif action == 'purge':
             if not state['closed_at'] or (datetime.now(timezone.utc) - datetime.fromisoformat(state['closed_at'])).days < 90:
                 raise ValueError('purge only after closure plus 90 days; handle individual deletion requests separately')
@@ -164,7 +172,7 @@ def operate(path, action, identifier=None, data=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--ledger', type=Path, default=DEFAULT)
-    parser.add_argument('action', choices=['receive', 'status', 'eligible', 'declined', 'award', 'in-progress', 'delivered', 'withdrawn', 'purge'])
+    parser.add_argument('action', choices=['receive', 'status', 'eligible', 'declined', 'award', 'in-progress', 'delivered', 'withdrawn', 'close', 'purge'])
     parser.add_argument('id', nargs='?')
     args = parser.parse_args()
     try:

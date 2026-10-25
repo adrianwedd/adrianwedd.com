@@ -6,6 +6,7 @@ from pathlib import Path
 import stat
 import tempfile
 import unittest
+from unittest.mock import patch
 from datetime import datetime, timedelta, timezone
 
 SPEC = importlib.util.spec_from_file_location('ledger', Path(__file__).with_name('ledger.py'))
@@ -70,7 +71,7 @@ class LedgerTests(unittest.TestCase):
             self.assertTrue(ledger.operate(self.path, 'award', identifier)['duplicate_award'])
             ledger.operate(self.path, 'in-progress', identifier)
             ledger.operate(self.path, 'delivered', identifier)
-        with self.assertRaisesRegex(ValueError, 'ten'):
+        with self.assertRaisesRegex(ValueError, 'closed'):
             ledger.operate(self.path, 'award', 'F011')
         status = ledger.operate(self.path, 'status')
         self.assertEqual(status['awarded'], 10)
@@ -108,6 +109,66 @@ class LedgerTests(unittest.TestCase):
         self.path.write_text('{')
         with self.assertRaises(ValueError):
             ledger.operate(self.path, 'award', 'F001')
+
+    def test_early_closure_blocks_intake_and_new_awards_but_allows_delivery(self):
+        first = self.receive(1)['id']
+        second = self.receive(2)['id']
+        for identifier in (first, second):
+            ledger.operate(self.path, 'eligible', identifier)
+        ledger.operate(self.path, 'award', first)
+        result = ledger.operate(self.path, 'close')
+        self.assertTrue(result['closed'])
+        self.assertEqual(result['awarded'], 1)
+        with patch.object(ledger, 'now', return_value='2099-01-01T00:00:00+00:00'):
+            self.assertEqual(ledger.operate(self.path, 'close'), result)
+        with self.assertRaisesRegex(ValueError, 'closed'):
+            self.receive(3)
+        with self.assertRaisesRegex(ValueError, 'closed'):
+            ledger.operate(self.path, 'award', second)
+        self.assertTrue(ledger.operate(self.path, 'award', first)['duplicate_award'])
+        ledger.operate(self.path, 'in-progress', first)
+        delivered = ledger.operate(self.path, 'delivered', first)
+        self.assertTrue(delivered['closed'])
+        self.assertEqual(delivered['awarded'], 1)
+        self.assertEqual(ledger.operate(self.path, 'status')['closed_at'], result['closed_at'])
+        with self.assertRaises(ValueError):
+            ledger.operate(self.path, 'purge')
+
+    def test_early_closure_starts_retention_and_purge_keeps_lifetime_awards(self):
+        identifier = self.receive()['id']
+        ledger.operate(self.path, 'eligible', identifier)
+        ledger.operate(self.path, 'award', identifier)
+        closed_at = (datetime.now(timezone.utc) - timedelta(days=91)).isoformat()
+        with patch.object(ledger, 'now', return_value=closed_at):
+            ledger.operate(self.path, 'close')
+        self.assertEqual(ledger.operate(self.path, 'purge'), {'purged': True, 'awarded': 1})
+        state = json.loads(self.path.read_text())
+        self.assertEqual(set(state['records'][0]), {'id', 'awarded_at', 'status'})
+        self.assertEqual(state['closed_at'], closed_at)
+        status = ledger.operate(self.path, 'status')
+        self.assertTrue(status['closed'])
+        self.assertEqual(status['awarded'], 1)
+        with self.assertRaises(ValueError):
+            self.receive(2)
+        for action in ('award', 'withdrawn'):
+            with self.assertRaisesRegex(ValueError, 'purged'):
+                ledger.operate(self.path, action, identifier)
+
+    def test_close_without_awards_and_after_capacity_preserves_closure_date(self):
+        result = ledger.operate(self.path, 'close')
+        self.assertEqual(result['awarded'], 0)
+        self.assertTrue(ledger.operate(self.path, 'status')['closed'])
+        with self.assertRaisesRegex(ValueError, 'closed'):
+            self.receive()
+        self.path.unlink()
+        for number in range(1, 11):
+            identifier = self.receive(number)['id']
+            ledger.operate(self.path, 'eligible', identifier)
+            ledger.operate(self.path, 'award', identifier)
+        status = ledger.operate(self.path, 'status')
+        result = ledger.operate(self.path, 'close')
+        self.assertEqual(result['closed_at'], status['closed_at'])
+        self.assertEqual(result['awarded'], 10)
 
     def test_purge_preserves_anonymous_capacity_and_closes_intake(self):
         identifier = self.receive()['id']
