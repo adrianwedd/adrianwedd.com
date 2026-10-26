@@ -1,0 +1,49 @@
+name: Dependency security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '23 19 * * 1' # weekly, including advisories published between changes
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        directory: ['.', worker, worker-csp, worker-links]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.directory }}/package-lock.json
+      - name: Audit production dependencies
+        working-directory: ${{ matrix.directory }}
+        run: npx -y npm@11 audit --omit=dev --audit-level=low
+      - name: Audit development and production dependencies
+        working-directory: ${{ matrix.directory }}
+        run: npx -y npm@11 audit --include=dev --audit-level=low
+
+  worker-links:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker-links
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker-links/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npx tsc --noEmit

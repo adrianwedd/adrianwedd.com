@@ -59,6 +59,14 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
+      - name: Check Lighthouse dependency compatibility
+        # LHCI's pinned Lighthouse uses a security-updated Puppeteer override.
+        # Exercise collection against the real build, using the installed browser.
+        run: |
+          export CHROME_PATH="$(node --input-type=module -e "import { chromium } from '@playwright/test'; console.log(chromium.executablePath())")"
+          npx lhci collect --staticDistDir=dist --url=/ --numberOfRuns=1 \
+            --settings.onlyCategories=performance \
+            --settings.chromeFlags="--headless --no-sandbox"
       - run: npm run test:e2e:smoke
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: failure()

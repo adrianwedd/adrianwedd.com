@@ -217,8 +217,9 @@ jobs:
 
   deploy:
     needs: [build, worker-csp]
-    # Never deploy from a PR — only on push to main (or a manual dispatch).
-    if: github.event_name != 'pull_request'
+    # A maintenance hold allows validated changes to merge without publishing.
+    # Set PAGES_DEPLOY_HOLD=true before the merge; clear only after its run ends.
+    if: github.event_name != 'pull_request' && vars.PAGES_DEPLOY_HOLD != 'true'
     runs-on: ubuntu-latest
     permissions:
       pages: write
