@@ -93,9 +93,16 @@ const description = campaign.closed
           is not proof either way. Older branches need vendor confirmation or an upgrade to a supported release.
         </p>
         <p class="text-text-muted mt-3">
-          PHP added a further warning on 23 October about an unusual combination of session configuration and
-          application code. Ask your host to check that too. Updating plugins and themes alone doesn't establish that
-          the runtime is patched.
+          PHP added a separate warning on 23 October (CVE-2026-115560): an uncommon combination of session upload
+          progress and application configuration. The 21 October updates do not fix that issue; ask your host to
+          check the advisory and its interim mitigation. Plugin and theme updates alone don't patch PHP.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Evidence correction, 25 October:</strong> Unit 42 withdrew its report linking
+          an intrusion at a European government agency to PHP2Shell. Exploitation attempts have been observed,
+          but that particular successful compromise is <em>not</em> established as PHP2Shell. The patch advice
+          hasn't changed.
+          <a href="https://unit42.paloaltonetworks.com/cve-2026-109618-cve-2026-109619/" class="text-accent underline">Read Unit 42's corrected threat brief</a>.
         </p>
         <a href="https://www.php.net/archive/2026.php#2026-10-21-5" class="text-accent mt-4 inline-block underline"
           >Read PHP's security advisory →</a
@@ -110,14 +117,15 @@ const description = campaign.closed
           subverted release process.
         </p>
         <p class="text-text-muted mt-3">
-          <strong class="text-text">Who might be affected:</strong> operators who installed or ran the affected Python package
-          or container images. This is an AI infrastructure incident; an ordinary business website isn't automatically affected
-          because it exists online.
+          <strong class="text-text">Who might be affected:</strong> operators who ran <code>litellm==1.107.0</code>
+          or affected container images on 21 October. Check historical deployments, not just today's installed version.
+          An ordinary business website isn't automatically affected.
         </p>
         <p class="text-text-muted mt-3">
           <strong class="text-text">Useful action:</strong> if your provider uses LiteLLM, ask them to check the exact installed
-          artifacts against the incident report and follow its response guidance. Installing a clean update alone doesn't
-          undo stolen credentials.
+          artifacts against the incident report and follow its response guidance. If a compromised artifact ran,
+          preserve evidence and investigate reachable credentials; an update alone doesn't undo theft. Don't run Python
+          inside a suspected environment just to check — malicious startup hooks can execute again.
         </p>
         <a
           href="https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain"
