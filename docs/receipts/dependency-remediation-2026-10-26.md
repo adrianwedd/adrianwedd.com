@@ -46,7 +46,10 @@ Fresh npm 11 full (`--include=dev`) and production-only (`--omit=dev`) audits:
 Local verification: root 217 tests, social 302 tests, CSP 34 tests and links
 10 tests passed. All Worker TypeScript checks passed. Root Astro check, ESLint,
 content validation, format check and production build passed. Root lockfile
-also passed a fresh npm 11 clean installation. A one-page LHCI collection ran
+also passed a fresh npm 11 clean installation. CI exposed npm 10 handling of
+optional proxy-agent peers, so its lockfile was completed with the npm 10
+installer used by Node 22 CI and checked with a clean-install dry run. Links
+now declares its own Node 22 types for isolated test type-checking. A one-page LHCI collection ran
 successfully with the updated Puppeteer and the existing Lighthouse version.
 
 ## Coverage and deployment
