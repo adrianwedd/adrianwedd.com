@@ -3,7 +3,7 @@ title: 'Homesick for the Future'
 description: 'On science fiction, Detroit techno, liberation, and the trouble with living in the present.'
 date: 2026-11-03
 tags: ['music', 'techno', 'futurism', 'personal']
-draft: true
+draft: false
 explicit: true
 ---
 
@@ -41,7 +41,7 @@ Juan Atkins was one of the architects of Detroit techno, although describing him
 
 I saw him play in London in the nineties. I bought his records, played them, mixed them, lived with them. I still have so many of those unwieldy slabs of vinyl that I fully intend to take them to my grave.
 
-And while the history books quite rightly celebrate the invention of techno, the records that mean the most to me aren't necessarily the famous ones. It's the strange, spacious, deeply funky music. The overlooked releases. The unexpected collaborations. The exquisite unfolding of *Sonic Sunset*. The moments when a handful of electronic instruments somehow communicate something enormous.
+And while the history books quite rightly celebrate the invention of techno, the records that mean the most to me aren't necessarily the famous ones. It's the strange, spacious, deeply funky music. The overlooked releases. The unexpected collaborations. The exquisite unfolding of _Sonic Sunset_. The moments when a handful of electronic instruments somehow communicate something enormous.
 
 There's a particular kind of longing in that music.
 
@@ -59,7 +59,7 @@ And underneath it all, the funk.
 
 Always the fucking funk.
 
-There's a connection here that I discovered only much later. [Atkins studied the future at school](https://patta.co/blogs/magazine/juan-atkins-for-patta-magazine). Alvin Toffler's *The Third Wave*, with its account of technological transformation and its talk of techno-rebels, was part of the intellectual world that informed his music.
+There's a connection here that I discovered only much later. [Atkins studied the future at school](https://patta.co/blogs/magazine/juan-atkins-for-patta-magazine). Alvin Toffler's _The Third Wave_, with its account of technological transformation and its talk of techno-rebels, was part of the intellectual world that informed his music.
 
 I love that.
 
@@ -89,7 +89,7 @@ Momentum. Trajectory.
 
 ## We will be free
 
-There's a song by Atkins, released as Infiniti, called [*Never Tempt Me*](https://tresorberlin.bandcamp.com/album/never-tempt-me).
+There's a song by Atkins, released as Infiniti, called [_Never Tempt Me_](https://tresorberlin.bandcamp.com/album/never-tempt-me).
 
 I've been listening to it again since hearing of [his death](https://ra.co/news/86327).
 
@@ -103,11 +103,11 @@ Among its lyrics is a simple promise:
 
 "We will be free, just wait and see."
 
-And in another recording, *Postcard From The Future*, there's a refrain that seems to circle the same idea: becoming something beyond what necessity demands, and finding freedom there.
+And in another recording, _Postcard From The Future_, there's a refrain that seems to circle the same idea: becoming something beyond what necessity demands, and finding freedom there.
 
 The words are partly obscured by processing. Perhaps I've misheard some of them. The idea sounded clearer than the words. But the sentiment has been unmistakable to me for decades.
 
-[A contemporary reviewer](https://www.metrotimes.com/arts/pitchd-2187797/) heard *Never Tempt Me* as part of a relationship falling apart. A love song, full of hurt and contradiction.
+[A contemporary reviewer](https://www.metrotimes.com/arts/pitchd-2187797/) heard _Never Tempt Me_ as part of a relationship falling apart. A love song, full of hurt and contradiction.
 
 I heard a promise of liberation.
 
@@ -203,7 +203,7 @@ The winners become evidence that the game is fair. The losers become cautionary 
 
 Somewhere, somebody in an expensive suit wishes you the very best of luck.
 
-*May the odds be ever in your favour.*
+_May the odds be ever in your favour._
 
 The older I get, the less that sounds like encouragement.
 
@@ -221,7 +221,7 @@ I'd become more experienced at living in the future.
 
 ## The Empire strikes back
 
-As a child, I watched an unreasonable amount of *Star Wars*.
+As a child, I watched an unreasonable amount of _Star Wars_.
 
 I genuinely expected a lightsaber to come my way eventually.
 
@@ -321,7 +321,7 @@ Apparently I haven't entirely learned my lesson.
 
 And occasionally, sitting here among the trees and the machines, answerable to nobody in particular, I catch myself thinking:
 
-*Holy shit. Am I actually free?*
+_Holy shit. Am I actually free?_
 
 For a moment, perhaps I am.
 
@@ -333,7 +333,7 @@ Since Juan's death, I've been working on a musical tribute using that experiment
 
 The machines can measure rhythm, dynamics, harmonic relationships and spectral changes. We're investigating what happens when two recordings meet — not simply whether their rhythms align, but what one might become in the presence of the other.
 
-But the measurements don't tell them why *Never Tempt Me* brought me to tears.
+But the measurements don't tell them why _Never Tempt Me_ brought me to tears.
 
 And neither can I.
 
@@ -357,7 +357,7 @@ Especially when the vibrations originated in a few electronic circuits in Detroi
 
 There's another small absurdity here.
 
-Two of the recordings I've been revisiting, *Never Tempt Me* and *Postcard From The Future*, appeared together on the [US CD edition of an Infiniti album called *Skynet*](https://tulipstuff.com/products/infiniti-skynet-juan-atkins-techno-album-cd-x-sight-1998).
+Two of the recordings I've been revisiting, _Never Tempt Me_ and _Postcard From The Future_, appeared together on the [US CD edition of an Infiniti album called _Skynet_](https://tulipstuff.com/products/infiniti-skynet-juan-atkins-techno-album-cd-x-sight-1998).
 
 Yes, that Skynet. Or at least, it's difficult to miss the association.
 
@@ -431,7 +431,7 @@ Juan Atkins is gone.
 
 But his records are still here. Those little machines are still sending messages from a future that hasn't quite arrived. A voice, gloriously imperfect, is still making promises.
 
-*We will be free, just wait and see.*
+_We will be free, just wait and see._
 
 I don't know whether we will.
 
