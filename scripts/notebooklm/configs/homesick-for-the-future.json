@@ -1,0 +1,16 @@
+{
+  "title": "Homesick for the Future",
+  "notebook_id": "39c9b66a-1da1-410f-b901-682312283ba3",
+  "source_id": "586ee241-5b1f-40b7-84da-b917c0b4eefc",
+  "source_file": "src/content/blog/homesick-for-the-future.md",
+  "audio": {
+    "format": "deep_dive",
+    "length": "long",
+    "artifact_id": "74588f16-bacb-4980-9359-fb24abbc9641"
+  },
+  "video": {
+    "format": "cinematic",
+    "artifact_id": "d6846645-799c-4eac-aadd-91bcc7484254"
+  },
+  "status": "Generation requested 2026-11-03; not yet downloaded or reviewed."
+}
