@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import campaign from '../data/on-fire.json';
 
 const providerMessage =
-  "Hi, I've seen the recent PHP2Shell security advisories (CVE-2026-109618 and CVE-2026-109619). Could you confirm whether our website or hosting uses an affected PHP runtime, whether the relevant patches have been applied, whether there is any evidence of earlier compromise, and whether our backups and recovery process have been checked? Please also check PHP's 23 October session upload progress advisory. A short written update would be appreciated. Thanks.";
+  'Hi, could you help me check our website security? Could you confirm our WordPress core (if used), plugins, themes and PHP runtime are on supported, patched releases, including PHP2Shell (CVE-2026-109618 and CVE-2026-109619)? Does our hosting use cPGuard or remote-management software affected by a recent incident? Please confirm whether we were exposed before patching, what logs were checked, whether affected passwords, keys or sessions need replacing, and when a backup was last successfully restored. Who owns each action? A short written update, including anything you cannot establish, would be appreciated. Thanks.';
 const application = `Hi Adrian,\n\nI'd like to request the free initial website exposure review.\n\nBusiness name:\nPublic website URL:\nBusiness location (town/suburb):\nContact name:\nContact email:\nOptional concern (no sensitive details):\n\nAuthority: [Please confirm: I own or am authorised to represent this website.]\n\nI understand this is an enquiry, not an awarded place, and that the review is external and non-invasive.\n`;
 const email =
   'mailto:adrian@adrianwedd.com?subject=' +
@@ -61,73 +61,86 @@ const description = campaign.closed
       </div>
       <p class="text-text-muted mt-4 text-sm">No bullshit. No obligation. An enquiry doesn't reserve a place.</p>
       <p class="text-text-muted mt-6 max-w-prose leading-relaxed">
-        The internet has had an absolute shocker. Critical flaws in PHP, the software underneath many websites. A
-        poisoned update to an AI tool. Ordinary businesses have better things to do than follow all this. Unfortunately,
-        running a café, orchard or workshop doesn't make the problem disappear. Your website might be fine. Let's
-        establish what we can actually verify — and what your hosting provider needs to answer.
+        The internet has had an absolute shocker. Running a café, orchard or workshop doesn't leave much time to follow
+        security alerts. Start with three things your website provider should be able to demonstrate: what's running,
+        whether it was exposed, and whether you can recover. Your website might be fine. Let's establish what we can
+        actually verify.
       </p>
     </div>
   </section>
 
   <div class="section-divider mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"></div>
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
-    <h2 id="happened-heading" class="text-text">What the hell happened?</h2>
+    <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
+    <p class="text-text-muted mt-6">
+      Reviewed 4 November 2026. A new incident and new evidence about an older flaw — different dates, different
+      questions.
+    </p>
     <div class="mt-8 space-y-8">
       <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
-        <p class="text-accent font-mono text-xs">01 / THE WEBSITE SOFTWARE</p>
-        <h3 class="text-text mt-3 text-xl">PHP2Shell: check the engine, not just the paintwork.</h3>
+        <p class="text-accent font-mono text-xs">NEW INCIDENT · 1–2 NOVEMBER</p>
+        <h3 class="text-text mt-3 text-xl">Ask your host whether it uses cPGuard.</h3>
         <p class="text-text-muted mt-4">
-          <strong class="text-text">Confirmed:</strong> PHP's 21 October advisory describes two flaws, CVE-2026-109618 and
-          CVE-2026-109619, that can let an unauthenticated attacker run code on a server. They involve memory corruption and
-          stale internal state across requests.
+          OPSSHIELD says attackers compromised its infrastructure and distributed a malicious cPGuard update on 2
+          November. This is hosting security software: your provider may run it even if you've never heard of it.
         </p>
         <p class="text-text-muted mt-3">
-          <strong class="text-text">Who should check:</strong> businesses whose websites use PHP, including many content-management
-          systems. PHP says installations serving web requests are at risk; it rates Apache mod_php highest, with a demonstrated
-          attack before application code runs. Actual exposure depends on the runtime, host and configuration. This does not
-          mean every PHP website is compromised.
+          <strong class="text-text">Useful action:</strong> ask whether your server received the affected update. The vendor
+          calls for cPGuard 5.88.25 or later and, where the malicious script ran or may have run, treatment as a compromise
+          and replacement of affected passwords and keys. Cleanup does not undo stolen credentials. Ask for the host's evidence
+          and recovery plan; don't try server-repair commands yourself.
         </p>
-        <p class="text-text-muted mt-3">
-          <strong class="text-text">Useful action:</strong> ask your host to verify the actual PHP runtime. The fixes released
-          on 21 October are PHP 8.2.35, 8.3.36, 8.4.27 and 8.5.12. A vendor may backport fixes, so a version string alone
-          is not proof either way. Older branches need vendor confirmation or an upgrade to a supported release.
-        </p>
-        <p class="text-text-muted mt-3">
-          PHP added a further warning on 23 October about an unusual combination of session configuration and
-          application code. Ask your host to check that too. Updating plugins and themes alone doesn't establish that
-          the runtime is patched.
-        </p>
-        <a href="https://www.php.net/archive/2026.php#2026-10-21-5" class="text-accent mt-4 inline-block underline"
-          >Read PHP's security advisory →</a
+        <a
+          href="https://opsshield.com/notice/cpguard-update-channel-compromise.html"
+          class="text-accent mt-4 inline-block underline">OPSSHIELD's response guidance →</a
         >
       </article>
       <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
-        <p class="text-accent font-mono text-xs">02 / THE SUPPLY CHAIN</p>
-        <h3 class="text-text mt-3 text-xl">A legitimate update channel. An illegitimate update.</h3>
+        <p class="text-accent font-mono text-xs">NEW EXPLOITATION LISTING · 3 NOVEMBER</p>
+        <h3 class="text-text mt-3 text-xl">WordPress: check core updates, too.</h3>
         <p class="text-text-muted mt-4">
-          <strong class="text-text">Confirmed:</strong> LiteLLM says its 1.107.0 release on 21 October contained credential-stealing
-          malware. Its later investigation traced the attack through an exposed, unrevoked key, stolen GitHub access and a
-          subverted release process.
+          CISA added WordPress Core CVE-2026-119977 to its known-exploited catalogue on 3 November. The flaw can allow
+          code execution during a core upgrade. WordPress released the security fix in 7.1.4 on <strong
+            class="text-text">28 October</strong
+          >; the November listing isn't a new disclosure or proof that your site was attacked.
         </p>
         <p class="text-text-muted mt-3">
-          <strong class="text-text">Who might be affected:</strong> operators who installed or ran the affected Python package
-          or container images. This is an AI infrastructure incident; an ordinary business website isn't automatically affected
-          because it exists online.
+          <strong class="text-text">Useful action:</strong> ask your provider to confirm that the relevant core security update
+          actually completed, alongside plugin, theme and PHP updates. Check any earlier exposure and relevant logs. “Automatic
+          updates are switched on” is not confirmation that an update succeeded.
         </p>
-        <p class="text-text-muted mt-3">
-          <strong class="text-text">Useful action:</strong> if your provider uses LiteLLM, ask them to check the exact installed
-          artifacts against the incident report and follow its response guidance. Installing a clean update alone doesn't
-          undo stolen credentials.
+        <p class="mt-4">
+          <a href="https://wordpress.org/news/2026/10/wordpress-7-1-4/" class="text-accent underline"
+            >WordPress security release</a
+          > · <a
+            href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?search_api_fulltext=CVE-2026-119977"
+            class="text-accent underline">CISA exploitation listing</a
+          >
         </p>
-        <a
-          href="https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain"
-          class="text-accent mt-4 inline-block underline">Read the corrected investigation →</a
-        >
       </article>
     </div>
+    <h3 class="text-text mt-8 text-xl">October catch-ups: still worth resolving</h3>
+    <ul class="text-text-muted mt-4 list-disc space-y-4 pl-6">
+      <li>
+        <strong class="text-text">PHP, 21 and 23 October.</strong> The PHP2Shell fixes shipped in 8.2.35, 8.3.36, 8.4.27 and
+        8.5.12. Ask your host to verify the runtime or vendor backport, plus the separate session upload progress guidance.
+        Windows hosts should also check the 26 October package rebuild. <a
+          href="https://www.php.net/archive/2026.php#2026-10-21-5"
+          class="text-accent underline">PHP's advisories</a
+        >.
+      </li>
+      <li>
+        <strong class="text-text">LiteLLM, 21 October.</strong> Its compromised 1.107.0 release matters if your provider runs
+        this AI software. Check affected packages and containers against the vendor report and replace exposed credentials.
+        This isn't evidence that an ordinary business website is affected. <a
+          href="https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain"
+          class="text-accent underline">Corrected investigation, 23 October</a
+        >.
+      </li>
+    </ul>
     <p class="text-text-muted mt-6">
       Being patched today doesn't prove you weren't exposed yesterday. It also doesn't prove there was a compromise.
-      Those are different questions, and they need different evidence.
+      Those questions need different evidence.
     </p>
   </section>
 
@@ -142,22 +155,25 @@ const description = campaign.closed
     <ol class="mt-8 space-y-8">
       <li>
         <h3 class="text-text text-xl">1. Are we running affected software?</h3><p class="text-text-muted mt-2">
-          For PHP2Shell, has the actual PHP runtime been checked and updated — as well as the website's plugins and
-          themes? Somebody should know what's running underneath your website.
+          Ask for WordPress core (if used), plugins, themes, PHP, hosting security and remote-management tools to be
+          checked. Are they supported and patched? Which administration services are publicly reachable, and do they
+          need to be? Somebody should know what's running underneath your website.
         </p>
       </li>
       <li>
         <h3 class="text-text text-xl">2. Were we exposed before it was patched?</h3><p class="text-text-muted mt-2">
           What evidence exists of exploitation or compromise? Have relevant logs and alerts been reviewed? What can't be
-          established from the records available?
+          established from the records available? If credentials were exposed, which passwords, keys and sessions need
+          replacing or revoking? A clean update alone may not remove an attacker's access.
         </p>
       </li>
       <li>
         <h3 class="text-text text-xl">3. Who is responsible if something goes wrong?</h3><p
           class="text-text-muted mt-2"
         >
-          Who manages hosting, backups, security updates and incident response? Has recovery been checked? Can you reach
-          the responsible person when it matters?
+          Who manages hosting, backups, security updates and incident response? When was a backup last successfully
+          restored, and is a recoverable copy kept separately from the live site? Use multi-factor authentication for
+          email, hosting and administrator accounts. Can you reach the responsible person when it matters?
         </p>
       </li>
     </ol>
@@ -369,6 +385,18 @@ const description = campaign.closed
         }</time
       >. Published: <time datetime="2026-10-25">25 October 2026</time>.
     </p>
+    <h3 class="text-text mt-6 text-xl">Change history</h3>
+    <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-04">4 November 2026</time> — added cPGuard and the WordPress exploitation listing; separated
+        October catch-ups; expanded provider checks for core updates, management tools, credentials and tested recovery. Ten-place
+        offer unchanged.
+      </li>
+      <li>
+        <time datetime="2026-10-25">25 October 2026</time> — first published: PHP and LiteLLM advice, local offer and example
+        report.
+      </li>
+    </ul>
     <ul class="mt-4 space-y-3 text-sm">
       <li>
         <a href="https://www.php.net/archive/2026.php#2026-10-21-5" class="text-accent underline"
@@ -392,10 +420,11 @@ const description = campaign.closed
       </li>
     </ul>
     <p class="text-text-muted mt-4 text-sm">
-      Advisories can change. These dates record an editorial review, not an automatic refresh. The later LiteLLM
-      investigation corrects parts of its initial explanation. Spotted something outdated? <a
-        href="mailto:adrian@adrianwedd.com?subject=ON%20FIRE%20correction"
-        class="text-accent underline">Email a correction</a
+      Advisories can change. Internet Fire Watch informs the daily editorial review; we publish when evidence or useful
+      advice changes. A quiet day does not trigger a new timestamp. Incident dates above are separate from this page's
+      review date. The later LiteLLM investigation corrects parts of its initial explanation. Spotted something
+      outdated? <a href="mailto:adrian@adrianwedd.com?subject=ON%20FIRE%20correction" class="text-accent underline"
+        >Email a correction</a
       >.
     </p>
   </section>
