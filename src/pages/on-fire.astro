@@ -73,10 +73,33 @@ const description = campaign.closed
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
     <p class="text-text-muted mt-6">
-      Reviewed 4 November 2026. A new incident and new evidence about an older flaw — different dates, different
-      questions.
+      Reviewed 5 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
+      and disclosure dates are shown separately from this review.
     </p>
     <div class="mt-8 space-y-8">
+      <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
+        <p class="text-accent font-mono text-xs">OBSERVED FROM 1 NOVEMBER · REPORTED 3 NOVEMBER, UPDATED 4 NOVEMBER</p>
+        <h3 class="text-text mt-3 text-xl">Microsoft 365: who else has the keys?</h3>
+        <p class="text-text-muted mt-4">
+          Todyl reports stolen application credentials being used to access Microsoft 365 and Azure, including IT
+          providers' customer environments. This is credential abuse, not a newly discovered Microsoft software flaw.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Useful action:</strong> if an IT provider manages your email or cloud files, ask them
+          to review trusted applications, delegated access and application sign-in logs, and investigate unexpected access.
+          Keep MFA enabled for people; it doesn't cover every application identity. Ask who will contain affected access and
+          replace exposed credentials if evidence is found.
+        </p>
+        <p class="mt-4">
+          <a
+            href="https://www.todyl.com/blog/stolen-app-credentials-real-access-an-actor-is-signing-into-entra-id-and-azure-devops-as-your-workloads"
+            class="text-accent underline">Todyl's investigation</a
+          > · <a
+            href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/workload-identity"
+            class="text-accent underline">Microsoft's application-identity guidance</a
+          >
+        </p>
+      </article>
       <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
         <p class="text-accent font-mono text-xs">NEW INCIDENT · 1–2 NOVEMBER</p>
         <h3 class="text-text mt-3 text-xl">Ask your host whether it uses cPGuard.</h3>
@@ -121,6 +144,19 @@ const description = campaign.closed
     </div>
     <h3 class="text-text mt-8 text-xl">October catch-ups: still worth resolving</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-4 pl-6">
+      <li>
+        <strong class="text-text">Synology backup devices, warning published 29 October.</strong> Synology confirmed ransomware
+        attacks on outdated DSM systems. If your business uses a Synology NAS for files or backups, ask your IT provider to
+        install the latest compatible DSM security updates, review internet access to its management interface, and test a
+        separate backup that the device's credentials cannot overwrite. This is an October catch-up, not a new attack disclosed
+        today. <a
+          href="https://www.synology.com/en-global/company/news/article/C3RB3R/Synology%20urges%20users%20to%20update%20DSM%20following%20ransomware%20attacks%20on%20outdated%20DSM%20versions"
+          class="text-accent underline">Synology's warning</a
+        > · <a
+          href="https://www.synology.com/en-global/security/advisory/Synology_SA_26_13"
+          class="text-accent underline">September security updates</a
+        >.
+      </li>
       <li>
         <strong class="text-text">PHP, 21 and 23 October.</strong> The PHP2Shell fixes shipped in 8.2.35, 8.3.36, 8.4.27 and
         8.5.12. Ask your host to verify the runtime or vendor backport, plus the separate session upload progress guidance.
@@ -387,6 +423,10 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-05">5 November 2026</time> — added a Microsoft 365 trusted-application check and the 29 October
+        Synology ransomware warning as a historical catch-up. Offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-04">4 November 2026</time> — added cPGuard and the WordPress exploitation listing; separated
         October catch-ups; expanded provider checks for core updates, management tools, credentials and tested recovery. Ten-place
