@@ -10,7 +10,12 @@
   },
   "video": {
     "format": "cinematic",
-    "artifact_id": "d6846645-799c-4eac-aadd-91bcc7484254"
+    "artifact_id": "d6846645-799c-4eac-aadd-91bcc7484254",
+    "source_duration_seconds": 416.891066,
+    "gemini_outro_start_seconds": 413.833333333,
+    "signoff_asset": "assets/brand/signoff-sting.mp4",
+    "prepared_file": "public/notebook-assets/homesick-for-the-future/video.mp4",
+    "published_url": "https://cdn.adrianwedd.com/notebook-assets/homesick-for-the-future/video.mp4"
   },
-  "status": "Generation requested 2026-11-03; not yet downloaded or reviewed."
+  "status": "2026-11-04: supplied OG artwork installed. Cinematic video uses the canonical adrianwedd.com sting and is attached via the CDN URL. Publication tracked in issue #769. Audio is completed in NotebookLM but not downloaded or reviewed; outside this media release."
 }
