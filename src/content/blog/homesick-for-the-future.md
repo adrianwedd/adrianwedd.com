@@ -5,6 +5,8 @@ date: 2026-11-03
 tags: ['music', 'techno', 'futurism', 'personal']
 draft: false
 explicit: true
+ogImage: '/og/blog/homesick-for-the-future.png'
+videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/homesick-for-the-future/video.mp4'
 ---
 
 I've spent much of my life feeling like a time traveller.
