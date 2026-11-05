@@ -73,10 +73,30 @@ const description = campaign.closed
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
     <p class="text-text-muted mt-6">
-      Reviewed 5 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
+      Reviewed 6 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
       and disclosure dates are shown separately from this review.
     </p>
     <div class="mt-8 space-y-8">
+      <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
+        <p class="text-accent font-mono text-xs">NEW SECURITY DISCLOSURE · 5 NOVEMBER</p>
+        <h3 class="text-text mt-3 text-xl">Alpine servers: check the remote login service.</h3>
+        <p class="text-text-muted mt-4">
+          OpenSSH released a critical fix for a password-login bypass affecting particular Linux configurations. Alpine
+          says affected servers can admit an attacker without the account's password. This requires a running SSH
+          service and specific authentication/account settings; it does not affect every Linux server or ordinary
+          container.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Useful action:</strong> ask your host whether it runs Alpine with SSH and whether the
+          advisory applies. If it does, ask them to install the vendor's fixed package and restart the SSH service, then verify
+          it. Installing the package alone leaves the old service running. Have the provider preserve working administrative
+          access while making changes.
+        </p>
+        <a
+          href="https://www.alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/"
+          class="text-accent mt-4 inline-block underline">Alpine's 5 November advisory →</a
+        >
+      </article>
       <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
         <p class="text-accent font-mono text-xs">OBSERVED FROM 1 NOVEMBER · REPORTED 3 NOVEMBER, UPDATED 4 NOVEMBER</p>
         <h3 class="text-text mt-3 text-xl">Microsoft 365: who else has the keys?</h3>
@@ -131,6 +151,16 @@ const description = campaign.closed
           <strong class="text-text">Useful action:</strong> ask your provider to confirm that the relevant core security update
           actually completed, alongside plugin, theme and PHP updates. Check any earlier exposure and relevant logs. “Automatic
           updates are switched on” is not confirmation that an update succeeded.
+        </p>
+
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">If you still need the fix:</strong> Xint's 3 November research shows that the old updater
+          can remain vulnerable during the first full-package upgrade. Ask your host to protect the temporary upgrade directory
+          from public web access before that update, using a supported process. Don't indefinitely postpone patching. This
+          is added update guidance, not a new November vulnerability. <a
+            href="https://xint.io/blog/wordpress-core-update-attack"
+            class="text-accent underline">Xint's research and update guidance</a
+          >.
         </p>
         <p class="mt-4">
           <a href="https://wordpress.org/news/2026/10/wordpress-7-1-4/" class="text-accent underline"
@@ -423,6 +453,10 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-06">6 November 2026</time> — added the Alpine/OpenSSH remote-login check and clarified protection
+        during the first WordPress full-package security update. Offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-05">5 November 2026</time> — added a Microsoft 365 trusted-application check and the 29 October
         Synology ransomware warning as a historical catch-up. Offer unchanged.
