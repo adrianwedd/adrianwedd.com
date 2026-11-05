@@ -7,6 +7,8 @@ draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-sandbox-is-part-of-the-puzzle/audio.m4a'
 audioDuration: '55:04'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-sandbox-is-part-of-the-puzzle/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=_Gf5nhp9Cz4'
+videoUploadDate: '2026-11-05T00:41:18Z'
 ---
 
 I want to make a prediction before the evidence makes it boring.

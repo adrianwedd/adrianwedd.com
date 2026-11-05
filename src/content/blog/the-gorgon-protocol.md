@@ -11,6 +11,8 @@ audioDuration: '22:44'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 3
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=e0lzMRJwp5k'
+videoUploadDate: '2026-11-05T00:28:54Z'
 ---
 
 A camera on a light pole does not see your face. It measures gradients.

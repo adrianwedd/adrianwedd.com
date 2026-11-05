@@ -7,6 +7,8 @@ draft: false
 explicit: true
 ogImage: '/og/blog/homesick-for-the-future.png'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/homesick-for-the-future/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=jXZvojEce2Y'
+videoUploadDate: '2026-11-05T00:44:37Z'
 ---
 
 I've spent much of my life feeling like a time traveller.
