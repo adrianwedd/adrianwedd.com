@@ -73,7 +73,7 @@ const description = campaign.closed
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
     <p class="text-text-muted mt-6">
-      Reviewed 6 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
+      Reviewed 7 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
       and disclosure dates are shown separately from this review.
     </p>
     <div class="mt-8 space-y-8">
@@ -172,6 +172,28 @@ const description = campaign.closed
         </p>
       </article>
     </div>
+    <h3 class="text-text mt-8 text-xl">Hosting catch-ups: check the operating system, too</h3>
+    <ul class="text-text-muted mt-4 list-disc space-y-4 pl-6">
+      <li>
+        <strong class="text-text">Linux kernel, AWS bulletin dated 30 October and updated 5 November.</strong> CVE-2026-98432
+        affects how some network traffic is handled. AWS reports demonstrated remote code execution under specific conditions,
+        but no evidence of malicious exploitation. Ask your host to check the running kernel against its distribution's advisory
+        and confirm that any required reboot has happened. Installing a kernel package alone may leave the vulnerable kernel
+        running. <a
+          href="https://aws.amazon.com/security/security-bulletins/2026-160-aws/"
+          class="text-accent underline">AWS's service-specific guidance</a
+        >.
+      </li>
+      <li>
+        <strong class="text-text">Ubuntu's APT updater, disclosed 4 November.</strong> CVE-2026-109518 can let an attacker
+        manipulating package downloads substitute software during installation. Canonical has released fixes and recommends
+        temporarily disabling download retries while applying them. Ask your provider to verify the installed APT fix using
+        its supported update process. This isn't evidence that Ubuntu's repositories or your website have been compromised.
+        <a href="https://ubuntu.com/blog/apt-vulnerability-fixes-available" class="text-accent underline"
+          >Canonical's update guidance</a
+        >.
+      </li>
+    </ul>
     <h3 class="text-text mt-8 text-xl">October catch-ups: still worth resolving</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-4 pl-6">
       <li>
@@ -453,6 +475,10 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-07">7 November 2026</time> — added dated Linux-kernel and Ubuntu APT hosting catch-ups, including
+        checks that security updates are actually in effect. Offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-06">6 November 2026</time> — added the Alpine/OpenSSH remote-login check and clarified protection
         during the first WordPress full-package security update. Offer unchanged.
