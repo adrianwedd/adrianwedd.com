@@ -11,6 +11,8 @@ audioDuration: '12:40'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 4
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=_dHtqWniCWc'
+videoUploadDate: '2026-11-05T00:29:43Z'
 ---
 
 Go and look at your nearest bus stop. If it was refurbished in the last decade, there is a decent chance the seat is gone and something else is in its place: a narrow rail at hip height, angled slightly, polished stainless. It is called a leaning bar. The trade name is ischiatic support, which means it holds your sit bones and nothing else.

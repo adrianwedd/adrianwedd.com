@@ -11,6 +11,8 @@ audioDuration: '19:30'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 10
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=mcVzCBdd7JY'
+videoUploadDate: '2026-11-05T00:34:15Z'
 ---
 
 An iris scanner fails on an eighty-year-old with a cataract. A fingerprint reader can't find the ridges on a hand that has lost collagen. A face-matching model looks at a woman in her seventies and does not see the woman in her fifties whose photo is on file.

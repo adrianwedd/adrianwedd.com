@@ -10,6 +10,8 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/sustainability-as-permissi
 audioDuration: '47:29'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/sustainability-as-permission-to-grow/video.mp4'
 draft: false
+youtubeUrl: 'https://www.youtube.com/watch?v=JIj-pLLVpvI'
+videoUploadDate: '2026-11-05T00:44:07Z'
 ---
 
 _When a community says no to a datacentre, the capital stalls — and sustainability becomes the machinery for getting it moving again. Tasmania shows what that does to the question underneath._

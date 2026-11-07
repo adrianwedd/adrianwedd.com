@@ -8,6 +8,8 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-button-was-never-the-a
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-button-was-never-the-art/video.mp4'
 audioDuration: '22:10'
 infographic: '/notebook-assets/the-button-was-never-the-art/infographic.webp'
+youtubeUrl: 'https://www.youtube.com/watch?v=lTUUrs1jHbw'
+videoUploadDate: '2026-11-05T00:41:28Z'
 ---
 
 Apparently we have solved art.

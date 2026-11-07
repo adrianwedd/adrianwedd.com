@@ -11,6 +11,8 @@ audioDuration: '24:22'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 12
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=IgDOUQkAa98'
+videoUploadDate: '2026-11-05T00:35:55Z'
 ---
 
 Pick up a colour photograph from the seventies and you read a date before you read a face. The dye has shifted. The paper has gone warm at the edges. Nothing is printed on it that tells you when it was taken; the object has simply aged, in the same direction you have, and that ageing is legible at a glance.

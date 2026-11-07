@@ -11,6 +11,8 @@ audioDuration: '21:09'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 6
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=uRQ__oKbFTs'
+videoUploadDate: '2026-11-05T00:31:51Z'
 ---
 
 Watch a conversation between a man who is holding forth and a woman who is listening, and count the sounds she makes. The "mm." The "right." The half-laugh at the joke that didn't land. The small "yeah, no, totally" she slots into his pause so the pause never becomes a gap.

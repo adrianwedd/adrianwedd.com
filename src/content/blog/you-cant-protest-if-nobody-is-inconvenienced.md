@@ -9,6 +9,8 @@ audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/you-cant-protest-if-nobody
 audioDuration: '43:27'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/you-cant-protest-if-nobody-is-inconvenienced/video.mp4'
 draft: false
+youtubeUrl: 'https://www.youtube.com/watch?v=zPJN1oZkmrU'
+videoUploadDate: '2026-11-05T00:39:16Z'
 ---
 
 I am a crusty old activist. For fifteen years I worked and volunteered for Greenpeace: coordinating actions, crewing boats, climbing things and working internationally. Professional troublemaker, broadly speaking.

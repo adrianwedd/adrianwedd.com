@@ -8,6 +8,8 @@ ogImage: '/og/blog/the-groove-isnt-in-the-notes.jpg'
 audioDuration: '54:03'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-groove-isnt-in-the-notes/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-groove-isnt-in-the-notes/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=P5Tp5bmexXs'
+videoUploadDate: '2026-11-05T00:43:10Z'
 ---
 
 _A simulated fire, quantum monkeyware, and the magnificent possibility that we have no fucking idea._

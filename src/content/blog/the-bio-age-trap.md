@@ -11,6 +11,8 @@ audioDuration: '21:25'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 2
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=yuVE8VNIl5M'
+videoUploadDate: '2026-11-05T00:29:01Z'
 ---
 
 Your birth date has one great virtue as a number: nobody can argue with it. It is fixed, it is on a document, and it is the same for everyone born on the same day. For two centuries the insurance industry built its entire mathematics on that fact. Chronological age was a bad proxy for health and everyone knew it — a fifty-year-old smoker and a fifty-year-old marathon runner are not the same risk — but it was verifiable, immutable, and defensible in court.

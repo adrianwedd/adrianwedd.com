@@ -11,6 +11,8 @@ audioDuration: '23:04'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 11
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=lVKvpxxRBYM'
+videoUploadDate: '2026-11-05T00:35:12Z'
 ---
 
 Someone dies, and their phone keeps talking.
