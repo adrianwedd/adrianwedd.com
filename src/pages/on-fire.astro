@@ -402,6 +402,8 @@ const description = campaign.closed
             Please don't send passwords, API keys, hosting credentials, customer records, payment details or sensitive
             files.
           </p>
+          {/* Keep the email draft and manual fallback usable without JavaScript at the Cloudflare edge. */}
+          <Fragment set:html={'<!--email_off-->'} />
           <a
             href={email}
             id="fire-email"
@@ -417,6 +419,7 @@ const description = campaign.closed
             </a>{' '}
             with the subject “ON FIRE — free website exposure review”.
           </p>
+          <Fragment set:html={'<!--/email_off-->'} />
           <details class="border-border mt-6 rounded-lg border p-5">
             <>
               <summary class="text-text min-h-11 cursor-pointer font-medium">Show the application text to copy</summary>

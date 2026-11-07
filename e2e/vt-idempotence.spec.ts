@@ -392,6 +392,9 @@ test('long mixed journey hydrates islands without console errors', async ({ page
   });
   // Audio episode page exercises the AudioPlayer island.
   await page.goto('/audio/');
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth),
+  ).toBeLessThanOrEqual(1);
   await clickCard(page, page.locator('#main-content article a[href^="/audio/"]').first());
   await page.waitForURL(/\/audio\/[^/]+\/$/);
   await expect(page.getByRole('button', { name: /play/i }).first()).toBeVisible();

@@ -33,6 +33,9 @@ test('audio player toggles play/pause state', async ({ page }) => {
   const playBtn = page.getByRole('button', { name: 'Play', exact: true });
   await expect(playBtn).toBeVisible({ timeout: 10_000 });
   await expect(playBtn).toBeEnabled();
+  // The server-rendered button is visible and enabled before Preact attaches
+  // its handlers. Wait for Astro to finish hydrating this specific island.
+  await expect(page.locator('astro-island[component-export="default"]:has(audio)')).not.toHaveAttribute('ssr');
   // CI's mobile emulation has a persistent compositor/main-thread coordinate
   // desync on this fresh-loaded island: even a forced tap can disappear while
   // elementFromPoint reports the button itself (runs 33950660671 and
