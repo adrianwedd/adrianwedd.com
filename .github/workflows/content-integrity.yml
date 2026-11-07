@@ -42,6 +42,13 @@ concurrency:
 
 jobs:
   check:
+    # PR builds and held/failed deploys have not changed the live site.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.event != 'pull_request' &&
+       github.event.workflow_run.head_branch == github.event.repository.default_branch &&
+       github.event.workflow_run.conclusion == 'success' &&
+       vars.PAGES_DEPLOY_HOLD != 'true')
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
