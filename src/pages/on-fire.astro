@@ -73,7 +73,7 @@ const description = campaign.closed
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
     <p class="text-text-muted mt-6">
-      Reviewed 7 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
+      Reviewed 8 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
       and disclosure dates are shown separately from this review.
     </p>
     <div class="mt-8 space-y-8">
@@ -160,6 +160,18 @@ const description = campaign.closed
           is added update guidance, not a new November vulnerability. <a
             href="https://xint.io/blog/wordpress-core-update-attack"
             class="text-accent underline">Xint's research and update guidance</a
+          >.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Taking bookings with LatePoint?</strong> A separate flaw, CVE-2026-118066, was disclosed
+          on 6 November UTC. Versions through 5.7.6 can allow customer-account takeover, exposing bookings and personal information.
+          Ask your provider to update the plugin to the current supported release (5.7.8 at this review) and check unexplained
+          customer-password resets or account changes. The fix shipped in 5.7.7 on 2 November. This is customer-account risk,
+          not a claim that every WordPress administrator account is vulnerable or that your site was attacked. <a
+            href="https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/118xxx/CVE-2026-118066.json"
+            class="text-accent underline">Wordfence's CVE record</a
+          > · <a href="https://wordpress.org/plugins/latepoint/#developers" class="text-accent underline"
+            >LatePoint release history</a
           >.
         </p>
         <p class="mt-4">
@@ -478,6 +490,10 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-08">8 November 2026</time> — added a targeted LatePoint booking-plugin update and customer-account
+        check, with disclosure and fix dates distinguished. Offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-07">7 November 2026</time> — added dated Linux-kernel and Ubuntu APT hosting catch-ups, including
         checks that security updates are actually in effect. Offer unchanged.
