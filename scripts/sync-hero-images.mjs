@@ -15,7 +15,7 @@ export function heroEntries(root) {
       // not a Picture hero. Their public cover must remain available.
       if (data.draft || !data.heroImage?.startsWith('/notebook-assets/')) continue;
       if (collection === 'blog' && data.series === 'The Lyria Chronicles' && data.videoUrl && !data.explicit) continue;
-      entries.push({ page: `/${collection}/${slug(file)}/`, image: data.heroImage });
+      entries.push({ page: `/${collection}/${slug(file)}/`, image: data.heroImage, animated: data.heroAnimated });
     }
   }
   return entries;
