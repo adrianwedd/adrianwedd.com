@@ -11,7 +11,7 @@
 
 - **All 43 project pages in full**, as Markdown source and as rendered HTML (including hero, metadata block, media players and the index cards).
 - **Four reference essays in full:** _The Groove Isn't in the Notes_ (3,286 words), _Homesick for the Future_ (3,573), _A Weathervane, Not a Map_ (4,364), _Building in the Open_ (282).
-- **The projects index** and one representative page per template shape.
+- **The projects index and four rendered pages** — one representative of each template shape (SPARK, ClawdCraft with sections, ordr.fm as a single block, plus LulzBench) — including hero, metadata block, media players and cards.
 - **Repository spot-checks** against local checkouts where they exist (29 of 43 projects have a repository on disk), plus the site's own generation history (`git log`, `docs/PROJECT_SPEC.md`, `docs/DESIGN_CHARTER.md`, `scripts/notebook-configs/*.json`).
 - Counted, not estimated: words, links, headings, numeric claims, hero assets.
 
