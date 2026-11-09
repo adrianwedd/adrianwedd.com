@@ -1,6 +1,7 @@
 ---
 title: 'ordr.fm'
 description: 'Precision-engineered CLI for intelligent music library organisation. EXIF metadata, lossless prioritisation, zero-overwrite safety.'
+lede: 'My music library is the single most curated collection I own. Decades of albums, carefully sourced, tagged with intention, organised by a system that only I fully understand.'
 tags: ['music', 'cli', 'node', 'audio']
 repo: 'https://github.com/adrianwedd/ordr.fm'
 status: 'active'
@@ -13,7 +14,7 @@ youtubeUrl: 'https://www.youtube.com/watch?v=n47aO8KOwbI'
 videoUploadDate: 2026-05-05T08:56:46Z
 ---
 
-My music library is the single most curated collection I own. Decades of albums, carefully sourced, tagged with intention, organised by a system that only I fully understand. When that library outgrew the capacity of any existing organiser to handle it without mangling metadata or silently overwriting lossless files with lossy duplicates, I built the tool I needed.
+When that library outgrew the capacity of any existing organiser to handle it without mangling metadata or silently overwriting lossless files with lossy duplicates, I built the tool I needed.
 
 ordr.fm sorts chaos into harmony. It organises music libraries using EXIF metadata, MusicBrainz and Discogs lookups, album-centric processing, and lossless format prioritisation—meaning it will never replace a FLAC with an MP3, even if the MP3 has better tags. Zero-overwrite safety as a first principle, not an afterthought.
 
