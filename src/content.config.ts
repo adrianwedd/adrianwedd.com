@@ -60,6 +60,12 @@ const projects = defineCollection({
     featured: z.boolean().default(false),
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
+    // An animated WebP rendered from the project's own implementation (see
+    // lulzbench results/wordmark-capture-20261109). Astro's image pipeline
+    // would flatten the frames, so it is served from public/ unprocessed and
+    // offered only when the visitor has not asked for reduced motion; heroImage
+    // remains the fallback and the OG-safe still.
+    heroAnimated: z.string().optional(),
     // Authored landscape social artwork. This must be generated and reviewed
     // editorially, then committed; production builds do not manufacture cards.
     ogImage: z.string().optional(),
