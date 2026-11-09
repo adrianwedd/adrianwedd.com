@@ -73,8 +73,8 @@ const description = campaign.closed
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
     <p class="text-text-muted mt-6">
-      Reviewed 8 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
-      and disclosure dates are shown separately from this review.
+      Reviewed 10 November 2026. Hosting, trusted applications and backups: check what applies to your business.
+      Incident and disclosure dates are shown separately from this review.
     </p>
     <div class="mt-8 space-y-8">
       <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
@@ -91,6 +91,14 @@ const description = campaign.closed
           advisory applies. If it does, ask them to install the vendor's fixed package and restart the SSH service, then verify
           it. Installing the package alone leaves the old service running. Have the provider preserve working administrative
           access while making changes.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Exploitation update, 9 November:</strong> CISA added this flaw, now identified as CVE-2026-123158,
+          to its known-exploited catalogue. That strengthens the reason to check affected servers promptly; it is new exploitation
+          evidence about the 5 November disclosure, not a new flaw or proof your server was attacked. <a
+            href="https://github.com/cisagov/kev-data/blob/develop/known_exploited_vulnerabilities.csv"
+            class="text-accent underline">CISA's official catalogue</a
+          >.
         </p>
         <a
           href="https://www.alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/"
@@ -490,6 +498,10 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-10">10 November 2026</time> — added CISA's 9 November known-exploitation listing for the existing
+        Alpine/OpenSSH advisory. Fix guidance and offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-08">8 November 2026</time> — added a targeted LatePoint booking-plugin update and customer-account
         check, with disclosure and fix dates distinguished. Offer unchanged.
