@@ -17,6 +17,6 @@ My music library is the single most curated collection I own. Decades of albums,
 
 ordr.fm sorts chaos into harmony. It organises music libraries using EXIF metadata, MusicBrainz and Discogs lookups, album-centric processing, and lossless format prioritisation—meaning it will never replace a FLAC with an MP3, even if the MP3 has better tags. Zero-overwrite safety as a first principle, not an afterthought.
 
-It processes ten thousand albums in twenty to forty-five minutes. An interactive PWA dashboard provides waveform visualisation, offline support, and automated Google Drive backup. Ninety percent test coverage across a hundred and fifty tests, because a tool that touches your music library needs to earn trust before it earns features.
+It has been benchmarked at ten thousand albums in twenty to forty-five minutes. An interactive PWA dashboard provides waveform visualisation, offline support, and automated Google Drive backup. Ninety percent coverage, self-reported across unit, integration and cross-browser suites — a hundred and fifty of those checks are cross-browser on their own, because a tool that touches your music library needs to earn trust before it earns features.
 
 The kind of software that only gets built by someone with something to lose.
