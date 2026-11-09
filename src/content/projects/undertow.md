@@ -6,13 +6,11 @@ tags: ['music', 'generative-art', 'radio', 'experiments', 'ai']
 status: 'active'
 featured: true
 url: 'https://undertow.wtf/'
-heroImage: '/images/undertow-room.jpg'
+heroImage: '/notebook-assets/undertow/room.jpg'
 heroAlt: 'Undertow’s imagined broadcast room: turntables, tape reels and a green desk lamp against a rain-darkened window.'
-ogImage: '/images/undertow-room.jpg'
+ogImage: '/og/projects/undertow.jpg'
 autopublish: false
 ---
-
-**Unthinkable things. In stereo.**
 
 Undertow is an ongoing musical experiment you can walk into. There is something playing, a history to explore, and an open line through which your ideas can influence what happens next.
 
