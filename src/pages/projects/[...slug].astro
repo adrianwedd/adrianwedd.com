@@ -216,7 +216,9 @@ const pathname = Astro.url.pathname;
       crumbs={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: project.data.title }]}
     />
     <header class="mb-10">
-      <div class="text-text-muted mb-4 flex items-center gap-3 text-sm">
+      <h1 class="text-text">{project.data.title}</h1>
+      <p class="text-text mt-4 text-xl leading-relaxed">{project.data.lede ?? project.data.description}</p>
+      <div class="text-text-muted mt-6 mb-4 flex items-center gap-3 text-sm">
         <span
           class:list={[
             'rounded-full border px-2 py-0.5 text-xs',
@@ -272,8 +274,6 @@ const pathname = Astro.url.pathname;
           )
         }
       </div>
-      <h1 class="text-text">{project.data.title}</h1>
-      <p class="text-text-muted mt-4 text-lg leading-relaxed">{project.data.description}</p>
       <div class="mt-4 flex flex-wrap items-center gap-2">
         {
           project.data.tags.map((tag: string) => (

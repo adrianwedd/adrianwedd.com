@@ -58,6 +58,9 @@ const projects = defineCollection({
     draft: z.boolean().default(false),
     status: z.enum(['active', 'complete', 'archived', 'experiment']).default('active'),
     featured: z.boolean().default(false),
+    // The page's own opening paragraph, distinct from the <=160-char card
+    // description. Optional: pages without one fall back to the description.
+    lede: z.string().optional(),
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
     // An animated WebP rendered from the project's own implementation (see
