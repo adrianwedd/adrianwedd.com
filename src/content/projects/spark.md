@@ -36,7 +36,7 @@ Two jailbroken personas — GREMLIN and VIXEN — run on a local Ollama instance
 
 ## The numbers
 
-716 tests. A watchdog thread that sends SIGTERM on stall and falls back to `os._exit(1)` after five seconds if the process doesn't comply. Atomic writes with `mkstemp` + `fsync` + `os.replace` throughout, because the robot runs on an SD card and crashes at inconvenient times. Battery monitoring with escalating voice warnings at 30%, 20%, and 15%, and an emergency shutdown at 10% — six beeps, a spoken farewell, then halt.
+Nearly two and a half thousand tests. A watchdog thread that sends SIGTERM on stall and falls back to `os._exit(1)` after five seconds if the process doesn't comply. Atomic writes with `mkstemp` + `fsync` + `os.replace` throughout, because the robot runs on an SD card and crashes at inconvenient times. Battery monitoring with escalating voice warnings at 30%, 20%, and 15%, and an emergency shutdown at 10% — six beeps, a spoken farewell, then halt.
 
 The system is built to be left running unsupervised in a child's room. That changes what "reliable" means.
 

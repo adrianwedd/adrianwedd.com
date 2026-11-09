@@ -20,7 +20,7 @@ Afterwords clones a voice from a fifteen-second clip and runs it on your own mac
 
 ## Three tiers
 
-**Local — the TTS server.** A FastAPI server running Qwen3-TTS (0.6B and 1.7B) on MLX. Clone from a fifteen-second clip; serve any number of voices from a single model load. It ships with 103 flagship voice families (284 profiles) and wires into the harnesses you already use — Claude Code, Codex CLI, Cursor, Gemini CLI / Antigravity, and Hermes — to speak every response aloud. No cloud API, no subscription, no data leaving the machine.
+**Local — the TTS server.** A FastAPI server running Qwen3-TTS (0.6B and 1.7B) on MLX. Clone from a fifteen-second clip; serve any number of voices from a single model load. It ships with a cloned-voice gallery — the count lives in the gallery rather than on this page, because it changes — and wires into the harnesses you already use — Claude Code, Codex CLI, Cursor, Gemini CLI / Antigravity, and Hermes — to speak every response aloud. No cloud API, no subscription, no data leaving the machine.
 
 **App — the macOS control panel.** A native SwiftUI menu-bar app (v1.2) that makes the local server feel like a first-class Mac citizen: a live status icon (stopped / starting / running / error), start/stop/restart, a searchable voices window where a single click plays a sample, a mute toggle, launch-at-login, and CLI-path/port settings. It auto-updates through Sparkle 2 with an EdDSA-signed appcast. It doesn't own the server — `launchd` does — it just drives it.
 
