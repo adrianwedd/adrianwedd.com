@@ -4,6 +4,7 @@ description: 'A fictional Hobart hotel, real voice experiments, and a listening 
 tags: ['ai', 'voice', 'research', 'evaluation', 'safety']
 url: 'https://hotel-voice-lab.pages.dev/'
 status: 'active'
+ogImage: '/og/projects/voice-agent-hotel-lab.png'
 date: 2026-11-09
 ---
 
