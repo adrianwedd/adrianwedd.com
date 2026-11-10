@@ -22,6 +22,7 @@ const TARGET_DURATION_TAG = '#EXT-X-TARGETDURATION:';
 const MAX_SEED_SEGMENTS = 3;
 const PRUNE_SEGMENTS_BEHIND = 2;
 const POLL_MS = 3000;
+const MAX_POLL_FAILURES = 3;
 
 export function parsePlaylist(text: string): Playlist {
   if (!text.startsWith('#EXTM3U')) throw new Error('Not an HLS playlist');
@@ -71,7 +72,8 @@ export class MsePipeline {
   private seeded = false;
   private target = 6;
   private buffer: SourceBuffer | null = null;
-  private poll: ReturnType<typeof setInterval> | null = null;
+  private poll: ReturnType<typeof setTimeout> | null = null;
+  private failures = 0;
   private readonly abort = new AbortController();
 
   constructor(
@@ -85,23 +87,52 @@ export class MsePipeline {
   /** Attach first (a MediaSource stays closed until attached), then seed. */
   async start(): Promise<void> {
     this.audio.src = this.objectURL;
+    const signal = this.abort.signal;
     await new Promise<void>((resolve, reject) => {
-      this.source.addEventListener('sourceopen', () => resolve(), { once: true });
-      this.source.addEventListener('error', () => reject(new Error('MediaSource failed')), { once: true });
+      const settle = (error?: Error) => {
+        this.source.removeEventListener('sourceopen', opened);
+        this.source.removeEventListener('error', failed);
+        signal.removeEventListener('abort', aborted);
+        if (error) reject(error);
+        else resolve();
+      };
+      const opened = () => settle();
+      const failed = () => settle(new Error('MediaSource failed'));
+      // stop() before the source opens must settle this wait, not strand it.
+      const aborted = () => settle(new DOMException('Stopped', 'AbortError'));
+      this.source.addEventListener('sourceopen', opened);
+      this.source.addEventListener('error', failed);
+      signal.addEventListener('abort', aborted);
     });
     this.buffer = this.source.addSourceBuffer(MSE_MIME);
     this.buffer.mode = 'sequence';
     await this.refresh();
-    this.poll = setInterval(() => {
-      this.refresh().catch(() => {
-        if (!this.abort.signal.aborted) this.onFailure();
-      });
+    this.schedule();
+  }
+
+  // One refresh at a time, rescheduled after the previous one settles. A single
+  // failed poll is tolerated (the buffer holds several segments); repeated
+  // failures hand recovery to the caller, as does the player's stall watchdog.
+  private schedule(): void {
+    if (this.abort.signal.aborted) return;
+    this.poll = setTimeout(async () => {
+      try {
+        await this.refresh();
+        this.failures = 0;
+      } catch {
+        if (this.abort.signal.aborted) return;
+        if (++this.failures >= MAX_POLL_FAILURES) {
+          this.onFailure();
+          return;
+        }
+      }
+      this.schedule();
     }, POLL_MS);
   }
 
   stop(): void {
     this.abort.abort();
-    if (this.poll) clearInterval(this.poll);
+    if (this.poll) clearTimeout(this.poll);
     this.poll = null;
     try {
       if (this.source.readyState === 'open') this.source.endOfStream();
@@ -120,9 +151,26 @@ export class MsePipeline {
   private async append(chunk: ArrayBuffer): Promise<void> {
     const buffer = this.buffer!;
     await new Promise<void>((resolve, reject) => {
-      buffer.addEventListener('updateend', () => resolve(), { once: true });
-      buffer.addEventListener('error', () => reject(new Error('Append failed')), { once: true });
-      buffer.appendBuffer(chunk);
+      // Both listeners go on either outcome: a long session appends thousands of segments.
+      const done = () => {
+        buffer.removeEventListener('updateend', done);
+        buffer.removeEventListener('error', failed);
+        resolve();
+      };
+      const failed = () => {
+        buffer.removeEventListener('updateend', done);
+        buffer.removeEventListener('error', failed);
+        reject(new Error('Append failed'));
+      };
+      buffer.addEventListener('updateend', done);
+      buffer.addEventListener('error', failed);
+      try {
+        buffer.appendBuffer(chunk);
+      } catch (error) {
+        buffer.removeEventListener('updateend', done);
+        buffer.removeEventListener('error', failed);
+        reject(error);
+      }
     });
   }
 
@@ -150,6 +198,10 @@ export class MsePipeline {
     const signal = this.abort.signal;
     const playlist = parsePlaylist(await (await get(this.playlistUrl, signal)).text());
     this.target = playlist.target;
+    // The producer restarted and renumbered: this pipeline's position is meaningless.
+    // Failing the poll lets the caller reconnect with a fresh seed.
+    if (this.seeded && playlist.sequence + playlist.segments.length < this.next - playlist.segments.length)
+      throw new Error('Media sequence went backwards');
     if (this.seeded && playlist.sequence + playlist.segments.length <= this.next) return;
     await this.enqueue(async () => {
       if (!this.initAppended && playlist.init) {

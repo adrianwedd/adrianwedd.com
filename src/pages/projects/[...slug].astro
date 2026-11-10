@@ -293,7 +293,9 @@ const pathname = Astro.url.pathname;
       {
         project.data.liveStream && (
           <div class="mt-8 mb-6">
-            <LiveRadio {...project.data.liveStream} client:visible />
+            {/* client:load: Play is the point of this block, and a press before
+                hydration would otherwise be silently dropped. */}
+            <LiveRadio {...project.data.liveStream} client:load />
           </div>
         )
       }

@@ -22,7 +22,7 @@ const STALL_MS = 15000;
 const NOW_PLAYING_MS = 20000;
 
 const BADGE: Record<State, string> = {
-  idle: 'On air',
+  idle: '',
   connecting: 'Tuning',
   live: 'Live',
   buffering: 'Buffering',
@@ -36,7 +36,7 @@ const STATUS: Record<State, string> = {
   connecting: 'Connecting to the live stream…',
   live: 'Playing live.',
   buffering: 'Buffering…',
-  reconnecting: 'The stream dropped. Reconnecting…',
+  reconnecting: 'Can’t reach the stream. Retrying…',
   offline: 'The live stream is unavailable right now. Press play to try again.',
   unsupported: 'This browser can’t play the live stream here.',
 };
@@ -201,13 +201,20 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
     };
   }, []);
 
-  // Now playing: one read when the player appears, then a slow poll while listening.
+  // Now playing: read only once the visitor has pressed Play (no request to the
+  // station on page view), then a slow poll while listening; the last answer
+  // stays shown after a stop.
   useEffect(() => {
-    if (!nowPlayingUrl) return;
+    if (!nowPlayingUrl || !playing) return;
     let cancelled = false;
+    const abort = new AbortController();
     const read = async () => {
       try {
-        const response = await fetch(nowPlayingUrl, { cache: 'no-store', credentials: 'omit' });
+        const response = await fetch(nowPlayingUrl, {
+          cache: 'no-store',
+          credentials: 'omit',
+          signal: abort.signal,
+        });
         if (!response.ok) throw new Error(String(response.status));
         const report = await response.json();
         if (cancelled) return;
@@ -228,29 +235,45 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
       }
     };
     void read();
-    const timer = playing ? setInterval(read, NOW_PLAYING_MS) : null;
+    const timer = setInterval(read, NOW_PLAYING_MS);
     return () => {
       cancelled = true;
-      if (timer) clearInterval(timer);
+      abort.abort();
+      clearInterval(timer);
     };
   }, [nowPlayingUrl, playing]);
 
-  // Lock-screen / headset controls and metadata.
+  // Lock-screen / headset controls and metadata, held only while this player is
+  // playing. On stop or unmount (e.g. a View Transition away) they are released,
+  // unless another player has since taken the session.
   useEffect(() => {
-    if (!('mediaSession' in navigator)) return;
+    if (!playing || !('mediaSession' in navigator)) return;
+    const session = navigator.mediaSession;
+    let metadata: MediaMetadata | null = null;
+    const handler = () => stop();
     try {
-      navigator.mediaSession.metadata = new MediaMetadata({
+      metadata = new MediaMetadata({
         title: nowPlaying?.title || label,
         artist: nowPlaying?.artist || label,
         album: label,
       });
-      navigator.mediaSession.setActionHandler('play', start);
-      navigator.mediaSession.setActionHandler('pause', stop);
-      navigator.mediaSession.setActionHandler('stop', stop);
+      session.metadata = metadata;
+      session.setActionHandler('pause', handler);
+      session.setActionHandler('stop', handler);
     } catch {
       /* partial Media Session support */
     }
-  }, [nowPlaying, label]);
+    return () => {
+      if (!metadata || session.metadata !== metadata) return;
+      try {
+        session.metadata = null;
+        session.setActionHandler('pause', null);
+        session.setActionHandler('stop', null);
+      } catch {
+        /* partial Media Session support */
+      }
+    };
+  }, [playing, nowPlaying, label]);
 
   const status = notice || STATUS[state];
   const live = state === 'live';
@@ -264,7 +287,6 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
           onClick={() => (playing ? stop() : start())}
           class="bg-accent text-surface hover:bg-accent-hover flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full transition-colors"
           aria-label={playing ? `Pause ${label}` : `Play ${label}`}
-          aria-pressed={playing}
         >
           {playing ? (
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -281,17 +303,19 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
         <div class="min-w-0 flex-1">
           <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span class="text-text text-sm font-medium">{label}</span>
-            <span
-              class={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[0.7rem] font-medium tracking-wide uppercase ${
-                live ? 'bg-accent/15 text-accent' : 'bg-surface-raised text-text-muted'
-              }`}
-            >
+            {BADGE[state] && (
               <span
-                class={`h-1.5 w-1.5 rounded-full ${live ? 'bg-accent motion-safe:animate-pulse' : 'bg-text-muted'}`}
-                aria-hidden="true"
-              />
-              {BADGE[state]}
-            </span>
+                class={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[0.7rem] font-medium tracking-wide uppercase ${
+                  live ? 'bg-accent/15 text-accent' : 'bg-surface-raised text-text-muted'
+                }`}
+              >
+                <span
+                  class={`h-1.5 w-1.5 rounded-full ${live ? 'bg-accent motion-safe:animate-pulse' : 'bg-text-muted'}`}
+                  aria-hidden="true"
+                />
+                {BADGE[state]}
+              </span>
+            )}
           </div>
           {nowPlaying ? (
             <p class="text-text-muted mt-1 truncate text-xs" title={`${nowPlaying.artist} — ${nowPlaying.title}`}>

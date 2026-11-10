@@ -82,9 +82,9 @@ const projects = defineCollection({
     liveStream: z
       .object({
         label: z.string(),
-        streamUrl: z.string().url(),
-        nowPlayingUrl: z.string().url().optional(),
-        entryUrl: z.string().url(),
+        streamUrl: z.string().url().startsWith('https://'),
+        nowPlayingUrl: z.string().url().startsWith('https://').optional(),
+        entryUrl: z.string().url().startsWith('https://'),
       })
       .optional(),
     ...notebookAssets,
