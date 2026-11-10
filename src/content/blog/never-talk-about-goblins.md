@@ -8,6 +8,8 @@ explicit: true
 heroImage: '/notebook-assets/never-talk-about-goblins/hero.jpg'
 heroAlt: 'A goblin peeks out through a torn parchment opening, finger to its lips, beside the title Never Talk About Goblins.'
 ogImage: '/notebook-assets/never-talk-about-goblins/og.jpg'
+audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/never-talk-about-goblins/audio.m4a'
+audioDuration: '39:38'
 ---
 
 _The strange instructions governing ChatGPT, Codex and Claude are becoming a history of what their creators have learned — and what they still don't understand._
