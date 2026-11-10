@@ -205,6 +205,7 @@ export function recordObservation(manifest, obs) {
   const earliestGen = [prev?.earliest_generation_date, genDate].filter(Boolean).sort()[0] ?? null;
 
   const entry = {
+    ...prev,
     identity: obs.identity.value,
     identity_type: obs.identity.type,
     slug: obs.identity.type === 'slug' ? obs.identity.value : (prev?.slug ?? null),
@@ -212,11 +213,57 @@ export function recordObservation(manifest, obs) {
     last_seen: lastSeen,
     earliest_generation_date: earliestGen,
     sightings: prev?.sightings ? prev.sightings + 1 : 1,
-    state: obs.state ?? prev?.state ?? 'new',
+    state: ['rejected', 'triaged', 'harvested'].includes(prev?.state)
+      ? prev.state : (obs.state ?? prev?.state ?? 'new'),
     content_hash: obs.hash ?? prev?.content_hash ?? null,
     hash_without_date: hashWithoutDate(obs.markdown ?? ''),
     source: prev?.source ?? 'content-pipeline',
   };
   manifest.candidates[obs.key] = entry;
   return entry;
+}
+
+/** Reconcile snapshots of the same durable memory; sightings are not additive. */
+export function reconcileManifests(current, retained) {
+  const result = structuredClone(current);
+  const humanStates = ['rejected', 'triaged', 'harvested'];
+  for (const [key, older] of Object.entries(retained.candidates ?? {})) {
+    const present = result.candidates[key];
+    if (!present) {
+      result.candidates[key] = structuredClone(older);
+      continue;
+    }
+    const humanCurrent = humanStates.includes(present.state);
+    const humanRetained = humanStates.includes(older.state);
+    if (humanCurrent && humanRetained && present.state !== older.state) {
+      throw new Error(`TRIAGE CONFLICT for ${key}: ${present.state} versus ${older.state}`);
+    }
+    // A human disposition outranks an unjudged snapshot. Otherwise neither
+    // branch nor observation time establishes an editorial winner: refuse.
+    for (const field of ['title', 'reason', 'archive_ref']) {
+      if (humanCurrent === humanRetained && present[field] != null && older[field] != null && present[field] !== older[field]) {
+        throw new Error(`TRIAGE CONFLICT for ${key}: incompatible ${field}`);
+      }
+    }
+    const latest = (older.last_seen ?? '') > (present.last_seen ?? '') ? older : present;
+    const entry = { ...older, ...present };
+    const editorial = humanCurrent ? present : humanRetained ? older : present;
+    const fallback = editorial === present ? older : present;
+    for (const field of ['title', 'reason', 'archive_ref']) {
+      entry[field] = editorial[field] ?? fallback[field];
+      if (entry[field] === undefined) delete entry[field];
+    }
+    for (const field of ['first_seen', 'earliest_generation_date']) {
+      entry[field] = [present[field], older[field]].filter(Boolean).sort()[0] ?? null;
+    }
+    entry.last_seen = [present.last_seen, older.last_seen].filter(Boolean).sort().at(-1) ?? null;
+    entry.sightings = Math.max(present.sightings ?? 0, older.sightings ?? 0);
+    entry.state = humanCurrent ? present.state : humanRetained ? older.state
+      : [present.state, older.state].includes('aged') ? 'aged' : (present.state ?? older.state);
+    for (const field of ['content_hash', 'hash_without_date']) {
+      entry[field] = latest[field] ?? entry[field];
+    }
+    result.candidates[key] = entry;
+  }
+  return result;
 }
