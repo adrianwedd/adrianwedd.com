@@ -62,6 +62,10 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
     delay: RECONNECT_BASE_MS,
     progressAt: 0,
     progressTime: 0,
+    mode: '' as '' | 'native' | 'mse',
+    // canPlayType() only says "maybe": once native HLS has refused this stream's
+    // format, later attempts use the MediaSource pipeline where it exists.
+    nativeRefused: false,
   });
 
   const playing = state === 'connecting' || state === 'live' || state === 'buffering' || state === 'reconnecting';
@@ -104,11 +108,13 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
     s.progressAt = performance.now();
     s.progressTime = audio.currentTime;
     try {
-      if (canPlayNativeHls(audio)) {
+      if (canPlayNativeHls(audio) && !(s.nativeRefused && canPlayMse())) {
+        s.mode = 'native';
         audio.src = streamUrl;
         // play() must follow the press directly (iOS): nothing is awaited first.
         await audio.play();
       } else if (canPlayMse()) {
+        s.mode = 'mse';
         const pipeline = new MsePipeline(audio, streamUrl, scheduleReconnect);
         s.pipeline = pipeline;
         const started = pipeline.start();
@@ -132,6 +138,7 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
         setNotice('Press play to start listening.');
         return;
       }
+      if (s.mode === 'native' && (failure as DOMException)?.name === 'NotSupportedError') s.nativeRefused = true;
       scheduleReconnect();
     }
   }
@@ -171,7 +178,15 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
       if (s.intended && !s.reconnectTimer) setState((current) => (current === 'live' ? 'buffering' : current));
     };
     const onError = () => {
-      if (s.intended) scheduleReconnect();
+      if (!s.intended) return;
+      // A format or decode refusal (not a network failure) rules out native HLS here.
+      const code = audio.error?.code;
+      if (
+        s.mode === 'native' &&
+        (code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED || code === MediaError.MEDIA_ERR_DECODE)
+      )
+        s.nativeRefused = true;
+      scheduleReconnect();
     };
     // A pause from outside the button (headset, OS media controls) stops the stream too.
     const onPause = () => {

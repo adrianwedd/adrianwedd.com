@@ -24,6 +24,12 @@ const PRUNE_SEGMENTS_BEHIND = 2;
 const POLL_MS = 3000;
 const MAX_POLL_FAILURES = 3;
 
+class NeedsReseed extends Error {
+  constructor() {
+    super('Pipeline must reseed at the live edge');
+  }
+}
+
 export function parsePlaylist(text: string): Playlist {
   if (!text.startsWith('#EXTM3U')) throw new Error('Not an HLS playlist');
   let sequence = 0;
@@ -119,9 +125,9 @@ export class MsePipeline {
       try {
         await this.refresh();
         this.failures = 0;
-      } catch {
+      } catch (error) {
         if (this.abort.signal.aborted) return;
-        if (++this.failures >= MAX_POLL_FAILURES) {
+        if (error instanceof NeedsReseed || ++this.failures >= MAX_POLL_FAILURES) {
           this.onFailure();
           return;
         }
@@ -201,8 +207,12 @@ export class MsePipeline {
     // The producer restarted and renumbered: this pipeline's position is meaningless.
     // Failing the poll lets the caller reconnect with a fresh seed.
     if (this.seeded && playlist.sequence + playlist.segments.length < this.next - playlist.segments.length)
-      throw new Error('Media sequence went backwards');
+      throw new NeedsReseed();
     if (this.seeded && playlist.sequence + playlist.segments.length <= this.next) return;
+    // The playlist has moved past what this pipeline holds (a suspended tab, a long
+    // stall): appending the oldest retained segments would play stale audio under a
+    // Live badge. Hand recovery to the caller, which reseeds at the live edge.
+    if (this.seeded && playlist.sequence > this.next) throw new NeedsReseed();
     await this.enqueue(async () => {
       if (!this.initAppended && playlist.init) {
         await this.append(await (await get(new URL(playlist.init, this.playlistUrl).href, signal)).arrayBuffer());
