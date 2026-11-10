@@ -38,6 +38,7 @@ cd worker && npm test             # social worker tests
 - **No numbered section headings** — headings are plain titles (`## 1. The machine agreed too much` reads as a list item and leaks the number into the TOC). Enumerate in prose if the order matters
 - **View Transitions scripts** — use `is:inline`, sentinel on `documentElement.dataset`, event delegation on `document`
 - **No additional worktrees or checkouts** — work within the existing repository. Preserve unrelated changes, use ordinary Git operations, and resolve conflicts explicitly.
+- **No repository `var/`** — a static site has no runtime state. Temporary artifacts go in the ignored `tmp/` and are deleted when the task ends; durable work is committed normally; decisions and evidence go on the owning GitHub issue. `npm run check` fails if `var/` exists. A directory that genuinely holds state needs an owner, a size bound and a reaper — if you cannot name all three, do not create it.
 
 ## Definition of done
 
