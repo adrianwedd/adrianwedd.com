@@ -39,7 +39,7 @@ function capture(page: Page): Captured {
       c.consoleErrors.push({ type: msg.type(), text: msg.text(), url: msg.location()?.url ?? '' });
   });
   page.on('pageerror', (err) => {
-    c.consoleErrors.push({ type: 'pageerror', text: String(err) });
+    c.consoleErrors.push({ type: 'pageerror', text: String(err), url: page.url() });
   });
   page.on('requestfailed', (req) => {
     c.failedRequests.push({ url: req.url(), failure: req.failure()?.errorText ?? 'unknown' });
