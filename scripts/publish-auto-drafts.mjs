@@ -26,6 +26,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { execFileSync } from 'node:child_process';
 import {
   DEFAULT_MANIFEST_PATH,
@@ -33,6 +34,7 @@ import {
   saveManifest,
   classifyObservation,
   recordObservation,
+  reconcileManifests,
 } from './auto-drafts-manifest.mjs';
 
 export const ROLLING_BRANCH = 'content/auto-drafts';
@@ -155,14 +157,26 @@ export function backlogCount(root = process.cwd()) {
   return candidateFiles(root).length;
 }
 
+/** Draft paths in the retained tree, without changing checkout or index. */
+function candidateFilesAt(ref) {
+  const files = git('ls-tree', '-r', '--name-only', ref, '--', CONTENT_DIR);
+  return files.split('\n').filter((rel) => rel.endsWith('.md'))
+    .filter((rel) => isDraft(git('show', `${ref}:${rel}`)));
+}
+
 async function main() {
   const dry = has('--check') || has('--dry-run');
   const onlyPreflight = has('--preflight');
   const maxBacklog = Number(val('--max-backlog', DEFAULT_MAX_BACKLOG));
   const manifestPath = val('--manifest', DEFAULT_MANIFEST_PATH);
 
+  if (!dry && !onlyPreflight && git('worktree', 'list', '--porcelain').split('\n')
+    .includes(`branch refs/heads/${ROLLING_BRANCH}`)) {
+    throw new Error('Rolling branch is checked out in a worktree; refusing to move its HEAD');
+  }
+
   // 1. Capability preflight FIRST — before any ref exists to leak.
-  const pf = preflight();
+  const pf = dry && !onlyPreflight ? { ok: true } : preflight();
   if (onlyPreflight) {
     if (!pf.ok) {
       console.error('PREFLIGHT FAILED:');
@@ -173,10 +187,25 @@ async function main() {
     return;
   }
 
-  const manifest = loadManifest(manifestPath);
+  // Fetch only for publication. --check reads existing refs and never changes them.
+  if (!dry) {
+    if (!pf.ok) throw new Error(`PREFLIGHT FAILED: ${pf.problems.join('; ')}`);
+    git('fetch', 'origin');
+  }
+  const branchExists = gitOk('rev-parse', '--verify', `origin/${ROLLING_BRANCH}`);
+  let manifest = loadManifest(manifestPath);
+  if (branchExists) {
+    const tracked = gitOk('cat-file', '-e', `origin/${ROLLING_BRANCH}:${manifestPath}`);
+    if (tracked) {
+      const retained = JSON.parse(git('show', `origin/${ROLLING_BRANCH}:${manifestPath}`));
+      manifest = reconcileManifests(manifest, retained);
+    }
+  }
   const files = candidateFiles();
   const { fresh, known } = partition(manifest, files);
-  const backlog = backlogCount();
+  const backlog = branchExists
+    ? new Set([...candidateFilesAt(`origin/${ROLLING_BRANCH}`), ...fresh.map((f) => f.rel)]).size
+    : backlogCount();
 
   console.log(`candidates on checkout : ${files.length}`);
   console.log(`  known (skipped)      : ${known.length}`);
@@ -200,7 +229,7 @@ async function main() {
   // 3. Successful no-op when there is nothing new.
   //    Repeat sightings are still recorded, so the manifest learns even when the
   //    run publishes nothing — otherwise every week re-adds the same DOI as new.
-  if (fresh.length === 0) {
+  if (!dry && !branchExists && fresh.length === 0) {
     for (const obs of known) recordObservation(manifest, { ...obs.cls, markdown: obs.md });
     saveManifest(manifestPath, manifest);
     console.log('No genuinely new candidates — successful no-op (no branch, no PR, no commit).');
@@ -219,47 +248,38 @@ async function main() {
     process.exit(1);
   }
 
-  // 5. One rolling branch. Never timestamped, so failures cannot add refs.
-  gitOk('fetch', 'origin', ROLLING_BRANCH);
-  const branchExists = gitOk('rev-parse', '--verify', `origin/${ROLLING_BRANCH}`);
-  if (branchExists) {
-    gitOk('checkout', '-B', ROLLING_BRANCH, `origin/${ROLLING_BRANCH}`);
-    gitOk('merge', '--ff-only', `origin/${ROLLING_BRANCH}`);
-  } else {
-    gitOk('checkout', '-b', ROLLING_BRANCH);
+  // Build the rolling commit without switching checkout or touching its index.
+  // Generated files may collide with retained drafts; unrelated local work is
+  // never stashed, overwritten or included in the publication commit.
+  const base = branchExists ? git('rev-parse', `origin/${ROLLING_BRANCH}`) : git('rev-parse', 'HEAD');
+  const localExists = gitOk('rev-parse', '--verify', `refs/heads/${ROLLING_BRANCH}`);
+  const oldTip = localExists ? git('rev-parse', `refs/heads/${ROLLING_BRANCH}`) : null;
+  if (oldTip && oldTip !== base) throw new Error('Rolling branch has local work; refusing to overwrite it');
+  for (const obs of [...fresh, ...known]) recordObservation(manifest, { ...obs.cls, markdown: obs.md });
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'auto-drafts-index-'));
+  const env = { ...process.env, GIT_INDEX_FILE: path.join(temp, 'index') };
+  const indexedGit = (a, input) => execFileSync('git', a, { env, input, encoding: 'utf8' }).trim();
+  try {
+    indexedGit(['read-tree', base]);
+    const add = (rel, text) => {
+      const hash = indexedGit(['hash-object', '-w', '--stdin'], text);
+      indexedGit(['update-index', '--add', '--cacheinfo', '100644', hash, rel]);
+    };
+    for (const f of fresh) add(f.rel, f.md);
+    const saved = path.join(temp, 'manifest.json');
+    saveManifest(saved, manifest);
+    add(manifestPath, fs.readFileSync(saved, 'utf8'));
+    const tree = indexedGit(['write-tree']);
+    if (tree === git('rev-parse', `${base}^{tree}`)) {
+      console.log('Nothing changed — successful no-op.');
+      return;
+    }
+    const commit = indexedGit(['commit-tree', tree, '-p', base, '-m',
+      `content(auto-drafts): add ${fresh.length} new candidate(s) and retain observations`]);
+    git('update-ref', `refs/heads/${ROLLING_BRANCH}`, commit, oldTip ?? '0000000000000000000000000000000000000000');
+  } finally {
+    fs.rmSync(temp, { recursive: true, force: true });
   }
-
-  for (const f of fresh) {
-    const dest = path.join(process.cwd(), f.rel);
-    fs.mkdirSync(path.dirname(dest), { recursive: true });
-    if (!fs.existsSync(dest)) fs.writeFileSync(dest, f.md);
-  }
-
-  // Record EVERY observation — new candidates and repeat sightings alike.
-  // Without this the manifest never learns, and the same DOI is re-added as new
-  // on the next run (which is exactly how the 15 orphan branches were born).
-  for (const obs of [...fresh, ...known]) {
-    recordObservation(manifest, { ...obs.cls, markdown: obs.md });
-  }
-
-  git('add', '--', ...fresh.map((f) => f.rel));
-  saveManifest(manifestPath, manifest);
-  git('add', '--', manifestPath);
-
-  const staged = gitOk('diff', '--cached', '--quiet') ? false : true;
-  if (!staged) {
-    console.log('Nothing staged — successful no-op.');
-    return;
-  }
-
-  git(
-    'commit',
-    '-m',
-    `content(auto-drafts): add ${fresh.length} new candidate(s)\n\n` +
-      `Rolling backlog branch. ${ROLLING_BRANCH} is generator-owned and updated by\n` +
-      `fast-forward commits; harvest a candidate onto a human-owned branch instead of\n` +
-      `editing here.\n\nCandidates:\n${fresh.map((f) => `- ${f.cls.key}`).join('\n')}`,
-  );
 
   if (!gitOk('push', 'origin', `${ROLLING_BRANCH}`)) {
     console.error('PUSH FAILED — no new branch was created (rolling name is fixed).');
@@ -277,7 +297,7 @@ async function main() {
       'All candidates are `draft: true` and require human review.\n\n' +
       '**Triage:** copy a candidate onto its own human-owned branch to harvest it into a\n' +
       'real article, or reject it in `data/auto-drafts-seen.json` so it cannot reappear.\n';
-    if (!ghOk('pr', 'create', '--title', PR_TITLE, '--body', body, '--label', 'content')) {
+    if (!ghOk('pr', 'create', '--head', ROLLING_BRANCH, '--title', PR_TITLE, '--body', body, '--label', 'content')) {
       console.error('PR create failed after push — the rolling branch was updated, not multiplied.');
       process.exit(2);
     }
