@@ -37,6 +37,16 @@ cd worker && npm test             # social worker tests
 - **Permanent URLs** — never rename a published content file
 - **No numbered section headings** — headings are plain titles (`## 1. The machine agreed too much` reads as a list item and leaks the number into the TOC). Enumerate in prose if the order matters
 - **View Transitions scripts** — use `is:inline`, sentinel on `documentElement.dataset`, event delegation on `document`
+- **No worktrees** — never `git worktree add`, not even a temporary verification checkout. Branch inside this canonical checkout, run the gates here, then switch back. A second tree leaves `main` behind here and duplicates the 665 MB `node_modules`. A commit that must not disturb the working tree goes through a scratch index (`GIT_INDEX_FILE`), never a second checkout.
+
+## Definition of done
+
+Merged and deployed is the middle of the job, not the end. A change is done when all of these hold:
+
+1. The PR is merged and the `deploy.yml` run on `main` succeeded, verified against the live URL.
+2. This canonical checkout is fast-forwarded to `origin/main` — never left behind by work done somewhere else.
+3. `git status` shows only work that was already in flight before the task. No new untracked or ignored files, no stray branches, no stale copies of a file that is now tracked.
+4. Anything removed from the tree was first proven non-unique against `origin/main`, or preserved deliberately and said so.
 
 ## Content schema highlights
 
