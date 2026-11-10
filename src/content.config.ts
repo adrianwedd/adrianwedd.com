@@ -76,6 +76,18 @@ const projects = defineCollection({
     series: z.string().optional(),
     seriesOrder: z.number().optional(),
     audioDuration: z.string().optional(),
+    // A live HLS radio stream the page can play in place (Undertow). The
+    // stream's host must also be allowed in the CSP (worker-csp/src/csp.ts and
+    // the SEOHead fallback) and must grant this origin CORS.
+    liveStream: z
+      .object({
+        label: z.string(),
+        streamUrl: z.string().url().startsWith('https://'),
+        nowPlayingUrl: z.string().url().startsWith('https://').optional(),
+        entryUrl: z.string().url().startsWith('https://'),
+        fallbackUrl: z.string().url().startsWith('https://').optional(),
+      })
+      .optional(),
     ...notebookAssets,
   }),
 });
