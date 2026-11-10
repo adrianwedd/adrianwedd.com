@@ -3,7 +3,7 @@
   "notebook_id": "c13234b3-d4df-4855-afce-305abc626476",
   "source_id": "a8852f58-9cdd-4e4a-abc3-c72eb6931bd0",
   "source_file": "src/content/blog/never-talk-about-goblins.md",
-  "note": "Essay-only source, isolated via --source-ids. Focus prompts stored verbatim under var/goblins-nlm/ during the run (audio-focus.txt, video-focus.txt); both generated 2026-11-10. Audio completed and published; cinematic video completed the same day and published after signoff-sting assembly. Provenance-only config; the repo's strict config schema (additionalProperties: false) rejects the rich shape by design.",
+  "note": "Essay-only source, isolated via --source-ids. Focus prompts are stored verbatim beside this config (never-talk-about-goblins.audio-focus.txt, never-talk-about-goblins.video-focus.txt); both generated 2026-11-10. Audio completed and published; cinematic video completed the same day and published after signoff-sting assembly. Provenance-only config; the repo's strict config schema (additionalProperties: false) rejects the rich shape by design.",
   "audio": {
     "format": "deep_dive",
     "length": "long",
@@ -15,7 +15,7 @@
   },
   "video": {
     "format": "cinematic",
-    "focus_file": "var/goblins-nlm/video-focus.txt",
+    "focus_file": "scripts/notebooklm/configs/never-talk-about-goblins.video-focus.txt",
     "artifact_id": "e53e1342-b134-4ede-9ec1-00bf239b6489",
     "raw_duration_seconds": 371.821134,
     "raw_download": "exports/never-talk-about-goblins/video-nlm-raw.mp4",
