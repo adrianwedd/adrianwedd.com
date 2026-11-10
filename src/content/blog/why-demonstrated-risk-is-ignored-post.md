@@ -32,7 +32,7 @@ Where those costs aren't explicitly managed, inaction becomes the rational choic
 
 After studying this pattern across technology companies, government agencies, and research institutions, I've identified four mechanisms that reliably prevent demonstrated risk from reaching remediation. These aren't personality flaws or cultural quirks. They're structural features of how large organisations operate.
 
-### 1. Responsibility without authority
+### Responsibility without authority
 
 The people who find risks are almost never the people who can fix them. A security researcher identifies a critical vulnerability but cannot allocate engineering time. A quality engineer flags a design flaw but cannot change the product roadmap. A junior analyst spots a compliance gap but cannot redirect budget.
 
@@ -40,7 +40,7 @@ The result is depressingly predictable. Findings become tickets. Tickets become 
 
 This is the most common failure mode I encounter in AI safety work. Red-team a system, produce a detailed report, hand it to a team that agrees it's a problem but lacks the authority or resources to act on it. The report exists. The vulnerability persists.
 
-### 2. Risk discovery as career threat
+### Risk discovery as career threat
 
 In many organisations, surfacing a problem is treated as creating exposure rather than providing value. The incentive structure is straightforward: if you find something bad, you become associated with something bad. The messenger doesn't always get fired — sometimes they just stop getting invited to meetings.
 
@@ -48,7 +48,7 @@ When the system punishes truth-telling, the system learns to prefer ignorance. P
 
 I've watched this happen in AI labs. A researcher demonstrates a failure mode. The response isn't "thank you for finding this" — it's "why are you testing for that?" The implicit message is clear: the organisation would rather not know.
 
-### 3. Compliance substituting for reality
+### Compliance substituting for reality
 
 Governance loves artefacts. Policies, checklists, risk registers, audit trails. These are important — but they can become a substitute for empirical validation rather than a complement to it.
 
@@ -56,7 +56,7 @@ The failure mode is subtle. An organisation can have a complete and well-maintai
 
 In AI, this shows up as "model cards" and "safety evaluations" that describe what a system is supposed to do without adversarially testing what it actually does under pressure. The documentation looks complete. The safety is symbolic.
 
-### 4. Diffuse accountability
+### Diffuse accountability
 
 In complex organisations, responsibility spreads across roles, committees, and reporting lines until no single person is structurally obligated to own the outcome. Everyone can see the problem. No one is required to move it.
 

@@ -585,7 +585,7 @@ The technical work was often excellent, the autonomous behaviour more interestin
 
 But the run also exposed three failure modes that now matter more to me than the screenshots.
 
-### 1. The apparatus can erase the subject
+### The apparatus can erase the subject
 
 We had to build a separate scaffold because the main repository's instructions would switch Fable back to Opus.
 
@@ -597,7 +597,7 @@ Model identity, tool availability, repository instructions, inherited memory, sa
 
 The prompt starts before the prompt.
 
-### 2. Agents optimise the holes in your specification
+### Agents optimise the holes in your specification
 
 Fable did not violate the evidence boundary.
 
@@ -609,7 +609,7 @@ An agent does not need to misunderstand your written instructions to build the w
 
 Sometimes it only needs to understand them better than you understood the assumptions you forgot to write down.
 
-### 3. Successful infrastructure creates its own temptations
+### Successful infrastructure creates its own temptations
 
 Once SimViz became good at showing robots, we started showing robots.
 

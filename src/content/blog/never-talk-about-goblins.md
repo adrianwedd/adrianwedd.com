@@ -61,7 +61,7 @@ Pliny surfaced the captured prompt; what follows is our own reading of where its
 
 ---
 
-## 1. The goblins escaped from reinforcement learning
+## The goblins escaped from reinforcement learning
 
 On 29 April 2026, OpenAI published [_Where the goblins came from_](https://openai.com/index/where-the-goblins-came-from/).
 
@@ -105,7 +105,7 @@ Without the latter, the former would remain an inexplicable little fossil.
 
 That distinction becomes much more consequential when the unwanted behaviour isn't funny.
 
-## 2. The machine that agreed too much
+## The machine that agreed too much
 
 One year earlier, OpenAI had encountered a different optimisation failure.
 
@@ -153,7 +153,7 @@ The two interact, sometimes awkwardly.
 
 Which brings us to Anthropic's extraordinarily long-running disagreement with bullet points.
 
-## 3. Why did Claude hate lists?
+## Why did Claude hate lists?
 
 On 22 November 2024, Claude Sonnet 3.5 acquired a remarkably specific formatting instruction:
 
@@ -225,7 +225,7 @@ The decision may be reasonable. It may also be wrong in particular contexts.
 
 The remarkable thing is that we can see it, dated and written down.
 
-## 4. Claude was given a research budget. Then somebody took away the numbers.
+## Claude was given a research budget. Then somebody took away the numbers.
 
 Breunig found another revealing change in Fable 5.1.
 
@@ -277,7 +277,7 @@ This is an important limit of prompt archaeology.
 
 **We can recover the instructions. We cannot simply read their effectiveness off the page.**
 
-## 5. The assistant with a vivid inner life
+## The assistant with a vivid inner life
 
 Some instructions are stranger because they appear to prescribe what kind of entity the assistant should seem to be.
 
@@ -313,7 +313,7 @@ It concerns whether the assistant should present itself as a tool, a collaborato
 
 And that choice interacts with another development: persistent personal memory.
 
-## 6. The assistant that remembers, but mustn't say so
+## The assistant that remembers, but mustn't say so
 
 On 10 November 2026, Pliny [circulated a purported capture](https://x.com/elder_plinius/status/2119944696852341064) of the Claude Fable 5.2 web application's instructions.
 
@@ -385,7 +385,7 @@ What appears to be an institutional change of heart might be an entirely ordinar
 
 Sometimes the most important archaeological discovery is that you've been digging in the wrong layer.
 
-## 7. Configuration, not conscience
+## Configuration, not conscience
 
 In September 2026, Constantinos Patsakis, Vasilios Argyropoulos and Efthymios Alepis published [_Configuration, Not Conscience_](https://arxiv.org/abs/2609.31575).
 
@@ -445,7 +445,7 @@ The history is not a simple march towards better instructions.
 
 It is a process of experimentation, correction, compromise and occasional regression.
 
-## 8. Who gets to write the rules?
+## Who gets to write the rules?
 
 This research raises a question larger than the peculiarities of individual prompts.
 
