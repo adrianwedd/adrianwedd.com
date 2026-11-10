@@ -80,6 +80,7 @@ export class MsePipeline {
   private buffer: SourceBuffer | null = null;
   private poll: ReturnType<typeof setTimeout> | null = null;
   private failures = 0;
+  private lastSequence = 0;
   private readonly abort = new AbortController();
 
   constructor(
@@ -204,10 +205,10 @@ export class MsePipeline {
     const signal = this.abort.signal;
     const playlist = parsePlaylist(await (await get(this.playlistUrl, signal)).text());
     this.target = playlist.target;
-    // The producer restarted and renumbered: this pipeline's position is meaningless.
-    // Failing the poll lets the caller reconnect with a fresh seed.
-    if (this.seeded && playlist.sequence + playlist.segments.length < this.next - playlist.segments.length)
-      throw new NeedsReseed();
+    // A live media sequence never decreases. If it does, the producer restarted and
+    // renumbered, and this pipeline's position is meaningless: reseed.
+    if (this.seeded && playlist.sequence < this.lastSequence) throw new NeedsReseed();
+    this.lastSequence = playlist.sequence;
     if (this.seeded && playlist.sequence + playlist.segments.length <= this.next) return;
     // The playlist has moved past what this pipeline holds (a suspended tab, a long
     // stall): appending the oldest retained segments would play stale audio under a

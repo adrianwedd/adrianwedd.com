@@ -22,6 +22,7 @@ const RECONNECT_MAX_MS = 30000;
 const MAX_RECONNECTS = 8;
 const STALL_MS = 15000;
 const NOW_PLAYING_MS = 20000;
+const NOW_PLAYING_TIMEOUT_MS = 10000;
 
 const BADGE: Record<State, string> = {
   idle: '',
@@ -230,11 +231,16 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
       // One read at a time: a slow answer must not land after a newer one.
       if (pending) return;
       pending = true;
+      // Each read has a deadline, so one stalled request can't block later polls.
+      const request = new AbortController();
+      const cancel = () => request.abort();
+      abort.signal.addEventListener('abort', cancel);
+      const deadline = setTimeout(cancel, NOW_PLAYING_TIMEOUT_MS);
       try {
         const response = await fetch(nowPlayingUrl, {
           cache: 'no-store',
           credentials: 'omit',
-          signal: abort.signal,
+          signal: request.signal,
         });
         if (!response.ok) throw new Error(String(response.status));
         const report = await response.json();
@@ -257,6 +263,8 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
           setQuiet(false);
         }
       } finally {
+        clearTimeout(deadline);
+        abort.signal.removeEventListener('abort', cancel);
         pending = false;
       }
     };
