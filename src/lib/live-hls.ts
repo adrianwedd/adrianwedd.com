@@ -218,6 +218,10 @@ export class MsePipeline {
       if (!this.initAppended && playlist.init) {
         await this.append(await (await get(new URL(playlist.init, this.playlistUrl).href, signal)).arrayBuffer());
         this.initAppended = true;
+        // A live stream has no end. Declare it before any media segment arrives:
+        // appending media would otherwise set a finite, growing duration that
+        // media controls show as a seek bar.
+        if (this.source.readyState === 'open') this.source.duration = Infinity;
       }
       const first = this.seeded
         ? this.next
@@ -231,22 +235,16 @@ export class MsePipeline {
         this.next = sequence + 1;
       }
     });
-    if (signal.aborted) return;
-    // An fMP4 init segment declares duration 0; a live stream has none.
-    if (this.source.readyState === 'open' && this.source.duration === 0) this.source.duration = Infinity;
-    if (this.seeded) return;
+    if (signal.aborted || this.seeded) return;
+    // Nothing appended yet (an empty playlist): stay unseeded so the next poll seeds.
+    const ranges = this.buffer?.buffered;
+    if (!ranges?.length) return;
     this.seeded = true;
     // Start a little inside the newest buffered range so the next segment
-    // arrives before the buffer runs dry.
-    // The element can lag the SourceBuffer, so seek once a range exists.
-    const goLive = () => {
-      const ranges = this.audio.buffered;
-      if (!ranges.length) return;
-      const last = ranges.length - 1;
-      this.audio.currentTime =
-        Math.max(ranges.start(last), ranges.end(last) - PRUNE_SEGMENTS_BEHIND * this.target) + 0.05;
-    };
-    if (this.audio.buffered.length) goLive();
-    else this.buffer?.addEventListener('updateend', goLive, { once: true });
+    // arrives before the buffer runs dry. The SourceBuffer's ranges are current
+    // once its append has resolved.
+    const last = ranges.length - 1;
+    this.audio.currentTime =
+      Math.max(ranges.start(last), ranges.end(last) - PRUNE_SEGMENTS_BEHIND * this.target) + 0.05;
   }
 }

@@ -69,6 +69,9 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
     // canPlayType() only says "maybe": once native HLS has refused this stream's
     // format, later attempts use the MediaSource pipeline where it exists.
     nativeRefused: false,
+    // Each connect() attempt's identity: a stale attempt settling late must not
+    // act on a session started after it.
+    run: 0,
   });
 
   const playing = state === 'connecting' || state === 'live' || state === 'buffering' || state === 'reconnecting';
@@ -91,6 +94,8 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
     teardown();
     if (s.attempts >= MAX_RECONNECTS) {
       s.intended = false;
+      setNowPlaying(null);
+      setQuiet(false);
       setState('offline');
       return;
     }
@@ -107,6 +112,7 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
     const s = session.current;
     const audio = audioRef.current;
     if (!audio || !s.intended) return;
+    const run = ++s.run;
     setState('connecting');
     s.progressAt = performance.now();
     s.progressTime = audio.currentTime;
@@ -132,7 +138,7 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
         return;
       }
     } catch (failure) {
-      if (!s.intended) return;
+      if (!s.intended || s.run !== run) return;
       if ((failure as DOMException)?.name === 'NotAllowedError') {
         // The browser refused playback without a fresh press.
         s.intended = false;
@@ -152,6 +158,9 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
     s.attempts = 0;
     s.delay = RECONNECT_BASE_MS;
     setNotice('');
+    // A fresh listen shows only what the station says now, not an earlier answer.
+    setNowPlaying(null);
+    setQuiet(false);
     if (s.reconnectTimer) clearTimeout(s.reconnectTimer);
     s.reconnectTimer = null;
     void connect();
@@ -160,6 +169,7 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
   function stop() {
     const s = session.current;
     s.intended = false;
+    s.run++;
     if (s.reconnectTimer) clearTimeout(s.reconnectTimer);
     s.reconnectTimer = null;
     teardown();
@@ -287,8 +297,9 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
     const handler = () => stop();
     try {
       metadata = new MediaMetadata({
+        // Only what the station supplied; the station name stands in for an unknown title.
         title: nowPlaying?.title || label,
-        artist: nowPlaying?.artist || label,
+        artist: nowPlaying?.artist || '',
         album: label,
       });
       session.metadata = metadata;
@@ -340,7 +351,8 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
             {BADGE[state] && (
               <span
                 class={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[0.7rem] font-medium tracking-wide uppercase ${
-                  live ? 'bg-accent/15 text-accent' : 'bg-surface-raised text-text-muted'
+                  // Small text: both pairs clear 4.5:1 in either theme.
+                  live ? 'bg-surface text-accent border-accent/40 border' : 'bg-surface text-text-muted'
                 }`}
               >
                 <span
@@ -352,7 +364,10 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, f
             )}
           </div>
           {nowPlaying ? (
-            <p class="text-text-muted mt-1 truncate text-xs" title={`${nowPlaying.artist} — ${nowPlaying.title}`}>
+            <p
+              class="text-text-muted mt-1 truncate text-xs"
+              title={[nowPlaying.artist, nowPlaying.title].filter(Boolean).join(' — ')}
+            >
               <span class="sr-only">Now playing: </span>
               {nowPlaying.artist && <span class="text-text">{nowPlaying.artist}</span>}
               {nowPlaying.artist && nowPlaying.title && ' — '}
