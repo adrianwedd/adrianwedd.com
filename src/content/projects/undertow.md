@@ -10,6 +10,11 @@ heroImage: '/notebook-assets/undertow/room.jpg'
 heroAlt: 'Undertow’s imagined broadcast room: turntables, tape reels and a green desk lamp against a rain-darkened window.'
 ogImage: '/og/projects/undertow.jpg'
 autopublish: false
+liveStream:
+  label: 'Undertow Radio — Live'
+  streamUrl: 'https://undertow.wtf/live/stream.m3u8'
+  nowPlayingUrl: 'https://undertow.wtf/api/live/now-playing'
+  entryUrl: 'https://undertow.wtf/'
 ---
 
 Undertow is an ongoing musical experiment you can walk into. There is something playing, a history to explore, and an open line through which your ideas can influence what happens next.

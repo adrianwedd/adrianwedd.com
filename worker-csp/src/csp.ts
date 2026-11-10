@@ -67,8 +67,8 @@ export function buildCsp(opts: {
     // www.google.com in connect-src: gtag sends /g/collect beacons there when
     // ad-signal features are active — observed blocked in CSP reports; the host
     // is already trusted in script-src and frame-src.
-    "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://adservice.google.com https://www.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://*.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com",
-    "media-src 'self' https://cdn.adrianwedd.com",
+    "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.g.doubleclick.net https://adservice.google.com https://www.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://snap.licdn.com https://*.ads.linkedin.com https://pagead2.googlesyndication.com https://api.book.adrianwedd.com https://api.github.com https://cdn.adrianwedd.com https://ops.adrianwedd.com https://challenges.cloudflare.com https://undertow.wtf",
+    "media-src 'self' blob: https://cdn.adrianwedd.com https://undertow.wtf",
     'frame-src https://www.openstreetmap.org https://challenges.cloudflare.com https://www.google.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google',
     "font-src 'self'",
     "object-src 'none'",

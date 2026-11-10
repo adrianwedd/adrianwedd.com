@@ -67,6 +67,18 @@ describe('buildCsp', () => {
     expect(csp).toMatch(/media-src [^;]*https:\/\/cdn\.adrianwedd\.com/);
   });
 
+  it('allows the Undertow live stream only where the embedded player needs it', () => {
+    const csp = buildCsp({ nonce: 'x', strictDynamic: false });
+    const directive = (name: string) => csp.split(';').find((d) => d.trim().startsWith(name + ' '))!;
+    // Playlist, segments and now-playing are fetched; native HLS loads media directly;
+    // the MediaSource pipeline plays from a blob: object URL.
+    expect(directive('connect-src')).toMatch(/ https:\/\/undertow\.wtf( |$)/);
+    expect(directive('media-src')).toMatch(/ https:\/\/undertow\.wtf( |$)/);
+    expect(directive('media-src')).toMatch(/ blob:/);
+    for (const name of ['script-src', 'img-src', 'frame-src', 'form-action', 'default-src'])
+      expect(directive(name)).not.toMatch(/undertow/);
+  });
+
   it('includes Turnstile srcdoc script hash and adtrafficquality sodar origins', () => {
     const csp = buildCsp({ nonce: 'x', strictDynamic: false });
     // Turnstile srcdoc hash allows Cloudflare's inline script in the inherited CSP

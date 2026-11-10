@@ -6,6 +6,7 @@ import ShareButton from '../../components/islands/ShareButton';
 import RelatedContent from '../../components/RelatedContent.astro';
 import NotebookAssets from '../../components/NotebookAssets.astro';
 import AudioPlayer from '../../components/islands/AudioPlayer';
+import LiveRadio from '../../components/islands/LiveRadio';
 import { getCollection, render } from 'astro:content';
 import { slug, youtubeId, ogSafeImage, heroAltText, tagSlug } from '../../lib/utils';
 import { resolveHeroImage } from '../../lib/hero-image';
@@ -289,6 +290,13 @@ const pathname = Astro.url.pathname;
           <ShareButton title={project.data.title} url={`/projects/${slug(project.id)}/`} client:idle />
         </span>
       </div>
+      {
+        project.data.liveStream && (
+          <div class="mt-8 mb-6">
+            <LiveRadio {...project.data.liveStream} client:visible />
+          </div>
+        )
+      }
       {
         project.data.audioUrl && (
           <div class="mt-8 mb-6">
