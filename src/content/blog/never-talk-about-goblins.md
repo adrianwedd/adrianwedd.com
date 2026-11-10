@@ -3,8 +3,11 @@ title: 'Never Talk About Goblins'
 description: 'ChatGPT was told never to mention goblins. Tracing OpenAI and Anthropic system prompts turns strange rules into institutional history.'
 date: 2026-11-10
 tags: ['ai', 'llm', 'openai', 'anthropic', 'system-prompts']
-draft: true
+draft: false
 explicit: true
+heroImage: '/notebook-assets/never-talk-about-goblins/hero.jpg'
+heroAlt: 'A goblin peeks out through a torn parchment opening, finger to its lips, beside the title Never Talk About Goblins.'
+ogImage: '/notebook-assets/never-talk-about-goblins/og.jpg'
 ---
 
 _The strange instructions governing ChatGPT, Codex and Claude are becoming a history of what their creators have learned — and what they still don't understand._
