@@ -35,6 +35,7 @@ cd worker && npm test             # social worker tests
 - **Images** — always `<Picture>` from `astro:assets` for local images; raw `<img>` blocked by CI
 - **Consent-first** — no tracking before consent; use `dns-prefetch` not `preconnect` for analytics origins
 - **Permanent URLs** — never rename a published content file
+- **No numbered section headings** — headings are plain titles (`## 1. The machine agreed too much` reads as a list item and leaks the number into the TOC). Enumerate in prose if the order matters
 - **View Transitions scripts** — use `is:inline`, sentinel on `documentElement.dataset`, event delegation on `document`
 
 ## Content schema highlights

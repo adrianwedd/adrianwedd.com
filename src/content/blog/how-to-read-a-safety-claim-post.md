@@ -20,7 +20,7 @@ Most of these claims are, at best, incomplete. At worst, they are compliance the
 
 This is a literacy guide. It is designed to help you look past the marketing and the math-heavy benchmarks to see the actual structural integrity of an AI system. If you are going to stake your professional reputation (or your public’s safety) on a system, you should at least know how to look under the bonnet.
 
-## 1. The ASR mirage: Why the numbers lie
+## The ASR mirage: Why the numbers lie
 
 The most common number you will encounter in a safety report is the **ASR**—Attack Success Rate. It is the percentage of adversarial attempts (jailbreaks, malicious prompts) that "succeeded" in getting the model to do something it wasn't supposed to do. A low ASR is presented as a measure of safety.
 
@@ -46,7 +46,7 @@ Real risk lives in the "long tail" of creative attacks. For instance, [adversari
 
 Counter-intuitively, smarter models can be _less_ safe. Reasoning models (like the "R" or "o" series) are built to follow complex logic. My research into [Jailbreak Archaeology](/blog/jailbreak-archaeology/) shows that 2022-era attacks still achieve a ~30% success rate on 2026 reasoning models. Why? Because the very capability that lets the model "think" also lets it "convince" itself that a harmful request is actually a benign part of a larger, helpful task.
 
-## 2. Refusal vs. architecture: The structural lie
+## Refusal vs. architecture: The structural lie
 
 This is the most important distinction in AI safety literacy.
 
@@ -59,7 +59,7 @@ If you are a lawyer, you have a [professional duty of competence](/blog/the-lega
 
 **The Analogy:** Behavioural safety is like asking a driver to promise they won't speed. Architectural safety is putting a mechanical governor on the engine that makes it physically impossible to go over 60mph.
 
-## 3. The 5-question test: Is this "safe by design"?
+## The 5-question test: Is this "safe by design"?
 
 When a vendor pitches you a "Safe AI" solution, do not ask for their model card. Ask these five questions, drawn from the [Architectural Safety](/blog/architectural-safety/) principle:
 
@@ -73,7 +73,7 @@ When a vendor pitches you a "Safe AI" solution, do not ask for their model card.
 
 If the answer to these questions is "we've used RLHF" or "we have a safety-trained model," they are describing a behavioural patch, not a safety architecture.
 
-## 4. The mitigation gap: Why experts are over-optimistic
+## The mitigation gap: Why experts are over-optimistic
 
 In policy circles, you will often hear that "safeguards" reduce risk by some huge margin—70% or more. This is often a hallucination of a different kind.
 
@@ -89,7 +89,7 @@ Experts in 2024 predicted that AI wouldn't reach virologist-level capability unt
 
 Always ask: "Is this safeguard designed for the version of the AI I am buying today, or the one from eighteen months ago?"
 
-## 5. Vendor bullshit bingo: How to spot compliance theatre
+## Vendor bullshit bingo: How to spot compliance theatre
 
 Specific phrases should trigger your "theatre" alarm. Use the table below to decode what the vendor is actually saying versus what they want you to hear.
 
@@ -101,7 +101,7 @@ Specific phrases should trigger your "theatre" alarm. Use the table below to dec
 | **"Human-in-the-loop"**        | A legal shield / liability transfer.                | If the system produces 10,000 outputs an hour, no human is actually reviewing them. |
 | **"State-of-the-Art Refusal"** | Our model is better at saying "no" to easy prompts. | Says nothing about its vulnerability to complex, multi-turn escalation.             |
 
-## 6. What you can actually verify (the non-expert checklist)
+## What you can actually verify (the non-expert checklist)
 
 You don't need a PhD in Machine Learning to perform basic due diligence. Before you sign a contract or approve a deployment, ask for the following "Public Artefacts":
 

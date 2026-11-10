@@ -36,41 +36,41 @@ None of this is decided. The exact legal structure, membership eligibility, gove
 
 An earlier version of this proposal made promises it had no business making and used examples it had not properly checked. Here's what was stripped out and why.
 
-### 1. No fixed financial returns. None.
+### No fixed financial returns. None.
 
 Earlier draft promised 5% annual dividends and a 15-year payback, secured by a first mortgage.
 
 Offering fixed dividends or secured first-mortgage positions to community members would put the proposal into territory regulated by ASIC under the Corporations Act — territory that is not appropriate for an early-stage community proposal, and that would expose members to risks they should not have to underwrite.
 
-### 2. A co-op cannot hold the liquor licence directly
+### A co-op cannot hold the liquor licence directly
 
 Tasmanian liquor law (s.22 of the _Liquor Licensing Act 1990_) requires a licence to be held by a natural person — a publican or licensee, an individual — with a legal relationship to the co-op. The lawful structure is a deliberate split: the co-op owns the business and assets; a publican holds the licence in their own name; a written agreement defines the boundary.
 
-### 3. Investors don't get reserved board seats
+### Investors don't get reserved board seats
 
 Australian co-operative law is built on one member, one vote. Reserving board seats by financial contribution, or weighting votes by dollars, would conflict with the core legal definition of a co-operative.
 
-### 4. Some "case studies" don't actually apply
+### Some "case studies" don't actually apply
 
 Mondragón is a multi-billion-euro Spanish industrial federation. The Old Crown's situation differs in scale, jurisdiction, and trading history. Case studies will only be put forward once they've been properly verified by someone with no stake in the idea.
 
-### 5. "Forever" overstates the asset lock
+### "Forever" overstates the asset lock
 
 A non-distributing co-op under the Co-operatives National Law has a real asset lock — surplus stays in the enterprise — but the co-op can still be wound up under specific procedures. The honest commitment is "the rules can be drafted to make selling out very hard, on community terms" — not "forever."
 
-### 6. Membership isn't a one-off donation
+### Membership isn't a one-off donation
 
 The Co-operatives National Law requires every co-op to have an active-membership rule (SMART: Simple, Measurable, Actionable, Reasonable, Timely). A member who stops meeting the test legally loses their membership. "Pay once and you're in forever" would not satisfy the Registrar.
 
-### 7. Sociocracy isn't the right shape for a single-venue startup
+### Sociocracy isn't the right shape for a single-venue startup
 
 Imposing a multi-stakeholder sociocratic governance model on a single-venue rural pub before it has traded a single day risks administrative paralysis at exactly the moment the business needs decisive operational leadership. A small elected board, a clear board-vs-management split, and a professional general manager is the right starting shape.
 
-### 8. There is no Year-5 surplus to pre-allocate
+### There is no Year-5 surplus to pre-allocate
 
 Regional Australian hospitality is brutal in years 1–3; survival is the only goal. Distributing percentages of imaginary surplus to specific causes before a single trading year is financially reckless. Surplus-treatment policy is a board-and-member decision after trading proves it's possible, not a marketing line at Stage 1.
 
-### 9. Volunteers don't run a commercial pub
+### Volunteers don't run a commercial pub
 
 Working bees, opening events, and ad-hoc community-asset maintenance — fine. Volunteer hours substituting for paid labour in a commercial hospitality operation is a _Fair Work Act 2009_ and workers-compensation risk. Misclassifying an employee as a volunteer carries civil penalties under ss.357–359.
 
