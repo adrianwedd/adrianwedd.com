@@ -6,8 +6,8 @@ tags: ['music', 'generative-art', 'radio', 'experiments', 'ai']
 status: 'active'
 featured: true
 url: 'https://undertow.wtf/'
-heroImage: '/notebook-assets/undertow/room.jpg'
-heroAlt: 'Undertow’s imagined broadcast room: turntables, tape reels and a green desk lamp against a rain-darkened window.'
+heroImage: '/notebook-assets/undertow/live-card.jpg'
+heroAlt: 'Undertow Radio: a distressed cream record-and-waveform emblem beside the station name, a LIVE badge and the tagline “Unthinkable things. In stereo.” on a near-black field.'
 ogImage: '/og/projects/undertow.jpg'
 autopublish: false
 liveStream:
