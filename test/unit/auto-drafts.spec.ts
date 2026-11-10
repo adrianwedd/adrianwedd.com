@@ -9,6 +9,7 @@ import {
   generatedDateOf,
   classifyObservation,
   recordObservation,
+  reconcileManifests,
   loadManifest,
   saveManifest,
   hashWithoutDate,
@@ -333,5 +334,87 @@ describe('durable seen/triaged manifest', () => {
   it('never scans historical remote branches during normal operation', () => {
     const src = readFileSync('scripts/publish-auto-drafts.mjs', 'utf8');
     expect(src).not.toMatch(/for-each-ref|branch -a|ls-remote/);
+  });
+});
+
+describe('retained rolling manifest reconciliation', () => {
+  it('keeps the earliest provenance, highest sightings and editorial rejection', () => {
+    const key = 'doi:10.1234/example';
+    const retained = {
+      version: 1,
+      candidates: {
+        [key]: {
+          state: 'new',
+          first_seen: '2026-01-01',
+          last_seen: '2026-09-01',
+          earliest_generation_date: '2025-12-01',
+          sightings: 8,
+        },
+      },
+    };
+    const current = {
+      version: 1,
+      candidates: {
+        [key]: {
+          state: 'rejected',
+          first_seen: '2026-08-01',
+          last_seen: '2026-08-01',
+          sightings: 2,
+          title: 'Editorial title',
+          reason: 'Declined',
+          archive_ref: 'archive/paper.md',
+        },
+      },
+    };
+    const merged = reconcileManifests(current, retained);
+    const markdown = stub({ date: '2026-10-05' });
+    const observation = classifyObservation(merged, {
+      markdown,
+      filePath: 'paper.md',
+      seenOn: '2026-10-05',
+    });
+    expect(observation.action).toBe('rejected');
+    expect(recordObservation(merged, { ...observation, markdown })).toMatchObject({
+      state: 'rejected',
+      first_seen: '2026-01-01',
+      earliest_generation_date: '2025-12-01',
+      sightings: 9,
+      title: 'Editorial title',
+      reason: 'Declined',
+      archive_ref: 'archive/paper.md',
+    });
+    expect(current.candidates[key].sightings).toBe(2);
+  });
+
+  it('surfaces title-only conflicts without guessing an editorial winner', () => {
+    for (const state of ['new', 'rejected', 'triaged', 'harvested']) {
+      const snapshot = (title: string) => ({ candidates: { paper: { state, title } } });
+      const current = snapshot('Current human title');
+      const retained = snapshot('Retained human title');
+      expect(() => reconcileManifests(current, retained)).toThrow(/TRIAGE CONFLICT.*title/);
+      expect(current.candidates.paper.title).toBe('Current human title');
+      expect(retained.candidates.paper.title).toBe('Retained human title');
+    }
+  });
+
+  it('uses explicit human disposition rather than generated title precedence', () => {
+    const judged = { candidates: { paper: { state: 'rejected', title: 'Human title' } } };
+    const generated = { candidates: { paper: { state: 'new', title: 'Generated title' } } };
+    expect(reconcileManifests(judged, generated).candidates.paper.title).toBe('Human title');
+    expect(reconcileManifests(generated, judged).candidates.paper.title).toBe('Human title');
+  });
+
+  it('stops on conflicting reason/archive metadata under equal authority', () => {
+    for (const field of ['reason', 'archive_ref']) {
+      for (const state of ['new', 'rejected']) {
+        const snapshot = (value: string) => ({ candidates: { paper: { state, [field]: value } } });
+        expect(() => reconcileManifests(snapshot('one'), snapshot('two'))).toThrow(/TRIAGE CONFLICT/);
+      }
+    }
+  });
+
+  it('stops on opposing human triage decisions', () => {
+    const snapshot = (state: string) => ({ candidates: { paper: { state } } });
+    expect(() => reconcileManifests(snapshot('rejected'), snapshot('harvested'))).toThrow(/TRIAGE CONFLICT/);
   });
 });
