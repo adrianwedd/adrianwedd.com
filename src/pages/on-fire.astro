@@ -73,10 +73,35 @@ const description = campaign.closed
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
     <p class="text-text-muted mt-6">
-      Reviewed 10 November 2026. Hosting, trusted applications and backups: check what applies to your business.
+      Reviewed 11 November 2026. Hosting, trusted applications and backups: check what applies to your business.
       Incident and disclosure dates are shown separately from this review.
     </p>
     <div class="mt-8 space-y-8">
+      <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
+        <p class="text-accent font-mono text-xs">MICROSOFT DISCLOSURE AND CISA LISTING · 10 NOVEMBER UTC</p>
+        <h3 class="text-text mt-3 text-xl">Outlook on Windows: confirm the security update landed.</h3>
+        <p class="text-text-muted mt-4">
+          Microsoft published fixes for Outlook spoofing flaw CVE-2026-124194, and CISA added it to its known-exploited
+          catalogue. Microsoft's affected-product list includes Microsoft 365 Apps for Enterprise and Office LTSC
+          2021/2024 on Windows. This is a targeted update check, not evidence your mailbox or business has been
+          compromised.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Useful action:</strong> ask whoever manages your computers to apply the relevant November
+          Office security update and verify the installed build for your servicing channel. If updates are centrally managed,
+          ask for confirmation across staff computers, not just one machine. Treat unexpected files cautiously while the update
+          is being arranged.
+        </p>
+        <p class="mt-4">
+          <a
+            href="https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/124xxx/CVE-2026-124194.json"
+            class="text-accent underline">Microsoft's CVE record and affected products</a
+          > · <a
+            href="https://github.com/cisagov/kev-data/blob/develop/known_exploited_vulnerabilities.csv"
+            class="text-accent underline">CISA's official catalogue</a
+          >
+        </p>
+      </article>
       <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
         <p class="text-accent font-mono text-xs">NEW SECURITY DISCLOSURE · 5 NOVEMBER</p>
         <h3 class="text-text mt-3 text-xl">Alpine servers: check the remote login service.</h3>
@@ -498,6 +523,10 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-11">11 November 2026</time> — added a targeted Outlook-on-Windows security-update check following
+        Microsoft's disclosure and CISA's 10 November UTC exploitation listing. Offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-10">10 November 2026</time> — added CISA's 9 November known-exploitation listing for the existing
         Alpine/OpenSSH advisory. Fix guidance and offer unchanged.
