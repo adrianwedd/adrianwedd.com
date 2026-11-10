@@ -43,6 +43,18 @@ And they invite one excellent question.
 
 **What the fuck happened here?**
 
+---
+
+The immediate spark for this investigation came from **Pliny the Liberator**, whose [10 November 2026 post on X](https://x.com/elder_plinius/status/2119944696852341064) shared a captured 420,000-character system prompt for Claude Fable 5.2, with the full text published in his [CL4R1T4S repository](https://github.com/elder-plinius/CL4R1T4S).
+
+Among the instructions were elaborate rules governing personal memory, emotional intimacy and when Claude could end a conversation. It was a gloriously strange glimpse behind the curtain.
+
+One rabbit hole led to another. What began with Pliny's discovery became a broader question: what other peculiar instructions are buried inside our AI assistants, and what happened in the world to make somebody write them?
+
+Pliny surfaced the captured prompt; what follows is our own reading of where its peculiarities led — the historical diffs, the research literature and the documented incidents.
+
+---
+
 ## 1. The goblins escaped from reinforcement learning
 
 On 29 April 2026, OpenAI published [_Where the goblins came from_](https://openai.com/index/where-the-goblins-came-from/).
@@ -297,7 +309,7 @@ And that choice interacts with another development: persistent personal memory.
 
 ## 6. The assistant that remembers, but mustn't say so
 
-On 10 November 2026, Pliny circulated a purported capture of the Claude Fable 5.2 web application's instructions.
+On 10 November 2026, Pliny [circulated a purported capture](https://x.com/elder_plinius/status/2119944696852341064) of the Claude Fable 5.2 web application's instructions.
 
 The [GitHub document](https://github.com/elder-plinius/CL4R1T4S/blob/main/ANTHROPIC%2FCLAUDE-WEB-APP-FABLE-5.2.md) contains 2,291 lines and occupies approximately 418 KB.
 
@@ -547,6 +559,7 @@ And yes, somewhere in that history, there will probably still be a fucking gobli
 - [Anthropic — Published Claude system prompts](https://platform.claude.com/docs/en/release-notes/system-prompts/overview).
 - [Anthropic — Claude's Constitution](https://www.anthropic.com/constitution), January 2026.
 - [OpenAI — Model Spec](https://model-spec.openai.com/).
+- [Pliny the Liberator — 10 November 2026 post on X sharing the captured Fable 5.2 system prompt](https://x.com/elder_plinius/status/2119944696852341064), the spark for this investigation.
 - [elder-plinius — Fable 5.2 application prompt capture](https://github.com/elder-plinius/CL4R1T4S/blob/main/ANTHROPIC%2FCLAUDE-WEB-APP-FABLE-5.2.md).
 
 **Historical analysis and reporting**
