@@ -15,6 +15,7 @@ liveStream:
   streamUrl: 'https://undertow.wtf/live/stream.m3u8'
   nowPlayingUrl: 'https://undertow.wtf/api/live/now-playing'
   entryUrl: 'https://undertow.wtf/'
+  fallbackUrl: 'https://undertow.wtf/listen/'
 ---
 
 Undertow is an ongoing musical experiment you can walk into. There is something playing, a history to explore, and an open line through which your ideas can influence what happens next.

@@ -237,11 +237,15 @@ export class MsePipeline {
     this.seeded = true;
     // Start a little inside the newest buffered range so the next segment
     // arrives before the buffer runs dry.
-    const ranges = this.audio.buffered;
-    if (ranges.length) {
+    // The element can lag the SourceBuffer, so seek once a range exists.
+    const goLive = () => {
+      const ranges = this.audio.buffered;
+      if (!ranges.length) return;
       const last = ranges.length - 1;
       this.audio.currentTime =
         Math.max(ranges.start(last), ranges.end(last) - PRUNE_SEGMENTS_BEHIND * this.target) + 0.05;
-    }
+    };
+    if (this.audio.buffered.length) goLive();
+    else this.buffer?.addEventListener('updateend', goLive, { once: true });
   }
 }

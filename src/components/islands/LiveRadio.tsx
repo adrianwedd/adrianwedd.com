@@ -6,6 +6,8 @@ interface Props {
   streamUrl: string;
   nowPlayingUrl?: string;
   entryUrl: string;
+  /** The station's own lightweight player, offered when this one can't play. */
+  fallbackUrl?: string;
 }
 
 type State = 'idle' | 'connecting' | 'live' | 'buffering' | 'reconnecting' | 'offline' | 'unsupported';
@@ -46,7 +48,7 @@ const STATUS: Record<State, string> = {
  * "pause" stops the stream so the next play rejoins the live edge rather than
  * resuming stale audio. Now-playing text is shown only as the station supplies it.
  */
-export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }: Props) {
+export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl, fallbackUrl }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [state, setState] = useState<State>('idle');
   const [nowPlaying, setNowPlaying] = useState<NowPlaying | null>(null);
@@ -222,8 +224,12 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
   useEffect(() => {
     if (!nowPlayingUrl || !playing) return;
     let cancelled = false;
+    let pending = false;
     const abort = new AbortController();
     const read = async () => {
+      // One read at a time: a slow answer must not land after a newer one.
+      if (pending) return;
+      pending = true;
       try {
         const response = await fetch(nowPlayingUrl, {
           cache: 'no-store',
@@ -238,7 +244,10 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
           setNowPlaying(null);
           setQuiet(true);
         } else if (now && typeof now.title === 'string' && typeof now.artist === 'string') {
-          setNowPlaying({ title: now.title.trim(), artist: now.artist.trim() });
+          const title = now.title.trim();
+          const artist = now.artist.trim();
+          // The station sends empty strings for facts it doesn't have: show nothing.
+          setNowPlaying(title || artist ? { title, artist } : null);
           setQuiet(false);
         } else throw new Error('malformed');
       } catch {
@@ -247,6 +256,8 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
           setNowPlaying(null);
           setQuiet(false);
         }
+      } finally {
+        pending = false;
       }
     };
     void read();
@@ -349,14 +360,25 @@ export default function LiveRadio({ label, streamUrl, nowPlayingUrl, entryUrl }:
         <p role="status" aria-live="polite" class="text-text-muted min-h-4 text-xs">
           {status}
         </p>
-        <a
-          href={entryUrl}
-          class="text-text-muted hover:text-accent flex-shrink-0 text-xs transition-colors"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Enter the room ↗
-        </a>
+        {fallbackUrl && (state === 'offline' || state === 'unsupported') ? (
+          <a
+            href={fallbackUrl}
+            class="text-text-muted hover:text-accent flex-shrink-0 text-xs transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Try the station’s player ↗
+          </a>
+        ) : (
+          <a
+            href={entryUrl}
+            class="text-text-muted hover:text-accent flex-shrink-0 text-xs transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Enter the room ↗
+          </a>
+        )}
       </div>
     </div>
   );

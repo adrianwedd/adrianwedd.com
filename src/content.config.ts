@@ -85,6 +85,7 @@ const projects = defineCollection({
         streamUrl: z.string().url().startsWith('https://'),
         nowPlayingUrl: z.string().url().startsWith('https://').optional(),
         entryUrl: z.string().url().startsWith('https://'),
+        fallbackUrl: z.string().url().startsWith('https://').optional(),
       })
       .optional(),
     ...notebookAssets,
