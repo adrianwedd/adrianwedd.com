@@ -73,7 +73,7 @@ const description = campaign.closed
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
     <p class="text-text-muted mt-6">
-      Reviewed 11 November 2026. Hosting, trusted applications and backups: check what applies to your business.
+      Reviewed 12 November 2026. Hosting, trusted applications and backups: check what applies to your business.
       Incident and disclosure dates are shown separately from this review.
     </p>
     <div class="mt-8 space-y-8">
@@ -217,8 +217,18 @@ const description = campaign.closed
         </p>
       </article>
     </div>
-    <h3 class="text-text mt-8 text-xl">Hosting catch-ups: check the operating system, too</h3>
+    <h3 class="text-text mt-8 text-xl">Hosting updates and catch-ups</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-4 pl-6">
+      <li>
+        <strong class="text-text">Apache HTTP Server, security release 11 November.</strong> Apache rates CVE-2026-119618
+        critical: its HTTP/2 module can suffer memory corruption leading to code execution. Versions 2.4.55–2.4.70 are affected;
+        2.4.71 contains the fix. Ask your host whether the affected module is in use and whether 2.4.71 or a vendor-confirmed
+        backport is running. A public website supporting HTTP/2 doesn't by itself establish that its backend is affected.
+        This is a vulnerability disclosure, not evidence your site was compromised. <a
+          href="https://httpd.apache.org/security/vulnerabilities_24.html"
+          class="text-accent underline">Apache's official security advisory</a
+        >.
+      </li>
       <li>
         <strong class="text-text">Linux kernel, AWS bulletin dated 30 October and updated 5 November.</strong> CVE-2026-98432
         affects how some network traffic is handled. AWS reports demonstrated remote code execution under specific conditions,
@@ -523,6 +533,10 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-12">12 November 2026</time> — added a targeted Apache HTTP/2 hosting check and the 2.4.71
+        security release, separate from older hosting catch-ups. Offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-11">11 November 2026</time> — added a targeted Outlook-on-Windows security-update check following
         Microsoft's disclosure and CISA's 10 November UTC exploitation listing. Offer unchanged.
