@@ -24,18 +24,53 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
           cache: npm
+      - name: Detect docs-only change
+        id: scope
+        run: |
+          # A documentation-only change cannot break the build, but this job is a
+          # required status check: a skipped job does not satisfy branch
+          # protection, so the job must run and report success. Hence the scope
+          # detection here and the per-step gate below, not a paths-ignore on the
+          # trigger.
+          set -euo pipefail
+          docs_only=false
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.base_ref }}"
+            git fetch --no-tags --depth=50 origin "$base" >/dev/null 2>&1 || true
+            range="origin/$base...HEAD"
+          elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            range="${{ github.event.before }}..HEAD"
+          else
+            range=""
+          fi
+          if [ -n "$range" ]; then
+            changed=$(git diff --name-only "$range" || true)
+            if [ -n "$changed" ] && ! printf '%s\n' "$changed" \
+              | grep -qvE '^(docs/|AGENTS\.md$|CLAUDE\.md$|README\.md$|LICENSE$|\.github/ISSUE_TEMPLATE/)'; then
+              docs_only=true
+              echo "Documentation-only change: skipping build and deploy gates."
+              printf '%s\n' "$changed" | sed 's/^/  /'
+            fi
+          fi
+          echo "docs_only=$docs_only" >> "$GITHUB_OUTPUT"
       - run: npm ci
+        if: steps.scope.outputs.docs_only != 'true'
       - name: Astro type check
+        if: steps.scope.outputs.docs_only != 'true'
         run: npx astro check
       - name: Validate content
+        if: steps.scope.outputs.docs_only != 'true'
         run: node scripts/validate-content.js
       - name: Audit dependencies
+        if: steps.scope.outputs.docs_only != 'true'
         # npm ≤10 submits the tree to the registry's /audits/quick endpoint,
         # which is being retired: since 2026-09-04 it 400s ("Invalid package
         # tree") on GitHub runners for this lockfile while smaller trees still
@@ -47,6 +82,7 @@ jobs:
       # fetch. Without secrets the script writes mock data flagged `_mock: true`,
       # which the dashboard labels as illustrative.
       - name: Fetch GA4 analytics data
+        if: steps.scope.outputs.docs_only != 'true'
         run: node scripts/fetch-ga4-data.mjs
         env:
           # Credentials are withheld on pull requests, so PR builds always take
@@ -55,7 +91,7 @@ jobs:
           GA4_PROPERTY_ID: ${{ github.event_name != 'pull_request' && vars.GA4_PROPERTY_ID || '' }}
           GA4_SERVICE_ACCOUNT_KEY: ${{ github.event_name != 'pull_request' && secrets.GA4_SERVICE_ACCOUNT_KEY || '' }}
       - name: Checkout CV data
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.scope.outputs.docs_only != 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: adrianwedd/cv
@@ -63,7 +99,7 @@ jobs:
           token: ${{ secrets.PIPELINE_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Copy CV data
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.scope.outputs.docs_only != 'true'
         run: |
           mkdir -p src/data
           if [ -f cv-repo/data/base-cv.json ]; then
@@ -80,9 +116,11 @@ jobs:
           # actually regress here is var/ content getting committed.
           node scripts/check-no-state-dir.mjs
       - run: npm run build
+        if: steps.scope.outputs.docs_only != 'true'
         env:
           PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
       - name: Check build size budget
+        if: steps.scope.outputs.docs_only != 'true'
         run: |
           # Check compiled assets only (excludes notebook-assets media files)
           ASTRO_MB=$(du -sm dist/_astro/ | cut -f1)
@@ -98,6 +136,7 @@ jobs:
           fi
           echo "✓ Build size within budget"
       - name: Enforce no raw <img> on local paths
+        if: steps.scope.outputs.docs_only != 'true'
         run: |
           # Raw <img> on local paths must use Astro <Picture>. Parse each <img …>
           # tag (quote-aware so a `>` inside an attribute can't truncate it; case-
@@ -118,6 +157,7 @@ jobs:
           fi
           echo "✓ No raw <img> tags on local paths found."
       - name: Enforce .jpg twin for every .webp heroImage
+        if: steps.scope.outputs.docs_only != 'true'
         run: |
           # FB / X / LinkedIn / iMessage do not reliably scrape WebP og:image.
           # src/pages/blog/[...slug].astro and src/pages/projects/[...slug].astro
@@ -140,19 +180,22 @@ jobs:
           fi
           echo "✓ Every .webp heroImage has a .jpg twin for OG scraping."
       - name: Run worker tests
+        if: steps.scope.outputs.docs_only != 'true'
         # worker-csp has its own dedicated job below; this only covers the
         # social-publish worker, which had no CI coverage prior to this step.
         run: cd worker && npm ci && npm test
       - name: Type check worker
+        if: steps.scope.outputs.docs_only != 'true'
         run: cd worker && npx tsc --noEmit
       - name: Audit worker dependencies
+        if: steps.scope.outputs.docs_only != 'true'
         # npm ≥11 for the bulk advisory endpoint — see the root Audit dependencies step.
         run: cd worker && npx -y npm@11 audit --audit-level=high --omit=dev
       # External link check is network-flaky/slow and its value is pre-deploy,
       # not pre-merge — keep it push-only so PRs stay fast and deterministic.
       # (check:links below still covers same-origin links on every PR.)
       - name: Install lychee
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.scope.outputs.docs_only != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SHA-256 of lychee-v0.23.0 x86_64-unknown-linux-gnu.tar.gz
@@ -172,7 +215,7 @@ jobs:
           sudo mv lychee /usr/local/bin/lychee
           lychee --version
       - name: Check links
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.scope.outputs.docs_only != 'true'
         run: |
           lychee \
             --config .lychee.toml \
@@ -183,18 +226,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check internal links
+        if: steps.scope.outputs.docs_only != 'true'
         # Catches same-origin 404s that Lychee skips (it excludes our own
         # domain to avoid pre-deploy 404s on not-yet-published pages).
         run: npm run check:links
 
       - name: Check og:image references resolve
+        if: steps.scope.outputs.docs_only != 'true'
         run: npm run check:og
       - name: Check responsive hero images
+        if: steps.scope.outputs.docs_only != 'true'
         run: node scripts/check-hero-images.mjs
       - name: Run site tests
+        if: steps.scope.outputs.docs_only != 'true'
         run: bash scripts/test-site.sh
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.scope.outputs.docs_only != 'true'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: dist
@@ -226,7 +273,9 @@ jobs:
     needs: [build, worker-csp]
     # A maintenance hold allows validated changes to merge without publishing.
     # Set PAGES_DEPLOY_HOLD=true before the merge; clear only after its run ends.
-    if: github.event_name != 'pull_request' && vars.PAGES_DEPLOY_HOLD != 'true'
+    # A documentation-only push has nothing to publish, and the build job
+    # skipped the steps that produce dist/.
+    if: github.event_name != 'pull_request' && vars.PAGES_DEPLOY_HOLD != 'true' && needs.build.outputs.docs_only != 'true'
     runs-on: ubuntu-latest
     permissions:
       pages: write
