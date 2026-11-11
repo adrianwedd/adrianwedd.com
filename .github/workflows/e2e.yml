@@ -2,6 +2,16 @@ name: E2E
 
 on:
   pull_request:
+    # E2E is not a required check, so a paths-ignore is safe here: a
+    # documentation-only PR simply has no browser run to do. src/content/**/*.md
+    # is deliberately NOT covered — that markdown is the site.
+    paths-ignore:
+      - 'docs/**'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
+      - 'README.md'
+      - 'LICENSE'
+      - '.github/ISSUE_TEMPLATE/**'
   workflow_dispatch:
   schedule:
     - cron: '0 14 * * *' # nightly ~00:00 AEST
