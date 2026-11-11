@@ -593,67 +593,15 @@ describe('dnssec-check.mjs CLI', () => {
 
 // ── The workflow must actually use this probe ─────────────────────────────
 
-describe('expiry-sweep.yml DNSSEC section', () => {
-  const workflow = readFileSync(resolve(__dirname, '../../.github/workflows/expiry-sweep.yml'), 'utf8');
-
-  it('calls the tested probe instead of a bare DS presence test', () => {
-    expect(workflow).toContain('node scripts/dnssec-check.mjs');
-    // Guard the CODE, not the commentary: the comments legitimately explain
-    // what the old `dig +short DS ...` presence test got wrong, so strip `#`
-    // lines before asserting that no such call survives in the shell.
-    const shell = workflow
-      .split('\n')
-      .filter((l) => !l.trim().startsWith('#'))
-      .join('\n');
-    expect(shell).not.toMatch(/dig \+short DS/);
-    expect(shell).not.toMatch(/\bdig\b/);
-  });
-
-  it('runs the actual DNSSEC workflow block: secure clears, bogus and silent probes remain findings', () => {
-    const start = workflow.indexOf('DNSSEC_ZONES="$DNSSEC_DOMAINS"');
-    const end = workflow.indexOf('COUNT=$(wc -l', start);
-    expect(start).toBeGreaterThan(0);
-    expect(end).toBeGreaterThan(start);
-    const block = workflow.slice(start, end);
-    const realProbe = '"$DNSSEC_TEST_NODE" "$DNSSEC_TEST_SCRIPT" --json --fixture "$DNSSEC_TEST_FIXTURE"';
-    const runBlock = (zone: string, replacement: string) => {
-      const scratch = mkdtempSync(resolve(tmpdir(), 'dnssec-workflow-'));
-      try {
-        const script =
-          'set +e -u +o pipefail\n: > findings.txt\nfinding() { echo "- $1" >> findings.txt; }\n' +
-          block.replace('node scripts/dnssec-check.mjs --json', replacement);
-        const result = spawnSync('bash', ['-c', script], {
-          cwd: scratch,
-          encoding: 'utf8',
-          env: {
-            ...process.env,
-            DNSSEC_DOMAINS: zone,
-            DNSSEC_TEST_NODE: process.execPath,
-            DNSSEC_TEST_SCRIPT: resolve(__dirname, '../../scripts/dnssec-check.mjs'),
-            DNSSEC_TEST_FIXTURE: resolve(__dirname, '../fixtures/dnssec-doh.json'),
-          },
-        });
-        expect(result.status, result.stderr).toBe(0);
-        return readFileSync(resolve(scratch, 'findings.txt'), 'utf8').trim().split('\n').filter(Boolean);
-      } finally {
-        rmSync(scratch, { recursive: true, force: true });
-      }
-    };
-    expect(runBlock('signed.example', realProbe)).toEqual([]);
-    expect(runBlock('bogus.example', realProbe).join(' ')).toContain('bogus.example');
-    expect(runBlock('signed.example', 'true').join(' ')).toContain('no usable result');
-    expect(runBlock('signed.example', 'false').join(' ')).toContain('no usable result');
-  });
-
-  it('still auto-closes only on a zero-finding run, and never on a crashed check step', () => {
-    expect(workflow).toMatch(/if \[ "\$COUNT" -gt 0 \]; then/);
-    expect(workflow).toMatch(/if: success\(\)/);
-    expect(workflow).toMatch(/FAILED=1/);
-  });
-
-  it('keeps the certificate and registration checks and the expiry label', () => {
-    expect(workflow).toMatch(/openssl s_client/);
-    expect(workflow).toMatch(/rdap\.org\/domain/);
-    expect(workflow).toContain('--label expiry');
-  });
-});
+// ── Coverage note ─────────────────────────────────────────────────────────
+// The four tests that used to live here executed the DNSSEC shell block out of
+// `.github/workflows/expiry-sweep.yml` against fixtures — they asserted the
+// workflow called the probe instead of a bare `dig +short DS`, that secure
+// zones clear while bogus and silent probes stay findings, and that the issue
+// only closes on a zero-finding run.
+//
+// That workflow moved to the private operations repository (adrianwedd-ops)
+// because its findings name registrars, renewals and payment arrangements and
+// its zone inventory was public here. The script-level coverage above still
+// runs; the workflow-block coverage did not move with the file and is currently
+// unautomated. That is a known gap, not a passing test.
