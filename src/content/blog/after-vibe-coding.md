@@ -10,6 +10,8 @@ ogImage: '/og/blog/after-vibe-coding.png'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/after-vibe-coding/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/after-vibe-coding/video.mp4'
 audioDuration: '48:31'
+youtubeUrl: 'https://www.youtube.com/watch?v=7Rg2MJED4V0'
+videoUploadDate: '2026-11-05T00:39:18Z'
 ---
 
 I forgot to go to university.

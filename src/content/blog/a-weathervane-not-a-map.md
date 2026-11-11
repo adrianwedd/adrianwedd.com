@@ -10,6 +10,8 @@ ogImage: '/og/blog/a-weathervane-not-a-map.png'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/a-weathervane-not-a-map/audio.m4a'
 audioDuration: '44:21'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/a-weathervane-not-a-map/video.mp4'
+youtubeUrl: 'https://www.youtube.com/watch?v=CwIwxYZHY8E'
+videoUploadDate: '2026-11-05T00:43:03Z'
 ---
 
 _Field notes from working with AI agents while the weather keeps changing._

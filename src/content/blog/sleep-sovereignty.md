@@ -11,6 +11,8 @@ audioDuration: '23:46'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 7
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=8MmB3gXF4PI'
+videoUploadDate: '2026-11-05T00:33:02Z'
 ---
 
 For a great many people the first act of the day is now checking how they slept. Not by noticing how they feel — by picking up a device and reading a number. Some mornings the number is low and the day acquires a weight it didn't have thirty seconds earlier. Some mornings it's high and the tiredness gets overruled.

@@ -11,6 +11,8 @@ audioDuration: '29:26'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 8
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=f4gsSDEBaQE'
+videoUploadDate: '2026-11-05T00:32:30Z'
 ---
 
 For twenty years the problem was getting people online. The digital divide was a gap in access, and closing it was straightforwardly good: connect the disconnected, and they get jobs, services, a vote that counts.

@@ -10,6 +10,8 @@ heroImage: '/notebook-assets/the-ungovernable-body-part-3/infographic.webp'
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ungovernable-body-part-3/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/the-ungovernable-body-part-3/video.mp4'
 audioDuration: '21:11'
+youtubeUrl: 'https://www.youtube.com/watch?v=kAEFs11YPvI'
+videoUploadDate: '2026-11-05T00:37:27Z'
 ---
 
 [Part 1](/blog/the-ungovernable-body-part-1/) was the machine that makes the film. [Part 2](/blog/the-ungovernable-body-part-2/) was the world the machine is pointed at. This one is about the thing underneath both, which I have been referring to obliquely for two posts without ever showing you: there is a research corpus, it is twelve essays long, and it is the reason the film has a position rather than a mood.
