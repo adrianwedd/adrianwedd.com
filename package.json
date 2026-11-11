@@ -17,8 +17,8 @@
     "validate": "node scripts/validate-content.js",
     "check:failure-first-stats": "node scripts/sync-failure-first-stats.mjs --check",
     "sync:failure-first-stats": "node scripts/sync-failure-first-stats.mjs --sync",
-    "check": "astro check && eslint . && node scripts/validate-content.js",
-    "verify": "astro check && node scripts/validate-content.js && npm run check:failure-first-stats && npm run build && bash scripts/test-site.sh && npm run check:links && npm run check:og",
+    "check": "node scripts/check-no-state-dir.mjs && astro check && eslint . && node scripts/validate-content.js",
+    "verify": "node scripts/check-no-state-dir.mjs && astro check && node scripts/validate-content.js && npm run check:failure-first-stats && npm run build && bash scripts/test-site.sh && npm run check:links && npm run check:og",
     "test:unit": "vitest run",
     "test:worker": "cd worker && npm test",
     "test:csp": "cd worker-csp && npm test && npx tsc --noEmit",
@@ -43,7 +43,7 @@
     "typescript": ">=5.0.0 <6.0.0"
   },
   "overrides": {
-    "fast-xml-parser": "^5.5.6",
+    "fast-xml-parser": "^5.12.0",
     "yaml": "~2.8.3",
     "esbuild": "^0.28.1",
     "@grpc/grpc-js": "^1.14.6",

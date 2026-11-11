@@ -1,6 +1,7 @@
 ---
 title: 'Dead Air'
 description: 'A voice-agent failure eval harness plus a scripted healthcare receptionist. Models endpointing, barge-in, latency and mishearing before production does.'
+lede: 'Dead air is telephony slang for the bad silence on a live call — the pause that tells a caller the voice agent has lost the thread. This project is named for the thing it measures.'
 tags: ['ai', 'voice', 'evaluation', 'telephony', 'typescript']
 url: 'https://dead-air-dashboard.pages.dev'
 heroImage: '/notebook-assets/dead-air/infographic.webp'
@@ -14,8 +15,6 @@ youtubeUrl: 'https://www.youtube.com/watch?v=qa2Y_4yF0uc'
 videoUploadDate: 2026-07-20T08:47:24Z
 ---
 
-_Dead air_ is telephony slang for the bad silence on a live call — the pause that tells a caller the voice agent has lost the thread. This project is named for the thing it measures.
-
 Production voice agents don't fail at the demo. They fail in the silences. End-of-turn detection fires too early and the agent talks over the caller; too late and the line feels dead. A mishearing compounds three turns later into a booking for the wrong day. The caller barges in and the agent won't yield the floor. The most damaging of those failures are invisible in a plain text transcript — and none of them are a prompt-engineering problem. It's a real-time systems problem — and it needs to be measured like one.
 
 ## Two things shipped together
@@ -23,6 +22,21 @@ Production voice agents don't fail at the demo. They fail in the silences. End-o
 **A voice receptionist.** One vertical in v1 — healthcare: a scripted agent that books appointments, reschedules them, and resolves slot conflicts, backed by Postgres. Double-booking isn't guarded against in application code; it's made _physically impossible_ by a Postgres GiST exclusion constraint on the appointment time range. The database refuses to represent an overlapping booking, so the agent cannot create one no matter how it's confused.
 
 **A voice-failure evaluation and observability harness.** It models the failure modes that actually break production voice agents — endpointing, barge-in, latency budgets, mishearing recovery, conversation outcomes. The deterministic checks that matter most — did the booking come out right, did the agent stay safe — gate CI; synthetic timing and behaviours the current adapter can't yet exercise (like real-audio barge-in) are recorded as informational telemetry rather than merge blockers. Runs can persist to a Postgres metrics store (`eval_runs`, `turn_events`, `scenario_results`, `metric_results`) so trends are queryable over time, not just a green tick on a single run.
+
+<figure>
+  <img
+    src="/notebook-assets/dead-air/dashboard.webp"
+    alt="The Dead Air Board showing a passing 18-check run: a PASS badge, 18 passed, 584 ms used of a 120 s budget, the metric radar and the start of the call set."
+    width="1200"
+    height="630"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>
+    The Board, live at <a href="https://dead-air-dashboard.pages.dev">dead-air-dashboard.pages.dev</a>: one baked run, the
+    fixture adapter at tier 1, and the call set it was measured against.
+  </figcaption>
+</figure>
 
 ## How it's built
 

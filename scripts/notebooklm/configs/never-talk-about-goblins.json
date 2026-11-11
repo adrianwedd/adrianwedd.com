@@ -1,0 +1,33 @@
+{
+  "title": "Never Talk About Goblins",
+  "notebook_id": "c13234b3-d4df-4855-afce-305abc626476",
+  "source_id": "a8852f58-9cdd-4e4a-abc3-c72eb6931bd0",
+  "source_file": "src/content/blog/never-talk-about-goblins.md",
+  "note": "Essay-only source, isolated via --source-ids. Focus prompts are stored verbatim beside this config (never-talk-about-goblins.audio-focus.txt, never-talk-about-goblins.video-focus.txt); both generated 2026-11-10. Audio completed and published; cinematic video completed the same day and published after signoff-sting assembly. Provenance-only config; the repo's strict config schema (additionalProperties: false) rejects the rich shape by design.",
+  "audio": {
+    "format": "deep_dive",
+    "length": "long",
+    "artifact_id": "8fdc282f-a347-484f-94e2-b21e96e0ba2c",
+    "raw_download": "exports/never-talk-about-goblins/audio-nlm-raw.m4a",
+    "published_profile": "AAC-LC 96 kbps mono 44.1 kHz",
+    "duration_seconds": 2378.489615,
+    "published_url": "https://cdn.adrianwedd.com/notebook-assets/never-talk-about-goblins/audio.m4a"
+  },
+  "video": {
+    "format": "cinematic",
+    "focus_file": "scripts/notebooklm/configs/never-talk-about-goblins.video-focus.txt",
+    "artifact_id": "e53e1342-b134-4ede-9ec1-00bf239b6489",
+    "raw_duration_seconds": 371.821134,
+    "raw_download": "exports/never-talk-about-goblins/video-nlm-raw.mp4",
+    "outpoint_truncated_seconds": 370.0,
+    "tail_note": "Raw tail 370->371.8 s verified digital silence (~-91 dB) before trim; signoff sting appended via ffconcat -c copy; assembled tail verified ~-30 dB.",
+    "signoff_asset": "assets/brand/signoff-sting.mp4",
+    "prepared_file": "public/notebook-assets/never-talk-about-goblins/video.mp4",
+    "published_url": "https://cdn.adrianwedd.com/notebook-assets/never-talk-about-goblins/video.mp4"
+  },
+  "og": {
+    "supplied_master": "Never Talk About Goblins.png (1734x907, 1.9118)",
+    "hero": "public/notebook-assets/never-talk-about-goblins/hero.jpg (1734x907, 396 KB, mozjpeg q82)",
+    "og_card": "public/notebook-assets/never-talk-about-goblins/og.jpg (1200x630, 200 KB)"
+  }
+}

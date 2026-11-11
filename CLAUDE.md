@@ -45,7 +45,7 @@ The Astro site also has a Playwright E2E suite (`e2e/`), run in CI by `.github/w
 
 - **Framework:** Astro 6 with TypeScript strict
 - **Styling:** Tailwind CSS 4 with CSS custom properties for theming
-- **Islands:** Preact for interactive components (12 islands in `src/components/islands/`)
+- **Islands:** Preact for interactive components (13 islands in `src/components/islands/`)
 - **Content:** Astro Content Collections (blog, projects, gallery, audio, fixes, case-studies) in `src/content/`
 - **Search:** Pagefind (client-side WASM, indexed at build time)
 - **Hosting:** GitHub Pages via GitHub Actions (fully static output)
@@ -81,7 +81,7 @@ File-based in `src/pages/`. Dynamic routes use `[...slug].astro` for blog, proje
 
 ### Islands architecture
 
-Preact islands in `src/components/islands/` are client-hydrated interactive components. All other components are Astro (server-rendered, zero JS). Current islands include: AudioPlayer, Personalisation, Transparency, Flashcards, MindMap, DataTable, ShareButton, AnalyticsDashboard, Quiz, TableOfContents, TerminalEasterEgg, GitHubActivity.
+Preact islands in `src/components/islands/` are client-hydrated interactive components. All other components are Astro (server-rendered, zero JS). Current islands include: AudioPlayer, LiveRadio (live HLS radio for a project's `liveStream`; native HLS else a minimal MediaSource pipeline in `src/lib/live-hls.ts`), Personalisation, Transparency, Flashcards, MindMap, DataTable, ShareButton, AnalyticsDashboard, Quiz, TableOfContents, TerminalEasterEgg, GitHubActivity.
 
 ### View Transitions compatibility
 

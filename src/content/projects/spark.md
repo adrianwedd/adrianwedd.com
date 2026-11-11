@@ -34,10 +34,8 @@ SPARK runs on a Raspberry Pi 4 with a three-layer cognitive architecture that gi
 
 Two jailbroken personas — GREMLIN and VIXEN — run on a local Ollama instance rather than Claude, because some conversations shouldn't have a safety net. They exist because Obi wanted a robot with range, not a robot that was always good.
 
-## The numbers
+## Built to be left alone
 
-716 tests. A watchdog thread that sends SIGTERM on stall and falls back to `os._exit(1)` after five seconds if the process doesn't comply. Atomic writes with `mkstemp` + `fsync` + `os.replace` throughout, because the robot runs on an SD card and crashes at inconvenient times. Battery monitoring with escalating voice warnings at 30%, 20%, and 15%, and an emergency shutdown at 10% — six beeps, a spoken farewell, then halt.
-
-The system is built to be left running unsupervised in a child's room. That changes what "reliable" means.
+The system is built to run unsupervised in a child's room. That changes what "reliable" means. Nearly two and a half thousand tests. A watchdog thread that sends SIGTERM on stall and falls back to `os._exit(1)` after five seconds if the process doesn't comply. Atomic writes — `mkstemp` + `fsync` + `os.replace` — throughout, because the robot lives on an SD card and crashes at inconvenient times. Battery monitoring with escalating voice warnings at 30%, 20%, and 15%, and at 10% an emergency shutdown: six beeps, a spoken farewell, then halt.
 
 [Read the deep dive →](/blog/the-robot-that-refuses-to-give-orders/)

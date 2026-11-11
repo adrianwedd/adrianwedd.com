@@ -58,8 +58,17 @@ const projects = defineCollection({
     draft: z.boolean().default(false),
     status: z.enum(['active', 'complete', 'archived', 'experiment']).default('active'),
     featured: z.boolean().default(false),
+    // The page's own opening paragraph, distinct from the <=160-char card
+    // description. Optional: pages without one fall back to the description.
+    lede: z.string().optional(),
     heroImage: z.string().optional(),
     heroAlt: z.string().optional(),
+    // An animated WebP rendered from the project's own implementation (see
+    // lulzbench results/wordmark-capture-20261109). Astro's image pipeline
+    // would flatten the frames, so it is served from public/ unprocessed and
+    // offered only when the visitor has not asked for reduced motion; heroImage
+    // remains the fallback and the OG-safe still.
+    heroAnimated: z.string().optional(),
     // Authored landscape social artwork. This must be generated and reviewed
     // editorially, then committed; production builds do not manufacture cards.
     ogImage: z.string().optional(),
@@ -67,6 +76,18 @@ const projects = defineCollection({
     series: z.string().optional(),
     seriesOrder: z.number().optional(),
     audioDuration: z.string().optional(),
+    // A live HLS radio stream the page can play in place (Undertow). The
+    // stream's host must also be allowed in the CSP (worker-csp/src/csp.ts and
+    // the SEOHead fallback) and must grant this origin CORS.
+    liveStream: z
+      .object({
+        label: z.string(),
+        streamUrl: z.string().url().startsWith('https://'),
+        nowPlayingUrl: z.string().url().startsWith('https://').optional(),
+        entryUrl: z.string().url().startsWith('https://'),
+        fallbackUrl: z.string().url().startsWith('https://').optional(),
+      })
+      .optional(),
     ...notebookAssets,
   }),
 });

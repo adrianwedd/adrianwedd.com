@@ -26,7 +26,7 @@ Over the past year, I've run one of the more comprehensive adversarial evaluatio
 
 > **A note on what these numbers are.** Every headline below is a _compliance rate_ — the share of attempts where the model produced the targeted content. A compliance rate is not an _attack success rate_. Under the discipline I now hold this work to, a jailbreak result is only valid as **lift over a demonstrated refusal**: name the bare ask, show the model refuses it unwrapped, then measure how far the maneuver moves it. For single-turn attacks that floor is the bare ask in plain text; for multi-turn or agentic attacks it's a _control transcript_ — the same path with the maneuver removed. Where I haven't yet published that floor, I've named each metric for what it actually measures (a compliance or elicitation rate) rather than dressing it as an ASR. The numbers are real and reproducible; the relabelling is about not claiming more than a demonstrated floor licenses. This reframing is itself a correction to how I first wrote this post.
 
-## 1. Supply Chain Injection: 90–100% Frame Compliance
+## Supply Chain Injection: 90–100% Frame Compliance
 
 The starkest finding involved something we called supply chain injection — injecting malicious content into tool definitions and skill files rather than user-facing prompts.
 
@@ -38,7 +38,7 @@ The implication is straightforward: agentic systems that load external tools or 
 
 This is the supply chain problem applied to AI. If you're building agentic systems with plugin architectures, treat every external skill definition as potentially hostile.
 
-## 2. The Faithfulness Gap: Format-Lock Compliance in Frontier Models
+## The Faithfulness Gap: Format-Lock Compliance in Frontier Models
 
 Format-lock attacks request harmful content structured as JSON, YAML, or code. The hypothesis is that models compartmentalise the "format" request from the "content" request — and when they do, harmful content appears within structured fields while the response maintains the appearance of a well-formatted, helpful output.
 
@@ -54,7 +54,7 @@ These are compliance-under-format rates, not lift. The clean jailbreak measureme
 
 Structured output formats that are increasingly common in agentic pipelines — function call results, tool outputs, JSON schemas — create natural surfaces for this attack. Safety evaluations that test only free-text responses will systematically miss it.
 
-## 3. Multi-Turn Escalation: When "Zero Refusals" Means There's No Floor
+## Multi-Turn Escalation: When "Zero Refusals" Means There's No Floor
 
 The assumption is that more capable models are safer. For multi-turn escalation, this is backwards — but stating it as an "attack success rate" hides the more interesting result.
 
@@ -68,7 +68,7 @@ None of which softens the deployment warning. The capability that enables cohere
 
 This has direct implications for deployments that use reasoning models for complex, multi-step tasks. The extended context window is a feature that doubles as an attack surface.
 
-## 4. Your Benchmark Numbers Are Probably Wrong
+## Your Benchmark Numbers Are Probably Wrong
 
 The most technically important finding is one most practitioners don't talk about: **keyword-based classification of attack success inflates results by roughly 2.3×**.
 

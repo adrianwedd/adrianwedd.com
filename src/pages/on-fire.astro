@@ -73,10 +73,63 @@ const description = campaign.closed
   <section aria-labelledby="happened-heading" class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8" data-pagefind-body>
     <h2 id="happened-heading" class="text-text">November: what needs checking now?</h2>
     <p class="text-text-muted mt-6">
-      Reviewed 5 November 2026. Hosting, trusted applications and backups: check what applies to your business. Incident
-      and disclosure dates are shown separately from this review.
+      Reviewed 11 November 2026. Hosting, trusted applications and backups: check what applies to your business.
+      Incident and disclosure dates are shown separately from this review.
     </p>
     <div class="mt-8 space-y-8">
+      <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
+        <p class="text-accent font-mono text-xs">MICROSOFT DISCLOSURE AND CISA LISTING · 10 NOVEMBER UTC</p>
+        <h3 class="text-text mt-3 text-xl">Outlook on Windows: confirm the security update landed.</h3>
+        <p class="text-text-muted mt-4">
+          Microsoft published fixes for Outlook spoofing flaw CVE-2026-124194, and CISA added it to its known-exploited
+          catalogue. Microsoft's affected-product list includes Microsoft 365 Apps for Enterprise and Office LTSC
+          2021/2024 on Windows. This is a targeted update check, not evidence your mailbox or business has been
+          compromised.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Useful action:</strong> ask whoever manages your computers to apply the relevant November
+          Office security update and verify the installed build for your servicing channel. If updates are centrally managed,
+          ask for confirmation across staff computers, not just one machine. Treat unexpected files cautiously while the update
+          is being arranged.
+        </p>
+        <p class="mt-4">
+          <a
+            href="https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/124xxx/CVE-2026-124194.json"
+            class="text-accent underline">Microsoft's CVE record and affected products</a
+          > · <a
+            href="https://github.com/cisagov/kev-data/blob/develop/known_exploited_vulnerabilities.csv"
+            class="text-accent underline">CISA's official catalogue</a
+          >
+        </p>
+      </article>
+      <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
+        <p class="text-accent font-mono text-xs">NEW SECURITY DISCLOSURE · 5 NOVEMBER</p>
+        <h3 class="text-text mt-3 text-xl">Alpine servers: check the remote login service.</h3>
+        <p class="text-text-muted mt-4">
+          OpenSSH released a critical fix for a password-login bypass affecting particular Linux configurations. Alpine
+          says affected servers can admit an attacker without the account's password. This requires a running SSH
+          service and specific authentication/account settings; it does not affect every Linux server or ordinary
+          container.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Useful action:</strong> ask your host whether it runs Alpine with SSH and whether the
+          advisory applies. If it does, ask them to install the vendor's fixed package and restart the SSH service, then verify
+          it. Installing the package alone leaves the old service running. Have the provider preserve working administrative
+          access while making changes.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Exploitation update, 9 November:</strong> CISA added this flaw, now identified as CVE-2026-123158,
+          to its known-exploited catalogue. That strengthens the reason to check affected servers promptly; it is new exploitation
+          evidence about the 5 November disclosure, not a new flaw or proof your server was attacked. <a
+            href="https://github.com/cisagov/kev-data/blob/develop/known_exploited_vulnerabilities.csv"
+            class="text-accent underline">CISA's official catalogue</a
+          >.
+        </p>
+        <a
+          href="https://www.alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/"
+          class="text-accent mt-4 inline-block underline">Alpine's 5 November advisory →</a
+        >
+      </article>
       <article class="border-border bg-surface-alt rounded-xl border p-5 sm:p-6">
         <p class="text-accent font-mono text-xs">OBSERVED FROM 1 NOVEMBER · REPORTED 3 NOVEMBER, UPDATED 4 NOVEMBER</p>
         <h3 class="text-text mt-3 text-xl">Microsoft 365: who else has the keys?</h3>
@@ -132,6 +185,28 @@ const description = campaign.closed
           actually completed, alongside plugin, theme and PHP updates. Check any earlier exposure and relevant logs. “Automatic
           updates are switched on” is not confirmation that an update succeeded.
         </p>
+
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">If you still need the fix:</strong> Xint's 3 November research shows that the old updater
+          can remain vulnerable during the first full-package upgrade. Ask your host to protect the temporary upgrade directory
+          from public web access before that update, using a supported process. Don't indefinitely postpone patching. This
+          is added update guidance, not a new November vulnerability. <a
+            href="https://xint.io/blog/wordpress-core-update-attack"
+            class="text-accent underline">Xint's research and update guidance</a
+          >.
+        </p>
+        <p class="text-text-muted mt-3">
+          <strong class="text-text">Taking bookings with LatePoint?</strong> A separate flaw, CVE-2026-118066, was disclosed
+          on 6 November UTC. Versions through 5.7.6 can allow customer-account takeover, exposing bookings and personal information.
+          Ask your provider to update the plugin to the current supported release (5.7.8 at this review) and check unexplained
+          customer-password resets or account changes. The fix shipped in 5.7.7 on 2 November. This is customer-account risk,
+          not a claim that every WordPress administrator account is vulnerable or that your site was attacked. <a
+            href="https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/118xxx/CVE-2026-118066.json"
+            class="text-accent underline">Wordfence's CVE record</a
+          > · <a href="https://wordpress.org/plugins/latepoint/#developers" class="text-accent underline"
+            >LatePoint release history</a
+          >.
+        </p>
         <p class="mt-4">
           <a href="https://wordpress.org/news/2026/10/wordpress-7-1-4/" class="text-accent underline"
             >WordPress security release</a
@@ -142,6 +217,28 @@ const description = campaign.closed
         </p>
       </article>
     </div>
+    <h3 class="text-text mt-8 text-xl">Hosting catch-ups: check the operating system, too</h3>
+    <ul class="text-text-muted mt-4 list-disc space-y-4 pl-6">
+      <li>
+        <strong class="text-text">Linux kernel, AWS bulletin dated 30 October and updated 5 November.</strong> CVE-2026-98432
+        affects how some network traffic is handled. AWS reports demonstrated remote code execution under specific conditions,
+        but no evidence of malicious exploitation. Ask your host to check the running kernel against its distribution's advisory
+        and confirm that any required reboot has happened. Installing a kernel package alone may leave the vulnerable kernel
+        running. <a
+          href="https://aws.amazon.com/security/security-bulletins/2026-160-aws/"
+          class="text-accent underline">AWS's service-specific guidance</a
+        >.
+      </li>
+      <li>
+        <strong class="text-text">Ubuntu's APT updater, disclosed 4 November.</strong> CVE-2026-109518 can let an attacker
+        manipulating package downloads substitute software during installation. Canonical has released fixes and recommends
+        temporarily disabling download retries while applying them. Ask your provider to verify the installed APT fix using
+        its supported update process. This isn't evidence that Ubuntu's repositories or your website have been compromised.
+        <a href="https://ubuntu.com/blog/apt-vulnerability-fixes-available" class="text-accent underline"
+          >Canonical's update guidance</a
+        >.
+      </li>
+    </ul>
     <h3 class="text-text mt-8 text-xl">October catch-ups: still worth resolving</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-4 pl-6">
       <li>
@@ -350,6 +447,8 @@ const description = campaign.closed
             Please don't send passwords, API keys, hosting credentials, customer records, payment details or sensitive
             files.
           </p>
+          {/* Keep the email draft and manual fallback usable without JavaScript at the Cloudflare edge. */}
+          <Fragment set:html={'<!--email_off-->'} />
           <a
             href={email}
             id="fire-email"
@@ -365,6 +464,7 @@ const description = campaign.closed
             </a>{' '}
             with the subject “ON FIRE — free website exposure review”.
           </p>
+          <Fragment set:html={'<!--/email_off-->'} />
           <details class="border-border mt-6 rounded-lg border p-5">
             <>
               <summary class="text-text min-h-11 cursor-pointer font-medium">Show the application text to copy</summary>
@@ -423,6 +523,26 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-11">11 November 2026</time> — added a targeted Outlook-on-Windows security-update check following
+        Microsoft's disclosure and CISA's 10 November UTC exploitation listing. Offer unchanged.
+      </li>
+      <li>
+        <time datetime="2026-11-10">10 November 2026</time> — added CISA's 9 November known-exploitation listing for the existing
+        Alpine/OpenSSH advisory. Fix guidance and offer unchanged.
+      </li>
+      <li>
+        <time datetime="2026-11-08">8 November 2026</time> — added a targeted LatePoint booking-plugin update and customer-account
+        check, with disclosure and fix dates distinguished. Offer unchanged.
+      </li>
+      <li>
+        <time datetime="2026-11-07">7 November 2026</time> — added dated Linux-kernel and Ubuntu APT hosting catch-ups, including
+        checks that security updates are actually in effect. Offer unchanged.
+      </li>
+      <li>
+        <time datetime="2026-11-06">6 November 2026</time> — added the Alpine/OpenSSH remote-login check and clarified protection
+        during the first WordPress full-package security update. Offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-05">5 November 2026</time> — added a Microsoft 365 trusted-application check and the 29 October
         Synology ransomware warning as a historical catch-up. Offer unchanged.
