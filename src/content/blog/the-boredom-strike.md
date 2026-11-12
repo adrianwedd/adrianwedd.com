@@ -11,6 +11,8 @@ audioDuration: '22:01'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 5
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=30XB6n_TIf4'
+videoUploadDate: '2026-11-05T00:31:16Z'
 ---
 
 We call it the attention economy, and that's the wrong name. Attention is just the delivery pipe. The thing being mined at the other end is **arousal** — how hard your nervous system spikes, in which direction, and how reliably it does it again tomorrow.

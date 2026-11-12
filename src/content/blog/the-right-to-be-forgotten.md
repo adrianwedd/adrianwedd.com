@@ -11,6 +11,8 @@ audioDuration: '23:04'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 9
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=Infczi-o0XE'
+videoUploadDate: '2026-11-05T00:33:28Z'
 ---
 
 In the analogue arrangement, the dead went quiet. Letters yellowed in a box. Photographs faded on a mantle. Withdrawal from the world was slow, and the slowness did work: it gave the people left behind time to move from _she is here_ to _she was here_.

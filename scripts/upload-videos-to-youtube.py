@@ -3,8 +3,14 @@
 Upload NLM videos from R2 to YouTube and write youtubeUrl back to frontmatter.
 
 Usage:
-  python3 scripts/upload-videos-to-youtube.py [--dry-run] [--limit N] [--slug SLUG]
+  python3 scripts/upload-videos-to-youtube.py [--dry-run] [--limit N] [--slug SLUG] [--oldest-first]
+
+Release check: run --dry-run --oldest-first after publishing CDN videos. Uploads
+are public; confirm the intended release scope before running without --dry-run.
+Successful uploads record youtubeUrl. Once processing completes, record the
+public videoUploadDate with scripts/backfill-video-upload-dates.py if needed.
 """
+from __future__ import annotations
 
 import argparse
 import re
@@ -85,6 +91,7 @@ def collect_videos(slug_filter=None) -> list[dict]:
                 'description': fm.get('description', ''),
                 'video_url': video_url,
                 'content_type': content_dir.name,
+                'date': str(fm.get('date', '')),
             })
     return videos
 
@@ -98,6 +105,8 @@ def upload_video(yt, video: dict) -> str | None:
         f"https://adrianwedd.com/{'blog' if video['content_type'] == 'blog' else 'projects'}/{video['slug']}/"
     )
     description = f"{video['description']}\n\n{site_url}" if video['description'] else site_url
+    if video.get('date'):
+        description += f"\n\nOriginal post published: {video['date']}"
 
     print(f"\n→ {video['title']}")
     print(f"  R2: {video['video_url']}")
@@ -183,9 +192,12 @@ def main():
     parser.add_argument('--dry-run', action='store_true', help='List videos without uploading')
     parser.add_argument('--limit', type=int, default=0, help='Max videos to upload (0 = all)')
     parser.add_argument('--slug', help='Upload a single content slug')
+    parser.add_argument('--oldest-first', action='store_true', help='Upload in post publication order')
     args = parser.parse_args()
 
     videos = collect_videos(slug_filter=args.slug)
+    if args.oldest_first:
+        videos.sort(key=lambda video: (video['date'], video['slug']))
     if not videos:
         print("No videos found (all may already have youtubeUrl set).")
         return
@@ -200,6 +212,9 @@ def main():
 
     creds = get_credentials()
     yt = build('youtube', 'v3', credentials=creds)
+    channels = yt.channels().list(part='id', mine=True).execute().get('items', [])
+    if [channel['id'] for channel in channels] != [CHANNEL_ID]:
+        raise RuntimeError('Authenticated channel does not match the expected Adrian Wedd channel')
 
     count = 0
     for video in videos:
@@ -214,6 +229,11 @@ def main():
         if video_id:
             yt_url = f'https://www.youtube.com/watch?v={video_id}'
             set_frontmatter_field(video['file'], 'youtubeUrl', yt_url)
+            uploaded = yt.videos().list(part='snippet,status', id=video_id).execute()['items'][0]
+            if uploaded['status']['uploadStatus'] == 'processed':
+                set_frontmatter_field(video['file'], 'videoUploadDate', uploaded['snippet']['publishedAt'])
+            else:
+                print('  Processing pending; backfill videoUploadDate after processing completes.')
             print(f"  ✓ youtubeUrl written to {video['file'].name}")
             count += 1
             time.sleep(2)  # avoid quota burst

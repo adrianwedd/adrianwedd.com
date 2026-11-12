@@ -13,7 +13,7 @@ still yes.
 | Uptime | Upptime (`adrianwedd/status`, renamed from `adrianwedd/upptime` 2026-07-31), every 5 min | Is it serving? Do the authed health endpoints report degradation? |
 | Health endpoints | `worker/src/index.ts` `/api/health`, book-api `/health`, ops `/api/health/xero`, twitb `/api/health?deep` | Are tokens valid, crons alive, queues draining? |
 | Monitoring watchdog | `monitor-watchdog.yml` (hourly) + `worker/src/watchdog.ts` (Cloudflare cron) | Is the monitoring itself still running? |
-| Expiry sweep | `expiry-sweep.yml` (weekly) | What runs out on a date? |
+| Expiry sweep | `adrianwedd-ops` `expiry-sweep.yml` (weekly) | What runs out on a date? Moved out of this repo: its findings name registrars, renewals and payment arrangements. |
 | Content integrity | `content-integrity.yml` (weekly + post-deploy) | Is the site up but not working? |
 | Token expiry | `social-token-alert.yml` (weekly) | Are platform data-access windows closing? |
 
@@ -96,8 +96,10 @@ Break these and the monitoring gets worse, not better.
 - **A DS record's presence does not prove DNSSEC validation.** The first sweep
   treated any parent DS as healthy; `tasmania.homes` returned SERVFAIL from
   validating resolvers during the 2026-09-28 publication attempt (#584).
-  `scripts/dnssec-check.mjs` now checks DS and an authenticated apex SOA through
-  two resolvers. Errors and disagreement remain findings rather than all-clear.
+  The check now asks for the parent DS *and* an authenticated apex SOA through
+  two resolvers, and lives in `adrianwedd-ops` as `scripts/expiry-dnssec.sh`
+  around `scripts/dnssec-check.mjs`, with fixture tests that run in that repo's
+  CI. Errors and disagreement remain findings rather than all-clear.
 - **GitHub silently disables scheduled workflows after 60 days of repo
   inactivity.**
 

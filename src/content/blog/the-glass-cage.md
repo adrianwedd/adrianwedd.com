@@ -11,6 +11,8 @@ audioDuration: '20:32'
 series: 'The Ungovernable Body: Essays'
 seriesOrder: 1
 relatedProject: 'ungovernable-body'
+youtubeUrl: 'https://www.youtube.com/watch?v=PTZOdDZNiEA'
+videoUploadDate: '2026-11-05T00:28:17Z'
 ---
 
 In the late eighteenth century the Prussian state had a problem with its forests. A forest, to the people living beside it, was firewood and fodder and berries and game and mushrooms and a place to hide. To a tax assessor it was noise. You cannot levy a berry. You cannot forecast a mushroom.

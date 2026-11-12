@@ -7,6 +7,8 @@ draft: false
 audioUrl: 'https://cdn.adrianwedd.com/notebook-assets/privacy-compliant-monster/audio.m4a'
 videoUrl: 'https://cdn.adrianwedd.com/notebook-assets/privacy-compliant-monster/video.mp4'
 audioDuration: '23:32'
+youtubeUrl: 'https://www.youtube.com/watch?v=xi8IVVxfRlY'
+videoUploadDate: '2026-11-05T00:39:51Z'
 ---
 
 _I went looking for loopholes in Australia's proposed privacy reforms. Most of the obvious ones died under scrutiny. What survived was stranger: the law can regulate each use of your data while still struggling to see the power of the profile built from all of it._
