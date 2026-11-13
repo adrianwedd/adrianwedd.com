@@ -126,7 +126,7 @@ Components using this pattern: ThemeToggle, ConsentBanner, Lightbox, ScrollRevea
 
 - **lighthouse.yml:** PR checks — builds + runs Lighthouse on 7 pages (90% thresholds)
 - **monitor-watchdog.yml:** Hourly — watches the _monitoring_, not the services. Actions-API checks for workflows disabled by GitHub's 60-day inactivity rule, schedules that have stopped firing, and runs stuck in `waiting`/`queued`/`in_progress` holding a concurrency group. Checks in to the worker so a dead GitHub scheduler gets escalated by email from Cloudflare. See `docs/runbooks/monitoring.md`
-- **expiry-sweep.yml:** Weekly — TLS certs, domain registration (public RDAP), DNSSEC DS presence. Auth-free by design
+- **expiry-sweep.yml:** *moved to `adrianwedd-ops`* (weekly TLS certs, domain registration via public RDAP, DNSSEC validation). The probe, its fixture tests and the sweep shell live there; see `docs/runbooks/monitoring.md`. Nothing in this repo's watchdog watches it any more — that gap is stated in `.github/scripts/watchdog-liveness.sh`
 - **content-integrity.yml:** Weekly + after each deploy — Pagefind index, analytics payload (must not be `_mock`), feeds and sitemap non-empty. The failures where every page still returns 200
 - **social-autopublish.yml:** Queue sync on push to main — regenerates the date-scheduled queue from content (`scripts/generate-social-queue.mjs`) and syncs it to the worker's KV; broadcasting itself is date-triggered via the cron, not fire-on-commit
 - **social-cron.yml:** Scheduled publish from queue every 10 min + comment monitor every 2 hours

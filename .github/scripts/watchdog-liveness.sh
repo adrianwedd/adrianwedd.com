@@ -68,13 +68,21 @@ adrianwedd/failurefirst-status
 # the schedule is dropped while manual dispatches keep passing.
 # 4th field: alert when the LAST run FAILED, not just when it stopped.
 #
-# Freshness alone can't see a crashed check. expiry-sweep and
-# content-integrity don't check in to Cloudflare, and their post-check
-# steps are `if: success()`, so a hard crash in one of them opens no
-# issue and sends no email — and a red run is still a RECENT run, so a
-# created_at-only check reads it as healthy. That is a check failing
-# completely silently, which is the exact thing this file exists to
-# prevent.
+# Freshness alone can't see a crashed check. content-integrity doesn't
+# check in to Cloudflare, and its post-check steps are `if: success()`,
+# so a hard crash opens no issue and sends no email — and a red run is
+# still a RECENT run, so a created_at-only check reads it as healthy.
+# That is a check failing completely silently, which is the exact thing
+# this file exists to prevent.
+#
+# expiry-sweep.yml is deliberately ABSENT from both lists: it moved to
+# `adrianwedd-ops` (#815), which is a private repo this token may not
+# read. It was listed here until 2026-11-12; because the Actions API
+# keeps serving a deleted workflow's run history, the row would have
+# stayed quiet until 200h after its last run and then reported a
+# workflow that no longer exists — an hourly false alarm. The sweep is
+# therefore currently unwatched from here. Adding it back needs a repo
+# entry plus verified private-repo read access, not just a line.
 #
 # Only `yes` for workflows whose failure is unambiguously a problem.
 # e2e.yml is `no`: it runs on pull requests, where a red run is often
@@ -88,7 +96,6 @@ adrianwedd/adrianwedd.com|worker-deploy.yml|30|no
 adrianwedd/adrianwedd.com|e2e.yml|30|no
 adrianwedd/adrianwedd.com|social-token-alert.yml|200|yes
 adrianwedd/adrianwedd.com|content-pipeline.yml|200|no
-adrianwedd/adrianwedd.com|expiry-sweep.yml|200|yes
 adrianwedd/adrianwedd.com|content-integrity.yml|200|yes
 adrianwedd/adrianwedd.com|monitor-watchdog.yml|4|yes
 "
@@ -357,9 +364,9 @@ for REPO in $REPOS; do
       # later run on any branch does prove the group is free, so
       # branch-scoping can under-count and cry wolf. That is the
       # direction to fail in, and the realistic case is narrow — the
-      # static-group workflows here (content-integrity, expiry-sweep,
-      # content-pipeline) are scheduled on main, so their stuck runs
-      # and their later runs are both on main.
+      # static-group workflows here (content-integrity, content-pipeline)
+      # are scheduled on main, so their stuck runs and their later runs
+      # are both on main.
       #
       # `head_branch` can be absent on some event types; when it is,
       # fall back to the unscoped probe rather than sending an empty
