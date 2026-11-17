@@ -279,16 +279,21 @@ const description = campaign.closed
       </li>
       <li>
         <strong class="text-text">PHP, 21 and 23 October.</strong> The PHP2Shell fixes shipped in 8.2.35, 8.3.36, 8.4.27 and
-        8.5.12. Ask your host to verify the runtime or vendor backport, plus the separate session upload progress guidance.
-        Windows hosts should also check the 26 October package rebuild. <a
-          href="https://www.php.net/archive/2026.php#2026-10-21-5"
-          class="text-accent underline">PHP's advisories</a
-        >.
+        8.5.12. Ask your host to verify the runtime or vendor backport. PHP's separate 23 October note covers a different
+        issue, CVE-2026-115560: an unusual combination of session configuration and application code that the 21 October releases
+        don't fix. Its interim advice is to switch session upload progress off until the full advisory ships; if your host
+        applied that mitigation on 21 October, keep it in place. Windows hosts should also check the 26 October package rebuild.
+        <a href="https://www.php.net/archive/2026.php#2026-10-21-5" class="text-accent underline">PHP's advisories</a>.
       </li>
       <li>
-        <strong class="text-text">LiteLLM, 21 October.</strong> Its compromised 1.107.0 release matters if your provider runs
-        this AI software. Check affected packages and containers against the vendor report and replace exposed credentials.
-        This isn't evidence that an ordinary business website is affected. <a
+        <strong class="text-text">LiteLLM, 21 October.</strong> The vendor's scope: the PyPI package litellm 1.107.0 and the
+        container tags v1.107.0, latest, main-latest and main-stable, for roughly two hours on 21 October. Its enterprise
+        private registry wasn't affected, and the GitHub 1.107.0 source tag is clean. If your provider ever started that version,
+        the vendor says to treat the environment as compromised and rotate everything it could reach — and not to run Python
+        in it to check, because the malware reloads on startup. This isn't evidence that an ordinary business website is affected.
+        <a href="https://docs.litellm.ai/blog/security-incident-oct-21-2026" class="text-accent underline"
+          >Vendor incident report</a
+        > · <a
           href="https://docs.litellm.ai/blog/security-incident-oct-21-2026-attack-chain"
           class="text-accent underline">Corrected investigation, 23 October</a
         >.
@@ -546,6 +551,11 @@ const description = campaign.closed
     </p>
     <h3 class="text-text mt-6 text-xl">Change history</h3>
     <ul class="text-text-muted mt-4 list-disc space-y-2 pl-6 text-sm">
+      <li>
+        <time datetime="2026-11-17">17 November 2026</time> — named CVE-2026-115560 and its interim advice in the PHP note,
+        and recorded LiteLLM's affected artifacts and remediation scope from the vendor's incident report. No new incident.
+        Offer unchanged.
+      </li>
       <li>
         <time datetime="2026-11-13">13 November 2026</time> — added a conditional Ninja Forms File Uploads add-on check, with
         the original 11 November disclosure date and fixed version. Offer unchanged.
