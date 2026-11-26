@@ -5,6 +5,7 @@ import importlib.util
 import json
 import subprocess
 import sys
+import tempfile
 import unittest
 from collections import Counter
 from pathlib import Path
@@ -47,6 +48,22 @@ class YouTubeOperationsMonitorTests(unittest.TestCase):
         report = monitor.reconcile(self.load("unknown.json"), self.exceptions())
         self.assertEqual(report["exit_code"], 2)
         self.assertEqual(report["status"], "unknown")
+
+    def test_incomplete_snapshot_is_unknown_not_empty_healthy_state(self):
+        snapshot = {
+            "observed_at": "2026-11-26T00:00:00Z",
+            "probe_error": None,
+            "channels": [{"id": monitor.CHANNEL_ID}],
+            "playlist": {"id": monitor.PLAYLIST_ID, "status": {"privacyStatus": "public"}},
+        }
+        report = monitor.reconcile(snapshot, self.exceptions())
+        self.assertEqual(report["exit_code"], 2)
+        self.assertEqual(report["unknown"][0]["code"], "snapshot_incomplete")
+
+    def test_missing_content_directories_fail_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(RuntimeError, "required content directory"):
+                monitor.load_site_entries(Path(directory))
 
     def test_cdn_identity_requires_exact_https_hostname(self):
         self.assertTrue(monitor.is_cdn_video_url("https://cdn.adrianwedd.com/video.mp4"))

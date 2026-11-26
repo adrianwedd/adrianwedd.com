@@ -68,6 +68,8 @@ def load_site_entries(repo_root: Path) -> list[dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     for relative, route in (("src/content/blog", "blog"), ("src/content/projects", "projects")):
         directory = repo_root / relative
+        if not directory.is_dir():
+            raise RuntimeError(f"required content directory is unavailable: {directory}")
         for path in sorted(directory.glob("*.md")):
             text = path.read_text()
             match = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
@@ -185,6 +187,29 @@ def reconcile(snapshot: dict[str, Any], exceptions: dict[str, Any]) -> dict[str,
     probe_error = snapshot.get("probe_error")
     if probe_error:
         unknown.append(finding("probe_incomplete", "YouTube observation did not complete", **probe_error))
+        return result(snapshot, actionable, unknown, accepted)
+
+    required_types = {
+        "channels": list,
+        "playlist_items": list,
+        "videos": list,
+        "site_entries": list,
+    }
+    incomplete = [
+        key
+        for key, expected_type in required_types.items()
+        if key not in snapshot or not isinstance(snapshot.get(key), expected_type)
+    ]
+    if "playlist" not in snapshot or not (snapshot.get("playlist") is None or isinstance(snapshot.get("playlist"), dict)):
+        incomplete.append("playlist")
+    if incomplete:
+        unknown.append(
+            finding(
+                "snapshot_incomplete",
+                "Observation is missing required fields or field types",
+                fields=sorted(incomplete),
+            )
+        )
         return result(snapshot, actionable, unknown, accepted)
 
     channels = snapshot.get("channels") or []
