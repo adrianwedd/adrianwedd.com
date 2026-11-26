@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-11-26T00:00:00Z",
+  "credentials_refreshed_in_memory": true,
+  "credentials_persisted": false,
+  "probe_error": null,
+  "channels": [{"id": "UC709-RgQ-IMi-GffU9guqUQ"}],
+  "playlist": {"id": "PLHCs2hYaGLAk4qe5za7rAh2j4YHRKdJXo", "status": {"privacyStatus": "public"}},
+  "playlist_items": ["G0ca7NjBEEE", "SOUJUti2oDw"],
+  "videos": [
+    {"id": "G0ca7NjBEEE", "snippet": {"title": "The Robot That Refuses to Give Orders", "channelId": "UC709-RgQ-IMi-GffU9guqUQ", "publishedAt": "2026-06-09T00:32:53Z", "description": "https://adrianwedd.com/blog/the-robot-that-refuses-to-give-orders/"}, "status": {"privacyStatus": "public", "uploadStatus": "processed"}, "contentDetails": {"duration": "PT4M45S"}},
+    {"id": "SOUJUti2oDw", "snippet": {"title": "The Robot That Refuses to Give Orders", "channelId": "UC709-RgQ-IMi-GffU9guqUQ", "publishedAt": "2026-05-05T01:16:20Z", "description": "https://adrianwedd.com/blog/the-robot-that-refuses-to-give-orders/"}, "status": {"privacyStatus": "public", "uploadStatus": "processed"}, "contentDetails": {"duration": "PT4M45S"}}
+  ],
+  "site_entries": [
+    {"path": "src/content/blog/the-robot-that-refuses-to-give-orders-post.md", "title": "The Robot That Refuses to Give Orders", "canonical_url": "https://adrianwedd.com/blog/the-robot-that-refuses-to-give-orders/", "video_url": "https://cdn.adrianwedd.com/robot.mp4", "youtube_id": "G0ca7NjBEEE", "video_upload_date": null},
+    {"path": "src/content/projects/adhdo.md", "title": "ADHDo", "canonical_url": "https://adrianwedd.com/projects/adhdo/", "video_url": "https://cdn.adrianwedd.com/adhdo.mp4", "youtube_id": "it_8g1ApwEk", "video_upload_date": null},
+    {"path": "src/content/blog/new.md", "title": "New", "canonical_url": "https://adrianwedd.com/blog/new/", "video_url": "https://cdn.adrianwedd.com/new.mp4", "youtube_id": null, "video_upload_date": null}
+  ]
+}
