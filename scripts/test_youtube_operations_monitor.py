@@ -48,6 +48,13 @@ class YouTubeOperationsMonitorTests(unittest.TestCase):
         self.assertEqual(report["exit_code"], 2)
         self.assertEqual(report["status"], "unknown")
 
+    def test_cdn_identity_requires_exact_https_hostname(self):
+        self.assertTrue(monitor.is_cdn_video_url("https://cdn.adrianwedd.com/video.mp4"))
+        self.assertFalse(monitor.is_cdn_video_url("http://cdn.adrianwedd.com/video.mp4"))
+        self.assertFalse(monitor.is_cdn_video_url("https://cdn.adrianwedd.com.evil.example/video.mp4"))
+        self.assertFalse(monitor.is_cdn_video_url("https://evil.example/cdn.adrianwedd.com/video.mp4"))
+        self.assertFalse(monitor.is_cdn_video_url("https://cdn.adrianwedd.com@evil.example/video.mp4"))
+
     def test_cli_exit_codes_and_json_are_stable(self):
         for fixture, expected in (("healthy.json", 0), ("drift.json", 1), ("unknown.json", 2)):
             run = subprocess.run(

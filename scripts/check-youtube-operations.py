@@ -20,6 +20,7 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 CHANNEL_ID = "UC709-RgQ-IMi-GffU9guqUQ"
 PLAYLIST_ID = "PLHCs2hYaGLAk4qe5za7rAh2j4YHRKdJXo"
@@ -36,6 +37,15 @@ def normalise_url(value: str) -> str:
 
 def normalise_title(value: str) -> str:
     return " ".join(value.casefold().split())
+
+
+def is_cdn_video_url(value: str) -> bool:
+    """Accept only the configured HTTPS media host, never a substring match."""
+    try:
+        parsed = urlparse(value)
+    except ValueError:
+        return False
+    return parsed.scheme == "https" and parsed.hostname == "cdn.adrianwedd.com"
 
 
 def finding(code: str, message: str, **context: Any) -> dict[str, Any]:
@@ -240,7 +250,7 @@ def reconcile(snapshot: dict[str, Any], exceptions: dict[str, Any]) -> dict[str,
     site_entries = snapshot.get("site_entries") or []
     known_missing = {item["video_id"]: item for item in exceptions.get("known_missing_site_video_ids") or []}
     for entry in site_entries:
-        if "cdn.adrianwedd.com" in (entry.get("video_url") or "") and not entry.get("youtube_id"):
+        if is_cdn_video_url(entry.get("video_url") or "") and not entry.get("youtube_id"):
             actionable.append(finding("upload_backlog", "Published CDN video has no YouTube URL", path=entry.get("path")))
         video_id = entry.get("youtube_id")
         if not video_id:
