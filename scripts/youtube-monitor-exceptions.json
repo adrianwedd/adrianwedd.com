@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "accepted_private_playlist_ids": [
+    "5eiE-DiagQE"
+  ],
+  "known_duplicate_groups": [
+    {
+      "canonical_url": "https://adrianwedd.com/blog/the-robot-that-refuses-to-give-orders/",
+      "title": "The Robot That Refuses to Give Orders",
+      "preferred_video_id": "G0ca7NjBEEE",
+      "other_video_ids": ["SOUJUti2oDw"],
+      "disposition": "human channel-curation decision; do not delete automatically"
+    }
+  ],
+  "known_missing_site_video_ids": [
+    {
+      "video_id": "it_8g1ApwEk",
+      "path": "src/content/projects/adhdo.md",
+      "disposition": "content decision required; do not invent a replacement or upload date"
+    }
+  ]
+}

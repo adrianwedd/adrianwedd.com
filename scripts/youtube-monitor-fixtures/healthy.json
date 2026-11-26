@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-11-26T00:00:00Z",
+  "credentials_refreshed_in_memory": false,
+  "credentials_persisted": false,
+  "probe_error": null,
+  "channels": [{"id": "UC709-RgQ-IMi-GffU9guqUQ", "snippet": {"title": "Adrian Wedd"}}],
+  "playlist": {"id": "PLHCs2hYaGLAk4qe5za7rAh2j4YHRKdJXo", "status": {"privacyStatus": "public"}},
+  "playlist_items": ["AAAAAAAAAAA", "5eiE-DiagQE", "BBBBBBBBBBB", "CCCCCCCCCCC"],
+  "videos": [
+    {"id": "AAAAAAAAAAA", "snippet": {"title": "One", "channelId": "UC709-RgQ-IMi-GffU9guqUQ", "publishedAt": "2026-11-01T00:00:00Z", "description": "https://adrianwedd.com/blog/one/"}, "status": {"privacyStatus": "public", "uploadStatus": "processed"}, "contentDetails": {"duration": "PT1M"}},
+    {"id": "5eiE-DiagQE", "snippet": {"title": "1978", "channelId": "UC709-RgQ-IMi-GffU9guqUQ", "publishedAt": "2014-01-05T04:29:38Z", "description": "legacy"}, "status": {"privacyStatus": "private", "uploadStatus": "processed"}, "contentDetails": {"duration": "PT16M21S"}},
+    {"id": "BBBBBBBBBBB", "snippet": {"title": "The Margins I", "channelId": "UC709-RgQ-IMi-GffU9guqUQ", "publishedAt": "2026-11-01T00:00:00Z", "description": "https://adrianwedd.com/blog/the-margins/"}, "status": {"privacyStatus": "public", "uploadStatus": "processed"}, "contentDetails": {"duration": "PT1M"}},
+    {"id": "CCCCCCCCCCC", "snippet": {"title": "The Margins II", "channelId": "UC709-RgQ-IMi-GffU9guqUQ", "publishedAt": "2026-11-01T00:00:00Z", "description": "https://adrianwedd.com/blog/the-margins/"}, "status": {"privacyStatus": "public", "uploadStatus": "processed"}, "contentDetails": {"duration": "PT1M"}}
+  ],
+  "site_entries": [
+    {"path": "src/content/blog/one.md", "title": "One", "canonical_url": "https://adrianwedd.com/blog/one/", "video_url": "https://cdn.adrianwedd.com/one.mp4", "youtube_id": "AAAAAAAAAAA", "video_upload_date": "2026-11-01T00:00:00Z"}
+  ]
+}
